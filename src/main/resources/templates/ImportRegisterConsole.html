@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Import Register</title>
+
+<style th:inline="text">
+/* Define page size and margins here */
+ @page {
+   
+    size: A4 landscape;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    margin: 0.7cm;
+    counter-increment: page;
+      
+    @top-center {
+        content: element(page-header);
+    }   
+}
+body {
+    margin: 0;
+}
+
+@page {
+    size: Wpx 1px;
+    margin-top: 197px;
+}
+
+
+@media print {
+	table {
+		page-break-after: always;
+	}
+	tbody {
+		display: table-row-group;
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+	td {
+		page-break-inside: avoid;
+		height: 20pt;
+	}
+	thead
+	{
+	height: 20pt;
+	}
+
+	/* Center text horizontally and vertically */
+	.text-center {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* Style tables */
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+	.table th {
+		align-items: center;
+		border: 1px solid grey;
+		color: graytext;
+		font-size: 12pt;
+		height: 22px;
+	}
+	
+	.table thead {
+		height: 25px;
+		
+	}
+	.table td {
+		align-items: center;
+		border: 1px solid grey;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		font-size: 8pt;
+		padding: 2px;
+	}
+	.page-header {
+		position: running(page-header);
+		margin-top: 5px;
+	}
+	.horizontal {
+		width: 100%;
+		overflow: hidden; /* Clear any floats */
+		margin-top: 1pt;
+	}
+	.part-1 {
+		font-size: 10pt;
+		width: 39%;
+		float: left;
+	}
+	.part-2 {
+		font-size: 12pt;
+		width: 50%;
+		float: left;
+	}
+	.part-3 {
+		font-weight: bold;
+		font-size: 11pt;
+		width: 10%;
+		float: left;
+	}
+	.pageNumber::before {
+		content: counter(page);
+	}
+	@page :left { @top-center { content:element(page-header);
+		
+	}
+}
+
+@page :right { @top-center { content:element(page-header);
+	
+}
+
+}
+.pageNumber::before {
+	content: counter(page);
+}
+}
+</style>
+</head>
+<body>
+
+
+	<div class="page-header">
+	
+	
+		<div class=" text-center">
+		
+		<div class=" text-center"><img
+				th:src="@{file:///home/ubuntu/Files/DGDCImages/DGDC.png}"
+				alt="DGDC LIMITED Logo"
+				style="width: 35%; height:80pt;" /></div>			 
+			<span style="font-weight: bold; font-size: 16pt;">NEW IMPORT REGISTER</span><br /> 
+			<div style="font-size: 12pt; margin-top: 5px;"
+				class="sub-header">For the Period  <span
+				th:text="${startDate}"></span> To <span
+				th:text="${enddate}"> To </span></div>
+		</div>    
+		<br />
+
+		<div class="horizontal" style="margin-top: -25px;">
+			<div class="part-1">
+				<span class="sub-header"
+					style="font-weight: bold; font-size: 11pt; margin-left: 15pt;">
+				Report Date : <span th:text="${currentDate}"></span>
+				</span>
+			</div>
+
+			<div class="part-2" style="margin-top: 15px;"></div>
+
+			<div class="part-3">
+				Page No: <span class="pageNumber"
+					style="font-weight: bold; font-size: 11pt; margin-left: 215pt;"></span>
+			</div>
+		</div>
+
+
+		<table class="table ">
+			<thead>
+				  <tr class="text-center">
+    <th style="width: 5%; word-wrap: break-word; height: 28pt;">Sr No</th>
+    <th style="width: 10%; word-wrap: break-word;">SIR No</th>
+    <th style="width: 10%; word-wrap: break-word;">SIR Date</th>
+    <th style="width: 35%; word-wrap: break-word;">IMPORTER</th>
+    <th style="width: 5%; word-wrap: break-word;">NOP</th>
+    <th style="width: 7%; word-wrap: break-word;">DESC</th>
+    <th style="width: 21%; word-wrap: break-word;">DGDC STATUS</th>
+    <th style="width: 17%; word-wrap: break-word;">Console</th>
+</tr>
+      
+			</thead>
+		</table>
+
+
+	</div>
+	<div class="print-content">
+		<table class="table">
+			<tbody>			
+			
+	<tr th:each="importData, invoicePData: ${importData}" class="text-center">
+    <td style="width: 5%; word-wrap: break-word;" th:text="${invoicePData.count}"></td>
+    <td style="width: 10%; word-wrap: break-word;" th:text="${importData[0]}"></td>
+    <td style="width: 10%; word-wrap: break-word;" th:text="${#dates.format(importData[1], 'dd/MM/yyyy')}"></td>
+    <td style="width: 35%; word-wrap: break-word;" th:text="${importData[2]}"></td>
+    <td style="width: 5%; word-wrap: break-word;" th:text="${importData[3]}"></td>
+    <td style="width: 7%; word-wrap: break-word;" th:text="${importData[4]}"></td>
+    <td style="width: 21%; word-wrap: break-word;" th:text="${importData[5]}"></td>
+    <td style="width: 17%; word-wrap: break-word;" th:text="${importData[13]}"></td>
+</tr>
+    				<tr></tr>
+				 <tr>
+					<td class="text-center" style="font-weight: bold;">Total</td>
+					<td class="text-center" style="font-weight: bold;" ><span th:text="${totalNoSIR}"></span></td>
+					
+					
+					<td></td>
+					<td></td>
+					<td class="text-center" style="font-weight: bold;">
+						<span th:text="${totalNoOfPackages}"></span>
+					</td>
+					<td></td>
+					<td></td>
+					
+					<td></td>
+					
+				</tr> 
+			</tbody>
+
+		</table>
+	</div>
+
+	<script>
+        // JavaScript code to show the header table on each page
+          const allPages = document.querySelectorAll('.page-break');
+
+        // Show header table on each page
+        allPages.forEach(page => {
+            const clonedHeader = headerTable.cloneNode(true);
+            page.insertBefore(clonedHeader, page.firstChild);
+        });
+
+        // Other JavaScript code remains unchanged
+    </script>
+</body>
+</html>
+
+
+
+
+
+

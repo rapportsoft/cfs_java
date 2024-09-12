@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NOC Certificate</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+	size: A4;
+}
+
+@media print {
+	tbody {
+		
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0;
+	/* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: after;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.main {
+	width: 100%;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.table123 {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table123 th, .table123 td {
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+	margin: 10px;
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden;
+	/* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " ";
+	/* Add a space character */
+	margin-top: 0.1px;
+	/* Adjust the margin-top value as needed */
+	display: block;
+	/* Ensure the space is displayed */
+}
+
+hr.red {
+	border: 0;
+	height: 2px;
+	background-color: #ff8080;
+	/*  background-color: #990000; */
+}
+
+table.table th, table.table td {
+	font-weight: normal;
+	/* Set the font weight to normal */
+}
+
+.horizontal {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	width: 35%;
+	align-items: center;
+}
+
+.part-2 {
+	width: 30%;
+	align-items: center;
+}
+
+.part-3 {
+	width: 35%;
+	align-items: center;
+}
+</style>
+
+</head>
+
+<body>
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+
+
+	<!-- Centered heading with bold and font size 18 -->
+	<div style="margin-bottom: 18px; text-align: center;">
+		<span th:text="${b1}"
+			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
+		<br /> <span th:text="${u1}"
+			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+	</div>
+	<hr class='red' />
+	<p style="text-align: center; font-size: 14px;">
+		<span th:text="${branchAdd}"></span>
+	</p>
+	<hr class='red' />
+
+	<p
+		style="text-align: center; font-size: 20px; text-decoration: underline; margin-bottom: 9px;">
+		SPACE CERTIFICATE W/H CODE (<span th:text="${bondCode}"></span>)
+	</p>
+	<br />
+	<br />
+
+	<table class="table"
+		style="border-collapse: collapse; border-color: white; font-size: 14px !important;">
+		<thead>
+			<tr>
+				<th
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>NOC No </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span th:text="${nocNo}"></span>
+
+				</th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>NOC Date </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 	<span
+					th:text="${#dates.format(nocDate, 'dd/MM/yyyy HH:mm')}"></span>
+					<br /> 
+				</th>
+
+			</tr>
+
+			<tr>
+				<th
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>BOE No</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 <span
+					th:text="${boeNo}"></span>
+				</th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>BOE Date
+				</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					<span
+					th:text="${#dates.format(boeDate, 'dd/MM/yyyy HH:mm')}"></span>
+					<br /> 
+				</th>
+			</tr>
+			<tr>
+				<th
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>IGM No </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				<span
+					th:text="${igmNo}"></span> 
+				</th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Item No </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+						<span
+					th:text="${itemNo}"></span> 
+					<!-- 	<span
+					th:text="${list1.containerSize}"></span><span
+					th:text="${list1.containerType}"></span>  --> 
+				</th>
+			</tr>
+
+			<tr>
+				<th
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>NOC Qty </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+			 <span
+					th:text="${nocQty}"></span> 
+				</th>
+				<th
+					style="height: 14px; width: 20%; border: 1px solid white; font-size: 14px !important;"><b>Weight</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					<span
+					th:text="${weight}"></span>
+					<br />
+				</th>
+			</tr>
+			<tr>
+				<th
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>Value</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:
+				</th>
+				<th
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+			 <span
+					th:text="${value}"></span>
+				</th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Duty</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span th:text="${duty}"></span> <br />
+				</th>
+			</tr>
+
+			<tr>
+				<th
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>Importer</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:
+				</th>
+				<th
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span th:text="${consignee}"></span>
+				</th>
+
+
+				<th
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>CHA</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:
+				</th>
+				<th
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+			 <span th:text="${cha}"></span>
+				</th>
+			</tr>
+
+			<tr>
+				<th
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>Address</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:
+				</th>
+				<th
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+			 <span th:text="${address}"></span>
+				</th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Gate In Type</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 <span th:text="${gateInType}"></span> <br />
+				</th>
+			</tr>
+
+			<tr>
+				<th
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>Package Type</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:
+				</th>
+				<th
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 <span th:text="${packageType}"></span> 
+				</th>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>NOC Area</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 <span
+					th:text="${nocArea}"></span> <br /> 
+					</th>
+			</tr>
+
+
+
+			<tr>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Space Type</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 <span
+					th:text="${spaceType}"></span> <br /> 
+				</th>
+
+
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Storage Week</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span
+					th:text="${storageWeek}"></span> <br /> 
+					</th>
+			</tr>
+			
+			
+					<tr>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>NOC From</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span
+					th:text="${#dates.format(nocFrom, 'dd/MM/yyyy HH:mm')}"></span>
+				</th>
+
+
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Noc To </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					<span
+					th:text="${#dates.format(nocTo, 'dd/MM/yyyy HH:mm')}"></span> <br /> 
+					</th>
+			</tr>
+			
+			
+			
+			
+			
+			
+					<tr>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>No of 20FT</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span
+					th:text="${noOfTw}"></span> <br />
+				</th>
+
+
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>No of 40FT </b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+			<span
+					th:text="${noOfFw}"></span> <br />
+					</th>
+			</tr>		
+				<tr>
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Cargo Desription</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					 <span
+					th:text="${cargoDesc}"></span> <br />
+				</th>
+
+
+				<th
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>HAZ Status</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					<span th:text="${haz == 'Y' ? 'YES' : 'NO'}"></span>
+<br />
+					</th>
+			</tr>
+		</thead>
+	</table>
+
+
+	<br />
+	<br />
+
+	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 14px !important;">
+	<thead>
+						<tr>
+				<th
+					style="height: 14px; width: 45%; border: 1px solid white; font-size: 14px !important;"><b>Total Duty Limit approved</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span th:text="${cusAppCrgoDuty}">
+					</span> <br />
+				</th>
+				
+				<br />
+			</tr>
+			
+			
+				<tr>
+				<th
+					style="height: 14px; width: 45%; border: 1px solid white; font-size: 14px !important;"><b>Duty on Stored Goods as on Date including this Consignment</b></th>
+				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
+				<th
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+				 <span
+					th:text="${storedDuty}"></span> <br />
+				</th>
+				
+				<br />
+			</tr>
+		
+	</thead>
+</table>
+
+
+
+
+
+	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 14px !important;margin-top: 54px;">
+	<thead>
+		<tr>
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: left;"><b>__________________</b></th>
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: right;"><b>__________________ </b></th>
+		</tr>
+
+		<tr>
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: left;"><b>Sign Of CHA</b></th>
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: right;"><b>Sign of Executive</b></th>
+		</tr>
+		<tr>
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: left;"><b> <span
+					th:text="${cha}"></span></b></th>
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: right;"><b><span
+					th:text="${b1}"></span> </b></th>
+		</tr>
+		
+	</thead>
+</table>
+</body>
+
+</html>

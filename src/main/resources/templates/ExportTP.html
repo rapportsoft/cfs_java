@@ -1,0 +1,628 @@
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Export TP</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	size: A4;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+}
+
+@media print {
+	tbody {
+		display: table-row-group;
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+	.page-number {
+		page-break-after: always;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0; /* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 30pt;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.table-custom {
+	font-size: 32px; /* Set the desired font size */
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+	display: block; /* Ensure the space is displayed */
+}
+
+table.table th, table.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+</style>
+
+</head>
+<body>
+
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+	<div>
+		Add the following Thymeleaf code to include the image in your HTML
+		<div style="text-align: center;">
+			<img
+				th:src="@{file:///home/ubuntu/Files/DGDCImages/DGDC.png}"
+				alt="DGDC LIMITED Logo"
+				style="width: 82%; height: auto; display: block; margin: 0 auto;" />
+		</div>
+
+		<div class="text-center"
+			style="font-size: 10pt; font-weight: bold; margin-bottom: 20px">
+
+			<span style="display: block;">DGDC SEEPZ SEZ STRONG ROOM</span> <span
+				style="display: block;">MAIL LTD-CSI AIRPORT, AIR CARGO
+				COMPLEX, SAHAR MUMBAI-400096</span> <span style="display: block;">GST
+				No : <span th:text="${gst}"></span>
+			</span><br /> <span
+				style="font-size: 14pt; display: block; margin-bottom: 10px;">
+				EXPORT TP</span> <span style="display: block; font-size: 14px;">Seepz
+				Transhipment permit No. : <span th:text="${tpno}"></span>
+			</span>
+		</div>
+		<div style="font-weight: bold; font-size: 16px; margin-bottom: 30px;">
+
+			<div class="row">
+				<span class="col text-start">To,</span> <span style="float: right;">Date:
+					<span th:text="${tpdate}"></span>
+				</span>
+			</div>
+
+			<div class="row">
+				<span class="col text-start">DGDC LIMITED</span>
+			</div>
+			<div class="row" style="text-align: right;">
+				<span class="col text-start">PAGE NO : 1</span>
+			</div>
+
+		</div>
+
+		<div style="font-weight: bold; font-size: 16px; margin-bottom: 15px;">
+
+			<span>Strong Room : International Air Cargo Complex Sahar,
+				Mumbai - 400 096</span>
+
+		</div>
+
+
+		<table class="table" style="margin-bottom: 10px; font-size: 14px">
+			<thead>
+				<tr>
+					<th style="width: 6%; font-size: 14px;" class="text-center"><b>SR
+							NO.</b></th>
+					<th style="width: 10%; font-size: 14px;" class="text-center"><b>SER
+							NO. </b></th>
+					<th style="width: 10%; font-size: 14px;" class="text-center"><b>SER
+							Date</b></th>
+					<th style="width: 20%; font-size: 14px;" class="text-center"><b>Name
+							of Exporter</b></th>
+					<th style="width: 9%; font-size: 14px;" class="text-center"><b>NO
+							Of Pkg</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Description</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Values
+							Rs.</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Destination</b></th>
+
+
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="getPassData, i: ${item}" class="text-center">
+					<td th:text="${i.index + 1}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[0]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[1]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[2]}" style="font-size: 12px;"></td>
+
+					<td th:text="${getPassData[3]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[4]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[5]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[6]}" style="font-size: 12px;"></td>
+
+
+				</tr>
+				<tr class="text-center">
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 14px;">Total</td>
+
+					<td style="font-size: 14px;">
+					  <span th:text="${totalNop}"></span><br />
+					  <span th:text="'('+${T(com.cwms.entities.NumberToWordConverter).convert(totalNop)+')'}"></span>
+					</td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 14px;"><span th:text="${totalFob}"></span></td>
+					<td></td>
+
+					
+				</tr>
+
+
+			</tbody>
+
+		</table>
+
+
+
+		<div style="margin-bottom: 35px; font-size: 14px">
+			<span>Vehicle No : <span th:text="${vehicle}"></span></span>
+		</div>
+		<div style="font-size: 14px">
+			<span>(Signature of Custodian)</span>
+		</div>
+
+	</div>
+
+	Second iteration for the next group of data
+
+	Add any additional content or styling after all groups
+
+</body>
+</html>
+ -->
+ 
+ 
+ 
+ 
+ <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Export TP</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	size: A4;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+}
+
+@media print {
+	tbody {
+		display: table-row-group;
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+	.page-number {
+		page-break-after: always;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0; /* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p {
+	font-size: 10pt;
+	padding: 0;
+	
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 30pt;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.table-custom {
+	font-size: 32px; /* Set the desired font size */
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.horizontal {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+	page-break-inside: avoid;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 38%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 12pt;
+	width: 1%;
+	float: left;
+}
+
+.part-3 {
+	font-size: 10pt;
+	width: 60%;
+	float: left;
+}
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+}
+
+table.table th, table.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+</style>
+
+</head>
+<body>
+
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+	<div>
+		<!-- Add the following Thymeleaf code to include the image in your HTML -->
+		<div style="text-align: center;">
+			<img
+				th:src="@{file:///home/ubuntu/Files/DGDCImages/DGDC.png}"
+				alt="DGDC LIMITED Logo"
+				style="width: 82%; height: auto; display: block; margin: 0 auto;" />
+		</div>
+
+		<div class="text-center"
+			style="font-size: 10pt; font-weight: bold; margin-bottom: 20px">
+
+			<span style="display: block;">DGDC SEEPZ SEZ STRONG ROOM</span> <span
+				style="display: block;">MAIL LTD-CSI AIRPORT, AIR CARGO
+				COMPLEX, SAHAR MUMBAI-400096</span> <span style="display: block;">GST
+				No : <span th:text="${gst}"></span>
+			</span><br /> <span
+				style="font-size: 14pt; display: block; margin-bottom: 10px;">
+				EXPORT TP</span> <span style="display: block; font-size: 14px;">Seepz
+				Transhipment permit No. : <span th:text="${tpno}"></span>
+			</span>
+		</div>
+		<div style="font-weight: bold; font-size: 16px; margin-bottom: 30px;">
+
+			<div class="row">
+				<span class="col text-start">To,</span> <span style="float: right;">Date:
+					<span th:text="${tpdate}"></span>
+				</span>
+			</div>
+
+			<div class="row">
+				<span class="col text-start">DGDC LIMITED</span>
+			</div>
+			<div class="row" style="text-align: right;">
+				<span class="col text-start">PAGE NO : 1</span>
+			</div>
+
+		</div>
+
+		<div style="font-weight: bold; font-size: 16px; margin-bottom: 15px;">
+
+			<span>Strong Room : International Air Cargo Complex Sahar,
+				Mumbai - 400 096</span>
+
+		</div>
+
+
+		<table class="table" style="margin-bottom: 10px; font-size: 14px">
+			<thead>
+				<tr>
+					<th style="width: 6%; font-size: 14px;" class="text-center"><b>SR
+							NO.</b></th>
+					<th style="width: 10%; font-size: 14px;" class="text-center"><b>SER
+							NO. </b></th>
+					<th style="width: 10%; font-size: 14px;" class="text-center"><b>SER
+							Date</b></th>
+					<th style="width: 20%; font-size: 14px;" class="text-center"><b>Name
+							of Exporter</b></th>
+					<th style="width: 9%; font-size: 14px;" class="text-center"><b>NO
+							Of Pkg</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Description</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Values
+							Rs.</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Destination</b></th>
+
+
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="getPassData, i: ${item}" class="text-center">
+					<td th:text="${i.index + 1}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[0]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[1]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[2]}" style="font-size: 12px;"></td>
+
+					<td th:text="${getPassData[3]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[4]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[5]}" style="font-size: 12px;"></td>
+					<td th:text="${getPassData[6]}" style="font-size: 12px;"></td>
+
+
+				</tr>
+				<tr class="text-center">
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 14px;">Total</td>
+
+					<td style="font-size: 14px;">
+					  <span th:text="${totalNop}"></span><br />
+					 <span th:text="'(' + ${TotalNoOfPackageInWord} + ')'"></span>
+					</td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 14px;"><span th:text="${totalFob}"></span></td>
+					<td></td>
+
+					
+				</tr>
+
+
+			</tbody>
+
+		</table>
+		
+		
+		
+			<div class="horizontal" style="margin-top: 5px;">
+		<div class="part-1">
+			<p>
+			Received  <b> <span th:text="${totalNop} + ' (' + ${TotalNoOfPackageInWord} + ')'"></span></b><br /> sealed parcel for Export
+			for  <br /></p>
+			<div style="margin-top: 30px;">
+			<b><span th:text = "${cartingAgent}"></span></b></div>
+			
+		</div>
+
+		<div class="part-2" style="margin-top: 15px;">
+			<!-- Print Dt: <span style="font-size: 11pt; margin-top: 10px;"
+				th:text="${currentDateTime}"></span> -->
+		</div>
+
+		<div class="part-3">
+		<p>
+			Forwarded   <b> <span th:text="${totalNop} + ' (' + ${TotalNoOfPackageInWord} + ')'"></span></b>  PKTS
+
+ from  Strongroom, SEEPZ SEZ to Custodian DGDC SEEPZ SEZ STRONG ROOM, SAHAR for export with Carting agent <b><span th:text = "${cartingAgent}"></span></b> <br /> with vehicle Number : <b><span th:text="${vehicle}"></span></b> <br />
+ </p>
+ <div>
+ 
+ <div style="margin-top: 15px;">
+Time : <span th:text="${currentTime}">  </span><br />
+Date : <span th:text="${currentDate}">  </span><br /></div>
+</div>
+
+
+	<div class="text-center" style="margin-left:130px">
+    
+        <div style="margin-top: 30px;"> <b> <span style="font-size:15pt;" th:text="${custodian}"></span></b>  </div>
+        <div style="margin-top: 1px; font-size:10pt;">Custodian</div>
+        <div style="margin-top: 1px; font-size:10pt;">DGDC Strongroom</div>
+        <div style="margin-top: 1px; font-size:10pt;">SEEPZ SEZ ANDHERI </div>
+        <div style="margin-top: 1px; font-size:10pt;"> MUMBAI - 400096 </div>
+  
+</div>
+
+
+		</div>
+		
+		
+	
+		
+		
+		
+		
+	</div>
+		
+	
+
+	</div>
+
+
+
+</body>
+</html>
+ 

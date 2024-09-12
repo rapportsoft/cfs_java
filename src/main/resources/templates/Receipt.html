@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Receipt</title>
+<style th:inline="text">
+/* Define page size and margins here */
+@page {
+    size: A4;
+	margin-left: 0.7cm;
+	margin-right: 0.7cm;
+	margin-top: 0.3cm;
+	/* margin-bottom: 1.6cm; */
+	border: 1px solid black;
+		
+	 @bottom-center {
+        content: element(page-header);
+    }     
+}
+
+body {
+	margin: 0;
+}
+@page {
+    size: Wpx 1px;
+    margin-bottom: 1.6cm;
+}
+
+@media print {	
+	tr {
+		page-break-inside: avoid;
+	}
+.page-header {
+		position: running(page-header);
+		margin-top: 5px;
+	}
+.blank-cell {
+	border: none;
+	padding: 0;
+}
+
+p {
+	font-size: 10pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	/* border-spacing: 0; */
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table th {
+	font-weight: bold;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* Style tables */
+.table2 {
+	width: 100%;
+	border-collapse: collapse;
+	/* border-spacing: 0; */
+}
+
+.table2 td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border-top: 1px solid grey;
+	border-bottom: 1px solid grey;
+	border-right: 1px solid grey;
+	color: graytext;
+}
+
+table2.table th, table2.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+
+.customer {
+	margin: 0; /* Remove any margin */
+	width: 100%; /* Ensure full width */
+	border-collapse: collapse; /* Collapse borders */
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+
+.customer td {
+	padding: 5px; /* Add padding */
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+	display: block; /* Ensure the space is displayed */
+}
+	.pageNumber::before {
+		content: counter(page);		
+	}
+	@page :left { @bottom-center { content:element(page-header);
+		
+	}
+}
+
+@page :right 
+{ 
+@bottom-center { content:element(page-header);	}
+
+}
+}
+</style>
+
+</head>
+<body>
+
+<div class="page-header">
+    <p class="text-center" style="font-size:9pt;">CIN No. : <span th:text="${Branch.cin}"></span>&nbsp;&nbsp;Phone No. : <span th:text="${Branch.phoneNo}"></span>&nbsp;&nbsp; Email :<span th:text="${Branch.emailId}"></span></p>
+    <p class="text-center" style="font-size:9pt;">Regd. Office <span th:text="${Branch.address1}"></span></p>
+    <div class="page-footer">
+    <p class="text-center" style="font-size:9pt; width: 95%; display: inline-block;">This is a computer generated receipt hence signature is not required</p>
+   <span class="pageNumber"></span>
+
+</div>
+</div>
+
+<div class="print-content">
+	<div style="text-align: center;">
+	<img
+			th:src="@{file:///home/ubuntu/Files/DGDCImages/DGDC.png}"
+			alt="DGDC LIMITED Logo"
+			style="width: 500px; height: 85px; display: block; margin: 0 auto;" />
+		
+		 <!-- <p style="font-size:19pt;"><b>DIAMOND &amp; GEM DEVELOPMENT CORP LTD</b></p> -->
+	</div>
+
+	<p class="text-center" style="margin: 1pt;">
+		<span th:text=${Branch.address1}></span>
+	</p>
+	<p class="text-center" style="margin: 1pt;">
+		Phone No. : <span th:text=${Branch.phoneNo}></span> Email : <span
+			th:text=${Branch.emailId}></span>
+	</p>
+	
+<table style="width:100%; border-top: 1px solid grey; margin-top:8px;">
+<tbody>
+<tr>
+
+
+<td style="width: 33.33%; text-align: left; padding-left: 10px;"><span>Receipt No. :<b><span th:text="${finTrans.transId}"></span></b></span></td>
+
+<td style="width: 33.33%; text-align: center; font-size:15pt;"> <b><span>Receipt</span></b></td>
+<td style="width: 33.33%; text-align: right; padding-right: 10px;"><span>Receipt Date : <b><span
+				th:text="${#dates.format(finTrans.transDate, 'dd/MM/yyyy HH:mm:ss')}"></span></b></span></td>
+</tr>
+
+</tbody>
+</table>
+	
+	<table class="customer">
+		<tr>
+			<td
+				style="width: 50%; border-right: 1px solid black; vertical-align: top;">
+				<p>Receipt to</p>
+				<p>
+					<b><span th:text="${finTrans.partyName}"></span></b>
+				</p>
+				<p>
+					<span class="value" th:text="${party.address1 + ' ' + party.address2}"></span>
+				</p>
+				
+				<p>
+					<span class="value" th:text="${party.city + ' ' + party.pin}"></span>
+				</p>
+				<table style="border-collapse: collapse; font-size: 10pt;">
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">Email</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${party.email}"></span></td>
+  </tr>
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">Pan No.</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${party.panNo}"></span></td>
+  </tr>
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">Contact No.</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${party.mobileNo}"></span></td>
+  </tr>
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">GST No.</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${party.gstNo}"></span></td>
+  </tr>
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">State</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${party.gstNo != null ? (party.gstNo.substring(0, 2) + ' ' + party.state) : ''}"></span></td>
+  </tr>
+</table>
+
+
+
+			</td>
+			<td style="width: 50%; padding-left: 10px; vertical-align: top;">
+				<p>Payment By</p>
+				<p>
+					<b><span th:text="${finTrans.billingPartyName}"></span></b>
+				</p>
+				<p>
+					<span class="value" th:text="${billingParty.address1 + ' ' + billingParty.address2}"></span>
+				</p>
+				<table style="border-collapse: collapse; font-size: 10pt;">
+ 
+    
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">GST No.</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${billingParty.gstNo}"></span></td>
+  </tr>
+  <tr>
+    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;"><span class="label">State</span></td>
+    <td style="padding: 1px; font-size: 10pt;"><span class="value" th:text="${billingParty.gstNo != null ? (billingParty.gstNo.substring(0, 2) + ' ' + billingParty.state) : ''}"></span></td>
+  </tr>
+</table>
+				
+
+			</td>
+		</tr>
+	</table>
+
+	
+	
+	
+	
+	
+	
+<div style="margin-top: 10px; font-size:10pt; padding-left: 10px;">
+		Received with thanks from M/s. <b><span th:text="${finTrans.billingPartyName}"></span></b> against following <span><b>INVOICE DETAILS</b></span><br /> 
+	</div>
+	
+	<table class="table" style="margin-top: 10px;">
+		<thead>
+			<tr class="text-center">
+				<th style="word-wrap: break-word;">Sr No.</th>
+				<th style="word-wrap: break-word;">Invoice No</th>
+				<th style="word-wrap: break-word;">Invoice Date</th>				
+				<th style="word-wrap: break-word;" >Invoice Amount</th>
+				
+			</tr>
+		</thead>
+		<tbody style="margin-top: 10px;">
+		
+		<tr th:each="Invoice, index : ${Invoices}" class="text-center">
+        <td th:text="${index.index + 1}"></td>
+		<td th:text="${Invoice.invoiceNO}"></td>
+		<td  th:text="${#dates.format(Invoice.invoiceDate, 'dd/MM/yyyy HH:mm:ss')}"></td>
+		<td th:text="${Invoice.totalInvoiceAmount}"></td>		
+		</tr>	
+		<tr class="text-center">
+		
+		<td><b>TOTAL</b></td>
+		<td></td>
+		<td></td>
+		<td><b><span th:text="${finTrans.invoiceAmt}"></span></b></td>
+		</tr>
+		</tbody>
+	
+</table>
+
+
+<div style="margin-top: 15px; font-size:12pt; padding-left: 10px;">
+		<b>PAYMENT DETAILS</b>
+	</div>
+	
+	<table class="table" style="margin-top: 10px;">
+		<thead>
+			<tr class="text-center">
+				<th style="word-wrap: break-word;">Sr No.</th>
+				<th style="word-wrap: break-word;">Type</th>
+				<th style="word-wrap: break-word;">Trans/cheq no.</th>	
+				<th style="word-wrap: break-word;">Trans/cheq Date</th>
+				<th style="word-wrap: break-word;">Trans/cheq Amount</th>				
+			</tr>
+		</thead>
+		<tbody style="margin-top: 10px;">
+		<th:block th:each="payment, index : ${paymentList}">
+		<tr class="text-center">
+    	<td th:text="${index.count}"></td>
+    	<td th:text="${payment['type']}"></td>
+    	<td th:text="${payment['number']}"></td>
+   		<td th:text="${#dates.format(payment['date'], 'dd/MM/yyyy HH:mm:ss')}"></td>
+    	<td th:text="${payment['amount']}"></td>
+		</tr>
+		</th:block>
+		<tr class="text-center">
+		<td><b>TOTAL</b></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><b><span th:text="${finTrans.receiptAmt}"></span></b></td>
+		</tr>
+		</tbody>	
+</table>
+
+<div style="margin-top: 15px; font-size:12pt; padding-left: 10px;">
+		<b>SUMMARY</b>
+	</div>
+	
+	<table class="customer" style="margin-top: 10px; border-collapse: collapse;">
+		<tr>
+			<td style="width: 50%; vertical-align: top;">			
+						
+				
+				<table style="width: 100%; border-collapse: collapse;">
+
+    <thead>
+        <tr class="text-center">
+            <th style="height: 25px; border: 1px solid black;">SUMMARY</th>
+            <th style="border: 1px solid black;">AMOUNT</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr class="text-center">
+            <td style="padding-top: 5px; padding-bottom: 5px; border: 1px solid black;">Invoice amount</td>
+            <td th:text="${finTrans.invoiceAmt}" style="border: 1px solid black;"></td>
+        </tr>
+        <tr class="text-center">
+            <td style="padding-top: 5px; padding-bottom: 5px; border: 1px solid black;">TDS amount(<span th:text="${finTrans.tdsPercentage}"></span>)</td>
+            <td th:text="${finTrans.tdsAmt}" style="border: 1px solid black;"></td>
+        </tr>
+        <tr class="text-center">
+            <td style="padding-top: 5px; padding-bottom: 5px; border: 1px solid black;">Receipt amount</td>
+            <td th:text="${finTrans.receiptAmt}" style="border: 1px solid black;"></td>
+        </tr>
+    </tbody>
+
+</table>			
+			</td>
+			<td style="width: 50%; padding-left: 10px; vertical-align: top;">
+				
+				Total Amount Received in Words : <br />
+				<p style="margin-top:5pt; font-weight: bold;"><span  th:text ="${amountWords}"></span></p>		
+			</td>
+		</tr>
+	</table>
+
+
+<table>
+<tbody>
+<tr>
+<td style="width: 55%;"></td>
+<td style="width: 45%;">
+
+<p style="margin-top:20pt;">
+For <b>DIAMOND &amp; GEM DEVELOPMENT CORP LTD</b>
+</p>
+</td>
+</tr>
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+</body>
+</html>

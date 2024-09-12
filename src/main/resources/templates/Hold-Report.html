@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hold Report</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	size: landscape;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+}
+
+@media print {
+	tbody {
+		display: table-row-group;
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0; /* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 30pt;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.table-custom {
+    font-size: 32px; /* Set the desired font size */
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+	display: block; /* Ensure the space is displayed */
+}
+
+table.table th, table.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+</style>
+
+</head>
+<body>
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+
+
+	<!-- Add the following Thymeleaf code to include the image in your HTML -->
+
+	<br />
+	<table class="table">
+    <thead>
+        <tr>
+            <th style="height: 35px; width: 5%; font-size: 16px;" class="text-center"><b>SR No.</b></th>
+            <th style="height: 35px; width: 10%; font-size: 16px;" class="text-center"><b>Request Id</b></th>
+            <th style="height: 35px; width: 8%; font-size: 16px;" class="text-center"><b>SB.No</b></th>
+            <th style="height: 35px; width: 8%; font-size: 16px;" class="text-center"><b>SER No</b></th>
+            <th style="height: 35px; width: 10%; font-size: 16px;" class="text-center"><b>SER Date</b></th>
+            <th style="height: 35px; width: 19%; font-size: 16px;" class="text-center"><b>Exporter</b></th>
+            <th style="height: 35px; width: 5%; font-size: 16px;" class="text-center"><b>Pkgs</b></th>
+            <th style="height: 35px; width: 8%; font-size: 16px;" class="text-center"><b>Gross Wt</b></th>
+            <th style="height: 35px; width: 12%; font-size: 16px;" class="text-center"><b>NSDL Status</b></th>
+            <th style="height: 35px; width: 15%; font-size: 16px;" class="text-center"><b>DGDC Status</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="getPassData, i: ${item}" class="text-center">
+            <td th:text="${i.index + 1}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[0]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[1]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[2]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[3]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[4]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[5]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[6]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[7]}" style="font-size: 14px;"></td>
+            <td th:text="${getPassData[8]}" style="font-size: 14px;"></td>
+        </tr>
+    </tbody>
+</table>
+
+	
+
+
+
+</body>
+</html>

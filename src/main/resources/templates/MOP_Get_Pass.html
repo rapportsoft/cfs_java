@@ -1,0 +1,554 @@
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mop Get Pass</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+}
+@media print {
+        tbody {
+            display: table-row-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+
+
+
+.blank-cell {
+	border: none;
+	padding: 0; /* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 5px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 11pt;
+}
+
+td {
+	font-size: 10pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/* .customer {
+	width: 60%;
+	overflow: hidden; 
+	margin-top: 1pt;
+}
+.third {
+	width: 60%;
+	overflow: hidden; 
+	margin-top: 1pt;
+} */
+
+/* .part-1 {
+	font-size: 10pt;
+	width: 50%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 45%;
+	float: right;
+}
+ */
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+	display: block; /* Ensure the space is displayed */
+}
+
+table.table th, table.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+
+/* .container {
+    display: flex;
+    justify-content: space-between; 
+}
+
+.customer {
+    display: flex;
+}
+
+.part-1, .part-2, .Third {
+   
+    margin: 10px; 
+} */
+</style>
+
+</head>
+<body>
+
+	<div style="text-align: center;">
+		<h2 style="margin-bottom: 5px;">DGDC &amp; GEM DEVELOPMENT
+			CORPORATION LTD.</h2>
+		<h5 style="margin-top: 0; margin-bottom: 5px;">GEMS &amp;
+			JEWELLERY COMPLEX SEEPZ, SEZ MUMBAI - 400 096</h5>
+		<h4 style="margin-top: 5px;">GET PASS FOR Parcel
+			Import / Export / DTA / Customs-Detention / Test / PC / SC</h4>
+	</div>
+
+
+
+	<h2 style="text-align: center; margin-bottom: 5px;">
+		<b>MOP</b>
+	</h2>
+
+
+
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 30%;">
+
+				<p>
+					Escorted: <span th:text="${TotalNop}"></span> <b> </b>
+				</p>
+
+				<p>
+					From: &nbsp; &nbsp; &nbsp;<span th:text="${from}"></span>
+
+				</p>
+
+				<p>Name: &nbsp; &nbsp;________________</p>
+
+			</td>
+			<td style="width: 30%;">
+				<p style="font-size: 11pt">
+					Date:&nbsp; &nbsp;<span th:text="${currentDate}"></span>
+				</p>
+				<p style="font-size: 11pt">
+					To:&nbsp; &nbsp;&nbsp; &nbsp;<span th:text="${to}"></span>
+				</p>
+				<p style="font-size: 11pt">Sign:&nbsp; &nbsp; ________________</p>
+
+			</td>
+			<td style="width: 40%;">
+				<p style="font-size: 11pt">
+					Delivery Request Date:&nbsp; &nbsp;<span th:text="${currentDate}"></span>
+				</p>
+				<p style="font-size: 11pt">Delivery Request Time:&nbsp;
+					&nbsp;<span th:text="${currentTime}"></span></p>
+
+			</td>
+		</tr>
+	</table>
+
+
+
+
+	<br />
+	<p>
+		Allow <b><span th:text="${TotalNop}"></span> PKGS </b> Parcel(s) as per
+		below :
+	</p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th style="height: 35px; width: 5%;" class="text-center"><b>SR No.</b></th>
+				<th style="height: 35px; width: 15%;" class="text-center"><b>SER/SIR</b></th>
+				<th style="height: 35px; width: 25%;" class="text-center"><b>HAWB/ SBNo/ ReqtId </b></th>
+				<th style="height: 35px; width: 10%;" class="text-center"><b>Pkgs</b></th>
+				<th style="height: 35px; width: 45%;" class="text-center"><b>Name of Unit</b></th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+			ImportSubList
+			<tr th:each="getPassData , i: ${getPassData}" class="text-center">
+				<td th:text="${i.index + 1}"></td>
+				<td th:text="${getPassData.sirNo}"></td>
+				<td th:text="${getPassData.hawb}"></td>
+				<td th:text="${getPassData.nop}"></td>
+				<td th:text="${getPassData.importerId}"></td>
+			</tr>
+		</tbody>
+	</table>	
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 60%;">
+
+				<p>Parcels Handed Over By</p>				
+				<p style="margin-bottom: 10px; margin-top: 10px;">____________________</p>
+
+				<p>DGDC official Signature</p>
+				
+				<p style="margin-bottom: 10px; margin-top: 10px;">Out Time :&nbsp; _______________ &nbsp;<span>Sign :&nbsp;_______________</span></p>
+				<p style="margin-bottom: 10px; margin-top: 20px;">In Time &nbsp;&nbsp;&nbsp;:&nbsp; _______________ &nbsp; <span>Sign :&nbsp;_______________</span> </p> 
+				
+				
+			</td>
+
+			<td style="width: 40%;">
+				<p>Parcel Checked and Received By &nbsp;</p>
+				<p style="font-size: 11pt">
+					Receivers Name:&nbsp; <span th:text="${rePresentativeName}"></span>
+				</p>
+				<p style="font-size: 11pt; margin-bottom: 10px; margin-top: 10px;">
+					Receivers Sign:&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;_____________________
+				</p>
+				<p style="font-size: 11pt">Name of CHA:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${chaName}"></span>
+				</p>
+				<p style="font-size: 11pt">Date &amp; Time :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${currentDate}"></span>
+				</p>
+
+			</td>
+		</tr>
+	</table>
+
+<p class="text-center" style="margin-top: 20px;"><b>Note :</b> The Get Pass should be handed over to Security Office before leaving DGDC premises.</p>
+
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mop Get Pass</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+}
+@media print {
+        tbody {
+            display: table-row-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    }
+
+
+
+.blank-cell {
+	border: none;
+	padding: 0; /* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 5px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 11pt;
+}
+
+td {
+	font-size: 10pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+	display: block; /* Ensure the space is displayed */
+}
+
+table.table th, table.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+
+</style>
+
+</head>
+<body>
+
+	<div style="text-align: center;">
+	
+		<h2 style="margin-bottom: 5px;">DGDC &amp; GEM DEVELOPMENT
+			CORPORATION LTD.</h2>
+		<h5 style="margin-top: 0; margin-bottom: 5px;">GEMS &amp;
+			JEWELLERY COMPLEX SEEPZ, SEZ MUMBAI - 400 096</h5>
+		<h4 style="margin-top: 5px;">GET PASS FOR Parcel
+			Import / Export / DTA / Customs-Detention / Test / PC / SC</h4>
+	</div>
+
+
+
+	<h2 style="text-align: center; margin-bottom: 5px;">
+		<b>MOP</b>
+	</h2>
+
+
+
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 30%;">
+
+				<p>
+					Escorted: <span th:text="${TotalNop}"></span> <b> </b>
+				</p>
+
+				<p>
+					From: &nbsp; &nbsp; &nbsp;<span th:text="${from}"></span>
+
+				</p>
+
+				<p>Name: &nbsp; &nbsp;________________</p>
+
+			</td>
+			<td style="width: 30%;">
+				<p style="font-size: 11pt">
+					Date:&nbsp; &nbsp;<span th:text="${currentDate}"></span>
+				</p>
+				<p style="font-size: 11pt">
+					To:&nbsp; &nbsp;&nbsp; &nbsp;<span th:text="${to}"></span>
+				</p>
+				<p style="font-size: 11pt">Sign:&nbsp; &nbsp; ________________</p>
+
+			</td>
+			<td style="width: 40%;">
+				<p style="font-size: 11pt">
+					Delivery Request Date:&nbsp; &nbsp;<span th:text="${currentDate}"></span>
+				</p>
+				<p style="font-size: 11pt">Delivery Request Time:&nbsp;
+					&nbsp;<span th:text="${currentTime}"></span></p>
+
+			</td>
+		</tr>
+	</table>
+
+
+
+
+	<br />
+	<p>
+		Allow <b><span th:text="${TotalNop}"></span> PKGS </b> Parcel(s) as per
+		below :
+	</p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th style="height: 35px; width: 5%;" class="text-center"><b>SR No.</b></th>
+				<th style="height: 35px; width: 15%;" class="text-center"><b>SER/SIR</b></th>
+				<th style="height: 35px; width: 25%;" class="text-center"><b>HAWB/ SBNo/ ReqtId </b></th>
+				<th style="height: 35px; width: 10%;" class="text-center"><b>Pkgs</b></th>
+				<th style="height: 35px; width: 45%;" class="text-center"><b>Name of Unit</b></th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+			<!-- ImportSubList -->
+			<tr th:each="getPassData , i: ${getPassData}" class="text-center">
+				<td th:text="${i.index + 1}"></td>
+				<td th:text="${getPassData.sirNo}"></td>
+				<td th:text="${getPassData.hawb}"></td>
+				<td th:text="${getPassData.nop}"></td>
+				<td th:text="${getPassData.importerId}"></td>
+			</tr>
+		</tbody>
+	</table>	
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 60%;">
+
+				<p>Parcels Handed Over By</p>				
+				<!-- <p style="margin-bottom: 10px; margin-top: 10px;">____________________</p> -->
+
+				<p>DGDC official Signature</p>
+				
+				<p style="margin-bottom: 10px; margin-top: 10px;">Out Time :&nbsp; _______________ &nbsp;<span>Sign :&nbsp;_______________</span></p>
+				<p style="margin-bottom: 10px; margin-top: 20px;">In Time &nbsp;&nbsp;&nbsp;:&nbsp; _______________ &nbsp; <span>Sign :&nbsp;_______________</span> </p> 
+				
+				
+			</td>
+
+			<td style="width: 40%;">
+				<p>Parcel Checked and Received By &nbsp;</p>
+				<p style="font-size: 11pt">
+					Receivers Name:&nbsp; <span th:text="${rePresentativeName}"></span>
+				</p>
+				<p style="font-size: 11pt; margin-bottom: 10px; margin-top: 10px;">
+					Receivers Sign:&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;_____________________
+				</p>
+				<p style="font-size: 11pt">Name of CHA:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${chaName}"></span>
+				</p>
+				<p style="font-size: 11pt">Date &amp; Time :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${currentDate}"></span>
+				</p>
+              
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: right;margin-left: 450px;" th:if="${not #strings.isEmpty(signpath)}">
+	    <p style="width: 100%; height: 100px;  margin-top: 20px; " >
+    			<img th:src="${signpath}" alt="DGDC LIMITED Logo"
+       				style="width: 227px; height: 100px; display: block;" />
+				</p>
+	</div>
+
+<div>
+<p class="text-center" style="margin-top: 20px;"><b>Note :</b> The Get Pass should be handed over to Security Office before leaving DGDC premises.</p>
+</div>
+
+
+</body>
+</html>
