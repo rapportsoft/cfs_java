@@ -1120,6 +1120,7 @@ public class CfExBondCrg {
 	
 	
 //query to get all recoord using exbondingid search 
+	
 	public CfExBondCrg(String companyId, String branchId, String finYear, String exBondingId, Date exBondingDate,
 			String profitcentreId, String nocTransId, String nocNo, Date nocValidityDate, String boeNo,
 			String bondingNo, Date bondingDate, String exBondBeNo, Date exBondBeDate, String inBondingId,
@@ -1149,6 +1150,15 @@ public class CfExBondCrg {
 		this.exBondDate = exBondDate;
 		this.giTransporterName = giTransporterName;
 		this.status = status;
+	}
+
+
+
+	public CfExBondCrg(String exBondingId, String inBondingId,String exBondBeNo) {
+		super();
+		this.exBondingId = exBondingId;
+		this.inBondingId = inBondingId;
+		this.exBondBeNo = exBondBeNo;
 	}
 
 

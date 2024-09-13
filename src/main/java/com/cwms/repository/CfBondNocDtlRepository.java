@@ -211,21 +211,25 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 		        @Param("nocNo") String nocNo,
 		        @Param("nocTransId") String nocTransId);
 
+
 	 
-//	 @Query("select count(c) > 0  from  CFBondGatePass c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
-//		 		+ "c.nocNo =:nocNo  and c.nocTransId =:nocTransId and (COALESCE( c.exBondedPackages ,0)- COALESCE(c.qtyTakenOut,0)) > 0  "
-//				 )
-//		 Boolean checkInForGatePass (
-//				 @Param("companyId") String companyId,
-//			        @Param("branchId") String branchId,
-//			        @Param("nocNo") String nocNo,
-//			        @Param("nocTransId") String nocTransId);
-	 
-	 
-	 @Query("select count(c) > 0 from CFBondGatePass c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+	 @Query("select count(c) > 0 from CfExBondCrg c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
 		       "c.nocNo = :nocNo AND c.nocTransId = :nocTransId AND (COALESCE(c.exBondedPackages, 0) - COALESCE(c.qtyTakenOut, 0)) > 0"
 		      )
 		Boolean checkInForGatePass(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("nocNo") String nocNo,
+		    @Param("nocTransId") String nocTransId
+		);
+
+	 
+	 
+	 @Query("select count(c) > 0 from CfExBondCrg c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+		       "c.nocNo = :nocNo AND c.nocTransId = :nocTransId AND "
+		       + "COALESCE(c.exBondedPackages, 0) - c.qtyTakenOut = 0 AND "
+		        + "c.qtyTakenOut > 0")
+		Boolean checkInForALLGatePass(
 		    @Param("companyId") String companyId,
 		    @Param("branchId") String branchId,
 		    @Param("nocNo") String nocNo,
@@ -278,7 +282,7 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 	 @Query("SELECT new com.cwms.entities.Cfinbondcrg(c.inBondingId, c.boeNo) "
 		     + "FROM Cfinbondcrg c "
 		     + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo "
-		     + "ORDER BY c.inBondingId DESC")
+		     + "ORDER BY c.createdDate DESC")
 		List<Cfinbondcrg> getInBondingIdAndBoeNo(
 		        @Param("companyId") String companyId,
 		        @Param("branchId") String branchId,
@@ -287,7 +291,7 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 	 
 	 
 	 
-	 @Query("SELECT new com.cwms.entities.CfExBondCrg(c.exBondingId, c.inBondingId) "
+	 @Query("SELECT new com.cwms.entities.CfExBondCrg(c.exBondingId, c.inBondingId, c.exBondBeNo) "
 		     + "FROM CfExBondCrg c "
 		     + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo "
 		     + "ORDER BY c.createdDate DESC")

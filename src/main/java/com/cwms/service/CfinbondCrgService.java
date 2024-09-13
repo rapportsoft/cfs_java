@@ -1234,4 +1234,8 @@ System.out.println("cfinbondcrg_______________________"+cfinbondcrg.getShortageP
 	public List<Cfinbondcrg> getFindAllCfinbondCrgHDR(String companyId, String branchId,String inBondingId) {
 		return cfinbondCrgHdrRepo.findCfinbondcrgByCompanyIdAndBranchIdForInbond(companyId, branchId,inBondingId);
 	}
+	
+	public Cfinbondcrg getDataOfBoeNoForEntryInExbond(String companyId, String branchId,String nocTransId,String nocNo,String boeNo) {
+		return cfinbondCrgHdrRepo.getDataOfBoeNoForEntryInExbond(companyId, branchId,nocTransId,nocNo,boeNo);
+	}
 }

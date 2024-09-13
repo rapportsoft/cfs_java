@@ -169,7 +169,34 @@ public interface CfinbondCrgHdrRepo extends JpaRepository<CfinbondcrgHDR, String
 
 	 
 	 
-	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingId, c.inBondingDate, " +
+		       "c.profitcentreId, c.nocTransId, c.nocNo, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocDate, " +
+		       "c.nocValidityDate, c.nocFromDate, c.shift, c.gateInId, c.boeNo, c.boeDate, c.accSrNo, c.onAccountOf, " +
+		       "c.bondingNo, c.bondingDate, c.bondValidityDate, c.chaSrNo, c.cha, c.chaCode, c.importerId, c.importerName, " +
+		       "c.importerAddress1, c.importerAddress2, c.importerAddress3, c.numberOfMarks, c.commodityDescription, " +
+		       "c.grossWeight, c.uom, c.nocPackages, c.areaAllocated, c.areaOccupied, c.cargoCondition, c.gateInPackages, " +
+		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.comments, " +
+		       "c.cifValue, c.cargoDuty, c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, " +
+		       "c.inBond40Ft, c.exBond20Ft, c.exBond40Ft, c.otlNo, c.bondYard, c.status, c.shortagePackages, " +
+		       "c.damagedQty, c.breakage, c.exBondedCargoDuty, c.exBondedInsurance, c.exBondedCif, c.exBondedGw) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "WHERE c.companyId = :companyId"   +
+		       " AND c.branchId = :branchId " + 
+		       "AND (c.inBondedPackages - COALESCE(c.exBondedPackages, 0)) > 0 " +
+		       "AND c.status != 'D' " +
+		       " AND c.nocTransId = :nocTransId " + 
+		       " AND c.nocNo = :nocNo " + 
+		       " AND c.boeNo = :boeNo " + 
+		       "ORDER BY c.boeNo DESC")
+	Cfinbondcrg getDataOfBoeNoForEntryInExbond(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("nocTransId") String nocTransId,
+		    @Param("nocNo") String nocNo,
+		    @Param("boeNo") String boeNo
+		);
+
 	 
 	 
 	 

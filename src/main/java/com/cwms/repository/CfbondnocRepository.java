@@ -373,6 +373,32 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 			                                                @Param("partyName") String partyName);
 
 	 
+	 @Query("SELECT NEW com.cwms.entities.Cfbondnoc(c.companyId, c.branchId, c.nocTransId, c.profitcentreId, c.nocTransDate, " +
+		       "c.nocNo, c.nocDate, c.shift, c.source, c.gateInId, c.igmTransId, c.igmNo, c.igmDate, " +
+		       "c.igmLineNo, c.boeNo, c.boeDate, c.shippingAgent, c.shippingLine, c.chaSrNo, c.cha, pa.customerCode, c.haz, " +
+		       "c.periodicBill, c.typeOfPackage, c.billingParty, c.importerId, c.importerName, c.importerAddress1, " +
+		       "c.importerAddress2, c.importerAddress3, c.accSrNo, c.onAccountOf, c.commodityDescription, " +
+		       "c.commodityCode, c.grossWeight, c.sampleQty, c.nocValidityDate, c.nocFromDate, c.licenceValidDate, " +
+		       "c.numberOfMarks, c.uom, c.nocPackages, c.gateInPackages, c.area, c.newArea, c.cifValue, c.imoCode, " +
+		       "c.cargoDuty, c.insuranceValue, c.insuranceAmt, c.storedCragoDuty, c.storedCifValue, c.inBondedPackages, " +
+		       "c.noticeDate, c.comments, c.status, c.createdBy, pa.partyName, c.approvedBy, c.nocWeek, c.dcaNo, c.sapNo, " +
+		       "c.jobNo, c.sourcePort, c.noOf20ft, c.noOf40ft, c.spaceAllocated, c.cargoSource, c.balCifValue, " +
+		       "c.spaceType, c.gateInType,c.bondingNo,c.bondingDate,c.bondValidityDate) " +
+		   "FROM Cfbondnoc c " +
+		   "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.cha = pa.partyId " +
+		   "WHERE c.companyId = :companyId " +
+		   "AND c.branchId = :branchId " +
+		   "AND c.status != 'D' " +
+		   "AND (c.gateInPackages - COALESCE(c.inBondedPackages, 0)) > 0 " +
+		   "AND c.nocTransId = :nocTransId " +
+		   "AND c.nocNo = :nocNo " +
+		   "AND c.boeNo = :boeNo " +
+		   "ORDER BY c.boeNo DESC")
+		Cfbondnoc  dataOfBoeNoForNeeEntry(@Param("companyId") String companyId, 
+			                                                @Param("branchId") String branchId,
+			                                                @Param("nocTransId") String nocTransId, 
+			                                                @Param("nocNo") String nocNo,
+			                                                @Param("boeNo") String boeNo);
 	 
 	 
 	 

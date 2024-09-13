@@ -177,6 +177,15 @@ public class CfbondnocController {
 		return ResponseEntity.ok(data);
 	}
 
+	
+	@GetMapping("/dataOfBoeNoForNeeEntry")
+	public ResponseEntity<?> dataOfBoeNoForNeeEntry(@RequestParam String companyId,
+			@RequestParam String branchId, @RequestParam String nocTransId,@RequestParam String nocNo,
+			@RequestParam String boeNo) {
+		Cfbondnoc data = cfbondnocService.dataOfBoeNoForNeeEntry(companyId, branchId, nocTransId,nocNo,boeNo);
+		return ResponseEntity.ok(data);
+	}
+	
 	@GetMapping("/getCfbondnocDataForCfBondGateIn")
 	public ResponseEntity<List<Cfbondnoc>> getCfbondnocDataForCfBondGateIn(@RequestParam String companyId,
 			@RequestParam String branchId, @RequestParam(name = "partyName", required = false) String partyName) {

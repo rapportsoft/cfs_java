@@ -83,4 +83,15 @@ public class CfinbondCrgController {
 				   @RequestParam(name = "partyName", required = false) String partyName) {
 			return cfinbondCrgService.getFindAllCfinbondCrgHDR(companyId, branchId,partyName);
 		}
+	 
+	 
+	 
+	 
+	 
+	 
+	 @GetMapping("/getDataOfBoeNoForEntryInExbond")
+		public Cfinbondcrg getDataOfBoeNoForEntryInExbond(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,@RequestParam("nocTransId") String nocTransId,@RequestParam("nocNo") String nocNo,
+				   @RequestParam("boeNo") String boeNo) {
+			return cfinbondCrgService.getDataOfBoeNoForEntryInExbond(companyId, branchId,nocTransId,nocNo,boeNo);
+		}
 }

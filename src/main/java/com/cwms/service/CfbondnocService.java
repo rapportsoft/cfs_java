@@ -119,6 +119,11 @@ public class CfbondnocService {
 		return cfbondnocRepository.findCfbondnocByCompanyIdAndBranchIdForInbondScreen(companyId, branchId, partyName);
 	}
 
+	public Cfbondnoc dataOfBoeNoForNeeEntry(String companyId, String branchId, String nocTransId, String nocNo,
+			String boeNo) {
+		return cfbondnocRepository.dataOfBoeNoForNeeEntry(companyId, branchId, nocTransId, nocNo, boeNo);
+	}
+
 	public List<Cfbondnoc> getCfbondnocDataForCfBondGateIn(String companyId, String branchId, String partyName) {
 		return cfbondnocRepository.findCfbondnocByCompanyIdAndBranchIdForCfbondGateIn(companyId, branchId, partyName);
 	}
@@ -305,7 +310,7 @@ public class CfbondnocService {
 
 				if (validate != null) {
 					BigDecimal addValue = validate.getCusAppArea().subtract(validate.getInbondAres())
-							.add(validate.getExbondArea());
+							.add(validate.getExbondArea() != null ? validate.getExbondArea() : BigDecimal.ZERO);
 
 					// Compare using compareTo method
 //   				    if (addValue.compareTo(cfBondNoc.getArea()) < 0) {
@@ -918,11 +923,10 @@ public class CfbondnocService {
 		return repository.getAllNocNoForBondingSearch(cid, bid, val);
 	}
 
-	
 	public List<Object[]> getAllBondingNoForBondingSearch(String cid, String bid, String val) {
 		return repository.getAllBondingNoForBondingSearch(cid, bid, val);
 	}
-	
+
 //	public ResponseEntity<?> searchExportMain(String companyId, String branchId, String sbNo, String vehicleNo, String containerNo, String bookingNo, String pod)
 //	{		
 //		
@@ -1181,8 +1185,7 @@ public class CfbondnocService {
 //
 //		return new ResponseEntity<>(myMap, HttpStatus.OK);
 //	}
-	
-	
+
 	public ResponseEntity<List<CfBondNocDtl>> getCfBondNocDtl(String companyId, String branchId, String nocTransId,
 			String nocNo) {
 		List<CfBondNocDtl> result = cfbondnocDtlRepository.forMainSearhcOfGateInBondScreen(companyId, branchId,
@@ -1194,275 +1197,179 @@ public class CfbondnocService {
 		}
 	}
 
-public ResponseEntity<?> getForMainBondingSearch(String cid, String bid, String nocNo, String boeNo,
-		String bondingNo) {
+	public ResponseEntity<?> getForMainBondingSearch(String cid, String bid, String nocNo, String boeNo,
+			String bondingNo) {
 
-	List<String> idList = new ArrayList<>();
-	Cfinbondcrg firstInbond = null;
-	CfExBondCrg firstExBond = null;
-	Map<String, Object> myMap = new HashMap<>();
-	Cfbondnoc list = repository.getForBondingSearch(cid, bid, nocNo, boeNo, bondingNo);
+		List<String> idList = new ArrayList<>();
+		Cfinbondcrg firstInbond = null;
+		CfExBondCrg firstExBond = null;
+		Map<String, Object> myMap = new HashMap<>();
+		Cfbondnoc list = repository.getForBondingSearch(cid, bid, nocNo, boeNo, bondingNo);
 
-	if (list == null) {
-		return new ResponseEntity<>("Data not found.", HttpStatus.CONFLICT);
-	}
+		if (list == null) {
+			return new ResponseEntity<>("Data not found.", HttpStatus.CONFLICT);
+		}
 
-	idList.add("P00248");
+		idList.add("P00248");
 
-	Boolean check = cfbondnocDtlRepository.checkGateInPackages(cid, bid, list.getNocNo(), list.getNocTransId());
+		Boolean check = cfbondnocDtlRepository.checkGateInPackages(cid, bid, list.getNocNo(), list.getNocTransId());
 
-	System.out.println("check______________________________________" + check);
-	if (check) 
-	{
-		idList.add("P00249");
-	
+		System.out.println("check______________________________________" + check);
+		if (check) {
+			idList.add("P00249");
 
-		myMap.put("list", list);
-		myMap.put("idList", idList);
-	
-        //return  new ResponseEntity<>(myMap,HttpStatus.OK) ;  
-	}
+			myMap.put("list", list);
+			myMap.put("idList", idList);
 
-	Boolean check9 = cfbondnocDtlRepository.checkInBondedPackages(cid, bid, list.getNocNo(), list.getNocTransId());
-	//
-			System.out.println("check9______________________________________" + check9);
-			if (check9) 
-			{
-				idList.add("P00249");
-				idList.add("P00250");
-				
-	
-				myMap.put("list", list);
-				myMap.put("idList", idList);
-				//return new ResponseEntity<>(myMap, HttpStatus.OK);
+			// return new ResponseEntity<>(myMap,HttpStatus.OK) ;
+		}
+
+		Boolean check9 = cfbondnocDtlRepository.checkInBondedPackages(cid, bid, list.getNocNo(), list.getNocTransId());
+		//
+		System.out.println("check9______________________________________" + check9);
+		if (check9) {
+			idList.add("P00249");
+			idList.add("P00250");
+
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+
+		Boolean check2 = cfbondnocDtlRepository.checkInBondedPackagesAllDone(cid, bid, list.getNocNo(),
+				list.getNocTransId());
+
+		System.out.println("check2______________________________________" + check2);
+		if (check2) {
+			idList.add("P00249");
+			idList.add("P00250");
+
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+
+		
+		Boolean check3 = cfbondnocDtlRepository.checkInBondedHdeDtl(cid, bid, list.getNocNo(), list.getNocTransId());
+
+		System.out.println("check3______________________________________" + check3);
+
+		if (check3) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+
+			Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
+
+			System.out.println("check3 check5______________________________________" + check5);
+			if (check5) {
+				idList.add("P00252");
 			}
-	
 			
-			
-			Boolean check2 = cfbondnocDtlRepository.checkInBondedPackagesAllDone(cid, bid, list.getNocNo(),
+			Boolean checkForQtyOut = cfbondnocDtlRepository.checkInForALLGatePass(cid, bid, list.getNocNo(),
 					list.getNocTransId());
-			
-			System.out.println("check2______________________________________" + check2);
-			if (check2) 
-			{
-				idList.add("P00249");
-				idList.add("P00250");
-				
-				myMap.put("list", list);
-				myMap.put("idList", idList);
 
-				//return new ResponseEntity<>(myMap, HttpStatus.OK);
+			if (checkForQtyOut) {
+				idList.add("P00252");
 			}
 
-			
-//	Boolean check1 = cfbondnocDtlRepository.checkInBondedPackages(cid, bid, list.getNocNo(), list.getNocTransId());
-//
-//	System.out.println("check1______________________________________" + check1);
-//	if (check1) 
-//	{
-//		idList.add("P00249");
-//		idList.add("P00250");
-//		idList.add("P00251");
-//		
-//
-//		List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
-//				list.getNocNo());
-//		if (!results.isEmpty())
-//
-//		{
-//			firstInbond = results.get(0);
-//		} else {
-//			return null; // Handle cases where no records are found
-//		}
-//
-////		Map<String, Object> myMap = new HashMap<>();
-//
-//		System.out.println("inbondind________________________________" + firstInbond);
-//		if (firstInbond != null) {
-//			myMap.put("inBondId", firstInbond.getInBondingId());
-//		}
-//
-//		myMap.put("list", list);
-//		myMap.put("idList", idList);
-//		myMap.put("firstInbond", firstInbond);
-//		//return new ResponseEntity<>(myMap, HttpStatus.OK);
-//	}
+			List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results.isEmpty())
 
-//	Boolean check2 = cfbondnocDtlRepository.checkInBondedPackagesAllDone(cid, bid, list.getNocNo(),
-//			list.getNocTransId());
-//	
-//	System.out.println("check2______________________________________" + check2);
-//	if (check2) 
-//	{
-//		idList.add("P00249");
-//		idList.add("P00250");
-//		idList.add("P00251");
-//
-//		//Cfinbondcrg firstInbond = null;
-//
-//		List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
-//				list.getNocNo());
-//		if (!results.isEmpty())
-//
-//		{
-//			firstInbond = results.get(0);
-//		} else {
-//			return null; // Handle cases where no records are found
-//		}
-//
-////		Map<String, Object> myMap = new HashMap<>();
-//
-//		System.out.println("inbondind________________________________" + firstInbond);
-//		if (firstInbond != null) {
-//			myMap.put("inBondId", firstInbond.getInBondingId());
-//		}
-//
-//		myMap.put("list", list);
-//		myMap.put("idList", idList);
-//		myMap.put("firstInbond", firstInbond);
-//
-//		//return new ResponseEntity<>(myMap, HttpStatus.OK);
-//	}
+			{
+				firstInbond = results.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
 
-	
-	
-	
-	
-	
-	
-	Boolean check3 = cfbondnocDtlRepository.checkInBondedHdeDtl(cid, bid, list.getNocNo(), list.getNocTransId());
+			List<CfExBondCrg> results1 = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results1.isEmpty())
 
-	System.out.println("check3______________________________________" + check3);
+			{
+				firstExBond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
 
-	if (check3) {
-		idList.add("P00249");
-		idList.add("P00250");
-		idList.add("P00251");
-//		idList.add("P00252");
-		
-	//Cfinbondcrg firstInbond = null;
-	
-//		Map<String, Object> myMap = new HashMap<>();
+			System.out.println("firstExBond________________________________" + firstExBond);
 
-		
-		
-		List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
-				list.getNocNo());
-		if (!results.isEmpty())
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("firstExBond", firstExBond);
 
-		{
-			firstInbond = results.get(0);
-		} else {
-			return null; // Handle cases where no records are found
-		}
-		
-		
-//		List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
-//				list.getNocNo());
-//		if (!results.isEmpty())
-//
-//		{
-//			firstExBond = results.get(0);
-//		} 
-//		else 
-//		{
-//			return null; // Handle cases where no records are found
-//		}
-//
-//		
-
-		System.out.println("firstExBond________________________________" + firstExBond);
-	
-		myMap.put("list", list);
-		myMap.put("idList", idList);
-		myMap.put("firstInbond", firstInbond);
-//		myMap.put("firstExBond", firstExBond);
-
-
-		//return new ResponseEntity<>(myMap, HttpStatus.OK);
-	}
-	
-	Boolean check4 = cfbondnocDtlRepository.checkExBondedPackagesAllDone(cid, bid, list.getNocNo(), list.getNocTransId());
-
-	System.out.println("check3______________________________________" + check4);
-
-	if (check4) {
-		idList.add("P00249");
-		idList.add("P00250");
-		idList.add("P00251");
-//		idList.add("P00252");
-
-		List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
-				list.getNocNo());
-		if (!results.isEmpty())
-
-		{
-			firstExBond = results.get(0);
-		} 
-		else 
-		{
-			return null; // Handle cases where no records are found
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
 
 		
+		Boolean check4 = cfbondnocDtlRepository.checkExBondedPackagesAllDone(cid, bid, list.getNocNo(),
+				list.getNocTransId());
 
-		System.out.println("firstExBond________________________________" + firstExBond);
-	
-		myMap.put("list", list);
-		myMap.put("idList", idList);
-		myMap.put("firstInbond", firstInbond);
-		myMap.put("firstExBond", firstExBond);
+		System.out.println("check4______________________________________" + check4);
 
+		if (check4) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+			idList.add("P00252");
 
-		//return new ResponseEntity<>(myMap, HttpStatus.OK);
-	}
+			List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results.isEmpty())
 
-	
-	
-	Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
+			{
+				firstExBond = results.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
 
-	System.out.println("check4______________________________________" + check5);
+			System.out.println("firstExBond________________________________" + firstExBond);
 
-	if (check5) 
-	{
-		idList.add("P00249");
-		idList.add("P00250");
-		idList.add("P00251");
-		idList.add("P00252");
-
-//		Map<String, Object> myMap = new HashMap<>();
-
-		List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
-				list.getNocNo());
-		if (!results.isEmpty())
-
-		{
-			firstExBond = results.get(0);
-		} 
-		else 
-		{
-			return null; // Handle cases where no records are found
-		}
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("firstExBond", firstExBond);
 
 		
+		}
 
-		System.out.println("firstExBond________________________________" + firstExBond);
-	
-		myMap.put("list", list);
-		myMap.put("idList", idList);
-		myMap.put("firstInbond", firstInbond);
-		myMap.put("firstExBond", firstExBond);
+	// check letter its alredy prsent in check3 loop 	
+		
+		Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
 
-		//return new ResponseEntity<>(myMap, HttpStatus.OK);
+		System.out.println("check4______________________________________" + check5);
+
+		if (check5) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+			idList.add("P00252");
+
+
+
+			List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results.isEmpty())
+
+			{
+				firstExBond = results.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+			System.out.println("firstExBond________________________________" + firstExBond);
+
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("firstExBond", firstExBond);
+
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(myMap, HttpStatus.OK);
 	}
-
-//	Map<String, Object> myMap = new HashMap<>();
-//
-//	myMap.put("list", list);
-//	myMap.put("idList", idList);
-//	myMap.put("firstInbond", firstInbond);
-//	myMap.put("firstExBond", firstExBond);
-
-	return new ResponseEntity<>(myMap, HttpStatus.OK);
-}
 }

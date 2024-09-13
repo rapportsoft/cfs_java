@@ -133,6 +133,7 @@ public class CfbondGatePassService {
 						gatePassDtl.setExBondedPackages(item.getExBondedPackages());
 						gatePassDtl.setNoOfPackage(item.getNoOfPackage());
 						gatePassDtl.setQtyTakenOut(item.getQtyTakenOut());
+						gatePassDtl.setNocTransId(item.getNocTransId());
 						gatePassDtl.setBondingNo(item.getBondingNo());
 						gatePassDtl.setCommodityDescription(item.getCommodityDescription());
 						gatePassDtl.setSrNo(sr);
@@ -236,6 +237,7 @@ public class CfbondGatePassService {
 						gatePassDtl.setAreaAllocated(item.getAreaAllocated());
 						gatePassDtl.setAreaReleased(item.getAreaReleased());
 						gatePassDtl.setGrossWt(item.getGrossWt());
+						gatePassDtl.setNocTransId(item.getNocTransId());
 						gatePassDtl.setExBondedPackages(item.getExBondedPackages());
 						gatePassDtl.setNoOfPackage(item.getNoOfPackage());
 						gatePassDtl.setQtyTakenOut(item.getQtyTakenOut());
@@ -289,7 +291,7 @@ public class CfbondGatePassService {
 							gatePassDtl1.setTransporterName(gatePass.getTransporterName());
 							gatePassDtl1.setTransporterStatus(gatePass.getTransporterStatus());
 							gatePassDtl1.setCha(gatePass.getCha());
-
+							gatePassDtl1.setNocTransId(item.getNocTransId());
 							gatePassDtl1.setTransType(gatePass.getTransType());
 							gatePassDtl1.setNocNo(item.getNocNo());
 							gatePassDtl1.setExBondBeNo(item.getExBondBeNo());
