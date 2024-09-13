@@ -1397,6 +1397,10 @@ public class Cfinbondcrg implements Serializable {
 	}
 	
 	
-	
+	public Cfinbondcrg(String inBondingId,String boeNo) {
+		super();
+		this.inBondingId = inBondingId;
+		this.boeNo = boeNo;
+	}
 }
 
