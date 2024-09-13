@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Import Register</title>
+
+   <style th:inline="text">
+        /* Define page size and margins here */
+      @page {
+   
+    size: A4 landscape;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    margin: 0.7cm;
+    counter-increment: page;
+      
+    @top-center {
+        content: element(page-header);
+    }   
+}
+body {
+    margin: 0;
+}
+
+@page {
+    size: Wpx 1px;
+    margin-top: 162px;
+}
+
+
+@media print {
+
+ 
+
+    table {
+         page-break-after: always;
+    }
+    tbody {
+        display: table-row-group;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    td {
+        page-break-inside: avoid;
+        height: 50pt;
+    }
+
+    /* Center text horizontally and vertically */
+    .text-center {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Style tables */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .table th {
+        align-items: center;
+        border: 1px solid grey;
+        color: graytext;
+        font-size: 9pt;
+    }
+
+    .table thead {
+        height: 18px;
+        display: table-header-group;
+    }
+
+    .table td {
+        align-items: center;
+        border: 1px solid grey;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 8pt;
+        padding: 2px;
+        
+    }
+
+    .page-header {
+       
+        position: running(page-header);
+        margin-top: 30px;
+       
+        
+    }
+    
+    .horizontal {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 39%;
+	float: left;
+	
+}
+
+.part-2 {
+	font-size: 12pt;
+	width: 50%;
+	float: left;
+}
+
+  .part-3 {
+        font-weight: bold;
+        font-size: 11pt;
+       width: 10%;
+	float: left;
+    }
+
+    .pageNumber::before {
+        content: counter(page);
+    }
+   
+
+    @page :left {
+        @top-center {
+            content: element(page-header);
+        }
+    }
+
+    @page :right {
+        @top-center {
+            content: element(page-header);
+        }
+    }
+
+     .pageNumber::before {
+        content: counter(page);
+    }
+
+}
+
+    </style>
+</head>
+<body>
+	  
+
+	 <div class="page-header">
+	 <p class=" text-center">
+        <span style="font-weight: bold; font-size: 20pt">Import Register</span><br />
+        <span style="font-weight: bold; font-size: 15pt" class="sub-header">Transhipment Permit No. : <span th:text="${tpNo}"></span></span>
+    </p>
+    <br />
+   
+    <div class="horizontal" style="margin-top: -25px;">
+		<div class="part-1">
+			 <span class="sub-header" style="font-weight: bold; font-size: 11pt; margin-left: 15pt;">
+			Date : <span th:text="${tpDate}"></span></span>
+		</div>
+
+		<div class="part-2" style="margin-top: 15px;">
+			
+		</div>
+
+		<div class="part-3">
+    Page No: <span class="pageNumber" style="font-weight: bold; font-size: 11pt; margin-left: 215pt;"></span>
+</div>
+	</div>
+    
+    
+<table class ="table ">
+    <thead>
+        <tr class="text-center">
+				
+					<th rowspan="2" style="width: 20pt; font-weight: bold; word-wrap: break-word;">Sr No</th>
+					<th rowspan="2" style="width: 45pt; font-weight: bold; word-wrap: break-word;">SIR No &amp; Dt</th>
+					<th rowspan="2" style="width: 25pt; font-weight: bold; word-wrap: break-word;">CONSOLE</th>
+				<th rowspan="2" style="width: 90pt; font-weight: bold; word-wrap: break-word;">IMPORTER</th>
+				<th rowspan="2" style="width: 33pt; font-weight: bold; word-wrap: break-word;">TP NO</th>
+				<th rowspan="2" style="width: 38pt; font-weight: bold; word-wrap: break-word;">PCTM NO</th>
+				<th rowspan="2" style="width: 38pt; font-weight: bold; word-wrap: break-word;">IGM</th>
+				<th rowspan="2" style="width: 55pt; font-weight: bold; word-wrap: break-word;">M.A.W.B NO</th>
+					<th rowspan="2" style="width: 55pt; font-weight: bold; word-wrap: break-word;">H.A.W.B NO</th>
+				<th rowspan="2" style="width: 18pt; font-weight: bold; word-wrap: break-word;">NOP</th>
+				<th rowspan="2" style="width: 22pt; font-weight: bold; word-wrap: break-word;">DESC</th>
+				<th rowspan="2" style="width: 45pt; font-weight: bold; word-wrap: break-word;">EXAM DATE</th>
+			   <th rowspan="2" style="width: 45pt; font-weight: bold; word-wrap: break-word;">DELIVERY	DATE</th>
+			
+			
+			<th colspan="2" style="width: 70pt; font-weight: bold; word-wrap: break-word;">IDF
+					Cash No &amp; Date</th>
+				<th colspan="2" style="width: 70pt; font-weight: bold; word-wrap: break-word;">Signature
+					of Importer With Date</th>
+				<th colspan="2" style="width: 70pt; font-weight: bold; word-wrap: break-word;">Signature
+					of D.G.D.C</th>
+			</tr>
+			<tr class="text-center">
+			<th style="width: 35pt; font-weight: bold; word-wrap: break-word;">Cash No</th>
+			<th style="width: 35pt; font-weight: bold; word-wrap: break-word;">Date</th>
+				<th style="width: 35pt; font-weight: bold; word-wrap: break-word;">Sign</th>
+				<th style="width: 35pt; font-weight: bold; word-wrap: break-word;">Date</th>
+				<th style="width: 35pt; font-weight: bold; word-wrap: break-word;">Sign</th>
+				<th style="width: 35pt; font-weight: bold; word-wrap: break-word;">Date</th>
+				
+			</tr>
+    </thead>
+</table>
+    
+    
+   </div>
+    <div class="print-content">
+	<table class="table" style="width: 100%;">
+		<tbody>
+		<tr th:each="importData, invoicePData: ${importData}" class="text-center">
+		<td style="width: 20pt; word-wrap: break-word;"  th:text="${invoicePData.count}"></td>
+		<td style="width: 45pt; word-wrap: break-word;"  th:text="${importData.sirNo} + ' | ' + ${importData.doNumber}"></td>
+		<td style="width: 25pt; word-wrap: break-word;" th:text="${importData.consoleName}"></td>
+		<td style="width: 90pt; word-wrap: break-word;" th:text="${importData.importerId}"></td>
+		<td style="width: 33pt; word-wrap: break-word;" th:text="${importData.tpNo}"></td>
+		<td style="width: 38pt; word-wrap: break-word;" th:text="${importData.pctmNo}"></td>
+		<td style="width: 38pt; word-wrap: break-word;" th:text="${importData.igmNo}"></td>
+		<td style="width: 55pt; word-wrap: break-word;" th:text="${importData.mawb}"></td>
+		<td style="width: 55pt; word-wrap: break-word;" th:text="${importData.hawb != '0000' ? importData.hawb : ''}"></td>
+		<td style="width: 18pt; word-wrap: break-word;" th:text="${importData.nop}"></td>
+		<td style="width: 22pt; word-wrap: break-word;" th:text="${importData.descriptionOfGoods}"></td>
+		<td style="width: 45pt; word-wrap: break-word;"></td>
+		<td style="width: 45pt; word-wrap: break-word;"></td>
+		<td style="width: 35pt; word-wrap: break-word;"></td>
+		<td style="width: 35pt; word-wrap: break-word;"></td>
+		<td style="width: 35pt; word-wrap: break-word;"></td>
+		<td style="width: 35pt; word-wrap: break-word;"></td>
+		<td style="width: 35pt; word-wrap: break-word;"></td>
+		<td style="width: 35pt; word-wrap: break-word;"></td>
+</tr>
+
+
+
+<tr style="height: 4px;"></tr>
+			<tr>
+				<td class="text-center" style="font-weight: bold;">Total</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td class="text-center" style="font-weight: bold;"  colspan="2">
+    <span th:text="${totalNoOfPackages + '(' + totalNoOfPackagesWrods + ')'}"></span>
+</td>
+
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr> 
+		</tbody>
+
+	</table>
+</div>
+
+	 <script>
+        // JavaScript code to show the header table on each page
+          const allPages = document.querySelectorAll('.page-break');
+
+        // Show header table on each page
+        allPages.forEach(page => {
+            const clonedHeader = headerTable.cloneNode(true);
+            page.insertBefore(clonedHeader, page.firstChild);
+        });
+
+        // Other JavaScript code remains unchanged
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+ 

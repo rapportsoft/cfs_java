@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Export Acknowledgement</title>
+
+<style>
+/* Define page size and margins here */
+@page {
+	margin: 1.0cm;
+	margin-top: 0.9cm;
+	size: A4 landscape;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+}
+
+@media print {
+	tbody {
+		display: table-row-group;
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0; /* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 30pt;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.table-custom {
+	font-size: 32px; /* Set the desired font size */
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " "; /* Add a space character */
+	margin-top: 0.1px; /* Adjust the margin-top value as needed */
+	display: block; /* Ensure the space is displayed */
+}
+
+table.table th, table.table td {
+	font-weight: normal; /* Set the font weight to normal */
+}
+</style>
+
+</head>
+<body>
+
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+	<div th:each="groupData : ${item}">
+		<!-- Add the following Thymeleaf code to include the image in your HTML -->
+
+		<div style="font-size: 14px; margin-bottom: 5px">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 25%; font-size: 14px;"><br /> <span>Airport
+							MUMBAI</span> <br /> <span>CUSTODIAN'S OFFICE</span></td>
+					<td class="text-center" style="width: 25%; font-size: 14px;"><b>D.G.D.C.
+							LIMITED</b><br /> <span>DGDC SEEPZ SEZ STRONG ROOM</span><br /> <span>MIAL
+							- CSI AIRPORT, AIR CARGO, SAHAR MUMBAI - 99</span><br /></td>
+					<td class="text-center" style="width: 25%; font-size: 14px;">
+						<span>TRIP NO. <span th:text="${tp}"></span></span><br /> <span> TRIP DATE :
+							<span th:text="${tpDate}"></span></span><br /> <span>FLIGHT : <span
+					th:each="entry : ${groupData}"> <!-- Access the key --> <!-- Access the first array in the list -->
+						<span th:text="${entry.value[0][13]}"></span>
+				</span></span>
+					</td>
+					<td class="text-center" style="width: 25%; font-size: 14px;"><br />
+						<br /> <span>PCTM NO: <span
+					th:text="${groupData.key}"></span></span></td>
+				</tr>
+			</table>
+		</div>
+		<span class="text-center" style="font-size: 18px; margin-bottom: 17px;display: block">
+			<span class="text-center"><b>EXPORT REGISTER</b></span>
+		</span>
+
+
+
+		<table class="table page-number"
+			style="margin-bottom: 5px; font-size: 14px">
+			<thead>
+				<tr>
+					<th style="width: 5%; font-size: 13px;" class="text-center"><b>SR
+							NO.</b></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"><b>SER
+							NO.</b></th>
+					<th style="width: 9%; font-size: 13px;" class="text-center"><b>AIRWAY
+							BILL NO.</b></th>
+					<th style="width: 10%; font-size: 13px;" class="text-center"><b>DESTINATION</b></th>
+
+					<th style="width: 6%; font-size: 13px;" class="text-center"><b>SB
+							NO.</b></th>
+					<th style="width: 5%; font-size: 13px;" class="text-center"><b>WEIGHT</b></th>
+					<th style="width: 5%; font-size: 13px;" class="text-center"><b>NO.
+							OF PKG</b></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"><b>Shpmnt
+							Removal</b></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"><b>Shipped
+							on Flight No</b></th>
+					<th colspan="2" style="width: 14%; font-size: 13px;"
+						class="text-center"><b>Removing the PKG for shipmnt
+							Airline Stff</b></th>
+					<th colspan="2" style="width: 14%; font-size: 13px;"
+						class="text-center"><b>Custom-Escort</b></th>
+					<th colspan="2" style="width: 14%; font-size: 13px;"
+						class="text-center"><b>DGDC Sign Name official Delivering
+							the pkg</b></th>
+				</tr>
+
+				<tr>
+					<th style="width: 5%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 9%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 10%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 5%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 5%; font-size: 13px;" class="text-center"></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"><b>Dt
+							of</b></th>
+					<th style="width: 6%; font-size: 13px;" class="text-center"><b>&amp;
+							Dt</b></th>
+
+					<th colspan="1" style="width: 7%; font-size: 13px; border: none;"
+						class="text-center"><b>Name</b></th>
+					<th colspan="1"
+						style="width: 7%; font-size: 13px; border-bottom: none; border-Top: none;"
+						class="text-center"><b>Sign</b></th>
+
+
+
+					<th colspan="1" style="width: 7%; font-size: 13px; border: none;"
+						class="text-center"><b>Name</b></th>
+					<th colspan="1"
+						style="width: 7%; font-size: 13px; border-bottom: none; border-Top: none;"
+						class="text-center"><b>Sign</b></th>
+
+					<th colspan="1" style="width: 7%; font-size: 13px; border: none;"
+						class="text-center"><b>Name</b></th>
+					<th colspan="1"
+						style="width: 7%; font-size: 13px; border-bottom: none; border-Top: none;"
+						class="text-center"><b>Sign</b></th>
+
+
+
+				</tr>
+			</thead>
+
+			<tbody style="vertical-align: middle;">
+				<span th:each="getPassData, i: ${groupData.value}"
+					style="vertical-align: middle;" class="text-center">
+				<tr class="text-center">
+					<td th:text="${i.index + 1}" style="font-size: 14px;"></td>
+					<td th:text="${getPassData[0]}" style="font-size: 14px;"></td>
+					<td style="font-size: 14px;"><span
+						th:text="${#strings.substring(getPassData[6], 0, 3) + '-' + #strings.substring(getPassData[6], 3, 7)+ '-' + #strings.substring(getPassData[6], 7, 11)}"></span>
+					</td>
+					<td th:text="${getPassData[1]} + ' | ' + ${getPassData[2]}"
+						style="font-size: 14px;"></td>
+					<td th:text="${getPassData[4]}" style="font-size: 14px;"></td>
+					<td  style="font-size: 14px;"><span th:text="${getPassData[5]}"></span> <span th:text="${getPassData[14]}"></span></td>
+					<td th:text="${getPassData[3]}" style="font-size: 14px;"></td>
+					<td style="font-size: 14px;"></td>
+					<td style="font-size: 14px;"></td>
+					<td style="width: 7%;"></td>
+					<td style="width: 7%"></td>
+					<td style="width: 7%"></td>
+					<td style="width: 7%;"></td>
+					<td style="width: 7%"></td>
+					<td style="width: 7%"></td>
+
+
+				</tr>
+				<tr class="text-center"
+					style="border-bottom: none; border-top: none;">
+					<td colspan="15"
+						style="text-align: left; height: 27px; vertical-align: middle;"><b>Remarks
+							:-</b></td>
+				</tr>
+				</span>
+
+
+
+
+
+			</tbody>
+
+		</table>
+
+		<div style="margin-top: 30px; font-size: 14px;">
+			<span
+				th:each="entry : ${summery}" > <!-- Check if groupData.key is equal to summary[0] -->
+				<span th:if="${entry[0] eq groupData.key}"> 
+				<span>TOTAL AWB   </span>
+				<span
+					th:text="${entry[4]}"></span> <span style="margin-right: 130px;"
+					th:text="'('+${T(com.cwms.entities.NumberToWordConverter).convert(entry[4])+')'}"></span>
+			</span>
+			</span>
+			
+			<span
+				th:each="entry : ${summery}"> <!-- Check if groupData.key is equal to summary[0] -->
+				<span th:if="${entry[0] eq groupData.key}"> 
+				<span>TOTAL PKGS   </span>
+				<span
+					th:text="${entry[2]}"></span> <span
+					th:text="'('+${T(com.cwms.entities.NumberToWordConverter).convert(entry[2])+')'}"></span>
+			</span>
+			</span>
+		</div>
+
+		<div class="page-break"></div>
+
+	</div>
+
+	<!-- Second iteration for the next group of data -->
+
+	<!-- Add any additional content or styling after all groups -->
+
+</body>
+</html>

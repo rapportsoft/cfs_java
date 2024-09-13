@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sub Export Transaction</title>
+
+<style th:inline="text">
+/* Define page size and margins here */
+ @page {
+   
+    size: A4 landscape;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    margin: 0.7cm;
+    counter-increment: page;
+      
+    @top-center {
+        content: element(page-header);
+    }   
+}
+body {
+    margin: 0;
+}
+
+@page {
+    size: Wpx 1px;
+    margin-top: 213px;
+}
+
+
+@media print {
+	table {
+		page-break-after: always;
+	}
+	tbody {
+		display: table-row-group;
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+	td {
+		page-break-inside: avoid;
+		height: 20pt;
+	}
+	thead
+	{
+	height: 20pt;
+	}
+
+	/* Center text horizontally and vertically */
+	.text-center {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* Style tables */
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+	.table th {
+		align-items: center;
+		border: 1px solid grey;
+		color: graytext;
+		font-size: 12pt;
+		height: 22px;
+	}
+	
+	.table thead {
+		height: 25px;
+		
+	}
+	.table td {
+		align-items: center;
+		border: 1px solid grey;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		font-size: 8pt;
+		padding: 2px;
+	}
+	.page-header {
+		position: running(page-header);
+		margin-top: 5px;
+	}
+	.horizontal {
+		width: 100%;
+		overflow: hidden; /* Clear any floats */
+		margin-top: 1pt;
+	}
+	.part-1 {
+		font-size: 10pt;
+		width: 39%;
+		float: left;
+	}
+	.part-2 {
+		font-size: 12pt;
+		width: 50%;
+		float: left;
+	}
+	.part-3 {
+		font-weight: bold;
+		font-size: 11pt;
+		width: 10%;
+		float: left;
+	}
+	.pageNumber::before {
+		content: counter(page);
+	}
+	@page :left { @top-center { content:element(page-header);
+		
+	}
+}
+
+@page :right { @top-center { content:element(page-header);
+	
+}
+
+}
+.pageNumber::before {
+	content: counter(page);
+}
+}
+</style>
+</head>
+<body>
+
+
+	<div class="page-header">
+	
+	
+		<div class=" text-center">
+		
+		<div class=" text-center"><img
+				th:src="@{file:///home/ubuntu/Files/DGDCImages/DGDC1.png}"
+				alt="DGDC LIMITED Logo"
+				style="width: 35%; height:80pt;" /></div>			 
+			<span style="font-weight: bold; font-size: 16pt;">SUBCONTRACT EXPORT TRANSACTION</span><br /> 
+			<div style="font-size: 12pt; margin-top: 5px;"
+				class="sub-header">Date:<span th:text="${tpdate}"></span>
+				<br />
+				Status :<span th:text="${dgdcStatus}"></span>
+				</div>
+		</div>    
+		<br />
+
+		
+
+		<table class="table ">
+			<thead>
+<tr>
+					<th style="width: 6%; font-size: 14px;" class="text-center"><b>SR
+							NO.</b></th>
+					<th style="width: 9%; font-size: 14px;" class="text-center"><b>SER
+							Date </b></th>
+					<th style="width: 9%; font-size: 14px;" class="text-center"><b>SER
+							No</b></th>
+					<th style="width: 20%; font-size: 14px;" class="text-center"><b>Exporter
+							Name</b></th>
+					<th style="width: 7%; font-size: 14px;" class="text-center"><b>Packages</b></th>
+					<th style="width: 10%; font-size: 14px;" class="text-center"><b>Invoice
+							No. </b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Challan
+							No. </b></th>
+					<th style="width: 10%; font-size: 14px;" class="text-center"><b>SB
+							REQUEST ID</b></th>
+					<th style="width: 15%; font-size: 14px;" class="text-center"><b>Current
+							Status</b></th>
+
+
+
+				</tr>
+      
+			</thead>
+		</table>
+
+
+	</div>
+	<div class="print-content">
+	<table class="table"
+			>
+			<thead>
+				
+			</thead>
+			<tbody>
+				
+				<tr th:each="getPassData, i: ${item}" class="text-center">
+					<td th:text="${i.index + 1}" style="font-size: 14px;width: 6%;"></td>
+					<td th:text="${getPassData[0]}" style="font-size: 14px;width: 9%;word-wrap: break-word;"></td>
+					<td th:text="${getPassData[1]}" style="font-size: 14px;width: 9%;word-wrap: break-word;"></td>
+					<td th:text="${getPassData[8]}" style="font-size: 14px;width: 20%;word-wrap: break-word;"></td>
+
+					<td th:text="${getPassData[3]}" style="font-size: 14px;width: 7%;word-wrap: break-word;"></td>
+					<td th:text="${getPassData[4]}" style="font-size: 14px;width: 10%;word-wrap: break-word;"></td>
+					<td th:text="${getPassData[5]}" style="font-size: 14px;width: 15%;word-wrap: break-word;"></td>
+					<td th:text="${getPassData[6]}" style="font-size: 14px;width: 10%;word-wrap: break-word;"></td>
+					<td th:text="${getPassData[7]}" style="font-size: 14px;width: 15%;word-wrap: break-word;"></td>
+
+				</tr>
+
+
+				<tr class="text-center">
+					<td style="font-size: 14px;"><b>Total</b></td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 14px;"><b><span
+							th:text="${totalRecord}"></span></b></td>
+					<td style="font-size: 14px;"></td>
+
+					<td style="font-size: 14px;"><b><span
+							th:text="${totalNop}"></span></b></td>
+					<td style="font-size: 12px;"></td>
+					<td style="font-size: 14px;"></td>
+					<td></td>
+					<td></td>
+
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+
+	<script>
+        // JavaScript code to show the header table on each page
+          const allPages = document.querySelectorAll('.page-break');
+
+        // Show header table on each page
+        allPages.forEach(page => {
+            const clonedHeader = headerTable.cloneNode(true);
+            page.insertBefore(clonedHeader, page.firstChild);
+        });
+
+        // Other JavaScript code remains unchanged
+    </script>
+</body>
+</html>
