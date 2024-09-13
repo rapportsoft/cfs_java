@@ -1,8 +1,11 @@
 package com.cwms.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.GateIn;
+import com.cwms.entities.GateOut;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.GateInRepository;
+import com.cwms.repository.GateOutRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.service.GateInService;
@@ -49,6 +54,9 @@ public class GateInController {
 
 	@Autowired
 	private VehicleTrackRepository vehicleTrackRepo;
+	
+	@Autowired
+	private GateOutRepository gateoutrepository;
 
 	@PostMapping("/saveGateIn")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -470,5 +478,195 @@ public class GateInController {
 		}
 
 	}
+	
+	@GetMapping("/getVehTrkData")
+	public ResponseEntity<?> getEmptyGateOutIdDataFromVehTrk(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid,@RequestParam(name="val",required = false) String val){
+		
+		List<Object[]> data = vehicleTrackRepo.getEmptyGateOutIdDataFromVehTrk(cid, bid, val);
 
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(data, HttpStatus.OK);
+		}
+
+		
+	}
+	
+	@GetMapping("/getVehTrkSelectedData")
+	public ResponseEntity<?> getSelectedData(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid,@RequestParam(name="val",required = false) String val){
+		
+		VehicleTrack data = vehicleTrackRepo.getByGateInId1(cid, bid, val);
+		
+		if (data == null) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(data, HttpStatus.OK);
+		}
+		
+	}
+	
+	
+	@PostMapping("/saveEmptyGateOut")
+	public ResponseEntity<?> saveEmptyGateOut(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam("userId") String userId,@RequestBody GateOut gateout){
+		
+		
+		if(gateout == null) {
+			return new ResponseEntity<>("GateOut data not found!!", HttpStatus.CONFLICT);
+		}
+		
+		if(gateout.getGateOutId().isEmpty()) {
+			
+			VehicleTrack veh = vehicleTrackRepo.getByGateInId2(cid, bid, gateout.getErpDocRefNo(), gateout.getVehicleNo());
+			
+			if(veh == null) {
+				return new ResponseEntity<>("Vehicle track data not found!!", HttpStatus.CONFLICT);
+			}
+			
+			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05072", "2024");
+
+			int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+			int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+			String HoldNextIdD1 = String.format("EVGY%06d", nextNumericNextID1);
+			
+			gateout.setCompanyId(cid);
+			gateout.setBranchId(bid);
+			gateout.setGateOutId(HoldNextIdD1);
+			gateout.setDocRefNo("1");
+			gateout.setProfitcentreId(veh.getProfitcentreId());
+			gateout.setSrNo("1");
+			gateout.setGateOutDate(new Date());
+			gateout.setProcessId("P00602");
+			gateout.setStatus('A');
+			gateout.setErpDocRefNo(veh.getGateInId());
+			gateout.setCreatedBy(userId);
+			gateout.setCreatedDate(new Date());
+			gateout.setApprovedBy(userId);
+			gateout.setApprovedDate(new Date());
+			gateoutrepository.save(gateout);
+			
+			veh.setGateOutDate(new Date());
+			veh.setGateOutId(HoldNextIdD1);
+			veh.setShiftOut(gateout.getShift());
+			veh.setGateNoOut(gateout.getGateNoOut());
+			
+			vehicleTrackRepo.save(veh);
+			
+			processnextidrepo.updateAuditTrail(cid, bid, "P05072", HoldNextIdD1, "2024");
+			
+			GateOut data = gateoutrepository.getDataByGateOutIdAndGateInId1(cid, bid, gateout.getErpDocRefNo(), HoldNextIdD1);
+			
+			return new ResponseEntity<>(data,HttpStatus.OK);
+		}
+		else {
+			GateOut out = gateoutrepository.getDataByGateOutIdAndGateInId(cid, bid, gateout.getErpDocRefNo(), gateout.getGateOutId());
+			
+			if(out == null) {
+				return new ResponseEntity<>("Existing data not found!!", HttpStatus.CONFLICT);
+			}
+			
+
+			VehicleTrack veh = vehicleTrackRepo.getByGateInId2(cid, bid, gateout.getErpDocRefNo(), gateout.getVehicleNo());
+			
+			if(veh == null) {
+				return new ResponseEntity<>("Vehicle track data not found!!", HttpStatus.CONFLICT);
+			}
+			
+			out.setEditedBy(userId);
+			out.setEditedDate(new Date());
+			out.setDriverName(gateout.getDriverName());
+			out.setShift(gateout.getShift());
+			out.setGateNoOut(gateout.getGateNoOut());
+			out.setComments(gateout.getComments());
+			
+			gateoutrepository.save(out);
+			
+			veh.setShiftOut(gateout.getShift());
+			veh.setGateNoOut(gateout.getGateNoOut());
+			
+			vehicleTrackRepo.save(veh);
+			
+			GateOut data = gateoutrepository.getDataByGateOutIdAndGateInId1(cid, bid, gateout.getErpDocRefNo(), gateout.getGateOutId());
+			
+			return new ResponseEntity<>(data,HttpStatus.OK);
+		}
+	}
+	
+	
+	@GetMapping("/searchgateOutData")
+	public ResponseEntity<?> searchData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam(name="val",required = false) String val){
+		
+		List<Object[]> data = gateoutrepository.searchGateOutData(cid, bid, val);
+		
+		if(data.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!",HttpStatus.CONFLICT);
+		}
+		else {
+			return new ResponseEntity<>(data,HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/getSelectedGateOutData")
+	public ResponseEntity<?> getSelectedGateOutData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam("gateInId") String gateInId,@RequestParam("gateOutId") String gateOutId){
+		
+		GateOut data = gateoutrepository.getDataByGateOutIdAndGateInId1(cid, bid, gateInId,gateOutId);
+		
+		if(data == null) {
+			return new ResponseEntity<>("Data not found!!",HttpStatus.CONFLICT);
+		}
+		else {
+			return new ResponseEntity<>(data,HttpStatus.OK);
+		}
+	}
+ 
+	
+	@GetMapping("/searchByVehicleNo")
+	public ResponseEntity<?> searchByVehicleNo(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("veh") String veh){
+		
+		Boolean  v = vehicleTrackRepo.checkVehicleNoSearch(cid, bid, veh);
+		List<String> pageList = new ArrayList<>();
+		
+		if(!v) {
+			return new ResponseEntity<>("Vehicle no data not found!!",HttpStatus.CONFLICT);
+		}
+		
+		VehicleTrack data = vehicleTrackRepo.vehNoSearch(cid, bid, veh);
+		
+		if(data == null) {
+			return new ResponseEntity<>("Vehicle no data not found!!",HttpStatus.CONFLICT);
+		}
+		
+		if (data.getGateOutId() == null || data.getGateOutId().isEmpty()) {
+			pageList.add("P00601");
+			pageList.add("P00602");
+			
+			Map<String,Object> allData = new HashMap<>();
+			allData.put("pageList",pageList);
+			allData.put("vehicleNo",data.getVehicleNo());
+			allData.put("gateInId",data.getGateInId());
+			allData.put("gateOutId","");
+			
+			return new ResponseEntity<>(allData,HttpStatus.OK);
+		}
+		else {
+			pageList.add("P00601");
+			pageList.add("P00602");
+			
+			Map<String,Object> allData = new HashMap<>();
+			allData.put("pageList",pageList);
+			allData.put("vehicleNo",data.getVehicleNo());
+			allData.put("gateInId",data.getGateInId());
+			allData.put("gateOutId",data.getGateOutId());
+			return new ResponseEntity<>(allData,HttpStatus.OK);
+		}
+		
+		
+	}
 }

@@ -1,5 +1,8 @@
 package com.cwms.repository;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +16,17 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 
 	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.gateInId=:id and v.status != 'D'")
 	VehicleTrack getByGateInId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	
+	@Query(value="select NEW com.cwms.entities.VehicleTrack(v.vehicleNo, p.profitcentreDesc, v.gateInId, v.transporterStatus,"
+			+ "v.transporterName, v.transporter, v.driverName, v.vehicleStatus, v.gateInDate,"
+			+ "v.gateNoIn, v.shiftIn, v.gateOutId, v.gateOutDate, v.gateNoOut,v.shiftOut) from VehicleTrack v "
+			+ "LEFT OUTER JOIN Profitcentre p ON v.companyId=p.companyId and v.branchId=p.branchId and v.profitcentreId=p.profitcentreId "
+			+ "where v.companyId=:cid and v.branchId=:bid and v.gateInId=:id and v.status != 'D'")
+	VehicleTrack getByGateInId1(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.gateInId=:id and v.vehicleNo=:veh and v.status != 'D'")
+	VehicleTrack getByGateInId2(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("veh") String veh);
 	
 	@Transactional
 	@Modifying
@@ -42,5 +56,18 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 	@Query(value="select COUNT(c)>0 from VehicleTrack c where c.companyId=:cid and c.branchId=:bid and c.vehicleNo=:veh and c.status != 'D' "
 			+ "and (c.gateOutId is null OR c.gateOutId = '') and c.gateInId != :id")
 	Boolean checkVehicleNo1(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("id") String id);
+	
+	@Query(value="select v.vehicleNo,v.gateInId from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.status != 'D' and "
+			+ "(v.gateOutId is null OR v.gateOutId = '') and (:val is null OR :val = '' OR v.vehicleNo LIKE CONCAT ('%',:val,'%'))")
+	List<Object[]> getEmptyGateOutIdDataFromVehTrk(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	@Query(value="select COUNT(c)>0 from VehicleTrack c where c.companyId=:cid and c.branchId=:bid and c.vehicleNo=:veh "
+			+ "and c.status != 'D'")
+	Boolean checkVehicleNoSearch(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
+	
+	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.vehicleNo=:veh and v.status != 'D' and v.vehicleStatus = 'E' "
+			+ "order by v.createdDate desc limit 1")
+	VehicleTrack vehNoSearch(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
 
 }
