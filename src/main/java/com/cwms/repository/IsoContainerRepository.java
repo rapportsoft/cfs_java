@@ -22,6 +22,13 @@ public interface IsoContainerRepository extends JpaRepository<IsoContainer, IsoC
 //	List<IsoContainer> findByCompanyIdAndStatusNot(String companyId, String status);
 //	
 	List<IsoContainer> findByCompanyIdAndStatusNot(String companyId, String status, Sort sort);
+	
+	@Query("SELECT NEW com.cwms.entities.IsoContainer(p.companyId, p.isoCode, p.containerType, p.containerSize, p.grossWeight, "
+			+ "p.tareWeight) "
+			+ "FROM IsoContainer p "
+			+ "WHERE p.companyId = :companyId AND p.status != 'D' ")
+	List<IsoContainer> findIsoContainersByCriteria1(@Param("companyId") String companyId);
+	
 
 	@Query(value = "SELECT * FROM isocontainer WHERE company_id = :companyId AND (container_size = :containerSize OR container_type = :containerType OR iso_code LIKE %:isoCode%) AND status <> 'D'", nativeQuery = true)
 	List<IsoContainer> findByCompanyAndContainerSizeOrTypeOrIsoCode(@Param("companyId") String companyId,

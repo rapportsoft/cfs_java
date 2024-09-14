@@ -218,4 +218,10 @@ public class IsoContainerController {
         return isoContainerRepository.findIsoContainersByCriteria(companyId,partyName);
     }
 	
+	@GetMapping("/searchByIsoCode")
+    public List<IsoContainer> getIsoCodes(
+            @RequestParam("companyId") String companyId) {
+        return isoContainerRepository.findIsoContainersByCriteria1(companyId);
+    }
+	
 }
