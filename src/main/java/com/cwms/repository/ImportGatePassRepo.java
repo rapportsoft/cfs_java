@@ -25,8 +25,15 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 			+ "i.cinNo, i.cinDate, i.stampDuty, i.doNo, i.doDate, i.doValidityDate, i.oocNo, i.oocDate, i.status, i.createdBy, "
 			+ "i.yardLocation, i.yardBlock, i.blockCellNo, i.vehStatus, i.mtyYardLocation, i.gateOutQty, i.boe) FROM ImportGatePass i "
 			+ "LEFT OUTER JOIN Party p ON i.companyId=p.companyId and i.branchId=p.branchId and i.cha = p.customerCode "
-			+ "WHERE i.companyId=:cid AND i.branchId=:bid AND i.igmNo=:igm AND i.igmLineNo=:line AND i.gatePassId=:gate AND i.status != 'D'")
+			+ "WHERE i.companyId=:cid AND i.branchId=:bid AND i.igmNo=:igm AND i.igmTransId=:line AND i.gatePassId=:gate AND i.status != 'D'")
 	List<ImportGatePass> getData(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, @Param("line") String line, @Param("gate") String gate);
+	
+	
+	@Query(value="select i.gatePassId from ImportGatePass i WHERE i.companyId=:cid AND i.branchId=:bid AND i.igmNo=:igm "
+			+ "AND i.igmTransId=:trans AND (:line is null OR :line = '' OR i.igmLineNo=:line)  AND i.status != 'D' "
+			+ "AND i.gatePassType='ITEM' order by i.gatePassId desc")
+	List<String> getLastGatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, 
+			@Param("trans") String trans,@Param("line") String line);
 	
 	@Query("SELECT new com.cwms.entities.ImportGatePass(i.gatePassId, i.srNo, i.profitcentreId, i.gatePassDate, i.igmNo, i.igmLineNo, "
 			+ "i.igmTransId, i.shift, i.transType, i.importerName, i.importerAddress1, i.importerAddress2, i.importerAddress3, p.partyName,"

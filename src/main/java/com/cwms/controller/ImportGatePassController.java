@@ -282,6 +282,25 @@ public class ImportGatePassController {
 		
 		return new ResponseEntity<>(gatepass,HttpStatus.OK);
 	}
+	
+	
+	@GetMapping("/selectSearchedItemWiseData1")
+	public ResponseEntity<?> selectSearchedItemWiseData1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igm") String igm,@RequestParam("trans") String trans, @RequestParam("igmline") String igmline){
+		
+		System.out.println("igm,trans, igmline "+igm+" "+trans+" "+ igmline);
+		List<String> gatepassid = importgatepassrepo.getLastGatePassId(cid, bid, igm,trans, igmline);
+		
+		System.out.println("gatepassid "+gatepassid);
+		
+		List<ImportGatePass> gatepass = importgatepassrepo.getData(cid, bid, igm, trans, gatepassid.get(0).toString());
+		
+		if(gatepass.isEmpty()) {
+			return new ResponseEntity<>("Gate Pass data not found",HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<>(gatepass,HttpStatus.OK);
+	}
 
 	
 	@PostMapping("/uploadItemwiseImage")

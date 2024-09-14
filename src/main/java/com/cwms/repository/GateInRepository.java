@@ -11,6 +11,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
+	
+	@Query(value="select g from GateIn g where g.companyId=:cid and g.branchId=:bid and g.erpDocRefNo=:igmtrans and "
+			+ "g.docRefNo=:igm and g.status !='D' order by g.createdDate desc limit 1")
+	GateIn getExistingData(@Param("cid") String cid,@Param("bid") String bid,@Param("igmtrans") String igmtrans,
+			@Param("igm") String igm);
+	
+	@Query("SELECT g.gateInId, g.erpDocRefNo, g.docRefNo, g.containerNo, g.vehicleNo, "
+	        + "g.status, DATE_FORMAT(g.inGateInDate, '%d %M %y'),p.profitcentreDesc, py1.partyName, py2.partyName, po.portName, v.vesselName "
+	        + "FROM GateIn g "
+	        + "LEFT JOIN Profitcentre p ON g.companyId = p.companyId AND g.branchId = p.branchId AND g.profitcentreId = p.profitcentreId "
+	        + "LEFT JOIN Party py1 ON g.companyId = py1.companyId AND g.branchId = py1.branchId AND g.sa = py1.partyId "
+	        + "LEFT JOIN Party py2 ON g.companyId = py2.companyId AND g.branchId = py2.branchId AND g.sl = py2.partyId "
+	        + "LEFT JOIN Port po ON g.companyId = po.companyId AND g.branchId = po.branchId AND g.terminal = po.portCode "
+	        + "LEFT JOIN Vessel v ON g.companyId = v.companyId AND g.branchId = v.branchId AND g.vessel = v.vesselId "
+	        + "WHERE g.companyId = :cid "
+	        + "AND g.branchId = :bid "
+	        + "AND g.gateInType = 'IMP' "
+	        + "AND g.status != 'D' "
+	        + "AND g.erpDocRefNo=:igmtrans AND g.docRefNo=:igm  order by g.inGateInDate desc")
+	Object[] getAll1(@Param("cid") String cid, @Param("bid") String bid, @Param("igmtrans") String igmtrans,@Param("igm") String igm);
 
 	@Query(value="select g from GateIn g where g.companyId=:cid and g.branchId=:bid and g.gateInId=:gateinid and g.erpDocRefNo=:igmtrans and "
 			+ "g.docRefNo=:igm and g.status !='D'")

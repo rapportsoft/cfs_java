@@ -25,6 +25,7 @@ import com.cwms.entities.ContainerExaminationDTO;
 import com.cwms.entities.ContainerSealCuttingDTO;
 import com.cwms.entities.ContainerSealCuttingDTO.Cargo;
 import com.cwms.entities.ContainerSealCuttingDTO.Container;
+import com.cwms.entities.GateIn;
 import com.cwms.entities.ImportExaminationDTO;
 import com.cwms.entities.Party;
 import com.cwms.entities.SealCuttingData;
@@ -32,6 +33,7 @@ import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.ChildMenuRepository;
+import com.cwms.repository.GateInRepository;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 
@@ -58,6 +60,9 @@ public class CfIgmController {
 	@Autowired
 	private ChildMenuRepository childmenurepo;
 
+	@Autowired
+	private GateInRepository gateinrepo;
+
 	@GetMapping("/search")
 	public List<Object[]> getSearchData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "search", required = false) String search) {
@@ -72,17 +77,17 @@ public class CfIgmController {
 	}
 
 	@GetMapping("/getDataByIGM")
-	public Map<String,Object> getDataByTransId1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+	public Map<String, Object> getDataByTransId1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("igm") String igm) {
 
-		System.out.println("igm "+igm);
+		System.out.println("igm " + igm);
 		CFIgm igm1 = cfigmrepo.getDataByIgmNo2(cid, bid, igm);
 		Object[] igm2 = cfigmrepo.getSearchData2(cid, bid, igm1.getIgmTransId());
-		
-		Map<String,Object> data = new HashMap<>();
+
+		Map<String, Object> data = new HashMap<>();
 		data.put("igm", igm1);
 		data.put("igm1", igm2);
-		
+
 		return data;
 	}
 
@@ -175,10 +180,9 @@ public class CfIgmController {
 //						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
 //					}
 
-					
-					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, i.getIgmLineNo(),igm.getIgmNo());
-					
-					System.out.println("exist1 "+exist1+" "+i.getIgmLineNo()+" "+igm.getIgmNo());
+					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, i.getIgmLineNo(), igm.getIgmNo());
+
+					System.out.println("exist1 " + exist1 + " " + i.getIgmLineNo() + " " + igm.getIgmNo());
 
 					if (exist1) {
 						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
@@ -220,14 +224,13 @@ public class CfIgmController {
 //					if (exist1) {
 //						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
 //					}
-					Boolean exist1 = cfigmcrgrepo.isExistLineRecord1(cid, bid, i.getIgmLineNo(), i.getIgmCrgTransId(),i.getIgmNo());
+					Boolean exist1 = cfigmcrgrepo.isExistLineRecord1(cid, bid, i.getIgmLineNo(), i.getIgmCrgTransId(),
+							i.getIgmNo());
 
 					if (exist1) {
 						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
 					}
 
-
-					
 					Cfigmcrg existingData1 = cfigmcrgrepo.getData(cid, bid, igmTransId, i.getIgmNo(),
 							i.getIgmCrgTransId());
 
@@ -300,7 +303,7 @@ public class CfIgmController {
 					return new ResponseEntity<>("Import cargo data not found", HttpStatus.BAD_REQUEST);
 				}
 
-				Boolean isExist = cfigmcnrepo.isExistContainer(cid, bid, cn.getIgmTransId(),cn.getIgmNo(),
+				Boolean isExist = cfigmcnrepo.isExistContainer(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
 						cn.getIgmLineNo(), cn.getContainerNo());
 
 				if (isExist) {
@@ -338,11 +341,11 @@ public class CfIgmController {
 				cn.setGateOutType(cn.getUpTariffDelMode());
 				cfigmcnrepo.save(cn);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD1, "2024");
-				int a = cfigmcnrepo.updateNoOfItem(cid, bid,cn.getIgmNo(),cn.getIgmTransId(),cn.getContainerNo());
+				int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
 				return new ResponseEntity<>(cn, HttpStatus.OK);
 			} else {
 				System.out.println("cn.getContainerTransId() " + cn.getContainerTransId());
-				Boolean isExist = cfigmcnrepo.isExistContainer1(cid, bid,  cn.getIgmTransId(),cn.getIgmNo(),
+				Boolean isExist = cfigmcnrepo.isExistContainer1(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
 						cn.getIgmLineNo(), cn.getContainerNo(), cn.getContainerTransId());
 
 				if (isExist) {
@@ -381,8 +384,9 @@ public class CfIgmController {
 							existingRecord1.getHoldDate(), existingRecord1.getHoldingAgentName(),
 							existingRecord1.getReleaseDate(), existingRecord1.getReleaseAgent());
 				}
-				int a = cfigmcnrepo.updateNoOfItem(cid, bid,cn.getIgmNo(),cn.getIgmTransId(),existingRecord1.getContainerNo());
-				int b = cfigmcnrepo.updateNoOfItem(cid, bid,cn.getIgmNo(),cn.getIgmTransId(),cn.getContainerNo());
+				int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(),
+						existingRecord1.getContainerNo());
+				int b = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
 
 				Cfigmcn existingRecord = cfigmcnrepo.getSingleData(cid, bid, cn.getIgmTransId(), cn.getProfitcentreId(),
 						cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerNo());
@@ -454,7 +458,7 @@ public class CfIgmController {
 		}
 
 //		List<Cfigmcn> cnData = cfigmcnrepo.getAllData1(cid, bid, igm, line);
-		
+
 		List<Cfigmcn> cnData = cfigmcnrepo.getSealCutting(cid, bid, igm, line);
 
 		if (cnData.isEmpty()) {
@@ -487,10 +491,10 @@ public class CfIgmController {
 		if (existingCrg == null) {
 			return new ResponseEntity<>("Cargo detail data not found", HttpStatus.BAD_REQUEST);
 		}
-		
-		Boolean isExistBe = cfigmcrgrepo.isExistBENo(cid, bid,  crg.getIgmNo(), crg.getIgmLineNo(), crg.getBeNo());
-		
-		if(isExistBe) {
+
+		Boolean isExistBe = cfigmcrgrepo.isExistBENo(cid, bid, crg.getIgmNo(), crg.getIgmLineNo(), crg.getBeNo());
+
+		if (isExistBe) {
 			return new ResponseEntity<>("BE No already exist.", HttpStatus.BAD_REQUEST);
 		}
 
@@ -541,7 +545,7 @@ public class CfIgmController {
 					existingCon.setSealCutCreatedBy(user);
 					existingCon.setSealCutCreatedDate(new Date());
 					existingCon.setSealCuttingType(crg.getSealCuttingType());
-					if("RMS".equals(crg.getSealCuttingType())) {
+					if ("RMS".equals(crg.getSealCuttingType())) {
 						existingCon.setContainerExamStatus("Y");
 					}
 					existingCon.setBeNo(crg.getBeNo());
@@ -564,7 +568,7 @@ public class CfIgmController {
 					existingCon.setBeDate(crg.getBeDate());
 					existingCon.setSealCutApprovedDate(new Date());
 					existingCon.setSealCuttingType(crg.getSealCuttingType());
-					if("RMS".equals(crg.getSealCuttingType())) {
+					if ("RMS".equals(crg.getSealCuttingType())) {
 						existingCon.setContainerExamStatus("Y");
 					}
 					existingCon.setCha(party != null ? party.getPartyId() : "");
@@ -670,11 +674,13 @@ public class CfIgmController {
 				return new ResponseEntity<>("Cargo data with item no " + c.getIgmLineNo() + " not found.",
 						HttpStatus.BAD_REQUEST);
 			}
-			
-			Boolean isExistBe = cfigmcrgrepo.isExistBENo(cid, bid,  c.getIgmNo(), c.getIgmLineNo(), c.getBeNo());
-			
-			if(isExistBe) {
-				return new ResponseEntity<>("The BE Number already exists for the specified item number "+c.getIgmLineNo(), HttpStatus.BAD_REQUEST);
+
+			Boolean isExistBe = cfigmcrgrepo.isExistBENo(cid, bid, c.getIgmNo(), c.getIgmLineNo(), c.getBeNo());
+
+			if (isExistBe) {
+				return new ResponseEntity<>(
+						"The BE Number already exists for the specified item number " + c.getIgmLineNo(),
+						HttpStatus.BAD_REQUEST);
 			}
 
 			crg.setBeNo(c.getBeNo());
@@ -720,7 +726,7 @@ public class CfIgmController {
 				con1.setSealCutCreatedBy(user);
 				con1.setSealCutCreatedDate(new Date());
 				con1.setSealCuttingType(con.getSealCuttingType());
-				if("RMS".equals(con.getSealCuttingType())) {
+				if ("RMS".equals(con.getSealCuttingType())) {
 					con1.setContainerExamStatus("Y");
 				}
 				con1.setSealCutTransId("A");
@@ -752,7 +758,7 @@ public class CfIgmController {
 				con1.setSealCutApprovedDate(new Date());
 				con1.setSealCuttingType(con.getSealCuttingType());
 				con1.setVehicleType(con.getVehicleType());
-				if("RMS".equals(con.getSealCuttingType())) {
+				if ("RMS".equals(con.getSealCuttingType())) {
 					con1.setContainerExamStatus("Y");
 				}
 				if ("Y".equals(con.getOdcStatus())) {
@@ -931,7 +937,6 @@ public class CfIgmController {
 			@RequestParam("container") String container) {
 
 		List<Object[]> cn = cfigmcnrepo.getSingleContainerForSealCutting1(cid, bid, igm, container);
-		
 
 		if (cn.isEmpty()) {
 			return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
@@ -1097,10 +1102,10 @@ public class CfIgmController {
 
 		List<String> list = new ArrayList<>();
 
-		List<Cfigmcn> cn = cfigmcnrepo.searchMainHeader(cid, bid, igm, item, blNo, beNo,container);
-		
+		List<Cfigmcn> cn = cfigmcnrepo.searchMainHeader(cid, bid, igm, item, blNo, beNo, container);
+
 		List<String> cnlist = new ArrayList<>();
-		
+
 		Object[] sealData = null;
 
 		if (cn.isEmpty()) {
@@ -1116,46 +1121,54 @@ public class CfIgmController {
 			list.add("P00203");
 			cnlist = cfigmcnrepo.getSearcgCon1(cid, bid, igm, item, container, blNo);
 			sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
-			System.out.println("cnlist "+cnlist);
-			Map<String,Object> c = new HashMap<>();
+			System.out.println("cnlist " + cnlist);
+			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
 			c.put("sealData", sealData);
 			c.put("igmtrans", cn.get(0).getIgmTransId());
 			c.put("con", container);
 			c.put("cnlist", cnlist);
-			if(container.isEmpty()) {
+			c.put("gateInId", "");
+			if (container.isEmpty()) {
 				c.put("sealCutStatus", "");
-			}
-			else {
+			} else {
 				c.put("sealCutStatus", "");
 			}
 			c.put("sealData", sealData);
-			
 
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
 
 		boolean containsEmptySealCuttingId = cn.stream()
-				.anyMatch(c -> (c.getSealCutWoTransId() == null || c.getSealCutWoTransId().isEmpty()) && "FCL".equals(c.getContainerStatus()));
+				.anyMatch(c -> (c.getSealCutWoTransId() == null || c.getSealCutWoTransId().isEmpty())
+						&& "FCL".equals(c.getContainerStatus()));
 
 		if (containsEmptySealCuttingId) {
 			list.add("P00203");
 			list.add("P00204");
-			
-			System.out.println("sealData "+sealData);
-			Map<String,Object> c = new HashMap<>();
+
+			System.out.println("sealData " + sealData);
+			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
 			c.put("igmtrans", cn.get(0).getIgmTransId());
 			c.put("cnlist", cnlist);
 			c.put("con", container);
-			if(container.isEmpty()) {
+			if (container.isEmpty()) {
 				c.put("sealCutStatus", "itemwise");
 				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
-			}
-			else {
+
+				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+
+				if (in != null) {
+					c.put("gateInId", in);
+				} else {
+					c.put("gateInId", "");
+				}
+			} else {
 				c.put("sealCutStatus", "containerwise");
+				c.put("gateInId", "");
 				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
 			}
 			c.put("sealData", sealData);
@@ -1163,57 +1176,73 @@ public class CfIgmController {
 		}
 
 		boolean containsExamination = cn.stream()
-				.anyMatch(c -> (c.getContainerExamWoTransId() == null || c.getContainerExamWoTransId().isEmpty()) && "FCL".equals(c.getContainerStatus()));
+				.anyMatch(c -> (c.getContainerExamWoTransId() == null || c.getContainerExamWoTransId().isEmpty())
+						&& "FCL".equals(c.getContainerStatus()));
 
 		if (containsExamination) {
 			list.add("P00203");
 			list.add("P00204");
 			list.add("P00205");
-			
-			Map<String,Object> c = new HashMap<>();
+
+			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
 			c.put("igmtrans", cn.get(0).getIgmTransId());
 			c.put("cnlist", cnlist);
 			c.put("con", container);
-			if(container.isEmpty()) {
+			if (container.isEmpty()) {
 				c.put("sealCutStatus", "itemwise");
 				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
-			}
-			else {
+				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+
+				if (in != null) {
+					c.put("gateInId", in);
+				} else {
+					c.put("gateInId", "");
+				}
+			} else {
 				c.put("sealCutStatus", "containerwise");
+				c.put("gateInId", "");
 				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
 			}
 			c.put("sealData", sealData);
-			
+
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
 
 		boolean containsDestuff = cn.stream()
-				.anyMatch(c -> (c.getDestuffWoTransId() == null || c.getDestuffWoTransId().isEmpty()) && "CRG".equals(c.getGateOutType()));
+				.anyMatch(c -> (c.getDestuffWoTransId() == null || c.getDestuffWoTransId().isEmpty())
+						&& "CRG".equals(c.getGateOutType()));
 
 		if (containsDestuff) {
 			list.add("P00203");
 			list.add("P00204");
 			list.add("P00205");
 			list.add("P00206");
-			
-			Map<String,Object> c = new HashMap<>();
+
+			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
 			c.put("igmtrans", cn.get(0).getIgmTransId());
 			c.put("cnlist", cnlist);
 			c.put("con", container);
-			if(container.isEmpty()) {
+			if (container.isEmpty()) {
 				c.put("sealCutStatus", "itemwise");
 				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
-			}
-			else {
+				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+
+				if (in != null) {
+					c.put("gateInId", in);
+				} else {
+					c.put("gateInId", "");
+				}
+			} else {
 				c.put("sealCutStatus", "containerwise");
+				c.put("gateInId", "");
 				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
 			}
 			c.put("sealData", sealData);
-			
+
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
 
@@ -1225,28 +1254,35 @@ public class CfIgmController {
 			list.add("P00205");
 			list.add("P00206");
 			list.add("P00208");
-			
+
 			boolean cargoExamination = cn.stream().anyMatch(c -> "LCL".equals(c.getContainerStatus()));
-			if(cargoExamination) {
+			if (cargoExamination) {
 				list.add("P00210");
 			}
-			
-			Map<String,Object> c = new HashMap<>();
+
+			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
 			c.put("igmtrans", cn.get(0).getIgmTransId());
 			c.put("cnlist", cnlist);
 			c.put("con", container);
-			if(container.isEmpty()) {
+			if (container.isEmpty()) {
 				c.put("sealCutStatus", "itemwise");
 				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
-			}
-			else {
+				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+
+				if (in != null) {
+					c.put("gateInId", in);
+				} else {
+					c.put("gateInId", "");
+				}
+			} else {
 				c.put("sealCutStatus", "containerwise");
+				c.put("gateInId", "");
 				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
 			}
 			c.put("sealData", sealData);
-			
+
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
 
@@ -1260,41 +1296,49 @@ public class CfIgmController {
 			list.add("P00208");
 			list.add("P00209");
 			boolean cargoExamination = cn.stream().anyMatch(c -> "LCL".equals(c.getContainerStatus()));
-			if(cargoExamination) {
+			if (cargoExamination) {
 				list.add("P00210");
 			}
-			
-			Map<String,Object> c = new HashMap<>();
+
+			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
 			c.put("igmtrans", cn.get(0).getIgmTransId());
 			c.put("cnlist", cnlist);
 			c.put("con", container);
-			if(container.isEmpty()) {
+			if (container.isEmpty()) {
 				c.put("sealCutStatus", "itemwise");
 				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
-			}
-			else {
+				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+
+				if (in != null) {
+					c.put("gateInId", in);
+				} else {
+					c.put("gateInId", "");
+				}
+			} else {
 				c.put("sealCutStatus", "containerwise");
+				c.put("gateInId", "");
 				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
 			}
 			c.put("sealData", sealData);
-			
+
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
-		
-		Map<String,Object> c = new HashMap<>();
+
+		Map<String, Object> c = new HashMap<>();
 		c.put("list", list);
 		c.put("igm", cn.get(0).getIgmNo());
 		c.put("igmtrans", cn.get(0).getIgmTransId());
 		c.put("cnlist", cnlist);
 		c.put("con", container);
-		if(container.isEmpty()) {
+		if (container.isEmpty()) {
 			c.put("sealCutStatus", "");
-		}
-		else {
+		} else {
 			c.put("sealCutStatus", "");
+
 		}
+		c.put("gateInId", "");
 		c.put("sealData", sealData);
 
 		return new ResponseEntity<>(c, HttpStatus.OK);
@@ -1302,153 +1346,134 @@ public class CfIgmController {
 
 	@GetMapping("/getSearchCon")
 	public ResponseEntity<?> getContainer(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam(name="con",required = false) String con){
+			@RequestParam(name = "con", required = false) String con) {
 		List<String> list = cfigmcnrepo.getSearcgCon(cid, bid, con);
-		
-		if(list.isEmpty()) {
+
+		if (list.isEmpty()) {
 			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-
-
 
 	@GetMapping("/getSearchSingleCon")
 	public ResponseEntity<?> getSearchSingleCon(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam(name="con",required = false) String con){
+			@RequestParam(name = "con", required = false) String con) {
 		List<Object[]> list = cfigmcnrepo.getContainers1(cid, bid, con);
-		
-		if(list.isEmpty()) {
+
+		if (list.isEmpty()) {
 			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping("/getItemsList")
 	public ResponseEntity<?> getItems(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm){
+			@RequestParam("igm") String igm) {
 		List<String> list = cfigmcnrepo.getItem(cid, bid, igm);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(list,HttpStatus.OK);
+
+		if (list.isEmpty()) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
-	
+
 	@GetMapping("/getContainerList")
 	public ResponseEntity<?> getContainerList(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm){
+			@RequestParam("igm") String igm) {
 		List<String> list = cfigmcnrepo.getCon(cid, bid, igm);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(list,HttpStatus.OK);
+
+		if (list.isEmpty()) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
-	
+
 	@GetMapping("/getItemsList1")
 	public ResponseEntity<?> getItems1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm){
+			@RequestParam("igm") String igm) {
 		List<String> list = cfigmcnrepo.getItem1(cid, bid, igm);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(list,HttpStatus.OK);
+
+		if (list.isEmpty()) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
-	
+
 	@GetMapping("/getContainerList1")
 	public ResponseEntity<?> getContainerList1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm){
+			@RequestParam("igm") String igm) {
 		List<String> list = cfigmcnrepo.getCon1(cid, bid, igm);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(list,HttpStatus.OK);
+
+		if (list.isEmpty()) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
-	
+
 	@GetMapping("/getItemsList2")
 	public ResponseEntity<?> getItems2(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm){
+			@RequestParam("igm") String igm) {
 		List<String> list = cfigmcnrepo.getItem2(cid, bid, igm);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(list,HttpStatus.OK);
+
+		if (list.isEmpty()) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
-	
+
 	@GetMapping("/getContainerList2")
 	public ResponseEntity<?> getContainerList2(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm){
+			@RequestParam("igm") String igm) {
 		List<String> list = cfigmcnrepo.getCon2(cid, bid, igm);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(list,HttpStatus.OK);
+
+		if (list.isEmpty()) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping("/getSingleCon")
 	public ResponseEntity<?> getSingleCon(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("con") String con){
+			@RequestParam("con") String con) {
 		Cfigmcn cn = cfigmcnrepo.getConByConNo(cid, bid, con);
-		
-		if(cn == null) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(cn,HttpStatus.OK);
+
+		if (cn == null) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(cn, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping("/getSingleCon1")
 	public ResponseEntity<?> getSingleCon1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("con") String con){
+			@RequestParam("con") String con) {
 		Object[] cn = cfigmcnrepo.getConByConNo1(cid, bid, con);
-		
-		if(cn == null) {
-			return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(cn,HttpStatus.OK);
+
+		if (cn == null) {
+			return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(cn, HttpStatus.OK);
 		}
 	}
-	
-
 
 	@GetMapping("/getDataOfLCLDestuff")
 	public ResponseEntity<?> getDataOfLCLDestuff(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("con") String con){
-		
+			@RequestParam("con") String con) {
+
 		List<Object[]> data = cfigmcnrepo.getSearchForExamination(cid, bid, con);
-		
-		if(data.isEmpty()) {
-			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
-		
-		return new ResponseEntity<>(data,HttpStatus.OK);
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 }
