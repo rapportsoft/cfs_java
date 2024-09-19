@@ -114,6 +114,18 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		                  @Param("igm") String igm,
 		                  @Param("igmCrgTransId") String igmLineNo);
 	
+	@Query("select c " +
+		       "from Cfigmcrg c " +
+		       "where c.companyId = :cid " +
+		       "and c.branchId = :bid " +
+		       "and c.igmNo = :igm " +
+		       "and c.igmLineNo = :igmCrgTransId " +
+		       "and c.status != 'D' and (c.destuffId is not null and c.destuffId != '')")
+		Cfigmcrg getData5(@Param("cid") String cid,
+		                  @Param("bid") String bid,
+		                  @Param("igm") String igm,
+		                  @Param("igmCrgTransId") String igmLineNo);
+	
 
 
 

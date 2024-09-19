@@ -431,9 +431,9 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			       "WHERE c.companyId = :cid AND c.branchId = :bid AND c.igmNo = :igm " +
 			       "AND c.igmLineNo = :igmline AND c.status != 'D' " +
 			       "AND ((c.containerExamStatus = 'Y' AND c.gateOutType='CRG' AND c.destuffStatus='Y') OR " +
-			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON')) " +
+			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON') OR (c.destuffStatus='Y' and c.containerStatus='LCL')) " +
 			       "AND (c.gatePassNo is null OR c.gatePassNo = '') " +
-			       "AND c.noOfItem = 1")
+			       "AND ((c.noOfItem = 1 and c.containerStatus='FCL') OR (c.noOfItem > 1 and c.containerStatus='LCL' ))")
 			List<Cfigmcn> getDataForGatePass(@Param("cid") String cid,
 			                         @Param("bid") String bid,
 			                         @Param("igm") String igm,
@@ -650,8 +650,11 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
                 @Param("con") String con);
 	    
 	    
-	    @Query(value="select distinct c.igmLineNo from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.status != 'D' "
-	    		+ "and c.noOfItem = 1 and (c.gatePassNo is null OR c.gatePassNo = '') "
+	    @Query(value="select distinct c.igmLineNo from Cfigmcn c LEFT OUTER JOIN DestuffCrg crg ON c.companyId=crg.companyId and "
+	    		+ "c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
+	    		+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.status != 'D' "
+	    		+ "and ((c.containerStatus = 'FCL' and c.noOfItem = 1) OR (c.containerStatus = 'LCL' and c.noOfItem > 1 and (crg.yardPackages - crg.qtyTakenOut) > 0)) and "
+	    		+ "(c.gatePassNo is null OR c.gatePassNo = '') "
 	    		+ "and ((c.gateOutType = 'CRG' and c.destuffStatus='Y') OR (c.gateOutType = 'CON' and c.containerExamStatus = 'Y')) ")
 	    List<String> getItems(@Param("cid") String cid,
                 @Param("bid") String bid,

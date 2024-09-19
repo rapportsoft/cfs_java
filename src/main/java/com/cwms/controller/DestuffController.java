@@ -97,7 +97,10 @@ public class DestuffController {
 					c.setBranchId(bid);
 					c.setCreatedBy(user);
 					c.setCreatedDate(new Date());
-
+                    c.setYardBlock(destuff.getYardBlock());
+                    c.setYardLocation(destuff.getYardLocation());
+                    c.setBlockCellNo(destuff.getBlockCellNo());
+                    
 					c.setApprovedBy(user);
 					c.setApprovedDate(new Date());
 					c.setDeStuffId(HoldNextIdD1);
@@ -203,16 +206,15 @@ public class DestuffController {
 				c.setDestuffWoDate(new Date());
 				c.setPackagesDeStuffed(totalNopFinal);
 				c.setDestuffWoTransId(newId);
-				
-				if("LCL".equals(c.getContainerStatus())) {
+
+				if ("LCL".equals(c.getContainerStatus())) {
 					c.setOocDate(data.getOocDate());
 					c.setOocNo(data.getOocNo());
 					c.setDoNo(data.getDoNo());
 					c.setDoDate(data.getDoDate());
 					c.setDoValidityDate(data.getDoValidityDate());
 				}
-				
-				
+
 				cfigmcnrepo.save(c);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05067", newId, "2024");
 			});
@@ -358,7 +360,7 @@ public class DestuffController {
 			final int totalNopFinal = totalNop1;
 			con.stream().forEach(c -> {
 				c.setHaz(haz);
-				if("LCL".equals(c.getContainerStatus())) {
+				if ("LCL".equals(c.getContainerStatus())) {
 					c.setOocDate(data.getOocDate());
 					c.setOocNo(data.getOocNo());
 					c.setDoNo(data.getDoNo());
@@ -412,10 +414,9 @@ public class DestuffController {
 			return new ResponseEntity<>("Data not found", HttpStatus.BAD_REQUEST);
 		}
 		dto.setDestuff(d1);
-		
-		List<Cfigmcn> con = cfigmcnrepo.getContainers(cid, bid, d1.getIgmNo(), d1.getIgmTransId(),
-				d1.getContainerNo());
-		
+
+		List<Cfigmcn> con = cfigmcnrepo.getContainers(cid, bid, d1.getIgmNo(), d1.getIgmTransId(), d1.getContainerNo());
+
 		dto.setDoDate(con.get(0).getDoDate());
 		dto.setDoNo(con.get(0).getDoNo());
 		dto.setDoValidityDate(con.get(0).getDoValidityDate());
@@ -828,12 +829,11 @@ public class DestuffController {
 
 				cfigmcrgrepo.save(cr);
 
-				
 				decr.setExamTallyId(HoldNextIdD1);
 				decr.setExamTallyLineId(String.valueOf(sr));
 				decr.setExamDate(new Date());
 				destuffcrgrepo.save(decr);
-				
+
 				processnextidrepo.updateAuditTrail(cid, bid, "P05070", HoldNextIdD1, "2024");
 				sr++;
 			} else {
@@ -848,51 +848,62 @@ public class DestuffController {
 					exam.setBeNo(crg.getBeNo());
 					exam.setSampleQty(c.getSampleQty());
 					exam.setExaminedPercentage(c.getExaminedPercentage());
-					
+
 					exam.setTypeOfCargo(c.getTypeOfCargo());
 					exam.setExaminer(c.getExaminer());
 					exam.setPurpose(c.getPurpose());
-					
+
 					examcrgrepo.save(exam);
-					
+
 					cr.setBeNo(crg.getBeNo());
 					cr.setBeDate(crg.getBeDate());
-					
+
 					cfigmcrgrepo.save(cr);
 				}
 			}
 		}
 
-		List<ExamCrg> allData = examcrgrepo.getData1(cid, bid,  crg.getIgmNo(), crg.getIgmTransId(),crg.getIgmLineNo());
+		List<ExamCrg> allData = examcrgrepo.getData1(cid, bid, crg.getIgmNo(), crg.getIgmTransId(), crg.getIgmLineNo());
 
 		return new ResponseEntity<>(allData, HttpStatus.OK);
 
 	}
-	
-	
+
 	@GetMapping("/searchExaminationData")
-	public ResponseEntity<?> searchCargoExamination(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			@RequestParam(name="value",required = false) String value){
+	public ResponseEntity<?> searchCargoExamination(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "value", required = false) String value) {
 		List<Object[]> data = examcrgrepo.search(cid, bid, value);
-		
-		if(data.isEmpty()) {
+
+		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping("/getSearchedData")
-	public ResponseEntity<?> getSearchedData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("igm") String igm,
-			@RequestParam("igmtrans") String igmtrans,@RequestParam(name="examTallyId",required = false) String examTallyId){
+	public ResponseEntity<?> getSearchedData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igm") String igm, @RequestParam("igmtrans") String igmtrans,
+			@RequestParam(name = "examTallyId", required = false) String examTallyId) {
 		List<ExamCrg> data = examcrgrepo.getData2(cid, bid, igm, igmtrans, examTallyId);
-		
-		if(data.isEmpty()) {
+
+		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(data, HttpStatus.OK);
+		}
+	}
+
+	@GetMapping("/getLatestExamCargoId")
+	public ResponseEntity<?> getLatestDestuffId(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igm") String igm, @RequestParam("igmtrans") String igmtrans,
+			@RequestParam(name = "line", required = false) String line) {
+		List<String> data = examcrgrepo.getLastCargoExaminationId(cid, bid, igm, igmtrans, line);
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(data.get(0), HttpStatus.OK);
 		}
 	}
 }

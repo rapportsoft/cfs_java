@@ -69,5 +69,19 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.vehicleNo=:veh and v.status != 'D' and v.vehicleStatus = 'E' "
 			+ "order by v.createdDate desc limit 1")
 	VehicleTrack vehNoSearch(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
+	
+	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.vehicleNo=:veh and v.status != 'D' and v.gateInId=:inId and "
+			+ "(v.gatePassNo is null OR v.gatePassNo = '') and (v.gateOutId is null OR v.gateOutId = '')")
+	VehicleTrack getDataByVehicleNo(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("inId") String inId);
 
+	@Query(value="select v.vehicleNo,v.gateInId from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
+			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) "
+			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) ")
+	List<Object[]> getEmptyVehGateIn(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
+	
+	
+	@Query(value="select v.vehicleNo,v.gateInId from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
+			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) and (v.gatePassNo is null OR v.gatePassNo = '') "
+			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) ")
+	List<Object[]> getEmptyVehGateIn1(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
 }

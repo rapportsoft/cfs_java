@@ -77,6 +77,12 @@ public class GateInController {
 				if (cn.isEmpty()) {
 					return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
 				}
+				
+				Boolean check = vehicleTrackRepo.checkVehicleNo(cid, bid, gatein.getVehicleNo());
+
+				if (check) {
+					return new ResponseEntity<>("The vehicle is already inside.", HttpStatus.CONFLICT);
+				}
 
 				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05063", "2024");
 
@@ -157,6 +163,30 @@ public class GateInController {
 				});
 
 				gateinrepo.save(gatein);
+				
+				VehicleTrack v = new VehicleTrack();
+				v.setCompanyId(cid);
+				v.setBranchId(bid);
+				v.setFinYear(gatein.getFinYear());
+				v.setVehicleNo(gatein.getVehicleNo());
+				v.setProfitcentreId(gatein.getProfitcentreId());
+				v.setSrNo(1);
+				v.setTransporterStatus(gatein.getTransporterStatus().charAt(0));
+				v.setTransporterName(gatein.getTransporterName());
+				v.setTransporter(gatein.getTransporter());
+				v.setDriverName(gatein.getDriverName());
+				v.setVehicleStatus('E');
+				v.setGateInId(HoldNextIdD1);
+				v.setGateInDate(new Date());
+				v.setGateNoIn("Gate01");
+				v.setShiftIn(gatein.getShift());
+				v.setStatus('A');
+				v.setCreatedBy(user);
+				v.setCreatedDate(new Date());
+				v.setApprovedBy(user);
+				v.setApprovedDate(new Date());
+
+				vehicleTrackRepo.save(v);
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05063", HoldNextIdD1, "2024");
 
@@ -268,12 +298,15 @@ public class GateInController {
 				});
 
 				gateinrepo.save(existingData);
+				int update = vehicleTrackRepo.updateData(cid, bid, gatein.getGateInId(), gatein.getVehicleNo(),
+						gatein.getProfitcentreId(), gatein.getTransporterStatus().charAt(0), gatein.getTransporterName(),
+						gatein.getTransporter(), gatein.getDriverName(), 'E', "Gate01", gatein.getShift(),
+						user);
 				return new ResponseEntity<>(existingData, HttpStatus.OK);
 
 			}
 		}
 	}
-
 	@GetMapping("/getImpData")
 	public List<Object[]> getImpData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "search", required = false) String search) {

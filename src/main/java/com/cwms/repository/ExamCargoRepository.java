@@ -39,4 +39,10 @@ public interface ExamCargoRepository extends JpaRepository<ExamCrg, String> {
 			+ "(:val is null OR :val = '' OR e.examTallyId LIKE CONCAT ('%',:val,'%') OR e.igmNo LIKE CONCAT ('%',:val,'%') "
 			+ "OR e.igmTransId LIKE CONCAT ('%',:val,'%') OR e.beNo LIKE CONCAT ('%',:val,'%')) order by e.examTallyId desc")
 	List<Object[]> search(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	@Query(value="select distinct e.examTallyId from ExamCrg e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
+			+ "e.igmNo=:igm and e.igmTransId=:igmTrans and (:line is null OR :line = '' OR e.igmLineNo=:line) order by e.examTallyId desc")
+	List<String> getLastCargoExaminationId(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,
+			@Param("igmTrans") String igmTrans,@Param("line") String line);
 }
