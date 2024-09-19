@@ -51,6 +51,12 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 	List<String> getLastGatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, 
 			@Param("trans") String trans,@Param("line") String line);
 	
+	@Query(value="select i.gatePassId,i.transType,i.igmLineNo from ImportGatePass i WHERE i.companyId=:cid AND i.branchId=:bid AND i.igmNo=:igm "
+			+ "AND i.igmTransId=:trans AND (:line is null OR :line = '' OR i.igmLineNo=:line)  AND i.status != 'D' "
+			+ "AND i.gatePassType='ITEM' order by i.gatePassId desc")
+	List<Object[]> getLastGatePassId1(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, 
+			@Param("trans") String trans,@Param("line") String line);
+	
 	@Query("SELECT new com.cwms.entities.ImportGatePass(i.gatePassId, i.srNo, i.profitcentreId, i.gatePassDate, i.igmNo, i.igmLineNo, "
 			+ "i.igmTransId, i.shift, i.transType, i.importerName, i.importerAddress1, i.importerAddress2, i.importerAddress3, p.partyName,"
 			+ " i.containerNo, i.containerSize, i.containerType, i.blNo, i.blDate, i.viaNo, i.commodity, i.grossWt, i.noOfPackage, "

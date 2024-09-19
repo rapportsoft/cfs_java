@@ -394,25 +394,80 @@ public class ImportGatePassController {
 
 	}
 
+//	@GetMapping("/selectSearchedItemWiseData1")
+//	public ResponseEntity<?> selectSearchedItemWiseData1(@RequestParam("cid") String cid,
+//			@RequestParam("bid") String bid, @RequestParam("igm") String igm, @RequestParam("trans") String trans,
+//			@RequestParam("igmline") String igmline) {
+//
+//		System.out.println("igm,trans, igmline " + igm + " " + trans + " " + igmline);
+//		List<String> gatepassid = importgatepassrepo.getLastGatePassId(cid, bid, igm, trans, igmline);
+//
+//		if (gatepassid.isEmpty()) {
+//			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+//		}
+//
+//		List<ImportGatePass> gatepass = importgatepassrepo.getData2(cid, bid, igm, trans, gatepassid.get(0).toString());
+//
+//		if (gatepass.isEmpty()) {
+//			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+//		}
+//
+//		return new ResponseEntity<>(gatepass, HttpStatus.OK);
+//	}
+	
 	@GetMapping("/selectSearchedItemWiseData1")
 	public ResponseEntity<?> selectSearchedItemWiseData1(@RequestParam("cid") String cid,
 			@RequestParam("bid") String bid, @RequestParam("igm") String igm, @RequestParam("trans") String trans,
 			@RequestParam("igmline") String igmline) {
 
 		System.out.println("igm,trans, igmline " + igm + " " + trans + " " + igmline);
-		List<String> gatepassid = importgatepassrepo.getLastGatePassId(cid, bid, igm, trans, igmline);
+//		List<String> gatepassid = importgatepassrepo.getLastGatePassId(cid, bid, igm, trans, igmline);
+//
+//		if (gatepassid.isEmpty()) {
+//			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+//		}
+//
+//		List<ImportGatePass> gatepass = importgatepassrepo.getData2(cid, bid, igm, trans, gatepassid.get(0).toString());
+//
+//		if (gatepass.isEmpty()) {
+//			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+//		}
+//
+//		return new ResponseEntity<>(gatepass, HttpStatus.OK);
+		
+		List<Object[]> gatepassid = importgatepassrepo.getLastGatePassId1(cid, bid, igm, trans, igmline);
 
 		if (gatepassid.isEmpty()) {
 			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
 		}
+		
+	
 
-		List<ImportGatePass> gatepass = importgatepassrepo.getData2(cid, bid, igm, trans, gatepassid.get(0).toString());
+		if ("LCL".equals(gatepassid.get(0)[1].toString())) {
+			List<ImportGatePass> gatepass = importgatepassrepo.getData3(cid, bid, igm, igmline.isEmpty() ? gatepassid.get(0)[2].toString():igmline, gatepassid.get(0)[0].toString());
 
-		if (gatepass.isEmpty()) {
-			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+			if (gatepass.isEmpty()) {
+				return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+			}
+			Party party = partyrepo.getDataByCustomerCode(cid, bid, gatepass.get(0).getCha());
+			Map<String, Object> data = new HashMap<>();
+			data.put("gatepass", gatepass);
+			data.put("cha", party.getPartyName());
+
+			return new ResponseEntity<>(data, HttpStatus.OK);
+		} else {
+			List<ImportGatePass> gatepass = importgatepassrepo.getData(cid, bid, igm, igmline, gatepassid.get(0)[0].toString());
+
+			if (gatepass.isEmpty()) {
+				return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+			}
+
+			Map<String, Object> data = new HashMap<>();
+			data.put("gatepass", gatepass);
+			data.put("cha", "");
+
+			return new ResponseEntity<>(data, HttpStatus.OK);
 		}
-
-		return new ResponseEntity<>(gatepass, HttpStatus.OK);
 	}
 
 	@PostMapping("/uploadItemwiseImage")
