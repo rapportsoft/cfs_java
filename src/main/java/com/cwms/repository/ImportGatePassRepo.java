@@ -124,4 +124,14 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 			+ "i.gatePassId=:val and i.srNo=:sr")
 	ImportGatePass getDataByGatePassIdAndSrNo(@Param("cid") String cid, @Param("bid") String bid,@Param("val") String val,@Param("sr") int sr);
 	
+	@Query(value="select i.igmLineNo from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
+			+ "i.igmNo=:igm and i.igmTransId=:trans and (:line is null OR :line = '' OR i.igmLineNo=:line) "
+			+ "and (i.gateOutId is null OR i.gateOutId = '')")
+	List<String> getItems(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+			@Param("line") String line);
+	
+	@Query(value="select i.gatePassId from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
+			+ "i.igmNo=:igm and i.igmTransId=:trans and i.containerNo=:con and (i.gateOutId is null OR i.gateOutId = '')")
+	String getGatePassIdFromContainerNo(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+			@Param("con") String con);
 }

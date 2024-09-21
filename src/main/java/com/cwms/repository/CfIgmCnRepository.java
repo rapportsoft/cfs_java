@@ -453,6 +453,22 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			                         @Param("con") String con);
 	    
 	    
+//	    @Query(value="select c from Cfigmcn c "
+//	    		+ "LEFT JOIN Cfigmcrg crg ON c.companyId = crg.companyId AND c.branchId = crg.branchId AND c.igmNo = crg.igmNo  AND c.igmLineNo = crg.igmLineNo "
+//	    		+ "where c.companyId=:cid and c.branchId=:bid and c.status != 'D' "
+//	    		+ "AND (:igm is null OR :igm = '' OR  c.igmNo =:igm) "
+//	    		+ "AND (:line is null OR :line = '' OR  c.igmLineNo =:line) "
+//	    		+ "AND (:bl is null OR :bl = '' OR  crg.blNo =:bl) "
+//	    		+ "AND (:be is null OR :be = '' OR  crg.beNo =:be) "
+//	    		+ "AND (:con is null OR :con = '' OR (c.containerNo =:con AND (c.gateOutId = '' OR c.gateOutId is null))) ")
+//	    List<Cfigmcn> searchMainHeader(@Param("cid") String cid,
+//                @Param("bid") String bid,
+//                @Param("igm") String igm,
+//                @Param("line") String igmline,
+//                @Param("bl") String bl,
+//                @Param("be") String be,
+//                @Param("con") String con);
+	    
 	    @Query(value="select c from Cfigmcn c "
 	    		+ "LEFT JOIN Cfigmcrg crg ON c.companyId = crg.companyId AND c.branchId = crg.branchId AND c.igmNo = crg.igmNo  AND c.igmLineNo = crg.igmLineNo "
 	    		+ "where c.companyId=:cid and c.branchId=:bid and c.status != 'D' "
@@ -460,7 +476,7 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	    		+ "AND (:line is null OR :line = '' OR  c.igmLineNo =:line) "
 	    		+ "AND (:bl is null OR :bl = '' OR  crg.blNo =:bl) "
 	    		+ "AND (:be is null OR :be = '' OR  crg.beNo =:be) "
-	    		+ "AND (:con is null OR :con = '' OR (c.containerNo =:con AND (c.gateOutId = '' OR c.gateOutId is null))) ")
+	    		+ "AND (:con is null OR :con = '' OR c.containerNo =:con) order by c.createdDate desc ")
 	    List<Cfigmcn> searchMainHeader(@Param("cid") String cid,
                 @Param("bid") String bid,
                 @Param("igm") String igm,

@@ -1092,6 +1092,259 @@ public class CfIgmController {
 
 	}
 
+//	@GetMapping("/searchMainHeader")
+//	public ResponseEntity<?> searchMainHeader(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+//			@RequestParam(name = "igm", required = false) String igm,
+//			@RequestParam(name = "item", required = false) String item,
+//			@RequestParam(name = "blNo", required = false) String blNo,
+//			@RequestParam(name = "beNo", required = false) String beNo,
+//			@RequestParam(name = "container", required = false) String container) {
+//
+//		List<String> list = new ArrayList<>();
+//
+//		List<Cfigmcn> cn = cfigmcnrepo.searchMainHeader(cid, bid, igm, item, blNo, beNo, container);
+//
+//		List<String> cnlist = new ArrayList<>();
+//
+//		Object[] sealData = null;
+//
+//		if (cn.isEmpty()) {
+//			return new ResponseEntity<>("Data not found.", HttpStatus.CONFLICT);
+//		}
+//
+//		list.add("P00201");
+//		list.add("P00202");
+//
+//		boolean containsEmptyGateInId = cn.stream().anyMatch(c -> c.getGateInId() == null || c.getGateInId().isEmpty());
+//
+//		if (containsEmptyGateInId) {
+//			list.add("P00203");
+//			cnlist = cfigmcnrepo.getSearcgCon1(cid, bid, igm, item, container, blNo);
+//			sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+//			System.out.println("cnlist " + cnlist);
+//			Map<String, Object> c = new HashMap<>();
+//			c.put("list", list);
+//			c.put("igm", cn.get(0).getIgmNo());
+//			c.put("sealData", sealData);
+//			c.put("igmtrans", cn.get(0).getIgmTransId());
+//			c.put("con", container);
+//			c.put("cnlist", cnlist);
+//			c.put("gateInId", "");
+//			if (container.isEmpty()) {
+//				c.put("sealCutStatus", "");
+//			} else {
+//				c.put("sealCutStatus", "");
+//			}
+//			c.put("sealData", sealData);
+//
+//			return new ResponseEntity<>(c, HttpStatus.OK);
+//		}
+//
+//		boolean containsEmptySealCuttingId = cn.stream()
+//				.anyMatch(c -> (c.getSealCutWoTransId() == null || c.getSealCutWoTransId().isEmpty())
+//						&& "FCL".equals(c.getContainerStatus()));
+//
+//		if (containsEmptySealCuttingId) {
+//			list.add("P00203");
+//			list.add("P00204");
+//
+//			System.out.println("sealData " + sealData);
+//			Map<String, Object> c = new HashMap<>();
+//			c.put("list", list);
+//			c.put("igm", cn.get(0).getIgmNo());
+//			c.put("igmtrans", cn.get(0).getIgmTransId());
+//			c.put("cnlist", cnlist);
+//			c.put("con", container);
+//			if (container.isEmpty()) {
+//				c.put("sealCutStatus", "itemwise");
+//				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+//
+//				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+//
+//				if (in != null) {
+//					c.put("gateInId", in);
+//				} else {
+//					c.put("gateInId", "");
+//				}
+//			} else {
+//				c.put("sealCutStatus", "containerwise");
+//				c.put("gateInId", "");
+//				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
+//			}
+//			c.put("sealData", sealData);
+//			return new ResponseEntity<>(c, HttpStatus.OK);
+//		}
+//
+//		boolean containsExamination = cn.stream()
+//				.anyMatch(c -> (c.getContainerExamWoTransId() == null || c.getContainerExamWoTransId().isEmpty())
+//						&& "FCL".equals(c.getContainerStatus()));
+//
+//		if (containsExamination) {
+//			list.add("P00203");
+//			list.add("P00204");
+//			list.add("P00205");
+//
+//			Map<String, Object> c = new HashMap<>();
+//			c.put("list", list);
+//			c.put("igm", cn.get(0).getIgmNo());
+//			c.put("igmtrans", cn.get(0).getIgmTransId());
+//			c.put("cnlist", cnlist);
+//			c.put("con", container);
+//			if (container.isEmpty()) {
+//				c.put("sealCutStatus", "itemwise");
+//				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+//				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+//
+//				if (in != null) {
+//					c.put("gateInId", in);
+//				} else {
+//					c.put("gateInId", "");
+//				}
+//			} else {
+//				c.put("sealCutStatus", "containerwise");
+//				c.put("gateInId", "");
+//				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
+//			}
+//			c.put("sealData", sealData);
+//
+//			return new ResponseEntity<>(c, HttpStatus.OK);
+//		}
+//
+//		boolean containsDestuff = cn.stream()
+//				.anyMatch(c -> (c.getDestuffWoTransId() == null || c.getDestuffWoTransId().isEmpty())
+//						&& "CRG".equals(c.getGateOutType()));
+//
+//		if (containsDestuff) {
+//			list.add("P00203");
+//			list.add("P00204");
+//			list.add("P00205");
+//			list.add("P00206");
+//
+//			Map<String, Object> c = new HashMap<>();
+//			c.put("list", list);
+//			c.put("igm", cn.get(0).getIgmNo());
+//			c.put("igmtrans", cn.get(0).getIgmTransId());
+//			c.put("cnlist", cnlist);
+//			c.put("con", container);
+//			if (container.isEmpty()) {
+//				c.put("sealCutStatus", "itemwise");
+//				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+//				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+//
+//				if (in != null) {
+//					c.put("gateInId", in);
+//				} else {
+//					c.put("gateInId", "");
+//				}
+//			} else {
+//				c.put("sealCutStatus", "containerwise");
+//				c.put("gateInId", "");
+//				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
+//			}
+//			c.put("sealData", sealData);
+//
+//			return new ResponseEntity<>(c, HttpStatus.OK);
+//		}
+//
+//		boolean containsGatePass = cn.stream().anyMatch(c -> c.getGatePassNo() == null || c.getGatePassNo().isEmpty());
+//
+//		if (containsGatePass) {
+//			list.add("P00203");
+//			list.add("P00204");
+//			list.add("P00205");
+//			list.add("P00206");
+//			list.add("P00208");
+//
+//			boolean cargoExamination = cn.stream().anyMatch(c -> "LCL".equals(c.getContainerStatus()));
+//			if (cargoExamination) {
+//				list.add("P00210");
+//			}
+//
+//			Map<String, Object> c = new HashMap<>();
+//			c.put("list", list);
+//			c.put("igm", cn.get(0).getIgmNo());
+//			c.put("igmtrans", cn.get(0).getIgmTransId());
+//			c.put("cnlist", cnlist);
+//			c.put("con", container);
+//			if (container.isEmpty()) {
+//				c.put("sealCutStatus", "itemwise");
+//				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+//				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+//
+//				if (in != null) {
+//					c.put("gateInId", in);
+//				} else {
+//					c.put("gateInId", "");
+//				}
+//			} else {
+//				c.put("sealCutStatus", "containerwise");
+//				c.put("gateInId", "");
+//				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
+//			}
+//			c.put("sealData", sealData);
+//
+//			return new ResponseEntity<>(c, HttpStatus.OK);
+//		}
+//
+//		boolean containsGateOut = cn.stream().anyMatch(c -> c.getGateOutId() == null || c.getGateOutId().isEmpty());
+//
+//		if (containsGateOut) {
+//			list.add("P00203");
+//			list.add("P00204");
+//			list.add("P00205");
+//			list.add("P00206");
+//			list.add("P00208");
+//			list.add("P00209");
+//			boolean cargoExamination = cn.stream().anyMatch(c -> "LCL".equals(c.getContainerStatus()));
+//			if (cargoExamination) {
+//				list.add("P00210");
+//			}
+//
+//			Map<String, Object> c = new HashMap<>();
+//			c.put("list", list);
+//			c.put("igm", cn.get(0).getIgmNo());
+//			c.put("igmtrans", cn.get(0).getIgmTransId());
+//			c.put("cnlist", cnlist);
+//			c.put("con", container);
+//			if (container.isEmpty()) {
+//				c.put("sealCutStatus", "itemwise");
+//				sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+//				Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
+//
+//				if (in != null) {
+//					c.put("gateInId", in);
+//				} else {
+//					c.put("gateInId", "");
+//				}
+//			} else {
+//				c.put("sealCutStatus", "containerwise");
+//				c.put("gateInId", "");
+//				sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
+//			}
+//			c.put("sealData", sealData);
+//
+//			return new ResponseEntity<>(c, HttpStatus.OK);
+//		}
+//
+//		Map<String, Object> c = new HashMap<>();
+//		c.put("list", list);
+//		c.put("igm", cn.get(0).getIgmNo());
+//		c.put("igmtrans", cn.get(0).getIgmTransId());
+//		c.put("cnlist", cnlist);
+//		c.put("con", container);
+//		if (container.isEmpty()) {
+//			c.put("sealCutStatus", "");
+//		} else {
+//			c.put("sealCutStatus", "");
+//
+//		}
+//		c.put("gateInId", "");
+//		c.put("sealData", sealData);
+//
+//		return new ResponseEntity<>(c, HttpStatus.OK);
+//	}
+	
+	
 	@GetMapping("/searchMainHeader")
 	public ResponseEntity<?> searchMainHeader(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "igm", required = false) String igm,
@@ -1300,6 +1553,7 @@ public class CfIgmController {
 				list.add("P00210");
 			}
 
+			
 			Map<String, Object> c = new HashMap<>();
 			c.put("list", list);
 			c.put("igm", cn.get(0).getIgmNo());
@@ -1326,6 +1580,18 @@ public class CfIgmController {
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
 
+		list.add("P00203");
+		list.add("P00204");
+		list.add("P00205");
+		list.add("P00206");
+		list.add("P00208");
+		list.add("P00209");
+		boolean cargoExamination = cn.stream().anyMatch(c -> "LCL".equals(c.getContainerStatus()));
+		if (cargoExamination) {
+			list.add("P00210");
+		}
+
+		
 		Map<String, Object> c = new HashMap<>();
 		c.put("list", list);
 		c.put("igm", cn.get(0).getIgmNo());
@@ -1333,12 +1599,20 @@ public class CfIgmController {
 		c.put("cnlist", cnlist);
 		c.put("con", container);
 		if (container.isEmpty()) {
-			c.put("sealCutStatus", "");
-		} else {
-			c.put("sealCutStatus", "");
+			c.put("sealCutStatus", "itemwise");
+			sealData = cfigmcnrepo.getSealCutData(cid, bid, igm, item, container, blNo, beNo);
+			Object[] in = gateinrepo.getAll1(cid, bid, cn.get(0).getIgmTransId(), cn.get(0).getIgmNo());
 
+			if (in != null) {
+				c.put("gateInId", in);
+			} else {
+				c.put("gateInId", "");
+			}
+		} else {
+			c.put("sealCutStatus", "containerwise");
+			c.put("gateInId", "");
+			sealData = cfigmcnrepo.getSealCutData1(cid, bid, igm, item, container, blNo, beNo);
 		}
-		c.put("gateInId", "");
 		c.put("sealData", sealData);
 
 		return new ResponseEntity<>(c, HttpStatus.OK);

@@ -147,7 +147,7 @@ public class ImportGatePass {
 	@Column(name = "Vehicle_Qty_Taken_Out", precision = 8, scale = 0)
 	private BigDecimal vehicleQtyTakenOut;
 
-	@Column(name = "GW_Taken_Out", precision = 8, scale = 3)
+	@Column(name = "GW_Taken_Out", precision = 18, scale = 3)
 	private BigDecimal gwTakenOut;
 
 	@Column(name = "Yard_Packages", precision = 18, scale = 3)

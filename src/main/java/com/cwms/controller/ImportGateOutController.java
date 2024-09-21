@@ -331,7 +331,7 @@ public class ImportGateOutController {
 	public ResponseEntity<?> getSelectedGateOutData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
 			@RequestParam("gateout") String gateout,@RequestParam("gatepass") String gatepass){
 		List<GateOut> outData = gateOutRepo.getDataByGateOutIdAndGatePassNo(cid, bid, gateout,gatepass);
-System.out.println("outData "+outData.size());
+
 		if(outData.isEmpty()) {
 			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
 		}
@@ -347,4 +347,87 @@ System.out.println("outData "+outData.size());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	
+	@GetMapping("/getItems")
+	public ResponseEntity<?> getItems(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam("igm") String igm,@RequestParam("igmtrans") String igmtrans,@RequestParam("line") String line){
+		System.out.println(cid+" "+ bid+" "+igm+" "+igmtrans+" "+line);
+		List<String> data = importgatepassrepo.getItems(cid, bid, igm, igmtrans, line);
+		
+		if(data.isEmpty()) {
+			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/getLatestRecord")
+	public ResponseEntity<?> getLatestRecord(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam("igm") String igm,@RequestParam("igmtrans") String igmtrans,@RequestParam("line") String line){
+		
+		GateOut data = gateOutRepo.getLatestRecordsGateOutId(cid, bid, igm, igmtrans, line);
+
+		if(data == null) {  // Also check if data is empty
+		    return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+
+
+		List<GateOut> outData = gateOutRepo.getLatestRecordsFromIgm(cid, bid, igm,igmtrans,line,data.getGateOutId());
+
+		if(outData.isEmpty()) {
+			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+		}
+		
+		String partyName = partyrepo.getPartyNameById(cid, bid, outData.get(0).getSl());
+		String profitCentreName = profitcentrerepo.getAllDataByID1(cid, bid, outData.get(0).getProfitcentreId());
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("gatePassData", outData);
+		result.put("sl", partyName);
+		result.put("profit", profitCentreName);
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/getGatePassIdFromContainerNo")
+	public ResponseEntity<?> getGatePassIdFromContainerNo(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam("igm") String igm,@RequestParam("igmtrans") String igmtrans,@RequestParam("con") String con){
+		
+		String gatePassId = importgatepassrepo.getGatePassIdFromContainerNo(cid, bid, igm, igmtrans, con);
+		
+		if(gatePassId == null || gatePassId.isEmpty()) {
+			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<>(gatePassId,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getLatestRecordFromContainer")
+	public ResponseEntity<?> getLatestRecordFromContainer(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam("igm") String igm,@RequestParam("igmtrans") String igmtrans,@RequestParam("con") String con){
+		
+		GateOut data = gateOutRepo.getLatestRecordsGateOutIdByContainer(cid, bid, igm, igmtrans, con);
+
+		if(data == null) {  // Also check if data is empty
+		    return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+
+
+		List<GateOut> outData = gateOutRepo.getLatestRecordsFromIgmByContainer(cid, bid, igm,igmtrans,con,data.getGateOutId());
+
+		if(outData.isEmpty()) {
+			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+		}
+		
+		String partyName = partyrepo.getPartyNameById(cid, bid, outData.get(0).getSl());
+		String profitCentreName = profitcentrerepo.getAllDataByID1(cid, bid, outData.get(0).getProfitcentreId());
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("gatePassData", outData);
+		result.put("sl", partyName);
+		result.put("profit", profitCentreName);
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

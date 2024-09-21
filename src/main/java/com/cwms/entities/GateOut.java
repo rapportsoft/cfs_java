@@ -1396,7 +1396,11 @@ public class GateOut {
 		}
 	    
 		
-		
+		public GateOut(String gateOutId, Date createdDate) {
+			super();
+			this.gateOutId = gateOutId;
+			this.createdDate = createdDate;
+		}
 		
 	    
 	    
