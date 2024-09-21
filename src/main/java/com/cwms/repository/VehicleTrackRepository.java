@@ -84,4 +84,24 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) and (v.gatePassNo is null OR v.gatePassNo = '') "
 			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) ")
 	List<Object[]> getEmptyVehGateIn1(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
+	
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE cfvehtrck v "
+	             + "SET v.gate_Out_Id = :id, v.gate_Out_Date = CURRENT_DATE "
+	             + "WHERE EXISTS ("
+	             + "  SELECT 1 FROM CfImportGatePassVehDtl c "
+	             + "  WHERE v.company_Id = c.company_Id "
+	             + "    AND v.branch_Id = c.branch_Id "
+	             + "    AND v.gate_In_Id = c.vehicle_Gate_Pass_Id "
+	             + "    AND c.company_Id = :cid "
+	             + "    AND c.branch_Id = :bid "
+	             + "    AND c.status != 'D' "
+	             + "    AND c.gate_Pass_Id = :gatpass)"
+	             , nativeQuery = true)
+	int updateVehicleData(@Param("cid") String cid, 
+	                      @Param("bid") String bid, 
+	                      @Param("gatpass") String gatpass, 
+	                      @Param("id") String id);
 }

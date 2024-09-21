@@ -121,10 +121,10 @@ public class GateOut {
 	    @Column(name = "SL", length = 6)
 	    private String sl;
 
-	    @Column(name = "CHA", length = 6)
+	    @Column(name = "CHA", length = 25)
 	    private String cha;
 
-	    @Column(name = "CHA_Name", length = 35)
+	    @Column(name = "CHA_Name", length = 100)
 	    private String chaName;
 
 	    @Column(name = "Exporter_Name", length = 100)

@@ -677,6 +677,30 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	               "AND ((:val IS NULL OR :val = '' OR c.igmNo LIKE CONCAT(:val, '%')) " +
 	               "OR (:val IS NULL OR :val = '' OR c.containerNo LIKE CONCAT(:val, '%')))")
 	List<Object[]> getSearchForExamination(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Cfigmcn cn SET cn.gateOutId=:id , cn.gateOutDate = CURRENT_DATE, cn.doNo=:do, cn.doDate=:doDate, "
+			+ "cn.doValidityDate=:doValidityDate where cn.companyId=:cid and cn.branchId=:bid and "
+			+ "cn.igmTransId=:trans and cn.igmNo=:igm and (:line is null OR :line = '' OR cn.igmLineNo=:line ) and cn.status != 'D'")
+	int updategateOutId1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
+			@Param("line") String igmline,@Param("id") String id,@Param("do") String doNo,@Param("doDate") Date doDate,@Param("doValidityDate") Date doValidityDate);
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Cfigmcn cn SET cn.doNo=:do, cn.doDate=:doDate, "
+			+ "cn.doValidityDate=:doValidityDate where cn.companyId=:cid and cn.branchId=:bid and "
+			+ "cn.igmTransId=:trans and cn.igmNo=:igm and (:line is null OR :line = '' OR cn.igmLineNo=:line ) and cn.status != 'D'")
+	int updategateOutId2(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
+			@Param("line") String igmline,@Param("do") String doNo,@Param("doDate") Date doDate,@Param("doValidityDate") Date doValidityDate);
+	
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Cfigmcn cn SET cn.gateOutId=:id , cn.gateOutDate = CURRENT_DATE where cn.companyId=:cid and cn.branchId=:bid and "
+			+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.status != 'D'")
+	int updategateOutId(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
+			@Param("id") String id);
 
 }
 

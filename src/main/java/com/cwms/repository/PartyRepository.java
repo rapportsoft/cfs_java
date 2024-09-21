@@ -143,4 +143,7 @@ List<Object[]> getDataForCha(@Param("cid") String cid, @Param("bid") String bid,
 @Query(value="select p.partyId,p.partyName,p.partyType,p.customerCode from Party p where p.companyId=:cid and p.branchId=:bid and p.status != 'D' "
 		+ "and p.agt = 'Y' and (:val is null OR :val = '' OR p.partyName like CONCAT (:val,'%'))")
 List<Object[]> getDataForOnAccount(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
+@Query(value = "select p.partyName from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
+String getPartyNameById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
 }

@@ -20,6 +20,9 @@ public interface ProfitcentreRepository extends JpaRepository<Profitcentre, Stri
 	@Query(value="SELECT p FROM Profitcentre p WHERE p.companyId = :companyId AND p.branchId = :branchId AND p.profitcentreId = :profitcentreId AND p.status != 'D'")
      Profitcentre getAllDataByID(@Param("companyId") String companyId, @Param("branchId") String branchId,@Param("profitcentreId") String profitcentreId);
 	
+	@Query(value="SELECT p.profitcentreDesc FROM Profitcentre p WHERE p.companyId = :companyId AND p.branchId = :branchId AND p.profitcentreId = :profitcentreId AND p.status != 'D'")
+    String getAllDataByID1(@Param("companyId") String companyId, @Param("branchId") String branchId,@Param("profitcentreId") String profitcentreId);
+	
 //	@Query("SELECT New com.cwms.entities.Profitcenter(p.profitcentreId, p.profitcentreDesc) FROM Profitcentre p WHERE p.companyId = :companyId AND p.branchId = :branchId "
 //			+ "AND p.profitcentreId = :profitcentreId AND p.status != 'D'")
 //    Profitcentre getAllDataByID1(@Param("companyId") String companyId, @Param("branchId") String branchId,@Param("profitcentreId") String profitcentreId);
