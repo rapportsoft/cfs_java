@@ -702,5 +702,12 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	int updategateOutId(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
 			@Param("id") String id);
 
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Cfigmcn cn SET cn.gatePassNo=:id where cn.companyId=:cid and cn.branchId=:bid and "
+			+ "cn.igmTransId=:trans and cn.igmNo=:igm and  cn.igmLineNo=:line and cn.status != 'D'")
+	int updategatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
+			@Param("line") String line,@Param("id") String id);
 }
 

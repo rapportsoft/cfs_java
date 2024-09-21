@@ -1085,6 +1085,8 @@ public class ImportGatePassController {
 				cfigmcrgrepo.save(cr);
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05073", HoldNextIdD1, "2024");
+				
+				int update = cfigmcnrepo.updategatePassId(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(), HoldNextIdD1);
 				sr++;
 			} else {
 				ImportGatePass existing = importgatepassrepo.getSingleData(cid, bid, i.getIgmNo(), i.getIgmLineNo(),
