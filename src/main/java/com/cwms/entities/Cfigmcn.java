@@ -140,7 +140,7 @@ public class Cfigmcn {
 	@Column(name = "Extra_Transport_Date", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date extraTransportDate = new Date(0); // Default value
+	private Date extraTransportDate; // Default value
 
 	@Column(name = "Fumigation", length = 1)
 	private String fumigation = "N"; // Default value
@@ -148,7 +148,7 @@ public class Cfigmcn {
 	@Column(name = "Fumigation_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date fumigationDate = new Date(0); // Default value
+	private Date fumigationDate; // Default value
 
 	@Column(name = "Movement_Req_Id")
 	private String movementReqId = ""; // Default value
@@ -251,7 +251,7 @@ public class Cfigmcn {
 	@Column(name = "Force_Entry_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date forceEntryDate = new Date(0); // Default value
+	private Date forceEntryDate; // Default value
 
 	@Column(name = "Force_Entry_Approval", length = 50)
 	private String forceEntryApproval = ""; // Default value
@@ -265,7 +265,7 @@ public class Cfigmcn {
 	@Column(name = "Exam_Tally_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date examTallyDate = new Date(0); // Default value
+	private Date examTallyDate; // Default value
 
 	@Column(name = "Exam_Crg_Tally_Id", length = 10)
 	private String examCrgTallyId = ""; // Default value
@@ -273,7 +273,7 @@ public class Cfigmcn {
 	@Column(name = "Exam_Crg_Tally_Date")
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date examCrgTallyDate = new Date(0); // Default value
+	private Date examCrgTallyDate; // Default value
 
 	@Column(name = "vehicle_type", length = 10)
 	private String vehicleType = ""; // Default value
@@ -284,7 +284,7 @@ public class Cfigmcn {
 	@Column(name = "Gate_In_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date gateInDate = new Date(0); // Default value
+	private Date gateInDate; // Default value
 
 	@Column(name = "Gate_Out_Id", length = 10)
 	private String gateOutId = ""; // Default value
@@ -292,7 +292,7 @@ public class Cfigmcn {
 	@Column(name = "Gate_Out_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date gateOutDate = new Date(0); // Default value
+	private Date gateOutDate; // Default value
 
 	@Column(name = "Gate_Out_Type", length = 10)
 	private String gateOutType = ""; // Default value
@@ -309,12 +309,12 @@ public class Cfigmcn {
 	@Column(name = "Hold_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date holdDate = new Date(0); // Default value
+	private Date holdDate; // Default value
 
 	@Column(name = "Release_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date releaseDate = new Date(0); // Default value
+	private Date releaseDate; // Default value
 
 	@Column(name = "Hold_Remarks", length = 150)
 	private String holdRemarks = ""; // Default value
@@ -337,7 +337,7 @@ public class Cfigmcn {
 	@Column(name = "Weighment_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date weighmentDate = new Date(0); // Default value
+	private Date weighmentDate; // Default value
 
 	@Column(name = "Labour", length = 1)
 	private char labour = 'N'; // Default value
@@ -378,7 +378,7 @@ public class Cfigmcn {
 	@Column(name = "Equipment_Entry_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date equipmentEntryDate = new Date(0); // Default value
+	private Date equipmentEntryDate; // Default value
 
 	@Column(name = "Notice_Id", length = 10)
 	private String noticeId = ""; // Default value
@@ -389,7 +389,7 @@ public class Cfigmcn {
 	@Column(name = "Notice_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date noticeDate = new Date(0); // Default value
+	private Date noticeDate; // Default value
 
 	@Column(name = "Second_Notice_Id", length = 10)
 	private String secondNoticeId = ""; // Default value
@@ -397,7 +397,7 @@ public class Cfigmcn {
 	@Column(name = "Second_Notice_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date secondNoticeDate = new Date(0); // Default value
+	private Date secondNoticeDate; // Default value
 
 	@Column(name = "Final_Notice_Id", length = 10)
 	private String finalNoticeId = ""; // Default value
@@ -405,7 +405,7 @@ public class Cfigmcn {
 	@Column(name = "Final_Notice_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date finalNoticeDate = new Date(0); // Default value
+	private Date finalNoticeDate; // Default value
 
 	@Column(name = "Auction_Status", length = 1)
 	private char auctionStatus = 'N'; // Default value
@@ -452,7 +452,7 @@ public class Cfigmcn {
 	@Column(name = "GRN_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date grnDate = new Date(0); // Default value
+	private Date grnDate; // Default value
 
 	@Column(name = "CIN_No", length = 25)
 	private String cinNo = ""; // Default value
@@ -460,7 +460,7 @@ public class Cfigmcn {
 	@Column(name = "CIN_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date cinDate = new Date(0); // Default value
+	private Date cinDate; // Default value
 
 	@Column(name = "Stamp_Duty", precision = 12, scale = 2)
 	private BigDecimal stampDuty = BigDecimal.ZERO; // Default value
@@ -496,7 +496,7 @@ public class Cfigmcn {
 	@Column(name = "Scanning_Done_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date scanningDoneDate = new Date(0); // Default value
+	private Date scanningDoneDate; // Default value
 
 	@Column(name = "OOC_No", length = 20)
 	private String oocNo = ""; // Default value
@@ -504,17 +504,17 @@ public class Cfigmcn {
 	@Column(name = "OOC_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date oocDate = new Date(0); // Default value
+	private Date oocDate; // Default value
 
 	@Column(name = "Loading_Start_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date loadingStartDate = new Date(0); // Default value
+	private Date loadingStartDate; // Default value
 
 	@Column(name = "Loading_End_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date loadingEndDate = new Date(0); // Default value
+	private Date loadingEndDate; // Default value
 
 	@Column(name = "Reefer_Escalation", length = 1)
 	private char reeferEscalation = 'N'; // Default value
@@ -537,7 +537,7 @@ public class Cfigmcn {
 	@Column(name = "Plug_In_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date plugInDate = new Date(0); // Default value
+	private Date plugInDate; // Default value
 
 	@Column(name = "Plug_In_User", length = 10)
 	private String plugInUser = ""; // Default value
@@ -548,7 +548,7 @@ public class Cfigmcn {
 	@Column(name = "Plug_Out_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date plugOutDate = new Date(0); // Default value
+	private Date plugOutDate; // Default value
 
 	@Column(name = "Plug_Out_User", length = 10)
 	private String plugOutUser = ""; // Default value
@@ -556,7 +556,7 @@ public class Cfigmcn {
 	@Column(name = "Plug_Entry_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date plugEntryDate = new Date(0); // Default value
+	private Date plugEntryDate; // Default value
 
 	@Column(name = "Status", length = 1)
 	private char status = ' '; // Default value
@@ -599,7 +599,7 @@ public class Cfigmcn {
 	@Column(name = "Created_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date createdDate = new Date(0); // Default value
+	private Date createdDate; // Default value
 
 	@Column(name = "Edited_By", length = 10)
 	private String editedBy = ""; // Default value
@@ -607,7 +607,7 @@ public class Cfigmcn {
 	@Column(name = "Edited_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date editedDate = new Date(0); // Default value
+	private Date editedDate; // Default value
 
 	@Column(name = "Approved_By", length = 10)
 	private String approvedBy = ""; // Default value
@@ -615,7 +615,7 @@ public class Cfigmcn {
 	@Column(name = "Approved_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date approvedDate = new Date(0); // Default value
+	private Date approvedDate; // Default value
 
 	@Column(name = "Transfer", length = 1)
 	private char transfer = 'N'; // Default value
@@ -623,7 +623,7 @@ public class Cfigmcn {
 	@Column(name = "Drt_Transfer_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date drtTransferDate = new Date(0); // Default value
+	private Date drtTransferDate; // Default value
 
 	@Column(name = "DRT", length = 1)
 	private char drt = 'N'; // Default value
@@ -637,7 +637,7 @@ public class Cfigmcn {
 	@Column(name = "upload_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date uploadDate = new Date(0); // Default value
+	private Date uploadDate; // Default value
 
 	@Column(name = "remove_user", length = 30)
 	private String removeUser = ""; // Default value
@@ -645,7 +645,7 @@ public class Cfigmcn {
 	@Column(name = "remove_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date removeDate = new Date(0); // Default value
+	private Date removeDate; // Default value
 
 	@Column(name = "image_path", length = 200)
 	private String imagePath = ""; // Default value
@@ -686,7 +686,7 @@ public class Cfigmcn {
 	@Column(name = "Invoice_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date invoiceDate = new Date(0); // Default value
+	private Date invoiceDate; // Default value
 
 	@Column(name = "Credit_Type", length = 1)
 	private char creditType = 'N'; // Default value
@@ -706,7 +706,7 @@ public class Cfigmcn {
 	@Column(name = "Tariff_valid")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date tariffValid = new Date(0); // Default value
+	private Date tariffValid; // Default value
 
 	@Column(name = "Tariff_Code", length = 20)
 	private String tariffCode = ""; // Default value
@@ -754,7 +754,7 @@ public class Cfigmcn {
 	@Column(name = "merge_Created_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date mergeCreatedDate = new Date(0); // Default value
+	private Date mergeCreatedDate; // Default value
 
 	@Column(name = "MERGE_CREATED_BY", length = 10)
 	private String mergeCreatedBy = ""; // Default value
@@ -771,7 +771,7 @@ public class Cfigmcn {
 	@Column(name = "merge_Approved_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date mergeApprovedDate = new Date(0); // Default value
+	private Date mergeApprovedDate; // Default value
 
 	@Column(name = "Last_Assesment_Id", length = 20)
 	private String lastAssesmentId = ""; // Default value
@@ -779,7 +779,7 @@ public class Cfigmcn {
 	@Column(name = "Last_Assesment_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date lastAssesmentDate = new Date(0); // Default value
+	private Date lastAssesmentDate; // Default value
 
 	@Column(name = "Last_Invoice_No", length = 16)
 	private String lastInvoiceNo = ""; // Default value
@@ -787,7 +787,7 @@ public class Cfigmcn {
 	@Column(name = "Last_Invoice_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date lastInvoiceDate = new Date(0); // Default value
+	private Date lastInvoiceDate; // Default value
 
 	@Column(name = "PN_Status", length = 1)
 	private char pnStatus = 'N'; // Default value
@@ -810,12 +810,12 @@ public class Cfigmcn {
 	@Column(name = "LCL_Zero_Entry_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date lclZeroEntryDate = new Date(0); // Default value
+	private Date lclZeroEntryDate; // Default value
 
 	@Column(name = "LCL_ZERO_ENTRY_Validity_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date lclZeroEntryValidityDate = new Date(0); // Default value
+	private Date lclZeroEntryValidityDate; // Default value
 
 	@Column(name = "LCL_ZERO_ENTRY_Created_By", length = 50)
 	private String lclZeroEntryCreatedBy = ""; // Default value
@@ -864,7 +864,7 @@ public class Cfigmcn {
 	@Column(name = "LCLCN_Invoice_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date lclcnInvoiceDate = new Date(0); // Default value
+	private Date lclcnInvoiceDate; // Default value
 
 	@Column(name = "LCLCN_Credit_Type", length = 1)
 	private char lclcnCreditType = 'N'; // Default value
@@ -884,7 +884,7 @@ public class Cfigmcn {
 	@Column(name = "CODECCO_IN_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date codeccoInDate = new Date(0); // Default value
+	private Date codeccoInDate; // Default value
 
 	@Column(name = "CODECCO_OUT_STATUS", length = 1)
 	private char codeccoOutStatus = 'N'; // Default value
@@ -892,7 +892,7 @@ public class Cfigmcn {
 	@Column(name = "CODECCO_OUT_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date codeccoOutDate = new Date(0); // Default value
+	private Date codeccoOutDate; // Default value
 
 	@Column(name = "CODECCO_DST_STATUS", length = 1)
 	private char codeccoDstStatus = 'N'; // Default value
@@ -900,7 +900,7 @@ public class Cfigmcn {
 	@Column(name = "CODECCO_DST_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date codeccoDstDate = new Date(0); // Default value
+	private Date codeccoDstDate; // Default value
 
 	@Column(name = "CODECCO_MT_IN_STATUS", length = 1)
 	private char codeccoMtInStatus = 'N'; // Default value
@@ -908,7 +908,7 @@ public class Cfigmcn {
 	@Column(name = "CODECCO_MT_IN_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date codeccoMtInDate = new Date(0); // Default value
+	private Date codeccoMtInDate; // Default value
 
 	@Column(name = "CODECCO_TERMINAL_OUT_STATUS", length = 1)
 	private char codeccoTerminalOutStatus = 'N'; // Default value
@@ -916,7 +916,7 @@ public class Cfigmcn {
 	@Column(name = "CODECCO_TERMINAL_OUT_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date codeccoTerminalOutDate = new Date(0); // Default value
+	private Date codeccoTerminalOutDate; // Default value
 
 	@Column(name = "THCharges", precision = 16, scale = 0)
 	private BigDecimal thCharges = BigDecimal.ZERO; // Default value
@@ -924,7 +924,7 @@ public class Cfigmcn {
 	@Column(name = "Part_DeStuff_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date partDeStuffDate = new Date(0); // Default value
+	private Date partDeStuffDate; // Default value
 
 	@Column(name = "Part_DeStuff_Id", length = 10)
 	private String partDeStuffId = ""; // Default value
@@ -947,7 +947,7 @@ public class Cfigmcn {
 	@Column(name = "INVOICE_UPTO_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date invoiceUptoDate = new Date(0); // Default value
+	private Date invoiceUptoDate; // Default value
 
 	@Column(name = "AUCTION_FLAG", length = 1)
 	private char auctionFlag = 'N'; // Default value
@@ -973,12 +973,12 @@ public class Cfigmcn {
 	@Column(name = "Last_Location_Received_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date lastLocationReceivedDate = new Date(0); // Default value
+	private Date lastLocationReceivedDate; // Default value
 
 	@Column(name = "Location_Received_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date locationReceivedDate = new Date(0); // Default value
+	private Date locationReceivedDate; // Default value
 
 	@Column(name = "Tag_Receive_Status", length = 1)
 	private char tagReceiveStatus = 'N'; // Default value
@@ -986,7 +986,7 @@ public class Cfigmcn {
 	@Column(name = "Tag_Receive_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date tagReceiveDate = new Date(0); // Default value
+	private Date tagReceiveDate; // Default value
 
 	@Column(name = "RFTag", length = 30)
 	private String rfTag = ""; // Default value
@@ -997,7 +997,7 @@ public class Cfigmcn {
 	@Column(name = "Tag_Remove_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date tagRemoveDate = new Date(0); // Default value
+	private Date tagRemoveDate; // Default value
 
 	@Column(name = "GP_Send_Status", length = 1)
 	private char gpSendStatus = 'N'; // Default value
@@ -1005,7 +1005,7 @@ public class Cfigmcn {
 	@Column(name = "GP_Send_Date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	private Date gpSendDate = new Date(0); // Default value
+	private Date gpSendDate; // Default value
 
 	@Column(name = "Inv_Cat_H", length = 1)
 	private char invCatH = ' '; // Default value (empty character)

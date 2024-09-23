@@ -180,6 +180,14 @@ public class ImportGatePassController {
 				Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
 						i.getContainerNo());
 				Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, i.getIgmNo(), i.getIgmLineNo());
+
+				DestuffCrg d = new DestuffCrg();
+
+				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+					d = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+							cn.getDeStuffId());
+				}
+
 				i.setGatePassId(HoldNextIdD1);
 				// i.setVehicleGatePassId(HoldNextIdD1);
 				i.setVehStatus(vehicleStatus);
@@ -213,6 +221,14 @@ public class ImportGatePassController {
 				i.setDoValidityDate(crg.getDoValidityDate());
 				i.setMtyYardLocation(crg.getMtyYardLocation());
 				i.setCha(cr.getChaCode());
+
+				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+
+					if (d != null) {
+						i.setDestuffId(d.getDeStuffId());
+						i.setDestuffLineId(d.getDeStuffLineId());
+					}
+				}
 
 				importgatepassrepo.save(i);
 
@@ -298,7 +314,7 @@ public class ImportGatePassController {
 						}
 						existing.setVehicleNo(i.getVehicleNo());
 						existing.setDriverName(i.getDriverName());
-						existing.setVehicleGatePassId("");
+						existing.setVehicleGatePassId(i.getVehicleGatePassId());
 					}
 
 					importgatepassrepo.save(existing);
@@ -394,27 +410,6 @@ public class ImportGatePassController {
 
 	}
 
-//	@GetMapping("/selectSearchedItemWiseData1")
-//	public ResponseEntity<?> selectSearchedItemWiseData1(@RequestParam("cid") String cid,
-//			@RequestParam("bid") String bid, @RequestParam("igm") String igm, @RequestParam("trans") String trans,
-//			@RequestParam("igmline") String igmline) {
-//
-//		System.out.println("igm,trans, igmline " + igm + " " + trans + " " + igmline);
-//		List<String> gatepassid = importgatepassrepo.getLastGatePassId(cid, bid, igm, trans, igmline);
-//
-//		if (gatepassid.isEmpty()) {
-//			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
-//		}
-//
-//		List<ImportGatePass> gatepass = importgatepassrepo.getData2(cid, bid, igm, trans, gatepassid.get(0).toString());
-//
-//		if (gatepass.isEmpty()) {
-//			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
-//		}
-//
-//		return new ResponseEntity<>(gatepass, HttpStatus.OK);
-//	}
-	
 	@GetMapping("/selectSearchedItemWiseData1")
 	public ResponseEntity<?> selectSearchedItemWiseData1(@RequestParam("cid") String cid,
 			@RequestParam("bid") String bid, @RequestParam("igm") String igm, @RequestParam("trans") String trans,
@@ -434,17 +429,19 @@ public class ImportGatePassController {
 //		}
 //
 //		return new ResponseEntity<>(gatepass, HttpStatus.OK);
-		
+
 		List<Object[]> gatepassid = importgatepassrepo.getLastGatePassId1(cid, bid, igm, trans, igmline);
 
 		if (gatepassid.isEmpty()) {
 			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
 		}
-		
-	
+
+		System.out.println(
+				"gatepassid " + cid + " " + bid + " " + igm + " " + igmline + " " + gatepassid.get(0)[0].toString());
 
 		if ("LCL".equals(gatepassid.get(0)[1].toString())) {
-			List<ImportGatePass> gatepass = importgatepassrepo.getData3(cid, bid, igm, igmline.isEmpty() ? gatepassid.get(0)[2].toString():igmline, gatepassid.get(0)[0].toString());
+			List<ImportGatePass> gatepass = importgatepassrepo.getData3(cid, bid, igm,
+					igmline.isEmpty() ? gatepassid.get(0)[2].toString() : igmline, gatepassid.get(0)[0].toString());
 
 			if (gatepass.isEmpty()) {
 				return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
@@ -456,7 +453,8 @@ public class ImportGatePassController {
 
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} else {
-			List<ImportGatePass> gatepass = importgatepassrepo.getData(cid, bid, igm, igmline, gatepassid.get(0)[0].toString());
+			List<ImportGatePass> gatepass = importgatepassrepo.getData(cid, bid, igm, igmline,
+					gatepassid.get(0)[0].toString());
 
 			if (gatepass.isEmpty()) {
 				return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
@@ -692,6 +690,13 @@ public class ImportGatePassController {
 						i.getContainerNo());
 				Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, i.getIgmNo(), i.getIgmLineNo());
 
+				DestuffCrg d = new DestuffCrg();
+
+				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+					d = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+							cn.getDeStuffId());
+				}
+
 				i.setGatePassId(HoldNextIdD1);
 				i.setVehicleGatePassId("Y".equals(crg.getVehStatus()) ? crg.getVehicleGatePassId() : "");
 				i.setVehStatus("Y");
@@ -727,6 +732,14 @@ public class ImportGatePassController {
 				i.setDoValidityDate(crg.getDoValidityDate());
 				i.setMtyYardLocation(crg.getMtyYardLocation());
 				i.setCha(cr.getChaCode());
+				
+				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+
+					if (d != null) {
+						i.setDestuffId(d.getDeStuffId());
+						i.setDestuffLineId(d.getDeStuffLineId());
+					}
+				}
 
 				importgatepassrepo.save(i);
 
@@ -951,14 +964,11 @@ public class ImportGatePassController {
 		if (i.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
-		
-		
 
 		return new ResponseEntity<>(i, HttpStatus.OK);
 
 	}
 
-	
 	@GetMapping("/getEmptyVehicle1")
 	public ResponseEntity<?> getEmptyVehicleGateIn1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "veh", required = false) String veh) {
@@ -967,12 +977,11 @@ public class ImportGatePassController {
 		if (i.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
-		
-		
 
 		return new ResponseEntity<>(i, HttpStatus.OK);
 
 	}
+
 	@PostMapping("/saveLCLGatePass")
 	public ResponseEntity<?> saveLCLGatePass(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("user") String user, @RequestParam("vehicleStatus") String vehicleStatus,
@@ -1065,6 +1074,8 @@ public class ImportGatePassController {
 				i.setCargoDuty(crg.getCargoDuty());
 				i.setLoadingStartDate(crg.getLoadingStartDate());
 				i.setLoadingEndDate(crg.getLoadingEndDate());
+				i.setDestuffId(destuff.getDeStuffId());
+				i.setDestuffLineId(destuff.getDeStuffLineId());
 
 				importgatepassrepo.save(i);
 
@@ -1085,8 +1096,9 @@ public class ImportGatePassController {
 				cfigmcrgrepo.save(cr);
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05073", HoldNextIdD1, "2024");
-				
-				int update = cfigmcnrepo.updategatePassId(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(), HoldNextIdD1);
+
+				int update = cfigmcnrepo.updategatePassId(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+						HoldNextIdD1);
 				sr++;
 			} else {
 				ImportGatePass existing = importgatepassrepo.getSingleData(cid, bid, i.getIgmNo(), i.getIgmLineNo(),
@@ -1219,34 +1231,30 @@ public class ImportGatePassController {
 		if (getData.isEmpty()) {
 			return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
 		}
-		
+
 		List<CfImportGatePassVehDtl> veh = importgatepassvehrepo.getData1(cid, bid, gatepassid);
-		
-		Map<String,Object> data = new HashMap<>();
+
+		Map<String, Object> data = new HashMap<>();
 
 		List<VehicleDetailDTO> result = new ArrayList<>();
-		
-		if(!veh.isEmpty()) {
+
+		if (!veh.isEmpty()) {
 			veh.stream().forEach(v -> {
 				VehicleDetailDTO dto = new VehicleDetailDTO();
 				dto.setVehId("1");
 				dto.setVehicleNo(v.getVehicleNo());
 				dto.setVehicleGatePassId(v.getVehicleGatePassId());
-				dto.setQtyTakenOut(v.getQtyTakenOut().intValue());  // Rounds down the value
+				dto.setQtyTakenOut(v.getQtyTakenOut().intValue()); // Rounds down the value
 
 				dto.setGwTakenOut(v.getGwTakenOut());
 
 				result.add(dto);
 			});
-		
-			
+
 		}
-		
-		
-		
+
 		data.put("vehData", result);
 		data.put("gatePassId", getData);
-		
 
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
@@ -1274,16 +1282,16 @@ public class ImportGatePassController {
 		vehData.stream().forEach(v -> {
 			if (v.getVehId().isEmpty()) {
 				int sr = importgatepassvehrepo.getcount(cid, bid, crg.getGatePassId());
-				
+
 				int vehStatus = importgatepassrepo.updateVehStatus(cid, bid, crg.getGatePassId());
-				
+
 				CfImportGatePassVehDtl dtl = new CfImportGatePassVehDtl();
 				dtl.setCompanyId(cid);
 				dtl.setBranchId(bid);
 				dtl.setFinYear(crg.getFinYear());
 				dtl.setProfitcentreId(crg.getProfitcentreId());
 				dtl.setGatePassId(crg.getGatePassId());
-				dtl.setSrNo(sr+1);
+				dtl.setSrNo(sr + 1);
 				dtl.setContainerNo("");
 				dtl.setIgmNo(crg.getIgmNo());
 				dtl.setIgmLineNo(crg.getIgmTransId());
@@ -1300,11 +1308,11 @@ public class ImportGatePassController {
 				dtl.setStatus('A');
 
 				importgatepassvehrepo.save(dtl);
-				
+
 				VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, v.getVehicleNo(),
 						v.getVehicleGatePassId());
-				
-				System.out.println("track "+track);
+
+				System.out.println("track " + track);
 
 				if (track != null) {
 					track.setGatePassNo(crg.getGatePassId());
@@ -1326,7 +1334,7 @@ public class ImportGatePassController {
 			dto.setVehId("1");
 			dto.setVehicleNo(v.getVehicleNo());
 			dto.setVehicleGatePassId(v.getVehicleGatePassId());
-			dto.setQtyTakenOut(v.getQtyTakenOut().intValue());  // Rounds down the value
+			dto.setQtyTakenOut(v.getQtyTakenOut().intValue()); // Rounds down the value
 
 			dto.setGwTakenOut(v.getGwTakenOut());
 
@@ -1349,7 +1357,7 @@ public class ImportGatePassController {
 			dto.setVehId("1");
 			dto.setVehicleNo(v.getVehicleNo());
 			dto.setVehicleGatePassId(v.getVehicleGatePassId());
-			dto.setQtyTakenOut(v.getQtyTakenOut().intValue());  // Rounds down the value
+			dto.setQtyTakenOut(v.getQtyTakenOut().intValue()); // Rounds down the value
 
 			dto.setGwTakenOut(v.getGwTakenOut());
 

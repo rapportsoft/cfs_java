@@ -2,6 +2,7 @@ package com.cwms.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +26,14 @@ import com.cwms.entities.Destuff;
 import com.cwms.entities.DestuffCrg;
 import com.cwms.entities.DestuffDto;
 import com.cwms.entities.ExamCrg;
+import com.cwms.entities.Impexpgrid;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.DestuffRepository;
 import com.cwms.repository.ExamCargoRepository;
+import com.cwms.repository.Impexpgridrepo;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -62,6 +65,9 @@ public class DestuffController {
 
 	@Autowired
 	private ExamCargoRepository examcrgrepo;
+	
+	@Autowired
+	private Impexpgridrepo impexpgridrepo;
 
 	@PostMapping("/saveData")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -143,7 +149,7 @@ public class DestuffController {
 //							cfigmcrgrepo.save(cr);
 //					     }
 //					}
-					sr++;
+					
 
 					Cfigmcrg cg = cfigmcrgrepo.getData1(cid, bid, c.getIgmTransId(), c.getIgmNo(), c.getIgmLineNo());
 
@@ -165,7 +171,40 @@ public class DestuffController {
 
 						cfigmcrgrepo.save(cg);
 					}
+					Impexpgrid grid = new Impexpgrid();
+					grid.setCompanyId(cid);
+					grid.setBranchId(bid);
+					grid.setCreatedBy(user);
+					grid.setCreatedDate(new Date());
+					grid.setApprovedBy(user);
+					grid.setApprovedDate(new Date());
+					grid.setStatus("A");
+					grid.setAreaReleased(BigDecimal.ZERO);
+					grid.setCellArea(c.getAreaOccupied());
+					grid.setCellAreaAllocated(c.getAreaOccupied());
+					grid.setCellAreaUsed(c.getAreaOccupied());
+					Date r = new Date();
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(r);
+					int year = cal.get(Calendar.YEAR);
+					grid.setFinYear(String.valueOf(year));
+					grid.setLineNo(sr);
+					grid.setProcessTransId(HoldNextIdD1);
+					grid.setQtyTakenOut(BigDecimal.ZERO);
+					grid.setStuffReqQty(0);
+					grid.setSubSrNo(sr);
+					grid.setTransType("IMP");
+					grid.setYardBlock(destuff.getYardBlock());
+					grid.setYardLocation(destuff.getYardLocation());
+					grid.setBlockCellNo(destuff.getBlockCellNo());
+					grid.setYardPackages(c.getYardPackages().intValue());
+
+					impexpgridrepo.save(grid);
+					sr++;
 				}
+				
+			
+				
 			}
 
 			String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05067", "2024");
@@ -318,6 +357,19 @@ public class DestuffController {
 					}
 
 					cfigmcrgrepo.save(cg);
+				}
+				
+				
+				Impexpgrid existingGrid = impexpgridrepo.getDataByIdAndLineId(cid, bid, c.getDeStuffId(), c.getDeStuffLineId());
+				
+				if(existingGrid != null) {
+				
+					existingGrid.setCellArea(c.getAreaOccupied());
+					existingGrid.setCellAreaAllocated(c.getAreaOccupied());
+					existingGrid.setCellAreaUsed(c.getAreaOccupied());
+					existingGrid.setYardPackages(c.getYardPackages().intValue());
+					
+					impexpgridrepo.save(existingGrid);
 				}
 
 			}
@@ -665,6 +717,36 @@ public class DestuffController {
 				existingCn.setHaz(haz);
 
 				cfigmcnrepo.save(existingCn);
+				
+				Impexpgrid grid = new Impexpgrid();
+				grid.setCompanyId(cid);
+				grid.setBranchId(bid);
+				grid.setCreatedBy(user);
+				grid.setCreatedDate(new Date());
+				grid.setApprovedBy(user);
+				grid.setApprovedDate(new Date());
+				grid.setStatus("A");
+				grid.setAreaReleased(BigDecimal.ZERO);
+				grid.setCellArea(BigDecimal.ZERO);
+				grid.setCellAreaAllocated(BigDecimal.ZERO);
+				grid.setCellAreaUsed(BigDecimal.ZERO);
+				Date r = new Date();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(r);
+				int year = cal.get(Calendar.YEAR);
+				grid.setFinYear(String.valueOf(year));
+				grid.setLineNo(1);
+				grid.setProcessTransId(HoldNextIdD1);
+				grid.setQtyTakenOut(BigDecimal.ZERO);
+				grid.setStuffReqQty(0);
+				grid.setSubSrNo(1);
+				grid.setTransType("IMP");
+				grid.setYardBlock(c.getYardBlock());
+				grid.setYardLocation(c.getYardLocation());
+				grid.setBlockCellNo(c.getBlockCellNo());
+				grid.setYardPackages(0);
+				impexpgridrepo.save(grid);
+				
 				processnextidrepo.updateAuditTrail(cid, bid, "P05067", newId, "2024");
 				processnextidrepo.updateAuditTrail(cid, bid, "P05066", HoldNextIdD1, "2024");
 

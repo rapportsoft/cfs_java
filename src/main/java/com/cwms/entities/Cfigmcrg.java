@@ -62,7 +62,7 @@ public class Cfigmcrg {
 	    @Column(name = "BL_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date blDate = new Date(0);
+	    private Date blDate;
 
 	    @Column(name = "Cargo_Movement", length = 2)
 	    private String cargoMovement = "";
@@ -206,7 +206,7 @@ public class Cfigmcrg {
 	    @Column(name = "Exam_Tally_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date examTallyDate = new Date(0);
+	    private Date examTallyDate;
 
 	    @Column(name = "BL_Tariff_No", length = 10)
 	    private String blTariffNo = "";
@@ -220,7 +220,7 @@ public class Cfigmcrg {
 	    @Column(name = "destuff_date")
 	    @Temporal(TemporalType.DATE)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date destuffDate = new Date(0);
+	    private Date destuffDate;
 
 	    @Column(name = "Cargo_Value", precision = 15, scale = 3)
 	    private BigDecimal cargoValue = BigDecimal.ZERO;
@@ -234,7 +234,7 @@ public class Cfigmcrg {
 	    @Column(name = "Gate_Out_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date gateOutDate = new Date(0);
+	    private Date gateOutDate;
 
 	    @Column(name = "Marks_Of_Numbers", columnDefinition = "TEXT")
 	    private String marksOfNumbers;
@@ -248,12 +248,12 @@ public class Cfigmcrg {
 	    @Column(name = "Hold_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date holdDate = new Date(0);
+	    private Date holdDate;
 
 	    @Column(name = "Release_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date releaseDate = new Date(0);
+	    private Date releaseDate;
 
 	    @Column(name = "Hold_Remarks", length = 150)
 	    private String holdRemarks;
@@ -276,7 +276,7 @@ public class Cfigmcrg {
 	    @Column(name = "Notice_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date noticeDate = new Date(0);
+	    private Date noticeDate;
 
 	    @Column(name = "Auction_Status", length = 1)
 	    private String auctionStatus = "N";
@@ -296,7 +296,7 @@ public class Cfigmcrg {
 	    @Column(name = "BL_Updater_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date blUpdaterDate = new Date(0);
+	    private Date blUpdaterDate;
 
 	    @Column(name = "BL_Report_User", length = 50)
 	    private String blReportUser = "";
@@ -307,7 +307,7 @@ public class Cfigmcrg {
 	    @Column(name = "BL_Report_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date blReportDate = new Date(0);
+	    private Date blReportDate;
 
 	    @Column(name = "Created_By", length = 10)
 	    private String createdBy;
@@ -315,7 +315,7 @@ public class Cfigmcrg {
 	    @Column(name = "Created_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date createdDate = new Date(0);
+	    private Date createdDate;
 
 	    @Column(name = "Edited_By", length = 10)
 	    private String editedBy;
@@ -323,7 +323,7 @@ public class Cfigmcrg {
 	    @Column(name = "Edited_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date editedDate = new Date(0);
+	    private Date editedDate;
 
 	    @Column(name = "Approved_By", length = 10)
 	    private String approvedBy;
@@ -331,7 +331,7 @@ public class Cfigmcrg {
 	    @Column(name = "Approved_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date approvedDate = new Date(0);
+	    private Date approvedDate;
 
 	    @Column(name = "Haz_Reefer_Remarks", length = 10)
 	    private String hazReeferRemarks;
@@ -348,7 +348,7 @@ public class Cfigmcrg {
 	    @Column(name = "merge_Created_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date mergeCreatedDate = new Date(0);
+	    private Date mergeCreatedDate;
 
 	    @Column(name = "merge_Created_By", length = 10)
 	    private String mergeCreatedBy = "";
@@ -359,7 +359,7 @@ public class Cfigmcrg {
 	    @Column(name = "merge_Approved_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date mergeApprovedDate = new Date(0);
+	    private Date mergeApprovedDate;
 
 	    @Column(name = "Old_Line_No", length = 7)
 	    private String oldLineNo = "";
@@ -373,7 +373,7 @@ public class Cfigmcrg {
 	    @Column(name = "Risk_Status_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date riskStatusDate = new Date(0);
+	    private Date riskStatusDate;
 
 	    @Column(name = "SMTP_Flag", length = 10)
 	    private String smtpFlag = "N";
@@ -384,7 +384,7 @@ public class Cfigmcrg {
 	    @Column(name = "SMTP_Status_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date smtpStatusDate = new Date(0);
+	    private Date smtpStatusDate;
 
 	    @Column(name = "New_FWD_Id", length = 6)
 	    private String newFwdId = "";
@@ -398,7 +398,7 @@ public class Cfigmcrg {
 	    @Column(name = "Igm_Send_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date igmSendDate = new Date(0);
+	    private Date igmSendDate;
 
 	    @Column(name = "Part_DeStuff_Id", length = 10)
 	    private String partDeStuffId = "";
@@ -406,7 +406,7 @@ public class Cfigmcrg {
 	    @Column(name = "Part_DeStuff_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date partDeStuffDate = new Date(0);
+	    private Date partDeStuffDate;
 
 	    @Column(name = "IGM_Importer_Name", length = 100)
 	    private String igmImporterName = "";

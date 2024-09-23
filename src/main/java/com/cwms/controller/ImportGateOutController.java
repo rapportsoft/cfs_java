@@ -21,6 +21,7 @@ import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.DestuffCrg;
 import com.cwms.entities.GateOut;
+import com.cwms.entities.Impexpgrid;
 import com.cwms.entities.ImportGatePass;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfIgmCnRepository;
@@ -28,6 +29,7 @@ import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.DestuffRepository;
+import com.cwms.repository.Impexpgridrepo;
 import com.cwms.repository.ImportGateOutRepository;
 import com.cwms.repository.ImportGatePassRepo;
 import com.cwms.repository.PartyRepository;
@@ -76,6 +78,9 @@ public class ImportGateOutController {
 
 	@Autowired
 	private ImportGateOutRepository gateOutRepo;
+	
+	@Autowired
+	private Impexpgridrepo impexpgridrepo;
 
 	@GetMapping("/searchGatePassData")
 	public ResponseEntity<?> searchGatePassData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -213,6 +218,7 @@ public class ImportGateOutController {
 				g.setDeliveryOrderDate(out.getDeliveryOrderDate());
 				g.setDoValidityDate(out.getDoValidityDate());
 
+				
 				gateOutRepo.save(g);
 
 				gatePass.setGateOutId(HoldNextIdD1);
@@ -251,6 +257,19 @@ public class ImportGateOutController {
 							"", HoldNextIdD1, out.getDeliveryOrderNo(), out.getDeliveryOrderDate(),
 							out.getDoValidityDate());
 				}
+				
+				if(gatePass.getDestuffId() != null && !gatePass.getDestuffId().isEmpty()) {
+					Impexpgrid existingGrid = impexpgridrepo.getDataByIdAndLineId(cid, bid, gatePass.getDestuffId(), gatePass.getDestuffLineId());
+					
+					if(existingGrid != null) {
+						existingGrid.setAreaReleased(existingGrid.getAreaReleased().add(gatePass.getCellAreaAllocated()));
+						existingGrid.setQtyTakenOut(existingGrid.getQtyTakenOut().add(gatePass.getQtyTakenOut()));
+						
+						impexpgridrepo.save(existingGrid);
+					}
+				}
+				
+			
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05074", HoldNextIdD1, "2024");
 			} else {
@@ -270,6 +289,17 @@ public class ImportGateOutController {
 
 					gateOutRepo.save(existing);
 				}
+//				if(gatePass.getDestuffId() != null && !gatePass.getDestuffId().isEmpty()) {
+//					Impexpgrid existingGrid = impexpgridrepo.getDataByIdAndLineId(cid, bid, gatePass.getDestuffId(), gatePass.getDestuffLineId());
+//					
+//					if(existingGrid != null) {
+//						existingGrid.setAreaReleased(gatePass.getCellAreaAllocated());
+//						existingGrid.setQtyTakenOut(gatePass.getQtyTakenOut());
+//						
+//						impexpgridrepo.save(existingGrid);
+//					}
+//				}
+				
 
 				if (!"LCL".equals(out.getTransType())) {
 					if (g.getVehicleNo() != null && !g.getVehicleNo().isEmpty()) {
