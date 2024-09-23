@@ -19,35 +19,35 @@ import jakarta.persistence.TemporalType;
 public class Cfigmcrg {
 
 	    @Id
-	    @Column(name = "Company_Id", length = 6, nullable = false)
+	    @Column(name = "Company_Id", length = 6)
 	    private String companyId;
 
 	    @Id
-	    @Column(name = "Branch_Id", length = 6, nullable = false)
+	    @Column(name = "Branch_Id", length = 6)
 	    private String branchId;
 
 	    @Id
-	    @Column(name = "Fin_Year", length = 4, nullable = false)
+	    @Column(name = "Fin_Year", length = 4)
 	    private String finYear;
 
 	    @Id
-	    @Column(name = "IGM_Trans_Id", length = 10, nullable = false)
+	    @Column(name = "IGM_Trans_Id", length = 10)
 	    private String igmTransId;
 	    
 	    @Id
-	    @Column(name = "IGM_Crg_Trans_Id", length = 10, nullable = false)
+	    @Column(name = "IGM_Crg_Trans_Id", length = 10)
 	    private String igmCrgTransId;
 
 	    @Id
-	    @Column(name = "Profitcentre_Id", length = 6, nullable = false)
+	    @Column(name = "Profitcentre_Id", length = 6)
 	    private String profitcentreId;
 
 	    @Id
-	    @Column(name = "IGM_Line_No", length = 7, nullable = false)
+	    @Column(name = "IGM_Line_No", length = 7)
 	    private String igmLineNo;
 
 	    @Id
-	    @Column(name = "igm_no", length = 10, nullable = false)
+	    @Column(name = "igm_no", length = 10)
 	    private String igmNo;
 
 	    @Column(name = "CYCLE", length = 10)

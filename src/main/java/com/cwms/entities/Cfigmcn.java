@@ -18,39 +18,39 @@ import jakarta.persistence.TemporalType;
 @IdClass(CfigmcnId.class)
 public class Cfigmcn {
 	@Id
-	@Column(name = "Company_Id", length = 6, nullable = false)
+	@Column(name = "Company_Id", length = 6)
 	private String companyId;
 
 	@Id
-	@Column(name = "Branch_Id", length = 6, nullable = false)
+	@Column(name = "Branch_Id", length = 6)
 	private String branchId;
 
 	@Id
-	@Column(name = "Fin_Year", length = 4, nullable = false)
+	@Column(name = "Fin_Year", length = 4)
 	private String finYear;
 
 	@Id
-	@Column(name = "IGM_Trans_Id", length = 10, nullable = false)
+	@Column(name = "IGM_Trans_Id", length = 10)
 	private String igmTransId;
 
 	@Id
-	@Column(name = "Profitcentre_Id", length = 6, nullable = false)
+	@Column(name = "Profitcentre_Id", length = 6)
 	private String profitcentreId;
 
 	@Id
-	@Column(name = "Igm_no", length = 10, nullable = false)
+	@Column(name = "Igm_no", length = 10)
 	private String igmNo;
 
 	@Id
-	@Column(name = "IGM_Line_No", length = 7, nullable = false)
+	@Column(name = "IGM_Line_No", length = 7)
 	private String igmLineNo;
 
 	@Id
-	@Column(name = "Container_No", length = 11, nullable = false)
+	@Column(name = "Container_No", length = 11)
 	private String containerNo;
 	
 	@Id
-	@Column(name = "Container_Trans_id", length = 10, nullable = false)
+	@Column(name = "Container_Trans_id", length = 10)
 	private String containerTransId;
 
 	@Column(name = "Cycle", length = 10)
@@ -134,10 +134,10 @@ public class Cfigmcn {
 	@Column(name = "ReExport", length = 1)
 	private String reExport = "N"; // Default value
 
-	@Column(name = "Extra_Transport", nullable = false, length = 1)
+	@Column(name = "Extra_Transport", length = 1)
 	private String extraTransport = "N"; // Default value
 
-	@Column(name = "Extra_Transport_Date", nullable = false)
+	@Column(name = "Extra_Transport_Date")
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date extraTransportDate; // Default value
@@ -795,13 +795,13 @@ public class Cfigmcn {
 	@Column(name = "Last_Invoice_Assesed", length = 1)
 	private char lastInvoiceAssesed = 'N'; // Default value
 
-	@Column(name = "Last_Bill_Amt", nullable = false, precision = 16, scale = 3)
+	@Column(name = "Last_Bill_Amt", precision = 16, scale = 3)
 	private BigDecimal lastBillAmt = BigDecimal.ZERO; // Default value
 
-	@Column(name = "Last_Invoice_Amt", nullable = false, precision = 16, scale = 3)
+	@Column(name = "Last_Invoice_Amt", precision = 16, scale = 3)
 	private BigDecimal lastInvoiceAmt = BigDecimal.ZERO; // Default value
 
-	@Column(name = "Last_Credit_Type", nullable = false, length = 16)
+	@Column(name = "Last_Credit_Type", length = 16)
 	private String lastCreditType = ""; // Default value
 
 	@Column(name = "LCL_Zero_Entry_Flag", length = 1)
