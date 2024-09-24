@@ -35,6 +35,7 @@ import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.DestuffCrg;
 import com.cwms.entities.ImportGatePass;
+import com.cwms.entities.ImportInventory;
 import com.cwms.entities.Party;
 import com.cwms.entities.VehicleDetailDTO;
 import com.cwms.entities.VehicleTrack;
@@ -45,6 +46,7 @@ import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.DestuffRepository;
 import com.cwms.repository.ImportGatePassRepo;
 import com.cwms.repository.ImportGatePassVehRepository;
+import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VehicleTrackRepository;
@@ -92,6 +94,9 @@ public class ImportGatePassController {
 
 	@Autowired
 	private ImportGatePassVehRepository importgatepassvehrepo;
+	
+	@Autowired
+	private ImportInventoryRepository importinventoryrepo;
 
 	@GetMapping("/getItemWiseData")
 	public ResponseEntity<?> getItemData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -260,6 +265,16 @@ public class ImportGatePassController {
 
 						vehicleTrackRepo.save(track);
 					}
+				}
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), 
+						cn.getContainerNo(), cn.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setGatePassDate(new Date());
+					existingInv.setGatePassNo(HoldNextIdD1);
+					
+					importinventoryrepo.save(existingInv);
 				}
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05068", HoldNextIdD1, "2024");
@@ -759,6 +774,16 @@ public class ImportGatePassController {
 
 					cfigmcnrepo.save(cn);
 				}
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), 
+						cn.getContainerNo(), cn.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setGatePassDate(new Date());
+					existingInv.setGatePassNo(HoldNextIdD1);
+					
+					importinventoryrepo.save(existingInv);
+				}
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05068", HoldNextIdD1, "2024");
 				sr++;
@@ -1038,7 +1063,6 @@ public class ImportGatePassController {
 					return new ResponseEntity<>("Destuff data not found", HttpStatus.CONFLICT);
 				}
 
-				System.out.println("i.getYardPackages() " + i.getYardPackages());
 
 				i.setGatePassId(HoldNextIdD1);
 				i.setVehStatus(vehicleStatus);
@@ -1095,10 +1119,15 @@ public class ImportGatePassController {
 
 				cfigmcrgrepo.save(cr);
 
-				processnextidrepo.updateAuditTrail(cid, bid, "P05073", HoldNextIdD1, "2024");
+				
 
 				int update = cfigmcnrepo.updategatePassId(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
 						HoldNextIdD1);
+				
+				int updateInventory = importinventoryrepo.updatData(cid, bid, i.getIgmTransId(), i.getIgmNo(), destuff.getDeStuffId(),
+						HoldNextIdD1);
+				
+				processnextidrepo.updateAuditTrail(cid, bid, "P05073", HoldNextIdD1, "2024");
 				sr++;
 			} else {
 				ImportGatePass existing = importgatepassrepo.getSingleData(cid, bid, i.getIgmNo(), i.getIgmLineNo(),

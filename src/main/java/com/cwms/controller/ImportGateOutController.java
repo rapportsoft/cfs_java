@@ -32,6 +32,7 @@ import com.cwms.repository.DestuffRepository;
 import com.cwms.repository.Impexpgridrepo;
 import com.cwms.repository.ImportGateOutRepository;
 import com.cwms.repository.ImportGatePassRepo;
+import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.ProfitcentreRepository;
@@ -81,6 +82,9 @@ public class ImportGateOutController {
 	
 	@Autowired
 	private Impexpgridrepo impexpgridrepo;
+	
+	@Autowired
+	private ImportInventoryRepository importinventoryrepo;
 
 	@GetMapping("/searchGatePassData")
 	public ResponseEntity<?> searchGatePassData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -233,6 +237,8 @@ public class ImportGateOutController {
 				crg.setGateOutDate(new Date());
 
 				cfigmcrgrepo.save(crg);
+				
+				System.out.println("out.getTransType() "+out.getTransType());
 
 				if (!"LCL".equals(out.getTransType())) {
 					if (g.getVehicleNo() != null && !g.getVehicleNo().isEmpty()) {
@@ -246,16 +252,26 @@ public class ImportGateOutController {
 
 							vehicleTrackRepo.save(vehTrack);
 						}
-						int updategateOutId = cfigmcnrepo.updategateOutId1(cid, bid, g.getErpDocRefNo(),
-								g.getDocRefNo(), g.getIgmLineNo(), HoldNextIdD1, out.getDeliveryOrderNo(),
-								out.getDeliveryOrderDate(), out.getDoValidityDate());
+
 					}
+					int updategateOutId = cfigmcnrepo.updategateOutId3(cid, bid, g.getErpDocRefNo(),
+							g.getDocRefNo(), g.getIgmLineNo(), g.getContainerNo(),HoldNextIdD1, out.getDeliveryOrderNo(),
+							out.getDeliveryOrderDate(), out.getDoValidityDate());
+					
+					System.out.println("data "+cid+" "+bid+" "+g.getErpDocRefNo()+" "+g.getDocRefNo()+" "+
+							gatePass.getGatePassId()+" "+g.getContainerNo()+" "+HoldNextIdD1);
+					
+					int updateGateOutId = importinventoryrepo.updateGateOutId1(cid, bid, g.getErpDocRefNo(), g.getDocRefNo(),
+							gatePass.getGatePassId(), g.getContainerNo(), HoldNextIdD1);
 				} else {
 					int updateVehicle = vehicleTrackRepo.updateVehicleData(cid, bid, out.getGatePassNo(), HoldNextIdD1);
 
 					int updategateOutId = cfigmcnrepo.updategateOutId1(cid, bid, g.getErpDocRefNo(), g.getDocRefNo(),
 							"", HoldNextIdD1, out.getDeliveryOrderNo(), out.getDeliveryOrderDate(),
 							out.getDoValidityDate());
+					
+					int updateGateOutId = importinventoryrepo.updateGateOutId(cid, bid, g.getErpDocRefNo(), g.getDocRefNo(),
+							gatePass.getGatePassId(), HoldNextIdD1);
 				}
 				
 				if(gatePass.getDestuffId() != null && !gatePass.getDestuffId().isEmpty()) {
@@ -303,8 +319,8 @@ public class ImportGateOutController {
 
 				if (!"LCL".equals(out.getTransType())) {
 					if (g.getVehicleNo() != null && !g.getVehicleNo().isEmpty()) {
-						int updategateOutId = cfigmcnrepo.updategateOutId2(cid, bid, g.getErpDocRefNo(), g.getDocRefNo(),
-								g.getIgmLineNo(), out.getDeliveryOrderNo(), out.getDeliveryOrderDate(),
+						int updategateOutId = cfigmcnrepo.updategateOutId4(cid, bid, g.getErpDocRefNo(), g.getDocRefNo(),
+								g.getIgmLineNo(), g.getContainerNo(),out.getDeliveryOrderNo(), out.getDeliveryOrderDate(),
 								out.getDoValidityDate());
 					}
 				} else {

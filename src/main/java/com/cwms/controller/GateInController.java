@@ -22,12 +22,14 @@ import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.GateOut;
+import com.cwms.entities.ImportInventory;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.GateOutRepository;
+import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.service.GateInService;
@@ -57,6 +59,9 @@ public class GateInController {
 	
 	@Autowired
 	private GateOutRepository gateoutrepository;
+	
+	@Autowired
+	private ImportInventoryRepository importinventoryrepo;
 
 	@PostMapping("/saveGateIn")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -187,6 +192,44 @@ public class GateInController {
 				v.setApprovedDate(new Date());
 
 				vehicleTrackRepo.save(v);
+				
+				ImportInventory inventory = new ImportInventory();
+				inventory.setCompanyId(cid);
+				inventory.setBranchId(bid);
+				inventory.setFinYear(gatein.getFinYear());
+				inventory.setIgmTransId(gatein.getErpDocRefNo());
+				inventory.setProfitcentreId(gatein.getProfitcentreId());
+				inventory.setIgmNo(gatein.getDocRefNo());
+				inventory.setVesselId(gatein.getVessel());
+				inventory.setViaNo(gatein.getViaNo());
+				inventory.setContainerNo(gatein.getContainerNo());
+				inventory.setContainerSize(gatein.getContainerSize());
+				inventory.setContainerType(gatein.getContainerType());
+				inventory.setIso(gatein.getIsoCode());
+				inventory.setSa(gatein.getSa());
+				inventory.setSl(gatein.getSl());
+				inventory.setImporterName(gatein.getImporterName());
+				inventory.setContainerStatus(gatein.getContainerStatus());
+				inventory.setContainerSealNo(gatein.getContainerSealNo());
+				inventory.setScannerType(gatein.getScannerType());
+				inventory.setYardLocation(gatein.getYardLocation());
+				inventory.setYardLocation1(gatein.getYardLocation1());
+				inventory.setYardBlock(gatein.getYardBlock());
+				inventory.setBlockCellNo(gatein.getYardCell());
+				inventory.setGateInId(HoldNextIdD1);
+				inventory.setGateInDate(new Date());
+				inventory.setStatus("A");
+				inventory.setCreatedBy(user);
+				inventory.setCreatedDate(new Date());
+				inventory.setApprovedBy(user);
+				inventory.setApprovedDate(new Date());
+				inventory.setNoOfItem(cn.get(0).getNoOfItem());
+				inventory.setContainerWeight(cn.get(0).getGrossWt()
+						.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
+				inventory.setCycle(cn.get(0).getCycle());
+				
+				
+				importinventoryrepo.save(inventory);
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05063", HoldNextIdD1, "2024");
 
@@ -296,6 +339,22 @@ public class GateInController {
 					}
 
 				});
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, gatein.getErpDocRefNo(), gatein.getDocRefNo(), 
+						gatein.getContainerNo(), gatein.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setContainerWeight(cn.get(0).getGrossWt()
+							.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
+					existingInv.setContainerSealNo(gatein.getContainerSealNo());
+	
+					existingInv.setYardLocation(gatein.getYardLocation());
+					existingInv.setYardLocation1(gatein.getYardLocation1());
+					existingInv.setYardBlock(gatein.getYardBlock());
+					existingInv.setBlockCellNo(gatein.getYardCell());
+					
+					importinventoryrepo.save(existingInv);
+				}
 
 				gateinrepo.save(existingData);
 				int update = vehicleTrackRepo.updateData(cid, bid, gatein.getGateInId(), gatein.getVehicleNo(),
@@ -307,6 +366,7 @@ public class GateInController {
 			}
 		}
 	}
+
 	@GetMapping("/getImpData")
 	public List<Object[]> getImpData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "search", required = false) String search) {

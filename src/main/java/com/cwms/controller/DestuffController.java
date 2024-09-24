@@ -27,6 +27,7 @@ import com.cwms.entities.DestuffCrg;
 import com.cwms.entities.DestuffDto;
 import com.cwms.entities.ExamCrg;
 import com.cwms.entities.Impexpgrid;
+import com.cwms.entities.ImportInventory;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
@@ -34,6 +35,7 @@ import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.DestuffRepository;
 import com.cwms.repository.ExamCargoRepository;
 import com.cwms.repository.Impexpgridrepo;
+import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -68,6 +70,9 @@ public class DestuffController {
 	
 	@Autowired
 	private Impexpgridrepo impexpgridrepo;
+	
+	@Autowired
+	private ImportInventoryRepository importinventoryrepo;
 
 	@PostMapping("/saveData")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -255,6 +260,16 @@ public class DestuffController {
 				}
 
 				cfigmcnrepo.save(c);
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, c.getIgmTransId(), c.getIgmNo(), 
+						c.getContainerNo(), c.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setDeStuffDate(new Date());
+					existingInv.setDeStuffId(HoldNextIdD1);
+					
+					importinventoryrepo.save(existingInv);
+				}
 				processnextidrepo.updateAuditTrail(cid, bid, "P05067", newId, "2024");
 			});
 
@@ -418,6 +433,7 @@ public class DestuffController {
 					c.setDoNo(data.getDoNo());
 					c.setDoDate(data.getDoDate());
 					c.setDoValidityDate(data.getDoValidityDate());
+					
 				}
 				c.setPackagesDeStuffed(totalNopFinal);
 				cfigmcnrepo.save(c);
@@ -746,6 +762,16 @@ public class DestuffController {
 				grid.setBlockCellNo(c.getBlockCellNo());
 				grid.setYardPackages(0);
 				impexpgridrepo.save(grid);
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, c.getIgmTransId(), c.getIgmNo(), 
+						c.getContainerNo(), c.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setDeStuffDate(new Date());
+					existingInv.setDeStuffId(HoldNextIdD1);
+					
+					importinventoryrepo.save(existingInv);
+				}
 				
 				processnextidrepo.updateAuditTrail(cid, bid, "P05067", newId, "2024");
 				processnextidrepo.updateAuditTrail(cid, bid, "P05066", HoldNextIdD1, "2024");

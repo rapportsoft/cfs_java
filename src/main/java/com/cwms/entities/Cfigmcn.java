@@ -419,10 +419,10 @@ public class Cfigmcn {
 	@Column(name = "Special_Remarks", length = 100)
 	private String specialRemarks = ""; // Default value
 
-	@Column(name = "Cargo_Wt", precision = 10, scale = 3)
+	@Column(name = "Cargo_Wt", precision = 18, scale = 3)
 	private BigDecimal cargoWt = BigDecimal.ZERO; // Default value
 
-	@Column(name = "Gross_Wt", precision = 10, scale = 3)
+	@Column(name = "Gross_Wt", precision = 18, scale = 3)
 	private BigDecimal grossWt = BigDecimal.ZERO; // Default value
 
 	@Column(name = "EIR_Gross_Weight", precision = 15, scale = 3)

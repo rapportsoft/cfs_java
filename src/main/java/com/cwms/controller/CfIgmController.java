@@ -27,6 +27,7 @@ import com.cwms.entities.ContainerSealCuttingDTO.Cargo;
 import com.cwms.entities.ContainerSealCuttingDTO.Container;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.ImportExaminationDTO;
+import com.cwms.entities.ImportInventory;
 import com.cwms.entities.Party;
 import com.cwms.entities.SealCuttingData;
 import com.cwms.repository.CfIgmCnRepository;
@@ -34,6 +35,7 @@ import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.ChildMenuRepository;
 import com.cwms.repository.GateInRepository;
+import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 
@@ -62,6 +64,9 @@ public class CfIgmController {
 
 	@Autowired
 	private GateInRepository gateinrepo;
+	
+	@Autowired
+	private ImportInventoryRepository importinventoryrepo;
 
 	@GetMapping("/search")
 	public List<Object[]> getSearchData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -529,14 +534,14 @@ public class CfIgmController {
 		Party party = partyrepo.getDataByCustomerCode(cid, bid, crg.getChaCode());
 
 		cn.stream().forEach(cnData -> {
-			System.out.println("cnData.getSealCuttingStatus() " + cnData.getSealCutWoTransId());
+			
 			if ("Y".equals(cnData.getSealCuttingStatus())) {
 
 				Cfigmcn existingCon = cfigmcnrepo.getSingleData4(cid, bid, cnData.getIgmTransId(), cnData.getIgmNo(),
 						cnData.getIgmLineNo(), cnData.getContainerNo());
 
 				if (cnData.getSealCutWoTransId() == null || cnData.getSealCutWoTransId().isEmpty()) {
-					System.out.println(cnData.getSealCuttingStatus());
+					
 					existingCon.setSealCutReqDate(cnData.getSealCutReqDate());
 					existingCon.setGateOutType(cnData.getGateOutType());
 					existingCon.setSealCutRemarks(crg.getSealCuttingRemarks());
@@ -557,6 +562,17 @@ public class CfIgmController {
 					existingCon.setCha(party != null ? party.getPartyId() : "");
 
 					cfigmcnrepo.save(existingCon);
+					
+					ImportInventory existingInv = importinventoryrepo.getById(cid, bid, existingCon.getIgmTransId(), existingCon.getIgmNo(), 
+							existingCon.getContainerNo(), existingCon.getGateInId());
+					
+					if(existingInv != null) {
+						existingInv.setSealCutReqDate(new Date());
+						existingInv.setSealCutTransId(newId);
+						existingInv.setCha(party != null ? party.getPartyId() : "");
+						
+						importinventoryrepo.save(existingInv);
+					}
 
 					processnextidrepo.updateAuditTrail(cid, bid, "P05064", newId, "2024");
 				} else {
@@ -572,6 +588,16 @@ public class CfIgmController {
 						existingCon.setContainerExamStatus("Y");
 					}
 					existingCon.setCha(party != null ? party.getPartyId() : "");
+					
+					ImportInventory existingInv = importinventoryrepo.getById(cid, bid, existingCon.getIgmTransId(), existingCon.getIgmNo(), 
+							existingCon.getContainerNo(), existingCon.getGateInId());
+					
+					if(existingInv != null) {
+	
+						existingInv.setCha(party != null ? party.getPartyId() : "");
+						
+						importinventoryrepo.save(existingInv);
+					}
 					cfigmcnrepo.save(existingCon);
 				}
 			}
@@ -659,7 +685,7 @@ public class CfIgmController {
 			@RequestBody ContainerSealCuttingDTO data) {
 		Container con = data.getCon();
 		List<Cargo> cargo = data.getCargo();
-		System.out.println("cargo " + cargo.size());
+		
 
 		List<Cfigmcn> containerData = cfigmcnrepo.getSingleContainerForSealCutting(cid, bid, con.getIgmNo(),
 				con.getContainerNo());
@@ -667,6 +693,8 @@ public class CfIgmController {
 		if (containerData.isEmpty()) {
 			return new ResponseEntity<>("Container data not found.", HttpStatus.BAD_REQUEST);
 		}
+		
+		
 
 		for (Cargo c : cargo) {
 			Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, c.getIgmTransId(), c.getIgmNo(), c.getIgmLineNo());
@@ -748,6 +776,17 @@ public class CfIgmController {
 				}
 
 				cfigmcnrepo.save(con1);
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, con1.getIgmTransId(), con1.getIgmNo(), 
+						con1.getContainerNo(), con1.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setSealCutReqDate(new Date());
+					existingInv.setSealCutTransId(newId);
+					
+					
+					importinventoryrepo.save(existingInv);
+				}
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05064", newId, "2024");
 			} else {
@@ -773,6 +812,16 @@ public class CfIgmController {
 					con1.setLowBed('N');
 				}
 				cfigmcnrepo.save(con1);
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, con1.getIgmTransId(), con1.getIgmNo(), 
+						con1.getContainerNo(), con1.getGateInId());
+				
+				if(existingInv != null) {
+		
+					existingInv.setCha(con1.getChaCode());
+					
+					importinventoryrepo.save(existingInv);
+				}
 			}
 
 		});
@@ -891,6 +940,17 @@ public class CfIgmController {
 				existingCon.setOocDate(data.getOocDate());
 
 				cfigmcnrepo.save(existingCon);
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, existingCon.getIgmTransId(), existingCon.getIgmNo(), 
+						existingCon.getContainerNo(), existingCon.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setContainerExamStatus("Y");
+					existingInv.setContainerExamDate(new Date());
+					
+					
+					importinventoryrepo.save(existingInv);
+				}
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05065", newId, "2024");
 			} else {
@@ -1022,6 +1082,17 @@ public class CfIgmController {
 				con1.setOocDate(data.getOocDate());
 
 				cfigmcnrepo.save(con1);
+				
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, con1.getIgmTransId(), con1.getIgmNo(), 
+						con1.getContainerNo(), con1.getGateInId());
+				
+				if(existingInv != null) {
+					existingInv.setContainerExamStatus("Y");
+					existingInv.setContainerExamDate(new Date());
+					
+					
+					importinventoryrepo.save(existingInv);
+				}
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05065", newId, "2024");
 			} else {
@@ -1300,6 +1371,7 @@ public class CfIgmController {
 //				list.add("P00210");
 //			}
 //
+//			
 //			Map<String, Object> c = new HashMap<>();
 //			c.put("list", list);
 //			c.put("igm", cn.get(0).getIgmNo());

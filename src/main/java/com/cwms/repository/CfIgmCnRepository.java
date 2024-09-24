@@ -698,9 +698,26 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	@Transactional
 	@Query(value="Update Cfigmcn cn SET cn.gateOutId=:id , cn.gateOutDate = CURRENT_DATE, cn.doNo=:do, cn.doDate=:doDate, "
 			+ "cn.doValidityDate=:doValidityDate where cn.companyId=:cid and cn.branchId=:bid and "
+			+ "cn.igmTransId=:trans and cn.igmNo=:igm and (:line is null OR :line = '' OR cn.igmLineNo=:line ) and cn.containerNo=:con and cn.status != 'D'")
+	int updategateOutId3(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
+			@Param("line") String igmline,@Param("con") String con,@Param("id") String id,@Param("do") String doNo,@Param("doDate") Date doDate,@Param("doValidityDate") Date doValidityDate);
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Cfigmcn cn SET cn.gateOutId=:id , cn.gateOutDate = CURRENT_DATE, cn.doNo=:do, cn.doDate=:doDate, "
+			+ "cn.doValidityDate=:doValidityDate where cn.companyId=:cid and cn.branchId=:bid and "
 			+ "cn.igmTransId=:trans and cn.igmNo=:igm and (:line is null OR :line = '' OR cn.igmLineNo=:line ) and cn.status != 'D'")
 	int updategateOutId1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
 			@Param("line") String igmline,@Param("id") String id,@Param("do") String doNo,@Param("doDate") Date doDate,@Param("doValidityDate") Date doValidityDate);
+	
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Cfigmcn cn SET cn.doNo=:do, cn.doDate=:doDate, "
+			+ "cn.doValidityDate=:doValidityDate where cn.companyId=:cid and cn.branchId=:bid and "
+			+ "cn.igmTransId=:trans and cn.igmNo=:igm and (:line is null OR :line = '' OR cn.igmLineNo=:line ) and cn.containerNo=:con and cn.status != 'D'")
+	int updategateOutId4(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
+			@Param("line") String igmline,@Param("con") String con,@Param("do") String doNo,@Param("doDate") Date doDate,@Param("doValidityDate") Date doValidityDate);
 	
 	@Modifying
 	@Transactional
@@ -717,7 +734,7 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.status != 'D'")
 	int updategateOutId(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
 			@Param("id") String id);
-
+	
 	
 	@Modifying
 	@Transactional
@@ -725,5 +742,6 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			+ "cn.igmTransId=:trans and cn.igmNo=:igm and  cn.igmLineNo=:line and cn.status != 'D'")
 	int updategatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
 			@Param("line") String line,@Param("id") String id);
+
 }
 
