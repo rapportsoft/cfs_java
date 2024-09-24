@@ -49,5 +49,25 @@ public class CfbondGatePassController {
 	        List<CFBondGatePass> gatePasses = cfbondGatePassService.getAllListOfGatePass(companyId, branchId, gatePassId, exBondBeNo);
 	        return ResponseEntity.ok(gatePasses);
 	    }
+	   
+	   
+	   @GetMapping("/getDataOfExBondBeNo")
+	    public List<Object[]> getDataOfExBondBeNo(
+	            @RequestParam("companyId") String companyId,
+	            @RequestParam("branchId") String branchId,
+	            @RequestParam(value = "value", required = false) String value) {
+	        return cfbondGatePassService.getDataOfExbondBeNo(companyId, branchId, value);
+	    }
+	    
+	    
+	    
+	    @GetMapping("/getVehicleNoOfExbondBeNoFromGatePass")
+	    public List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(
+	            @RequestParam("companyId") String companyId,
+	            @RequestParam("branchId") String branchId,
+	            @RequestParam("ecBondBeNo") String ecBondBeNo,
+	            @RequestParam(value = "value", required = false) String value) {
+	        return cfbondGatePassService.getVehicleNoOfExbondBeNoFromGatePass(companyId, branchId,ecBondBeNo, value);
+	    }
 }
 

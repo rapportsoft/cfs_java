@@ -367,4 +367,12 @@ public class CfbondGatePassService {
 	 public List<CFBondGatePass> getAllListOfGatePass(String companyId, String branchId, String gatePassId, String exBondBeNo) {
 	        return cfbondGatePassRepository.getAllListOfGatePass(companyId, branchId, gatePassId, exBondBeNo);
 	    }
+	 
+	 public List<Object[]> getDataOfExbondBeNo(String cid, String bid, String val) {
+			return cfbondGatePassRepository.getAllExbondBeNoFromGatePass(cid, bid, val);
+		}
+	 
+	 public List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(String cid, String bid,String exBondBeNo, String val) {
+			return cfbondGatePassRepository.getVehicleNoOfExbondBeNoFromGatePass(cid, bid, exBondBeNo,val);
+		}
 }

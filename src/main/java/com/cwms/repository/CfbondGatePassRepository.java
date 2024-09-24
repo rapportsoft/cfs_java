@@ -70,5 +70,31 @@ List<CFBondGatePass> getAllListOfGatePass(
 	    @Param("gatePassId") String gatePassId,
 	    @Param("exBondBeNo") String exBondBeNo);
 
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query(value = "select DISTINCT c.exBondBeNo " +
+	         "from CFBondGatePass c " +
+	         "where c.companyId = :cid and c.branchId = :bid " +
+	         "and c.status != 'D' " +
+	         "and c.gateOutId IS NULL " +
+	         "and (:val is null OR :val = '' OR c.exBondBeNo LIKE CONCAT(:val, '%'))")
+	List<Object[]> getAllExbondBeNoFromGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+	
+	
+	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo " +
+	         "from CFBondGatePass c " +
+	         "where c.companyId = :cid and c.branchId = :bid and c.exBondBeNo=:exBondBeNo " +
+	         "and c.status != 'D' " +
+	         "and c.gateOutId IS NULL " +
+	         "and (:val is null OR :val = '' OR c.exBondBeNo LIKE CONCAT(:val, '%'))")
+	List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("exBondBeNo") String exBondBeNo,@Param("val") String val);
+
+
 
 }
