@@ -25,6 +25,7 @@ import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.Destuff;
 import com.cwms.entities.DestuffCrg;
 import com.cwms.entities.DestuffDto;
+import com.cwms.entities.EmptyInventory;
 import com.cwms.entities.ExamCrg;
 import com.cwms.entities.Impexpgrid;
 import com.cwms.entities.ImportInventory;
@@ -33,6 +34,7 @@ import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.DestuffRepository;
+import com.cwms.repository.EmptyInventoryRepo;
 import com.cwms.repository.ExamCargoRepository;
 import com.cwms.repository.Impexpgridrepo;
 import com.cwms.repository.ImportInventoryRepository;
@@ -67,12 +69,15 @@ public class DestuffController {
 
 	@Autowired
 	private ExamCargoRepository examcrgrepo;
-	
+
 	@Autowired
 	private Impexpgridrepo impexpgridrepo;
-	
+
 	@Autowired
 	private ImportInventoryRepository importinventoryrepo;
+
+	@Autowired
+	private EmptyInventoryRepo emptyinventoryrepo;
 
 	@PostMapping("/saveData")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -86,6 +91,11 @@ public class DestuffController {
 
 		if (con.isEmpty()) {
 			return new ResponseEntity<>("Container data not found.", HttpStatus.BAD_REQUEST);
+		}
+		CFIgm igm = cfigmrepo.getDataByIgmNoAndtrans(cid, bid, destuff.getIgmTransId(), destuff.getIgmNo());
+
+		if (igm == null) {
+			return new ResponseEntity<>("Igm data not found.", HttpStatus.BAD_REQUEST);
 		}
 
 		if ("add".equals(flag)) {
@@ -108,10 +118,10 @@ public class DestuffController {
 					c.setBranchId(bid);
 					c.setCreatedBy(user);
 					c.setCreatedDate(new Date());
-                    c.setYardBlock(destuff.getYardBlock());
-                    c.setYardLocation(destuff.getYardLocation());
-                    c.setBlockCellNo(destuff.getBlockCellNo());
-                    
+					c.setYardBlock(destuff.getYardBlock());
+					c.setYardLocation(destuff.getYardLocation());
+					c.setBlockCellNo(destuff.getBlockCellNo());
+
 					c.setApprovedBy(user);
 					c.setApprovedDate(new Date());
 					c.setDeStuffId(HoldNextIdD1);
@@ -119,18 +129,21 @@ public class DestuffController {
 					c.setDeStuffLineId(String.valueOf(sr));
 					c.setDestuffType(destuff.getDestuffType());
 					c.setOnAccountOf(destuff.getOnAccountOf());
+					c.setOldActualNoOfPackages(c.getActualNoOfPackages());
+					c.setOldYardPackages(c.getYardPackages());
+					c.setOldActualWeight(c.getActualWeight());
 
-					if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) > 0) {
-						c.setGainLossPackages(String.valueOf(c.getNoOfPackages() - c.getActualNoOfPackages()));
-						c.setShortagePackages(new BigDecimal(c.getNoOfPackages() - c.getActualNoOfPackages()));
-					} else if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) < 0) {
-						c.setGainLossPackages(String.valueOf(c.getActualNoOfPackages() - c.getNoOfPackages()));
-						c.setExcessPackages(new BigDecimal(c.getActualNoOfPackages() - c.getNoOfPackages()));
-					} else {
-						c.setGainLossPackages("0");
-						c.setShortagePackages(BigDecimal.ZERO);
-						c.setExcessPackages(BigDecimal.ZERO);
-					}
+//					if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) > 0) {
+//						c.setGainLossPackages(String.valueOf(c.getNoOfPackages() - c.getActualNoOfPackages()));
+//						c.setShortagePackages(new BigDecimal(c.getNoOfPackages() - c.getActualNoOfPackages()));
+//					} else if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) < 0) {
+//						c.setGainLossPackages(String.valueOf(c.getActualNoOfPackages() - c.getNoOfPackages()));
+//						c.setExcessPackages(new BigDecimal(c.getActualNoOfPackages() - c.getNoOfPackages()));
+//					} else {
+//						c.setGainLossPackages("0");
+//						c.setShortagePackages(BigDecimal.ZERO);
+//						c.setExcessPackages(BigDecimal.ZERO);
+//					}
 
 					totalNop = totalNop.add(c.getYardPackages());
 					totalNop1 = totalNop1 + c.getActualNoOfPackages();
@@ -154,7 +167,6 @@ public class DestuffController {
 //							cfigmcrgrepo.save(cr);
 //					     }
 //					}
-					
 
 					Cfigmcrg cg = cfigmcrgrepo.getData1(cid, bid, c.getIgmTransId(), c.getIgmNo(), c.getIgmLineNo());
 
@@ -205,11 +217,10 @@ public class DestuffController {
 					grid.setYardPackages(c.getYardPackages().intValue());
 
 					impexpgridrepo.save(grid);
+
 					sr++;
 				}
-				
-			
-				
+
 			}
 
 			String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05067", "2024");
@@ -240,6 +251,34 @@ public class DestuffController {
 			destuff.setWorkOrderNo(newId);
 			destuff.setAreaOccupied(totalArea);
 			final int totalNopFinal = totalNop1;
+
+			EmptyInventory empinv = new EmptyInventory();
+			empinv.setBranchId(bid);
+			empinv.setCha(con.get(0).getCha());
+			empinv.setCompanyId(cid);
+			empinv.setContainerNo(con.get(0).getContainerNo());
+			empinv.setContainerSize(con.get(0).getContainerSize());
+			empinv.setContainerType(con.get(0).getContainerType());
+			empinv.setDeStuffId(HoldNextIdD1);
+			empinv.setDocRefNo(con.get(0).getIgmNo());
+			empinv.setEmptyDate(new Date());
+			empinv.setErpDocRefNo(con.get(0).getIgmTransId());
+			empinv.setFinYear(con.get(0).getFinYear());
+			empinv.setGateInDate(con.get(0).getGateInDate());
+			empinv.setGateInId(con.get(0).getGateInId());
+			empinv.setIsoCode(con.get(0).getIso());
+			empinv.setMovementCode("DEVC");
+			empinv.setOnAccountOf(destuff.getOnAccountOf());
+			empinv.setProfitcentreId(con.get(0).getProfitcentreId());
+			empinv.setSa(igm.getShippingAgent());
+			empinv.setSl(igm.getShippingLine());
+			empinv.setSubDocRefNo(con.get(0).getIgmLineNo());
+			empinv.setStatus("A");
+			empinv.setCreatedBy(user);
+			empinv.setCreatedDate(new Date());
+
+			emptyinventoryrepo.save(empinv);
+
 			con.stream().forEach(c -> {
 
 				c.setHaz(haz);
@@ -248,7 +287,7 @@ public class DestuffController {
 				c.setDestuffStatus("Y");
 				c.setDestuffWoCreatedBy(user);
 				c.setDestuffWoDate(new Date());
-				c.setPackagesDeStuffed(totalNopFinal);
+				//c.setPackagesDeStuffed(totalNopFinal);
 				c.setDestuffWoTransId(newId);
 
 				if ("LCL".equals(c.getContainerStatus())) {
@@ -260,22 +299,28 @@ public class DestuffController {
 				}
 
 				cfigmcnrepo.save(c);
-				
-				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, c.getIgmTransId(), c.getIgmNo(), 
+
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, c.getIgmTransId(), c.getIgmNo(),
 						c.getContainerNo(), c.getGateInId());
-				
-				if(existingInv != null) {
+
+				if (existingInv != null) {
 					existingInv.setDeStuffDate(new Date());
 					existingInv.setDeStuffId(HoldNextIdD1);
-					
+
 					importinventoryrepo.save(existingInv);
 				}
 				processnextidrepo.updateAuditTrail(cid, bid, "P05067", newId, "2024");
 			});
-
+			destuff.setMtyStatus("N");
 			destuffRepo.save(destuff);
 
 			processnextidrepo.updateAuditTrail(cid, bid, "P05066", HoldNextIdD1, "2024");
+
+			Boolean checkStatus = destuffRepo.checkMtyStatus(cid, bid, HoldNextIdD1);
+
+			if (checkStatus) {
+				int updateCheck = destuffRepo.updateMtyStatus(cid, bid, HoldNextIdD1);
+			}
 
 			DestuffDto dto = new DestuffDto();
 			List<DestuffCrg> crgData = destuffcrgrepo.getData1(cid, bid, destuff.getIgmTransId(), destuff.getIgmNo(),
@@ -297,6 +342,12 @@ public class DestuffController {
 			BigDecimal totalNop = BigDecimal.ZERO;
 			BigDecimal totalArea = BigDecimal.ZERO;
 			int totalNop1 = 0;
+			Destuff d = destuffRepo.getData(cid, bid, destuff.getIgmTransId(), destuff.getIgmNo(),
+					destuff.getIgmLineNo(), destuff.getDeStuffId());
+
+			if (d == null) {
+				return new ResponseEntity<>("Destuff data not found.", HttpStatus.BAD_REQUEST);
+			}
 			for (DestuffCrg c : crg) {
 				DestuffCrg existing = destuffcrgrepo.getSingleData(cid, bid, c.getIgmTransId(), c.getIgmNo(),
 						c.getIgmLineNo(), c.getDeStuffId(), c.getDeStuffLineId());
@@ -304,37 +355,48 @@ public class DestuffController {
 				if (existing == null) {
 					return new ResponseEntity<>("DestuffCrg data not found.", HttpStatus.BAD_REQUEST);
 				}
+				existing.setActualNoOfPackages(existing.getActualNoOfPackages()+c.getActualNoOfPackages());
+				existing.setActualWeight(existing.getActualWeight().add(c.getActualWeight()));
 				existing.setCommodityDescription(c.getCommodityDescription());
+				existing.setWarehouseLocation(c.getWarehouseLocation());
+				existing.setCargoType(c.getCargoType());
 				existing.setMarksOfNumbers(c.getMarksOfNumbers());
 				existing.setDamagedPackages(c.getDamagedPackages());
 				existing.setAreaOccupied(c.getAreaOccupied());
 				existing.setGrossWeight(c.getGrossWeight());
 				existing.setBlGainLoss(c.getBlGainLoss());
-				existing.setYardPackages(c.getYardPackages());
+				existing.setGainLossPackages(c.getGainLossPackages());
+				existing.setShortagePackages(c.getShortagePackages());
+				existing.setExcessPackages(c.getExcessPackages());
+				existing.setYardPackages(existing.getYardPackages().add(c.getYardPackages()));
 				existing.setComments(c.getComments());
 				existing.setEditedBy(user);
 				existing.setEditedDate(new Date());
 				existing.setOnAccountOf(destuff.getOnAccountOf());
-				System.out.println(c.getNoOfPackages().compareTo(c.getActualNoOfPackages()));
-
-				if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) == 1) {
-
-					int a = c.getNoOfPackages() - c.getActualNoOfPackages();
-					existing.setGainLossPackages(String.valueOf(a));
-					existing.setShortagePackages(new BigDecimal(a));
-				} else if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) == -1) {
-					int a = c.getActualNoOfPackages() - c.getNoOfPackages();
-					existing.setGainLossPackages(String.valueOf(a));
-					existing.setExcessPackages(new BigDecimal(a));
-				} else {
-					existing.setGainLossPackages("0");
-					existing.setShortagePackages(BigDecimal.ZERO);
-					existing.setExcessPackages(BigDecimal.ZERO);
-				}
-
-				totalNop = totalNop.add(c.getYardPackages());
-				totalNop1 = totalNop1 + c.getActualNoOfPackages();
+				existing.setOldActualNoOfPackages(existing.getOldActualNoOfPackages() + c.getActualNoOfPackages());
+				existing.setOldYardPackages(existing.getOldYardPackages().add(c.getYardPackages()));
+				existing.setOldActualWeight(existing.getOldActualWeight().add(c.getActualWeight()));
+				d.setYardPackages(d.getYardPackages().add(c.getYardPackages()));
+			//	d.setAreaOccupied(d.getAreaOccupied().add(c.getAreaOccupied()));
 				totalArea = totalArea.add(c.getAreaOccupied());
+				
+
+//				if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) == 1) {
+//
+//					int a = c.getNoOfPackages() - c.getActualNoOfPackages();
+//					existing.setGainLossPackages(String.valueOf(a));
+//					existing.setShortagePackages(new BigDecimal(a));
+//				} else if (c.getNoOfPackages().compareTo(c.getActualNoOfPackages()) == -1) {
+//					int a = c.getActualNoOfPackages() - c.getNoOfPackages();
+//					existing.setGainLossPackages(String.valueOf(a));
+//					existing.setExcessPackages(new BigDecimal(a));
+//				} else {
+//					existing.setGainLossPackages("0");
+//					existing.setShortagePackages(BigDecimal.ZERO);
+//					existing.setExcessPackages(BigDecimal.ZERO);
+//				}
+
+				
 
 				Cfigmcrg cr = cfigmcrgrepo.getData1(cid, bid, c.getIgmTransId(), c.getIgmNo(), c.getIgmLineNo());
 
@@ -373,39 +435,34 @@ public class DestuffController {
 
 					cfigmcrgrepo.save(cg);
 				}
-				
-				
-				Impexpgrid existingGrid = impexpgridrepo.getDataByIdAndLineId(cid, bid, c.getDeStuffId(), c.getDeStuffLineId());
-				
-				if(existingGrid != null) {
-				
+
+				Impexpgrid existingGrid = impexpgridrepo.getDataByIdAndLineId(cid, bid, c.getDeStuffId(),
+						c.getDeStuffLineId());
+
+				if (existingGrid != null) {
+
 					existingGrid.setCellArea(c.getAreaOccupied());
 					existingGrid.setCellAreaAllocated(c.getAreaOccupied());
 					existingGrid.setCellAreaUsed(c.getAreaOccupied());
 					existingGrid.setYardPackages(c.getYardPackages().intValue());
-					
+
 					impexpgridrepo.save(existingGrid);
 				}
 
 			}
 
-			Destuff d = destuffRepo.getData(cid, bid, destuff.getIgmTransId(), destuff.getIgmNo(),
-					destuff.getIgmLineNo(), destuff.getDeStuffId());
-
-			if (d == null) {
-				return new ResponseEntity<>("Destuff data not found.", HttpStatus.BAD_REQUEST);
-			}
+		
 
 			BigDecimal oldGw = BigDecimal.ZERO;
 			d.setHaz(haz);
 			d.setEditedBy(user);
 			d.setEditedDate(new Date());
-			d.setYardPackages(totalNop);
+//			d.setYardPackages(totalNop);
 			d.setAreaOccupied(totalArea);
 			d.setDestuffFromDate(destuff.getDestuffFromDate());
 			d.setDestuffToDate(destuff.getDestuffToDate());
 			d.setOnAccountOf(destuff.getOnAccountOf());
-			d.setGrossWeight(destuff.getGrossWeight());
+//			d.setGrossWeight(destuff.getGrossWeight());
 			d.setShift(destuff.getShift());
 			destuffRepo.save(d);
 
@@ -433,11 +490,17 @@ public class DestuffController {
 					c.setDoNo(data.getDoNo());
 					c.setDoDate(data.getDoDate());
 					c.setDoValidityDate(data.getDoValidityDate());
-					
+
 				}
-				c.setPackagesDeStuffed(totalNopFinal);
+			//	c.setPackagesDeStuffed(totalNopFinal);
 				cfigmcnrepo.save(c);
 			});
+
+			Boolean checkStatus = destuffRepo.checkMtyStatus(cid, bid, destuff.getDeStuffId());
+
+			if (checkStatus) {
+				int updateCheck = destuffRepo.updateMtyStatus(cid, bid, destuff.getDeStuffId());
+			}
 
 			DestuffDto dto = new DestuffDto();
 			List<DestuffCrg> crgData = destuffcrgrepo.getData1(cid, bid, destuff.getIgmTransId(), destuff.getIgmNo(),
@@ -569,6 +632,21 @@ public class DestuffController {
 				d.setShift(shift);
 				d.setHaz(haz);
 
+				BigDecimal checkMtyVal = ((c.getActualNoOfPackages().add(c.getOldActualNoOfPackages()))
+						.add(c.getDamagedNoOfPackages())).add(c.getGainOrLossPkgs());
+
+				if ((checkMtyVal.compareTo(new BigDecimal(c.getNoOfPackages())) == 0
+						|| checkMtyVal.compareTo(new BigDecimal(c.getNoOfPackages())) == 1)
+						&& !"Y".equals(d.getMtyStatus())) {
+					d.setMtyStatus("Y");
+					d.setMtyDate(new Date());
+
+				} else {
+					if(!"Y".equals(d.getMtyStatus())) {
+						d.setMtyStatus("N");
+					}
+				}
+
 				destuffRepo.save(d);
 
 				DestuffCrg existingCrg = destuffcrgrepo.getSingleData1(cid, bid, c.getIgmTransId(), c.getIgmNo(),
@@ -589,13 +667,25 @@ public class DestuffController {
 						existingCrg.getDamagedPackages() - existingCn.getDamagedNoOfPackages().intValue()
 								+ new BigDecimal(c.getDamagedNoOfPackages().toString()).intValue());
 
+				existingCrg.setOldActualNoOfPackages(
+						existingCrg.getOldActualNoOfPackages() - existingCn.getOldActualNoOfPackages().intValue()
+								+ new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
+
+				// Update damaged packages
+				existingCrg.setOldYardPackages(
+						(existingCrg.getOldYardPackages().subtract(existingCn.getOldActualNoOfPackages()))
+								.add(c.getActualNoOfPackages()));
+
 				destuffcrgrepo.save(existingCrg);
 
-				existingCn.setActualNoOfPackages(c.getActualNoOfPackages());
+				existingCn.setActualNoOfPackages(existingCn.getActualNoOfPackages().add(c.getActualNoOfPackages()));
 				existingCn.setDamagedNoOfPackages(c.getDamagedNoOfPackages());
+				existingCn
+						.setOldActualNoOfPackages(existingCn.getOldActualNoOfPackages().add(c.getActualNoOfPackages()));
 				existingCn.setShift(shift);
 				existingCn.setHaz(haz);
-				existingCn.setPackagesDeStuffed(new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
+				existingCn.setGainOrLossPkgs(c.getGainOrLossPkgs());
+			//	existingCn.setPackagesDeStuffed(new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
 //				String lastValue1 = processnextidrepo.findAuditTrail(cid, bid, "P05069", "2024");
 //
 //				String[] parts1 = lastValue1.split("/");
@@ -642,7 +732,7 @@ public class DestuffController {
 				dcrg.setDeStuffDate(new Date());
 				dcrg.setDeStuffId(HoldNextIdD1);
 				dcrg.setDeStuffLineId("1");
-				dcrg.setGainLossPackages("0");
+				dcrg.setGainLossPackages(c.getGainOrLossPkgs().toString());
 				dcrg.setGrossWeight(crg.getGrossWeight());
 				dcrg.setIgmLineNo(c.getIgmLineNo());
 				dcrg.setIgmNo(c.getIgmNo());
@@ -651,7 +741,7 @@ public class DestuffController {
 				dcrg.setImporterAddress2(crg.getImporterAddress2());
 				dcrg.setImporterAddress3(crg.getImporterAddress3());
 				dcrg.setImporterName(crg.getImporterName());
-				dcrg.setNoOfPackages(new BigDecimal(crg.getNoOfPackages().toString()).intValue());
+				dcrg.setNoOfPackages(c.getNoOfPackages());
 				dcrg.setProfitcentreId(c.getProfitcentreId());
 				dcrg.setQtyTakenOut(0);
 				dcrg.setShortagePackages(BigDecimal.ZERO);
@@ -659,7 +749,9 @@ public class DestuffController {
 				dcrg.setTypeOfPackages(crg.getTypeOfPackage());
 				dcrg.setYardBlock(c.getYardBlock());
 				dcrg.setYardLocation(c.getYardLocation());
-				dcrg.setYardPackages(BigDecimal.ZERO);
+				dcrg.setYardPackages(c.getActualNoOfPackages());
+				dcrg.setOldActualNoOfPackages(new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
+				dcrg.setOldYardPackages(c.getActualNoOfPackages());
 
 				destuffcrgrepo.save(dcrg);
 				String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05067", "2024");
@@ -715,12 +807,26 @@ public class DestuffController {
 				cn.setYardBlock1(c.getYardBlock1());
 				cn.setYardLocation(c.getYardLocation());
 				cn.setYardLocation1(c.getYardLocation1());
-				cn.setYardPackages(BigDecimal.ZERO);
 				cn.setTransType("FCL");
 				cn.setContainerStatus("FCL");
+				cn.setYardPackages(c.getActualNoOfPackages());
+
+				BigDecimal checkMtyVal = (c.getActualNoOfPackages().add(c.getDamagedNoOfPackages()))
+						.add(c.getGainOrLossPkgs());
+
+				if (checkMtyVal.compareTo(new BigDecimal(c.getNoOfPackages())) == 0
+						|| checkMtyVal.compareTo(new BigDecimal(c.getNoOfPackages())) == 1) {
+					cn.setMtyStatus("Y");
+					cn.setMtyDate(new Date());
+
+				} else {
+					cn.setMtyStatus("N");
+				}
+
 				destuffRepo.save(cn);
 
 				existingCn.setActualNoOfPackages(c.getActualNoOfPackages());
+
 				existingCn.setDamagedNoOfPackages(c.getDamagedNoOfPackages());
 				existingCn.setDeStuffDate(new Date());
 				existingCn.setDeStuffId(HoldNextIdD1);
@@ -731,9 +837,38 @@ public class DestuffController {
 				existingCn.setPackagesDeStuffed(new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
 				existingCn.setShift(shift);
 				existingCn.setHaz(haz);
+				existingCn.setGainOrLossPkgs(c.getGainOrLossPkgs());
+				existingCn.setOldActualNoOfPackages(c.getActualNoOfPackages());
 
 				cfigmcnrepo.save(existingCn);
-				
+
+				EmptyInventory empinv = new EmptyInventory();
+				empinv.setBranchId(bid);
+				empinv.setCha(existingCn.getCha());
+				empinv.setCompanyId(cid);
+				empinv.setContainerNo(existingCn.getContainerNo());
+				empinv.setContainerSize(existingCn.getContainerSize());
+				empinv.setContainerType(existingCn.getContainerType());
+				empinv.setDeStuffId(HoldNextIdD1);
+				empinv.setDocRefNo(existingCn.getIgmNo());
+				empinv.setEmptyDate(new Date());
+				empinv.setErpDocRefNo(existingCn.getIgmTransId());
+				empinv.setFinYear(existingCn.getFinYear());
+				empinv.setGateInDate(existingCn.getGateInDate());
+				empinv.setGateInId(existingCn.getGateInId());
+				empinv.setIsoCode(existingCn.getIso());
+				empinv.setMovementCode("DEVC");
+				empinv.setOnAccountOf("");
+				empinv.setProfitcentreId(existingCn.getProfitcentreId());
+				empinv.setSa(igm.getShippingAgent());
+				empinv.setSl(igm.getShippingLine());
+				empinv.setSubDocRefNo(existingCn.getIgmLineNo());
+				empinv.setStatus("A");
+				empinv.setCreatedBy(user);
+				empinv.setCreatedDate(new Date());
+
+				emptyinventoryrepo.save(empinv);
+
 				Impexpgrid grid = new Impexpgrid();
 				grid.setCompanyId(cid);
 				grid.setBranchId(bid);
@@ -762,17 +897,17 @@ public class DestuffController {
 				grid.setBlockCellNo(c.getBlockCellNo());
 				grid.setYardPackages(0);
 				impexpgridrepo.save(grid);
-				
-				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, c.getIgmTransId(), c.getIgmNo(), 
+
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, c.getIgmTransId(), c.getIgmNo(),
 						c.getContainerNo(), c.getGateInId());
-				
-				if(existingInv != null) {
+
+				if (existingInv != null) {
 					existingInv.setDeStuffDate(new Date());
 					existingInv.setDeStuffId(HoldNextIdD1);
-					
+
 					importinventoryrepo.save(existingInv);
 				}
-				
+
 				processnextidrepo.updateAuditTrail(cid, bid, "P05067", newId, "2024");
 				processnextidrepo.updateAuditTrail(cid, bid, "P05066", HoldNextIdD1, "2024");
 

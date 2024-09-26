@@ -1,5 +1,6 @@
 package com.cwms.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -246,7 +247,7 @@ public class CfIgmController {
 					int updateData = cfigmcrgrepo.updateData(cid, bid, igmTransId, i.getIgmNo(), i.getIgmCrgTransId(),
 							i.getCycle(), i.getIgmLineNo(), i.getBlNo(), i.getBlDate(), i.getCommodityDescription(),
 							i.getCargoMovement(), i.getGrossWeight(), i.getUnitOfWeight(), i.getNoOfPackages(),
-							i.getTypeOfPackage(), i.getHoldingAgent(), i.getHoldingAgentName(), i.getMarksOfNumbers(),
+							i.getTypeOfPackage(), i.getAccountHolderId(), i.getAccountHolderName(), i.getMarksOfNumbers(),
 							i.getImporterId(), i.getImporterName(), i.getImporterAddress1(), i.getImporterAddress2(),
 							i.getImporterAddress3(), i.getNotifyPartyId(), i.getNotifyPartyName(),
 							i.getNotifiedAddress1(), i.getNotifiedAddress2(), i.getNotifiedAddress3(),
@@ -1144,6 +1145,8 @@ public class CfIgmController {
 					con.getIgmLineNo());
 
 			if (crg != null) {
+				crg.setNoOfPackages(new BigDecimal(con.getNoOfPackages()));
+				crg.setGrossWeight(con.getGrossWt());
 				data.add(crg);
 			}
 		});

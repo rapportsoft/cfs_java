@@ -198,6 +198,12 @@ public class Cfigmcn {
 
 	@Column(name = "Actual_No_Of_Packages", precision = 8, scale = 0)
 	private BigDecimal actualNoOfPackages = BigDecimal.ZERO; // Default value
+	
+	@Column(name = "Gain_Or_Loss_Pkgs", precision = 8, scale = 0)
+	private BigDecimal gainOrLossPkgs = BigDecimal.ZERO; // Default value
+	
+	@Column(name = "Old_Actual_No_Of_Packages", precision = 8, scale = 0)
+	private BigDecimal oldActualNoOfPackages = BigDecimal.ZERO; // Default value
 
 	@Column(name = "Damaged_No_Of_Packages", precision = 8, scale = 0)
 	private BigDecimal damagedNoOfPackages = BigDecimal.ZERO; // Default value
@@ -1032,6 +1038,18 @@ public class Cfigmcn {
 	
 	
 
+	public BigDecimal getGainOrLossPkgs() {
+		return gainOrLossPkgs;
+	}
+
+
+
+	public void setGainOrLossPkgs(BigDecimal gainOrLossPkgs) {
+		this.gainOrLossPkgs = gainOrLossPkgs;
+	}
+
+
+
 	public String getSealCuttingStatus() {
 		return sealCuttingStatus;
 	}
@@ -1373,6 +1391,21 @@ public class Cfigmcn {
 		this.codeccoMtInStatus = codeccoMtInStatus;
 
 	}
+
+	
+	
+	
+	public BigDecimal getOldActualNoOfPackages() {
+		return oldActualNoOfPackages;
+	}
+
+
+
+	public void setOldActualNoOfPackages(BigDecimal oldActualNoOfPackages) {
+		this.oldActualNoOfPackages = oldActualNoOfPackages;
+	}
+
+
 
 	public String getCompanyId() {
 		return companyId;

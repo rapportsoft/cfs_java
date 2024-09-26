@@ -71,6 +71,9 @@ public class DestuffCrg {
 
 	    @Column(name = "Actual_No_Of_Packages", precision = 8, scale = 0)
 	    private Integer actualNoOfPackages;
+	    
+	    @Column(name = "Old_Actual_No_Of_Packages", precision = 8, scale = 0)
+	    private Integer oldActualNoOfPackages;
 
 	    @Column(name = "On_Account_Of", length = 6)
 	    private String onAccountOf;
@@ -110,6 +113,9 @@ public class DestuffCrg {
 
 	    @Column(name = "Yard_Packages", precision = 8, scale = 3)
 	    private BigDecimal yardPackages;
+	    
+	    @Column(name = "Old_Yard_Packages", precision = 8, scale = 3)
+	    private BigDecimal oldYardPackages;
 
 	    @Column(name = "Exam_Tally_Id", length = 10)
 	    private String examTallyId;
@@ -201,6 +207,9 @@ public class DestuffCrg {
 
 	    @Column(name = "Actual_Weight", precision = 16, scale = 3)
 	    private BigDecimal actualWeight;
+	    
+	    @Column(name = "Old_Actual_Weight", precision = 16, scale = 3)
+	    private BigDecimal oldActualWeight;
 
 	    @Column(name = "Cargo_Type", length = 10)
 	    private String cargoType;
@@ -225,21 +234,30 @@ public class DestuffCrg {
 			// TODO Auto-generated constructor stub
 		}
 
+		
+
+		
+
+
+		
+
 		public DestuffCrg(String companyId, String branchId, String finYear, String deStuffId, String deStuffLineId,
 				Date deStuffDate, String igmTransId, String igmNo, String profitcentreId, String igmLineNo,
 				String commodityDescription, String comments, String marksOfNumbers, BigDecimal grossWeight,
-				String typeOfPackages, Integer noOfPackages, Integer actualNoOfPackages, String onAccountOf,
-				String gainLossPackages, Integer damagedPackages, String blGainLoss, String importerName,
-				String importerAddress1, String importerAddress2, String importerAddress3, String yardLocation,
-				String yardBlock, String blockCellNo, BigDecimal areaOccupied, BigDecimal yardPackages,
-				String examTallyId, Date examDate, String examTallyLineId, Integer qtyTakenOut, String invoiceType,
-				String gateInType, BigDecimal destuffCharges, BigDecimal fob, String sampleSlipId,
-				String forceEntryFlag, Date forceEntryDate, String forceEntryApproval, String forceEntryRemarks,
-				String status, String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+				String typeOfPackages, Integer noOfPackages, Integer actualNoOfPackages, Integer oldActualNoOfPackages,
+				String onAccountOf, String gainLossPackages, Integer damagedPackages, String blGainLoss,
+				String importerName, String importerAddress1, String importerAddress2, String importerAddress3,
+				String yardLocation, String yardBlock, String blockCellNo, BigDecimal areaOccupied,
+				BigDecimal yardPackages, BigDecimal oldYardPackages, String examTallyId, Date examDate,
+				String examTallyLineId, Integer qtyTakenOut, String invoiceType, String gateInType,
+				BigDecimal destuffCharges, BigDecimal fob, String sampleSlipId, String forceEntryFlag,
+				Date forceEntryDate, String forceEntryApproval, String forceEntryRemarks, String status,
+				String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
 				Date approvedDate, String destuffType, String lclZeroEntryFlag, Date lclZeroEntryDate,
 				Date lclZeroEntryValidityDate, String lclZeroEntryCreatedBy, String lclZeroEntryApproval,
-				String lclZeroEntryRemarks, BigDecimal actualWeight, String cargoType, String warehouseLocation,
-				String movementType, BigDecimal excessPackages, BigDecimal shortagePackages, String forceEntryFlagInv) {
+				String lclZeroEntryRemarks, BigDecimal actualWeight, BigDecimal oldActualWeight, String cargoType,
+				String warehouseLocation, String movementType, BigDecimal excessPackages, BigDecimal shortagePackages,
+				String forceEntryFlagInv) {
 			super();
 			this.companyId = companyId;
 			this.branchId = branchId;
@@ -258,6 +276,7 @@ public class DestuffCrg {
 			this.typeOfPackages = typeOfPackages;
 			this.noOfPackages = noOfPackages;
 			this.actualNoOfPackages = actualNoOfPackages;
+			this.oldActualNoOfPackages = oldActualNoOfPackages;
 			this.onAccountOf = onAccountOf;
 			this.gainLossPackages = gainLossPackages;
 			this.damagedPackages = damagedPackages;
@@ -271,6 +290,7 @@ public class DestuffCrg {
 			this.blockCellNo = blockCellNo;
 			this.areaOccupied = areaOccupied;
 			this.yardPackages = yardPackages;
+			this.oldYardPackages = oldYardPackages;
 			this.examTallyId = examTallyId;
 			this.examDate = examDate;
 			this.examTallyLineId = examTallyLineId;
@@ -299,6 +319,7 @@ public class DestuffCrg {
 			this.lclZeroEntryApproval = lclZeroEntryApproval;
 			this.lclZeroEntryRemarks = lclZeroEntryRemarks;
 			this.actualWeight = actualWeight;
+			this.oldActualWeight = oldActualWeight;
 			this.cargoType = cargoType;
 			this.warehouseLocation = warehouseLocation;
 			this.movementType = movementType;
@@ -306,6 +327,64 @@ public class DestuffCrg {
 			this.shortagePackages = shortagePackages;
 			this.forceEntryFlagInv = forceEntryFlagInv;
 		}
+
+
+
+
+       
+
+
+
+		
+
+
+
+
+		public BigDecimal getOldActualWeight() {
+			return oldActualWeight;
+		}
+
+
+
+
+
+
+
+
+		public void setOldActualWeight(BigDecimal oldActualWeight) {
+			this.oldActualWeight = oldActualWeight;
+		}
+
+
+
+
+
+
+
+
+		public Integer getOldActualNoOfPackages() {
+			return oldActualNoOfPackages;
+		}
+
+
+
+		public void setOldActualNoOfPackages(Integer oldActualNoOfPackages) {
+			this.oldActualNoOfPackages = oldActualNoOfPackages;
+		}
+
+
+
+		public BigDecimal getOldYardPackages() {
+			return oldYardPackages;
+		}
+
+
+
+		public void setOldYardPackages(BigDecimal oldYardPackages) {
+			this.oldYardPackages = oldYardPackages;
+		}
+
+
 
 		public String getCompanyId() {
 			return companyId;

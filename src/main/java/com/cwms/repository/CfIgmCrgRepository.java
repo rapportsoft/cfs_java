@@ -168,8 +168,22 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 
 	 
 	 
+//	 
+//	 @Query("SELECT crg.igmNo,crg.igmTransId,crg.igmLineNo,crg.importerName,crg.blNo,crg.blDate,crg.noOfPackages,crg.grossWeight, "
+//	 		    + "crg.beNo,crg.beDate,crg.cargoValue,crg.cargoDuty,crg.blType,crg.commodityDescription,crg.chaCode,crg.chaName "
+//	 		    + "FROM Cfigmcrg crg "
+//		        + "LEFT JOIN Cfigmcn cn ON crg.companyId = cn.companyId "
+//		        + "AND crg.branchId = cn.branchId "
+//		        + "AND crg.igmNo = cn.igmNo "
+//		        + "AND crg.igmTransId = cn.igmTransId "
+//		        + "AND crg.igmLineNo = cn.igmLineNo "
+//		        + "WHERE crg.companyId = :cid "
+//		        + "AND crg.branchId = :bid "
+//		        + "AND crg.igmNo = :igm "
+//		        + "AND cn.containerNo = :container")
+//		List<Object[]> getCrgData(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, @Param("container") String container);
 	 
-	 @Query("SELECT crg.igmNo,crg.igmTransId,crg.igmLineNo,crg.importerName,crg.blNo,crg.blDate,crg.noOfPackages,crg.grossWeight, "
+	 @Query("SELECT crg.igmNo,crg.igmTransId,crg.igmLineNo,crg.importerName,crg.blNo,crg.blDate,cn.noOfPackages,cn.grossWt, "
 	 		    + "crg.beNo,crg.beDate,crg.cargoValue,crg.cargoDuty,crg.blType,crg.commodityDescription,crg.chaCode,crg.chaName "
 	 		    + "FROM Cfigmcrg crg "
 		        + "LEFT JOIN Cfigmcn cn ON crg.companyId = cn.companyId "
@@ -182,6 +196,8 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		        + "AND crg.igmNo = :igm "
 		        + "AND cn.containerNo = :container")
 		List<Object[]> getCrgData(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, @Param("container") String container);
+		
+		
 
 
 		@Query(value="select c from Cfigmcrg c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:line and c.status != 'D'")
