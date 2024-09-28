@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +51,7 @@ public class CfbondGatePassController {
 	        return ResponseEntity.ok(gatePasses);
 	    }
 	   
-	   
+	  
 	   @GetMapping("/getDataOfExBondBeNo")
 	    public List<Object[]> getDataOfExBondBeNo(
 	            @RequestParam("companyId") String companyId,
@@ -69,5 +70,18 @@ public class CfbondGatePassController {
 	            @RequestParam(value = "value", required = false) String value) {
 	        return cfbondGatePassService.getVehicleNoOfExbondBeNoFromGatePass(companyId, branchId,ecBondBeNo, value);
 	    }
+	    @GetMapping("/getDataOfVehicleNo")
+	    public List<Object[]> getDataOfVehicleNo(
+	            @RequestParam("companyId") String companyId,
+	            @RequestParam("branchId") String branchId,
+	            @RequestParam(value = "value", required = false) String value) {
+	        return cfbondGatePassService.getDataOfVehicleNo(companyId, branchId, value);
+	    }
+	    
+	    @GetMapping("/getCommodityDetailsByVehicleNo")
+	    public ResponseEntity<List<CFBondGatePass>> getCommodityByVehicleNo(@RequestParam ("companyId") String companyId ,@RequestParam ("branchId") String branchId,@RequestParam (name = "vehicleNo",required = false) String vehicleNo) {
+			List<CFBondGatePass> getData = cfbondGatePassService.getDataOfCommodityDetailsByVehicleNo(companyId,branchId,vehicleNo);
+	    	return new ResponseEntity<>(getData,HttpStatus.OK);
+		}
 }
 

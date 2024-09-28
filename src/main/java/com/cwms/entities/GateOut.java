@@ -360,6 +360,12 @@ public class GateOut {
 
 	    @Column(name = "Review_Comments", length = 250)
 	    private String reviewComments;
+	    
+	    @Column(name = "Commodity", length = 10)
+	    private String commodity;
+	    
+	    @Column(name = "ExBond_BE_No", length = 20)
+	    private String exBondBeNo;
 
 		public GateOut() {
 			super();
@@ -388,8 +394,8 @@ public class GateOut {
 				char tagRemoveStatus, Date tagRemoveDate, String tallyType, String outSealNo, String draftBillNo,
 				Date draftBillDate, String gstin, char internalMove, char doAssessStatus, Date doAssessDate,
 				String noOfTrips, String alternateContactNo, String transTypeSubtype, String invoiceType,
-				String tallyId, String sealType, String exportDocument, char invtStatus, char markForReview,
-				String reviewComments) {
+				String tallyId, String sealType, String commodity, String exBondBeNo, String exportDocument,
+				char invtStatus, char markForReview, String reviewComments) {
 			super();
 			this.companyId = companyId;
 			this.branchId = branchId;
@@ -493,6 +499,8 @@ public class GateOut {
 			this.invoiceType = invoiceType;
 			this.tallyId = tallyId;
 			this.sealType = sealType;
+			this.commodity = commodity;
+			this.exBondBeNo = exBondBeNo;
 			this.exportDocument = exportDocument;
 			this.invtStatus = invtStatus;
 			this.markForReview = markForReview;
@@ -1359,6 +1367,29 @@ public class GateOut {
 			this.reviewComments = reviewComments;
 		}
 
+		public String getCommodity() {
+			return commodity;
+		}
+
+
+
+
+
+		public void setCommodity(String commodity) {
+			this.commodity = commodity;
+		}
+
+		public String getExBondBeNo() {
+			return exBondBeNo;
+		}
+
+
+
+
+
+		public void setExBondBeNo(String exBondBeNo) {
+			this.exBondBeNo = exBondBeNo;
+		}
 
 
 		public GateOut(String companyId, String branchId, String finYear, String gateOutId, String erpDocRefNo,
@@ -1402,6 +1433,70 @@ public class GateOut {
 			this.createdDate = createdDate;
 		}
 		
-	    
+
+		// query constructor for getting gate out data 
+				
+				public GateOut(String companyId, String branchId, String finYear, String gateOutId, String erpDocRefNo,
+						String docRefNo, String srNo, Date gateOutDate, String shift, String gatePassNo,
+						String commodityDescription, BigDecimal grossWt, String vehicleNo, String driverName,
+						String deliveryOrderNo, Date deliveryOrderDate, Date doValidityDate, String exBondBeNo,String comments,char transporterStatus,String transporter,
+						String transporterName,String tripType,Date gatePassDate,String gateNoIn,String createdBy,String approvedBy,char status,String profitcentreId,String driverContactNo,String licenceNo)  {
+					super();
+					this.companyId = companyId;
+					this.branchId = branchId;
+					this.finYear = finYear;
+					this.gateOutId = gateOutId;
+					this.erpDocRefNo = erpDocRefNo;
+					this.docRefNo = docRefNo;
+					this.srNo = srNo;
+					this.gateOutDate = gateOutDate;
+					this.shift = shift;
+					this.gatePassNo = gatePassNo;
+					this.commodityDescription = commodityDescription;
+					this.grossWt = grossWt;
+					this.vehicleNo = vehicleNo;
+					this.driverName = driverName;
+					this.deliveryOrderNo = deliveryOrderNo;
+					this.deliveryOrderDate = deliveryOrderDate;
+					this.doValidityDate = doValidityDate;
+					this.exBondBeNo = exBondBeNo;
+					this.comments = comments;
+					this.transporterStatus = transporterStatus;
+					this.transporter = transporter;
+					this.transporterName = transporterName;
+					this.tripType = tripType;
+					this.gatePassDate = gatePassDate;
+					this.gateNoIn = gateNoIn;
+					this.createdBy = createdBy;
+					this.approvedBy = approvedBy;
+					this.status=status;
+					this.profitcentreId=profitcentreId;
+					this.driverContactNo=driverContactNo;
+					this.licenceNo=licenceNo;
+				}
+
+
+
+
+
+		public GateOut(String companyId, String branchId, String finYear, String gateOutId, String erpDocRefNo, String docRefNo,
+				String srNo, String igmLineNo, BigDecimal grossWt, String natureOfCargo, BigDecimal actualNoOfPackages,
+				BigDecimal qtyTakenOut, String gatePassNo,String commodityDescription) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.gateOutId = gateOutId;
+			this.erpDocRefNo = erpDocRefNo;
+			this.docRefNo = docRefNo;
+			this.srNo = srNo;
+			this.igmLineNo = igmLineNo;
+			this.grossWt = grossWt;
+			this.natureOfCargo = natureOfCargo;
+			this.actualNoOfPackages = actualNoOfPackages;
+			this.qtyTakenOut = qtyTakenOut;
+			this.gatePassNo = gatePassNo;
+			this.commodityDescription = commodityDescription;
+		}
 	    
 }

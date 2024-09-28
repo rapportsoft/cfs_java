@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +96,7 @@ public class CfbondGatePassService {
 						gatePassDtl.setApprovedBy(user);
 						gatePassDtl.setApprovedDate(new Date());
 						gatePassDtl.setStatus("A");
-
+						
 						gatePassDtl.setGatePassId(nectExBondingId);
 						gatePassDtl.setGatePassDate(gatePass.getGatePassDate());
 						gatePassDtl.setShift(gatePass.getShift());
@@ -121,6 +123,7 @@ public class CfbondGatePassService {
 
 						gatePassDtl.setTransType(gatePass.getTransType());
 						gatePassDtl.setNocNo(item.getNocNo());
+						gatePassDtl.setNocTransId(item.getNocTransId());
 						gatePassDtl.setExBondBeNo(item.getExBondBeNo());
 						gatePassDtl.setBoeNo(item.getBoeNo());
 						gatePassDtl.setCommodity(item.getCommodity());
@@ -375,4 +378,21 @@ public class CfbondGatePassService {
 	 public List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(String cid, String bid,String exBondBeNo, String val) {
 			return cfbondGatePassRepository.getVehicleNoOfExbondBeNoFromGatePass(cid, bid, exBondBeNo,val);
 		}
+	 
+	
+	 
+	 
+	 
+	 
+	 
+	 
+	 public List<Object[]> getDataOfVehicleNo(String cid, String bid, String val) {
+			return cfbondGatePassRepository.getVehicleNo(cid, bid, val);
+		}
+		
+	 
+	 public List<CFBondGatePass> getDataOfCommodityDetailsByVehicleNo(String companyId, String branchId, String vehicleNo) {
+		    return cfbondGatePassRepository.getCommodityDetailsOfVehicleNo(companyId, branchId, vehicleNo);
+		}
+
 }

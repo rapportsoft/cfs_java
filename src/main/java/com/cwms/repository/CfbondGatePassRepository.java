@@ -1,12 +1,14 @@
 package com.cwms.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cwms.entities.CFBondGatePass;
+
+import jakarta.transaction.Transactional;
 
 public interface CfbondGatePassRepository extends JpaRepository<CFBondGatePass, String> {
 
@@ -70,7 +72,7 @@ List<CFBondGatePass> getAllListOfGatePass(
 	    @Param("gatePassId") String gatePassId,
 	    @Param("exBondBeNo") String exBondBeNo);
 
-	
+
 	
 	
 	
@@ -87,7 +89,7 @@ List<CFBondGatePass> getAllListOfGatePass(
 	List<Object[]> getAllExbondBeNoFromGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 	
 	
-	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo " +
+	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo,c.exBondBeNo,c.gatePassId,c.gatePassDate " +
 	         "from CFBondGatePass c " +
 	         "where c.companyId = :cid and c.branchId = :bid and c.exBondBeNo=:exBondBeNo " +
 	         "and c.status != 'D' " +
@@ -95,6 +97,60 @@ List<CFBondGatePass> getAllListOfGatePass(
 	         "and (:val is null OR :val = '' OR c.exBondBeNo LIKE CONCAT(:val, '%'))")
 	List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("exBondBeNo") String exBondBeNo,@Param("val") String val);
 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo,c.exBondBeNo,c.gatePassId,c.gatePassDate " +
+	         "from CFBondGatePass c " +
+	         "where c.companyId = :cid and c.branchId = :bid " +
+	         "and c.status != 'D' " +
+	         "and c.gateOutId IS NULL " +
+	         "and (:val is null OR :val = '' OR c.vehicleNo LIKE CONCAT(:val, '%'))")
+	List<Object[]> getVehicleNo(@Param("cid") String cid, @Param("bid") String bid,@Param("val") String val);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query("SELECT DISTINCT NEW com.cwms.entities.CFBondGatePass(c.companyId, c.branchId, c.finYear, c.gatePassId, " +
+		       "c.srNo, c.nocTransId,c.nocNo, c.bondingNo, c.igmLineNo, c.noOfPackage, c.noOfPackages, " +
+		       "c.qtyTakenOut, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.commodity,c.grossWt,cf.typeOfPackage ) " +
+		       "FROM CFBondGatePass c " +
+		       "LEFT OUTER JOIN CfBondNocDtl cf ON c.companyId=cf.companyId AND c.branchId=cf.branchId AND c.nocNo = cf.nocNo AND c.commodity=cf.cfBondDtlId "+
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.gateOutId IS NULL " +
+		       "AND c.status != 'D' " +
+		       "AND c.vehicleNo = :vehicleNo " +
+		       "ORDER BY c.gatePassId DESC")
+		List<CFBondGatePass> getCommodityDetailsOfVehicleNo(
+		    @Param("companyId") String companyId, 
+		    @Param("branchId") String branchId, 
+		    @Param("vehicleNo") String vehicleNo);
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE CFBondGatePass c set c.gateOutId=:gateOutId where c.companyId=:companyId and c.branchId=:branchId and c.gatePassId=:gatePassId and c.commodity=:commodity")
+	int updateGatePassAfterGateOut(@Param ("gateOutId") String gateOutId,
+			 @Param("companyId") String companyId, 
+			    @Param("branchId") String branchId, 
+			    @Param("gatePassId") String gatePassId,
+			    @Param("commodity") String commodity);
 
 
 }
