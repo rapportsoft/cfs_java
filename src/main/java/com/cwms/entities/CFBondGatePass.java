@@ -1005,7 +1005,30 @@ public class CFBondGatePass {
 
 
 	
-	
+	public CFBondGatePass(String companyId, String branchId, String finYear, String gatePassId, int srNo,
+			String nocTransId, String nocNo,String bondingNo, String igmLineNo, BigDecimal noOfPackage, BigDecimal noOfPackages,
+			BigDecimal qtyTakenOut, String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription,String commodity,BigDecimal grossWt,String approvedBy) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.gatePassId = gatePassId;
+		this.srNo = srNo;
+		this.nocTransId = nocTransId;
+		this.nocNo = nocNo;
+		this.bondingNo = bondingNo;
+		this.igmLineNo = igmLineNo;
+		this.noOfPackage = noOfPackage;
+		this.noOfPackages = noOfPackages;
+		this.qtyTakenOut = qtyTakenOut;
+		this.exBondBeNo = exBondBeNo;
+		this.exBondedPackages = exBondedPackages;
+		this.commodityDescription = commodityDescription;
+		this.commodity=commodity;
+		this.grossWt=grossWt;
+		this.approvedBy=approvedBy;
+	}
+
 	
 
 }
