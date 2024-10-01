@@ -80,7 +80,7 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 	List<Object[]> getEmptyVehGateIn(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
 	
 	
-	@Query(value="select v.vehicleNo,v.gateInId from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
+	@Query(value="select v.vehicleNo,v.gateInId,v.driverName from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
 			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) and (v.gatePassNo is null OR v.gatePassNo = '') "
 			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) ")
 	List<Object[]> getEmptyVehGateIn1(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
@@ -104,4 +104,5 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 	                      @Param("bid") String bid, 
 	                      @Param("gatpass") String gatpass, 
 	                      @Param("id") String id);
+
 }
