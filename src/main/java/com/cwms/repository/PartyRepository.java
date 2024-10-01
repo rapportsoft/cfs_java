@@ -13,6 +13,11 @@ public interface PartyRepository extends JpaRepository<Party, String> {
 
 	@Query(value = "select COUNT(p)>0 from Party p where p.companyId=:cid and p.branchId=:bid and p.panNo=:pan and p.status !='D'")
 	Boolean isExistPanNo(@Param("cid") String cid, @Param("bid") String bid, @Param("pan") String pan);
+	
+	@Query(value="select p.party_Id,p.party_Name from Party p  "
+			+ "where p.company_Id=:cid and p.branch_Id=:bid and p.status != 'D' "
+			+ "and p.exp = 'Y' and (:val is null OR :val = '' OR p.party_Name like CONCAT (:val,'%'))",nativeQuery = true)
+	List<Object[]> getDataForExp(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 
 	@Query(value = "select COUNT(p)>0 from Party p where p.companyId=:cid and p.branchId=:bid and p.panNo=:pan and p.partyId != :party and p.status !='D'")
 	Boolean isExistPanNo1(@Param("cid") String cid, @Param("bid") String bid, @Param("pan") String pan,

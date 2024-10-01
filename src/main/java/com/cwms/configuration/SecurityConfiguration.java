@@ -107,6 +107,8 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/cfexbondcrg/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/cfbondgatepass/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/importGateOut/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/emptyOrder/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/commonGatePass/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
