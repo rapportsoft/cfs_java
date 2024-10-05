@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cwms.entities.ExportCarting;
 import com.cwms.entities.ExportSbCargoEntry;
 import com.cwms.entities.ExportSbEntry;
 import com.cwms.entities.GateIn;
 import com.cwms.helper.HelperMethods;
+import com.cwms.repository.ExportCartingRepo;
 import com.cwms.repository.ExportEntryRepo;
 import com.cwms.repository.ExportSbCargoEntryRepo;
 import com.cwms.repository.GateInRepository;
@@ -45,6 +48,9 @@ public class ExportEntryService {
 	
 	@Autowired
 	private GateInRepository gateInRepo;	
+	
+	@Autowired
+	private ExportCartingRepo cartingRepo;
 	
 	
 	private List<Map<String, String>> convertToValueLabelList(List<String> data) {
@@ -105,18 +111,46 @@ public class ExportEntryService {
 //		allowedList.add("P00217");
 		
 		boolean containsEmptyGateInId = gateInList.stream().anyMatch(c -> c.getGateInId() == null || c.getGateInId().isEmpty());
+		boolean containsEmptyCartingInId = gateInList.stream().anyMatch(c -> c.getCartingTransId() == null || c.getCartingTransId().isEmpty());
 
-		System.out.println("containsEmptyGateInId : "+containsEmptyGateInId);
+		Optional<GateIn> firstValidCartingIn = gateInList.stream()
+			    .filter(c -> c.getCartingTransId() != null && !c.getCartingTransId().isEmpty())
+			    .findFirst();
 		
+		
+		System.out.println("containsEmptyGateInId : "+containsEmptyGateInId);
+		System.out.println("firstValidCartingId.get() : \n"+ firstValidCartingIn != null ? firstValidCartingIn.get() : "");
+		
+		System.out.println("EP1 : ");
 		ExportSbEntry getsbNoAndPrimary = entryRepo.getsbNoAndPrimary(companyId, branchId, gateIn.getDocRefNo(), gateIn.getErpDocRefNo());
+		System.out.println("EP2 : ");
 		if (!containsEmptyGateInId) {
+			
+			if (!containsEmptyGateInId) {
+				
+				if (firstValidCartingIn != null) {
+					System.out.println("EP3 : ");
+					GateIn newGateIn = firstValidCartingIn.get();		
+					System.out.println("EP4 : ");
+					ExportCarting cartingsForMainSearch = cartingRepo.cartingsForMainSearch(companyId, branchId,newGateIn.getDocRefNo(), newGateIn.getCartingTransId());
+					System.out.println("EP5 : ");
+					allowedList.add("P00218");
+					dataMap.put("cartingTransId", newGateIn.getCartingTransId());	
+					dataMap.put("cartingLineId", cartingsForMainSearch.getCartingLineId());	
+					dataMap.put("cartingprofitCentre", cartingsForMainSearch.getProfitcentreId());
+					dataMap.put("cartingSbNo", cartingsForMainSearch.getSbNo());
+				}
+				
+			}
+			
+			
 				allowedList.add("P00217");
 				dataMap.put("sbNo", getsbNoAndPrimary.getSbNo());
 		        dataMap.put("sbTransId", getsbNoAndPrimary.getSbTransId());
 		        dataMap.put("gateInId", gateIn.getGateInId());
 		        dataMap.put("profitCenterId", gateIn.getProfitcentreId());
 		        dataMap.put("hsbSbTransId", getsbNoAndPrimary.gethSbTransId());
-		        System.out.println("profitCenterId"+ gateIn.getProfitcentreId());
+//		        System.out.println("profitCenterId"+ gateIn.getProfitcentreId());
 		        mainData.put("allowedList", allowedList);
 				mainData.put("data", dataMap);
 				return ResponseEntity.ok(mainData);
@@ -137,15 +171,6 @@ public class ExportEntryService {
 		mainData.put("data", dataMap);
 		return ResponseEntity.ok(mainData);
 	}
-	
-	
-	
-//	public ResponseEntity<?> searchSbNosToGateIn(String companyId, String branchId, String searchValue)
-//	{			
-//		List<String> sbNos = entryCargoRepo.searchSbNosToGateIn(companyId, branchId);
-//		List<Map<String, String>> sbNoList = convertToValueLabelList(sbNos);		
-//		return ResponseEntity.ok(sbNoList);
-//	}
 	
 	public ResponseEntity<?> searchSbNosToGateIn(String companyId, String branchId, String searchValue)
 	{			

@@ -9,6 +9,25 @@ import org.springframework.data.repository.query.Param;
 import com.cwms.entities.YardBlockCell;
 
 public interface YardBlockCellRepository extends JpaRepository<YardBlockCell, String> {
+	
+	@Query("SELECT E FROM YardBlockCell E "
+		 	+ "WHERE E.companyId = :companyId AND E.yardId = :branchId " 
+           	+ "AND E.yardLocationId = :yardLocationId " 
+	        + "AND E.blockId = :blockId "
+	        + "AND E.cellNoRow = :cellNoRow "	            
+	        + "AND E.status <> 'D'")
+	YardBlockCell getYardCellByCellNo(@Param("companyId") String companyId, @Param("branchId") String branchId,
+            @Param("yardLocationId") String yardLocationId, @Param("blockId") String blockId, @Param("cellNoRow") String cellNoRow);
+
+
+	@Query(value = "SELECT p.yardLocationId, p.blockId, p.cellNoRow, p.cellArea, p.cellAreaUsed "
+			+ "FROM YardBlockCell p " + "WHERE p.companyId = :companyId AND p.yardId = :branchId AND p.status != 'D' "
+			+ "AND p.yardLocationId LIKE CONCAT(:searchValue, '%') "
+			+ "ORDER BY p.yardLocationId, p.blockId, p.cellNoRow")
+	List<Object[]> searchYardCells(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("searchValue") String searchValue);
+	
+	
 	@Query(value = "SELECT * FROM yardblockcell WHERE Company_Id = :cid AND  yard_Id = :bid  AND yard_location_id = :yardLocationId AND block_Id=:blockId AND Cell_No_Row=:cellNoRow  AND status <> 'D'", nativeQuery = true)
 	YardBlockCell getAllData(@Param("cid") String cid, @Param("bid") String bid,@Param("yardLocationId") String yardLocationId, @Param("blockId") String blockId,
 			@Param("cellNoRow") String cellNoRow);

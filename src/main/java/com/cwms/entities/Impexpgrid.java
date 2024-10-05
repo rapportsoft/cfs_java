@@ -79,6 +79,14 @@ public class Impexpgrid {
 	    @Column(name = "Created_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    private Date createdDate;
+	    
+	    
+	    @Column(name = "Edited_By", length = 10)
+	    private String editedBy;
+
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @Column(name = "Editeded_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
+	    private Date editedDate;	    
 
 	    @Column(name = "Approved_By", length = 10)
 	    private String approvedBy;
@@ -123,6 +131,55 @@ public class Impexpgrid {
 			this.approvedBy = approvedBy;
 			this.approvedDate = approvedDate;
 			this.status = status;
+		}	
+		
+
+		public Impexpgrid(String companyId, String finYear, String branchId, String processTransId, int lineNo,
+				int subSrNo, String yardLocation, String yardBlock, String blockCellNo, int yardPackages,
+				BigDecimal cellArea, BigDecimal cellAreaUsed, BigDecimal cellAreaAllocated, BigDecimal qtyTakenOut,
+				BigDecimal areaReleased, String transType, int stuffReqQty, String createdBy, Date createdDate,
+				String editedBy, Date editedDate, String approvedBy, Date approvedDate, String status) {
+			super();
+			this.companyId = companyId;
+			this.finYear = finYear;
+			this.branchId = branchId;
+			this.processTransId = processTransId;
+			this.lineNo = lineNo;
+			this.subSrNo = subSrNo;
+			this.yardLocation = yardLocation;
+			this.yardBlock = yardBlock;
+			this.blockCellNo = blockCellNo;
+			this.yardPackages = yardPackages;
+			this.cellArea = cellArea;
+			this.cellAreaUsed = cellAreaUsed;
+			this.cellAreaAllocated = cellAreaAllocated;
+			this.qtyTakenOut = qtyTakenOut;
+			this.areaReleased = areaReleased;
+			this.transType = transType;
+			this.stuffReqQty = stuffReqQty;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.status = status;
+		}
+
+		public String getEditedBy() {
+			return editedBy;
+		}
+
+		public void setEditedBy(String editedBy) {
+			this.editedBy = editedBy;
+		}
+
+		public Date getEditedDate() {
+			return editedDate;
+		}
+
+		public void setEditedDate(Date editedDate) {
+			this.editedDate = editedDate;
 		}
 
 		public String getCompanyId() {
@@ -300,7 +357,5 @@ public class Impexpgrid {
 		public void setStatus(String status) {
 			this.status = status;
 		}
-
-	
 	    
 }

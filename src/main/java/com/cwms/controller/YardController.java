@@ -1,7 +1,10 @@
 package com.cwms.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +43,44 @@ public class YardController {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	
+	
+
+	@GetMapping("/searchYardCells")
+	public ResponseEntity<?> searchSbNosToGateIn(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam("searchValue") String searchValue      
+	       ) {	    
+	    try {	    	
+	    	
+	    	 List<Object[]> yardListStrings = yardBlockCellRepository.searchYardCells(companyId, branchId, searchValue);   	
+	    	
+	    	
+	    	 List<Map<String, Object>> toSendGetParties = yardListStrings.stream().map(row -> {
+			        Map<String, Object> map = new HashMap<>();	
+			        map.put("value", row[0] + "" + row[1] + "" + row[2]);
+			        map.put("label", row[0]);
+			        map.put("yardLocationId", row[0]);
+			        map.put("blockId", row[1]);
+			        map.put("cellNoRow", row[2]);
+			        map.put("cellArea", row[3]);
+			        map.put("cellAreaUsed", row[4]);
+			        return map;
+			    }).collect(Collectors.toList());	
+	    		    	
+	    	return ResponseEntity.ok(toSendGetParties);
+	    } catch (Exception e) {	       
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+	
+	
+	
+	
 
 	@PostMapping("/addLocations/{companyId}/{branchId}/{userId}")
 	public ResponseEntity<?> createYardBlockCell(@RequestBody YardBlockCell yardBlockCell,

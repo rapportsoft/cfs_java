@@ -14,6 +14,36 @@ import jakarta.transaction.Transactional;
 
 public interface EquipmentActivityRepository extends JpaRepository<EquipmentActivity, String> {
 
+	@Query(value="SELECT COALESCE(MAX(e.srNo), 0) FROM EquipmentActivity e WHERE e.companyId = :cid AND e.branchId = :bid AND e.erpDocRefNo = :erp AND e.docRefNo = :doc AND e.status <> 'D'")
+	int getHighestSrNo(@Param("cid") String cid, @Param("bid") String bid, @Param("erp") String erp, @Param("doc") String doc);
+	
+	@Query("SELECT E FROM EquipmentActivity E "
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.profitCenterId = :profitcentreId " 	        
+	        + "AND E.deStuffId IN (:deStuffId, :cartingTransId) "	
+	        + "AND E.status <> 'D'")
+	List<EquipmentActivity> getAllEquipmentsCommonCarting(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("profitcentreId") String profitcentreId, @Param("cartingTransId") String cartingTransId, @Param("deStuffId") String deStuffId);
+	
+	@Query("SELECT E FROM EquipmentActivity E "
+	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.profitCenterId = :profitcentreId " 
+	        + "AND E.erpDocRefNo = :erpDocRefNo "
+	        + "AND E.docRefNo = :docRefNo "
+	        + "AND E.deStuffId IN (:deStuffId1, :cartingId) "	
+	        + "AND E.status <> 'D'")
+	List<EquipmentActivity> getAllEquipmentsCarting(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("profitcentreId") String profitcentreId,
+	    @Param("erpDocRefNo") String erpDocRefNo,
+	    @Param("docRefNo") String docRefNo,
+	    @Param("deStuffId1") String deStuffId1,
+	    @Param("cartingId") String cartingId);
+	
+	
+	
+	
 	@Query(value="select COUNT(e) from EquipmentActivity e where e.companyId=:cid and e.branchId=:bid and e.erpDocRefNo=:erp and "
 			+ "e.docRefNo=:doc and e.subDocRefNo=:subdoc")
 	int getCount(@Param("cid") String cid,@Param("bid") String bid,@Param("erp") String erp,@Param("doc") String doc,@Param("subdoc") String subdoc);
