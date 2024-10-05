@@ -3175,6 +3175,8 @@ public GateIn(String gateInId, String erpDocRefNo, String docRefNo, String boeNo
 
 
 
+
+
 public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, String onAccountOf, String cha,
 		String commodityDescription, BigDecimal actualNoOfPackages, BigDecimal qtyTakenIn, String vehicleNo,
 		BigDecimal cargoWeight,BigDecimal fob, Date inGateInDate, Date docRefDate, BigDecimal grossWeight) {
@@ -3197,7 +3199,15 @@ public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, St
 	}
 
 
-
+public GateIn(String gateInId, String docRefNo,
+		String erpDocRefNo, String vehicleNo, BigDecimal grossWeight) {
+	super();
+	this.gateInId = gateInId;
+	this.docRefNo = docRefNo;
+	this.erpDocRefNo = erpDocRefNo;
+	this.vehicleNo = vehicleNo;	
+	this.grossWeight = grossWeight;
+}
 
 
 

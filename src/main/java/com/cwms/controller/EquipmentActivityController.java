@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.EquipmentActivity;
 import com.cwms.entities.ExportCarting;
+import com.cwms.entities.GateIn;
 import com.cwms.entities.JarDetail;
 import com.cwms.entities.Party;
 import com.cwms.helper.HelperMethods;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.EquipmentActivityRepository;
 import com.cwms.repository.ExportCartingRepo;
+import com.cwms.repository.GateInRepository;
 import com.cwms.repository.JarDetailRepository;
 import com.cwms.repository.PartyRepository;
 
@@ -48,6 +50,8 @@ public class EquipmentActivityController {
 	@Autowired
 	private ExportCartingRepo cartingRepo;
 	
+	@Autowired
+	private GateInRepository gateInRepo;
 
 	@Autowired
 	private HelperMethods helperMethods;
@@ -557,8 +561,92 @@ public class EquipmentActivityController {
 		}
 	}
 	
+
+	@PostMapping("/saveEquipMentCommon")
+	public ResponseEntity<?> saveEquipMentCommon(@RequestBody EquipmentActivity equipmentActivity,
+			@RequestParam("userId") String userId) {
+		try {
+			
+			System.out.println("equipmentActivity \n"+ equipmentActivity );
+
+			List<GateIn> gateInsForMultipleEquipment = gateInRepo.gateInsForMultipleEquipment(
+					equipmentActivity.getCompanyId(), equipmentActivity.getBranchId(),
+					equipmentActivity.getProfitCenterId(), equipmentActivity.getProcessId(),
+					equipmentActivity.getDeStuffId(), "EXP");
+
+			System.out.println("gateInsForMultipleEquipment \n"+ gateInsForMultipleEquipment );
+			for (GateIn gateIn : gateInsForMultipleEquipment) {
+
+				System.out.println(equipmentActivity);				
+    	
+				EquipmentActivity sendEquipmentActivity = new EquipmentActivity();
+
+				EquipmentActivity allEquipmentsWithEquipment = equipmentActivityRepository
+						.getAllEquipmentsWithEquipment(equipmentActivity.getCompanyId(),
+								equipmentActivity.getBranchId(), equipmentActivity.getProfitCenterId(),
+								equipmentActivity.getProcessId(), gateIn.getErpDocRefNo(),
+								gateIn.getDocRefNo(), equipmentActivity.getDeStuffId(),
+								equipmentActivity.getEquipment());
+
+				if (allEquipmentsWithEquipment != null) {
+
+					allEquipmentsWithEquipment.setEquipment(equipmentActivity.getEquipment());
+					allEquipmentsWithEquipment.setEquipmentNm(equipmentActivity.getEquipmentNm());
+
+					allEquipmentsWithEquipment.setEditedBy(userId);
+					allEquipmentsWithEquipment.setEditedDate(new Date());
+					sendEquipmentActivity = equipmentActivityRepository.save(allEquipmentsWithEquipment);
+				} else {
+					String financialYear = helperMethods.getFinancialYear();
+
+					
+					int getsrNo = equipmentActivityRepository.getHighestSrNo(equipmentActivity.getCompanyId(), equipmentActivity.getBranchId(),gateIn.getErpDocRefNo(),gateIn.getDocRefNo());
+					
+					System.out.println(getsrNo);
+					equipmentActivity.setSrNo(getsrNo + 1);
+					equipmentActivity.setErpDocRefNo(gateIn.getErpDocRefNo());
+					equipmentActivity.setDocRefNo(gateIn.getDocRefNo());
+					equipmentActivity.setFinYear(financialYear);
+					equipmentActivity.setStatus("A");
+					equipmentActivity.setCreatedBy(userId);
+					equipmentActivity.setEditedBy(userId);
+					equipmentActivity.setEditedDate(new Date());
+					equipmentActivity.setCreatedDate(new Date());
+					equipmentActivity.setApprovedBy(userId);
+					equipmentActivity.setApprovedDate(new Date());
+					sendEquipmentActivity = equipmentActivityRepository.save(equipmentActivity);
+				}
+
+				System.out.println(sendEquipmentActivity);
+			}
+			return ResponseEntity.ok("Success");
+		} catch (Exception e) {
+			System.out.println(e);
+			// Return an appropriate error response
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+
+	}
 	
-	
+//	getAllEquipments of Gate In Ids 
+	@GetMapping("/getAllEquipmentsCommon")
+	public ResponseEntity<?> getAllEquipmentsCommon(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("profitCenterId") String profitCenterId,
+			@RequestParam("gateInId") String gateInId, @RequestParam("processId") String processId) {
+		try {
+
+			List<EquipmentActivity> equipMentEntries = equipmentActivityRepository.getAllEquipmentsCommon(companyId,
+					branchId, profitCenterId, processId, gateInId);
+			return ResponseEntity.ok(equipMentEntries);
+		} catch (Exception e) {
+			System.out.println(e);
+			// Return an appropriate error response
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+
 	
 	
 	

@@ -14,6 +14,17 @@ import jakarta.transaction.Transactional;
 
 public interface EquipmentActivityRepository extends JpaRepository<EquipmentActivity, String> {
 
+	
+	@Query("SELECT E FROM EquipmentActivity E "
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.profitCenterId = :profitcentreId " 	        
+	        + "AND E.processId = :processId "	
+	        + "AND E.deStuffId = :deStuffId "	
+	        + "AND E.status <> 'D'")
+	List<EquipmentActivity> getAllEquipmentsCommon(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("profitcentreId") String profitcentreId, @Param("processId") String processId, @Param("deStuffId") String deStuffId);
+
+	
 	@Query(value="SELECT COALESCE(MAX(e.srNo), 0) FROM EquipmentActivity e WHERE e.companyId = :cid AND e.branchId = :bid AND e.erpDocRefNo = :erp AND e.docRefNo = :doc AND e.status <> 'D'")
 	int getHighestSrNo(@Param("cid") String cid, @Param("bid") String bid, @Param("erp") String erp, @Param("doc") String doc);
 	

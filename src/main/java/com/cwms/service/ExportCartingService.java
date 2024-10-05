@@ -1,5 +1,6 @@
 package com.cwms.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cwms.entities.ExportCarting;
+import com.cwms.entities.ExportSbCargoEntry;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.Impexpgrid;
 import com.cwms.helper.HelperMethods;
@@ -38,6 +40,9 @@ public class ExportCartingService {
 	
 	@Autowired
 	private VehicleTrackRepository vehicleRepo;
+	
+	@Autowired
+	private ExportEntryService exportSbService;	
 	
 	public ResponseEntity<?> getSelectedCartingEntry(String companyId, String branchId, String cartingTransId, String cartingLineId, String sbNo,String profitCenterId)
 	{		
@@ -81,6 +86,9 @@ public class ExportCartingService {
 						
 			GateIn gateInByIds = gateInRepo.getGateInByIds(companyId, branchId, cartingEntry.getProfitcentreId(), cartingEntry.getGateInId(), cartingEntry.getSbTransId(), cartingEntry.getSbNo(), "EXP");
 			
+			 ExportSbCargoEntry exportSbCargoEntry = exportSbService.getExportSbCargoEntry(companyId, branchId, gateInByIds.getDocRefNo(), gateInByIds.getErpDocRefNo());
+
+			
 //			For Update
 			if(isUpdate)
 			{
@@ -91,13 +99,29 @@ public class ExportCartingService {
 				existing.setGridCellNo(cartingEntry.getGridCellNo());
 				existing.setGridLocation(cartingEntry.getGridLocation());
 				existing.setDamageComments(cartingEntry.getDamageComments());
+				
+								
+				BigDecimal ExistingPackages = existing.getActualNoOfPackages().add(existing.getShortagePackages()).subtract(existing.getExcessPackages());
+				BigDecimal newPackages = cartingEntry.getActualNoOfPackages().add(cartingEntry.getShortagePackages()).subtract(cartingEntry.getExcessPackages());
+
+				BigDecimal difference = ExistingPackages.subtract(newPackages);
+				
+				System.out.println("difference "+difference + "\n ExistingPackages :  "+ ExistingPackages + " \n newPackages "+newPackages);
+				
+				gateInByIds.setCartedPackages(gateInByIds.getCartedPackages().add(difference));
+				exportSbCargoEntry.setCartedPackages(exportSbCargoEntry.getCartedPackages().add(difference));
+				
+				
+				ExportCarting save = cartingRepo.save(existing);
+				cartingListToSend.add(save);
+				
+				
 				existing.setAreaOccupied(cartingEntry.getAreaOccupied());
 				existing.setYardPackages(cartingEntry.getYardPackages());
 				existing.setActualNoOfPackages(cartingEntry.getActualNoOfPackages());
 				existing.setExcessPackages(cartingEntry.getExcessPackages());
 				existing.setShortagePackages(cartingEntry.getShortagePackages());
-				ExportCarting save = cartingRepo.save(existing);
-				cartingListToSend.add(save);
+
 			}
 //			Add
 			else
@@ -105,10 +129,19 @@ public class ExportCartingService {
 				
 				gateInByIds.setCartingStatus("Y");
 				gateInByIds.setCartedPackages(
-					    cartingEntry.getActualNoOfPackages()
-					        .add(cartingEntry.getShortagePackages())
-					        .subtract(cartingEntry.getExcessPackages())
+					    gateInByIds.getCartedPackages().add(
+					        cartingEntry.getActualNoOfPackages()
+					            .add(cartingEntry.getShortagePackages())
+					            .subtract(cartingEntry.getExcessPackages())
+					    )
 					);
+				
+				
+				exportSbCargoEntry.setCartedPackages(exportSbCargoEntry.getCartedPackages()
+						.add(cartingEntry.getActualNoOfPackages()
+			            .add(cartingEntry.getShortagePackages())
+			            .subtract(cartingEntry.getExcessPackages())));
+				
 				gateInByIds.setCartingTransId(autoCartingTransId);
 				
 				
@@ -160,7 +193,7 @@ public class ExportCartingService {
 			
 			
 			gateInRepo.save(gateInByIds);
-			
+			exportSbService.saveExportSbCargoEntry(exportSbCargoEntry);
 			
 		}
 		
