@@ -857,6 +857,17 @@ public class ExportSbEntry {
 	}
     
     
+	public ExportSbEntry(String sbTransId, String sbNo, String profitcentreId, String outOfCharge, Date outOfChargeDate,
+			String hSbTransId, Date leoDate) {
+		super();
+		this.sbTransId = sbTransId;
+		this.sbNo = sbNo;
+		this.profitcentreId = profitcentreId;
+		this.outOfCharge = outOfCharge;
+		this.outOfChargeDate = outOfChargeDate;
+		this.hSbTransId = hSbTransId;
+		this.leoDate = leoDate;
+	}
     
 	
 
