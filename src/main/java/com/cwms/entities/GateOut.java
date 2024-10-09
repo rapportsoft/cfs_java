@@ -388,6 +388,8 @@ public class GateOut {
 		@Temporal(TemporalType.TIMESTAMP)
 		@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 		public Date gateInDate; // Default value
+	    
+	    private transient String holdStatus;
 
 		public GateOut() {
 			super();
@@ -416,6 +418,22 @@ public class GateOut {
 
 		public BigDecimal getTareWt() {
 			return tareWt;
+		}
+
+
+
+
+
+		public String getHoldStatus() {
+			return holdStatus;
+		}
+
+
+
+
+
+		public void setHoldStatus(String holdStatus) {
+			this.holdStatus = holdStatus;
 		}
 
 

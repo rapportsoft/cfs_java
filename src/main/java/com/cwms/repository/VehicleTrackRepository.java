@@ -13,7 +13,26 @@ import com.cwms.entities.VehicleTrack;
 
 
 public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, String> {
+	
 
+	 @Transactional
+	 @Modifying
+	 @Query(value = "UPDATE VehicleTrack e " +
+	            "SET e.gateOutId = :gateOutId, e.gateOutDate = :gateOutDate, e.editedBy = :user, e.editedDate = :editedDate " +
+	            "WHERE e.companyId = :companyId " +
+	            "AND e.branchId = :branchId " +
+	            "AND e.gateInId = :gateInId " +	 	            	 
+	            "AND e.status <>'D'")
+	    int updateGateOutExport(	           
+	            @Param("companyId") String companyId,
+	            @Param("branchId") String branchId,	            
+	            @Param("gateInId") String gateInId,
+	            @Param("gateOutId") String gateOutId,
+	            @Param("gateOutDate") Date gateOutDate,
+	            @Param("user") String user,
+	            @Param("editedDate") Date editedDate
+	           );	
+	
 	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.gateInId=:id and v.status != 'D'")
 	VehicleTrack getByGateInId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 	

@@ -327,6 +327,8 @@ public class ImportGatePass {
 	
 	@Column(name="Gate-Out_Qty")
 	private int gateOutQty;
+	
+	private transient String holdStatus;
 
 	public ImportGatePass() {
 		super();
@@ -334,6 +336,10 @@ public class ImportGatePass {
 	}
 
 	
+
+	
+
+
 
 	public ImportGatePass(String companyId, String branchId, String finYear, String gatePassId, int srNo,
 			String vehicleGatePassId, BigDecimal conSrNo, String profitcentreId, String invoiceNo, Date invoiceDate,
@@ -351,7 +357,8 @@ public class ImportGatePass {
 			String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
 			String yardLocation, String yardBlock, String blockCellNo, String yardLocation1, String yardBlock1,
 			String blockCellNo1, String vehStatus, String gatePassType, String othPartyId, String webCamPath,
-			String scannerType, String iso, String actualSealNo, String mtyYardLocation, int gateOutQty) {
+			String scannerType, String iso, String actualSealNo, String mtyYardLocation, int gateOutQty,
+			String holdStatus) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -444,10 +451,32 @@ public class ImportGatePass {
 		this.actualSealNo = actualSealNo;
 		this.mtyYardLocation = mtyYardLocation;
 		this.gateOutQty = gateOutQty;
+		this.holdStatus = holdStatus;
 	}
-	
-	
-	
+
+
+
+    
+
+
+
+	public String getHoldStatus() {
+		return holdStatus;
+	}
+
+
+
+
+
+
+
+	public void setHoldStatus(String holdStatus) {
+		this.holdStatus = holdStatus;
+	}
+
+
+
+
 
 
 

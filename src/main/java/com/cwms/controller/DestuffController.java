@@ -78,6 +78,8 @@ public class DestuffController {
 
 	@Autowired
 	private EmptyInventoryRepo emptyinventoryrepo;
+	
+	
 
 	@PostMapping("/saveData")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -659,21 +661,21 @@ public class DestuffController {
 				existingCrg.setEditedDate(new Date());
 				// Update actual number of packages
 				existingCrg.setActualNoOfPackages(
-						existingCrg.getActualNoOfPackages() - existingCn.getActualNoOfPackages().intValue()
+						existingCrg.getActualNoOfPackages()
 								+ new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
 
 				// Update damaged packages
 				existingCrg.setDamagedPackages(
-						existingCrg.getDamagedPackages() - existingCn.getDamagedNoOfPackages().intValue()
+						existingCrg.getDamagedPackages()
 								+ new BigDecimal(c.getDamagedNoOfPackages().toString()).intValue());
 
 				existingCrg.setOldActualNoOfPackages(
-						existingCrg.getOldActualNoOfPackages() - existingCn.getOldActualNoOfPackages().intValue()
+						existingCrg.getOldActualNoOfPackages()
 								+ new BigDecimal(c.getActualNoOfPackages().toString()).intValue());
 
 				// Update damaged packages
 				existingCrg.setOldYardPackages(
-						(existingCrg.getOldYardPackages().subtract(existingCn.getOldActualNoOfPackages()))
+						existingCrg.getOldYardPackages()
 								.add(c.getActualNoOfPackages()));
 
 				destuffcrgrepo.save(existingCrg);
@@ -727,7 +729,12 @@ public class DestuffController {
 				dcrg.setCommodityDescription(crg.getCommodityDescription());
 				dcrg.setCreatedBy(user);
 				dcrg.setCreatedDate(new Date());
-				dcrg.setDamagedPackages(new BigDecimal(c.getDamagedNoOfPackages().toString()).intValue());
+				if (c.getDamagedNoOfPackages() != null && !c.getDamagedNoOfPackages().toString().trim().isEmpty()) {
+				    dcrg.setDamagedPackages(new BigDecimal(c.getDamagedNoOfPackages().toString()).intValue());
+				} else {
+				    dcrg.setDamagedPackages(0);  // Set default value, e.g., 0, when null or empty
+				}
+
 				dcrg.setDestuffCharges(BigDecimal.ZERO);
 				dcrg.setDeStuffDate(new Date());
 				dcrg.setDeStuffId(HoldNextIdD1);

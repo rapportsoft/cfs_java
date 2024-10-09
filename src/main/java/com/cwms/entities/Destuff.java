@@ -196,6 +196,9 @@ public class Destuff {
 	    
 	    @Column(name="Work_Order_No",length = 20)
 	    private String workOrderNo;
+	    
+	    
+	    private transient String holdStatus;
 
 		public Destuff() {
 			super();
@@ -203,6 +206,10 @@ public class Destuff {
 		}
 
 		
+		
+		
+
+
 		public Destuff(String companyId, String branchId, String finYear, String deStuffId, Date deStuffDate,
 				String profitcentreId, String igmTransId, String igmNo, String igmLineNo, Date igmDate,
 				String transType, String drt, String viaNo, String shippingAgent, String shippingLine,
@@ -213,7 +220,8 @@ public class Destuff {
 				BigDecimal areaOccupied, BigDecimal yardPackages, String pod, String invoiceType, String gateInType,
 				String shift, String blGainLossId, String mtyStatus, Date mtyDate, String doEntryFlag, Date doEntryDate,
 				String status, String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
-				Date approvedDate, String destuffType, Date destuffFromDate, Date destuffToDate, String workOrderNo) {
+				Date approvedDate, String destuffType, Date destuffFromDate, Date destuffToDate, String workOrderNo,
+				String holdStatus) {
 			super();
 			this.companyId = companyId;
 			this.branchId = branchId;
@@ -271,9 +279,30 @@ public class Destuff {
 			this.destuffFromDate = destuffFromDate;
 			this.destuffToDate = destuffToDate;
 			this.workOrderNo = workOrderNo;
+			this.holdStatus = holdStatus;
 		}
-		
-		
+
+
+
+
+
+
+		public String getHoldStatus() {
+			return holdStatus;
+		}
+
+
+
+
+
+
+		public void setHoldStatus(String holdStatus) {
+			this.holdStatus = holdStatus;
+		}
+
+
+
+
 
 
 		public String getWorkOrderNo() {

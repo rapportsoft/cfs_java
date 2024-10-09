@@ -17,6 +17,44 @@ import jakarta.transaction.Transactional;
 public interface ExportEntryRepo extends JpaRepository<ExportSbEntry, String> {
 	
 	
+	
+	@Query("SELECT NEW com.cwms.entities.ExportSbEntry(e.sbTransId, e.sbNo, "
+	        + "e.profitcentreId, e.outOfCharge, e.outOfChargeDate, e.hSbTransId, e.leoDate) "
+	        + "FROM ExportSbEntry e "
+			+ "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+	        + "AND e.sbNo = :sbNo " 
+	        + "AND e.sbTransId = :sbTransId "
+	        + "AND e.hSbTransId = :hSbTransId " 
+	        + "AND e.profitcentreId = :profitcentreId "
+	        + "AND e.status <> 'D'")
+	ExportSbEntry getDataForOutOfCharge(@Param("companyId") String companyId, @Param("branchId") String branchId,
+								  @Param("hSbTransId") String hSbTransId, @Param("profitcentreId") String profitcentreId,
+	                              @Param("sbNo") String sbNo, @Param("sbTransId") String sbTransId);
+
+	
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE ExportSbEntry e " +
+	        "SET e.outOfCharge = :outOfCharge , e.outOfChargeDate = :outOfChargeDate,e.leoDate =:leoDate  " +
+	        "WHERE e.companyId = :companyId " +
+	        "AND e.branchId = :branchId " +
+	        "AND e.sbNo = :sbNo " +
+	        "AND e.sbTransId = :sbTransId " +	
+	        "AND e.hSbTransId = :hsbTransId " +	
+	        "AND e.status <> 'D'")
+	int updateOutOfCharge(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("hsbTransId") String hsbTransId,
+	        @Param("outOfCharge") String outOfCharge,
+	        @Param("outOfChargeDate") Date outOfChargeDate,	       
+	        @Param("leoDate") Date leoDate      
+	);
+	
+	
 	@Query("SELECT NEW com.cwms.entities.ExportSbEntry(e.sbTransId, e.sbNo, "
 	        + "e.pod, e.totalPackages, e.gateInPackages, e.hSbTransId,profitcentreId) "
 	        + "FROM ExportSbEntry e "

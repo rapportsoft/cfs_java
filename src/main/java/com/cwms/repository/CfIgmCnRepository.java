@@ -193,6 +193,12 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	                             @Param("igm") String igm,
 	                             @Param("igmline") String igmline,
 	                             @Param("con") String con);
+	    
+	    @Query("SELECT COUNT(c) > 0 FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid AND c.status != 'D' "
+	    		+ "AND c.containerNo=:con AND (c.gateOutId = '' OR c.gateOutId is null)")
+	    Boolean isExistContainer2(@Param("cid") String cid,
+	                             @Param("bid") String bid,
+	                             @Param("con") String con);
 
 	    @Query("SELECT COUNT(c) > 0 FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid AND ((c.igmTransId = :igmTrans AND c.igmNo = :igm "
 	    		+ "AND c.igmLineNo = :igmline AND c.containerNo = :con AND c.containerTransId != :trans) OR (c.containerNo = :con and c.igmTransId != :igmTrans)) "
@@ -426,13 +432,27 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			                         @Param("igmline") String igmline);
 	    
 	    
+//	    @Query("SELECT c " +
+//			       "FROM Cfigmcn c " +
+//			       "WHERE c.companyId = :cid AND c.branchId = :bid AND c.igmNo = :igm " +
+//			       "AND c.igmLineNo = :igmline AND c.status != 'D' " +
+//			       "AND ((c.containerExamStatus = 'Y' AND c.gateOutType='CRG' AND c.destuffStatus='Y') OR " +
+//			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON') OR (c.destuffStatus='Y' and c.containerStatus='LCL')) " +
+//			       "AND (c.gatePassNo is null OR c.gatePassNo = '') " +
+//			       "AND ((c.noOfItem = 1 and c.containerStatus='FCL') OR (c.noOfItem > 1 and c.containerStatus='LCL' ))")
+//			List<Cfigmcn> getDataForGatePass(@Param("cid") String cid,
+//			                         @Param("bid") String bid,
+//			                         @Param("igm") String igm,
+//			                         @Param("igmline") String igmline);
+	    
+	    
 	    @Query("SELECT c " +
-			       "FROM Cfigmcn c " +
+			       "FROM Cfigmcn c LEFT OUTER JOIN DestuffCrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId " +
+	    		   "and c.deStuffId=crg.deStuffId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo " +
 			       "WHERE c.companyId = :cid AND c.branchId = :bid AND c.igmNo = :igm " +
 			       "AND c.igmLineNo = :igmline AND c.status != 'D' " +
-			       "AND ((c.containerExamStatus = 'Y' AND c.gateOutType='CRG' AND c.destuffStatus='Y') OR " +
-			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON') OR (c.destuffStatus='Y' and c.containerStatus='LCL')) " +
-			       "AND (c.gatePassNo is null OR c.gatePassNo = '') " +
+			       "AND ((c.containerExamStatus = 'Y' AND c.gateOutType='CRG' AND c.containerStatus='FCL' AND c.destuffStatus='Y' AND (crg.actualNoOfPackages - crg.qtyTakenOut)>0) OR " +
+			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON' AND (c.gatePassNo is null OR c.gatePassNo = '')) OR (c.destuffStatus='Y' and c.containerStatus='LCL' AND (crg.actualNoOfPackages - crg.qtyTakenOut)>0)) " +
 			       "AND ((c.noOfItem = 1 and c.containerStatus='FCL') OR (c.noOfItem > 1 and c.containerStatus='LCL' ))")
 			List<Cfigmcn> getDataForGatePass(@Param("cid") String cid,
 			                         @Param("bid") String bid,
@@ -742,6 +762,26 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			+ "cn.igmTransId=:trans and cn.igmNo=:igm and  cn.igmLineNo=:line and cn.status != 'D'")
 	int updategatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,@Param("igm") String igm,
 			@Param("line") String line,@Param("id") String id);
+	
+	
+	@Query(value="select c from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.containerNo=:con and c.status != 'D' and "
+			+ "(c.gateOutId is null OR c.gateOutId = '')")
+	List<Cfigmcn> getHoldSearch(@Param("cid") String cid, @Param("bid") String bid, @Param("con") String con);
+	
+	@Query(value="select c from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm and "
+			+ "c.igmLineNo=:line and c.status != 'D' and (c.gateOutId is null OR c.gateOutId = '')")
+	List<Cfigmcn> getHoldSearch1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+			@Param("igm") String igm, @Param("line") String line);
+	
+	@Query(value="select c from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm and "
+			+ "c.containerNo=:con and c.status != 'D' and (c.gateOutId is null OR c.gateOutId = '')")
+	List<Cfigmcn> getHoldSearch2(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+			@Param("igm") String igm, @Param("con") String con);
+	
+	@Query(value="select COUNT(c)>0 from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm and "
+			+ "c.igmLineNo=:line and c.status != 'D' and c.holdStatus = 'R' AND c.holdDocRefNo IS NOT NULL AND c.holdDocRefNo != '' ")
+	Boolean checkContainerHoldStatus(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+			@Param("igm") String igm, @Param("line") String line);
 
 }
 

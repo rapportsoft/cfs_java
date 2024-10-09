@@ -12,6 +12,61 @@ import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
+	
+	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.docRefNo, E.erpDocRefNo, E.vehicleNo, E.grossWeight) " +
+		       "FROM GateIn E " +
+		       "WHERE E.companyId = :companyId " +
+		       "AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.gateInType = :type " +
+		       "AND E.gateInId = :gateInId " +
+		       "AND E.processId = :processId " +
+		       "AND E.status <> 'D' " +
+		       "ORDER BY E.createdDate DESC")
+		List<GateIn> gateInsForMultipleEquipment(@Param("companyId") String companyId, 
+		                                   @Param("branchId") String branchId,
+		                                   @Param("profitcentreId") String profitcentreId,
+		                                   @Param("processId") String processId,
+		                                   @Param("gateInId") String gateInId,		                                  
+		                                   @Param("type") String type);
+
+	
+	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight) " +
+		       "FROM GateIn E " +
+		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
+		       "WHERE E.companyId = :companyId " +
+		       "AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.vehicleNo = :vehicleNo " +
+		       "AND E.gateInType = :type " +		       
+		       "AND E.status <> 'D' " +
+		       "ORDER BY E.createdDate DESC")
+		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
+		                                   @Param("branchId") String branchId,
+		                                   @Param("profitcentreId") String profitcentreId,
+		                                   @Param("vehicleNo") String vehicleNo,
+		                                   @Param("type") String type);
+
+	
+	
+	
+	
+	@Query("SELECT Distinct s.vehicleNo " +
+		       "FROM GateIn s " +		       
+		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
+		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
+		       "AND s.status <> 'D' " +
+		       "AND s.vehicleNo LIKE %:searchValue% " +
+		       "ORDER BY s.createdDate")
+		List<String> searchVehicleNosToCarting(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("searchValue") String searchValue
+		);
+
+
+	
+	
 	@Query(value="select g from GateIn g where g.companyId=:cid and g.branchId=:bid and g.erpDocRefNo=:igmtrans and "
 			+ "g.docRefNo=:igm and g.status !='D' order by g.createdDate desc limit 1")
 	GateIn getExistingData(@Param("cid") String cid,@Param("bid") String bid,@Param("igmtrans") String igmtrans,

@@ -16,10 +16,13 @@ public interface ImportInventoryRepository extends JpaRepository<ImportInventory
 			@Param("cont") String cont,@Param("gatein") String gatein) ;
 	
 	
-	@Query(value="Update ImportInventory i SET i.gatePassNo=:id , i.gatePassDate = CURRENT_DATE where i.companyId=:cid and i.branchId=:bid "
-			+ "and i.igmTransId=:trans and i.igmNo=:igm and i.status != 'D' and i.deStuffId=:destuff")
-	int updatData(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String igmtrans,@Param("igm") String igm,
-			@Param("destuff") String destuff,@Param("id") String id);
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE ImportInventory i SET i.gatePassNo = :id, i.gatePassDate = CURRENT_DATE WHERE i.companyId = :cid AND i.branchId = :bid "
+	        + "AND i.igmTransId = :trans AND i.igmNo = :igm AND i.status != 'D' AND i.deStuffId = :destuff")
+	int updateData(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String igmtrans, @Param("igm") String igm,
+	               @Param("destuff") String destuff, @Param("id") String id);
+
 	
 	@Modifying
 	@Transactional
@@ -34,4 +37,10 @@ public interface ImportInventoryRepository extends JpaRepository<ImportInventory
 			+ "and i.igmTransId=:trans and i.igmNo=:igm and i.status != 'D' and i.gatePassNo=:gatePass and i.containerNo=:con")
 	int updateGateOutId1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String igmtrans,@Param("igm") String igm,
 			@Param("gatePass") String gatePass,@Param("con") String con,@Param("id") String id);
+	
+    @Query("SELECT COUNT(c) > 0 FROM ImportInventory c WHERE c.companyId = :cid AND c.branchId = :bid AND c.status != 'D' "
+    		+ "AND c.containerNo=:con AND (c.gateOutId = '' OR c.gateOutId is null)")
+    Boolean isExistContainer(@Param("cid") String cid,
+                             @Param("bid") String bid,
+                             @Param("con") String con);
 }

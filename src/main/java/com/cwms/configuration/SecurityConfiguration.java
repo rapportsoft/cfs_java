@@ -109,6 +109,8 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/importGateOut/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/emptyOrder/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/commonGatePass/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/manualContainerGateIn/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/holdDetail/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

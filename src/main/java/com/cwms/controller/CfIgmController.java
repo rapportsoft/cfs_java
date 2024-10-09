@@ -29,16 +29,20 @@ import com.cwms.entities.ContainerSealCuttingDTO.Container;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.ImportExaminationDTO;
 import com.cwms.entities.ImportInventory;
+import com.cwms.entities.ManualGateIn;
 import com.cwms.entities.Party;
 import com.cwms.entities.SealCuttingData;
+import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.ChildMenuRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.ImportInventoryRepository;
+import com.cwms.repository.ManualContainerGateInRepo;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.VehicleTrackRepository;
 
 @RestController
 @CrossOrigin("*")
@@ -68,6 +72,12 @@ public class CfIgmController {
 	
 	@Autowired
 	private ImportInventoryRepository importinventoryrepo;
+	
+	@Autowired
+	private ManualContainerGateInRepo manualcontainergateinrepo;
+	
+	@Autowired
+	private VehicleTrackRepository vehicletrackrepo;
 
 	@GetMapping("/search")
 	public List<Object[]> getSearchData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -301,12 +311,16 @@ public class CfIgmController {
 
 		if (cn != null) {
 			if ("add".equals(flag)) {
-				System.out.println("cn.getIgmTransId(), cn.getIgmNo(), cn.getIgmLineNo() " + cn.getIgmTransId() + " "
-						+ cn.getIgmNo() + " " + cn.getIgmLineNo());
+				
 				Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), cn.getIgmLineNo());
 
 				if (crg == null) {
 					return new ResponseEntity<>("Import cargo data not found", HttpStatus.BAD_REQUEST);
+				}
+				
+				CFIgm igm = cfigmrepo.getDataByIgmNo(cid, bid, cn.getIgmTransId());
+				if (igm == null) {
+					return new ResponseEntity<>("IGM data not found", HttpStatus.BAD_REQUEST);
 				}
 
 				Boolean isExist = cfigmcnrepo.isExistContainer(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
@@ -345,6 +359,229 @@ public class CfIgmController {
 				cn.setApprovedDate(new Date());
 				cn.setCycle(crg.getCycle());
 				cn.setGateOutType(cn.getUpTariffDelMode());
+				
+				
+				
+				ManualGateIn manual = manualcontainergateinrepo.getDataByContainerNo(cid, bid, cn.getContainerNo());
+				
+				if(manual != null) {
+					cn.setGateInDate(manual.getGateInDate());
+					cn.setGateInId(manual.getGateInId());
+					cn.setHaz(manual.getHazardous());
+					cn.setHazClass(manual.getHazClass());
+					cn.setEirGrossWeight(manual.getEirGrossWeight());
+					cn.setVehicleType(manual.getVehicleType());
+					//cn.setContainerWeight(manual.getTareWeight());
+					cn.setContainerSealNo(manual.getContainerSealNo());
+					cn.setYardLocation(manual.getYardLocation());
+					cn.setYardBlock(manual.getYardBlock());
+					cn.setBlockCellNo(manual.getYardCell());
+				
+					//cn.setMovementType(manual.getDrt());
+					
+					cn.setCargoWt(cn.getGrossWt()
+							.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
+//					gatein.setCargoWeight(c.getGrossWt()
+//							.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
+
+					cn.setRefer("RF".equals(cn.getContainerType()) ? 'Y' : 'N');
+					
+//					if ("Y".equals(manual.getLowBed())) {
+//						cn.setLowBed('Y');
+//					} else {
+//						cn.setLowBed('N');
+//					}
+
+					
+					cn.setMovementType("Y".equals(manual.getDrt()) ? "DRT" : "CFS");
+
+					if ("Y".equals(manual.getPnStatus())) {
+						cn.setPnStatus('Y');
+					} else {
+						cn.setPnStatus('N');
+					}
+
+					if ("Y".equals(manual.getOdcStatus())) {
+						cn.setOdcStatus('Y');
+					} else {
+						cn.setOdcStatus('N');
+					}
+					
+					
+					crg.setActualCargoWeight(crg.getActualCargoWeight() == null ? BigDecimal.ZERO
+							: crg.getActualCargoWeight().add(cn.getGrossWt().subtract(
+									manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO)));
+					cfigmcrgrepo.save(crg);
+					
+					
+//					manual.setErpDocRefNo(cn.getIgmTransId());
+//					manual.setDocRefNo(cn.getIgmNo());
+//					manual.setDocRefDate(igm.getIgmDate());
+//					manual.setLineNo(cn.getIgmLineNo());
+//					manual.setContainerStatus(cn.getContainerStatus());
+//					manual.setIsoCode(cn.getIso());
+//					if (cn.getOdcStatus() == 'Y') {
+//						manual.setOdcStatus("Y");
+//					} else {
+//						manual.setOdcStatus("N");
+//					}
+//					
+//					if (cn.getLowBed() == 'Y') {
+//						manual.setLowBed("Y");
+//					} else {
+//						manual.setLowBed("N");
+//					}
+//					manual.setGrossWeight(cn.getGrossWt());
+//					manual.setScannerType(cn.getScannerType());
+//					manual.setCustomsSealNo(cn.getCustomsSealNo());
+//					manual.setScanningDoneStatus(cn.getScanningDoneStatus());
+//					manual.setVessel(igm.getVesselId());
+//					manual.setViaNo(igm.getViaNo());
+//					manual.setVoyageNo(igm.getVoyageNo());
+//					manual.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
+//					
+//					manualcontainergateinrepo.save(manual);
+					
+					int updateData = manualcontainergateinrepo.updateManualGateIn(cid, bid, manual.getGateInId(), cn.getIgmTransId(), cn.getIgmNo(), 
+							cn.getIgmLineNo(), cn.getContainerStatus(), cn.getIso(), String.valueOf(cn.getOdcStatus()), String.valueOf(cn.getLowBed()), cn.getGrossWt(), 
+							cn.getScannerType(), cn.getCustomsSealNo(), cn.getScanningDoneStatus(), igm.getVesselId(), igm.getViaNo(), 
+							igm.getVoyageNo(), "RF".equals(cn.getContainerType()) ? "Y" : "N", igm.getIgmDate());
+					
+					GateIn gatein = new GateIn();
+					
+					gatein.setGateInId(manual.getGateInId());
+					gatein.setCompanyId(cid);
+					gatein.setLineNo("");
+					gatein.setSrNo(1);
+					gatein.setInGateInDate(manual.getGateInDate());
+					gatein.setBranchId(bid);
+					gatein.setFinYear(cn.getFinYear());
+					gatein.setCreatedBy(user);
+					gatein.setCreatedDate(new Date());
+					gatein.setApprovedBy(user);
+					gatein.setApprovedDate(new Date());
+					gatein.setStatus("A");
+					gatein.setGateInType("IMP");
+					gatein.setCargoWeight(cn.getGrossWt()
+					.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
+					gatein.setContainerNo(manual.getContainerNo());
+					gatein.setContainerStatus(cn.getContainerStatus());
+					gatein.setContainerSize(cn.getContainerSize());
+					gatein.setContainerType(cn.getContainerType());
+					gatein.setIsoCode(cn.getIso());
+					gatein.setSl(igm.getShippingLine());
+					gatein.setContainerSealNo(manual.getContainerSealNo());
+					gatein.setActualSealNo(manual.getActualSealNo());
+					gatein.setDocRefDate(igm.getIgmDate());
+					gatein.setErpDocRefNo(cn.getIgmTransId());
+					gatein.setDocRefNo(cn.getIgmNo());
+					gatein.setJobDate(igm.getDocDate());
+					gatein.setTerminal(manual.getTerminal());
+					gatein.setJobOrderId(cn.getIgmNo());
+					gatein.setTareWeight(cn.getContainerWeight());
+					gatein.setTerminal(igm.getPort());
+					gatein.setVessel(igm.getVesselId());
+					gatein.setViaNo(igm.getViaNo());
+					gatein.setEirGrossWeight(manual.getEirGrossWeight());
+					gatein.setRefer(manual.getRefer());
+					gatein.setLowBed(manual.getLowBed());
+					gatein.setScannerType(cn.getScannerType());
+					gatein.setOdcStatus(manual.getOdcStatus());
+					gatein.setTemperature(cn.getTemperature());
+					gatein.setProfitcentreId(igm.getProfitcentreId());
+					gatein.setLineNo(cn.getIgmLineNo());
+					gatein.setHazardous(manual.getHazardous());
+					gatein.setOrigin(crg.getOrigin());
+					gatein.setVehicleNo(manual.getVehicleNo());
+					gatein.setDriverName(manual.getDriverName());
+					gatein.setVehicleType(manual.getVehicleType());
+					gatein.setTransporter(manual.getTransporter());
+					gatein.setTransporterName(manual.getTransporterName());
+					gatein.setTransporterStatus("O");
+					gatein.setPortExitNo(manual.getPortExitNo());
+					gatein.setPortExitDate(manual.getPortExitDate());
+					gatein.setScanningDoneStatus(cn.getScanningDoneStatus());
+					gatein.setYardLocation(manual.getYardLocation());
+					gatein.setYardBlock(manual.getYardBlock());
+					gatein.setYardCell(manual.getYardCell());
+					gatein.setContainerHealth(manual.getContainerHealth());
+					gatein.setLowBed(String.valueOf(cn.getLowBed()));
+					gatein.setOdcStatus(String.valueOf(cn.getOdcStatus()));
+					gatein.setPnStatus(manual.getPnStatus());
+					gatein.setCustomsSealNo(cn.getCustomsSealNo());
+					gatein.setDrt("N");
+					gatein.setHazardous(manual.getHazardous());
+					gatein.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
+					
+					gateinrepo.save(gatein);
+					
+					VehicleTrack v = new VehicleTrack();
+					v.setCompanyId(cid);
+					v.setBranchId(bid);
+					v.setFinYear(igm.getFinYear());
+					v.setVehicleNo(manual.getVehicleNo());
+					v.setProfitcentreId(igm.getProfitcentreId());
+					v.setSrNo(1);
+					v.setTransporterStatus(gatein.getTransporterStatus().charAt(0));
+					v.setTransporterName(manual.getTransporterName());
+					v.setTransporter(manual.getTransporter());
+					v.setDriverName(manual.getDriverName());
+					v.setVehicleStatus('E');
+					v.setGateInId(manual.getGateInId());
+					v.setGateInDate(new Date());
+					v.setGateNoIn("Gate01");
+					v.setShiftIn("1");
+					v.setStatus('A');
+					v.setCreatedBy(user);
+					v.setCreatedDate(new Date());
+					v.setApprovedBy(user);
+					v.setApprovedDate(new Date());
+
+					vehicletrackrepo.save(v);
+					
+					
+					ImportInventory inventory = new ImportInventory();
+					inventory.setCompanyId(cid);
+					inventory.setBranchId(bid);
+					inventory.setFinYear(igm.getFinYear());
+					inventory.setIgmTransId(cn.getIgmTransId());
+					inventory.setProfitcentreId(cn.getProfitcentreId());
+					inventory.setIgmNo(cn.getIgmNo());
+					inventory.setVesselId(igm.getVesselId());
+					inventory.setViaNo(igm.getViaNo());
+					inventory.setContainerNo(cn.getContainerNo());
+					inventory.setContainerSize(cn.getContainerSize());
+					inventory.setContainerType(cn.getContainerType());
+					inventory.setIso(cn.getIso());
+					inventory.setSa(igm.getShippingAgent());
+					inventory.setSl(igm.getShippingLine());
+					inventory.setImporterName(crg.getImporterName());
+					inventory.setContainerStatus(cn.getContainerStatus());
+					inventory.setContainerSealNo(manual.getContainerSealNo());
+					inventory.setScannerType(cn.getScannerType());
+					inventory.setYardLocation(manual.getYardLocation());
+					inventory.setYardLocation1(manual.getYardLocation1());
+					inventory.setYardBlock(manual.getYardBlock());
+					inventory.setBlockCellNo(manual.getYardCell());
+					inventory.setGateInId(manual.getGateInId());
+					inventory.setGateInDate(manual.getGateInDate());
+					inventory.setStatus("A");
+					inventory.setCreatedBy(user);
+					inventory.setCreatedDate(new Date());
+					inventory.setApprovedBy(user);
+					inventory.setApprovedDate(new Date());
+					inventory.setNoOfItem(1);
+					inventory.setContainerWeight(cn.getGrossWt()
+							.subtract(cn.getContainerWeight() != null ? cn.getContainerWeight() : BigDecimal.ZERO));
+					inventory.setCycle(cn.getCycle());
+					
+					
+					importinventoryrepo.save(inventory);
+
+				}
+				
+				
+				
 				cfigmcnrepo.save(cn);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD1, "2024");
 				int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
@@ -1002,6 +1239,13 @@ public class CfIgmController {
 		if (cn.isEmpty()) {
 			return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
 		} else {
+			boolean holdStatusFlag = cn.stream().anyMatch(record -> "H".equals(record[40].toString()));
+
+			if (holdStatusFlag) {
+				return new ResponseEntity<>("Container is hold", HttpStatus.BAD_REQUEST);
+			}
+
+			
 			Object[] singleResult = cn.get(0);
 			if (singleResult[19] == null || singleResult[19].toString().isEmpty()) {
 				return new ResponseEntity<>("Seal cutting process not completed", HttpStatus.BAD_REQUEST);
@@ -1138,6 +1382,13 @@ public class CfIgmController {
 		if (getContainer.isEmpty()) {
 			return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
 		}
+		
+		Boolean exist = getContainer.stream().anyMatch(c -> "H".equals(c.getHoldStatus()));
+
+		if(exist) {
+			return new ResponseEntity<>("Container is hold..", HttpStatus.CONFLICT);
+		}
+		
 		List<Cfigmcrg> data = new ArrayList<>();
 
 		getContainer.stream().forEach(con -> {

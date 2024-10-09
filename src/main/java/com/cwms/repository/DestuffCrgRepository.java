@@ -39,7 +39,7 @@ public interface DestuffCrgRepository extends JpaRepository<DestuffCrg, String> 
 	
 	
 	@Query(value="select New com.cwms.entities.DestuffCrg(d.deStuffId, d.deStuffLineId, d.deStuffDate, d.igmTransId, d.igmNo,"
-			+ "d.igmLineNo, d.commodityDescription, d.grossWeight, d.noOfPackages,d.importerName, d.importerAddress1, "
+			+ "d.igmLineNo, d.commodityDescription, d.grossWeight, d.actualNoOfPackages,d.importerName, d.importerAddress1, "
 			+ "d.importerAddress2, d.importerAddress3,d.areaOccupied, d.cargoType, d.profitcentreId) from DestuffCrg d where d.companyId=:cid and "
 			+ "d.branchId=:bid and d.igmNo=:igm and d.igmLineNo=:igmline and d.igmTransId=:igmTransId and d.status != 'D'")
 	List<DestuffCrg> getDataByIgmAndTransId(@Param("cid") String cid,@Param("bid") String bid,

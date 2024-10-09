@@ -106,7 +106,7 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 	int updateVehStatus(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
 	
 	@Query(value = "select i from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and i.gatePassType = 'ITEM' "
-			+ "and i.igmNo=:igm and i.igmLineNo=:line and (i.gateOutId is null OR i.gateOutId = '')")
+			+ "and i.igmNo=:igm and i.igmLineNo=:line and (i.gateOutId is null OR i.gateOutId = '') order by i.gatePassDate desc")
 	List<ImportGatePass> searchDataForGateOut(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("line") String line);
 	
 	
@@ -130,7 +130,7 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 	List<String> getItems(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
 			@Param("line") String line);
 	
-	@Query(value="select i.gatePassId from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
+	@Query(value="select distinct i.gatePassId from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
 			+ "i.igmNo=:igm and i.igmTransId=:trans and i.containerNo=:con and (i.gateOutId is null OR i.gateOutId = '')")
 	String getGatePassIdFromContainerNo(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
 			@Param("con") String con);

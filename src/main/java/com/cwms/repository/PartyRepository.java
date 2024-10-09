@@ -8,11 +8,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cwms.entities.Party;
+import com.cwms.entities.Port;
 
 public interface PartyRepository extends JpaRepository<Party, String> {
 
 	@Query(value = "select COUNT(p)>0 from Party p where p.companyId=:cid and p.branchId=:bid and p.panNo=:pan and p.status !='D'")
 	Boolean isExistPanNo(@Param("cid") String cid, @Param("bid") String bid, @Param("pan") String pan);
+	
+	 @Query("SELECT NEW com.cwms.entities.Port(i.portCode, i.portName) " +
+		        "FROM Port i " +
+		        "WHERE " +		       
+		        "i.companyId = :companyId " +
+		        "AND i.branchId = :branchId AND i.jobOrderFormat != '' " +			        		       
+		        "ORDER BY i.portName DESC")
+		List<Port> getPortsForGateIn(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId  
+		   );
 	
 	@Query(value="select p.party_Id,p.party_Name from Party p  "
 			+ "where p.company_Id=:cid and p.branch_Id=:bid and p.status != 'D' "

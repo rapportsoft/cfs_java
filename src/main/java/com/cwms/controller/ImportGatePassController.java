@@ -94,7 +94,7 @@ public class ImportGatePassController {
 
 	@Autowired
 	private ImportGatePassVehRepository importgatepassvehrepo;
-	
+
 	@Autowired
 	private ImportInventoryRepository importinventoryrepo;
 
@@ -113,6 +113,10 @@ public class ImportGatePassController {
 
 			if (crg == null) {
 				return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
+			}
+			
+			if("H".equals(crg.getHoldStatus())) {
+				return new ResponseEntity<>("Item no. "+crg.getIgmLineNo()+" is on hold.", HttpStatus.CONFLICT);
 			}
 
 			DestuffCrg crgData = destuffcrgrepo.getSingleData2(cid, bid, crg.getIgmTransId(), igm, item);
@@ -139,6 +143,15 @@ public class ImportGatePassController {
 			if (crg == null) {
 				return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
 			}
+			
+			data.stream().forEach(c->{
+				if (c.getDeStuffId() != null && !c.getDeStuffId().isEmpty()) {
+					DestuffCrg d = destuffcrgrepo.getSingleData1(cid, bid, c.getIgmTransId(), c.getIgmNo(), c.getIgmLineNo(),
+							c.getDeStuffId());
+					
+					c.setOldActualNoOfPackages(new BigDecimal(d.getQtyTakenOut()));
+				}
+			});
 
 			Map<String, Object> con = new HashedMap<>();
 			con.put("crg", crg);
@@ -182,101 +195,450 @@ public class ImportGatePassController {
 		for (ImportGatePass i : container) {
 			if (i.getGatePassId().isEmpty()) {
 
-				Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
-						i.getContainerNo());
-				Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, i.getIgmNo(), i.getIgmLineNo());
-
-				DestuffCrg d = new DestuffCrg();
-
-				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
-					d = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
-							cn.getDeStuffId());
-				}
-
-				i.setGatePassId(HoldNextIdD1);
-				// i.setVehicleGatePassId(HoldNextIdD1);
-				i.setVehStatus(vehicleStatus);
-				i.setSrNo(sr);
-
 				if ("N".equals(vehicleStatus)) {
-					i.setVehicleNo("");
-					i.setDriverName("");
-					i.setVehicleGatePassId("");
+					Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+							i.getContainerNo());
+					Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, i.getIgmNo(), i.getIgmLineNo());
+
+					DestuffCrg d = new DestuffCrg();
+
+					if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+						d = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+								cn.getDeStuffId());
+					}
+
+					i.setGatePassId(HoldNextIdD1);
+					// i.setVehicleGatePassId(HoldNextIdD1);
+					i.setVehStatus(vehicleStatus);
+					i.setSrNo(sr);
+
+					if ("N".equals(vehicleStatus)) {
+						i.setVehicleNo("");
+						i.setDriverName("");
+						i.setVehicleGatePassId("");
+					}
+
+					i.setCompanyId(cid);
+					i.setBranchId(bid);
+					i.setSl(igm.getShippingLine());
+					i.setStatus("A");
+					i.setShift(crg.getShift());
+					i.setGrnNo(crg.getGrnNo());
+					i.setGrnDate(crg.getGrnDate());
+					i.setCreatedBy(user);
+					i.setCreatedDate(new Date());
+					i.setApprovedBy(user);
+					i.setApprovedDate(new Date());
+					i.setComments(crg.getComments());
+					i.setStampDuty(crg.getStampDuty());
+					i.setCinNo(crg.getCinNo());
+					i.setCinDate(crg.getCinDate());
+					i.setDoNo(crg.getDoNo());
+					i.setOocNo(crg.getOocNo());
+					i.setOocDate(crg.getOocDate());
+					i.setDoDate(crg.getDoDate());
+					i.setDoValidityDate(crg.getDoValidityDate());
+					i.setMtyYardLocation(crg.getMtyYardLocation());
+					i.setCha(cr.getChaCode());
+
+					if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+
+						if (d != null) {
+							i.setDestuffId(d.getDeStuffId());
+							i.setDestuffLineId(d.getDeStuffLineId());
+							
+							d.setQtyTakenOut(d.getQtyTakenOut()+i.getQtyTakenOut().intValue());
+							
+							destuffcrgrepo.save(d);
+						}
+					}
+
+					importgatepassrepo.save(i);
+
+					if (cn != null) {
+						cn.setGatePassNo(HoldNextIdD1);
+						cn.setShift(i.getShift());
+						cn.setGrnNo(i.getGrnNo());
+						cn.setGrnDate(i.getGrnDate());
+						cn.setStampDuty(i.getStampDuty());
+						cn.setCinNo(i.getCinNo());
+						cn.setCinDate(crg.getCinDate());
+						cn.setDoNo(crg.getDoNo());
+						cn.setOocNo(crg.getOocNo());
+						cn.setOocDate(crg.getOocDate());
+						cn.setDoDate(crg.getDoDate());
+						cn.setDoValidityDate(crg.getDoValidityDate());
+
+						cfigmcnrepo.save(cn);
+					}
+
+					if (!"N".equals(i.getVehStatus())) {
+						VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, i.getVehicleNo(),
+								i.getVehicleGatePassId());
+
+						if (track != null) {
+							track.setGatePassNo(HoldNextIdD1);
+							track.setIgmNo(i.getIgmNo());
+							track.setIgmTransId(i.getIgmTransId());
+
+							vehicleTrackRepo.save(track);
+						}
+					}
+
+					ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
+							cn.getContainerNo(), cn.getGateInId());
+
+					if (existingInv != null) {
+						existingInv.setGatePassDate(new Date());
+						existingInv.setGatePassNo(HoldNextIdD1);
+
+						importinventoryrepo.save(existingInv);
+					}
+
+				} else {
+                      if(i.getVehicleNo() != null && !i.getVehicleNo().isEmpty()) {
+                    		Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+            						i.getContainerNo());
+            				Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, i.getIgmNo(), i.getIgmLineNo());
+
+            				DestuffCrg d = new DestuffCrg();
+
+            				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+            					d = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+            							cn.getDeStuffId());
+            				}
+
+            				i.setGatePassId(HoldNextIdD1);
+            				// i.setVehicleGatePassId(HoldNextIdD1);
+            				i.setVehStatus(vehicleStatus);
+            				i.setSrNo(sr);
+
+            				if ("N".equals(vehicleStatus)) {
+            					i.setVehicleNo("");
+            					i.setDriverName("");
+            					i.setVehicleGatePassId("");
+            				}
+
+            				i.setCompanyId(cid);
+            				i.setBranchId(bid);
+            				i.setSl(igm.getShippingLine());
+            				i.setStatus("A");
+            				i.setShift(crg.getShift());
+            				i.setGrnNo(crg.getGrnNo());
+            				i.setGrnDate(crg.getGrnDate());
+            				i.setCreatedBy(user);
+            				i.setCreatedDate(new Date());
+            				i.setApprovedBy(user);
+            				i.setApprovedDate(new Date());
+            				i.setComments(crg.getComments());
+            				i.setStampDuty(crg.getStampDuty());
+            				i.setCinNo(crg.getCinNo());
+            				i.setCinDate(crg.getCinDate());
+            				i.setDoNo(crg.getDoNo());
+            				i.setOocNo(crg.getOocNo());
+            				i.setOocDate(crg.getOocDate());
+            				i.setDoDate(crg.getDoDate());
+            				i.setDoValidityDate(crg.getDoValidityDate());
+            				i.setMtyYardLocation(crg.getMtyYardLocation());
+            				i.setCha(cr.getChaCode());
+
+            				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+
+            					if (d != null) {
+            						i.setDestuffId(d.getDeStuffId());
+            						i.setDestuffLineId(d.getDeStuffLineId());
+            						
+            						d.setQtyTakenOut(d.getQtyTakenOut()+i.getQtyTakenOut().intValue());
+        							
+        							destuffcrgrepo.save(d);
+            					}
+            				}
+
+            				importgatepassrepo.save(i);
+
+            				if (cn != null) {
+            					cn.setGatePassNo(HoldNextIdD1);
+            					cn.setShift(i.getShift());
+            					cn.setGrnNo(i.getGrnNo());
+            					cn.setGrnDate(i.getGrnDate());
+            					cn.setStampDuty(i.getStampDuty());
+            					cn.setCinNo(i.getCinNo());
+            					cn.setCinDate(crg.getCinDate());
+            					cn.setDoNo(crg.getDoNo());
+            					cn.setOocNo(crg.getOocNo());
+            					cn.setOocDate(crg.getOocDate());
+            					cn.setDoDate(crg.getDoDate());
+            					cn.setDoValidityDate(crg.getDoValidityDate());
+
+            					cfigmcnrepo.save(cn);
+            				}
+
+            				if (!"N".equals(i.getVehStatus())) {
+            					VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, i.getVehicleNo(),
+            							i.getVehicleGatePassId());
+
+            					if (track != null) {
+            						track.setGatePassNo(HoldNextIdD1);
+            						track.setIgmNo(i.getIgmNo());
+            						track.setIgmTransId(i.getIgmTransId());
+
+            						vehicleTrackRepo.save(track);
+            					}
+            				}
+
+            				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
+            						cn.getContainerNo(), cn.getGateInId());
+
+            				if (existingInv != null) {
+            					existingInv.setGatePassDate(new Date());
+            					existingInv.setGatePassNo(HoldNextIdD1);
+
+            					importinventoryrepo.save(existingInv);
+            				}
+
+                      }
 				}
 
-				i.setCompanyId(cid);
-				i.setBranchId(bid);
-				i.setSl(igm.getShippingLine());
-				i.setStatus("A");
-				i.setShift(crg.getShift());
-				i.setGrnNo(crg.getGrnNo());
-				i.setGrnDate(crg.getGrnDate());
-				i.setCreatedBy(user);
-				i.setCreatedDate(new Date());
-				i.setApprovedBy(user);
-				i.setApprovedDate(new Date());
-				i.setComments(crg.getComments());
-				i.setStampDuty(crg.getStampDuty());
-				i.setCinNo(crg.getCinNo());
-				i.setCinDate(crg.getCinDate());
-				i.setDoNo(crg.getDoNo());
-				i.setOocNo(crg.getOocNo());
-				i.setOocDate(crg.getOocDate());
-				i.setDoDate(crg.getDoDate());
-				i.setDoValidityDate(crg.getDoValidityDate());
-				i.setMtyYardLocation(crg.getMtyYardLocation());
-				i.setCha(cr.getChaCode());
+			
+				processnextidrepo.updateAuditTrail(cid, bid, "P05068", HoldNextIdD1, "2024");
+				sr++;
+			} else {
+				ImportGatePass existing = importgatepassrepo.getSingleData(cid, bid, i.getIgmNo(), i.getIgmLineNo(),
+						i.getContainerNo(), i.getGatePassId(), i.getSrNo());
 
-				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+				if (existing != null) {
+					existing.setEditedBy(user);
+					existing.setEditedDate(new Date());
+					existing.setShift(crg.getShift());
+					existing.setGrnNo(crg.getGrnNo());
+					existing.setGrnDate(crg.getGrnDate());
+					existing.setComments(crg.getComments());
+					existing.setStampDuty(crg.getStampDuty());
+					existing.setCinNo(crg.getCinNo());
+					existing.setCinDate(crg.getCinDate());
+					existing.setDoNo(crg.getDoNo());
+					existing.setOocNo(crg.getOocNo());
+					existing.setOocDate(crg.getOocDate());
+					existing.setDoDate(crg.getDoDate());
+					existing.setDoValidityDate(crg.getDoValidityDate());
+					existing.setMtyYardLocation(crg.getMtyYardLocation());
+					existing.setVehStatus(vehicleStatus);
+					if ("N".equals(vehicleStatus)) {
 
-					if (d != null) {
-						i.setDestuffId(d.getDeStuffId());
-						i.setDestuffLineId(d.getDeStuffLineId());
+						VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, existing.getVehicleNo(),
+								existing.getVehicleGatePassId());
+
+						if (track != null) {
+							track.setGatePassNo("");
+							track.setIgmNo("");
+							track.setIgmTransId("");
+
+							vehicleTrackRepo.save(track);
+						}
+						existing.setVehicleNo("");
+						existing.setDriverName("");
+						existing.setVehicleGatePassId("");
+					} else {
+
+						VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, i.getVehicleNo(),
+								i.getVehicleGatePassId());
+
+						if (track != null) {
+							track.setGatePassNo(existing.getGatePassId());
+							track.setIgmNo(existing.getIgmNo());
+							track.setIgmTransId(existing.getIgmTransId());
+
+							vehicleTrackRepo.save(track);
+						}
+						existing.setVehicleNo(i.getVehicleNo());
+						existing.setDriverName(i.getDriverName());
+						existing.setVehicleGatePassId(i.getVehicleGatePassId());
+					}
+
+					importgatepassrepo.save(existing);
+
+					Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+							i.getContainerNo());
+
+					if (cn != null) {
+
+						cn.setShift(i.getShift());
+						cn.setGrnNo(i.getGrnNo());
+						cn.setGrnDate(i.getGrnDate());
+						cn.setStampDuty(i.getStampDuty());
+						cn.setCinNo(i.getCinNo());
+						cn.setCinDate(crg.getCinDate());
+						cn.setDoNo(crg.getDoNo());
+						cn.setOocNo(crg.getOocNo());
+						cn.setOocDate(crg.getOocDate());
+						cn.setDoDate(crg.getDoDate());
+						cn.setDoValidityDate(crg.getDoValidityDate());
+
+						cfigmcnrepo.save(cn);
 					}
 				}
+			}
+		}
 
-				importgatepassrepo.save(i);
+		if (crg.getGatePassId() == null || crg.getGatePassId().isEmpty()) {
+			List<ImportGatePass> gatepass = importgatepassrepo.getData(cid, bid, crg.getIgmNo(), crg.getIgmLineNo(),
+					HoldNextIdD1);
 
-				if (cn != null) {
-					cn.setGatePassNo(HoldNextIdD1);
-					cn.setShift(i.getShift());
-					cn.setGrnNo(i.getGrnNo());
-					cn.setGrnDate(i.getGrnDate());
-					cn.setStampDuty(i.getStampDuty());
-					cn.setCinNo(i.getCinNo());
-					cn.setCinDate(crg.getCinDate());
-					cn.setDoNo(crg.getDoNo());
-					cn.setOocNo(crg.getOocNo());
-					cn.setOocDate(crg.getOocDate());
-					cn.setDoDate(crg.getDoDate());
-					cn.setDoValidityDate(crg.getDoValidityDate());
+			if (gatepass.isEmpty()) {
+				return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+			}
 
-					cfigmcnrepo.save(cn);
-				}
+			return new ResponseEntity<>(gatepass, HttpStatus.OK);
+		} else {
+			List<ImportGatePass> gatepass = importgatepassrepo.getData(cid, bid, crg.getIgmNo(), crg.getIgmLineNo(),
+					crg.getGatePassId());
 
-				if (!"N".equals(i.getVehStatus())) {
-					VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, i.getVehicleNo(),
-							i.getVehicleGatePassId());
+			if (gatepass.isEmpty()) {
+				return new ResponseEntity<>("Gate Pass data not found", HttpStatus.CONFLICT);
+			}
 
-					if (track != null) {
-						track.setGatePassNo(HoldNextIdD1);
-						track.setIgmNo(i.getIgmNo());
-						track.setIgmTransId(i.getIgmTransId());
+			return new ResponseEntity<>(gatepass, HttpStatus.OK);
+		}
 
-						vehicleTrackRepo.save(track);
+	}
+	
+	
+	
+	@PostMapping("/saveItemwiseCRGData")
+	public ResponseEntity<?> saveItemwiseCRGData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestParam("vehicleStatus") String vehicleStatus,
+			@RequestBody Map<String, Object> data) throws JsonMappingException, JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+
+		ImportGatePass crg = mapper.readValue(mapper.writeValueAsString(data.get("crg")), ImportGatePass.class);
+
+		if (crg == null) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+		CFIgm igm = cfigmrepo.getDataByIgmNoAndtrans(cid, bid, crg.getIgmTransId(), crg.getIgmNo());
+
+		List<ImportGatePass> container = mapper.readValue(mapper.writeValueAsString(data.get("container")),
+				new TypeReference<List<ImportGatePass>>() {
+				});
+		if (container.isEmpty()) {
+			return new ResponseEntity<>("Container Data not found", HttpStatus.CONFLICT);
+		}
+
+		int sr = 1;
+		String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05068", "2024");
+
+		int lastNextNumericId1 = Integer.parseInt(holdId1.substring(3));
+
+		int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+		String HoldNextIdD1 = String.format("IMG%07d", nextNumericNextID1);
+
+		for (ImportGatePass i : container) {
+			if (i.getGatePassId().isEmpty()) {
+
+				
+					Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+							i.getContainerNo());
+					Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, i.getIgmNo(), i.getIgmLineNo());
+
+					DestuffCrg d = new DestuffCrg();
+
+					if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+						d = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
+								cn.getDeStuffId());
 					}
-				}
-				
-				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), 
-						cn.getContainerNo(), cn.getGateInId());
-				
-				if(existingInv != null) {
-					existingInv.setGatePassDate(new Date());
-					existingInv.setGatePassNo(HoldNextIdD1);
-					
-					importinventoryrepo.save(existingInv);
-				}
 
+					i.setGatePassId(HoldNextIdD1);
+					// i.setVehicleGatePassId(HoldNextIdD1);
+					i.setVehStatus(vehicleStatus);
+					i.setSrNo(sr);
+
+					if ("N".equals(vehicleStatus)) {
+						i.setVehicleNo("");
+						i.setDriverName("");
+						i.setVehicleGatePassId("");
+					}
+
+					i.setCompanyId(cid);
+					i.setBranchId(bid);
+					i.setSl(igm.getShippingLine());
+					i.setStatus("A");
+					i.setShift(crg.getShift());
+					i.setGrnNo(crg.getGrnNo());
+					i.setGrnDate(crg.getGrnDate());
+					i.setCreatedBy(user);
+					i.setCreatedDate(new Date());
+					i.setApprovedBy(user);
+					i.setApprovedDate(new Date());
+					i.setComments(crg.getComments());
+					i.setStampDuty(crg.getStampDuty());
+					i.setCinNo(crg.getCinNo());
+					i.setCinDate(crg.getCinDate());
+					i.setDoNo(crg.getDoNo());
+					i.setOocNo(crg.getOocNo());
+					i.setOocDate(crg.getOocDate());
+					i.setDoDate(crg.getDoDate());
+					i.setDoValidityDate(crg.getDoValidityDate());
+					i.setMtyYardLocation(crg.getMtyYardLocation());
+					i.setCha(cr.getChaCode());
+
+					if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
+
+						if (d != null) {
+							i.setDestuffId(d.getDeStuffId());
+							i.setDestuffLineId(d.getDeStuffLineId());
+							
+							d.setQtyTakenOut(d.getQtyTakenOut()+i.getQtyTakenOut().intValue());
+							
+							destuffcrgrepo.save(d);
+						}
+					}
+
+					importgatepassrepo.save(i);
+
+					if (cn != null) {
+						cn.setGatePassNo(HoldNextIdD1);
+						cn.setShift(i.getShift());
+						cn.setGrnNo(i.getGrnNo());
+						cn.setGrnDate(i.getGrnDate());
+						cn.setStampDuty(i.getStampDuty());
+						cn.setCinNo(i.getCinNo());
+						cn.setCinDate(crg.getCinDate());
+						cn.setDoNo(crg.getDoNo());
+						cn.setOocNo(crg.getOocNo());
+						cn.setOocDate(crg.getOocDate());
+						cn.setDoDate(crg.getDoDate());
+						cn.setDoValidityDate(crg.getDoValidityDate());
+
+						cfigmcnrepo.save(cn);
+					}
+
+//					if (!"N".equals(i.getVehStatus())) {
+//						VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, i.getVehicleNo(),
+//								i.getVehicleGatePassId());
+//
+//						if (track != null) {
+//							track.setGatePassNo(HoldNextIdD1);
+//							track.setIgmNo(i.getIgmNo());
+//							track.setIgmTransId(i.getIgmTransId());
+//
+//							vehicleTrackRepo.save(track);
+//						}
+//					}
+
+					ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
+							cn.getContainerNo(), cn.getGateInId());
+
+					if (existingInv != null) {
+						existingInv.setGatePassDate(new Date());
+						existingInv.setGatePassNo(HoldNextIdD1);
+
+						importinventoryrepo.save(existingInv);
+					}
+
+				
+
+			
 				processnextidrepo.updateAuditTrail(cid, bid, "P05068", HoldNextIdD1, "2024");
 				sr++;
 			} else {
@@ -649,8 +1011,16 @@ public class ImportGatePassController {
 		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
+		
+		Boolean check = data.stream().anyMatch(c-> "H".equals(c.getHoldStatus()));
+		
+		if (check) {
+			return new ResponseEntity<>("Container is hold.", HttpStatus.CONFLICT);
+		}
 
 		List<Cfigmcrg> crg = new ArrayList<>();
+		
+		
 
 		data.stream().forEach(c -> {
 			Cfigmcrg cr = cfigmcrgrepo.getData4(cid, bid, c.getIgmNo(), c.getIgmLineNo());
@@ -714,7 +1084,7 @@ public class ImportGatePassController {
 
 				i.setGatePassId(HoldNextIdD1);
 				i.setVehicleGatePassId("Y".equals(crg.getVehStatus()) ? crg.getVehicleGatePassId() : "");
-				i.setVehStatus("Y");
+				i.setVehStatus(crg.getVehStatus());
 				i.setSrNo(sr);
 				i.setGatePassType("CON");
 
@@ -747,7 +1117,7 @@ public class ImportGatePassController {
 				i.setDoValidityDate(crg.getDoValidityDate());
 				i.setMtyYardLocation(crg.getMtyYardLocation());
 				i.setCha(cr.getChaCode());
-				
+
 				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
 
 					if (d != null) {
@@ -774,14 +1144,14 @@ public class ImportGatePassController {
 
 					cfigmcnrepo.save(cn);
 				}
-				
-				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), 
+
+				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
 						cn.getContainerNo(), cn.getGateInId());
-				
-				if(existingInv != null) {
+
+				if (existingInv != null) {
 					existingInv.setGatePassDate(new Date());
 					existingInv.setGatePassNo(HoldNextIdD1);
-					
+
 					importinventoryrepo.save(existingInv);
 				}
 
@@ -800,6 +1170,7 @@ public class ImportGatePassController {
 					existing.setComments(crg.getComments());
 					existing.setStampDuty(i.getStampDuty());
 					existing.setCinNo(i.getCinNo());
+					existing.setVehStatus(crg.getVehStatus());
 					existing.setCinDate(i.getCinDate());
 					existing.setDoNo(crg.getDoNo());
 					existing.setOocNo(crg.getOocNo());
@@ -1063,7 +1434,6 @@ public class ImportGatePassController {
 					return new ResponseEntity<>("Destuff data not found", HttpStatus.CONFLICT);
 				}
 
-
 				i.setGatePassId(HoldNextIdD1);
 				i.setVehStatus(vehicleStatus);
 				i.setSrNo(sr);
@@ -1119,14 +1489,12 @@ public class ImportGatePassController {
 
 				cfigmcrgrepo.save(cr);
 
-				
-
 				int update = cfigmcnrepo.updategatePassId(cid, bid, i.getIgmTransId(), i.getIgmNo(), i.getIgmLineNo(),
 						HoldNextIdD1);
-				
-				int updateInventory = importinventoryrepo.updatData(cid, bid, i.getIgmTransId(), i.getIgmNo(), destuff.getDeStuffId(),
-						HoldNextIdD1);
-				
+
+				int updateInventory = importinventoryrepo.updateData(cid, bid, i.getIgmTransId(), i.getIgmNo(),
+						destuff.getDeStuffId(), HoldNextIdD1);
+
 				processnextidrepo.updateAuditTrail(cid, bid, "P05073", HoldNextIdD1, "2024");
 				sr++;
 			} else {

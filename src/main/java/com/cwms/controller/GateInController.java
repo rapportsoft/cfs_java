@@ -452,6 +452,77 @@ public class GateInController {
 		return addExportSbEntry;
 	}
 
+	
+	
+	@GetMapping("/getSavedGateInRecords")
+	public ResponseEntity<?> getSavedGateInRecords(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam("profitCenterId") String profitCenterId, 
+	        @RequestParam("gateInId") String gateInId) {	    
+	    try {	    	
+	    	ResponseEntity<?>  gateInEntries = gateInService.getSavedGateInRecords(companyId, branchId, profitCenterId, gateInId);
+	        return gateInEntries;
+	    } catch (Exception e) {	       
+	        // Return an appropriate error response
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	@GetMapping("/searchVehicleNos")
+	public ResponseEntity<?> searchVehicleNos(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam("searchValue") String searchValue      
+	       ) {	    
+	    try {	    	
+	    	ResponseEntity<?> sbCargoGateIn = gateInService.searchSbNosToGateIn(companyId, branchId, searchValue);
+	        return sbCargoGateIn;
+	    } catch (Exception e) {	       
+	        // Return an appropriate error response
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+	@GetMapping("/getGateInEntryFromVehicleNo")
+	public ResponseEntity<?> getGateInEntryFromVehicleNo(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam("vehicleNo") String vehicleNo ,
+	        @RequestParam("profitCenter") String profitCenter 
+	       ) {	    
+	    try {	    	
+	    	ResponseEntity<?> sbCargoGateIn = gateInService.getGateInEntryFromVehicleNo(companyId, branchId, vehicleNo, profitCenter);
+	        return sbCargoGateIn;
+	    } catch (Exception e) {	       
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@PostMapping("/saveEmptyVehiclegateIn")
 	public ResponseEntity<?> saveEmptyVehiclegateIn(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("userId") String userId, @RequestBody GateIn gatein) {

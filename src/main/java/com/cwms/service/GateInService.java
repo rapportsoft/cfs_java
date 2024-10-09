@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cwms.entities.ExportSbCargoEntry;
 import com.cwms.entities.ExportSbEntry;
 import com.cwms.entities.GateIn;
+import com.cwms.entities.VehicleTrack;
 import com.cwms.helper.HelperMethods;
 import com.cwms.repository.GateInRepository;
+import com.cwms.repository.VehicleTrackRepository;
 
 @Service
 public class GateInService {
@@ -33,6 +36,36 @@ public class GateInService {
 	
 	@Autowired
 	private HelperMethods helperMethods;	
+	
+	@Autowired
+	private VehicleTrackRepository vehicleRepo;
+	
+	
+	private List<Map<String, String>> convertToValueLabelList(List<String> data) {
+	    return data.stream().map(obj -> {
+	        Map<String, String> map = new HashMap<>();
+	        map.put("value", obj);
+	        map.put("label", obj);
+	        return map;
+	    }).collect(Collectors.toList());
+	}
+	
+	public ResponseEntity<?> getGateInEntryFromVehicleNo(String companyId, String branchId, String vehicleNo, String profitCenter)
+	{			
+		List<GateIn> gateInEntries = gateInRepo.getGateInEntryFromVehicleNo(companyId, branchId, profitCenter, vehicleNo, "EXP");
+		return ResponseEntity.ok(gateInEntries);
+	}
+	
+	public ResponseEntity<?> searchSbNosToGateIn(String companyId, String branchId, String searchValue)
+	{			
+		List<String> sbNos = gateInRepo.searchVehicleNosToCarting(companyId, branchId, searchValue);
+		List<Map<String, String>> sbNoList = convertToValueLabelList(sbNos);		
+		return ResponseEntity.ok(sbNoList);
+	}
+	
+	
+	
+	
 	
 	
 	public ResponseEntity<?> getSavedGateInRecords(String companyId, String branchId, String profitCenterId, String gateInId)
@@ -166,6 +199,44 @@ public class GateInService {
 	                gateInLoop.setFinYear(financialYear);
 	                GateIn save = gateInRepo.save(gateInLoop);
 	                listToSend.add(save);
+	                
+	                
+	                
+	                
+	                VehicleTrack v = new VehicleTrack();
+					v.setCompanyId(companyId);
+					v.setBranchId(branchId);
+					v.setFinYear(gateInLoop.getFinYear());
+					v.setVehicleNo(gateInLoop.getVehicleNo());
+					v.setProfitcentreId(gateInLoop.getProfitcentreId());
+					v.setSrNo(1);
+					v.setTransporterStatus(gateInLoop.getTransporterStatus().charAt(0));
+					v.setTransporterName(gateInLoop.getTransporterName());
+					v.setTransporter(gateInLoop.getTransporter());
+					v.setDriverName(gateInLoop.getDriverName());					
+					v.setVehicleStatus('E');
+					v.setGateInId(gateInLoop.getGateInId());
+					v.setGateInDate(new Date());
+					v.setGateNoIn("Gate01");
+					v.setShiftIn(gateInLoop.getShift());
+					v.setStatus('A');
+					v.setCreatedBy(user);
+					v.setCreatedDate(new Date());
+					v.setApprovedBy(user);
+					v.setApprovedDate(new Date());
+	                
+	                
+	                
+	                vehicleRepo.save(v);
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
+	                
 	            }
 	        }
 	        

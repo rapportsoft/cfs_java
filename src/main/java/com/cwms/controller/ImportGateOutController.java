@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,12 +96,22 @@ public class ImportGateOutController {
 		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
+		
+		String id = data.get(0).getGatePassId();
+		
+		List<ImportGatePass> filteredData = data.stream()
+			    .filter(c -> c.getGatePassId().equals(id))
+			    .collect(Collectors.toList());
+
+			if (filteredData.isEmpty()) {
+			    return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			}
 
 		String partyName = partyrepo.getPartyNameById(cid, bid, data.get(0).getSl());
 		String profitCentreName = profitcentrerepo.getAllDataByID1(cid, bid, data.get(0).getProfitcentreId());
 
 		Map<String, Object> result = new HashMap<>();
-		result.put("gatePassData", data);
+		result.put("gatePassData", filteredData);
 		result.put("sl", partyName);
 		result.put("profit", profitCentreName);
 
@@ -129,6 +140,30 @@ public class ImportGateOutController {
 		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
+		
+		data.stream().forEach(c->{
+			if("LCL".equals(c.getTransType())) {
+				Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, c.getIgmTransId(), c.getIgmNo(), c.getIgmLineNo());
+				
+
+				if(crg != null) {
+					c.setHoldStatus(crg.getHoldStatus());
+				}
+				else {
+					c.setHoldStatus("N");
+				}
+			}
+			else {
+				Cfigmcn cn = cfigmcnrepo.getSingleData4(cid, bid, c.getIgmTransId(), c.getIgmNo(),c.getIgmLineNo() ,c.getContainerNo());
+				
+				if(cn != null) {
+					c.setHoldStatus(cn.getHoldStatus());
+				}
+				else {
+					c.setHoldStatus("N");
+				}
+			}
+		});
 
 		String partyName = partyrepo.getPartyNameById(cid, bid, data.get(0).getSl());
 		String profitCentreName = profitcentrerepo.getAllDataByID1(cid, bid, data.get(0).getProfitcentreId());
