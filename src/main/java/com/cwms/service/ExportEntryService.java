@@ -64,6 +64,39 @@ public class ExportEntryService {
 	
 	
 	
+	
+	public ExportSbEntry getDataForOutOfCharge(String companyId, String branchId, String profitcentreId, String sbTransId, String hSbTransId, String sbNo)
+	{			
+		return entryRepo.getDataForOutOfCharge(companyId, branchId, hSbTransId, profitcentreId, sbNo, sbTransId);
+	}
+	
+	@Transactional
+	public int updateOutOfCharge(String companyId, String branchId, ExportSbEntry exportSbEntry, String user) {
+	    try {
+	        int updateOutOfCharge = entryRepo.updateOutOfCharge(
+	            companyId, 
+	            branchId, 
+	            exportSbEntry.getSbNo(), 
+	            exportSbEntry.getSbTransId(), 
+	            exportSbEntry.gethSbTransId(), 
+	            exportSbEntry.getOutOfCharge(), 
+	            exportSbEntry.getOutOfChargeDate(),	            
+	            exportSbEntry.getLeoDate()
+	        );
+
+	        System.out.println("updateOutOfCharge : " + updateOutOfCharge);
+	        
+	        // Optionally handle cases where no rows were updated
+	       return updateOutOfCharge;
+	    } catch (Exception e) {
+	        // Handle other potential exceptions
+	        System.err.println("An error occurred while updating OutOfCharge: " + e.getMessage());
+	        throw e; // or handle it based on your application's requirement
+	    }
+	}
+	
+	
+	
 	public ResponseEntity<?> searchExportMain(String companyId, String branchId, String sbNo, String vehicleNo, String containerNo, String bookingNo, String pod)
 	{		
 		

@@ -30,6 +30,53 @@ public class ExportSbEntryController
 {
 	@Autowired
 	private ExportEntryService exportEntryService;	
+	
+	
+	
+	
+
+	@GetMapping("/getDataForOutOfCharge")
+	public ResponseEntity<?> getDataForOutOfCharge(
+	        @RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,	        
+	        @RequestParam("profitcentreId") String profitcentreId, @RequestParam("sbTransId") String sbTransId, 
+	        @RequestParam("hSbTransId") String hSbTransId, @RequestParam("sbNo") String sbNo
+	       ) {	    
+	    try {	    	
+	    	ExportSbEntry exportSbEntry = exportEntryService.getDataForOutOfCharge(companyId, branchId, profitcentreId, sbTransId, hSbTransId, sbNo);
+	        return ResponseEntity.ok(exportSbEntry);
+	    } catch (Exception e) {	       
+	        // Return an appropriate error response
+	    	System.out.println(e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+
+	@PostMapping("/updateOutOfCharge")
+	public ResponseEntity<?> updateOutOfCharge(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,
+	        @RequestBody ExportSbEntry exportSbEntry, 
+	        @RequestParam("userId") String user) {
+	    
+	    System.out.println(exportSbEntry);
+	    
+	    int updateOutOfCharge = exportEntryService.updateOutOfCharge(companyId, branchId, exportSbEntry, user);
+	    
+	    if (updateOutOfCharge == 1) {
+	        return ResponseEntity.ok("Record Updated Successfully");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Record could not be updated");
+	    }
+	}
+
+	
+	
+	
+	
+	
+	
 		
 	@GetMapping("/searchExportMain")
 	public ResponseEntity<?> searchExportMain(
@@ -50,22 +97,6 @@ public class ExportSbEntryController
 	    }
 	}
 	
-	
-	
-//	@GetMapping("/searchSbNosToGateIn")
-//	public ResponseEntity<?> searchSbNosToGateIn(
-//	        @RequestParam("companyId") String companyId, 
-//	        @RequestParam("branchId") String branchId,	        
-//	        @RequestParam(value="searchValue", required = false) String searchValue      
-//	       ) {	    
-//	    try {	    	
-//	    	ResponseEntity<?> sbCargoGateIn = exportEntryService.searchSbNosToGateIn(companyId, branchId, searchValue);
-//	        return sbCargoGateIn;
-//	    } catch (Exception e) {	       
-//	        // Return an appropriate error response
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
-//	    }
-//	}
 	
 	@GetMapping("/searchSbNosToGateIn")
 	public ResponseEntity<?> searchSbNosToGateIn(

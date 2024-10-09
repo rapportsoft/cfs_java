@@ -28,12 +28,11 @@ public class ExportCartingController {
 
 	@PostMapping("/addExportCarting")
 	public ResponseEntity<?> addExportCarting(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
-			@RequestBody List<ExportCarting> cartingList, @RequestParam("userId") String User)
+			@RequestBody List<ExportCarting> cartingList, @RequestParam("userId") String User, @RequestParam("status") String status)
 		{				
-			ResponseEntity<?> addExportCartingEntry = cartingService.addExportCarting(companyId, branchId, cartingList, User);
+			ResponseEntity<?> addExportCartingEntry = cartingService.addExportCarting(companyId, branchId, cartingList, User, status);
 			return addExportCartingEntry;
 		}
-	
 
 	@GetMapping("/getSelectedCartingEntry")
 	public ResponseEntity<?> getSelectedCartingEntry(
