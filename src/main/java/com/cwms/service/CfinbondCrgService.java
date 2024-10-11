@@ -1386,7 +1386,15 @@ public class CfinbondCrgService {
 
 	    Cfinbondcrg cfinbondcrg = object.convertValue(requestBody.get("inBond"), Cfinbondcrg.class);
 	    
-	    if (cfinbondcrg != null) {
+	    System.out.println("cfinbondcrg________________________"+cfinbondcrg.getInBondingId());
+	    
+	    if (cfinbondcrg.getInBondingId()==null || cfinbondcrg.getInBondingId().isEmpty() || cfinbondcrg.getInBondingId().isBlank())
+	    {
+	    	return new ResponseEntity<>("Please First Save Data", HttpStatus.BAD_REQUEST);
+	    }
+	    
+	    if (cfinbondcrg != null && cfinbondcrg.getInBondingId()!=null || !cfinbondcrg.getInBondingId().isEmpty() || !cfinbondcrg.getInBondingId().isBlank()) 	    	
+	    {
 
 	        BigDecimal sumOfInbondFromDtl = cfinbondcrgDtlRepo.getSumOfInBondPackages(companyId, branchId,
 	                cfinbondcrg.getInBondingId(), cfinbondcrg.getNocTransId());
@@ -1411,8 +1419,7 @@ public class CfinbondCrgService {
 	        	 System.out.println("updateAfterApprov row count "+updateAfterApprov);
 	        }
 	    }
-
-
+	   
 	    return new ResponseEntity<>("", HttpStatus.OK);
 	}
 
