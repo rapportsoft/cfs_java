@@ -123,5 +123,68 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 	                      @Param("bid") String bid, 
 	                      @Param("gatpass") String gatpass, 
 	                      @Param("id") String id);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query(value="select v.vehicleNo,v.gateInId,v.driverName,v.transporterName,v.transporterStatus,v.transporter from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
+			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gatePassNo = '' OR v.gatePassNo is null) "
+			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) ")
+	List<Object[]> getEmptyVehGateInForGatePass(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh);
+	
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE VehicleTrack v SET v.gatePassNo = :gatePassNo,"
+	        + "v.editedBy = :editedBy, v.editedDate = CURRENT_DATE "
+	        + "WHERE v.companyId = :cid AND v.branchId = :bid AND v.gateInId = :id AND v.status != 'D'")
+	int updateDataAfterBondGatePass(
+	               @Param("gatePassNo") String gatePassNo,
+	               @Param("editedBy") String editedBy,
+	               @Param("cid") String cid, 
+	               @Param("bid") String bid, 
+	               @Param("id") String id);
+	
+	
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE VehicleTrack v SET v.gateOutId = :gateOutId, v.gateOutDate = :gateOutDate, "
+	        + "v.editedBy = :editedBy, v.editedDate = CURRENT_DATE "
+	        + "WHERE v.companyId = :cid AND v.branchId = :bid AND v.gateInId = :id AND v.status != 'D'")
+	int updateDataAfterBondGateOut(
+	               @Param("gateOutId") String gateOutId,
+	               @Param("gateOutDate") Date gateOutDate,
+	               @Param("editedBy") String editedBy,
+	               @Param("cid") String cid, 
+	               @Param("bid") String bid, 
+	               @Param("id") String id);
+
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE VehicleTrack v SET v.vehicleNo = :vehicleNo,v.transporterStatus = :transporterStatus, "
+	        + "v.transporterName = :transporterName, v.driverName = :driverName, v.vehicleStatus = :vehicleStatus, "
+	        + "v.shiftIn = :shiftIn, v.containerNo=:containerNo,v.containerSize=:containerSize,v.containerType=:containerType,v.editedBy = :editedBy, v.editedDate = CURRENT_DATE "
+	        + "WHERE v.companyId = :cid AND v.branchId = :bid AND v.gateInId = :id AND v.status != 'D'")
+	int updateDataBondGateInVehicle(
+	               @Param("vehicleNo") String vehicleNo,
+	               @Param("transporterStatus") char transporterStatus,
+	               @Param("transporterName") String transporterName,
+	               @Param("driverName") String driverName,
+	               @Param("vehicleStatus") char vehicleStatus,
+	               @Param("shiftIn") String shiftIn,
+	               @Param("containerNo") String containerNo,
+	               @Param("containerSize") String containerSize, 
+	               @Param("containerType") String containerType, 
+	               @Param("editedBy") String editedBy,
+	               @Param("cid") String cid, 
+	               @Param("bid") String bid, 
+	               @Param("id") String id);
 
 }
