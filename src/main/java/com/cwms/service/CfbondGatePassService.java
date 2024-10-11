@@ -16,6 +16,7 @@ import com.cwms.repository.CfExBondCrgDtlRepository;
 import com.cwms.repository.CfExBondCrgRepository;
 import com.cwms.repository.CfbondGatePassRepository;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.VehicleTrackRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +35,9 @@ public class CfbondGatePassService {
 
 	@Autowired
 	private CfExBondCrgDtlRepository cfExBondCrgDtlRepository;
+	
+	@Autowired
+    private VehicleTrackRepository vehicleTrackRepository;
 
 	public ResponseEntity<?> saveDataOfGatePassAndGatePassDtl(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
@@ -97,6 +101,8 @@ public class CfbondGatePassService {
 						gatePassDtl.setApprovedDate(new Date());
 						gatePassDtl.setStatus("A");
 						
+						gatePassDtl.setVehGateInId(gatePass.getVehGateInId());
+						
 						gatePassDtl.setGatePassId(nectExBondingId);
 						gatePassDtl.setGatePassDate(gatePass.getGatePassDate());
 						gatePassDtl.setShift(gatePass.getShift());
@@ -113,6 +119,9 @@ public class CfbondGatePassService {
 						gatePassDtl.setLicenceNo(gatePass.getLicenceNo());
 						gatePassDtl.setTransporterName(gatePass.getTransporterName());
 						gatePassDtl.setComments(gatePass.getComments());
+						gatePassDtl.setDeliveryOrderNo(gatePass.getDeliveryOrderNo());
+						gatePassDtl.setDeliveryOrderDate(gatePass.getDeliveryOrderDate());
+						gatePassDtl.setDoValidityDate(gatePass.getDoValidityDate());
 
 						gatePassDtl.setInBondingId(item.getInBondingId());
 						gatePassDtl.setExBondingId(item.getExBondingId());
@@ -150,6 +159,9 @@ public class CfbondGatePassService {
 						int updateCfExbondcrgDtlAfterGatePass = cfExBondCrgDtlRepository.updateCfexbondDtlAfterGatePass(
 								saved.getQtyTakenOut(), companyId, branchId, saved.getExBondingId(),
 								saved.getExBondBeNo(), saved.getCommodity());
+						
+						
+						
 
 						System.out.println(
 								"Update row count after exbond details is" + updateCfExbondcrgDtlAfterGatePass);
@@ -168,7 +180,13 @@ public class CfbondGatePassService {
 						int updateExbondCrg = cfExBondCrgRepository.updateCfexbondAfterGatePass(totalOut, companyId,
 								branchId, firstSavedObject.getExBondingId(), firstSavedObject.getExBondBeNo());
 						
+						int updateDataAfterBondGatePass=vehicleTrackRepository.updateDataAfterBondGatePass(firstSavedObject.getGatePassId(), user,companyId,branchId,firstSavedObject.getVehGateInId());
+						
+						
 						System.out.println("Update row count after gate pass in exbond is____________"+updateExbondCrg);
+						
+						
+						System.out.println("Update row count after gate pass in updateDataAfterBondGatePass___________"+updateDataAfterBondGatePass);
 					}
 //					
 
@@ -221,14 +239,16 @@ public class CfbondGatePassService {
 						gatePassDtl.setLicenceNo(gatePass.getLicenceNo());
 						gatePassDtl.setTransporterName(gatePass.getTransporterName());
 						gatePassDtl.setComments(gatePass.getComments());
-
+						gatePassDtl.setVehGateInId(gatePass.getVehGateInId());
 						gatePassDtl.setInBondingId(item.getInBondingId());
 						gatePassDtl.setExBondingId(item.getExBondingId());
 						gatePassDtl.setInBondPackages(item.getInBondPackages());
 						gatePassDtl.setTransporterName(gatePass.getTransporterName());
 						gatePassDtl.setTransporterStatus(gatePass.getTransporterStatus());
 						gatePassDtl.setCha(gatePass.getCha());
-
+						gatePassDtl.setDeliveryOrderNo(gatePass.getDeliveryOrderNo());
+						gatePassDtl.setDeliveryOrderDate(gatePass.getDeliveryOrderDate());
+						gatePassDtl.setDoValidityDate(gatePass.getDoValidityDate());
 						gatePassDtl.setTransType(gatePass.getTransType());
 						gatePassDtl.setNocNo(item.getNocNo());
 						gatePassDtl.setExBondBeNo(item.getExBondBeNo());
@@ -287,7 +307,7 @@ public class CfbondGatePassService {
 							gatePassDtl1.setLicenceNo(gatePass.getLicenceNo());
 							gatePassDtl1.setTransporterName(gatePass.getTransporterName());
 							gatePassDtl1.setComments(gatePass.getComments());
-
+							gatePassDtl1.setVehGateInId(gatePass.getVehGateInId());
 							gatePassDtl1.setInBondingId(item.getInBondingId());
 							gatePassDtl1.setExBondingId(item.getExBondingId());
 							gatePassDtl1.setInBondPackages(item.getInBondPackages());
@@ -312,6 +332,9 @@ public class CfbondGatePassService {
 							gatePassDtl1.setBondingNo(item.getBondingNo());
 							gatePassDtl1.setCommodityDescription(item.getCommodityDescription());
 							gatePassDtl1.setSrNo(item.getSrNo()+1);
+							gatePassDtl1.setDeliveryOrderNo(gatePass.getDeliveryOrderNo());
+							gatePassDtl1.setDeliveryOrderDate(gatePass.getDeliveryOrderDate());
+							gatePassDtl1.setDoValidityDate(gatePass.getDoValidityDate());
 
 							saved = cfbondGatePassRepository.save(gatePassDtl1);
 
@@ -343,7 +366,15 @@ public class CfbondGatePassService {
 						int updateExbondCrg = cfExBondCrgRepository.updateCfexbondAfterGatePass(totalOut, companyId,
 								branchId, firstSavedObject.getExBondingId(), firstSavedObject.getExBondBeNo());
 						
+						
+						int updateDataAfterBondGatePass=vehicleTrackRepository.updateDataAfterBondGatePass(firstSavedObject.getGatePassId(), user,companyId,branchId,firstSavedObject.getVehGateInId());
+						
 						System.out.println("Update row count after gate pass in exbond is in edit ok ____________"+updateExbondCrg);
+						
+						
+						
+						
+						System.out.println("Update row count after gate pass in exbond is in edit updateDataAfterBondGatePass ____________"+updateDataAfterBondGatePass);
 					}
 
 				}
@@ -364,9 +395,7 @@ public class CfbondGatePassService {
         return cfbondGatePassRepository.findCfbondnocByCompanyIdAndBranchIdForCfbondGateIn(companyId, branchId, partyName);
     }
 	
-	
-	
-	
+
 	 public List<CFBondGatePass> getAllListOfGatePass(String companyId, String branchId, String gatePassId, String exBondBeNo) {
 	        return cfbondGatePassRepository.getAllListOfGatePass(companyId, branchId, gatePassId, exBondBeNo);
 	    }
@@ -376,16 +405,11 @@ public class CfbondGatePassService {
 		}
 	 
 	 public List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(String cid, String bid,String exBondBeNo, String val) {
+		 
 			return cfbondGatePassRepository.getVehicleNoOfExbondBeNoFromGatePass(cid, bid, exBondBeNo,val);
 		}
 	 
-	
-	 
-	 
-	 
-	 
-	 
-	 
+
 	 public List<Object[]> getDataOfVehicleNo(String cid, String bid, String val) {
 			return cfbondGatePassRepository.getVehicleNo(cid, bid, val);
 		}
@@ -394,5 +418,9 @@ public class CfbondGatePassService {
 	 public List<CFBondGatePass> getDataOfCommodityDetailsByVehicleNo(String companyId, String branchId, String vehicleNo) {
 		    return cfbondGatePassRepository.getCommodityDetailsOfVehicleNo(companyId, branchId, vehicleNo);
 		}
+	 
+	 public List<Object[]> getEmptyVehiclesForGatePass(String companyId, String branchId, String vehicleNo) {
+	        return vehicleTrackRepository.getEmptyVehGateInForGatePass(companyId, branchId, vehicleNo);
+	    }
 
 }

@@ -17,6 +17,7 @@ import com.cwms.entities.GateOut;
 import com.cwms.repository.CfbondGatePassRepository;
 import com.cwms.repository.GateOutRepo;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.VehicleTrackRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,9 @@ public class GateOutService {
 	
 	@Autowired
 	public CfbondGatePassRepository cfbondGatePassRepository;
+	
+	@Autowired
+    private VehicleTrackRepository vehicleTrackRepository;
 	
 	public ResponseEntity<?> saveDataOfExbondGateOut(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
@@ -118,6 +122,7 @@ public class GateOutService {
 						gateOutDtl.setGatePassDate(gatePass.getGatePassDate());
 						gateOutDtl.setShift(gatePass.getShift());
 						gateOutDtl.setProfitcentreId(gatePass.getProfitcentreId());
+						gateOutDtl.setVehicalGateIn(gatePass.getVehicalGateIn());
 						
 						gateOutDtl.setCha(gatePass.getCha());
 						gateOutDtl.setDriverContactNo(gatePass.getDriverContactNo());
@@ -128,7 +133,7 @@ public class GateOutService {
 						gateOutDtl.setLicenceNo(gatePass.getLicenceNo());
 						gateOutDtl.setTransporterName(gatePass.getTransporterName());
 						gateOutDtl.setComments(gatePass.getComments());
-
+						gateOutDtl.setProcessId(gatePass.getProcessId());
 					
 				
 						gateOutDtl.setTransporterStatus(gatePass.getTransporterStatus());
@@ -156,6 +161,14 @@ public class GateOutService {
 
 							System.out.println(
 									"Update row count after exbond details is" + updateGatePassAfterGateOut);
+							
+							
+							int updateVehicleTrackAfterGateOut = vehicleTrackRepository.updateDataAfterBondGateOut(
+									saved.getGateOutId(),saved.getGateOutDate(),user, companyId, branchId,
+									saved.getVehicalGateIn());
+
+							System.out.println(
+									"Update row count after exbond details updateVehicleTrackAfterGateOut" + updateVehicleTrackAfterGateOut);
 							
 					    }
 					
@@ -214,9 +227,9 @@ public class GateOutService {
 						gateOutDtl.setGatePassDate(gatePass.getGatePassDate());
 						gateOutDtl.setShift(gatePass.getShift());
 						gateOutDtl.setProfitcentreId(gatePass.getProfitcentreId());
-						
+						gateOutDtl.setVehicalGateIn(gatePass.getVehicalGateIn());
 						gateOutDtl.setCha(gatePass.getCha());
-					
+						gateOutDtl.setProcessId(gatePass.getProcessId());
 						gateOutDtl.setDriverName(gatePass.getDriverName());
 						gateOutDtl.setDriverContactNo(gatePass.getDriverContactNo());
 						gateOutDtl.setTransporterStatus(gatePass.getTransporterStatus());
@@ -246,6 +259,14 @@ public class GateOutService {
 
 								System.out.println(
 										"Update row count after exbond details is" + updateGatePassAfterGateOut);
+								
+
+								int updateVehicleTrackAfterGateOut = vehicleTrackRepository.updateDataAfterBondGateOut(
+										saved.getGateOutId(),saved.getGateOutDate(),user, companyId, branchId,
+										saved.getVehicalGateIn());
+
+								System.out.println(
+										"Update row count after exbond details updateVehicleTrackAfterGateOut" + updateVehicleTrackAfterGateOut);
 								
 						    }
 						

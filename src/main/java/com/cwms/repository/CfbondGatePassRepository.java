@@ -29,7 +29,7 @@ public interface CfbondGatePassRepository extends JpaRepository<CFBondGatePass, 
 	        "c.areaAllocated, c.areaReleased, c.examiner, c.status, c.yardLocation, " +
 	        "c.yardBlock, c.contactNo, c.licenceNo, c.balQtyOut, c.totalGrossWt, " +
 	        "c.tareWeight, c.netWeight, c.deliveryPersonName, c.deliveryPersonAddrs, " +
-	        "c.vehGateInId, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.createdBy,pa.partyName,c.approvedBy) " +
+	        "c.vehGateInId, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.createdBy,pa.partyName,c.approvedBy,c.deliveryOrderNo,c.deliveryOrderDate,c.doValidityDate) " +
 	    "FROM CFBondGatePass c " +
 	    "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.cha = pa.partyId " +
 	    "WHERE c.companyId = :companyId " +
@@ -57,7 +57,7 @@ public interface CfbondGatePassRepository extends JpaRepository<CFBondGatePass, 
 	        "c.areaAllocated, c.areaReleased, c.examiner, c.status, c.yardLocation, " +
 	        "c.yardBlock, c.contactNo, c.licenceNo, c.balQtyOut, c.totalGrossWt, " +
 	        "c.tareWeight, c.netWeight, c.deliveryPersonName, c.deliveryPersonAddrs, " +
-	        "c.vehGateInId, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.createdBy,pa.partyName,c.approvedBy) " +
+	        "c.vehGateInId, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.createdBy,pa.partyName,c.approvedBy,c.deliveryOrderNo,c.deliveryOrderDate,c.doValidityDate) " +
 	    "FROM CFBondGatePass c " +
 	    "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.cha = pa.partyId " +
 	    "WHERE c.companyId = :companyId " +
@@ -84,16 +84,16 @@ List<CFBondGatePass> getAllListOfGatePass(
 	         "from CFBondGatePass c " +
 	         "where c.companyId = :cid and c.branchId = :bid " +
 	         "and c.status != 'D' " +
-	         "and c.gateOutId IS NULL " +
+	         "and (c.gateOutId IS NULL OR c.gateOutId = '') " +
 	         "and (:val is null OR :val = '' OR c.exBondBeNo LIKE CONCAT(:val, '%'))")
 	List<Object[]> getAllExbondBeNoFromGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 	
 	
-	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo,c.exBondBeNo,c.gatePassId,c.gatePassDate " +
+	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo,c.exBondBeNo,c.gatePassId,c.gatePassDate,c.vehGateInId,c.deliveryOrderNo,c.deliveryOrderDate,c.doValidityDate " +
 	         "from CFBondGatePass c " +
 	         "where c.companyId = :cid and c.branchId = :bid and c.exBondBeNo=:exBondBeNo " +
 	         "and c.status != 'D' " +
-	         "and c.gateOutId IS NULL " +
+	         "and (c.gateOutId IS NULL OR c.gateOutId = '') " +
 	         "and (:val is null OR :val = '' OR c.exBondBeNo LIKE CONCAT(:val, '%'))")
 	List<Object[]> getVehicleNoOfExbondBeNoFromGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("exBondBeNo") String exBondBeNo,@Param("val") String val);
 
@@ -106,11 +106,11 @@ List<CFBondGatePass> getAllListOfGatePass(
 	
 	
 	
-	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo,c.exBondBeNo,c.gatePassId,c.gatePassDate " +
+	@Query(value = "select DISTINCT c.vehicleNo,c.driverName,c.contactNo,c.transType,c.profitcentreId,c.transporterStatus,c.transporterName,c.transporter,c.licenceNo,c.exBondBeNo,c.gatePassId,c.gatePassDate,c.vehGateInId,c.deliveryOrderNo,c.deliveryOrderDate,c.doValidityDate " +
 	         "from CFBondGatePass c " +
 	         "where c.companyId = :cid and c.branchId = :bid " +
 	         "and c.status != 'D' " +
-	         "and c.gateOutId IS NULL " +
+	         "and (c.gateOutId IS NULL OR c.gateOutId = '') " +
 	         "and (:val is null OR :val = '' OR c.vehicleNo LIKE CONCAT(:val, '%'))")
 	List<Object[]> getVehicleNo(@Param("cid") String cid, @Param("bid") String bid,@Param("val") String val);
 
@@ -128,12 +128,12 @@ List<CFBondGatePass> getAllListOfGatePass(
 	
 	@Query("SELECT DISTINCT NEW com.cwms.entities.CFBondGatePass(c.companyId, c.branchId, c.finYear, c.gatePassId, " +
 		       "c.srNo, c.nocTransId,c.nocNo, c.bondingNo, c.igmLineNo, c.noOfPackage, c.noOfPackages, " +
-		       "c.qtyTakenOut, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.commodity,c.grossWt,cf.typeOfPackage ) " +
+		       "c.qtyTakenOut, c.exBondBeNo, c.exBondedPackages, c.commodityDescription,c.commodity,c.grossWt,cf.typeOfPackage,c.deliveryOrderNo,c.deliveryOrderDate,c.doValidityDate ) " +
 		       "FROM CFBondGatePass c " +
 		       "LEFT OUTER JOIN CfBondNocDtl cf ON c.companyId=cf.companyId AND c.branchId=cf.branchId AND c.nocNo = cf.nocNo AND c.commodity=cf.cfBondDtlId "+
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
-		       "AND c.gateOutId IS NULL " +
+		       "and (c.gateOutId IS NULL OR c.gateOutId = '') " +
 		       "AND c.status != 'D' " +
 		       "AND c.vehicleNo = :vehicleNo " +
 		       "ORDER BY c.gatePassId DESC")

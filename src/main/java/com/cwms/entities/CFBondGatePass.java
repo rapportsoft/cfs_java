@@ -236,6 +236,44 @@ public class CFBondGatePass {
 	@Column(name = "Commodity_Description", length = 250)
 	private String commodityDescription;
 	
+	 @Column(name = "Delivery_Order_No", length = 25)
+	    private String deliveryOrderNo;
+
+	    @Column(name = "Delivery_Order_Date")
+	    @Temporal(TemporalType.TIMESTAMP)
+		@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	    private Date deliveryOrderDate;
+
+	    @Column(name = "DO_Validity_Date")
+	    @Temporal(TemporalType.TIMESTAMP)
+		@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	    private Date doValidityDate;
+
+	
+	public String getDeliveryOrderNo() {
+			return deliveryOrderNo;
+		}
+
+		public void setDeliveryOrderNo(String deliveryOrderNo) {
+			this.deliveryOrderNo = deliveryOrderNo;
+		}
+
+		public Date getDeliveryOrderDate() {
+			return deliveryOrderDate;
+		}
+
+		public void setDeliveryOrderDate(Date deliveryOrderDate) {
+			this.deliveryOrderDate = deliveryOrderDate;
+		}
+
+		public Date getDoValidityDate() {
+			return doValidityDate;
+		}
+
+		public void setDoValidityDate(Date doValidityDate) {
+			this.doValidityDate = doValidityDate;
+		}
+
 	public BigDecimal getExBondedPackages() {
 		return exBondedPackages;
 	}
@@ -786,6 +824,14 @@ public class CFBondGatePass {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
 	public CFBondGatePass(String companyId, String branchId, String finYear, String gatePassId, int srNo,
 			String subSrNo, String profitcentreId, String exBondingId, String inBondingId, String invoiceNo,
 			Date invoiceDate, Date gatePassDate, String nocNo, String nocTransId, String bondingNo, String gateOutId,
@@ -799,7 +845,8 @@ public class CFBondGatePass {
 			String approvedBy, Date approvedDate, String yardLocation, String yardBlock, String contactNo,
 			String licenceNo, BigDecimal balQtyOut, BigDecimal totalGrossWt, BigDecimal tareWeight,
 			BigDecimal netWeight, String deliveryPersonName, String deliveryPersonAddrs, String vehGateInId,
-			String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription) {
+			String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription, String deliveryOrderNo,
+			Date deliveryOrderDate, Date doValidityDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -869,6 +916,9 @@ public class CFBondGatePass {
 		this.exBondBeNo = exBondBeNo;
 		this.exBondedPackages = exBondedPackages;
 		this.commodityDescription = commodityDescription;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.deliveryOrderDate = deliveryOrderDate;
+		this.doValidityDate = doValidityDate;
 	}
 
 	@Override
@@ -894,17 +944,11 @@ public class CFBondGatePass {
 				+ balQtyOut + ", totalGrossWt=" + totalGrossWt + ", tareWeight=" + tareWeight + ", netWeight="
 				+ netWeight + ", deliveryPersonName=" + deliveryPersonName + ", deliveryPersonAddrs="
 				+ deliveryPersonAddrs + ", vehGateInId=" + vehGateInId + ", exBondBeNo=" + exBondBeNo
-				+ ", exBondedPackages=" + exBondedPackages + ", commodityDescription=" + commodityDescription + "]";
+				+ ", exBondedPackages=" + exBondedPackages + ", commodityDescription=" + commodityDescription
+				+ ", deliveryOrderNo=" + deliveryOrderNo + ", deliveryOrderDate=" + deliveryOrderDate
+				+ ", doValidityDate=" + doValidityDate + "]";
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
 	public CFBondGatePass(String companyId, String branchId, String gatePassId, int srNo, String subSrNo,
 			String profitcentreId, String exBondingId, String inBondingId, String invoiceNo, Date invoiceDate,
 			Date gatePassDate, String nocNo, String nocTransId, String bondingNo, String gateOutId, String igmLineNo,
@@ -918,7 +962,8 @@ public class CFBondGatePass {
 			BigDecimal tareWeight, BigDecimal netWeight, String deliveryPersonName, String deliveryPersonAddrs,
 			String vehGateInId, String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription,
 			String createdBy,String editedBy,
-			String approvedBy) {
+			String approvedBy,String deliveryOrderNo,
+			Date deliveryOrderDate, Date doValidityDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -982,6 +1027,9 @@ public class CFBondGatePass {
 		this.createdBy = createdBy;
 		this.editedBy = editedBy;
 		this.approvedBy = approvedBy;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.deliveryOrderDate = deliveryOrderDate;
+		this.doValidityDate = doValidityDate;
 	}
 
 	
@@ -990,7 +1038,7 @@ public class CFBondGatePass {
 	
 	// for cfbonding main search 
 	public CFBondGatePass(String companyId, String branchId, String finYear, String gatePassId, String exBondingId,
-			String inBondingId, String nocNo, String nocTransId, String bondingNo) {
+			String inBondingId, String nocNo, String nocTransId, String bondingNo,String exBondBeNo) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1001,13 +1049,15 @@ public class CFBondGatePass {
 		this.nocNo = nocNo;
 		this.nocTransId = nocTransId;
 		this.bondingNo = bondingNo;
+		this.exBondBeNo = exBondBeNo;
 	}
 
 
 	
 	public CFBondGatePass(String companyId, String branchId, String finYear, String gatePassId, int srNo,
 			String nocTransId, String nocNo,String bondingNo, String igmLineNo, BigDecimal noOfPackage, BigDecimal noOfPackages,
-			BigDecimal qtyTakenOut, String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription,String commodity,BigDecimal grossWt,String approvedBy) {
+			BigDecimal qtyTakenOut, String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription,String commodity,BigDecimal grossWt,String approvedBy,String deliveryOrderNo,
+			Date deliveryOrderDate, Date doValidityDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1027,6 +1077,9 @@ public class CFBondGatePass {
 		this.commodity=commodity;
 		this.grossWt=grossWt;
 		this.approvedBy=approvedBy;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.deliveryOrderDate = deliveryOrderDate;
+		this.doValidityDate = doValidityDate;
 	}
 
 	

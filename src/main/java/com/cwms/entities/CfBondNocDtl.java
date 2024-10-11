@@ -10,6 +10,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "cfbondnocdtl")
@@ -35,7 +36,7 @@ public class CfBondNocDtl {
 	@Id
 	@Column(name = "Cfbond_Detail_Id", length = 6, nullable = true)
 	private String cfBondDtlId;
-	
+
 	@Id
 	@Column(name = "BOE_No", length = 15, nullable = true)
 	private String boeNo;
@@ -89,145 +90,166 @@ public class CfBondNocDtl {
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	private Date approvedDate;
-	
-	@Column(name = "Gate_In_Packages", precision = 8, scale = 0, nullable = true)
-	private BigDecimal gateInPackages =BigDecimal.ZERO;
-	
-	
-	@Column(name = "Qty_Taken_In", precision = 8, scale = 0)
-	private BigDecimal qtyTakenIn =BigDecimal.ZERO;
 
-	
-	
+	@Column(name = "Gate_In_Packages", precision = 8, scale = 0, nullable = true)
+	private BigDecimal gateInPackages = BigDecimal.ZERO;
+
+	@Column(name = "Qty_Taken_In", precision = 8, scale = 0)
+	private BigDecimal qtyTakenIn = BigDecimal.ZERO;
+
 	@Column(name = "Weight_Taken_In", precision = 12, scale = 2)
-	private BigDecimal weightTakenIn =BigDecimal.ZERO;
+	private BigDecimal weightTakenIn = BigDecimal.ZERO;
 
 	@Column(name = "Gross_Weight", precision = 16, scale = 3, nullable = true)
 	private BigDecimal grossWeight;
+
+	@Column(name = "In_Bonded_Packages", precision = 8, scale = 0, nullable = true)
+	private BigDecimal inBondedPackages = BigDecimal.ZERO;
+
+	@Column(name = "Inbond_Gross_Wt", precision = 12, scale = 3)
+	private BigDecimal inbondGrossWt = BigDecimal.ZERO;
+
+	@Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+	private BigDecimal inbondInsuranceValue = BigDecimal.ZERO;
+
+	@Column(name = "Inbond_CIF_Value", precision = 15, scale = 2)
+	private BigDecimal inbondCifValue = BigDecimal.ZERO;
+
+	@Column(name = "Inbond_Cargo_Duty", precision = 15, scale = 2)
+	private BigDecimal inbondCargoDuty = BigDecimal.ZERO;
+
+	@Column(name = "Shortage_Packages")
+	private BigDecimal shortagePackages = BigDecimal.ZERO;
+
+	@Column(name = "Damaged_Qty")
+	private BigDecimal damagedQty = BigDecimal.ZERO;
+
+	@Column(name = "Breakage")
+	private BigDecimal breakage = BigDecimal.ZERO;
+
+	@Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
+	private BigDecimal areaOccupied;
+
+	@Column(name = "Bonding_no", length = 25)
+	private String bondingNo;
+
+	@Transient
+	@Column(name = "Yard_Packages", precision = 16, scale = 3)
+	private BigDecimal yardPackages;
+
+	@Transient
+	@Column(name = "Cell_Area_Allocated", precision = 16, scale = 3)
+	private BigDecimal cellAreaAllocated;
 	
+	@Transient
+	@Column(name = "Cell_Area", precision = 8, scale = 3)
+	private BigDecimal cellArea;
 
-	  @Column(name = "In_Bonded_Packages", precision = 8, scale = 0, nullable = true)
-	    private BigDecimal inBondedPackages =BigDecimal.ZERO;
+	public BigDecimal getYardPackages() {
+		return yardPackages;
+	}
 
+	public void setYardPackages(BigDecimal yardPackages) {
+		this.yardPackages = yardPackages;
+	}
 
-	    @Column(name = "Inbond_Gross_Wt", precision = 12, scale = 3)
-	    private BigDecimal inbondGrossWt=BigDecimal.ZERO;
+	public BigDecimal getCellAreaAllocated() {
+		return cellAreaAllocated;
+	}
 
-	    @Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
-	    private BigDecimal inbondInsuranceValue=BigDecimal.ZERO;
+	public void setCellAreaAllocated(BigDecimal cellAreaAllocated) {
+		this.cellAreaAllocated = cellAreaAllocated;
+	}
 
-	    @Column(name = "Inbond_CIF_Value", precision = 15, scale = 2)
-		private BigDecimal inbondCifValue=BigDecimal.ZERO;
-	    
-		@Column(name = "Inbond_Cargo_Duty", precision = 15, scale = 2)
-		private BigDecimal inbondCargoDuty=BigDecimal.ZERO;
-		
-		
-	    @Column(name = "Shortage_Packages")
-		private BigDecimal shortagePackages=BigDecimal.ZERO;
+	public BigDecimal getCellArea() {
+		return cellArea;
+	}
 
-		@Column(name = "Damaged_Qty")
-		private BigDecimal damagedQty=BigDecimal.ZERO;
+	public void setCellArea(BigDecimal cellArea) {
+		this.cellArea = cellArea;
+	}
 
-		@Column(name = "Breakage")
-		private BigDecimal breakage=BigDecimal.ZERO;
-		
-		  @Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
-		    private BigDecimal areaOccupied;
-		  
-		  @Column(name = "Bonding_no", length = 25)
-		    private String bondingNo;
-
-		  
-		  
-		  
-		  
 	public String getBondingNo() {
-			return bondingNo;
-		}
+		return bondingNo;
+	}
 
-		public void setBondingNo(String bondingNo) {
-			this.bondingNo = bondingNo;
-		}
+	public void setBondingNo(String bondingNo) {
+		this.bondingNo = bondingNo;
+	}
 
 	public BigDecimal getShortagePackages() {
-			return shortagePackages;
-		}
+		return shortagePackages;
+	}
 
-		public void setShortagePackages(BigDecimal shortagePackages) {
-			this.shortagePackages = shortagePackages;
-		}
+	public void setShortagePackages(BigDecimal shortagePackages) {
+		this.shortagePackages = shortagePackages;
+	}
 
-		public BigDecimal getDamagedQty() {
-			return damagedQty;
-		}
+	public BigDecimal getDamagedQty() {
+		return damagedQty;
+	}
 
-		public void setDamagedQty(BigDecimal damagedQty) {
-			this.damagedQty = damagedQty;
-		}
+	public void setDamagedQty(BigDecimal damagedQty) {
+		this.damagedQty = damagedQty;
+	}
 
-		public BigDecimal getBreakage() {
-			return breakage;
-		}
+	public BigDecimal getBreakage() {
+		return breakage;
+	}
 
-		public void setBreakage(BigDecimal breakage) {
-			this.breakage = breakage;
-		}
+	public void setBreakage(BigDecimal breakage) {
+		this.breakage = breakage;
+	}
 
 	public BigDecimal getInBondedPackages() {
-			return inBondedPackages;
-		}
+		return inBondedPackages;
+	}
 
-		public void setInBondedPackages(BigDecimal inBondedPackages) {
-			this.inBondedPackages = inBondedPackages;
-		}
+	public void setInBondedPackages(BigDecimal inBondedPackages) {
+		this.inBondedPackages = inBondedPackages;
+	}
 
-		public BigDecimal getInbondGrossWt() {
-			return inbondGrossWt;
-		}
+	public BigDecimal getInbondGrossWt() {
+		return inbondGrossWt;
+	}
 
-		public void setInbondGrossWt(BigDecimal inbondGrossWt) {
-			this.inbondGrossWt = inbondGrossWt;
-		}
+	public void setInbondGrossWt(BigDecimal inbondGrossWt) {
+		this.inbondGrossWt = inbondGrossWt;
+	}
 
-		public BigDecimal getInbondInsuranceValue() {
-			return inbondInsuranceValue;
-		}
+	public BigDecimal getInbondInsuranceValue() {
+		return inbondInsuranceValue;
+	}
 
-		public void setInbondInsuranceValue(BigDecimal inbondInsuranceValue) {
-			this.inbondInsuranceValue = inbondInsuranceValue;
-		}
+	public void setInbondInsuranceValue(BigDecimal inbondInsuranceValue) {
+		this.inbondInsuranceValue = inbondInsuranceValue;
+	}
 
-		public BigDecimal getInbondCifValue() {
-			return inbondCifValue;
-		}
+	public BigDecimal getInbondCifValue() {
+		return inbondCifValue;
+	}
 
-		public void setInbondCifValue(BigDecimal inbondCifValue) {
-			this.inbondCifValue = inbondCifValue;
-		}
+	public void setInbondCifValue(BigDecimal inbondCifValue) {
+		this.inbondCifValue = inbondCifValue;
+	}
 
-		public BigDecimal getInbondCargoDuty() {
-			return inbondCargoDuty;
-		}
+	public BigDecimal getInbondCargoDuty() {
+		return inbondCargoDuty;
+	}
 
-		public void setInbondCargoDuty(BigDecimal inbondCargoDuty) {
-			this.inbondCargoDuty = inbondCargoDuty;
-		}
+	public void setInbondCargoDuty(BigDecimal inbondCargoDuty) {
+		this.inbondCargoDuty = inbondCargoDuty;
+	}
 
 	public BigDecimal getGrossWeight() {
 		return grossWeight;
 	}
 
-	
-
 	public void setGrossWeight(BigDecimal grossWeight) {
 		this.grossWeight = grossWeight;
 	}
 
-	
-
-	// all object 
-	
+	// all object
 
 	public BigDecimal getAreaOccupied() {
 		return areaOccupied;
@@ -240,7 +262,6 @@ public class CfBondNocDtl {
 	public BigDecimal getQtyTakenIn() {
 		return qtyTakenIn;
 	}
-	
 
 	public void setQtyTakenIn(BigDecimal qtyTakenIn) {
 		this.qtyTakenIn = qtyTakenIn;
@@ -429,6 +450,55 @@ public class CfBondNocDtl {
 			BigDecimal gateInPackages, BigDecimal qtyTakenIn, BigDecimal weightTakenIn, BigDecimal grossWeight,
 			BigDecimal inBondedPackages, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
 			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal shortagePackages, BigDecimal damagedQty,
+			BigDecimal breakage, BigDecimal areaOccupied, String bondingNo, BigDecimal yardPackages,
+			BigDecimal cellAreaAllocated, BigDecimal cellArea) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.nocTransId = nocTransId;
+		this.nocNo = nocNo;
+		this.cfBondDtlId = cfBondDtlId;
+		this.boeNo = boeNo;
+		CfbondDetailDate = cfbondDetailDate;
+		this.nocPackages = nocPackages;
+		this.cifValue = cifValue;
+		this.cargoDuty = cargoDuty;
+		this.insuranceValue = insuranceValue;
+		this.typeOfPackage = typeOfPackage;
+		this.commodityDescription = commodityDescription;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.gateInPackages = gateInPackages;
+		this.qtyTakenIn = qtyTakenIn;
+		this.weightTakenIn = weightTakenIn;
+		this.grossWeight = grossWeight;
+		this.inBondedPackages = inBondedPackages;
+		this.inbondGrossWt = inbondGrossWt;
+		this.inbondInsuranceValue = inbondInsuranceValue;
+		this.inbondCifValue = inbondCifValue;
+		this.inbondCargoDuty = inbondCargoDuty;
+		this.shortagePackages = shortagePackages;
+		this.damagedQty = damagedQty;
+		this.breakage = breakage;
+		this.areaOccupied = areaOccupied;
+		this.bondingNo = bondingNo;
+		this.yardPackages = yardPackages;
+		this.cellAreaAllocated = cellAreaAllocated;
+		this.cellArea = cellArea;
+	}
+
+	public CfBondNocDtl(String companyId, String branchId, String nocTransId, String nocNo, String cfBondDtlId,
+			String boeNo, Date cfbondDetailDate, BigDecimal nocPackages, BigDecimal cifValue, BigDecimal cargoDuty,
+			BigDecimal insuranceValue, String typeOfPackage, String commodityDescription, String status,
+			String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
+			BigDecimal gateInPackages, BigDecimal qtyTakenIn, BigDecimal weightTakenIn, BigDecimal grossWeight,
+			BigDecimal inBondedPackages, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
+			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal shortagePackages, BigDecimal damagedQty,
 			BigDecimal breakage, BigDecimal areaOccupied, String bondingNo) {
 		super();
 		this.companyId = companyId;
@@ -494,9 +564,6 @@ public class CfBondNocDtl {
 		this.approvedBy = approvedBy;
 		this.approvedDate = approvedDate;
 	}
-	
-	
-	
 
 	public CfBondNocDtl(String companyId, String branchId, String nocTransId, String nocNo, String cfBondDtlId,
 			String boeNo, Date cfbondDetailDate, BigDecimal nocPackages, BigDecimal cifValue, BigDecimal cargoDuty,
@@ -526,25 +593,18 @@ public class CfBondNocDtl {
 		this.approvedDate = approvedDate;
 		this.gateInPackages = gateInPackages;
 	}
-	
-	
 
 	public CfBondNocDtl() {
 		super();
 	}
 
-	
-	
-	
-	
-	
-
-
-	
 	public CfBondNocDtl(String companyId, String branchId, String nocTransId, String nocNo, String cfBondDtlId,
 			String boeNo, BigDecimal nocPackages, BigDecimal cifValue, BigDecimal cargoDuty, BigDecimal insuranceValue,
-			String typeOfPackage, String commodityDescription, String status,BigDecimal grossWeight,BigDecimal gateInPackages,BigDecimal weightTakenIn,BigDecimal inBondedPackages,
-			BigDecimal inbondGrossWt,BigDecimal inbondCargoDuty,BigDecimal inbondCifValue,BigDecimal shortagePackages,BigDecimal damagedQty,BigDecimal breakage,String createdBy, String editedBy, String approvedBy,BigDecimal areaOccupied) {
+			String typeOfPackage, String commodityDescription, String status, BigDecimal grossWeight,
+			BigDecimal gateInPackages, BigDecimal weightTakenIn, BigDecimal inBondedPackages, BigDecimal inbondGrossWt,
+			BigDecimal inbondCargoDuty, BigDecimal inbondCifValue, BigDecimal shortagePackages, BigDecimal damagedQty,
+			BigDecimal breakage, String createdBy, String editedBy, String approvedBy, BigDecimal areaOccupied,BigDecimal yardPackages,
+			BigDecimal cellAreaAllocated, BigDecimal cellArea) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -573,6 +633,9 @@ public class CfBondNocDtl {
 		this.editedBy = editedBy;
 		this.approvedBy = approvedBy;
 		this.areaOccupied = areaOccupied;
+		this.yardPackages = yardPackages;
+		this.cellAreaAllocated = cellAreaAllocated;
+		this.cellArea = cellArea;
 	}
 
 	@Override
@@ -591,13 +654,5 @@ public class CfBondNocDtl {
 				+ damagedQty + ", breakage=" + breakage + ", areaOccupied=" + areaOccupied + ", bondingNo=" + bondingNo
 				+ "]";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

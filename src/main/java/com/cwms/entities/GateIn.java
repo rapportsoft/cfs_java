@@ -639,8 +639,17 @@ public class GateIn {
 	private String remarks = "";
 	
 	
+	@Column(name = "Gate_In_Packages", precision = 8, scale = 0, nullable = true)
+	private BigDecimal gateInPackages = BigDecimal.ZERO;
 	
-	
+
+	public BigDecimal getGateInPackages() {
+		return gateInPackages;
+	}
+
+	public void setGateInPackages(BigDecimal gateInPackages) {
+		this.gateInPackages = gateInPackages;
+	}
 
 	public String getRemarks() {
 		return remarks;
@@ -2988,56 +2997,56 @@ public class GateIn {
 		
 		
 		//search data 
-
-				public GateIn(String companyId, String branchId, String gateInId, String finYear, String erpDocRefNo,
-						String docRefNo, String lineNo, int srNo, Date docRefDate, String boeNo, Date boeDate, String nocNo,
-						Date nocDate, String gateInType, String profitcentreId, String containerNo, String containerSize,
-						String containerType, String isoCode, BigDecimal grossWeight, BigDecimal eirGrossWeight, String cha,
-						String importerName, String commodityDescription, BigDecimal actualNoOfPackages, BigDecimal qtyTakenIn,
-						String shift, String transporterStatus, String transporterName, String transporter, String vehicleNo,
-						String driverName, String status, String createdBy, String editedBy, String approvedBy, Date inGateInDate,BigDecimal weightTakenIn,String typeOfPackage,String commodity) {
-					super();
-					this.companyId = companyId;
-					this.branchId = branchId;
-					this.gateInId = gateInId;
-					this.finYear = finYear;
-					this.erpDocRefNo = erpDocRefNo;
-					this.docRefNo = docRefNo;
-					this.lineNo = lineNo;
-					this.srNo = srNo;
-					this.docRefDate = docRefDate;
-					this.boeNo = boeNo;
-					this.boeDate = boeDate;
-					this.nocNo = nocNo;
-					this.nocDate = nocDate;
-					this.gateInType = gateInType;
-					this.profitcentreId = profitcentreId;
-					this.containerNo = containerNo;
-					this.containerSize = containerSize;
-					this.containerType = containerType;
-					this.isoCode = isoCode;
-					this.grossWeight = grossWeight;
-					this.eirGrossWeight = eirGrossWeight;
-					this.cha = cha;
-					this.importerName = importerName;
-					this.commodityDescription = commodityDescription;
-					this.actualNoOfPackages = actualNoOfPackages;
-					this.qtyTakenIn = qtyTakenIn;
-					this.shift = shift;
-					this.transporterStatus = transporterStatus;
-					this.transporterName = transporterName;
-					this.transporter = transporter;
-					this.vehicleNo = vehicleNo;
-					this.driverName = driverName;
-					this.status = status;
-					this.createdBy = createdBy;
-					this.editedBy = editedBy;
-					this.approvedBy = approvedBy;
-					this.inGateInDate = inGateInDate;
-					this.weightTakenIn = weightTakenIn;
-					this.typeOfPackage=typeOfPackage;
-					this.commodity=commodity;
-				}
+		public GateIn(String companyId, String branchId, String gateInId, String finYear, String erpDocRefNo,
+				String docRefNo, String lineNo, int srNo, Date docRefDate, String boeNo, Date boeDate, String nocNo,
+				Date nocDate, String gateInType, String profitcentreId, String containerNo, String containerSize,
+				String containerType, String isoCode, BigDecimal grossWeight, BigDecimal eirGrossWeight, String cha,
+				String importerName, String commodityDescription, BigDecimal actualNoOfPackages, BigDecimal qtyTakenIn,
+				String shift, String transporterStatus, String transporterName, String transporter, String vehicleNo,
+				String driverName, String status, String createdBy, String editedBy, String approvedBy, Date inGateInDate,BigDecimal weightTakenIn,String typeOfPackage,String commodity,BigDecimal gateInPackages) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.gateInId = gateInId;
+			this.finYear = finYear;
+			this.erpDocRefNo = erpDocRefNo;
+			this.docRefNo = docRefNo;
+			this.lineNo = lineNo;
+			this.srNo = srNo;
+			this.docRefDate = docRefDate;
+			this.boeNo = boeNo;
+			this.boeDate = boeDate;
+			this.nocNo = nocNo;
+			this.nocDate = nocDate;
+			this.gateInType = gateInType;
+			this.profitcentreId = profitcentreId;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.isoCode = isoCode;
+			this.grossWeight = grossWeight;
+			this.eirGrossWeight = eirGrossWeight;
+			this.cha = cha;
+			this.importerName = importerName;
+			this.commodityDescription = commodityDescription;
+			this.actualNoOfPackages = actualNoOfPackages;
+			this.qtyTakenIn = qtyTakenIn;
+			this.shift = shift;
+			this.transporterStatus = transporterStatus;
+			this.transporterName = transporterName;
+			this.transporter = transporter;
+			this.vehicleNo = vehicleNo;
+			this.driverName = driverName;
+			this.status = status;
+			this.createdBy = createdBy;
+			this.editedBy = editedBy;
+			this.approvedBy = approvedBy;
+			this.inGateInDate = inGateInDate;
+			this.weightTakenIn = weightTakenIn;
+			this.typeOfPackage=typeOfPackage;
+			this.commodity=commodity;
+			this.gateInPackages=gateInPackages;
+		}
 				
 				
 //				Export Gate In

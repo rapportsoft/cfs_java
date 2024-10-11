@@ -1,5 +1,6 @@
 package com.cwms.service;
 
+import org.apache.poi.hssf.record.aggregates.CFRecordsAggregate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,15 @@ import com.cwms.entities.Cfbondinsbal;
 import com.cwms.entities.Cfbondnoc;
 import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.GateIn;
+import com.cwms.entities.GateOut;
 import com.cwms.entities.Party;
 import com.cwms.entities.PartyAddress;
+import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfbondnocRepository;
 import com.cwms.repository.GateInRepo;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.repository.CfBondNocDtlRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,8 +58,8 @@ public class CfbondnocService {
 	@Autowired
 	private GateInRepo gateInRepo;
 
-//  @Autowired
-//  private ProcessNextIdService processNextIdRepositorye;
+  @Autowired
+  private VehicleTrackRepository vehicleTrackRepository;
 
 	public List<Cfbondnoc> findAll() {
 		return repository.findAll();
@@ -639,7 +643,8 @@ public class CfbondnocService {
 
 					gateInNextId = String.format("GIBM%06d", nextNumericNextID1);
 
-					for (GateIn item : bondnocDtl) { // Replace ItemType with the actual type of items in bondnocDtl
+					for (GateIn item : bondnocDtl) 
+					{ // Replace ItemType with the actual type of items in bondnocDtl
 						GateIn gateIn = new GateIn();
 						gateIn.setCompanyId(cid);
 						gateIn.setBranchId(bid);
@@ -681,68 +686,129 @@ public class CfbondnocService {
 
 						gateInList.add(gateIn);
 
-						gateInRepo.save(gateIn);
-
-						Cfbondnoc existingNoc = cfbondnocRepository.findCfBondNoc(cid, bid, item.getErpDocRefNo(),
-								item.getDocRefNo());
-
-						// Check if the existing NOC record is found
-						if (existingNoc != null) {
-							System.out.println("existingNoc.getGateInPackages()____________________"
-									+ existingNoc.getGateInPackages());
-
-							// Update the GateInPackages
-							BigDecimal updatedGateInPackages = (existingNoc.getGateInPackages() != null
-									? existingNoc.getGateInPackages()
-									: BigDecimal.ZERO)
-									.add(item.getQtyTakenIn() != null ? item.getQtyTakenIn() : BigDecimal.ZERO);
-
-							System.out.println("updatedGateInPackages____________________" + updatedGateInPackages);
-							existingNoc.setGateInPackages(updatedGateInPackages);
-							cfbondnocRepository.save(existingNoc);
-//
-//					        // Update the NOC record in the database
-//					        int updateCfBondNoc = cfbondnocRepository.updateCfBondNoc(updatedGateInPackages, cid, bid, item.getErpDocRefNo(), item.getDocRefNo());
-//					        System.out.println("updateCfBondNoc____________________________________" + updateCfBondNoc);
-						}
-						// Increment srNo after setting it
-						srNo++;
-					}
-
-					savedGatein = gateInList;
-
-					if (!savedGatein.isEmpty()) {
-
-						processNextIdRepository.updateAuditTrail(cid, bid, "P03204", gateInNextId, "2241");
-
-						bondnocDtl.forEach(item -> {
-
+						GateIn saved = 	gateInRepo.save(gateIn);
+						
+						if (saved!=null)
+						{
+							
 							CfBondNocDtl existingDetail = cfbondnocDtlRepository.findCfBondDetails(cid, bid,
-									item.getErpDocRefNo(), item.getCommodity(), item.getDocRefNo());
+									saved.getErpDocRefNo(), saved.getCommodity(), saved.getDocRefNo());
 
+							
+							Cfbondnoc existingNoc = cfbondnocRepository.findCfBondNoc(cid, bid, saved.getErpDocRefNo(),
+									saved.getDocRefNo());
+							
 							if (existingDetail != null) {
 
 								BigDecimal newQtyTakenIn = (existingDetail.getGateInPackages() != null
 										? existingDetail.getGateInPackages()
 										: BigDecimal.ZERO)
-										.add(item.getQtyTakenIn() != null ? item.getQtyTakenIn() : BigDecimal.ZERO);
+										.add(saved.getQtyTakenIn() != null ? saved.getQtyTakenIn() : BigDecimal.ZERO);
 								BigDecimal newWeightTakenIn = existingDetail.getWeightTakenIn().add(
-										item.getWeightTakenIn() != null ? item.getWeightTakenIn() : BigDecimal.ZERO);
+										saved.getWeightTakenIn() != null ? saved.getWeightTakenIn() : BigDecimal.ZERO);
 
 								// Update the database with new values
 								int updateDetail = cfbondnocDtlRepository.updateCfBondDetails(newQtyTakenIn,
-										newWeightTakenIn, cid, bid, item.getErpDocRefNo(), item.getCommodity(),
-										item.getDocRefNo());
+										newWeightTakenIn, cid, bid, saved.getErpDocRefNo(), saved.getCommodity(),
+										saved.getDocRefNo());
 
 								System.out.println("Successfully updated item with updateDetail: " + updateDetail);
 
 							}
 
-							else {
-								System.out.println("No existing record found for CfBondDtlId: " + item.getCommodity());
+							
+
+							// Check if the existing NOC record is found
+							if (existingNoc != null) 
+							{
+								System.out.println("existingNoc.getGateInPackages()____________________"
+										+ existingNoc.getGateInPackages());
+
+								// Update the GateInPackages
+								BigDecimal updatedGateInPackages = (existingNoc.getGateInPackages() != null
+										? existingNoc.getGateInPackages()
+										: BigDecimal.ZERO)
+										.add(saved.getQtyTakenIn() != null ? saved.getQtyTakenIn() : BigDecimal.ZERO);
+
+								System.out.println("updatedGateInPackages____________________" + updatedGateInPackages);
+								existingNoc.setGateInPackages(updatedGateInPackages);
+								cfbondnocRepository.save(existingNoc);
+	//
+//						        // Update the NOC record in the database
+//						        int updateCfBondNoc = cfbondnocRepository.updateCfBondNoc(updatedGateInPackages, cid, bid, item.getErpDocRefNo(), item.getDocRefNo());
+//						        System.out.println("updateCfBondNoc____________________________________" + updateCfBondNoc);
 							}
 
-						});
+						}
+						
+			
+			
+						// Increment srNo after setting it
+						srNo++;
+					}
+					
+					
+
+					savedGatein = gateInList;
+
+					if (!savedGatein.isEmpty()) 
+					{
+						VehicleTrack vtrac = new VehicleTrack();
+						vtrac.setCompanyId(cid);
+						vtrac.setBranchId(bid);
+						vtrac.setCreatedBy(user);
+						 vtrac.setCreatedDate(new Date());
+						 vtrac.setApprovedBy(user);
+						 vtrac.setApprovedDate(new Date ());
+						 vtrac.setVehicleNo(cfGateIn.getVehicleNo());
+						 vtrac.setDriverName(cfGateIn.getDriverName());
+						 vtrac.setTransporterName(cfGateIn.getTransporterName());
+						 vtrac.setTransporterStatus(cfGateIn.getTransporterStatus().charAt(0));
+						 vtrac.setFinYear("2025");
+						 vtrac.setContainerNo(cfGateIn.getContainerNo()!=null ? cfGateIn.getContainerNo() : "");
+						 vtrac.setContainerSize(cfGateIn.getContainerSize()!=null ? cfGateIn.getContainerSize() :"");
+						 vtrac.setContainerType(cfGateIn.getContainerType()!=null ? cfGateIn.getContainerType() : "");
+						 vtrac.setStatus('A');
+						 vtrac.setProfitcentreId(cfGateIn.getProfitcentreId());
+						 vtrac.setSrNo(1);
+						 vtrac.setShiftIn(cfGateIn.getShift());
+						 vtrac.setGateInId(gateInNextId);
+						 vtrac.setGateInDate(cfGateIn.getInGateInDate());
+						 vtrac.setVehicleStatus('E');
+                         vehicleTrackRepository.save(vtrac);
+
+						processNextIdRepository.updateAuditTrail(cid, bid, "P03204", gateInNextId, "2241");
+
+//						bondnocDtl.forEach(item -> {
+//
+//							CfBondNocDtl existingDetail = cfbondnocDtlRepository.findCfBondDetails(cid, bid,
+//									item.getErpDocRefNo(), item.getCommodity(), item.getDocRefNo());
+//
+//							if (existingDetail != null) {
+//
+//								BigDecimal newQtyTakenIn = (existingDetail.getGateInPackages() != null
+//										? existingDetail.getGateInPackages()
+//										: BigDecimal.ZERO)
+//										.add(item.getQtyTakenIn() != null ? item.getQtyTakenIn() : BigDecimal.ZERO);
+//								BigDecimal newWeightTakenIn = existingDetail.getWeightTakenIn().add(
+//										item.getWeightTakenIn() != null ? item.getWeightTakenIn() : BigDecimal.ZERO);
+//
+//								// Update the database with new values
+//								int updateDetail = cfbondnocDtlRepository.updateCfBondDetails(newQtyTakenIn,
+//										newWeightTakenIn, cid, bid, item.getErpDocRefNo(), item.getCommodity(),
+//										item.getDocRefNo());
+//
+//								System.out.println("Successfully updated item with updateDetail: " + updateDetail);
+//
+//							}
+//
+//							else {
+//								System.out.println("No existing record found for CfBondDtlId: " + item.getCommodity());
+//							}
+//
+//						});
+
+
 					} else {
 						return new ResponseEntity<>("Gate In data not found", HttpStatus.BAD_REQUEST);
 					}
@@ -769,6 +835,18 @@ public class CfbondnocService {
 				cfGateIn.setTransporterName(cfGateIn.getTransporterName());
 
 				gateInRepo.save(cfGateIn);
+				
+				
+				String transporterStatus = cfGateIn.getTransporterStatus();
+				char statusChar = (transporterStatus != null && !transporterStatus.isEmpty()) ? transporterStatus.charAt(0) : ' ';
+				
+				int updateDataBondGateInVehicle=vehicleTrackRepository.updateDataBondGateInVehicle(cfGateIn.getVehicleNo(),statusChar,
+						cfGateIn.getTransporterName(),cfGateIn.getDriverName(),'E',cfGateIn.getShift(),
+						cfGateIn.getContainerNo(),cfGateIn.getContainerSize(),cfGateIn.getContainerType(),
+						user,
+						cid,bid,cfGateIn.getGateInId());
+				
+				System.out.println("updateDataBondGateInVehicle updated row count is "+updateDataBondGateInVehicle);
 
 				bondnocDtl.forEach(item1 -> {
 
@@ -1203,6 +1281,8 @@ public class CfbondnocService {
 		List<String> idList = new ArrayList<>();
 		Cfinbondcrg firstInbond = null;
 		CfExBondCrg firstExBond = null;
+		GateOut firstGateOut = null;
+		CFBondGatePass firstGatePass = null;
 		Map<String, Object> myMap = new HashMap<>();
 		Cfbondnoc list = repository.getForBondingSearch(cid, bid, nocNo, boeNo, bondingNo);
 
@@ -1255,7 +1335,8 @@ public class CfbondnocService {
 
 		System.out.println("check3______________________________________" + check3);
 
-		if (check3) {
+		if (check3) 
+		{
 			idList.add("P00249");
 			idList.add("P00250");
 			idList.add("P00251");
@@ -1265,6 +1346,20 @@ public class CfbondnocService {
 			System.out.println("check3 check5______________________________________" + check5);
 			if (check5) {
 				idList.add("P00252");
+				idList.add("P00253");
+				
+			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
+				 
+			if (!result.isEmpty())
+
+			{
+				firstGatePass = result.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+				
+
 			}
 			
 			Boolean checkForQtyOut = cfbondnocDtlRepository.checkInForALLGatePass(cid, bid, list.getNocNo(),
@@ -1272,6 +1367,21 @@ public class CfbondnocService {
 
 			if (checkForQtyOut) {
 				idList.add("P00252");
+				idList.add("P00253");
+				
+				List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
+				 
+				if (!result.isEmpty())
+
+				{
+					firstGatePass = result.get(0);
+				} else 
+				{
+					return null; // Handle cases where no records are found
+				}
+
+					 myMap.put("firstGatePass", firstGatePass);
+				
 			}
 
 			List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
@@ -1283,6 +1393,7 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
+			
 
 			List<CfExBondCrg> results1 = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
 					list.getNocNo());
@@ -1300,17 +1411,20 @@ public class CfbondnocService {
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
 			myMap.put("firstExBond", firstExBond);
-
+		    myMap.put("firstGatePass", firstGatePass);
 			// return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
 
+		
+		
 		
 		Boolean check4 = cfbondnocDtlRepository.checkExBondedPackagesAllDone(cid, bid, list.getNocNo(),
 				list.getNocTransId());
 
 		System.out.println("check4______________________________________" + check4);
 
-		if (check4) {
+		if (check4) 
+		{
 			idList.add("P00249");
 			idList.add("P00250");
 			idList.add("P00251");
@@ -1326,8 +1440,19 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 
-			System.out.println("firstExBond________________________________" + firstExBond);
+			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results1.isEmpty())
 
+			{
+				firstInbond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			System.out.println("firstExBond________________________________" + firstExBond);
+			
+			
+			
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
@@ -1340,16 +1465,15 @@ public class CfbondnocService {
 		
 		Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
 
-		System.out.println("check4______________________________________" + check5);
+		System.out.println("check45______________________________________" + check5);
 
 		if (check5) {
 			idList.add("P00249");
 			idList.add("P00250");
 			idList.add("P00251");
 			idList.add("P00252");
-
-
-
+			
+			
 			List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results.isEmpty())
@@ -1359,17 +1483,197 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
+			
+			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results1.isEmpty())
 
+			{
+				firstInbond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
 			System.out.println("firstExBond________________________________" + firstExBond);
+			
+			
+
+		
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("firstExBond", firstExBond);
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+		
+		
+		
+		Boolean check54 = cfbondnocDtlRepository.checkInForGatePassOut(cid, bid, list.getNocNo(), list.getNocTransId());
+
+		System.out.println("check454______________________________________" + check54);
+
+		if (check54) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+			idList.add("P00252");
+			idList.add("P00253");
+			List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results.isEmpty())
+
+			{
+				firstExBond = results.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			
+			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results1.isEmpty())
+
+			{
+				firstInbond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			System.out.println("firstExBond________________________________" + firstExBond);
+			
+			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
+			 
+			if (!result.isEmpty())
+
+			{
+				firstGatePass = result.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+
+		
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("firstExBond", firstExBond);
+			myMap.put("firstGatePass", firstGatePass);
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+		
+		Boolean checkPass = cfbondnocDtlRepository.checkInForALLGatePassOut(cid, bid, list.getNocNo(), list.getNocTransId());
+
+		System.out.println("checkPass______________________________________" + checkPass);
+
+		if (checkPass) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+			idList.add("P00252");
+			idList.add("P00253");
+			List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results.isEmpty())
+
+			{
+				firstExBond = results.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			
+			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results1.isEmpty())
+
+			{
+				firstInbond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			System.out.println("firstExBond________________________________" + firstExBond);
+			
+			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
+			 
+			if (!result.isEmpty())
+
+			{
+				firstGatePass = result.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+
+		
+			myMap.put("list", list);
+			myMap.put("idList", idList);
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("firstExBond", firstExBond);
+			myMap.put("firstGatePass", firstGatePass);
+			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+		
+		
+		
+		Boolean check55 = cfbondnocDtlRepository.checkInForGateGateOut(cid, bid, list.getNocNo(), list.getNocTransId());
+
+		System.out.println("ccheck55______________________________________" + check55);
+
+		if (check55) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+			idList.add("P00252");
+			idList.add("P00253");
+			
+			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results1.isEmpty())
+
+			{
+				firstInbond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			
+			List<CfExBondCrg> results111 = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results111.isEmpty())
+
+			{
+				firstExBond = results111.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			
+			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
+			 
+			if (!result.isEmpty())
+
+			{
+				firstGatePass = result.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+			
+			List<GateOut> results11 = cfbondnocDtlRepository.getDetailsInMainSearch(cid, bid, 
+					list.getNocNo(),list.getNocTransId());
+			if (!results11.isEmpty())
+
+			{
+				firstGateOut = results11.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+
+			System.out.println("firstExBond________________________________" + firstGateOut);
 
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
 			myMap.put("firstExBond", firstExBond);
-
+			myMap.put("firstGatePass", firstGatePass);
+			myMap.put("firstGateOut", firstGateOut);
 			// return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
-
 		return new ResponseEntity<>(myMap, HttpStatus.OK);
 	}
 }

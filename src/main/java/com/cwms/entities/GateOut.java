@@ -391,6 +391,8 @@ public class GateOut {
 	    
 	    private transient String holdStatus;
 
+	   
+	    
 		public GateOut() {
 			super();
 			// TODO Auto-generated constructor stub
@@ -1779,6 +1781,25 @@ public class GateOut {
 			this.qtyTakenOut = qtyTakenOut;
 			this.gatePassNo = gatePassNo;
 			this.commodityDescription = commodityDescription;
+		}
+		
+		
+		
+		
+		
+		
+		public GateOut(String companyId, String branchId, String finYear, String gateOutId, String erpDocRefNo,
+				String docRefNo, String srNo, Date docRefDate, String exBondBeNo) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.gateOutId = gateOutId;
+			this.erpDocRefNo = erpDocRefNo;
+			this.docRefNo = docRefNo;
+			this.srNo = srNo;
+			this.docRefDate = docRefDate;
+			this.exBondBeNo = exBondBeNo;
 		}
 	    
 }

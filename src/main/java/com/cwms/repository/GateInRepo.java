@@ -67,8 +67,9 @@ public interface GateInRepo extends JpaRepository<GateIn, String> {
 //	 );
 	
 	
-	@Query("SELECT NEW com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, g.grossWeight, g.eirGrossWeight, g.cha, g.importerName, g.commodityDescription, g.actualNoOfPackages, g.qtyTakenIn, g.shift, g.transporterStatus, g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, g.createdBy, p.partyName, g.approvedBy, g.inGateInDate, g.weightTakenIn, g.typeOfPackage,g.commodity) " +
+	@Query("SELECT NEW com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, g.grossWeight, g.eirGrossWeight, g.cha, g.importerName, g.commodityDescription, g.actualNoOfPackages, g.qtyTakenIn, g.shift, g.transporterStatus, g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, g.createdBy, p.partyName, g.approvedBy, g.inGateInDate, g.weightTakenIn, g.typeOfPackage,g.commodity,cd.gateInPackages) " +
 		       "FROM GateIn g LEFT JOIN Party p ON g.companyId = p.companyId AND g.branchId = p.branchId AND g.cha = p.partyId " +
+		       " LEFT JOIN CfBondNocDtl cd ON g.companyId = cd.companyId AND g.branchId = cd.branchId AND g.erpDocRefNo = cd.nocTransId and g.docRefNo=cd.nocNo and g.commodity =cd.cfBondDtlId " +
 		       "WHERE g.companyId = :companyId AND g.branchId = :branchId AND g.gateInId = :gateInId")
 		List<GateIn> getDataOfRowUsingGateInId(
 		    @Param("companyId") String companyId,
@@ -106,7 +107,7 @@ public interface GateInRepo extends JpaRepository<GateIn, String> {
 	 @Query("SELECT NEW com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, " +
 		       "g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, " +
 		       "g.grossWeight, g.eirGrossWeight, a.partyName, pa.partyName, g.commodityDescription, g.actualNoOfPackages, g.qtyTakenIn, g.shift, g.transporterStatus, " +
-		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, g.createdBy, g.editedBy, g.approvedBy, g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity) " +
+		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, g.createdBy, g.editedBy, g.approvedBy, g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity,g.gateInPackages) " +
 		       "FROM GateIn g " +
 		       "LEFT OUTER JOIN Party pa ON g.companyId = pa.companyId AND g.branchId = pa.branchId AND g.importerName = pa.partyId " +
 		       "LEFT OUTER JOIN Party a ON g.companyId = a.companyId AND g.branchId = a.branchId AND g.cha = a.partyId " +
@@ -132,7 +133,7 @@ public interface GateInRepo extends JpaRepository<GateIn, String> {
 	 @Query("SELECT NEW com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, " +
 		       "g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, " +
 		       "g.grossWeight, g.eirGrossWeight, g.cha, g.importerName, g.commodityDescription, g.actualNoOfPackages, g.qtyTakenIn, g.shift, g.transporterStatus, " +
-		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, g.createdBy, g.editedBy, g.approvedBy, g.inGateInDate, g.weightTakenIn, g.typeOfPackage, g.commodity) " +
+		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, g.createdBy, g.editedBy, g.approvedBy, g.inGateInDate, g.weightTakenIn, g.typeOfPackage, g.commodity,g.gateInPackages) " +
 		       "FROM GateIn g " +
 		       "WHERE g.companyId = :companyId " +
 		       "AND g.branchId = :branchId " +
@@ -210,7 +211,7 @@ public interface GateInRepo extends JpaRepository<GateIn, String> {
 	 @Query("SELECT NEW com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, " +
 		       "g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, " +
 		       "cf.grossWeight, g.eirGrossWeight, a.partyName, pa.partyName, g.commodityDescription, cf.nocPackages, g.qtyTakenIn, g.shift, g.transporterStatus, " +
-		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, add.address1, add.address2, add.address3, g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity) " +
+		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, add.address1, add.address2, add.address3, g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity,g.gateInPackages) " +
 		       "FROM GateIn g " +
 		       "LEFT OUTER JOIN Party pa ON g.companyId = pa.companyId AND g.branchId = pa.branchId AND g.importerName = pa.partyId " +
 		       "LEFT OUTER JOIN Cfbondnoc cf ON g.companyId = cf.companyId AND g.branchId = cf.branchId AND g.docRefNo = cf.nocNo AND g.erpDocRefNo =cf.nocTransId " +
@@ -243,7 +244,7 @@ public interface GateInRepo extends JpaRepository<GateIn, String> {
 	 @Query("SELECT NEW com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, " +
 		       "g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, " +
 		       "g.grossWeight, g.eirGrossWeight, g.cha, g.importerName, g.commodityDescription, g.actualNoOfPackages, g.qtyTakenIn, g.shift, g.transporterStatus, " +
-		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, '', '', '', g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity) " +
+		       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, '', '', '', g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity,g.gateInPackages) " +
 		       "FROM GateIn g " +
 		       "WHERE g.companyId = :companyId " +
 		       "AND g.branchId = :branchId " +

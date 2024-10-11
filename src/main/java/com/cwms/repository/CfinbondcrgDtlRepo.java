@@ -39,7 +39,7 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 		       "AND c.nocNo = :nocNo " +
 		       "AND c.inBondingId = :inBondingId " +
 		       "AND c.boeNo = :boeNo " +
-		       "AND c.status != 'D'")
+		       "AND c.status  = 'A'")
 		List<CfinbondcrgDtl> getCfBondInBondDTLData(@Param("companyId") String companyId, 
 		                                     @Param("branchId") String branchId, 
 		                                     @Param("nocTransId") String nocTransId, 
@@ -96,5 +96,16 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 	        @Param("inBondingId") String inBondingId
 	    );
 
+	
+	
+	@Query("SELECT COALESCE(SUM(c.inBondedPackages), 0) FROM CfinbondcrgDtl c " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.inBondingId = :inBondingId " +
+		       "AND c.nocTransId = :nocTransId")
+	BigDecimal getSumOfInBondPackages(@Param("companyId") String companyId,
+		                            @Param("branchId") String branchId,
+		                            @Param("inBondingId") String inBondingId,
+		                            @Param("nocTransId") String nocTransId);
 	
 }

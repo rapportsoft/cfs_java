@@ -83,5 +83,16 @@ public class CfbondGatePassController {
 			List<CFBondGatePass> getData = cfbondGatePassService.getDataOfCommodityDetailsByVehicleNo(companyId,branchId,vehicleNo);
 	    	return new ResponseEntity<>(getData,HttpStatus.OK);
 		}
+	    
+	    
+	    
+	    
+	    @GetMapping("/emptyVehicles")
+	    public List<Object[]> getEmptyVehiclesForGatePass(
+	            @RequestParam("companyId") String companyId,
+	            @RequestParam("branchId") String branchId,
+	            @RequestParam(value = "vehicleNo", required = false) String vehicleNo) {
+	        return cfbondGatePassService.getEmptyVehiclesForGatePass(companyId, branchId, vehicleNo);
+	    }
 }
 

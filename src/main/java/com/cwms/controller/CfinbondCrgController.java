@@ -94,4 +94,16 @@ public class CfinbondCrgController {
 				   @RequestParam("boeNo") String boeNo) {
 			return cfinbondCrgService.getDataOfBoeNoForEntryInExbond(companyId, branchId,nocTransId,nocNo,boeNo);
 		}
+	 
+	 
+	   @PostMapping("/approve")
+	    public ResponseEntity<?> approveDataOfInCFbondGrid(
+	            @RequestParam("companyId") String companyId, 
+	            @RequestParam("branchId") String branchId, 
+	            @RequestParam("flag") String flag, 
+	            @RequestParam("user") String user, 
+	            @RequestBody Map<String, Object> requestBody) {
+		   return cfinbondCrgService.approveDataOfInCFbondGrid(companyId, branchId, flag, user, requestBody);
+	       
+	    }
 }

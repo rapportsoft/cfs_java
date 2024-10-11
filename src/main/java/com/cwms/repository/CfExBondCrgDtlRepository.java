@@ -104,6 +104,7 @@ public interface CfExBondCrgDtlRepository extends JpaRepository<CfexBondCrgDtl, 
 	@Query(value = "select DISTINCT c.exBondBeNo,c.nocNo,c.boeNo,c.cfBondDtlId,c.nocTransId,c.bondingNo " +
             "from CfexBondCrgDtl c " +
             "where c.companyId = :cid and c.branchId = :bid " +
+            "and COALESCE(c.exBondedPackages, 0) - COALESCE(c.outQty, 0) > 0 " +
             "and c.status != 'D' " +
             "and (:val is null OR :val = '' OR c.exBondBeNo LIKE CONCAT(:val, '%'))")
 List<Object[]> getAllExbondBeNoFromExbondDtl(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
@@ -117,6 +118,7 @@ List<Object[]> getAllExbondBeNoFromExbondDtl(@Param("cid") String cid, @Param("b
 		+ "c.exBondingId,c.inBondingId,c.nocPackages,c.inBondedPackages,c.exBondedGW " +
         "from CfexBondCrgDtl c " +
         "where c.companyId = :cid and c.branchId = :bid and c.exBondBeNo = :exBondBeNo " +
+        "and COALESCE(c.exBondedPackages, 0) - COALESCE(c.outQty, 0) > 0 " +
         "and c.status != 'D' " +
         "and (:val is null OR :val = '' OR c.commodityDescription LIKE CONCAT(:val, '%'))")
 List<Object[]> getAllExbondCargoFromExbondDtl(@Param("cid") String cid, 

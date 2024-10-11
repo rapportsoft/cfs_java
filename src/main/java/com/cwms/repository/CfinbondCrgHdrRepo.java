@@ -158,7 +158,8 @@ public interface CfinbondCrgHdrRepo extends JpaRepository<CfinbondcrgHDR, String
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +
 		       "AND (c.inBondedPackages - COALESCE(c.exBondedPackages, 0)) > 0 " +
-		       "AND c.status != 'D' " +
+//		       "AND c.status != 'D' " +
+"AND c.status = 'A' " +
 		       "AND (:partyName IS NULL OR :partyName = '' OR c.boeNo LIKE concat(:partyName, '%')) " +
 		       "ORDER BY c.boeNo DESC")
 		List<Cfinbondcrg> findCfinbondcrgByCompanyIdAndBranchIdForInbond(

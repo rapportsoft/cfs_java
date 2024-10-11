@@ -23,6 +23,7 @@ public interface GateOutRepo extends JpaRepository<GateOut, String>{
 	    "FROM GateOut c " +
 	    "WHERE c.companyId = :companyId " +
 	    "AND c.branchId = :branchId " +
+	    "AND c.processId='P00500' "+
 	    "AND c.status != 'D' " +
 	    "AND ((:partyName IS NULL OR :partyName = '' OR c.gateOutId LIKE concat(:partyName, '%')) " +
 	        "OR (:partyName IS NULL OR :partyName = '' OR c.gatePassNo LIKE concat(:partyName, '%')) " +

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.cwms.entities.Cfinbondcrg;
 
-
+import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.Transactional;
 
 public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
@@ -149,4 +149,15 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		);
 
 
+	 
+	 @Transactional
+	 @Modifying
+	 @Query("UPDATE Cfinbondcrg c SET c.status =:status WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.inBondingId = :inBondingId AND c.nocNo = :nocNo AND c.nocTransId = :nocTransId")
+	 int updateAfterApprove(
+			 @Param("status") String status,
+			 @Param("companyId") String companyId,
+	         @Param("branchId") String branchId,
+	         @Param("inBondingId") String inBondingId,
+	         @Param("nocNo") String nocNo,
+	         @Param("nocTransId") String nocTransId);
 }

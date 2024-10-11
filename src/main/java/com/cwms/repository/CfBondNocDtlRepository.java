@@ -15,32 +15,35 @@ import com.cwms.entities.Cfbondinsbal;
 import com.cwms.entities.CFBondGatePass;
 import jakarta.transaction.Transactional;
 import com.cwms.entities.Cfinbondcrg;
+import com.cwms.entities.GateOut;
+
 import java.math.BigDecimal;
 @EnableJpaRepositories
-public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,String>{
-
+public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,String>{	
 	
-//	@Query("SELECT NEW com.cwms.entities.CfBondNocDtl(c.companyId, c.branchId, c.nocTransId, c.nocNo, c.cfBondDtlId, " +
-//	           "c.boeNo, c.nocPackages, c.cifValue, c.cargoDuty, c.insuranceValue, " +
-//	           "c.typeOfPackage, c.commodityDescription, c.status,c.grossWeight,c.gateInPackages,c.weightTakenIn,c.inBondedPackages,c.inbondGrossWt,c.inbondCargoDuty,c.inbondCifValue,"
-//	           + "c.shortagePackages,c.damagedQty,c.breakage) " +
-//	           "FROM CfBondNocDtl c " +
-//	           "WHERE c.companyId = :companyId " +
-//	           "AND c.branchId = :branchId " +
-//	           "AND c.nocTransId = :nocTransId " +
-//	           "AND c.nocNo = :nocNo " +
-//	           "AND c.status != 'D'")
-//	    List<CfBondNocDtl> getCfBondNocDtl(@Param("companyId") String companyId, 
-//	                                       @Param("branchId") String branchId, 
-//	                                       @Param("nocTransId") String nocTransId, 
-//	                                       @Param("nocNo") String nocNo);
-	
+//	@Query("SELECT Distinct NEW com.cwms.entities.CfBondNocDtl(c.companyId, c.branchId, c.nocTransId, c.nocNo, c.cfBondDtlId, " +
+//		       "c.boeNo, c.nocPackages, c.cifValue, c.cargoDuty, c.insuranceValue, " +
+//		       "c.typeOfPackage, c.commodityDescription, c.status, c.grossWeight, c.gateInPackages, c.weightTakenIn, " +
+//		       "c.inBondedPackages, c.inbondGrossWt, c.inbondCargoDuty, c.inbondCifValue,  " +
+//		       "c.shortagePackages, c.damagedQty, c.breakage,cd.yardLocationId, cd.blockId,cd.cellNoRow,cd.areaOccupied) " +
+//		       "FROM CfBondNocDtl c " +
+//		       "LEFT OUTER JOIN CfinbondcrgDtl cd ON c.companyId = cd.companyId AND c.branchId = cd.branchId AND c.nocTransId = cd.nocTransId AND c.nocNo = cd.nocNo AND c.cfBondDtlId = cd.cfBondDtlId " +
+//		       "WHERE c.companyId = :companyId " +
+//		       "AND c.branchId = :branchId " +
+//		       "AND c.nocTransId = :nocTransId " +
+//		       "AND c.nocNo = :nocNo " +
+//		       "AND c.status != 'D'")
+//		List<CfBondNocDtl> getCfBondNocDtl(@Param("companyId") String companyId, 
+//		                                   @Param("branchId") String branchId, 
+//		                                   @Param("nocTransId") String nocTransId, 
+//		                                   @Param("nocNo") String nocNo);
+//	
 	
 	@Query("SELECT Distinct NEW com.cwms.entities.CfBondNocDtl(c.companyId, c.branchId, c.nocTransId, c.nocNo, c.cfBondDtlId, " +
 		       "c.boeNo, c.nocPackages, c.cifValue, c.cargoDuty, c.insuranceValue, " +
 		       "c.typeOfPackage, c.commodityDescription, c.status, c.grossWeight, c.gateInPackages, c.weightTakenIn, " +
 		       "c.inBondedPackages, c.inbondGrossWt, c.inbondCargoDuty, c.inbondCifValue,  " +
-		       "c.shortagePackages, c.damagedQty, c.breakage,cd.yardLocationId, cd.blockId,cd.cellNoRow,cd.areaOccupied) " +
+		       "c.shortagePackages, c.damagedQty, c.breakage,cd.yardLocationId, cd.blockId,cd.cellNoRow,cd.areaOccupied,cd.yardPackages,cd.cellAreaAllocated,cd.cellArea) " +
 		       "FROM CfBondNocDtl c " +
 		       "LEFT OUTER JOIN CfinbondcrgDtl cd ON c.companyId = cd.companyId AND c.branchId = cd.branchId AND c.nocTransId = cd.nocTransId AND c.nocNo = cd.nocNo AND c.cfBondDtlId = cd.cfBondDtlId " +
 		       "WHERE c.companyId = :companyId " +
@@ -52,6 +55,16 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 		                                   @Param("branchId") String branchId, 
 		                                   @Param("nocTransId") String nocTransId, 
 		                                   @Param("nocNo") String nocNo);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 		       
 
@@ -235,8 +248,54 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 		    @Param("nocNo") String nocNo,
 		    @Param("nocTransId") String nocTransId
 		);
+	 
+	 
+	 @Query("select count(c) > 0 from CFBondGatePass c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+		       "c.nocNo = :nocNo AND c.nocTransId = :nocTransId AND (COALESCE(c.exBondedPackages, 0) - COALESCE(c.qtyTakenOut, 0)) > 0"
+		      )
+		Boolean checkInForGatePassOut(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("nocNo") String nocNo,
+		    @Param("nocTransId") String nocTransId
+		);
 
 	 
+	 
+	 @Query("select count(c) > 0 from CFBondGatePass c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+		       "c.nocNo = :nocNo AND c.nocTransId = :nocTransId AND "
+		       + "COALESCE(c.exBondedPackages, 0) - c.qtyTakenOut = 0 AND "
+		        + "c.qtyTakenOut > 0")
+		Boolean checkInForALLGatePassOut(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("nocNo") String nocNo,
+		    @Param("nocTransId") String nocTransId
+		);
+
+	 
+	 
+	 
+	 @Query("select count(c) > 0 from GateOut c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+		       "c.docRefNo = :docRefNo AND c.erpDocRefNo = :erpDocRefNo "
+		      )
+		Boolean checkInForGateGateOut(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("docRefNo") String docRefNo,
+		    @Param("erpDocRefNo") String erpDocRefNo
+		);
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.GateOut(c.companyId, c.branchId, c.finYear, c.gateOutId, c.erpDocRefNo, c.docRefNo, c.srNo, c.docRefDate, c.exBondBeNo) " +
+		       "FROM GateOut c " +
+		       "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.docRefNo = :docRefNo AND c.erpDocRefNo = :erpDocRefNo")
+		List<GateOut> getDetailsInMainSearch(
+		        @Param("companyId") String companyId,
+		        @Param("branchId") String branchId,
+		        @Param("docRefNo") String docRefNo,
+		        @Param("erpDocRefNo") String erpDocRefNo);
+
 	 
 	 @Query("SELECT NEW com.cwms.entities.CfBondNocDtl(" +
 		        "cc.importerName, p.partyName, c.nocTransId, c.nocNo, c.cfBondDtlId, " +
@@ -264,7 +323,7 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 
 
 	 @Query("SELECT NEW com.cwms.entities.CFBondGatePass(c.companyId, c.branchId, c.finYear, c.gatePassId, c.exBondingId, " +
-		       "c.inBondingId, c.nocNo, c.nocTransId, c.bondingNo) " +
+		       "c.inBondingId, c.nocNo, c.nocTransId, c.bondingNo,c.exBondBeNo) " +
 		       "FROM CFBondGatePass c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
@@ -277,6 +336,23 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 		    @Param("branchId") String branchId, 
 		    @Param("nocTransId") String nocTransId, 
 		    @Param("nocNo") String nocNo);
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.CFBondGatePass(c.companyId, c.branchId, c.finYear, c.gatePassId, c.exBondingId, " +
+		       "c.inBondingId, c.nocNo, c.nocTransId, c.bondingNo,c.exBondBeNo) " +
+		       "FROM CFBondGatePass c " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.nocTransId = :nocTransId " +
+		       "AND c.nocNo = :nocNo " +
+		       "AND c.status != 'D' " +
+		       "ORDER BY c.createdDate DESC")
+	 List<CFBondGatePass> getCfBondGatePassList(
+		    @Param("companyId") String companyId, 
+		    @Param("branchId") String branchId, 
+		    @Param("nocTransId") String nocTransId, 
+		    @Param("nocNo") String nocNo);
+	 
 	 
 	 
 	 @Query("SELECT new com.cwms.entities.Cfinbondcrg(c.inBondingId, c.boeNo) "
