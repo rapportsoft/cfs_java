@@ -19,6 +19,9 @@ public interface VesselRepository extends JpaRepository<Vessel, String> {
 	@Query(value="select v from Vessel v where v.companyId=:cid and v.branchId=:bid and v.vesselId=:vid")
 	Vessel getData(@Param("cid") String cid,@Param("bid") String bid,@Param("vid") String vid);
 	
+	@Query(value="select v from Vessel v where v.companyId=:cid and v.branchId=:bid and v.vesselName=:vname and v.status != 'D'")
+	Vessel getDataByVesselName(@Param("cid") String cid,@Param("bid") String bid,@Param("vname") String vname);
+	
 	@Query(value="select New com.cwms.entities.Vessel(v.vesselId, v.vesselName) from Vessel v where v.companyId=:cid and v.branchId=:bid and v.status != 'D'")
 	List<Vessel> getVesselData(@Param("cid") String cid,@Param("bid") String bid);
 	

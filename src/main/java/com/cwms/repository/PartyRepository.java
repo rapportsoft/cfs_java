@@ -11,6 +11,13 @@ import com.cwms.entities.Party;
 import com.cwms.entities.Port;
 
 public interface PartyRepository extends JpaRepository<Party, String> {
+	
+	
+	@Query(value = "select p from Party p where p.companyId=:cid and p.branchId=:bid and p.customerCode=:pid and p.status != 'D' and p.lin='Y'")
+	Party getDataByCustomerCode1(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
+	
+	@Query(value = "select p from Party p where p.companyId=:cid and p.branchId=:bid and p.customerCode=:pid and p.status != 'D' and p.agt='Y'")
+	Party getDataByCustomerCode2(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
 
 	@Query(value = "select COUNT(p)>0 from Party p where p.companyId=:cid and p.branchId=:bid and p.panNo=:pan and p.status !='D'")
 	Boolean isExistPanNo(@Param("cid") String cid, @Param("bid") String bid, @Param("pan") String pan);

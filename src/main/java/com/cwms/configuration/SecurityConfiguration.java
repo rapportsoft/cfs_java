@@ -111,6 +111,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/commonGatePass/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/manualContainerGateIn/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/holdDetail/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/excelUpload/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

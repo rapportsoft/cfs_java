@@ -68,6 +68,19 @@ public interface PortRepository extends JpaRepository<Port, String> {
 		    @Param("portTransId") String portTransId
 		   );
 	 
+	 @Query("SELECT i " +
+		        "FROM Port i " +
+		        "WHERE " +		       
+		        "i.companyId = :companyId " +
+		        "AND i.branchId = :branchId " +
+		        "AND i.portCode = :portCode " +
+		        "AND i.status != 'D'")	       
+		Port getPortByPortCode(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,		    
+		    @Param("portCode") String portCode
+		   );
+	 
 	 
 //		Port Search
 		 @Query("SELECT NEW com.cwms.entities.Port(i.portCode, i.portName) " +
