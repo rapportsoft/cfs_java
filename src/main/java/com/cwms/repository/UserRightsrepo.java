@@ -14,6 +14,33 @@ import com.cwms.entities.UserRights;
 public interface UserRightsrepo extends JpaRepository<UserRights, String> {
 	
 	
+
+	@Query(value = "SELECT :companyId AS company_Id, :branchId AS branch_Id, :userId AS user_Id, pm.process_Id, " +
+	        "pm.PMenu_Name AS name " +
+	        "FROM pmenu pm " +
+	        "LEFT JOIN UserRights ur ON pm.company_Id = ur.company_Id AND pm.branch_Id = ur.branch_Id AND ur.user_Id = :userId And ur.process_id = pm.process_Id " +
+	        "WHERE pm.company_Id = :companyId AND pm.branch_Id = :branchId " +
+	        "AND (ur.user_Id IS NULL) " + // Only select if there is no match in UserRights
+	        "AND (:searchValue IS NULL OR :searchValue = '' OR pm.PMenu_Name LIKE CONCAT('%', :searchValue, '%')) " +
+	        "UNION ALL " +
+	        "SELECT :companyId AS company_Id, :branchId AS branch_Id, :userId AS user_Id, cm.process_Id, " +
+	        "cm.Child_Menu_Name AS name " +
+	        "FROM cmenu cm " +
+	        "LEFT JOIN UserRights ur ON cm.company_Id = ur.company_Id AND cm.branch_Id = ur.branch_Id AND ur.user_Id = :userId And ur.process_id = cm.process_Id " +
+	        "WHERE cm.company_Id = :companyId AND cm.branch_Id = :branchId " +
+	        "AND (ur.user_Id IS NULL) " + // Only select if there is no match in UserRights
+	        "AND (:searchValue IS NULL OR :searchValue = '' OR cm.Child_Menu_Name LIKE CONCAT('%', :searchValue, '%'))",
+	    nativeQuery = true)
+	List<Object[]> getAllUserRightsNotInRights(@Param("companyId") String companyId, 
+	                                         @Param("branchId") String branchId, 
+	                                         @Param("userId") String userId,
+	                                         @Param("searchValue") String searchValue);
+
+
+	
+	
+	
+	
 	@Query(value = "SELECT NEW com.cwms.entities.UserRights(i.company_Id, i.branch_Id, i.user_Id, i.process_Id, i.allow_Read, i.allow_Create, i.allow_Update, i.allow_Delete, " +
             "(CASE " +
             "WHEN cm.Child_Menu_Name IS NOT NULL THEN cm.Child_Menu_Name " +

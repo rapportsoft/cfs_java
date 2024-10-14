@@ -1,5 +1,6 @@
 package com.cwms.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,61 +38,134 @@ public class UserRightsService {
 	    private ChildMenuRepository childRepo;
 	    
 	    
-		
-		
+	    public List<UserRights> getUnsavedUserRights(String companyId, String branchId, String userId, String searchValue) {
+	        List<Object[]> results = urights.getAllUserRightsNotInRights(companyId, branchId, userId, searchValue);
+	        List<UserRights> userRightsList = new ArrayList<>();
+
+	        for (Object[] result : results) {
+	            userRightsList.add(new UserRights(
+	                result[0] != null ? result[0].toString() : "", // company_Id
+	                result[1] != null ? result[1].toString() : "", // branch_Id
+	                result[2] != null ? result[2].toString() : "", // user_Id
+	                result[3] != null ? result[3].toString() : "", // process_Id	               
+	                result[4] != null ? result[4].toString() : "",  // name
+	                "","N","N","N","N"	                
+	            ));
+	        }
+
+	        return userRightsList;  
+	    }
+
 	    public List<UserRights> getUserRights(String companyId, String branchId, String userId) {
 	        List<UserRights> existingUserRights = urights.getUserRights(companyId, branchId, userId);
 
-	        // Fetch all parent and child menus
-	        List<ParentMenu> allParentMenu = parentRepo.getAllParentMenu(companyId, branchId);
-	        List<ChildMenu> allChildMenu = childRepo.getAllChildMenu(companyId, branchId);
-
-	        // Create a map for easy lookup of existing UserRights by processId
-	        Map<String, UserRights> userRightsMap = existingUserRights.stream()
-	        	    .collect(Collectors.toMap(
-	        	        UserRights::getProcess_Id, 
-	        	        ur -> ur, 
-	        	        (existing, replacement) -> existing // keep the first one
-	        	    ));
-
-	        // Update or add UserRights for each ParentMenu
-	        for (ParentMenu parentMenu : allParentMenu) {
-	            if (!userRightsMap.containsKey(parentMenu.getProcessId())) {
-	                UserRights newUserRight = new UserRights(
-	                    companyId,
-	                    branchId,
-	                    userId,
-	                    parentMenu.getProcessId(),
-	                    "N",
-	                    "N",
-	                    "N",
-	                    "N",
-	                    parentMenu.getPMenu_Name()
-	                );
-	                existingUserRights.add(newUserRight);
-	            }
-	        }
-
-	        // Update or add UserRights for each ChildMenu
-	        for (ChildMenu childMenu : allChildMenu) {
-	            if (!userRightsMap.containsKey(childMenu.getProcessId())) {
-	                UserRights newUserRight = new UserRights(
-	                    companyId,
-	                    branchId,
-	                    userId,
-	                    childMenu.getProcessId(),
-	                    "N",
-	                    "N",
-	                    "N",
-	                    "N",
-	                    childMenu.getChild_Menu_Name()
-	                );
-	                existingUserRights.add(newUserRight);
-	            }
-	        }
+//	        // Fetch all parent and child menus
+//	        List<ParentMenu> allParentMenu = parentRepo.getAllParentMenu(companyId, branchId);
+//	        List<ChildMenu> allChildMenu = childRepo.getAllChildMenu(companyId, branchId);
+//
+//	        // Create a map for easy lookup of existing UserRights by processId
+//	        Map<String, UserRights> userRightsMap = existingUserRights.stream()
+//	        	    .collect(Collectors.toMap(
+//	        	        UserRights::getProcess_Id, 
+//	        	        ur -> ur, 
+//	        	        (existing, replacement) -> existing // keep the first one
+//	        	    ));
+//
+//	        // Update or add UserRights for each ParentMenu
+//	        for (ParentMenu parentMenu : allParentMenu) {
+//	            if (!userRightsMap.containsKey(parentMenu.getProcessId())) {
+//	                UserRights newUserRight = new UserRights(
+//	                    companyId,
+//	                    branchId,
+//	                    userId,
+//	                    parentMenu.getProcessId(),
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    parentMenu.getPMenu_Name()
+//	                );
+//	                existingUserRights.add(newUserRight);
+//	            }
+//	        }
+//
+//	        // Update or add UserRights for each ChildMenu
+//	        for (ChildMenu childMenu : allChildMenu) {
+//	            if (!userRightsMap.containsKey(childMenu.getProcessId())) {
+//	                UserRights newUserRight = new UserRights(
+//	                    companyId,
+//	                    branchId,
+//	                    userId,
+//	                    childMenu.getProcessId(),
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    childMenu.getChild_Menu_Name()
+//	                );
+//	                existingUserRights.add(newUserRight);
+//	            }
+//	        }
 
 	        return existingUserRights;
 	    }
+
+	    
+		
+//		
+//	    public List<UserRights> getUserRights(String companyId, String branchId, String userId) {
+//	        List<UserRights> existingUserRights = urights.getUserRights(companyId, branchId, userId);
+//
+//	        // Fetch all parent and child menus
+//	        List<ParentMenu> allParentMenu = parentRepo.getAllParentMenu(companyId, branchId);
+//	        List<ChildMenu> allChildMenu = childRepo.getAllChildMenu(companyId, branchId);
+//
+//	        // Create a map for easy lookup of existing UserRights by processId
+//	        Map<String, UserRights> userRightsMap = existingUserRights.stream()
+//	        	    .collect(Collectors.toMap(
+//	        	        UserRights::getProcess_Id, 
+//	        	        ur -> ur, 
+//	        	        (existing, replacement) -> existing // keep the first one
+//	        	    ));
+//
+//	        // Update or add UserRights for each ParentMenu
+//	        for (ParentMenu parentMenu : allParentMenu) {
+//	            if (!userRightsMap.containsKey(parentMenu.getProcessId())) {
+//	                UserRights newUserRight = new UserRights(
+//	                    companyId,
+//	                    branchId,
+//	                    userId,
+//	                    parentMenu.getProcessId(),
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    parentMenu.getPMenu_Name()
+//	                );
+//	                existingUserRights.add(newUserRight);
+//	            }
+//	        }
+//
+//	        // Update or add UserRights for each ChildMenu
+//	        for (ChildMenu childMenu : allChildMenu) {
+//	            if (!userRightsMap.containsKey(childMenu.getProcessId())) {
+//	                UserRights newUserRight = new UserRights(
+//	                    companyId,
+//	                    branchId,
+//	                    userId,
+//	                    childMenu.getProcessId(),
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    "N",
+//	                    childMenu.getChild_Menu_Name()
+//	                );
+//	                existingUserRights.add(newUserRight);
+//	            }
+//	        }
+//
+//	        return existingUserRights;
+//	    }
 
 		
 	

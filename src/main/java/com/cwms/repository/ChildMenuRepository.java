@@ -13,6 +13,10 @@ import com.cwms.entities.*;
 @EnableJpaRepositories
 public interface ChildMenuRepository extends JpaRepository<ChildMenu, String> {
 	
+	@Query(value="select NEW com.cwms.entities.ChildMenu(i.Child_Menu_Id,i.processId, i.Child_Menu_Name, i.cicons, i.child_page_links, i.pprocess_Id) from ChildMenu i "
+			+ "where i.Company_Id=:cid and i.Branch_Id=:bid ")
+	List<ChildMenu> getAllChildMenuNew(@Param("cid") String cid,@Param("bid") String bid);
+	
 	
 	
 	@Query("SELECT NEW com.cwms.entities.ChildMenu(cm.Child_Menu_Id, cm.processId, cm.Child_Menu_Name, cm.cicons, cm.child_page_links,cm.pprocess_Id) FROM ChildMenu cm INNER JOIN UserRights ur ON cm.processId = ur.process_Id WHERE cm.Company_Id = :cid AND cm.Branch_Id = :bid AND ur.user_Id = :userId AND cm.tabStatus = 'N' AND (ur.allow_Read = 'Y' OR ur.allow_Create = 'Y' OR ur.allow_Update = 'Y' OR ur.allow_Delete = 'Y')")

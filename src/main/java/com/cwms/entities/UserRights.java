@@ -257,5 +257,23 @@ public class UserRights implements Serializable {
 		this.allow_Update = allow_Update;
 		this.allow_Delete = allow_Delete;
 	}
+	
+	public UserRights(String company_Id, String branch_Id, String userId, String process_Id, String status, String createdBy, String allow_Read, String allow_Create, String allow_Update,
+			String allow_Delete) {
+		super();
+		this.process_Id = process_Id;
+		this.user_Id = userId;
+		this.company_Id = company_Id;
+		this.branch_Id = branch_Id;
+		this.status = status;
+		this.allow_Read = allow_Read;
+		this.allow_Create = allow_Create;
+		this.allow_Update = allow_Update;
+		this.allow_Delete = allow_Delete;
+		this.created_By = createdBy;
+	}
     
+	
+	
+	
 }

@@ -3,9 +3,11 @@
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,12 +34,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.Branch;
+import com.cwms.entities.ChildMenu;
 import com.cwms.entities.Company;
+import com.cwms.entities.ParentMenu;
 import com.cwms.entities.UpdateUserRights;
 import com.cwms.entities.User;
 import com.cwms.entities.UserRights;
 import com.cwms.repository.BranchRepo;
+import com.cwms.repository.ChildMenuRepository;
 import com.cwms.repository.CompanyRepo;
+import com.cwms.repository.ParentMenuRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.UserRepository;
 import com.cwms.repository.UserRightsrepo;
@@ -90,63 +96,225 @@ public class UserController {
 
  
     
-    
-    
+    @Autowired
+	   private ParentMenuRepository parentRepo;
+	    
+	    @Autowired
+	    private ChildMenuRepository childRepo;
 
-    @GetMapping("/getAllUsersSelect")
-    public List<User> parentRepo(@RequestParam("branchId") String branchId,@RequestParam("companyId") String companyId){
+
+ 
+ @GetMapping("/getNotSavedEntriesRights")
+	public ResponseEntity<?> getNotSavedEntriesRights(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam(value = "searchValue", required = false) String searchValue,
+	        @RequestParam("userId") String userId 
+	       ) {	    
+	    try {	    	
+	    	List<UserRights> unsavedUserRights = uservice.getUnsavedUserRights(companyId, branchId, userId, searchValue);	    	
+	    	return ResponseEntity.ok(unsavedUserRights);
+	    } catch (Exception e) {	   
+	    	System.out.println("error : " + e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+	
+ 
+
+ @GetMapping("/getAllUsersSelect")
+ public List<User> parentRepo(@RequestParam("branchId") String branchId,@RequestParam("companyId") String companyId){
 		
-    	return urepo.getUserSelectData(companyId,branchId);
-    	
-    }
+ 	return urepo.getUserSelectData(companyId,branchId);
+ 	
+ }
+ 
+ 
+ @GetMapping("/getAllUsersRights")
+ public ResponseEntity<?> getAllUsersRights(@RequestParam("branchId") String branchId,
+                                            @RequestParam("companyId") String companyId,
+                                            @RequestParam(value="userId", required = false) String userId) {
+     List<UserRights> userRights = uservice.getUserRights(companyId, branchId, userId);       
+     return ResponseEntity.ok(userRights);
+ }
+
+ 
+ @PostMapping("/saveUserRights")
+ public ResponseEntity<?> saveUserRights(
+         @RequestParam("branchId") String branchId,
+         @RequestParam("companyId") String companyId,
+         @RequestParam("userId") String userId,
+         @RequestParam("rightsUserId") String rightsUserId,
+         @RequestBody List<UserRights> userRights) {
+
+     // Step 1: Retrieve existing user rights
+     List<UserRights> existingUserRights = urights.getUserRights(companyId, branchId, rightsUserId);
+     
+     // Step 2: Get all parent menus
+     List<ParentMenu> parentMenus = parentRepo.getAllParentMenu(companyId, branchId);
+     Set<String> parentProcessIds = parentMenus.stream()
+             .map(ParentMenu::getProcessId)
+             .collect(Collectors.toSet());
+     List<ChildMenu> allChildMenu = childRepo.getAllChildMenuNew(companyId, branchId);
+
+
+     // Step 3: Process the user rights
+     List<UserRights> processedUserRights = new ArrayList<>();
+     
+     for (UserRights userRight : userRights) {
+         userRight.setCompany_Id(companyId);
+         userRight.setBranch_Id(branchId);
+         userRight.setStatus("A");
+         userRight.setCreated_By(userRight.getCreated_By() == null || userRight.getCreated_By().isEmpty() ? userId : userRight.getCreated_By());
+         userRight.setCreated_Date(userRight.getCreated_Date() == null ? new Date() : userRight.getCreated_Date());
+         userRight.setEdited_By(userId);
+         userRight.setEdited_Date(new Date());
+         userRight.setApproved_By(userRight.getApproved_By() == null || userRight.getApproved_By().isEmpty() ? userId : userRight.getApproved_By());
+         userRight.setApproved_Date(userRight.getApproved_Date() == null ? new Date() : userRight.getApproved_Date());
+
+         // Step 4: Check if it's a parent or child menu
+         if (parentProcessIds.contains(userRight.getProcess_Id())) {
+         	  System.out.println(" if (parentProcessIds.contains(userRight.getProcess_Id())) { : \n" + userRight.getProcess_Id());
+             // It's a parent menu
+             processedUserRights.add(userRight);
+         } else {
+             // It's a child menu; check for parent rights
+             String parentProcessId = getParentProcessId(userRight.getProcess_Id(), allChildMenu); // Determine the parent ID
+             System.out.println("userRight.getProcess_Id() : \n" + userRight.getProcess_Id());
+             System.out.println("parentProcessId : \n" + parentProcessId);
+             
+             boolean parentRightExists = existingUserRights.stream()
+                     .anyMatch(existingRight -> existingRight.getProcess_Id().equals(parentProcessId)) ||
+                     userRights.stream().anyMatch(currentRight -> currentRight.getProcess_Id().equals(parentProcessId));
+
+
+             
+             System.out.println("parentRightExists : \n" + parentRightExists);
+             
+             // If the parent right does not exist, create and add it
+             if (!parentRightExists) {
+                 UserRights parentRight = new UserRights();
+                 parentRight.setCompany_Id(companyId);
+                 parentRight.setBranch_Id(branchId);
+                 parentRight.setProcess_Id(parentProcessId);
+                 parentRight.setStatus("A");
+                 parentRight.setUser_Id(rightsUserId);
+                 parentRight.setAllow_Read("Y");
+                 parentRight.setAllow_Delete("N");
+                 parentRight.setAllow_Create("N");
+                 parentRight.setAllow_Update("N");              
+                 parentRight.setCreated_By(userId);
+                 parentRight.setCreated_Date(new Date());
+                 parentRight.setEdited_By(userId);
+                 parentRight.setEdited_Date(new Date());
+                 parentRight.setApproved_By(userId);
+                 parentRight.setApproved_Date(new Date());
+
+                 
+                 System.out.println("parentRight : \n" + parentRight);
+                 processedUserRights.add(parentRight);
+             }
+
+             // Add the child right as well
+             processedUserRights.add(userRight);
+         }
+     }
+
+     // Step 5: Save all processed user rights
+     urights.saveAll(processedUserRights);
+
+     // Retrieve updated user rights to return
+     List<UserRights> userRightsNew = uservice.getUserRights(companyId, branchId, rightsUserId);
+
+     return ResponseEntity.ok(userRightsNew);
+ }
+
+//  Helper method to determine the parent process ID based on the current process ID
+ private String getParentProcessId(String processId, List<ChildMenu> allChildMenus) {
+     for (ChildMenu childMenu : allChildMenus) {
+         if (childMenu.getProcessId().equals(processId)) {
+             return childMenu.getPprocess_Id();
+         }
+     }
+     return null;
+ }
+
+ 
+ 
+ 
     
     
-    @GetMapping("/getAllUsersRights")
-    public ResponseEntity<?> getAllUsersRights(@RequestParam("branchId") String branchId,
-                                               @RequestParam("companyId") String companyId,
-                                               @RequestParam(value="userId", required = false) String userId) {
-        List<UserRights> userRights = uservice.getUserRights(companyId, branchId, userId);       
-        return ResponseEntity.ok(userRights);
-    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+//    @GetMapping("/getAllUsersSelect")
+//    public List<User> parentRepo(@RequestParam("branchId") String branchId,@RequestParam("companyId") String companyId){
+//		
+//    	return urepo.getUserSelectData(companyId,branchId);
+//    	
+//    }
+//    
+//    
+//    @GetMapping("/getAllUsersRights")
+//    public ResponseEntity<?> getAllUsersRights(@RequestParam("branchId") String branchId,
+//                                               @RequestParam("companyId") String companyId,
+//                                               @RequestParam(value="userId", required = false) String userId) {
+//        List<UserRights> userRights = uservice.getUserRights(companyId, branchId, userId);       
+//        return ResponseEntity.ok(userRights);
+//    }
 
     
-    @PostMapping("/saveUserRights")
-    public ResponseEntity<?> saveUserRights(@RequestParam("branchId") String branchId,@RequestParam("companyId") String companyId,
-    		@RequestParam("userId") String userId, @RequestParam("rightsUserId") String rightsUserId,@RequestBody List<UserRights> userRights){
-		    	
-    	
-    	 List<UserRights> processedUserRights = userRights.stream()
-    	            .peek(userRight -> {
-    	                userRight.setCompany_Id(companyId);
-    	                userRight.setBranch_Id(branchId);
-    	                userRight.setStatus("A");
-    	                userRight.setCreated_By(userRight.getCreated_By() == null ? userId : userRight.getCreated_By());
-    	                userRight.setCreated_Date(userRight.getCreated_Date() == null ? new Date() : userRight.getCreated_Date());    	                
-    	                userRight.setEdited_By(userId);
-    	                userRight.setEdited_Date(new Date());
-    	                userRight.setApproved_By(userRight.getApproved_By() == null ? userId : userRight.getApproved_By());
-    	                userRight.setApproved_Date(userRight.getApproved_Date() == null ? new Date() : userRight.getApproved_Date());
-    	            })
-    	            .collect(Collectors.toList());
-
-    	        // Save all the processed user rights
-    	      urights.saveAll(processedUserRights);    
-    	      
-    	      List<UserRights> userRightsNew = uservice.getUserRights(companyId, branchId, rightsUserId); 
-    	
-    	return ResponseEntity.ok(userRightsNew);    	
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+//    @PostMapping("/saveUserRights")
+//    public ResponseEntity<?> saveUserRights(@RequestParam("branchId") String branchId,@RequestParam("companyId") String companyId,
+//    		@RequestParam("userId") String userId, @RequestParam("rightsUserId") String rightsUserId,@RequestBody List<UserRights> userRights){
+//		    	
+//    	
+//    	 List<UserRights> processedUserRights = userRights.stream()
+//    	            .peek(userRight -> {
+//    	                userRight.setCompany_Id(companyId);
+//    	                userRight.setBranch_Id(branchId);
+//    	                userRight.setStatus("A");
+//    	                userRight.setCreated_By(userRight.getCreated_By() == null ? userId : userRight.getCreated_By());
+//    	                userRight.setCreated_Date(userRight.getCreated_Date() == null ? new Date() : userRight.getCreated_Date());    	                
+//    	                userRight.setEdited_By(userId);
+//    	                userRight.setEdited_Date(new Date());
+//    	                userRight.setApproved_By(userRight.getApproved_By() == null ? userId : userRight.getApproved_By());
+//    	                userRight.setApproved_Date(userRight.getApproved_Date() == null ? new Date() : userRight.getApproved_Date());
+//    	            })
+//    	            .collect(Collectors.toList());
+//
+//    	        // Save all the processed user rights
+//    	      urights.saveAll(processedUserRights);    
+//    	      
+//    	      List<UserRights> userRightsNew = uservice.getUserRights(companyId, branchId, rightsUserId); 
+//    	
+//    	return ResponseEntity.ok(userRightsNew);    	
+//    }
+//    
+//    
+//    
+//    
+//    
+//    
+//    
+//    
+//    
+//    
+//    
     
     
     
