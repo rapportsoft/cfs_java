@@ -159,7 +159,7 @@ public class CfbondnocService {
 //   				    }
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area validation failed", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -227,7 +227,7 @@ public class CfbondnocService {
 
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area validation failed", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -323,7 +323,7 @@ public class CfbondnocService {
 
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area validation failed", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -342,7 +342,7 @@ public class CfbondnocService {
 
 					if (bondnocDtl.getCifValue().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Cif Value validation failed", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Cif should be less than :"+addValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -358,7 +358,7 @@ public class CfbondnocService {
 //   				    }
 					if (bondnocDtl.getCargoDuty().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Crago Duty value validation failed", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Crago should be less than :"+addValue, HttpStatus.BAD_REQUEST);
 					}
 				}
 
@@ -457,18 +457,17 @@ public class CfbondnocService {
 				Boolean isExist = cfbondnocRepository.isDataExist1(cid, bid, cfBondNoc.getBoeNo(),
 						cfBondNoc.getNocTransId());
 
-				if (isExist) {
-					return new ResponseEntity<>("Duplicate Bill of entry no", HttpStatus.BAD_REQUEST);
-				}
-
-				Cfbondinsbal validate = cfbondnocDtlRepository.getDataOfCfBondCifForValidation(cid, bid);
-
 				CfBondNocDtl existing = cfbondnocDtlRepository.getDataOfDtlId(cid, bid, bondnocDtl.getCfBondDtlId(),
 						bondnocDtl.getNocTransId(), bondnocDtl.getNocNo());
 
 				Cfbondnoc existingCfBondNoc = cfbondnocRepository.getDataOfDtlId(cid, bid, cfBondNoc.getNocTransId(),
 						cfBondNoc.getNocNo());
+				
+				if (isExist) {
+					return new ResponseEntity<>("Duplicate Bill of entry no", HttpStatus.BAD_REQUEST);
+				}
 
+				
 //   				if (validate != null && existing != null) 
 //   				{
 //   				    BigDecimal addValue = validate.getCusAppArea()
@@ -530,7 +529,37 @@ public class CfbondnocService {
 					existing.setEditedDate(new Date());
 					cfbondnocDtlRepository.save(existing);
 				} else {
+					
+					Cfbondinsbal validate = cfbondnocDtlRepository.getDataOfCfBondCifForValidation(cid, bid);
 
+					if (validate != null) {
+						BigDecimal addValue = validate.getCusAppArea().subtract(validate.getInbondAres())
+								.add(validate.getExbondArea() != null ? validate.getExbondArea() : BigDecimal.ZERO);
+
+						if (cfBondNoc.getArea().compareTo(addValue) > 0) {
+							// If cfBondNoc.getArea() is greater than addValue
+							return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						}
+					}
+
+					if (validate != null) {
+						BigDecimal addValue = validate.getCusAppCifValue().subtract(validate.getInbondCifValue())
+								.add(validate.getExbondCifValue());
+
+						if (bondnocDtl.getCifValue().compareTo(addValue) > 0) {
+							// If cfBondNoc.getArea() is greater than addValue
+							return new ResponseEntity<>("Cif should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						}
+					}
+
+					if (validate != null) {
+						BigDecimal addValue = validate.getCusAppCargoDuty().subtract(validate.getInbondCargoDuty())
+								.add(validate.getExbondCargoDuty());
+						if (bondnocDtl.getCargoDuty().compareTo(addValue) > 0) {
+							// If cfBondNoc.getArea() is greater than addValue
+							return new ResponseEntity<>("Crago should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						}
+					}
 					CfBondNocDtl bondnocDtl1 = new CfBondNocDtl();
 
 					String holdId = processNextIdRepository.findAuditTrail(cid, bid, "P02232", "2232");
