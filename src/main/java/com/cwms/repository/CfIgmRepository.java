@@ -14,6 +14,21 @@ public interface CfIgmRepository extends JpaRepository<CFIgm, String> {
 	@Query(value="select COUNT(c)>0 from CFIgm c where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.status !='D'")
 	Boolean isDataExist(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm);
 	
+	@Query(value="select c from CFIgm c where c.companyId=:cid and c.branchId=:bid and c.igmNo=:transId "
+			+ "and c.status != 'D' and c.shippingLine=:sl order by c.createdDate desc limit 1")
+	CFIgm getDataByIgmNoAndSl(@Param("cid") String cid,@Param("bid") String bid,@Param("transId") String transId,
+			@Param("sl") String sl);
+	
+	
+	@Query(value="select COUNT(c)>0 from CFIgm c LEFT OUTER JOIN Party p ON c.companyId=p.companyId and c.branchId=p.branchId "
+			+ "and c.shippingLine=p.partyId where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and "
+			+ "p.customerCode=:sl and c.status !='D'")
+	Boolean isDataExist2(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("sl") String sl);
+	
+	@Query(value="select c from CFIgm c LEFT OUTER JOIN Party p ON c.companyId=p.companyId and c.branchId=p.branchId "
+			+ "and c.shippingLine=p.partyId where  c.companyId=:cid and c.branchId=:bid and c.igmNo=:transId "
+			+ "and p.customerCode=:sl and c.status != 'D' order by c.createdDate desc limit 1")
+	CFIgm getDataByIgmNo3(@Param("cid") String cid,@Param("bid") String bid,@Param("transId") String transId,@Param("sl") String sl);
 	
 	@Query(value="select COUNT(c)>0 from CFIgm c where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm "
 			+ "and c.igmTransId!=:trans and c.status !='D'")

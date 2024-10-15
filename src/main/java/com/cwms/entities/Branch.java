@@ -136,7 +136,8 @@ public class Branch {
     @Column(name="Bond_Code",length=27)
     private String bondCode;
     
-    
+    @Column(name="Cfs_code",length = 20)
+    private String cfsCode;
     
     
         
@@ -190,6 +191,76 @@ public class Branch {
 		this.sealNo = sealNo;
 		this.bondCode = bondCode;
 	}
+
+
+	
+
+	public String getCfsCode() {
+		return cfsCode;
+	}
+
+
+
+
+	public void setCfsCode(String cfsCode) {
+		this.cfsCode = cfsCode;
+	}
+
+
+
+
+	public Branch(String companyId, String branchId, String branchName, Character bizCentreType, String baseCurrency,
+			String foreignCurrency, Character status, String address1, String address2, String irlNo, String gST_No,
+			String pan_No, String cin, String address3, String city, String state, String country, String pin,
+			String stdCode, String phoneNo, String emailId, String sacCode, String tdsAcCode, String tdsRange,
+			String tanNo, String comments, String domainName, String bankName, String bankAddress, String bankIFSCCode,
+			String bankAcountNo, String faxNo, String createdBy, Date createdDate, String editedBy, Date editedDate,
+			String approvedBy, Date approvedDate, String branchCode, String sealNo, String bondCode, String cfsCode) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.branchName = branchName;
+		this.bizCentreType = bizCentreType;
+		this.baseCurrency = baseCurrency;
+		this.foreignCurrency = foreignCurrency;
+		this.status = status;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.irlNo = irlNo;
+		GST_No = gST_No;
+		Pan_No = pan_No;
+		this.cin = cin;
+		this.address3 = address3;
+		this.city = city;
+		this.state = state;
+		this.country = country;
+		this.pin = pin;
+		this.stdCode = stdCode;
+		this.phoneNo = phoneNo;
+		this.emailId = emailId;
+		this.sacCode = sacCode;
+		this.tdsAcCode = tdsAcCode;
+		this.tdsRange = tdsRange;
+		this.tanNo = tanNo;
+		this.comments = comments;
+		this.domainName = domainName;
+		this.bankName = bankName;
+		this.bankAddress = bankAddress;
+		this.bankIFSCCode = bankIFSCCode;
+		this.bankAcountNo = bankAcountNo;
+		this.faxNo = faxNo;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.branchCode = branchCode;
+		this.sealNo = sealNo;
+		this.bondCode = bondCode;
+		this.cfsCode = cfsCode;
+	}
+
 
 
 
