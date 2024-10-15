@@ -2,14 +2,17 @@ package com.cwms.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,6 +99,9 @@ public class ExcelUploadController {
 
 	@Value("${file.igmFormat}")
 	private String filePath;
+
+	@Value("${file.igmFiles}")
+	private String igmFiles;
 
 	@GetMapping("/excelFormatDownload")
 	public ResponseEntity<?> downloadExcelFile() {
@@ -540,8 +546,8 @@ public class ExcelUploadController {
 									check = true;
 								}
 							}
-							
-							if(address2 != null && !address2.isEmpty()) {
+
+							if (address2 != null && !address2.isEmpty()) {
 								if (address2.length() > 100) {
 									String mess = "For Container no " + containerNo
 											+ " - Address2 length should not exceed 100 characters.";
@@ -549,8 +555,8 @@ public class ExcelUploadController {
 									check = true;
 								}
 							}
-							
-							if(address3 != null && !address3.isEmpty()) {
+
+							if (address3 != null && !address3.isEmpty()) {
 								if (address3.length() > 100) {
 									String mess = "For Container no " + containerNo
 											+ " - Address3 length should not exceed 100 characters.";
@@ -636,7 +642,7 @@ public class ExcelUploadController {
 								cn.setContainerType(isoData.getContainerType());
 								cn.setContainerWeight(isoData.getTareWeight());
 								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
-								if("LCL".equals(status)) {
+								if ("LCL".equals(status)) {
 									cn.setGateOutType("CRG");
 									cn.setUpTariffDelMode("CRG");
 								}
@@ -754,7 +760,7 @@ public class ExcelUploadController {
 								cn.setContainerType(isoData.getContainerType());
 								cn.setContainerWeight(isoData.getTareWeight());
 								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
-								if("LCL".equals(status)) {
+								if ("LCL".equals(status)) {
 									cn.setGateOutType("CRG");
 									cn.setUpTariffDelMode("CRG");
 								}
@@ -872,8 +878,7 @@ public class ExcelUploadController {
 
 		if (itemData.size() > 0) {
 			CFIgm existingIgm = cfigmrepo.getDataByIgmNoAndSl(cid, bid, igm.getIgmNo(), igm.getShippingLine());
-			
-			
+
 			Map<String, Object> result = new HashMap<>();
 			List<String> list = new ArrayList<>();
 			List<String> itemList = new ArrayList<>();
@@ -899,49 +904,43 @@ public class ExcelUploadController {
 					String cargoWt = m.get("Cargo wt");
 					String commodity = m.get("Commodity");
 					String origin = m.get("Origin");
-					
 
 					if (itemNo.isEmpty()) {
 						String mess = " - Item No is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(itemNo.length()>7) {
-							String mess = "For Item no " + itemNo
-									+ " - Item No length should not exceed 7 characters.";
+					} else {
+						if (itemNo.length() > 7) {
+							String mess = "For Item no " + itemNo + " - Item No length should not exceed 7 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (blNo.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - BL No is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(blNo.length()>20) {
-							String mess = "For Item no " + itemNo
-									+ " - BL No length should not exceed 20 characters.";
+					} else {
+						if (blNo.length() > 20) {
+							String mess = "For Item no " + itemNo + " - BL No length should not exceed 20 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (blDate.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - BL date is required.";
 						list.add(mess);
 						check = true;
 					}
-					
+
 					if (importer.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Importer is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(importer.length()>100) {
+					} else {
+						if (importer.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer length should not exceed 100 characters.";
 							list.add(mess);
@@ -952,127 +951,121 @@ public class ExcelUploadController {
 						String mess = "For Item no " + itemNo + " - Importer address1 is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(impAddress1.length()>250) {
+					} else {
+						if (impAddress1.length() > 250) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer address1 length should not exceed 250 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!impAddress2.isEmpty()) {
-						if(impAddress2.length()>100) {
+
+					if (!impAddress2.isEmpty()) {
+						if (impAddress2.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer address2 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!impAddress3.isEmpty()) {
-						if(impAddress3.length()>100) {
+
+					if (!impAddress3.isEmpty()) {
+						if (impAddress3.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer address3 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyParty.isEmpty()) {
-						if(notifyParty.length()>100) {
+
+					if (!notifyParty.isEmpty()) {
+						if (notifyParty.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyPartyAddress1.isEmpty()) {
-						if(notifyPartyAddress1.length()>250) {
+
+					if (!notifyPartyAddress1.isEmpty()) {
+						if (notifyPartyAddress1.length() > 250) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party address1 length should not exceed 250 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyPartyAddress2.isEmpty()) {
-						if(notifyPartyAddress2.length()>100) {
+
+					if (!notifyPartyAddress2.isEmpty()) {
+						if (notifyPartyAddress2.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party address2 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyPartyAddress3.isEmpty()) {
-						if(notifyPartyAddress3.length()>100) {
+
+					if (!notifyPartyAddress3.isEmpty()) {
+						if (notifyPartyAddress3.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party address3 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (packages.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Packages is required.";
 						list.add(mess);
 						check = true;
 					}
-					
+
 					if (packageType.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Package type is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(packageType.length()>3) {
+					} else {
+						if (packageType.length() > 3) {
 							String mess = "For Item no " + itemNo
 									+ " - Pakage type length should not exceed 3 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (cargoWt.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Cargo wt is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(cargoWt.length()>12) {
+					} else {
+						if (cargoWt.length() > 12) {
 							String mess = "For Item no " + itemNo
 									+ " - Cargo wt length should not exceed 12 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (commodity.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Commodity is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(commodity.length()>250) {
+					} else {
+						if (commodity.length() > 250) {
 							String mess = "For Item no " + itemNo
 									+ " - Commodity length should not exceed 250 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (origin.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Origin is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(origin.length()>50) {
-							String mess = "For Item no " + itemNo
-									+ " - Origin length should not exceed 50 characters.";
+					} else {
+						if (origin.length() > 50) {
+							String mess = "For Item no " + itemNo + " - Origin length should not exceed 50 characters.";
 							list.add(mess);
 							check = true;
 						}
@@ -1084,18 +1077,18 @@ public class ExcelUploadController {
 						blDate1 = format.parse(blDate);
 
 						if (blDate1 == null) {
-							
-								String mess = "For Item no " + itemNo + " - Invalid BL Date.";
-								list.add(mess);
-							    check = true;
-							
+
+							String mess = "For Item no " + itemNo + " - Invalid BL Date.";
+							list.add(mess);
+							check = true;
+
 						}
 
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						String mess = "For Item no " + itemNo + " - Invalid BL date format.";
 						list.add(mess);
-					    check = true;
+						check = true;
 
 					}
 
@@ -1149,24 +1142,23 @@ public class ExcelUploadController {
 						crg.setNoOfPackages(
 								BigDecimal.ZERO.add(new BigDecimal(packages).setScale(3, RoundingMode.HALF_UP)));
 
-						if(!check) {
+						if (!check) {
 							cfigmcrgrepo.save(crg);
 							processnextidrepo.updateAuditTrail(cid, bid, "P05061", HoldNextIdD2, "2024");
 						}
-						
-						if(check) {
-							if(!itemNo.isEmpty()) {
+
+						if (check) {
+							if (!itemNo.isEmpty()) {
 								itemList.add(itemNo);
 							}
-							
+
 						}
-					
 
 					}
 
 				}
-				
-				if(conData.size()>0) {
+
+				if (conData.size() > 0) {
 					for (Map<String, String> c : conData) {
 
 						String containerNo = c.get("Container no");
@@ -1176,18 +1168,17 @@ public class ExcelUploadController {
 						String packages = c.get("Packages");
 						String cargoWt = c.get("Cargo Wt.");
 						String iso = c.get("ISO");
-						
+
 						Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(itemNo));
 						Boolean check1 = false;
 
-						if(!check) {
-							
+						if (!check) {
+
 							if (containerNo.isEmpty()) {
 								String mess = "For Item no " + itemNo + " - Container no is required.";
 								list.add(mess);
 								check1 = true;
-							}
-							else {
+							} else {
 								if (containerNo.length() > 11) {
 									String mess = "For Container no " + containerNo
 											+ " - Container No length should not exceed 11 characters.";
@@ -1196,13 +1187,12 @@ public class ExcelUploadController {
 
 								}
 							}
-							
+
 							if (itemNo.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - Item no is required.";
 								list.add(mess);
 								check1 = true;
-							}
-							else {
+							} else {
 								if (itemNo.length() > 7) {
 									String mess = "For Container no " + containerNo
 											+ " - Item no length should not exceed 11 characters.";
@@ -1211,14 +1201,13 @@ public class ExcelUploadController {
 
 								}
 							}
-							
+
 							if (conStatus.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - Container status is required.";
 								list.add(mess);
 								check1 = true;
-							}
-							else {
-								if (!"FCL".equals(conStatus) || !"LCL".equals(conStatus)) {
+							} else {
+								if (!"FCL".equals(conStatus) && !"LCL".equals(conStatus)) {
 									String mess = "For Container no " + containerNo
 											+ " - Container status should be 'FCL' OR 'LCL'.";
 									list.add(mess);
@@ -1226,33 +1215,34 @@ public class ExcelUploadController {
 
 								}
 							}
-							
+
 							if (packages.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - Packages is required.";
 								list.add(mess);
 								check1 = true;
 							}
-							
+
 							if (iso.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - ISO is required.";
 								list.add(mess);
 								check1 = true;
 							}
-							
+
 							Boolean isExist3 = cfigmcnrepo.isExistContainer(cid, bid, existingIgm.getIgmTransId(),
 									existingIgm.getIgmNo(), itemNo, containerNo);
 
 							if (isExist3) {
-								//return new ResponseEntity<>("Duplicate container no", HttpStatus.CONFLICT);
+								// return new ResponseEntity<>("Duplicate container no", HttpStatus.CONFLICT);
 								String mess = "For Container no " + containerNo + " - Duplicate container no.";
 								list.add(mess);
 								check1 = true;
 							}
 
-							Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, existingIgm.getIgmTransId(), igm.getIgmNo(), itemNo);
+							Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, existingIgm.getIgmTransId(), igm.getIgmNo(),
+									itemNo);
 
 							if (crg == null) {
-								//return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
+								// return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
 								String mess = "For Container no " + containerNo + " - Item data not found.";
 								list.add(mess);
 								check1 = true;
@@ -1271,7 +1261,7 @@ public class ExcelUploadController {
 							IsoContainer isoData = isoContainerRepository.getDataByIsoCode(cid, iso);
 
 							if (isoData == null) {
-								//return new ResponseEntity<>("ISO data not found", HttpStatus.CONFLICT);
+								// return new ResponseEntity<>("ISO data not found", HttpStatus.CONFLICT);
 								String mess = "For Container no " + containerNo + " - ISO data not found.";
 								list.add(mess);
 								check1 = true;
@@ -1299,29 +1289,26 @@ public class ExcelUploadController {
 							cn.setContainerType(isoData.getContainerType());
 							cn.setContainerWeight(isoData.getTareWeight());
 							cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
-							if("LCL".equals(conStatus)) {
+							if ("LCL".equals(conStatus)) {
 								cn.setGateOutType("CRG");
 								cn.setUpTariffDelMode("CRG");
 							}
 
-							if(!check1) {
+							if (!check1) {
 								cfigmcnrepo.save(cn);
 								int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(),
 										cn.getContainerNo());
 								processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD3, "2024");
 							}
-							
-						}
-						else {
-							String mess = "For Container no " + containerNo + " - Error for Item no "+itemNo;
+
+						} else {
+							String mess = "For Container no " + containerNo + " - Error for Item no " + itemNo;
 							list.add(mess);
 							check = true;
 						}
 
 					}
 				}
-
-		
 
 			} else {
 
@@ -1343,7 +1330,7 @@ public class ExcelUploadController {
 				igm.setApprovedDate(new Date());
 				cfigmrepo.save(igm);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05060", HoldNextIdD1, "2024");
-	
+
 				for (Map<String, String> m : itemData) {
 					String itemNo = m.get("Item no");
 					String blNo = m.get("Bl no");
@@ -1363,50 +1350,45 @@ public class ExcelUploadController {
 					String cargoWt = m.get("Cargo wt");
 					String commodity = m.get("Commodity");
 					String origin = m.get("Origin");
-			
+
 					Boolean check = false;
-					
+
 					if (itemNo.isEmpty()) {
 						String mess = " - Item No is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(itemNo.length()>7) {
-							String mess = "For Item no " + itemNo
-									+ " - Item No length should not exceed 7 characters.";
+					} else {
+						if (itemNo.length() > 7) {
+							String mess = "For Item no " + itemNo + " - Item No length should not exceed 7 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (blNo.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - BL No is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(blNo.length()>20) {
-							String mess = "For Item no " + itemNo
-									+ " - BL No length should not exceed 20 characters.";
+					} else {
+						if (blNo.length() > 20) {
+							String mess = "For Item no " + itemNo + " - BL No length should not exceed 20 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (blDate.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - BL date is required.";
 						list.add(mess);
 						check = true;
 					}
-					
+
 					if (importer.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Importer is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(importer.length()>100) {
+					} else {
+						if (importer.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer length should not exceed 100 characters.";
 							list.add(mess);
@@ -1417,127 +1399,121 @@ public class ExcelUploadController {
 						String mess = "For Item no " + itemNo + " - Importer address1 is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(impAddress1.length()>250) {
+					} else {
+						if (impAddress1.length() > 250) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer address1 length should not exceed 250 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!impAddress2.isEmpty()) {
-						if(impAddress2.length()>100) {
+
+					if (!impAddress2.isEmpty()) {
+						if (impAddress2.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer address2 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!impAddress3.isEmpty()) {
-						if(impAddress3.length()>100) {
+
+					if (!impAddress3.isEmpty()) {
+						if (impAddress3.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Importer address3 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyParty.isEmpty()) {
-						if(notifyParty.length()>100) {
+
+					if (!notifyParty.isEmpty()) {
+						if (notifyParty.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyPartyAddress1.isEmpty()) {
-						if(notifyPartyAddress1.length()>250) {
+
+					if (!notifyPartyAddress1.isEmpty()) {
+						if (notifyPartyAddress1.length() > 250) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party address1 length should not exceed 250 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyPartyAddress2.isEmpty()) {
-						if(notifyPartyAddress2.length()>100) {
+
+					if (!notifyPartyAddress2.isEmpty()) {
+						if (notifyPartyAddress2.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party address2 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
-					if(!notifyPartyAddress3.isEmpty()) {
-						if(notifyPartyAddress3.length()>100) {
+
+					if (!notifyPartyAddress3.isEmpty()) {
+						if (notifyPartyAddress3.length() > 100) {
 							String mess = "For Item no " + itemNo
 									+ " - Notify party address3 length should not exceed 100 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (packages.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Packages is required.";
 						list.add(mess);
 						check = true;
 					}
-					
+
 					if (packageType.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Package type is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(packageType.length()>3) {
+					} else {
+						if (packageType.length() > 3) {
 							String mess = "For Item no " + itemNo
 									+ " - Pakage type length should not exceed 3 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (cargoWt.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Cargo wt is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(cargoWt.length()>12) {
+					} else {
+						if (cargoWt.length() > 12) {
 							String mess = "For Item no " + itemNo
 									+ " - Cargo wt length should not exceed 12 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (commodity.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Commodity is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(commodity.length()>250) {
+					} else {
+						if (commodity.length() > 250) {
 							String mess = "For Item no " + itemNo
 									+ " - Commodity length should not exceed 250 characters.";
 							list.add(mess);
 							check = true;
 						}
 					}
-					
+
 					if (origin.isEmpty()) {
 						String mess = "For Item no " + itemNo + " - Origin is required.";
 						list.add(mess);
 						check = true;
-					}
-					else {
-						if(origin.length()>50) {
-							String mess = "For Item no " + itemNo
-									+ " - Origin length should not exceed 50 characters.";
+					} else {
+						if (origin.length() > 50) {
+							String mess = "For Item no " + itemNo + " - Origin length should not exceed 50 characters.";
 							list.add(mess);
 							check = true;
 						}
@@ -1549,21 +1525,20 @@ public class ExcelUploadController {
 						blDate1 = format.parse(blDate);
 
 						if (blDate1 == null) {
-							
-								String mess = "For Item no " + itemNo + " - Invalid BL Date.";
-								list.add(mess);
-							    check = true;
-							
+
+							String mess = "For Item no " + itemNo + " - Invalid BL Date.";
+							list.add(mess);
+							check = true;
+
 						}
 
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						String mess = "For Item no " + itemNo + " - Invalid BL date format.";
 						list.add(mess);
-					    check = true;
+						check = true;
 
 					}
-
 
 					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, itemNo, igm.getIgmNo());
 
@@ -1615,24 +1590,24 @@ public class ExcelUploadController {
 						crg.setNoOfPackages(
 								BigDecimal.ZERO.add(new BigDecimal(packages).setScale(3, RoundingMode.HALF_UP)));
 
-						if(!check) {
+						if (!check) {
 							cfigmcrgrepo.save(crg);
 							processnextidrepo.updateAuditTrail(cid, bid, "P05061", HoldNextIdD2, "2024");
 						}
-						
-						if(check) {
-							if(!itemNo.isEmpty()) {
+
+						if (check) {
+							if (!itemNo.isEmpty()) {
 								itemList.add(itemNo);
 							}
-							
+
 						}
 
 					}
 
 				}
 
-			    if(conData.size()>0) {
-			    	for (Map<String, String> c : conData) {
+				if (conData.size() > 0) {
+					for (Map<String, String> c : conData) {
 
 						String containerNo = c.get("Container no");
 						String itemNo = c.get("Item no");
@@ -1641,18 +1616,17 @@ public class ExcelUploadController {
 						String packages = c.get("Packages");
 						String cargoWt = c.get("Cargo Wt.");
 						String iso = c.get("ISO");
-						
+
 						Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(itemNo));
 						Boolean check1 = false;
 
-						if(!check) {
-							
+						if (!check) {
+
 							if (containerNo.isEmpty()) {
 								String mess = "For Item no " + itemNo + " - Container no is required.";
 								list.add(mess);
 								check1 = true;
-							}
-							else {
+							} else {
 								if (containerNo.length() > 11) {
 									String mess = "For Container no " + containerNo
 											+ " - Container No length should not exceed 11 characters.";
@@ -1661,13 +1635,12 @@ public class ExcelUploadController {
 
 								}
 							}
-							
+
 							if (itemNo.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - Item no is required.";
 								list.add(mess);
 								check1 = true;
-							}
-							else {
+							} else {
 								if (itemNo.length() > 7) {
 									String mess = "For Container no " + containerNo
 											+ " - Item no length should not exceed 11 characters.";
@@ -1676,14 +1649,13 @@ public class ExcelUploadController {
 
 								}
 							}
-							
+
 							if (conStatus.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - Container status is required.";
 								list.add(mess);
 								check1 = true;
-							}
-							else {
-								if (!"FCL".equals(conStatus) || !"LCL".equals(conStatus)) {
+							} else {
+								if (!"FCL".equals(conStatus) && !"LCL".equals(conStatus)) {
 									String mess = "For Container no " + containerNo
 											+ " - Container status should be 'FCL' OR 'LCL'.";
 									list.add(mess);
@@ -1691,24 +1663,24 @@ public class ExcelUploadController {
 
 								}
 							}
-							
+
 							if (packages.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - Packages is required.";
 								list.add(mess);
 								check1 = true;
 							}
-							
+
 							if (iso.isEmpty()) {
 								String mess = "For Container no " + containerNo + " - ISO is required.";
 								list.add(mess);
 								check1 = true;
 							}
-							
-							Boolean isExist3 = cfigmcnrepo.isExistContainer(cid, bid, igm.getIgmTransId(), igm.getIgmNo(),
-									itemNo, containerNo);
+
+							Boolean isExist3 = cfigmcnrepo.isExistContainer(cid, bid, igm.getIgmTransId(),
+									igm.getIgmNo(), itemNo, containerNo);
 
 							if (isExist3) {
-								//return new ResponseEntity<>("Duplicate container no", HttpStatus.CONFLICT);
+								// return new ResponseEntity<>("Duplicate container no", HttpStatus.CONFLICT);
 								String mess = "For Container no " + containerNo + " - Duplicate container no.";
 								list.add(mess);
 								check1 = true;
@@ -1717,7 +1689,7 @@ public class ExcelUploadController {
 							Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, igm.getIgmTransId(), igm.getIgmNo(), itemNo);
 
 							if (crg == null) {
-								//return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
+								// return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
 								String mess = "For Container no " + containerNo + " - Item data not found.";
 								list.add(mess);
 								check1 = true;
@@ -1736,7 +1708,7 @@ public class ExcelUploadController {
 							IsoContainer isoData = isoContainerRepository.getDataByIsoCode(cid, iso);
 
 							if (isoData == null) {
-								//return new ResponseEntity<>("ISO data not found", HttpStatus.CONFLICT);
+								// return new ResponseEntity<>("ISO data not found", HttpStatus.CONFLICT);
 								String mess = "For Container no " + containerNo + " - ISO data not found.";
 								list.add(mess);
 								check1 = true;
@@ -1764,27 +1736,26 @@ public class ExcelUploadController {
 							cn.setContainerType(isoData.getContainerType());
 							cn.setContainerWeight(isoData.getTareWeight());
 							cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
-							
-							if("LCL".equals(conStatus)) {
+
+							if ("LCL".equals(conStatus)) {
 								cn.setGateOutType("CRG");
 								cn.setUpTariffDelMode("CRG");
 							}
 
-							if(!check1) {
+							if (!check1) {
 								cfigmcnrepo.save(cn);
 								int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(),
 										cn.getContainerNo());
 								processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD3, "2024");
 							}
 
-						}
-						else {
-							String mess = "For Container no " + containerNo + " - Error for Item no "+itemNo;
+						} else {
+							String mess = "For Container no " + containerNo + " - Error for Item no " + itemNo;
 							list.add(mess);
 							check = true;
 						}
 					}
-			    }
+				}
 			}
 
 			if (list.size() > 0) {
@@ -1815,10 +1786,31 @@ public class ExcelUploadController {
 			if (file.isEmpty()) {
 				return ResponseEntity.badRequest().body("File is empty.");
 			}
-			// Call the service to process the file
-			List<List<String>> content = readAndParseCargoSection(file);
 
-			List<List<String>> content1 = readAndParseContainerSection(file);
+			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			String newFileName = "IGM_File_" + igm.getIgmNo()+"_"+igm.getShippingLine()+"_"+timestamp + ".txt";
+
+			// Get the path to save the new file (adjust the directory path as per your
+			// requirement)
+			Path newFilePath = Paths.get(igmFiles + newFileName);
+
+			// Save the uploaded MultipartFile to a temporary file first
+			File tempFile = File.createTempFile("upload", file.getOriginalFilename());
+			file.transferTo(tempFile);
+
+			// Now, copy the temporary file to the final destination, simulating "Ctrl + C" and "Ctrl + V"
+			Files.copy(tempFile.toPath(), newFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+			// Delete the temporary file after copying if needed
+			tempFile.delete();
+
+			// Now, create a new MultipartFile from the new file and pass it to the methods
+			File newFile = newFilePath.toFile();
+			
+			// Call the service to process the file
+			List<List<String>> content = readAndParseCargoSection(newFile);
+
+			List<List<String>> content1 = readAndParseContainerSection(newFile);
 
 			List<Map<String, String>> itemData = new ArrayList<>();
 
@@ -1857,8 +1849,8 @@ public class ExcelUploadController {
 				}
 
 			});
-			
-			if(content.size()>0) {
+
+			if (content.size() > 0) {
 				content1.stream().forEach(c -> {
 
 					Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
@@ -1880,7 +1872,6 @@ public class ExcelUploadController {
 
 			}
 
-			
 			return saveIgm(cid, bid, user, finYear, itemData, conData, igm);
 			// return ResponseEntity.ok(data);
 		} catch (IOException e) {
@@ -1956,12 +1947,12 @@ public class ExcelUploadController {
 		return records;
 	}
 
-	public List<List<String>> readAndParseCargoSection(MultipartFile file) throws IOException {
+	public List<List<String>> readAndParseCargoSection(File file) throws IOException {
 		List<List<String>> records = new ArrayList<>();
 		StringBuilder content = new StringBuilder();
 		boolean isCargoSection = false;
 
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+		  try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				// Check if we are inside the <cargo> section
@@ -2009,12 +2000,12 @@ public class ExcelUploadController {
 		return records;
 	}
 
-	public List<List<String>> readAndParseContainerSection(MultipartFile file) throws IOException {
+	public List<List<String>> readAndParseContainerSection(File file) throws IOException {
 		List<List<String>> records = new ArrayList<>();
 		StringBuilder content = new StringBuilder();
 		boolean isCargoSection = false;
 
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+		  try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				// Check if we are inside the <cargo> section
