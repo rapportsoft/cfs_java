@@ -540,6 +540,24 @@ public class ExcelUploadController {
 									check = true;
 								}
 							}
+							
+							if(address2 != null && !address2.isEmpty()) {
+								if (address2.length() > 100) {
+									String mess = "For Container no " + containerNo
+											+ " - Address2 length should not exceed 100 characters.";
+									list.add(mess);
+									check = true;
+								}
+							}
+							
+							if(address3 != null && !address3.isEmpty()) {
+								if (address3.length() > 100) {
+									String mess = "For Container no " + containerNo
+											+ " - Address3 length should not exceed 100 characters.";
+									list.add(mess);
+									check = true;
+								}
+							}
 
 							// Origin validation
 							if (origin == null || origin.isEmpty()) {
@@ -618,6 +636,10 @@ public class ExcelUploadController {
 								cn.setContainerType(isoData.getContainerType());
 								cn.setContainerWeight(isoData.getTareWeight());
 								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+								if("LCL".equals(status)) {
+									cn.setGateOutType("CRG");
+									cn.setUpTariffDelMode("CRG");
+								}
 
 								if (!check) {
 									cfigmcnrepo.save(cn);
@@ -732,6 +754,10 @@ public class ExcelUploadController {
 								cn.setContainerType(isoData.getContainerType());
 								cn.setContainerWeight(isoData.getTareWeight());
 								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+								if("LCL".equals(status)) {
+									cn.setGateOutType("CRG");
+									cn.setUpTariffDelMode("CRG");
+								}
 
 								if (!check) {
 									cfigmcnrepo.save(cn);
@@ -1273,6 +1299,10 @@ public class ExcelUploadController {
 							cn.setContainerType(isoData.getContainerType());
 							cn.setContainerWeight(isoData.getTareWeight());
 							cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+							if("LCL".equals(conStatus)) {
+								cn.setGateOutType("CRG");
+								cn.setUpTariffDelMode("CRG");
+							}
 
 							if(!check1) {
 								cfigmcnrepo.save(cn);
@@ -1734,6 +1764,11 @@ public class ExcelUploadController {
 							cn.setContainerType(isoData.getContainerType());
 							cn.setContainerWeight(isoData.getTareWeight());
 							cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+							
+							if("LCL".equals(conStatus)) {
+								cn.setGateOutType("CRG");
+								cn.setUpTariffDelMode("CRG");
+							}
 
 							if(!check1) {
 								cfigmcnrepo.save(cn);
