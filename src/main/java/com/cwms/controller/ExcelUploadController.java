@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1285,10 +1286,12 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
-							cn.setContainerSize(isoData.getContainerSize());
-							cn.setContainerType(isoData.getContainerType());
-							cn.setContainerWeight(isoData.getTareWeight());
-							cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+							if(isoData != null) {
+								cn.setContainerSize(isoData.getContainerSize());
+								cn.setContainerType(isoData.getContainerType());
+								cn.setContainerWeight(isoData.getTareWeight());
+								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+							}
 							if ("LCL".equals(conStatus)) {
 								cn.setGateOutType("CRG");
 								cn.setUpTariffDelMode("CRG");
@@ -1732,10 +1735,13 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
-							cn.setContainerSize(isoData.getContainerSize());
-							cn.setContainerType(isoData.getContainerType());
-							cn.setContainerWeight(isoData.getTareWeight());
-							cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+							if(isoData != null) {
+								cn.setContainerSize(isoData.getContainerSize());
+								cn.setContainerType(isoData.getContainerType());
+								cn.setContainerWeight(isoData.getTareWeight());
+								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
+							}
+						
 
 							if ("LCL".equals(conStatus)) {
 								cn.setGateOutType("CRG");
@@ -1787,30 +1793,33 @@ public class ExcelUploadController {
 				return ResponseEntity.badRequest().body("File is empty.");
 			}
 
+			// Create timestamp for the new file name
 			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-			String newFileName = "IGM_File_" + igm.getIgmNo()+"_"+igm.getShippingLine()+"_"+timestamp + ".txt";
+			String newFileName = "IGM_File_" + igm.getIgmNo() + "_" + igm.getShippingLine() + "_" + timestamp + ".txt";
 
-			// Get the path to save the new file (adjust the directory path as per your
-			// requirement)
+			// Define the path where the new file will be saved
 			Path newFilePath = Paths.get(igmFiles + newFileName);
 
 			// Save the uploaded MultipartFile to a temporary file first
 			File tempFile = File.createTempFile("upload", file.getOriginalFilename());
 			file.transferTo(tempFile);
 
-			// Now, copy the temporary file to the final destination, simulating "Ctrl + C" and "Ctrl + V"
-			Files.copy(tempFile.toPath(), newFilePath, StandardCopyOption.REPLACE_EXISTING);
+			// Read the content of the temporary file
+			List<String> fileContent = Files.readAllLines(tempFile.toPath(), StandardCharsets.UTF_8);
 
-			// Delete the temporary file after copying if needed
+			// Write the content to the new file
+			Files.write(newFilePath, fileContent, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
+
+			// Optionally, delete the temporary file after processing
 			tempFile.delete();
 
-			// Now, create a new MultipartFile from the new file and pass it to the methods
+			// Now, create a new File object for the newly created file
 			File newFile = newFilePath.toFile();
-			
-			// Call the service to process the file
-			List<List<String>> content = readAndParseCargoSection(newFile);
 
+			// Call the service to process the new file
+			List<List<String>> content = readAndParseCargoSection(newFile);
 			List<List<String>> content1 = readAndParseContainerSection(newFile);
+
 
 			List<Map<String, String>> itemData = new ArrayList<>();
 
