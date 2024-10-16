@@ -28,6 +28,12 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	                             @Param("igm") String igm,
 	                             @Param("igmline") String igmline);
 	  
+	  @Query(value="select c from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm "
+				+ "and c.containerNo=:con and c.status != 'D' and (c.gateOutId is null OR c.gateOutId = '') "
+				+ "and (c.deStuffId is null OR c.deStuffId = '') and c.scanningDoneStatus != 'Y'")
+		List<Cfigmcn> getDataForScanning(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+				@Param("igm") String igm,@Param("con") String con);
+	  
 	  
 //	  @Query("SELECT c " +
 //	           "FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid  AND c.igmNo = :igm " +

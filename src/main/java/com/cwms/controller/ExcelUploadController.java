@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,7 +43,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,18 +52,25 @@ import com.cwms.entities.Branch;
 import com.cwms.entities.CFIgm;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
+import com.cwms.entities.GateIn;
+import com.cwms.entities.ImportInventory;
 import com.cwms.entities.IsoContainer;
 import com.cwms.entities.Party;
 import com.cwms.entities.Port;
+import com.cwms.entities.ScanDetail;
 import com.cwms.entities.Vessel;
 import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
+import com.cwms.repository.CompanyRepo;
+import com.cwms.repository.GateInRepository;
+import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.IsoContainerRepository;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.PortRepository;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.ScanDetailRepository;
 import com.cwms.repository.VesselRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -103,6 +111,15 @@ public class ExcelUploadController {
 
 	@Value("${file.igmFiles}")
 	private String igmFiles;
+
+	@Autowired
+	private GateInRepository gateinrepo;
+
+	@Autowired
+	private ImportInventoryRepository importinventoryrepo;
+	
+	@Autowired
+	private ScanDetailRepository scandetailrepo;
 
 	@GetMapping("/excelFormatDownload")
 	public ResponseEntity<?> downloadExcelFile() {
@@ -1286,7 +1303,7 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
-							if(isoData != null) {
+							if (isoData != null) {
 								cn.setContainerSize(isoData.getContainerSize());
 								cn.setContainerType(isoData.getContainerType());
 								cn.setContainerWeight(isoData.getTareWeight());
@@ -1549,7 +1566,7 @@ public class ExcelUploadController {
 						Cfigmcrg crg = new Cfigmcrg();
 						String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05061", "2024");
 
-						int lastNextNumericId2 = Integer.parseInt(holdId2.substring(4));
+						int lastNextNumericId2 = Integer.parseInt(holdId2.substring(3));
 
 						int nextNumericNextID2 = lastNextNumericId2 + 1;
 
@@ -1735,13 +1752,12 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
-							if(isoData != null) {
+							if (isoData != null) {
 								cn.setContainerSize(isoData.getContainerSize());
 								cn.setContainerType(isoData.getContainerType());
 								cn.setContainerWeight(isoData.getTareWeight());
 								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
 							}
-						
 
 							if ("LCL".equals(conStatus)) {
 								cn.setGateOutType("CRG");
@@ -1820,7 +1836,6 @@ public class ExcelUploadController {
 			List<List<String>> content = readAndParseCargoSection(newFile);
 			List<List<String>> content1 = readAndParseContainerSection(newFile);
 
-
 			List<Map<String, String>> itemData = new ArrayList<>();
 
 			List<Map<String, String>> conData = new ArrayList<>();
@@ -1887,6 +1902,226 @@ public class ExcelUploadController {
 			return ResponseEntity.status(500).body("Failed to read the file.");
 		}
 	}
+
+	@PostMapping("/uploadScanningList")
+	public ResponseEntity<?> uploadScanningListFile(@RequestParam("cid") String cid,
+			@RequestParam("cname") String cname, @RequestParam("bid") String bid, @RequestParam("user") String user,
+			@RequestParam("file") MultipartFile file) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+
+			if (file.isEmpty()) {
+				return ResponseEntity.badRequest().body("File is empty.");
+			}
+
+			String fileName = file.getOriginalFilename();
+			// Create timestamp for the new file name
+			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			String newFileName = fileName + "_" + timestamp + ".txt";
+
+			// Define the path where the new file will be saved
+			Path newFilePath = Paths.get(igmFiles + newFileName);
+
+			// Write the file content to the new file
+			Files.write(newFilePath, file.getBytes());
+
+			// Read the file content after writing
+			List<String> fileContent = Files.readAllLines(newFilePath);
+
+			// Initialize variables to store parsed data
+			String shippingLine = null;
+			String igmNo = null;
+
+			// Regular expression pattern to extract table row data
+			Pattern tableRowPattern = Pattern.compile("(\\d+)\\s+(\\S+)\\s+(.+?)\\s{2,}(.+)");
+
+			// List to hold parsed table data
+			List<Map<String, String>> tableData = new ArrayList<>();
+
+			// Loop through each line to extract the required data
+			for (String line : fileContent) {
+				// Check and extract "Shipping Line"
+				if (line.startsWith("Shipping Line")) {
+					shippingLine = line.split(":")[1].trim();
+				}
+
+				// Check and extract "IGM No."
+				if (line.startsWith("IGM No.")) {
+					String igmRaw = line.split(":")[1].trim();
+					igmNo = igmRaw.split("/")[0].trim();
+				}
+
+				// Check if the line matches the table row pattern
+				Matcher matcher = tableRowPattern.matcher(line);
+				if (matcher.matches()) {
+					Map<String, String> rowData = new HashMap<>();
+					rowData.put("SlNo", matcher.group(1));
+					rowData.put("ContainerNo", matcher.group(2));
+					rowData.put("CFSName", matcher.group(3).trim());
+					rowData.put("GoodsDesc", matcher.group(4).trim());
+					rowData.put("line", line);
+
+					tableData.add(rowData);
+				}
+			}
+
+			CFIgm igm = cfigmrepo.getDataByIgmNo2(cid, bid, igmNo);
+
+			if (igm == null) {
+				return new ResponseEntity<>("Igm data not found", HttpStatus.CONFLICT);
+			}
+			
+			String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05079", "2024");
+
+			int lastNextNumericId2 = Integer.parseInt(holdId2.substring(4));
+
+			int nextNumericNextID2 = lastNextNumericId2 + 1;
+
+			String HoldNextIdD2 = String.format("SCAN%06d", nextNumericNextID2);
+			
+			System.out.println("tableData "+tableData.size());
+
+
+			for (Map<String, String> data : tableData) {
+				String con = data.get("ContainerNo");
+				String line = data.get("line");
+				String cfsname = data.get("CFSName");
+				String containerNo = "";
+				String scannerType = "";
+
+				// Regular expression to capture ContainerNo and scannerType
+				Pattern pattern = Pattern.compile("([A-Z0-9]+)\\(([^-]+)-.*\\)");
+				Matcher matcher = pattern.matcher(con);
+
+				if (matcher.matches()) {
+					containerNo = matcher.group(1); // Extracts DFSU3095298
+					scannerType = matcher.group(2); // Extracts 'M'
+				}
+
+				List<Cfigmcn> cn = cfigmcnrepo.getDataForScanning(cid, bid, igm.getIgmTransId(), igm.getIgmNo(),
+						containerNo);
+
+				if (!cn.isEmpty()) {
+
+					final String finalScannerType = scannerType;
+
+					String scannerTypeValue;
+
+					if ("M".equals(finalScannerType)) {
+						scannerTypeValue = "Mobile";
+					} else if ("F".equals(finalScannerType)) {
+						scannerTypeValue = "Relocatable";
+					} else if ("D".equals(finalScannerType)) {
+						scannerTypeValue = "DTS";
+					} else {
+						scannerTypeValue = finalScannerType; // Fallback to the original scannerType
+					}
+					System.out.println(line.length());
+					
+					ScanDetail scan = new ScanDetail();
+					scan.setBranchId(bid);
+					scan.setCompanyId(cid);
+					scan.setContainerNo(containerNo);
+					scan.setCreatedBy(user);
+					scan.setCreatedDate(new Date());
+					scan.setFileName(newFileName);
+					scan.setFullLineDetails(line);
+					scan.setProfitCentreId("N00002");
+					scan.setRefNo(igmNo);
+					scan.setScanLinkDate(null);
+					scan.setScannerType(scannerTypeValue);
+					scan.setStatus("A");
+					scan.setTransDate(new Date());
+					scan.setTransId(HoldNextIdD2);
+
+					if (cname.equals(cfsname)) {
+						String[] scantype = cname.split(" ");
+						scan.setScanType(scantype[0]);
+					} else {
+						scan.setScanType("Other");
+					}
+					scan.setScanningUpdated("Y");
+					
+					scandetailrepo.save(scan);
+					processnextidrepo.updateAuditTrail(cid, bid, "P05079", HoldNextIdD2, "2024");
+					// Create a final variable to use inside the lambda
+
+					cn.stream().forEach(c -> {
+						c.setScanningDoneStatus("Y");
+						c.setScanningDoneDate(new Date());
+
+						c.setScannerType(scannerTypeValue);
+
+						cfigmcnrepo.save(c);
+
+						if (c.getGateInId() != null && !c.getGateInId().isEmpty()) {
+							GateIn gate = gateinrepo.getData(cid, bid, c.getGateInId(), c.getIgmTransId(),
+									c.getIgmNo());
+
+							if (gate != null) {
+								gate.setScannerType(scannerTypeValue);
+								gate.setScanningDoneDate(new Date());
+								gate.setScanningDoneStatus("Y");
+
+								gateinrepo.save(gate);
+							}
+							
+							ImportInventory inventory = importinventoryrepo.getById(cid, bid, c.getIgmTransId(),
+									c.getIgmNo(), c.getContainerNo(), c.getGateInId());
+
+							if (inventory != null) {
+								inventory.setScannerType(scannerTypeValue);
+
+								importinventoryrepo.save(inventory);
+							}
+						}
+
+				
+					});
+				}
+			}
+			
+			List<ScanDetail> detail = scandetailrepo.getDataByTransId(cid, bid, HoldNextIdD2);
+			
+			Map<String,Object> result = new HashMap<>();
+			result.put("success", "File uploaded successfully!!");
+			result.put("scanDetail", detail);
+
+			return new ResponseEntity<>(result,HttpStatus.OK);
+
+		} catch (IOException e) {
+			return ResponseEntity.status(500).body("Failed to read the file.");
+		}
+	}
+	
+	@GetMapping("/searchScanningData")
+	public ResponseEntity<?> searchScanningData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam(name="id",required = false) String id) {
+	
+		List<Object[]> data = scandetailrepo.searchData(cid, bid, id);
+		
+		if(data.isEmpty()) {
+			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<>(data,HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/getScanningData")
+	public ResponseEntity<?> getScanningData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam(name="id",required = false) String id) {
+	
+		List<ScanDetail> data = scandetailrepo.getDataByTransId(cid, bid, id);
+		
+		if(data.isEmpty()) {
+			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<>(data,HttpStatus.OK);
+	}
+	
+	
 
 	public List<List<String>> readAndParseIgmFile(MultipartFile file) throws IOException {
 		List<List<String>> records = new ArrayList<>();
@@ -1961,7 +2196,7 @@ public class ExcelUploadController {
 		StringBuilder content = new StringBuilder();
 		boolean isCargoSection = false;
 
-		  try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				// Check if we are inside the <cargo> section
@@ -2014,7 +2249,7 @@ public class ExcelUploadController {
 		StringBuilder content = new StringBuilder();
 		boolean isCargoSection = false;
 
-		  try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				// Check if we are inside the <cargo> section

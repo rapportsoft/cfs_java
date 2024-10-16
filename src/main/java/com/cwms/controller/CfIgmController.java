@@ -198,7 +198,6 @@ public class CfIgmController {
 
 					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, i.getIgmLineNo(), igm.getIgmNo());
 
-					System.out.println("exist1 " + exist1 + " " + i.getIgmLineNo() + " " + igm.getIgmNo());
 
 					if (exist1) {
 						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
@@ -206,7 +205,7 @@ public class CfIgmController {
 
 					String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05061", "2024");
 
-					int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+					int lastNextNumericId1 = Integer.parseInt(holdId1.substring(3));
 
 					int nextNumericNextID1 = lastNextNumericId1 + 1;
 
