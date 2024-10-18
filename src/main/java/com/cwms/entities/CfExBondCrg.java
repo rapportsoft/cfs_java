@@ -287,10 +287,42 @@ public class CfExBondCrg {
 
     // Constructors
 
+
+
+    @Transient
+    private String chaName;
+
+    @Transient
+    private String importerName;
+    
     public CfExBondCrg() {
     }
 
    
+
+	public String getChaName() {
+		return chaName;
+	}
+
+
+
+	public void setChaName(String chaName) {
+		this.chaName = chaName;
+	}
+
+
+
+	public String getImporterName() {
+		return importerName;
+	}
+
+
+
+	public void setImporterName(String importerName) {
+		this.importerName = importerName;
+	}
+
+
 
 	public String getStatus() {
 		return status;
@@ -1162,10 +1194,121 @@ public class CfExBondCrg {
 	}
 
 
+	
+
+	public CfExBondCrg(String companyId, String branchId, String finYear, String exBondingId, Date exBondingDate,
+			String profitcentreId, String nocTransId, String nocNo, Date nocValidityDate, String boeNo,
+			String bondingNo, Date bondingDate, String exBondBeNo, Date exBondBeDate, String inBondingId,
+			Date inBondingDate, Date invoiceUptoDate, String igmNo, String igmLineNo, int accSrNo, String onAccountOf,
+			int chaSrNo, String cha, String shift, String commodityDescription, BigDecimal grossWeight,
+			BigDecimal inBondedGw, BigDecimal exBondedGw, BigDecimal remainingGw, BigDecimal balanceGw,
+			String numberOfMarks, String uom, char periodicBill, String nocPackages, BigDecimal areaOccupied,
+			BigDecimal areaReleased, BigDecimal areaBalanced, BigDecimal areaRemaining, BigDecimal inBondedPackages,
+			BigDecimal exBondedPackages, BigDecimal remainingPackages, BigDecimal balancedQty,
+			BigDecimal balancedPackages, BigDecimal qtyTakenOut, String spaceAllocated, BigDecimal cifValue,
+			BigDecimal inBondedCif, BigDecimal exBondedCif, BigDecimal remainingCif, BigDecimal balanceCif,
+			BigDecimal inBondedCargoDuty, BigDecimal exBondedCargoDuty, BigDecimal remainingCargoDuty,
+			BigDecimal balanceCargoDuty, BigDecimal inBondedInsurance, BigDecimal exBondedInsurance,
+			BigDecimal remainingInsurance, BigDecimal balanceInsurance, BigDecimal cifQty, String exBondNo,
+			Date exBondDate, String noOf20Ft, String noOf40Ft, String comments, String giTransporterStatus,
+			String giTransporter, String giTransporterName, String giVehicleNo, String giDriverName, String gateOutId,
+			Date gateOutDate, String gateOutTransporter, String gateOutVehicleNo, String gateOutDriverName,
+			String status, String createdBy, Date createdDate, String editedBy, String approvedBy, Date approvedDate,String chaName,String importerName) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.exBondingId = exBondingId;
+		this.exBondingDate = exBondingDate;
+		this.profitcentreId = profitcentreId;
+		this.nocTransId = nocTransId;
+		this.nocNo = nocNo;
+		this.nocValidityDate = nocValidityDate;
+		this.boeNo = boeNo;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.exBondBeNo = exBondBeNo;
+		this.exBondBeDate = exBondBeDate;
+		this.inBondingId = inBondingId;
+		this.inBondingDate = inBondingDate;
+		this.invoiceUptoDate = invoiceUptoDate;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
+		this.accSrNo = accSrNo;
+		this.onAccountOf = onAccountOf;
+		this.chaSrNo = chaSrNo;
+		this.cha = cha;
+		this.shift = shift;
+		this.commodityDescription = commodityDescription;
+		this.grossWeight = grossWeight;
+		this.inBondedGw = inBondedGw;
+		this.exBondedGw = exBondedGw;
+		this.remainingGw = remainingGw;
+		this.balanceGw = balanceGw;
+		this.numberOfMarks = numberOfMarks;
+		this.uom = uom;
+		this.periodicBill = periodicBill;
+		this.nocPackages = nocPackages;
+		this.areaOccupied = areaOccupied;
+		this.areaReleased = areaReleased;
+		this.areaBalanced = areaBalanced;
+		this.areaRemaining = areaRemaining;
+		this.inBondedPackages = inBondedPackages;
+		this.exBondedPackages = exBondedPackages;
+		this.remainingPackages = remainingPackages;
+		this.balancedQty = balancedQty;
+		this.balancedPackages = balancedPackages;
+		this.qtyTakenOut = qtyTakenOut;
+		this.spaceAllocated = spaceAllocated;
+		this.cifValue = cifValue;
+		this.inBondedCif = inBondedCif;
+		this.exBondedCif = exBondedCif;
+		this.remainingCif = remainingCif;
+		this.balanceCif = balanceCif;
+		this.inBondedCargoDuty = inBondedCargoDuty;
+		this.exBondedCargoDuty = exBondedCargoDuty;
+		this.remainingCargoDuty = remainingCargoDuty;
+		this.balanceCargoDuty = balanceCargoDuty;
+		this.inBondedInsurance = inBondedInsurance;
+		this.exBondedInsurance = exBondedInsurance;
+		this.remainingInsurance = remainingInsurance;
+		this.balanceInsurance = balanceInsurance;
+		this.cifQty = cifQty;
+		this.exBondNo = exBondNo;
+		this.exBondDate = exBondDate;
+		this.noOf20Ft = noOf20Ft;
+		this.noOf40Ft = noOf40Ft;
+		this.comments = comments;
+		this.giTransporterStatus = giTransporterStatus;
+		this.giTransporter = giTransporter;
+		this.giTransporterName = giTransporterName;
+		this.giVehicleNo = giVehicleNo;
+		this.giDriverName = giDriverName;
+		this.gateOutId = gateOutId;
+		this.gateOutDate = gateOutDate;
+		this.gateOutTransporter = gateOutTransporter;
+		this.gateOutVehicleNo = gateOutVehicleNo;
+		this.gateOutDriverName = gateOutDriverName;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.chaName = chaName;
+		this.importerName = importerName;
+	}
+
+
 
 	
 	
 	
 	
+
 	
+	
+	
+	
+
 }
