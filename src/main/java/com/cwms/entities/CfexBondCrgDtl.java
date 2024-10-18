@@ -158,10 +158,33 @@ public class CfexBondCrgDtl {
 
 	    @Column(name = "Cell_No_Row", length = 10, nullable = false)
 	    private String cellNoRow;
+	    
+	    @Column(name = "ExBond_Yard_Packages", precision = 16, scale = 3)
+		private BigDecimal exBondyardPackages;
+	    
+	    
+	    @Column(name = "ExBond_Grid_Area", precision = 16, scale = 3)
+		private BigDecimal exBondGridArea;
 
 	public CfexBondCrgDtl() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public BigDecimal getExBondyardPackages() {
+		return exBondyardPackages;
+	}
+
+	public void setExBondyardPackages(BigDecimal exBondyardPackages) {
+		this.exBondyardPackages = exBondyardPackages;
+	}
+
+	public BigDecimal getExBondGridArea() {
+		return exBondGridArea;
+	}
+
+	public void setExBondGridArea(BigDecimal exBondGridArea) {
+		this.exBondGridArea = exBondGridArea;
 	}
 
 	public String getCompanyId() {
@@ -504,6 +527,9 @@ public class CfexBondCrgDtl {
 
 	
 
+	
+
+	
 	public CfexBondCrgDtl(String companyId, String branchId, String finYear, String cfBondDtlId, String nocTransId,
 			String exBondingId, String inBondingId, String nocNo, String boeNo, String bondingNo, Date bondingDate,
 			String exBondBeNo, BigDecimal nocPackages, BigDecimal exBondedPackages, String exBondType,
@@ -513,7 +539,7 @@ public class CfexBondCrgDtl {
 			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate, BigDecimal outQty,
 			BigDecimal inBondedPackages, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
 			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, String yardLocationId, String blockId,
-			String cellNoRow) {
+			String cellNoRow, BigDecimal exBondyardPackages, BigDecimal exBondGridArea) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -557,6 +583,8 @@ public class CfexBondCrgDtl {
 		this.yardLocationId = yardLocationId;
 		this.blockId = blockId;
 		this.cellNoRow = cellNoRow;
+		this.exBondyardPackages = exBondyardPackages;
+		this.exBondGridArea = exBondGridArea;
 	}
 
 	@Override
@@ -575,7 +603,8 @@ public class CfexBondCrgDtl {
 				+ ", outQty=" + outQty + ", inBondedPackages=" + inBondedPackages + ", inbondGrossWt=" + inbondGrossWt
 				+ ", inbondInsuranceValue=" + inbondInsuranceValue + ", inbondCifValue=" + inbondCifValue
 				+ ", inbondCargoDuty=" + inbondCargoDuty + ", yardLocationId=" + yardLocationId + ", blockId=" + blockId
-				+ ", cellNoRow=" + cellNoRow + "]";
+				+ ", cellNoRow=" + cellNoRow + ", exBondyardPackages=" + exBondyardPackages + ", exBondGridArea="
+				+ exBondGridArea + "]";
 	}
 
 	public CfexBondCrgDtl(String companyId, String branchId, String finYear, String cfBondDtlId, String nocTransId,
@@ -609,6 +638,11 @@ public class CfexBondCrgDtl {
 		this.inbondInsuranceValue = inbondInsuranceValue;
 		this.inbondCifValue = inbondCifValue;
 		this.inbondCargoDuty = inbondCargoDuty;
+	}
+
+	public CfexBondCrgDtl(char status) {
+		super();
+		this.status = status;
 	}
 
 	

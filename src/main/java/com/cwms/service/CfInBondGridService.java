@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cwms.entities.CfInBondGrid;
+import com.cwms.entities.CfexBondCrgDtl;
 import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.YardBlockCell;
 import com.cwms.repository.CfInBondGridRepository;
+import com.cwms.repository.CfinbondcrgDtlRepo;
 import com.cwms.repository.YardBlockCellRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -38,6 +40,10 @@ public class CfInBondGridService {
 
 	@Autowired
 	public YardBlockCellRepository yardBlockCellRepository;
+	
+	
+	@Autowired
+	public CfinbondcrgDtlRepo cfinbondcrgDtlRepo;
 
 //	public ResponseEntity<?> saveDataInCFbondGrid(String compnayId, String branchId, String flag, String user,
 //			CfInBondGrid grid) {
@@ -254,8 +260,12 @@ public class CfInBondGridService {
 					CfInBondGrid cf = cfInBondGridRepository.getExistingData(companyId, branchId,
 							cfinbondcrgGrid.getInBondingId(), cfinbondcrgGrid.getCfBondDtlId(), grid.getSrNo());
 					
+					
+				
 					if (cf!=null)
 					{
+						BigDecimal exitpack = cf.getInBondPackages() !=null ? cf.getInBondPackages() :BigDecimal.ZERO;
+						BigDecimal exitarea = cf.getCellAreaAllocated() !=null ? cf.getCellAreaAllocated() : BigDecimal.ZERO;
 						cf.setYardLocation(grid.getYardLocation());
 						cf.setYardBlock(grid.getYardBlock());
 						cf.setBlockCellNo(grid.getBlockCellNo());
@@ -272,12 +282,28 @@ public class CfInBondGridService {
 						savedList.add(saved);
 						
 						if (saved != null) {
+							
+							
+							
+	CfinbondcrgDtl toEditData =cfinbondcrgDtlRepo.toEditData(companyId, branchId, saved.getInBondingId(), saved.getCfBondDtlId(), saved.getYardLocation(), saved.getYardBlock(), saved.getBlockCellNo());
+							
+							if (toEditData!=null)
+							{
+								toEditData.setYardPackages( toEditData.getYardPackages().add(saved.getInBondPackages()).subtract(exitpack));
+								toEditData.setCellAreaAllocated(toEditData.getCellAreaAllocated().add(saved.getCellAreaAllocated()).subtract(exitarea));
+								 
+								
+								
+								cfinbondcrgDtlRepo.save(toEditData);
+							}
+							
+							
 							YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
 									saved.getYardLocation(), saved.getYardBlock(), saved.getBlockCellNo());
 
 							if (existingCell != null) {
 								existingCell.setCellAreaUsed(existingCell.getCellAreaUsed()
-										.add(saved.getCellAreaAllocated()).subtract(cf.getCellAreaAllocated()));
+										.add(saved.getCellAreaAllocated()).subtract(exitarea));
 								yardBlockCellRepository.save(existingCell);
 							}
 						}

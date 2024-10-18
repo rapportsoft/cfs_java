@@ -12,6 +12,7 @@ import com.cwms.service.CfExBondCrgService;
 
 import jakarta.mail.Part;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -171,5 +172,30 @@ public class CfExBondCrgController {
             @RequestParam("exBondBeNo") String exBondBeNo,
             @RequestParam(value = "value", required = false) String value) {
         return cfExBondCrgService.getDataOfExbondBeNoCargo(companyId, branchId,exBondBeNo, value);
+    }
+    
+
+    @PostMapping("/approve")
+    public ResponseEntity<?> approveDataOfCfExbondCrg(
+            @RequestParam("companyId") String companyId, 
+            @RequestParam("branchId") String branchId, 
+            @RequestParam("flag") String flag, 
+            @RequestParam("user") String user, 
+            @RequestBody Map<String, Object> requestBody) {
+	   return cfExBondCrgService.approveDataOfInCFbondGrid(companyId, branchId, flag, user, requestBody);
+       
+    }
+    
+    
+    @GetMapping("/sum")
+    public ResponseEntity<BigDecimal> getSumOfInBondPackagesForCommodity(
+            @RequestParam String companyId,
+            @RequestParam String branchId,
+            @RequestParam String exBondingId,
+            @RequestParam String cfBondDtlId,
+            @RequestParam String nocTransId) {
+        
+        BigDecimal sumOfInBondPackages = cfExBondCrgService.getSumOfInBondPackagesForCommodity(companyId, branchId, exBondingId, cfBondDtlId, nocTransId);
+        return ResponseEntity.ok(sumOfInBondPackages);
     }
 }

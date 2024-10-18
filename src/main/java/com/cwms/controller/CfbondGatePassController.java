@@ -1,5 +1,6 @@
 package com.cwms.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,35 @@ public class CfbondGatePassController {
 	            @RequestParam("branchId") String branchId,
 	            @RequestParam(value = "vehicleNo", required = false) String vehicleNo) {
 	        return cfbondGatePassService.getEmptyVehiclesForGatePass(companyId, branchId, vehicleNo);
+	    }
+	    
+	    
+	    @GetMapping("/sum")
+	    public BigDecimal getSumOfQtyTakenOutForCommodity(
+	            @RequestParam("companyId") String companyId,
+	            @RequestParam("branchId") String branchId,
+	            @RequestParam("exBondingId") String exBondingId,
+	            @RequestParam("gatePassId") String gatePassId,
+	            @RequestParam("cfBondDtlId") String cfBondDtlId) {
+	        
+	        return cfbondGatePassService.getSumOfQtyTakenOutForCommodity(companyId, branchId, exBondingId, gatePassId, cfBondDtlId);
+	    }
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    @PostMapping("/approve")
+	    public ResponseEntity<?> approveDataOfCfExbondCrg(
+	            @RequestParam("companyId") String companyId, 
+	            @RequestParam("branchId") String branchId, 
+	            @RequestParam("flag") String flag, 
+	            @RequestParam("user") String user, 
+	            @RequestBody Map<String, Object> requestBody) {
+		   return cfbondGatePassService.approveDataOfInCFbondGrid(companyId, branchId, flag, user, requestBody);
+	       
 	    }
 }
 

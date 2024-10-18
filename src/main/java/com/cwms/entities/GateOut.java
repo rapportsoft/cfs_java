@@ -46,7 +46,8 @@ public class GateOut {
 	    private String srNo;
 
 	    @Column(name = "Doc_Ref_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date docRefDate;
 
 	    @Column(name = "Profitcentre_Id", length = 6)
@@ -59,7 +60,8 @@ public class GateOut {
 	    private char drt = 'N';
 
 	    @Column(name = "Gate_Out_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date gateOutDate;
 
 	    @Column(name = "Process_Id", length = 10)
@@ -81,7 +83,8 @@ public class GateOut {
 	    private String invoiceNo;
 
 	    @Column(name = "Invoice_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date invoiceDate;
 
 	    @Column(name = "On_Account_Of", length = 6)
@@ -175,18 +178,21 @@ public class GateOut {
 	    private String deliveryOrderNo;
 
 	    @Column(name = "Delivery_Order_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date deliveryOrderDate;
 
 	    @Column(name = "DO_Validity_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date doValidityDate;
 
 	    @Column(name = "Gate_Pass_No", length = 10)
 	    private String gatePassNo;
 
 	    @Column(name = "Gate_Pass_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date gatePassDate;
 
 	    @Column(name = "Location", length = 30)
@@ -202,7 +208,8 @@ public class GateOut {
 	    private String eirNo;
 
 	    @Column(name = "EIR_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date eirDate;
 
 	    @Column(name = "EIR_Status", length = 1)
@@ -212,21 +219,24 @@ public class GateOut {
 	    private String eirCreatedBy;
 
 	    @Column(name = "EIR_Created_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date eirCreatedDate;
 
 	    @Column(name = "EIR_Approved_By", length = 10)
 	    private String eirApprovedBy;
 
 	    @Column(name = "EIR_Approved_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date eirApprovedDate;
 
 	    @Column(name = "EGM_No", length = 20)
 	    private String egmNo;
 
 	    @Column(name = "EGM_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date egmDate;
 
 	    @Column(name = "Status", length = 1)
@@ -236,21 +246,24 @@ public class GateOut {
 	    private String createdBy;
 
 	    @Column(name = "Created_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date createdDate;
 
 	    @Column(name = "Edited_By", length = 10)
 	    private String editedBy;
 
 	    @Column(name = "Edited_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date editedDate;
 
 	    @Column(name = "Approved_By", length = 10)
 	    private String approvedBy;
 
 	    @Column(name = "Approved_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date approvedDate;
 
 	    @Column(name = "oth_party_Id", length = 10)
@@ -266,7 +279,8 @@ public class GateOut {
 	    private char codeccoMtOutStatus;
 
 	    @Column(name = "CODECCO_MT_OUT_DATE")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date codeccoMtOutDate;
 
 	    @Column(name = "Licence_No", length = 30)
@@ -282,21 +296,24 @@ public class GateOut {
 	    private char customsExpOutStatus;
 
 	    @Column(name = "Customs_EXP_OUT_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date customsExpOutDate;
 
 	    @Column(name = "EMPTY_OUT_ID", length = 10)
 	    private String emptyOutId;
 
 	    @Column(name = "EMPTY_OUT_DATE")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date emptyOutDate;
 
 	    @Column(name = "Vehical_Gate_In", length = 10)
 	    private String vehicalGateIn;
 
 	    @Column(name = "empty_pass_date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date emptyPassDate;
 
 	    @Column(name = "Tag_Remove_Status", length = 1)
@@ -304,7 +321,8 @@ public class GateOut {
 	    
 	    
 	    @Column(name = "Tag_Remove_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date tagRemoveDate;
 
 	    @Column(name = "Tally_Type", length = 20)
@@ -317,7 +335,8 @@ public class GateOut {
 	    private String draftBillNo;
 
 	    @Column(name = "DRAFT_Bill_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date draftBillDate;
 
 	    @Column(name = "GSTIN", length = 15)
@@ -330,7 +349,8 @@ public class GateOut {
 	    private char doAssessStatus;
 
 	    @Column(name = "DO_Assess_Date")
-	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+		@Temporal(TemporalType.TIMESTAMP)
 	    private Date doAssessDate;
 
 	    @Column(name = "No_Of_Trips", length = 4)
@@ -385,8 +405,8 @@ public class GateOut {
 		public String shipper;
 	    
 	    @Column(name = "Gate_In_Date")
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 		@Temporal(TemporalType.TIMESTAMP)
-		@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 		public Date gateInDate; // Default value
 	    
 	    private transient String holdStatus;

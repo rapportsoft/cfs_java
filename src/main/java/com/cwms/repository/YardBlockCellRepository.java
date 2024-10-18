@@ -1,12 +1,16 @@
 package com.cwms.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cwms.entities.YardBlockCell;
+
+import jakarta.transaction.Transactional;
 
 public interface YardBlockCellRepository extends JpaRepository<YardBlockCell, String> {
 	
@@ -91,4 +95,25 @@ List<YardBlockCell> findYardBlockCell(@Param("companyId") String companyId,
 			+ "(:val2 is null OR :val2 = '' OR y.cellNoRow like CONCAT ('%',:val2,'%')))")
 	List<YardBlockCell> getAll1(@Param("cid") String cid,@Param("val") String val,@Param("val1") String val1,@Param("val2") String val2);
 	
+	
+
+	
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE YardBlockCell c SET c.cellAreaUsed = :cellAreaUsed " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.yardId = :yardId " +
+	       "AND c.yardLocationId = :yardLocationId " +
+	       "AND c.blockId = :blockId " +
+	       "AND c.cellNoRow = :cellNoRow")
+	int updateYardBlockCellAfterGatePass(
+	        @Param("cellAreaUsed") BigDecimal cellAreaUsed,
+	        @Param("companyId") String companyId,
+	        @Param("yardId") String yardId,
+	        @Param("yardLocationId") String yardLocationId,
+	        @Param("blockId") String blockId,
+	        @Param("cellNoRow") String cellNoRow);
+
 }

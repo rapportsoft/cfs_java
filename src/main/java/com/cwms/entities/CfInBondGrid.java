@@ -63,7 +63,7 @@ public class CfInBondGrid {
     private BigDecimal cellAreaAllocated;
 
     @Column(name = "Qty_Taken_Out", columnDefinition = "int default 0")
-    private Integer qtyTakenOut;
+    private BigDecimal qtyTakenOut;
 
     @Column(name = "Area_Released", precision = 8, scale = 3, columnDefinition = "decimal(8,3) default '0.000'")
     private BigDecimal areaReleased;
@@ -100,6 +100,33 @@ public class CfInBondGrid {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvedDate;
+    
+    
+    @Transient
+    @Column(name = "Ex_Cell_Area_Allocated", precision = 8, scale = 2)
+    private BigDecimal exCellAreaAllocated;
+    
+    @Transient
+    @Column(name = "Ex_Bond_Packages", precision = 8, scale = 0)
+    private BigDecimal exBondPackages;
+
+
+
+	public BigDecimal getExCellAreaAllocated() {
+		return exCellAreaAllocated;
+	}
+
+	public void setExCellAreaAllocated(BigDecimal exCellAreaAllocated) {
+		this.exCellAreaAllocated = exCellAreaAllocated;
+	}
+
+	public BigDecimal getExBondPackages() {
+		return exBondPackages;
+	}
+
+	public void setExBondPackages(BigDecimal exBondPackages) {
+		this.exBondPackages = exBondPackages;
+	}
 
 	public String getCompanyId() {
 		return companyId;
@@ -205,11 +232,11 @@ public class CfInBondGrid {
 		this.cellAreaAllocated = cellAreaAllocated;
 	}
 
-	public Integer getQtyTakenOut() {
+	public BigDecimal getQtyTakenOut() {
 		return qtyTakenOut;
 	}
 
-	public void setQtyTakenOut(Integer qtyTakenOut) {
+	public void setQtyTakenOut(BigDecimal qtyTakenOut) {
 		this.qtyTakenOut = qtyTakenOut;
 	}
 
@@ -304,7 +331,7 @@ public class CfInBondGrid {
 
 	public CfInBondGrid(String companyId, String branchId, String finYear, String nocTransId, String inBondingId,
 			Integer srNo, String gateInId, String cfBondDtlId, String yardLocation, String yardBlock, String blockCellNo,
-			BigDecimal cellArea, BigDecimal cellAreaUsed, BigDecimal cellAreaAllocated, Integer qtyTakenOut,
+			BigDecimal cellArea, BigDecimal cellAreaUsed, BigDecimal cellAreaAllocated, BigDecimal qtyTakenOut,
 			BigDecimal areaReleased, String gridReleased, BigDecimal inBondPackages, String status, String createdBy,
 			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate) {
 		super();
@@ -353,6 +380,34 @@ public class CfInBondGrid {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	// to get data in exbond for exbond grid table 
+	public CfInBondGrid(String companyId, String branchId, String finYear, String nocTransId, String inBondingId,
+			Integer srNo, String gateInId, String cfBondDtlId, String yardLocation, String yardBlock,
+			String blockCellNo, BigDecimal cellArea, BigDecimal cellAreaUsed, BigDecimal cellAreaAllocated,
+			BigDecimal inBondPackages, BigDecimal exCellAreaAllocated, BigDecimal exBondPackages) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.nocTransId = nocTransId;
+		this.inBondingId = inBondingId;
+		this.srNo = srNo;
+		this.gateInId = gateInId;
+		this.cfBondDtlId = cfBondDtlId;
+		this.yardLocation = yardLocation;
+		this.yardBlock = yardBlock;
+		this.blockCellNo = blockCellNo;
+		this.cellArea = cellArea;
+		this.cellAreaUsed = cellAreaUsed;
+		this.cellAreaAllocated = cellAreaAllocated;
+		this.inBondPackages = inBondPackages;
+		this.exCellAreaAllocated = exCellAreaAllocated;
+		this.exBondPackages = exBondPackages;
+	}
+
+	
+	
     // Getters and Setters
 
 }

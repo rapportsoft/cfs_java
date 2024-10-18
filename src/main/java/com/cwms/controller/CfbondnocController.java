@@ -246,6 +246,7 @@ public class CfbondnocController {
 		context.setVariable("boeNo", dataForPrint.getBoeNo());
 		context.setVariable("boeDate", dataForPrint.getBoeDate());
 		context.setVariable("igmNo", dataForPrint.getIgmNo());
+//		context.setVariable("itemNo", dataForPrint.getIgmLineNoi());
 		context.setVariable("igmLineNo", dataForPrint.getIgmLineNo());
 		context.setVariable("nocQty", dataForPrint.getNocPackages());
 		context.setVariable("weight", dataForPrint.getGrossWeight());

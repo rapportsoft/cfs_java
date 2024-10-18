@@ -179,19 +179,19 @@ public class Cfbondnoc {
 	@Column(name = "New_Area", precision = 5, scale = 0, nullable = true)
 	private BigDecimal newArea;
 
-	@Column(name = "CIF_Value", precision = 15, scale = 2)
+	@Column(name = "CIF_Value", precision = 16, scale = 2)
 	private BigDecimal cifValue;
 
 	@Column(name = "IMO_CODE", length = 10, nullable = true)
 	private String imoCode;
 
-	@Column(name = "Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Cargo_Duty", precision = 16, scale = 2)
 	private BigDecimal cargoDuty;
 
-	@Column(name = "Insurance_Value", precision = 15, scale = 2)
+	@Column(name = "Insurance_Value", precision = 16, scale = 2)
 	private BigDecimal insuranceValue;
 
-	@Column(name = "Insurance_Amt", precision = 15, scale = 2)
+	@Column(name = "Insurance_Amt", precision = 16, scale = 2)
 	private BigDecimal insuranceAmt;
 
 	@Column(name = "Stored_Cargo_Duty", precision = 15, scale = 2)

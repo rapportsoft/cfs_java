@@ -108,6 +108,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/cfbondgatepass/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/cfinbondgrid/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/gateOutController/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/api/exbondgrid/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/importGateOut/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/emptyOrder/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/commonGatePass/**")).authenticated()

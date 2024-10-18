@@ -49,13 +49,13 @@ public class CfBondNocDtl {
 	@Column(name = "NOC_Packages", precision = 8, scale = 0, nullable = true)
 	private BigDecimal nocPackages;
 
-	@Column(name = "CIF_Value", precision = 15, scale = 2)
+	@Column(name = "CIF_Value", precision = 16, scale = 2)
 	private BigDecimal cifValue;
 
-	@Column(name = "Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Cargo_Duty", precision = 16, scale = 2)
 	private BigDecimal cargoDuty;
 
-	@Column(name = "Insurance_Value", precision = 15, scale = 2)
+	@Column(name = "Insurance_Value", precision = 16, scale = 2)
 	private BigDecimal insuranceValue;
 
 	@Column(name = "TYPE_OF_PACKAGE", length = 15)
@@ -144,6 +144,18 @@ public class CfBondNocDtl {
 	@Transient
 	@Column(name = "Cell_Area", precision = 8, scale = 3)
 	private BigDecimal cellArea;
+
+	@Transient
+	 @Column(name = "In_Bonding_Id", length = 10, nullable = true)
+	    private String inBondingId;
+	 
+	public String getInBondingId() {
+		return inBondingId;
+	}
+
+	public void setInBondingId(String inBondingId) {
+		this.inBondingId = inBondingId;
+	}
 
 	public BigDecimal getYardPackages() {
 		return yardPackages;
@@ -604,7 +616,7 @@ public class CfBondNocDtl {
 			BigDecimal gateInPackages, BigDecimal weightTakenIn, BigDecimal inBondedPackages, BigDecimal inbondGrossWt,
 			BigDecimal inbondCargoDuty, BigDecimal inbondCifValue, BigDecimal shortagePackages, BigDecimal damagedQty,
 			BigDecimal breakage, String createdBy, String editedBy, String approvedBy, BigDecimal areaOccupied,BigDecimal yardPackages,
-			BigDecimal cellAreaAllocated, BigDecimal cellArea) {
+			BigDecimal cellAreaAllocated, BigDecimal cellArea,String inBondingId) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -636,6 +648,7 @@ public class CfBondNocDtl {
 		this.yardPackages = yardPackages;
 		this.cellAreaAllocated = cellAreaAllocated;
 		this.cellArea = cellArea;
+		this.inBondingId = inBondingId;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.cwms.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -105,5 +106,17 @@ public class CfinbondCrgController {
 	            @RequestBody Map<String, Object> requestBody) {
 		   return cfinbondCrgService.approveDataOfInCFbondGrid(companyId, branchId, flag, user, requestBody);
 	       
+	    }
+	   
+	   @GetMapping("/sum")
+	    public ResponseEntity<BigDecimal> getSumOfInBondPackagesForCommodity(
+	            @RequestParam String companyId,
+	            @RequestParam String branchId,
+	            @RequestParam String inBondingId,
+	            @RequestParam String cfBondDtlId,
+	            @RequestParam String nocTransId) {
+	        
+	        BigDecimal sumOfInBondPackages = cfinbondCrgService.getSumOfInBondPackagesForCommodity(companyId, branchId, inBondingId, cfBondDtlId, nocTransId);
+	        return ResponseEntity.ok(sumOfInBondPackages);
 	    }
 }

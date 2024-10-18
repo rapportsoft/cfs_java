@@ -159,7 +159,8 @@ public class CfinbondCrgService {
 		CfInBondGrid saved = null;
 
 		if (cfinbondcrg != null) {
-			if ("add".equals(flag)) {
+			if ("add".equals(flag)) 
+			{
 				Boolean exists = cfinbondCrgHdrRepo.isDataExist(companyId, branchId, cfinbondcrg.getNocTransId(),
 						cfinbondcrg.getNocNo());
 				if (exists) {
@@ -173,7 +174,8 @@ public class CfinbondCrgService {
 
 					BigDecimal[] totalInBondPackages = { BigDecimal.ZERO };
 
-					cfinbondcrgDtlList.forEach(item -> {
+					cfinbondcrgDtlList.forEach(item -> 
+					{
 						BigDecimal cifValue = item.getInbondCifValue();
 						BigDecimal cargoValue = item.getInbondCargoDuty();
 						BigDecimal insuranceValue = item.getInbondInsuranceValue();
@@ -896,8 +898,9 @@ public class CfinbondCrgService {
 
 					for (CfinbondcrgDtl item : cfinbondcrgDtlList) {
 
-						System.out.println("yardLocation_____________________" + item.getEditedBy());
+						System.out.println("yardLocation_____________________cfinbondcrgDtlList :" + cfinbondcrgDtlList);
 
+						System.out.println("findCfBondCrgDTLData__________________________"+ item.getInBondingId());
 						totalCif = totalCif.add(item.getInbondCifValue());
 						totalInbondedd = totalInbondedd.add(item.getInBondedPackages());
 						totalCargo = totalCargo.add(item.getInbondCargoDuty());
@@ -913,11 +916,12 @@ public class CfinbondCrgService {
 
 						String nectInBondingDTLId = String.format("INBD%06d", nextNumericNextID11);
 
-						findCfBondCrgDTLData = cfinbondcrgDtlRepo.findCfBondCrgDTLData(companyId, branchId,
+						findCfBondCrgDTLData = cfinbondcrgDtlRepo.findCfBondCrgDTLData(companyId, branchId,item.getInBondingId(),
 								item.getNocTransId(), item.getCfBondDtlId(), item.getNocNo());
 
-						System.out.println("findCfBondCrgDTLData__________________________" + findCfBondCrgDTLData);
-						if (findCfBondCrgDTLData != null) {
+						
+						if (findCfBondCrgDTLData != null) 
+						{
 
 							findCfBondCrgHDRDTLData = cfinbondCrgHdrDtlRepo.findCfBondCrgHDRDTLData(companyId, branchId,
 									findCfBondCrgDTLData.getNocTransId(), findCfBondCrgDTLData.getInBondingDtlId(),
@@ -1409,7 +1413,8 @@ public class CfinbondCrgService {
 	            return new ResponseEntity<>("One of the sum values is null. Please check the data.", HttpStatus.BAD_REQUEST);
 	        }
 
-	        if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) < 0) {
+//	        if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) < 0) {
+	        if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) != 0) {
 	        	
 	            return new ResponseEntity<>("InbondPackages do not match in yard, please add packages in grid.", HttpStatus.BAD_REQUEST);
 	        }
@@ -1423,7 +1428,9 @@ public class CfinbondCrgService {
 	    return new ResponseEntity<>("", HttpStatus.OK);
 	}
 
-	
+	 public BigDecimal getSumOfInBondPackagesForCommodity(String companyId, String branchId, String inBondingId, String cfBondDtlId, String nocTransId) {
+	        return cfinbondcrgDtlRepo.getSumOfInBondPackagesForCommodity(companyId, branchId, inBondingId, cfBondDtlId, nocTransId);
+	    }
 
 	public List<Cfinbondcrg> findAllCfinbondCrgIn(String companyId, String branchId, String search) {
 		return cfinbondcrgRepo.findCfinbondcrgByCompanyIdAndBranchIdForInbondScreen(companyId, branchId, search);

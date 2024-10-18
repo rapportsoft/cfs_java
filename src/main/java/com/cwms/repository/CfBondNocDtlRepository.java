@@ -43,14 +43,15 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 		       "c.boeNo, c.nocPackages, c.cifValue, c.cargoDuty, c.insuranceValue, " +
 		       "c.typeOfPackage, c.commodityDescription, c.status, c.grossWeight, c.gateInPackages, c.weightTakenIn, " +
 		       "c.inBondedPackages, c.inbondGrossWt, c.inbondCargoDuty, c.inbondCifValue,  " +
-		       "c.shortagePackages, c.damagedQty, c.breakage,cd.yardLocationId, cd.blockId,cd.cellNoRow,cd.areaOccupied,cd.yardPackages,cd.cellAreaAllocated,cd.cellArea) " +
+		       "c.shortagePackages, c.damagedQty, c.breakage,cd.yardLocationId, cd.blockId,cd.cellNoRow,cd.areaOccupied,cd.yardPackages,cd.cellAreaAllocated,cd.cellArea,cd.inBondingId) " +
 		       "FROM CfBondNocDtl c " +
 		       "LEFT OUTER JOIN CfinbondcrgDtl cd ON c.companyId = cd.companyId AND c.branchId = cd.branchId AND c.nocTransId = cd.nocTransId AND c.nocNo = cd.nocNo AND c.cfBondDtlId = cd.cfBondDtlId " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
 		       "AND c.nocTransId = :nocTransId " +
 		       "AND c.nocNo = :nocNo " +
-		       "AND c.status != 'D'")
+		       "AND c.status != 'D'" +
+			  "GROUP BY c.nocTransId,c.nocNo,c.cfBondDtlId ")
 		List<CfBondNocDtl> getCfBondNocDtl(@Param("companyId") String companyId, 
 		                                   @Param("branchId") String branchId, 
 		                                   @Param("nocTransId") String nocTransId, 
