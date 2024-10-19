@@ -218,6 +218,34 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		Boolean isExistBENo(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,@Param("line") String line,
 				@Param("be") String be);
 		
+		@Query("select NEW com.cwms.entities.Cfigmcrg(c.companyId, c.branchId, c.igmTransId, c.igmCrgTransId, "
+			      + " c.profitcentreId, c.igmLineNo, c.igmNo, c.blNo, c.blDate, c.importerName, "
+			      + " c.commodityDescription, c.accountHolderName, c.beNo, c.beDate, c.chaName, "
+			      + " i.igmDate, py1.partyName, py2.partyName) from Cfigmcrg c "
+			      + " LEFT OUTER JOIN CFIgm i ON c.companyId = i.companyId and c.branchId = i.branchId and c.igmTransId = i.igmTransId and c.igmNo = i.igmNo "
+			      + " LEFT OUTER JOIN Party py1 ON i.companyId = py1.companyId AND i.branchId = py1.branchId AND i.shippingAgent = py1.partyId "
+			      + " LEFT OUTER JOIN Party py2 ON i.companyId = py2.companyId AND i.branchId = py2.branchId AND i.shippingLine = py2.partyId "
+			      + " and c.igmNo = i.igmNo "  // Added space at the end
+			      + " where c.companyId = :cid "
+			      + " and c.branchId = :bid "
+			      + " and c.igmNo = :igm "
+			      + " and c.igmLineNo = :igmCrgTransId "
+			      + " and c.status != 'D'")
+			Cfigmcrg getDataforSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+			                       @Param("igmCrgTransId") String igmLineNo);
 		
+		
+		@Query("select NEW com.cwms.entities.Cfigmcrg(c.companyId, c.branchId, c.igmTransId, c.igmCrgTransId, "
+			      + " c.profitcentreId, c.igmLineNo, c.igmNo, c.blNo, c.blDate, c.importerName, "
+			      + " c.commodityDescription, c.accountHolderName, c.beNo, c.beDate, c.chaName, "
+			      + " i.igmDate, py1.partyName, py2.partyName) from Cfigmcrg c "
+			      + " LEFT OUTER JOIN CFIgm i ON c.companyId = i.companyId and c.branchId = i.branchId and c.igmTransId = i.igmTransId and c.igmNo = i.igmNo "
+			      + " LEFT OUTER JOIN Party py1 ON i.companyId = py1.companyId AND i.branchId = py1.branchId AND i.shippingAgent = py1.partyId "
+			      + " LEFT OUTER JOIN Party py2 ON i.companyId = py2.companyId AND i.branchId = py2.branchId AND i.shippingLine = py2.partyId "
+			      + " and c.igmNo = i.igmNo "  // Added space at the end
+				  + "where c.companyId=:cid and c.branchId=:bid and c.igmTransId =:igmtrans and "
+				  + "c.igmNo=:igm and c.igmLineNo=:igmCrgTransId and c.status != 'D'")
+		Cfigmcrg getDataforSSR1(@Param("cid") String cid, @Param("bid") String bid, @Param("igmtrans") String igmtrans,
+				@Param("igm") String igm, @Param("igmCrgTransId") String igmLineNo);
 		
 }

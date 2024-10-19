@@ -66,7 +66,7 @@ public class Party {
 	    @Column(name = "Movement_Block", length = 3, nullable = false)
 	    private String movementBlock = "ACT";
 
-	    @Column(name = "Credit_Limit", precision = 10, scale = 0, nullable = false)
+	    @Column(name = "Credit_Limit", precision = 16, scale = 3, nullable = false)
 	    private BigDecimal creditLimit = BigDecimal.ZERO;
 
 	    @Column(name = "Phone_No", length = 15)
@@ -325,7 +325,7 @@ public class Party {
 	    @Column(name = "LIN", length = 1, nullable = false)
 	    private String lin = "N";
 
-	    @Column(name = "EXP", length = 1, nullable = false)
+	    @Column(name = "exp", length = 1, nullable = false)
 	    private String exp = "N";
 
 	    @Column(name = "BIDDR", length = 1, nullable = false)
@@ -412,7 +412,7 @@ public class Party {
 	    @Column(name = "Cr_AmtLmt", precision = 16, scale = 3, nullable = false)
 	    private BigDecimal crAmtLmt = BigDecimal.ZERO;
 
-	    @Column(name = "Cr_Period", precision = 3, scale = 0, nullable = false)
+	    @Column(name = "Cr_Period", precision = 6, scale = 3, nullable = false)
 	    private BigDecimal crPeriod = BigDecimal.ZERO;
 
 	    @Column(name = "Current_Bal", precision = 16, scale = 3, nullable = false)

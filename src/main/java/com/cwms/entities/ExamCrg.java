@@ -86,7 +86,7 @@ public class ExamCrg {
 	    @Column(name = "Actual_No_Of_Packages", precision = 8)
 	    private BigDecimal actualNoOfPackages;
 
-	    @Column(name = "Gross_Weight", precision = 15, scale = 3)
+	    @Column(name = "Gross_Weight", precision = 17, scale = 3)
 	    private BigDecimal grossWeight;
 
 	    @Column(name = "Gate_Out_Packages", precision = 8)

@@ -12,6 +12,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "cfigmcrg")
@@ -88,6 +89,9 @@ public class Cfigmcrg {
 	    @Column(name = "importer_address3", length = 100)
 	    private String importerAddress3 = "";
 	    
+	    @Column(name = "importer_type", length = 30)
+	    private String importerType = "";
+	    
 	    @Column(name = "Notify_Party_Id", length = 7)
 	    private String notifyPartyId = "";
 	    
@@ -134,10 +138,10 @@ public class Cfigmcrg {
 	    @Column(name = "Area_Used", precision = 16, scale = 3)
 	    private BigDecimal areaUsed = BigDecimal.ZERO;
 
-	    @Column(name = "No_Of_Packages", precision = 8, scale = 0)
+	    @Column(name = "No_Of_Packages", precision = 16, scale = 3)
 	    private BigDecimal noOfPackages = BigDecimal.ZERO;
 
-	    @Column(name = "Qty_Taken_Out",  precision = 8, scale = 0)
+	    @Column(name = "Qty_Taken_Out",  precision = 16, scale = 3)
 	    private BigDecimal qtyTakenOut = BigDecimal.ZERO;
 
 	    @Column(name = "Qty_Taken_Out_weight",  precision = 16, scale = 3)
@@ -446,7 +450,7 @@ public class Cfigmcrg {
 	    @Column(name="Seal_cutting_type",length = 10)
 	    private String sealCuttingType;
 	    
-	    @Column(name="Be_Wt",precision = 12,scale = 3)
+	    @Column(name="Be_Wt",precision = 16,scale = 3)
 	    private BigDecimal beWt;
 	    
 	    @Column(name="Seal_cutting_Remarks",length = 150)
@@ -458,6 +462,15 @@ public class Cfigmcrg {
 	    
 	    @Column(name="Bl_Type",length = 15)
 	    private String blType;
+	    
+	    @Transient
+	    private Date igmDate;
+	    
+	    @Transient
+	    private String sa;
+	    
+	    @Transient
+	    private String sl;
 
 		public Cfigmcrg() {
 			super();
@@ -549,6 +562,27 @@ public class Cfigmcrg {
 		}
 
 
+		
+
+		public String getImporterType() {
+			return importerType;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public void setImporterType(String importerType) {
+			this.importerType = importerType;
+		}
+
+
 
 
 
@@ -559,25 +593,15 @@ public class Cfigmcrg {
 
 
 		
-
-
-
-
-
-
-
-
-
-
 		public Cfigmcrg(String companyId, String branchId, String finYear, String igmTransId, String igmCrgTransId,
 				String profitcentreId, String igmLineNo, String igmNo, String cycle, String viaNo, String blNo,
 				Date blDate, String cargoMovement, int sampleQty, String importerId, String importerName,
 				String importerSr, String importerAddress1, String importerAddress2, String importerAddress3,
-				String notifyPartyId, String notifySr, String notifyPartyName, String notifiedAddress1,
-				String notifiedAddress2, String notifiedAddress3, String oldImporterName, String oldImporterAddress1,
-				String oldImporterAddress2, String oldImporterAddress3, String origin, String destination,
-				String commodityDescription, String commodityCode, BigDecimal areaUsed, BigDecimal noOfPackages,
-				BigDecimal qtyTakenOut, BigDecimal qtyTakenOutWeight, BigDecimal grossWeight,
+				String importerType, String notifyPartyId, String notifySr, String notifyPartyName,
+				String notifiedAddress1, String notifiedAddress2, String notifiedAddress3, String oldImporterName,
+				String oldImporterAddress1, String oldImporterAddress2, String oldImporterAddress3, String origin,
+				String destination, String commodityDescription, String commodityCode, BigDecimal areaUsed,
+				BigDecimal noOfPackages, BigDecimal qtyTakenOut, BigDecimal qtyTakenOutWeight, BigDecimal grossWeight,
 				BigDecimal actualGrossWeight, BigDecimal actualCargoWeight, BigDecimal weighmentWeight,
 				String unitOfWeight, String typeOfPackage, String cargoType, String imoCode, String unNo,
 				String dataInputStatus, String entryStatus, BigDecimal actualNoOfPackages,
@@ -620,6 +644,7 @@ public class Cfigmcrg {
 			this.importerAddress1 = importerAddress1;
 			this.importerAddress2 = importerAddress2;
 			this.importerAddress3 = importerAddress3;
+			this.importerType = importerType;
 			this.notifyPartyId = notifyPartyId;
 			this.notifySr = notifySr;
 			this.notifyPartyName = notifyPartyName;
@@ -2717,6 +2742,125 @@ public class Cfigmcrg {
 
 		public void setIgmImporterAddress3(String igmImporterAddress3) {
 			this.igmImporterAddress3 = igmImporterAddress3;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public Cfigmcrg(String companyId, String branchId, String igmTransId, String igmCrgTransId,
+				String profitcentreId, String igmLineNo, String igmNo, String blNo, Date blDate, String importerName,
+				String commodityDescription, String accountHolderName, String beNo, Date beDate, String chaName,
+				Date igmDate, String sa, String sl) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.igmTransId = igmTransId;
+			this.igmCrgTransId = igmCrgTransId;
+			this.profitcentreId = profitcentreId;
+			this.igmLineNo = igmLineNo;
+			this.igmNo = igmNo;
+			this.blNo = blNo;
+			this.blDate = blDate;
+			this.importerName = importerName;
+			this.commodityDescription = commodityDescription;
+			this.accountHolderName = accountHolderName;
+			this.beNo = beNo;
+			this.beDate = beDate;
+			this.chaName = chaName;
+			this.igmDate = igmDate;
+			this.sa = sa;
+			this.sl = sl;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public Date getIgmDate() {
+			return igmDate;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public void setIgmDate(Date igmDate) {
+			this.igmDate = igmDate;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public String getSa() {
+			return sa;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public void setSa(String sa) {
+			this.sa = sa;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public String getSl() {
+			return sl;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public void setSl(String sl) {
+			this.sl = sl;
 		}
 
 

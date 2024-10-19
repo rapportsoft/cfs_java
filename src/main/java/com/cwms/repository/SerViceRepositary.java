@@ -46,7 +46,9 @@ public interface SerViceRepositary extends JpaRepository<Services, String>
 	 
 	 
 	 
-	 
+	 @Query(value = "SELECT New com.cwms.entities.Services(s.serviceId, s.serviceShortDesc, s.serviceUnit) FROM Services s "
+		 		+ "WHERE s.companyId = ?1 AND s.branchId = ?2 AND s.status != 'D' order by s.serviceId desc ")
+		    List<Services> getActiveServices1(String companyId, String branchId);
 	 
 	 
 	 

@@ -216,7 +216,7 @@ public class ImportGatePass {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	private Date cinDate;
 
-	@Column(name = "Stamp_Duty", precision = 12, scale = 2)
+	@Column(name = "Stamp_Duty", precision = 16, scale = 3)
 	private BigDecimal stampDuty;
 
 	@Column(name = "SPLGate_Out_Flag", length = 1)

@@ -780,6 +780,13 @@ public class Services {
 		this.status = status;
 		this.createdBy = createdBy;
 	}
+
+	public Services(String serviceId, String serviceShortDesc, String serviceUnit) {
+		super();
+		this.serviceId = serviceId;
+		this.serviceShortDesc = serviceShortDesc;
+		this.serviceUnit = serviceUnit;
+	}
 	
 	
 	

@@ -85,7 +85,7 @@ public class Impexpgrid {
 	    private String editedBy;
 
 	    @Temporal(TemporalType.TIMESTAMP)
-	    @Column(name = "Editeded_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
+	    @Column(name = "Editeded_Date")
 	    private Date editedDate;	    
 
 	    @Column(name = "Approved_By", length = 10)

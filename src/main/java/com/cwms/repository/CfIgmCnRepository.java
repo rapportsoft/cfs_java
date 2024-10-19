@@ -789,5 +789,57 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	Boolean checkContainerHoldStatus(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
 			@Param("igm") String igm, @Param("line") String line);
 
+	
+	 @Query("SELECT NEW com.cwms.entities.Cfigmcn(c.finYear, c.igmTransId, c.containerTransId, c.profitcentreId, c.igmNo, c.igmLineNo, " +
+	           "c.containerNo, c.containerSize, c.containerType, c.typeOfContainer, c.iso, " +
+	           "c.containerWeight, c.containerStatus, c.grossWt, c.noOfPackages, c.temperature, c.gateInId, c.scannerType,c.holdStatus,c.gateOutType,c.cargoWt) " +
+	           "FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid AND c.status != 'D' " +
+	           "AND c.igmNo=:igm AND c.igmTransId=:transId AND c.igmLineNo=:igmLine AND (c.gateOutId is null OR c.gateOutId = '') " +
+	           "AND (c.ssrTransId is null OR c.ssrTransId = '')")
+	    List<Cfigmcn> searchSSr(@Param("cid") String cid,
+	                             @Param("bid") String bid,
+	                             @Param("igm") String igm,
+	                             @Param("transId") String transId,
+	                             @Param("igmLine") String igmline);
+	
+	  
+		@Query(value="select NEW com.cwms.entities.Cfigmcn(c.finYear, c.igmTransId, c.containerTransId, c.profitcentreId, c.igmNo, c.igmLineNo,"
+				+ "c.containerNo, c.containerSize, c.containerType, c.typeOfContainer, c.iso,"
+				+ "c.containerWeight, c.containerStatus, c.grossWt, c.noOfPackages, c.temperature, c.gateInId, c.scannerType,c.holdStatus,c.gateOutType,c.cargoWt) "
+				+ "from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.containerNo=:con and c.status != 'D' and "
+				+ "(c.gateOutId is null OR c.gateOutId = '') AND (c.ssrTransId is null OR c.ssrTransId = '')")
+		List<Cfigmcn> searchSSrContainer(@Param("cid") String cid, @Param("bid") String bid, @Param("con") String con);
+		
+		  @Query("SELECT c " +
+		           "FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid " +
+		           "AND c.igmTransId = :igmTrans AND c.igmNo = :igm AND c.igmLineNo=:line " +
+		           " AND c.containerNo = :con  AND c.status != 'D' "
+		           + "AND (c.gateOutId is null OR c.gateOutId = '') AND (c.ssrTransId is null OR c.ssrTransId = '')")
+		    Cfigmcn getSingleData5(@Param("cid") String cid,
+		                             @Param("bid") String bid,
+		                             @Param("igmTrans") String igmTrans,
+		                             @Param("igm") String igm,@Param("line") String line,@Param("con") String con);
+		  
+		  @Query("SELECT c " +
+		           "FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid " +
+		           "AND c.igmTransId = :igmTrans AND c.igmNo = :igm AND c.igmLineNo=:line " +
+		           " AND c.containerNo = :con  AND c.status != 'D' "
+		           + "AND (((c.gateOutId is null OR c.gateOutId = '') AND (c.ssrTransId is null OR c.ssrTransId = '')) OR "
+		           + "(c.ssrTransId=:id))")
+		    Cfigmcn getSingleData6(@Param("cid") String cid,
+		                             @Param("bid") String bid,
+		                             @Param("igmTrans") String igmTrans,
+		                             @Param("igm") String igm,@Param("line") String line,@Param("con") String con,@Param("id") String id);
+		  
+		  @Query("SELECT NEW com.cwms.entities.Cfigmcn(c.finYear, c.igmTransId, c.containerTransId, c.profitcentreId, c.igmNo, c.igmLineNo, " +
+		           "c.containerNo, c.containerSize, c.containerType, c.typeOfContainer, c.iso, " +
+		           "c.containerWeight, c.containerStatus, c.grossWt, c.noOfPackages, c.temperature, c.gateInId, c.scannerType,c.holdStatus,c.gateOutType,c.cargoWt) " +
+		           "FROM Cfigmcn c WHERE c.companyId = :cid AND c.branchId = :bid AND c.status != 'D' " +
+		           "AND c.igmNo=:igm AND c.igmTransId=:igmTrans AND c.igmLineNo=:igmLine AND (((c.gateOutId is null OR c.gateOutId = '') " +
+		           "AND (c.ssrTransId is null OR c.ssrTransId = '')) OR (c.ssrTransId=:id))")
+		    List<Cfigmcn> getLatestSSRData(@Param("cid") String cid,
+		                             @Param("bid") String bid,
+		                             @Param("igmTrans") String igmTrans,
+		                             @Param("igm") String igm,@Param("igmLine") String line,@Param("id") String id);
 }
 

@@ -468,7 +468,7 @@ public class Cfigmcn {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	private Date cinDate; // Default value
 
-	@Column(name = "Stamp_Duty", precision = 12, scale = 2)
+	@Column(name = "Stamp_Duty", precision = 16, scale = 3)
 	private BigDecimal stampDuty = BigDecimal.ZERO; // Default value
 
 	@Column(name = "DO_No", length = 30)
@@ -721,7 +721,7 @@ public class Cfigmcn {
 	private String destuffWoTransId = ""; // Default value
 
 	@Column(name = "SSR_Trans_Id", length = 20)
-	private String sssTransId = ""; // Default value
+	private String ssrTransId = ""; // Default value
 
 	@Column(name = "Seal_Cut_WO_Trans_Id", length = 25)
 	private String sealCutWoTransId = ""; // Default value
@@ -1121,7 +1121,7 @@ public class Cfigmcn {
 			String upTariffAmndNo, String upTariffDelMode, String othPartyId, char invoiceAssesed, String assesmentId,
 			String invoiceNo, Date invoiceDate, char creditType, String invoiceCategory, BigDecimal billAmt,
 			BigDecimal invoiceAmt, String subItemNo, Date tariffValid, String tariffCode, String destuffWoTransId,
-			String sssTransId, String sealCutWoTransId, Date sealCutWoTransDate, String containerExamWoTransId,
+			String ssrTransId, String sealCutWoTransId, Date sealCutWoTransDate, String containerExamWoTransId,
 			Date containerExamWoTransDate, String examRemarks, String fileNo, String lotNo, String hsnNo,
 			String fileStatus, String mergeStatus, Date mergeCreatedDate, String mergeCreatedBy, char refer,
 			BigDecimal weighmentWt, String mergeApprovedBy, Date mergeApprovedDate, String lastAssesmentId,
@@ -1334,7 +1334,7 @@ public class Cfigmcn {
 		this.tariffValid = tariffValid;
 		this.tariffCode = tariffCode;
 		this.destuffWoTransId = destuffWoTransId;
-		this.sssTransId = sssTransId;
+		this.ssrTransId = ssrTransId;
 		this.sealCutWoTransId = sealCutWoTransId;
 		this.sealCutWoTransDate = sealCutWoTransDate;
 		this.containerExamWoTransId = containerExamWoTransId;
@@ -2999,13 +2999,19 @@ public class Cfigmcn {
 		this.destuffWoTransId = destuffWoTransId;
 	}
 
-	public String getSssTransId() {
-		return sssTransId;
+	
+
+	public String getSsrTransId() {
+		return ssrTransId;
 	}
 
-	public void setSssTransId(String sssTransId) {
-		this.sssTransId = sssTransId;
+
+
+	public void setSsrTransId(String ssrTransId) {
+		this.ssrTransId = ssrTransId;
 	}
+
+
 
 	public String getSealCutWoTransId() {
 		return sealCutWoTransId;
@@ -3767,7 +3773,7 @@ public class Cfigmcn {
 				+ invoiceAssesed + ", assesmentId=" + assesmentId + ", invoiceNo=" + invoiceNo + ", invoiceDate="
 				+ invoiceDate + ", creditType=" + creditType + ", invoiceCategory=" + invoiceCategory + ", billAmt="
 				+ billAmt + ", invoiceAmt=" + invoiceAmt + ", subItemNo=" + subItemNo + ", tariffValid=" + tariffValid
-				+ ", tariffCode=" + tariffCode + ", destuffWoTransId=" + destuffWoTransId + ", sssTransId=" + sssTransId
+				+ ", tariffCode=" + tariffCode + ", destuffWoTransId=" + destuffWoTransId + ", sssTransId=" + ssrTransId
 				+ ", sealCutWoTransId=" + sealCutWoTransId + ", sealCutWoTransDate=" + sealCutWoTransDate
 				+ ", containerExamWoTransId=" + containerExamWoTransId + ", containerExamWoTransDate="
 				+ containerExamWoTransDate + ", examRemarks=" + examRemarks + ", fileNo=" + fileNo + ", lotNo=" + lotNo
@@ -4006,6 +4012,33 @@ public class Cfigmcn {
 		this.scannerType = scannerType;
 		this.holdStatus = holdStatus;
 	}
+	
+	public Cfigmcn(String finYear, String igmTransId, String containerTransId, String profitcentreId, String igmNo, String igmLineNo,
+			String containerNo, String containerSize, String containerType, String typeOfContainer, String iso,
+			BigDecimal containerWeight, String containerStatus, BigDecimal grossWt, int noOfPackages,
+			String temperature,String gateInId, String scannerType,String holdStatus, String gateOutType, BigDecimal cargoWt) {
+		this.finYear = finYear;
+		this.igmTransId = igmTransId;
+		this.containerTransId = containerTransId;
+		this.profitcentreId = profitcentreId;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
+		this.containerNo = containerNo;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.typeOfContainer = typeOfContainer;
+		this.iso = iso;
+		this.containerWeight = containerWeight;
+		this.containerStatus = containerStatus;
+		this.grossWt = grossWt;
+		this.noOfPackages = noOfPackages;
+		this.temperature = temperature;
+		this.gateInId = gateInId;
+		this.scannerType = scannerType;
+		this.holdStatus = holdStatus;
+		this.gateOutType = gateOutType;
+		this.cargoWt = cargoWt;
+ 	}
 
 	
 

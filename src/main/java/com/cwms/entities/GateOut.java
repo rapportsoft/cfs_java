@@ -141,7 +141,7 @@ public class GateOut {
 	    @Column(name = "Commodity_Description", length = 250)
 	    private String commodityDescription;
 
-	    @Column(name = "Gross_Wt", precision = 12, scale = 4)
+	    @Column(name = "Gross_Wt", precision = 17, scale = 4)
 	    private BigDecimal grossWt;
 
 	    @Column(name = "NATURE_OF_CARGO", length = 10)

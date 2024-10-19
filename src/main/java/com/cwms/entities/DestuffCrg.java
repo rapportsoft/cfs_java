@@ -60,7 +60,7 @@ public class DestuffCrg {
 	    @Column(name = "Marks_Of_Numbers", columnDefinition = "TEXT")
 	    private String marksOfNumbers;
 
-	    @Column(name = "Gross_Weight", precision = 12, scale = 3)
+	    @Column(name = "Gross_Weight", precision = 16, scale = 3)
 	    private BigDecimal grossWeight;
 
 	    @Column(name = "Type_Of_Packages", length = 6)
