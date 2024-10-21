@@ -166,6 +166,31 @@ public class CfexBondCrgDtl {
 	    @Column(name = "ExBond_Grid_Area", precision = 16, scale = 3)
 		private BigDecimal exBondGridArea;
 
+	    
+	    
+	    @Column(name = "IGM_No", length = 10, nullable = true)
+	    private String igmNo;
+
+	    @Column(name = "IGM_Line_No", length = 10, nullable = true)
+	    private String igmLineNo;
+
+	    
+	public String getIgmNo() {
+			return igmNo;
+		}
+
+		public void setIgmNo(String igmNo) {
+			this.igmNo = igmNo;
+		}
+
+		public String getIgmLineNo() {
+			return igmLineNo;
+		}
+
+		public void setIgmLineNo(String igmLineNo) {
+			this.igmLineNo = igmLineNo;
+		}
+
 	public CfexBondCrgDtl() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -529,8 +554,8 @@ public class CfexBondCrgDtl {
 
 	
 
-	
-	public CfexBondCrgDtl(String companyId, String branchId, String finYear, String cfBondDtlId, String nocTransId,
+
+public CfexBondCrgDtl(String companyId, String branchId, String finYear, String cfBondDtlId, String nocTransId,
 			String exBondingId, String inBondingId, String nocNo, String boeNo, String bondingNo, Date bondingDate,
 			String exBondBeNo, BigDecimal nocPackages, BigDecimal exBondedPackages, String exBondType,
 			BigDecimal exBondedCIF, BigDecimal exBondedCargoDuty, BigDecimal exBondedInsurance, String sbNo,
@@ -539,7 +564,8 @@ public class CfexBondCrgDtl {
 			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate, BigDecimal outQty,
 			BigDecimal inBondedPackages, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
 			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, String yardLocationId, String blockId,
-			String cellNoRow, BigDecimal exBondyardPackages, BigDecimal exBondGridArea) {
+			String cellNoRow, BigDecimal exBondyardPackages, BigDecimal exBondGridArea, String igmNo,
+			String igmLineNo) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -585,6 +611,8 @@ public class CfexBondCrgDtl {
 		this.cellNoRow = cellNoRow;
 		this.exBondyardPackages = exBondyardPackages;
 		this.exBondGridArea = exBondGridArea;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
 	}
 
 	@Override
