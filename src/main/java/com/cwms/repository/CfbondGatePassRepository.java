@@ -65,14 +65,15 @@ public interface CfbondGatePassRepository extends JpaRepository<CFBondGatePass, 
 	    "WHERE c.companyId = :companyId " +
 	    "AND c.branchId = :branchId " +
 	    "AND c.gatePassId = :gatePassId " +
-	    "AND c.exBondBeNo = :exBondBeNo " +
+//	    "AND c.exBondBeNo = :exBondBeNo " +
 	    "AND c.status != 'D' " +
 	    "ORDER BY c.gatePassId DESC")
 List<CFBondGatePass> getAllListOfGatePass(
 	    @Param("companyId") String companyId, 
 	    @Param("branchId") String branchId,
-	    @Param("gatePassId") String gatePassId,
-	    @Param("exBondBeNo") String exBondBeNo);
+	    @Param("gatePassId") String gatePassId
+//	    @Param("exBondBeNo") String exBondBeNo
+	    );
 
 
 	
@@ -176,14 +177,23 @@ BigDecimal getSumOfQtyTakenOutForCommodity(@Param("companyId") String companyId,
 
 
 
+//@Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM CFBondGatePass c " +
+//	       "WHERE c.companyId = :companyId " +
+//	       "AND c.branchId = :branchId " +
+//	       "AND c.status = 'A' +
+//	       "AND c.gatePassId = :gatePassId ")
+//BigDecimal getSumOfQtyTakenOut(@Param("companyId") String companyId,
+//	                            @Param("branchId") String branchId,
+//	                            @Param("gatePassId") String gatePassId);
+
 @Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM CFBondGatePass c " +
 	       "WHERE c.companyId = :companyId " +
 	       "AND c.branchId = :branchId " +
-	       "AND c.gatePassId = :gatePassId ")
-BigDecimal getSumOfQtyTakenOut(@Param("companyId") String companyId,
-	                            @Param("branchId") String branchId,
-	                            @Param("gatePassId") String gatePassId);
-
+	       "AND c.status != 'D' " +
+	       "AND c.gatePassId = :gatePassId")
+	BigDecimal getSumOfQtyTakenOut(@Param("companyId") String companyId,
+		                            @Param("branchId") String branchId,
+		                            @Param("gatePassId") String gatePassId);
 
 
 @Modifying
@@ -221,16 +231,82 @@ CFBondGatePass toEditData(
 
 
 
+//@Query("SELECT c FROM CFBondGatePass c " +
+//	       "WHERE c.companyId = :companyId " +
+//	       "AND c.branchId = :branchId " +
+//	       "AND c.gatePassId = :gatePassId " +
+//	       "AND c.inBondingId = :inBondingId " +
+//	       "AND c.exBondingId = :exBondingId " +
+//	       "AND c.status != 'D'")
+//	List<CFBondGatePass> updateAfterApprove(@Param("companyId") String companyId, 
+//	                                        @Param("branchId") String branchId, 
+//	                                        @Param("gatePassId") String gatePassId, 
+//	                                        @Param("inBondingId") String inBondingId,
+//	                                        @Param("exBondingId") String exBondingId);
+
+
 @Query("SELECT c FROM CFBondGatePass c " +
 	       "WHERE c.companyId = :companyId " +
 	       "AND c.branchId = :branchId " +
 	       "AND c.gatePassId = :gatePassId " +
-	       "AND c.inBondingId = :inBondingId " +
-	       "AND c.exBondingId = :exBondingId " +
 	       "AND c.status != 'D'")
 	List<CFBondGatePass> updateAfterApprove(@Param("companyId") String companyId, 
 	                                        @Param("branchId") String branchId, 
-	                                        @Param("gatePassId") String gatePassId, 
-	                                        @Param("inBondingId") String inBondingId,
-	                                        @Param("exBondingId") String exBondingId);
+	                                        @Param("gatePassId") String gatePassId);
+
+
+
+//
+//@Query("SELECT NEW com.cwms.entities.CFBondGatePass(c.companyId, c.branchId, c.gatePassId, c.srNo, " +
+//        "c.exBondingId, c.inBondingId, c.gatePassDate, c.bondingNo, ex.igmLineNo, c.importerName, " +
+//        "c.importerAddress1, c.importerAddress2, c.importerAddress3, pa.partyName, c.boeNo, c.boeDate, " +
+//        "c.commodity, c.grossWt, c.noOfPackage, c.inBondPackages, c.transporterStatus, c.transporter, " +
+//        "c.transporterName, c.vehicleNo, c.driverName, c.noOfPackages, c.qtyTakenOut, c.areaAllocated, " +
+//        "c.areaReleased, c.totalGrossWt, c.vehGateInId, c.exBondBeNo, c.exBondedPackages, " +
+//        "c.commodityDescription, ex.igmNo, ex.bondingDate, ex.inBondingDate, ex.inBondedGw, ex.exBondedGw, ex.exBondBeDate,exx.typeOfPackage) " +
+//    "FROM CFBondGatePass c " +
+//    "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.cha = pa.partyId " +
+//    "LEFT OUTER JOIN CfExBondCrg ex ON c.companyId = ex.companyId AND c.branchId = ex.branchId AND c.exBondingId = ex.exBondingId AND c.exBondBeNo = ex.exBondBeNo " +
+//    "LEFT OUTER JOIN CfexBondCrgDtl exx ON c.companyId = exx.companyId AND c.branchId = exx.branchId AND c.exBondingId = exx.exBondingId AND c.exBondBeNo = exx.exBondBeNo AND c.commodity=exx.cfBondDtlId " +
+//    "WHERE c.companyId = :companyId " +
+//    "AND c.branchId = :branchId " +
+//    "AND c.gatePassId = :gatePassId " +
+//    "AND c.status = 'A' " +
+//    "ORDER BY c.gatePassId DESC")
+//List<CFBondGatePass> getDataForBondGateOutPass(
+//    @Param("companyId") String companyId, 
+//    @Param("branchId") String branchId,
+//    @Param("gatePassId") String gatePassId
+//);
+
+
+
+
+
+
+
+
+@Query("SELECT NEW com.cwms.entities.CFBondGatePass(c.companyId, c.branchId, c.gatePassId, c.srNo, " +
+        "c.exBondingId, c.inBondingId, c.gatePassDate, c.bondingNo, ex.igmLineNo, c.importerName, " +
+        "c.importerAddress1, c.importerAddress2, c.importerAddress3, pa.partyName, c.boeNo, c.boeDate, " +
+        "c.commodity, c.grossWt, c.noOfPackage, c.inBondPackages, c.transporterStatus, c.transporter, " +
+        "c.transporterName, c.vehicleNo, c.driverName, c.noOfPackages, c.qtyTakenOut, c.areaAllocated, " +
+        "c.areaReleased, c.totalGrossWt, c.vehGateInId, c.exBondBeNo, c.exBondedPackages, " +
+        "c.commodityDescription, ex.igmNo, ex.bondingDate, ex.inBondingDate, ex.inBondedGw, ex.exBondedGw, ex.exBondBeDate,exx.typeOfPackage) " +
+    "FROM CFBondGatePass c " +
+    "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.cha = pa.partyId " +
+    "LEFT OUTER JOIN CfExBondCrg ex ON c.companyId = ex.companyId AND c.branchId = ex.branchId AND c.exBondingId = ex.exBondingId AND c.exBondBeNo = ex.exBondBeNo and c.inBondingId =ex.inBondingId and c.nocTransId =ex.nocTransId " +
+    "LEFT OUTER JOIN CfexBondCrgDtl exx ON c.companyId = exx.companyId AND c.branchId = exx.branchId AND c.exBondingId = exx.exBondingId AND c.exBondBeNo = exx.exBondBeNo AND c.commodity=exx.cfBondDtlId and c.inBondingId =exx.inBondingId and c.nocTransId =ex.nocTransId " +
+    "WHERE c.companyId = :companyId " +
+    "AND c.branchId = :branchId " +
+    "AND c.gatePassId = :gatePassId " +
+    "AND c.status = 'A' " +
+    "ORDER BY c.gatePassId DESC")
+List<CFBondGatePass> getDataForBondGateOutPass(
+    @Param("companyId") String companyId, 
+    @Param("branchId") String branchId,
+    @Param("gatePassId") String gatePassId
+);
+
+
 }

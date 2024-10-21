@@ -250,6 +250,8 @@ public class CFBondGatePass {
 	    private Date doValidityDate;
 
 	
+	    @Column(name = "IGM_No", length = 10, nullable = true)
+	    private String igmNo;
 	    
 	    @Column(name = "Yard_Qty_Taken_Out", precision = 8, scale = 0, nullable = true)
 	    private BigDecimal yardQtyTakenOut;
@@ -259,7 +261,87 @@ public class CFBondGatePass {
 	    private BigDecimal yardAreaReleased;
 	    
 	    
+	    @Transient
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	    private Date bondingDate;
+
+	    @Transient
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	    private Date inBondingDate;
 	    
+	    @Transient
+	    private BigDecimal inBondedGw;
+
+	    @Transient
+	    private BigDecimal exBondedGw;
+	    
+	    @Transient
+	    @Temporal(TemporalType.DATE)
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	    private Date exBondBeDate;
+
+	    @Transient
+		private String typeOfPackage;
+	    
+	    
+	public String getTypeOfPackage() {
+			return typeOfPackage;
+		}
+
+		public void setTypeOfPackage(String typeOfPackage) {
+			this.typeOfPackage = typeOfPackage;
+		}
+
+	public Date getBondingDate() {
+			return bondingDate;
+		}
+
+		public void setBondingDate(Date bondingDate) {
+			this.bondingDate = bondingDate;
+		}
+
+		public Date getInBondingDate() {
+			return inBondingDate;
+		}
+
+		public void setInBondingDate(Date inBondingDate) {
+			this.inBondingDate = inBondingDate;
+		}
+
+		public BigDecimal getInBondedGw() {
+			return inBondedGw;
+		}
+
+		public void setInBondedGw(BigDecimal inBondedGw) {
+			this.inBondedGw = inBondedGw;
+		}
+
+		public BigDecimal getExBondedGw() {
+			return exBondedGw;
+		}
+
+		public void setExBondedGw(BigDecimal exBondedGw) {
+			this.exBondedGw = exBondedGw;
+		}
+
+		public Date getExBondBeDate() {
+			return exBondBeDate;
+		}
+
+		public void setExBondBeDate(Date exBondBeDate) {
+			this.exBondBeDate = exBondBeDate;
+		}
+
+	public String getIgmNo() {
+			return igmNo;
+		}
+
+		public void setIgmNo(String igmNo) {
+			this.igmNo = igmNo;
+		}
+
 	public BigDecimal getYardQtyTakenOut() {
 			return yardQtyTakenOut;
 		}
@@ -867,7 +949,7 @@ public class CFBondGatePass {
 			String licenceNo, BigDecimal balQtyOut, BigDecimal totalGrossWt, BigDecimal tareWeight,
 			BigDecimal netWeight, String deliveryPersonName, String deliveryPersonAddrs, String vehGateInId,
 			String exBondBeNo, BigDecimal exBondedPackages, String commodityDescription, String deliveryOrderNo,
-			Date deliveryOrderDate, Date doValidityDate, BigDecimal yardQtyTakenOut, BigDecimal yardAreaReleased) {
+			Date deliveryOrderDate, Date doValidityDate,String igmNo, BigDecimal yardQtyTakenOut, BigDecimal yardAreaReleased) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -940,6 +1022,7 @@ public class CFBondGatePass {
 		this.deliveryOrderNo = deliveryOrderNo;
 		this.deliveryOrderDate = deliveryOrderDate;
 		this.doValidityDate = doValidityDate;
+		this.igmNo = igmNo;
 		this.yardQtyTakenOut = yardQtyTakenOut;
 		this.yardAreaReleased = yardAreaReleased;
 	}
@@ -1107,7 +1190,61 @@ public class CFBondGatePass {
 		this.deliveryOrderDate = deliveryOrderDate;
 		this.doValidityDate = doValidityDate;
 	}
-
 	
+	
+	// DATA for bond gate out pass please check this for any query 
+	public CFBondGatePass(String companyId, String branchId, String gatePassId, int srNo, String exBondingId,
+			String inBondingId, Date gatePassDate, String bondingNo, String igmLineNo, String importerName,
+			String importerAddress1, String importerAddress2, String importerAddress3, String cha, String boeNo,
+			Date boeDate, String commodity, BigDecimal grossWt, BigDecimal noOfPackage, BigDecimal inBondPackages,
+			String transporterStatus, String transporter, String transporterName, String vehicleNo, String driverName,
+			BigDecimal noOfPackages, BigDecimal qtyTakenOut, BigDecimal areaAllocated, BigDecimal areaReleased,
+			BigDecimal totalGrossWt, String vehGateInId, String exBondBeNo, BigDecimal exBondedPackages,
+			String commodityDescription, String igmNo,Date bondingDate,Date inBondingDate,BigDecimal inBondedGw,BigDecimal exBondedGw,Date exBondBeDate,String typeOfPackage) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.gatePassId = gatePassId;
+		this.srNo = srNo;
+		this.exBondingId = exBondingId;
+		this.inBondingId = inBondingId;
+		this.gatePassDate = gatePassDate;
+		this.bondingNo = bondingNo;
+		this.igmLineNo = igmLineNo;
+		this.importerName = importerName;
+		this.importerAddress1 = importerAddress1;
+		this.importerAddress2 = importerAddress2;
+		this.importerAddress3 = importerAddress3;
+		this.cha = cha;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.commodity = commodity;
+		this.grossWt = grossWt;
+		this.noOfPackage = noOfPackage;
+		this.inBondPackages = inBondPackages;
+		this.transporterStatus = transporterStatus;
+		this.transporter = transporter;
+		this.transporterName = transporterName;
+		this.vehicleNo = vehicleNo;
+		this.driverName = driverName;
+		this.noOfPackages = noOfPackages;
+		this.qtyTakenOut = qtyTakenOut;
+		this.areaAllocated = areaAllocated;
+		this.areaReleased = areaReleased;
+		this.totalGrossWt = totalGrossWt;
+		this.vehGateInId = vehGateInId;
+		this.exBondBeNo = exBondBeNo;
+		this.exBondedPackages = exBondedPackages;
+		this.commodityDescription = commodityDescription;
+		this.igmNo = igmNo;
+		
+		this.bondingDate = bondingDate;
+		this.inBondingDate = inBondingDate;
+		this.inBondedGw = inBondedGw;
+		this.exBondedGw = exBondedGw;
+		this.exBondBeDate = exBondBeDate;
+		this.typeOfPackage = typeOfPackage;
+	}
 
+	 
 }

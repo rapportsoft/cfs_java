@@ -146,7 +146,7 @@ List<Object[]> getAllExbondBeNoFromExbondDtl(@Param("cid") String cid, @Param("b
 
 
 @Query(value = "select DISTINCT c.cfBondDtlId, c.commodityDescription,c.yardLocationId,c.blockId,c.cellNoRow,c.exBondedPackages,"
-		+ "c.exBondingId,c.inBondingId,c.nocPackages,c.inBondedPackages,c.exBondedGW ,c.exBondGridArea, c.nocTransId ,c.outQty " +
+		+ "c.exBondingId,c.inBondingId,c.nocPackages,c.inBondedPackages,c.exBondedGW ,c.exBondGridArea, c.nocTransId ,c.outQty ,c.igmNo ,c.igmLineNo " +
         "from CfexBondCrgDtl c " +
         "where c.companyId = :cid and c.branchId = :bid and c.exBondBeNo = :exBondBeNo " +
         "and COALESCE(c.exBondedPackages, 0) - COALESCE(c.outQty, 0) > 0 " +
@@ -199,6 +199,7 @@ int updateCfexBondDtlAfterExBondGrid(
 @Query("SELECT COALESCE(SUM(c.exBondedPackages), 0) FROM CfexBondCrgDtl c " +
 	       "WHERE c.companyId = :companyId " +
 	       "AND c.branchId = :branchId " +
+	       "AND c.status != 'D' " +
 	       "AND c.exBondingId = :exBondingId " +
 	       "AND c.nocTransId = :nocTransId")
 BigDecimal getSumOfInBondPackages(@Param("companyId") String companyId,
@@ -209,6 +210,7 @@ BigDecimal getSumOfInBondPackages(@Param("companyId") String companyId,
 @Query("SELECT COALESCE(SUM(c.exBondedPackages), 0) FROM CfexBondCrgDtl c " +
 	       "WHERE c.companyId = :companyId " +
 	       "AND c.branchId = :branchId " +
+	       "AND c.status != 'D' " +
 	       "AND c.exBondingId = :exBondingId " +
 	       "AND c.cfBondDtlId = :cfBondDtlId " +
 	       "AND c.nocTransId = :nocTransId")

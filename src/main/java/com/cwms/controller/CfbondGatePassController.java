@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.Cfbondnoc;
 import com.cwms.service.CfbondGatePassService;
+import com.lowagie.text.DocumentException;
 
 
 @RestController
@@ -46,9 +47,10 @@ public class CfbondGatePassController {
 	    public ResponseEntity<List<CFBondGatePass>> getAllListOfGatePass(
 	            @RequestParam("companyId") String companyId,
 	            @RequestParam("branchId") String branchId,
-	            @RequestParam("gatePassId") String gatePassId,
-	            @RequestParam("exBondBeNo") String exBondBeNo) {
-	        List<CFBondGatePass> gatePasses = cfbondGatePassService.getAllListOfGatePass(companyId, branchId, gatePassId, exBondBeNo);
+	            @RequestParam("gatePassId") String gatePassId
+//	            @RequestParam("exBondBeNo") String exBondBeNo
+	            ) {
+	        List<CFBondGatePass> gatePasses = cfbondGatePassService.getAllListOfGatePass(companyId, branchId, gatePassId);
 	        return ResponseEntity.ok(gatePasses);
 	    }
 	   
@@ -123,6 +125,28 @@ public class CfbondGatePassController {
 	            @RequestBody Map<String, Object> requestBody) {
 		   return cfbondGatePassService.approveDataOfInCFbondGrid(companyId, branchId, flag, user, requestBody);
 	       
+	    }
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    @GetMapping("/generateBondGatePassPrint")
+	    public ResponseEntity<String> generateSurveyPdf(
+	    		@RequestParam(name = "companyId") String companyId,
+				@RequestParam(name = "branchId") String branchId, @RequestParam(name = "uname") String username,
+				@RequestParam(name = "type") String type, @RequestParam(name = "cname") String companyname,
+				@RequestParam(name = "bname") String branchname, @RequestParam(name = "gatePassId") String gatePassId) throws DocumentException {
+	        try {
+	            // Call the service method and return the response
+	            return cfbondGatePassService.printOfSurveyDetails(companyId, branchId, username, type, companyname, branchname, gatePassId);
+	        } catch (Exception e) {
+	            // In case of an error, you can handle the exception and return an appropriate response
+	            return ResponseEntity.status(500).body("Error generating PDF: " + e.getMessage());
+	        }
 	    }
 }
 

@@ -59,6 +59,7 @@ public interface CfInBondGridRepository extends JpaRepository<CfInBondGrid, Stri
 	@Query("SELECT COALESCE(SUM(c.inBondPackages), 0) FROM CfInBondGrid c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
+		       "AND c.status != 'D' " +
 		       "AND c.inBondingId = :inBondingId " +
 		       "AND c.nocTransId = :nocTransId")
 	BigDecimal  getSumOfInBondPackages(@Param("companyId") String companyId,

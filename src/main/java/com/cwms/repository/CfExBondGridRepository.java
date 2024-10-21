@@ -69,6 +69,7 @@ public interface CfExBondGridRepository extends JpaRepository<CfExBondGrid, Stri
 	@Query("SELECT COALESCE(SUM(c.exBondPackages), 0) FROM CfExBondGrid c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
+		       "AND c.status != 'D' " +
 		       "AND c.exBondingId = :exBondingId " +
 		       "AND c.nocTransId = :nocTransId")
 	BigDecimal  getSumOfInBondPackages(@Param("companyId") String companyId,
@@ -153,10 +154,23 @@ public interface CfExBondGridRepository extends JpaRepository<CfExBondGrid, Stri
 	@Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM CfExBondGrid c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
+		       "AND c.status != 'D' " +
 		       "AND c.exBondingId = :exBondingId " +
 		       "AND c.nocTransId = :nocTransId")
 	BigDecimal  getSumOfQtyTakenOut(@Param("companyId") String companyId,
 		                            @Param("branchId") String branchId,
 		                            @Param("exBondingId") String exBondingId,
 		                            @Param("nocTransId") String nocTransId);
+	
+	
+	@Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM CfExBondGrid c " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.status != 'D' " +
+		       "AND c.exBondingId = :exBondingId " +
+		       "AND c.cfBondDtlId = :cfBondDtlId ")
+	BigDecimal  getSumOfQtyTakenOutCommodityWise(@Param("companyId") String companyId,
+		                            @Param("branchId") String branchId,
+		                            @Param("exBondingId") String exBondingId,
+		                            @Param("cfBondDtlId") String cfBondDtlId);
 }

@@ -2,32 +2,53 @@ package com.cwms.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.cwms.entities.Branch;
 import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfExBondCrg;
 import com.cwms.entities.CfExBondGrid;
 import com.cwms.entities.CfInBondGrid;
+import com.cwms.entities.Cfbondnoc;
 import com.cwms.entities.CfexBondCrgDtl;
+import com.cwms.entities.Company;
 import com.cwms.entities.YardBlockCell;
+import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfExBondCrgDtlRepository;
 import com.cwms.repository.CfExBondCrgRepository;
 import com.cwms.repository.CfExBondGridRepository;
 import com.cwms.repository.CfInBondGridRepository;
 import com.cwms.repository.CfbondGatePassRepository;
+import com.cwms.repository.CfbondnocRepository;
+import com.cwms.repository.CompanyRepo;
+import com.cwms.repository.GateInRepo;
+import com.cwms.repository.PartyAddressRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.repository.YardBlockCellRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.lowagie.text.DocumentException;
 
 @Service
 public class CfbondGatePassService {
@@ -55,6 +76,20 @@ public class CfbondGatePassService {
 	
 	@Autowired
 	private CfInBondGridRepository cfInBondGridRepository;
+	
+	@Autowired
+	private TemplateEngine templateEngine;
+
+	@Autowired
+	private CompanyRepo companyRepo;
+
+	@Autowired
+	private BranchRepo branchRepo;
+
+	@Autowired
+	private CfbondnocRepository cfbondnocRepository;
+
+	
 
 	public ResponseEntity<?> saveDataOfGatePassAndGatePassDtl(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
@@ -163,11 +198,13 @@ public class CfbondGatePassService {
 						gatePassDtl.setExBondedPackages(item.getExBondedPackages());
 						gatePassDtl.setNoOfPackage(item.getNoOfPackage());
 						gatePassDtl.setQtyTakenOut(item.getQtyTakenOut());
-						gatePassDtl.setNocTransId(item.getNocTransId());
+			
 						gatePassDtl.setBondingNo(item.getBondingNo());
 						gatePassDtl.setCommodityDescription(item.getCommodityDescription());
 						gatePassDtl.setSrNo(sr);
 
+						gatePassDtl.setIgmLineNo(item.getIgmLineNo());
+						gatePassDtl.setIgmNo(item.getIgmNo());
 						gatePassDtl.setYardAreaReleased(item.getYardAreaReleased());
 						gatePassDtl.setYardQtyTakenOut(item.getYardQtyTakenOut());
 						saved = cfbondGatePassRepository.save(gatePassDtl);
@@ -387,6 +424,8 @@ public class CfbondGatePassService {
 						gatePassDtl.setCommodityDescription(item.getCommodityDescription());
 						gatePassDtl.setYardAreaReleased(item.getYardAreaReleased());
 						gatePassDtl.setYardQtyTakenOut(item.getYardQtyTakenOut());
+						gatePassDtl.setIgmLineNo(item.getIgmLineNo());
+						gatePassDtl.setIgmNo(item.getIgmNo());
 						saved = cfbondGatePassRepository.save(gatePassDtl);
 
 //						int updateCfExbondcrgDtlAfterGatePass = cfExBondCrgDtlRepository.updateCfexbondDtlAfterGatePass(
@@ -517,6 +556,8 @@ public class CfbondGatePassService {
 							gatePassDtl1.setDoValidityDate(gatePass.getDoValidityDate());
 							gatePassDtl1.setYardAreaReleased(item.getYardAreaReleased());
 							gatePassDtl1.setYardQtyTakenOut(item.getYardQtyTakenOut());
+							gatePassDtl1.setIgmLineNo(item.getIgmLineNo());
+							gatePassDtl1.setIgmNo(item.getIgmNo());
 							saved = cfbondGatePassRepository.save(gatePassDtl1);
 
 							savedDtl.add(saved);
@@ -662,6 +703,49 @@ public class CfbondGatePassService {
 	    CFBondGatePass cfinbondcrg = object.convertValue(requestBody.get("gatePass"), CFBondGatePass.class);
 	    
 	    System.out.println("cfinbondcrg________________________"+cfinbondcrg.getInBondingId());
+	    CFBondGatePass dataForPrint =null;
+	    
+		Object nocDtlObj = requestBody.get("dtl");
+		List<CFBondGatePass> gatePassDtlList = new ArrayList();
+
+		if (nocDtlObj instanceof List) {
+			// If nocDtl is a list, deserialize it directly
+			gatePassDtlList = object.convertValue(nocDtlObj, new TypeReference<List<CFBondGatePass>>() {
+			});
+		} else if (nocDtlObj instanceof Map) {
+			// If nocDtl is a map, convert each map entry to CfinbondcrgDtl
+			Map<String, Object> nocDtlMap = (Map<String, Object>) nocDtlObj;
+			for (Map.Entry<String, Object> entry : nocDtlMap.entrySet()) {
+				CFBondGatePass gatePassDtl = object.convertValue(entry.getValue(), CFBondGatePass.class);
+				gatePassDtlList.add(gatePassDtl);
+			}
+		} else {
+			// Handle unexpected types
+			throw new IllegalArgumentException("Invalid type for nocDtl: " + nocDtlObj.getClass());
+		}
+		
+		BigDecimal totalSum = BigDecimal.ZERO;
+
+		if(gatePassDtlList != null) {
+		    for(CFBondGatePass list : gatePassDtlList) {
+		    	
+		    	System.out.println("jhsdjhsfjsdjfgdsjfdgsjfh :"+list.getNocTransId());
+		    	System.out.println("jhsdjhsfjsdjfgdsjfdgsjfh :"+list.getExBondingId());
+		    	
+		        BigDecimal sumOfInbondFormGrid = cfExBondGridRepository.getSumOfQtyTakenOutCommodityWise(
+		            companyId, branchId, list.getExBondingId(),list.getCommodity()
+		        );
+		        
+
+		        if (sumOfInbondFormGrid != null) {
+		            totalSum = totalSum.add(sumOfInbondFormGrid);
+		        }
+		    }
+		}
+
+		System.out.println("Total Sum: " + totalSum);
+		
+		
 	    
 	    if (cfinbondcrg.getGatePassId()==null || cfinbondcrg.getGatePassId().isEmpty() || cfinbondcrg.getGatePassId().isBlank())
 	    {
@@ -678,13 +762,13 @@ public class CfbondGatePassService {
 	        BigDecimal sumOfInbondFormGrid = cfExBondGridRepository.getSumOfQtyTakenOut(companyId, branchId,
 	                cfinbondcrg.getExBondingId(), cfinbondcrg.getNocTransId());
 
-	        System.out.println("sumOfInbondFromDtl: " + sumOfInbondFromDtl + " ______________ " + sumOfInbondFormGrid);
+	        System.out.println("sumOfInbondFromDtl: " + sumOfInbondFromDtl + " ______________ " + totalSum);
 	        
-	        if (sumOfInbondFromDtl == null || sumOfInbondFormGrid == null) {
+	        if (sumOfInbondFromDtl == null || totalSum == null) {
 	            return new ResponseEntity<>("One of the sum values is null. Please check the data.", HttpStatus.BAD_REQUEST);
 	        }
 
-	        if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) != 0) {
+	        if (totalSum.compareTo(sumOfInbondFromDtl) != 0) {
 	            return new ResponseEntity<>("Qty Taken Out do not match in yard, please add packages in grid.", HttpStatus.BAD_REQUEST);
 	        }
 	        else
@@ -693,18 +777,27 @@ public class CfbondGatePassService {
 	        	 System.out.println("updateAfterApprov row count "+updateAfterApprov);
 	        	 
 	        	 
-	        	 List<CFBondGatePass> updateAfterApprove =cfbondGatePassRepository.updateAfterApprove(companyId, branchId, cfinbondcrg.getGatePassId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getExBondingId());
+	        	
+//	        	 List<CFBondGatePass> updateAfterApprove =cfbondGatePassRepository.updateAfterApprove(companyId, branchId, cfinbondcrg.getGatePassId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getExBondingId());
+	        	 List<CFBondGatePass> updateAfterApprove =cfbondGatePassRepository.updateAfterApprove(companyId, branchId, cfinbondcrg.getGatePassId());
 	        	 if (updateAfterApprove!=null)
 	        	 {
+	     				// Process the firstResul
+	     			
 	        		 updateAfterApprove.forEach(data -> data.setStatus("A"));
-
 	        		    // Batch save all records in one go
 	        		 cfbondGatePassRepository.saveAll(updateAfterApprove);
+	        		 
+	        		 dataForPrint = updateAfterApprove.get(0);
+	        		 
+	        		 
+	        		 System.out.println("dataForPrint_____________________"+dataForPrint);
+	        		 return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
 	        	 }
 	        }
 	    }
 	   
-	    return new ResponseEntity<>("", HttpStatus.OK);
+	    return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
 	}
 	 public BigDecimal getSumOfQtyTakenOutForCommodity(String companyId, String branchId, String exBondingId,String gatePassId, String cfBondDtlId) {
 	        return cfbondGatePassRepository.getSumOfQtyTakenOutForCommodity(companyId, branchId, exBondingId,gatePassId, cfBondDtlId);
@@ -715,8 +808,8 @@ public class CfbondGatePassService {
     }
 	
 
-	 public List<CFBondGatePass> getAllListOfGatePass(String companyId, String branchId, String gatePassId, String exBondBeNo) {
-	        return cfbondGatePassRepository.getAllListOfGatePass(companyId, branchId, gatePassId, exBondBeNo);
+	 public List<CFBondGatePass> getAllListOfGatePass(String companyId, String branchId, String gatePassId) {
+	        return cfbondGatePassRepository.getAllListOfGatePass(companyId, branchId, gatePassId);
 	    }
 	 
 	 public List<Object[]> getDataOfExbondBeNo(String cid, String bid, String val) {
@@ -742,4 +835,189 @@ public class CfbondGatePassService {
 	        return vehicleTrackRepository.getEmptyVehGateInForGatePass(companyId, branchId, vehicleNo);
 	    }
 
+	 
+	 
+
+		public ResponseEntity<String> printOfSurveyDetails( String companyId,
+				String branchId,  String username,
+				 String type,String companyname,
+				 String branchname,  String gatePassId) throws DocumentException {
+			
+			Context context = new Context();
+
+			// Cfbondnoc dataForPrint
+			// =cfbondnocRepository.findCfbondnocByCompanyIdAndBranchIdAndNocTransIdAndNocNo(companyId,
+			// branchId, nocTransId, nocNo);
+
+			CFBondGatePass dataForPrint = null;
+
+			List<CFBondGatePass> result = cfbondGatePassRepository.getDataForBondGateOutPass(companyId,
+					branchId, gatePassId);
+			if (!result.isEmpty()) {
+				dataForPrint = result.get(0);
+				// Process the firstResult
+			}
+			
+			
+			BigDecimal totalQtyTakenOut = result.stream()
+				    .map(CFBondGatePass::getQtyTakenOut)           // Extract qtyTakenOut from each object
+				    .filter(qty -> qty != null)               // Filter out null values
+				    .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum the non-null values
+
+				System.out.println("Total Qty Taken Out: " + totalQtyTakenOut);
+				
+				StringBuilder exBondBeNosBuilder = new StringBuilder();
+
+				result.stream()
+				    .map(CFBondGatePass::getExBondBeNo)  // Extract exBondBeNo from each object
+				    .filter(Objects::nonNull)             // Filter out null values
+				    .forEach(exBondBeNo -> {
+				        if (exBondBeNosBuilder.length() > 0) {
+				            exBondBeNosBuilder.append(","); // Add comma before the next value if it's not the first one
+				        }
+				        exBondBeNosBuilder.append(exBondBeNo); // Append the exBondBeNo
+				    });
+
+				
+				// StringBuilder for boeNo, bondNo, and igmNo
+				StringBuilder boeNosBuilder = new StringBuilder();
+				StringBuilder bondNosBuilder = new StringBuilder();
+				StringBuilder igmNosBuilder = new StringBuilder();
+
+				// Variable for sum of inBondedPackages
+			
+
+				
+				
+				// Stream through the result list
+
+				 BigDecimal totalInBondedPackages =BigDecimal.ZERO;
+					for (CFBondGatePass item1 :result)
+					{
+						if (item1.getBoeNo() != null) {
+					        if (boeNosBuilder.length() > 0) {
+					            boeNosBuilder.append(","); // Add comma before the next value if it's not the first one
+					        }
+					        boeNosBuilder.append(item1.getBoeNo()); // Append boeNo
+					    }
+					    
+					    // Collect bondNo
+					    if (item1.getBondingNo() != null) {
+					        if (bondNosBuilder.length() > 0) {
+					            bondNosBuilder.append(","); // Add comma before the next value if it's not the first one
+					        }
+					        bondNosBuilder.append(item1.getBondingNo()); // Append bondNo
+					    }
+					    
+					    // Collect igmNo
+					    if (item1.getIgmNo() != null) {
+					        if (igmNosBuilder.length() > 0) {
+					            igmNosBuilder.append(","); // Add comma before the next value if it's not the first one
+					        }
+					        igmNosBuilder.append(item1.getIgmNo()); // Append igmNo
+					    }
+					     
+					    // Sum the inBondedPackages
+					    if (item1.getInBondPackages() != null) {
+					    	
+					    	
+					        totalInBondedPackages = totalInBondedPackages.add(item1.getInBondPackages());
+					        
+					        System.out.println("Total In-Bonded Packages: " + totalInBondedPackages);
+					    }
+					}
+				    // Collect boeNo
+				// Print the results
+				System.out.println("BOE Nos: " + boeNosBuilder.toString());
+				System.out.println("Bond Nos: " + bondNosBuilder.toString());
+				System.out.println("IGM Nos: " + igmNosBuilder.toString());
+				
+
+				System.out.println("Total In-Bonded Packages: " + totalInBondedPackages);
+				String exBondBeNos = exBondBeNosBuilder.toString();
+				System.out.println("Ex Bond Be Nos: " + exBondBeNos);
+				
+
+			System.out.println("gatePassdata____________________________________________");
+			String c1 = username;
+			String b1 = companyname;
+			String u1 = branchname;
+
+			Company companyAddress = companyRepo.findByCompany_Id(companyId);
+
+			Branch branchAddress = branchRepo.findByBranchId(branchId);
+
+			String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
+					+ companyAddress.getAddress_3() + companyAddress.getCity();
+
+			String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress1() + " "
+					+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+			String city = companyAddress.getCity();
+
+			String bondCode = branchAddress.getBondCode();
+			context.setVariable("gatePassId", dataForPrint.getGatePassId());
+			context.setVariable("gatePassDate", dataForPrint.getGatePassDate());
+			context.setVariable("ExBondboeNo", exBondBeNos);
+//			context.setVariable("boeNo", dataForPrint.getBoeNo());
+			context.setVariable("boeNo", boeNosBuilder.toString());
+			context.setVariable("boeDate", dataForPrint.getInBondingDate());
+			context.setVariable("exBondBoeDate", dataForPrint.getExBondBeDate());
+//			context.setVariable("igmNo", dataForPrint.getIgmNo());
+			
+			context.setVariable("igmNo", igmNosBuilder.toString());
+			
+//			context.setVariable("itemNo", dataForPrint.getIgmLineNoi());
+			context.setVariable("igmLineNo", dataForPrint.getIgmLineNo());
+//			context.setVariable("bondingNo", dataForPrint.getBondingNo());
+			context.setVariable("bondingNo", bondNosBuilder.toString());			
+			context.setVariable("bondingDate", dataForPrint.getBondingDate());
+//			context.setVariable("inBondPkgs", dataForPrint.getInBondPackages());
+			
+			context.setVariable("inBondPkgs", totalInBondedPackages);
+			context.setVariable("inBondGrWeight", dataForPrint.getInBondedGw());
+			
+			context.setVariable("exBondGrWeight", dataForPrint.getExBondedGw());
+			context.setVariable("consignee", dataForPrint.getImporterName());
+			
+			context.setVariable("typeOfPackages", dataForPrint.getTypeOfPackage());
+			context.setVariable("cha", dataForPrint.getCha());
+			context.setVariable("address", dataForPrint.getImporterAddress1() + " " + dataForPrint.getImporterAddress2()
+					+ " " + dataForPrint.getImporterAddress3());
+			
+			context.setVariable("cargoDiscrpition", dataForPrint.getCommodityDescription());
+			context.setVariable("exBondPkgs", totalQtyTakenOut);
+			context.setVariable("trasporterName", dataForPrint.getTransporterName());
+		
+//				context.setVariable("noOfTw", dataForPrint.getNoOf20ft());
+	
+			context.setVariable("cargoDesc", dataForPrint.getCommodityDescription());
+		
+			context.setVariable("result", result);
+			context.setVariable("c1", c1);
+			context.setVariable("b1", b1);
+			context.setVariable("u1", u1);
+			context.setVariable("companyAdd", companyAdd);
+			context.setVariable("branchAdd", branchAdd);
+			context.setVariable("bondCode", bondCode);
+			context.setVariable("city", city);
+
+//				context.setVariable("gatePassdata", gatePassdata);
+
+			String htmlContent = templateEngine.process("BondGatePass", context);
+
+			ITextRenderer renderer = new ITextRenderer();
+
+			renderer.setDocumentFromString(htmlContent);
+			renderer.layout();
+
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			renderer.createPDF(outputStream);
+
+			byte[] pdfBytes = outputStream.toByteArray();
+
+			String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
+		}
 }

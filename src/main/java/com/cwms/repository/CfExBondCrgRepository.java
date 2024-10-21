@@ -80,6 +80,8 @@ public interface CfExBondCrgRepository extends JpaRepository<CfExBondCrg, String
 
 	 
 	 
+	 
+//	 
 //	 @Query("SELECT c FROM CfExBondCrg c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo AND c.exBondingId = :exBondingId and c.inBondingId=:inBondingId")
 //	 CfExBondCrg getDataOfExbond(
 //	        @Param("companyId") String companyId,
@@ -89,8 +91,10 @@ public interface CfExBondCrgRepository extends JpaRepository<CfExBondCrg, String
 //	        @Param("exBondingId") String exBondingId,
 //	        @Param("inBondingId") String inBondingId
 //	    );
+//	 
 	 
 	 
+		
 	 
 	 @Query("SELECT NEW com.cwms.entities.CfExBondCrg(c.companyId, c.branchId, c.finYear, c.exBondingId, c.exBondingDate, " +
 		       "c.profitcentreId, c.nocTransId, c.nocNo, c.nocValidityDate, c.boeNo, c.bondingNo, c.bondingDate, c.exBondBeNo, " +
@@ -124,6 +128,10 @@ public interface CfExBondCrgRepository extends JpaRepository<CfExBondCrg, String
 		      @Param("inBondingId") String inBondingId
 		);
 
+
+	 
+	 
+	 
 	 
 	 @Query(value = "select c.giTransporterName, p.partyName, pa.address1, pa.address2, pa.address3  " +
              "from CfExBondCrg c " +
