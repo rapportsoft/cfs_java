@@ -220,4 +220,20 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	List<Object[]> searchEmptyVehicleGateInRecords(@Param("cid") String cid,@Param("bid") String bid,@RequestParam("val") String val);
 	
 	
+	@Query(value="select New com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.erpDocRefNo, g.docRefNo, g.lineNo,"
+			+ "p.partyName, g.imagePath, g.backImage, g.inGateInDate) "
+			+ "from GateIn g LEFT OUTER JOIN Party p ON g.companyId=p.companyId and g.branchId=p.branchId and g.sl=p.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "g.docRefNo=:doc and g.containerNo=:con")
+	GateIn getDataByIgmNoAndContainerNo(@Param("cid") String cid,@Param("bid") String bid,@Param("doc") String doc,
+			@Param("con") String con);
+	
+	@Query(value="select New com.cwms.entities.GateIn(g.companyId, g.branchId, g.gateInId, g.erpDocRefNo, g.docRefNo, g.lineNo,"
+			+ "p.partyName, g.imagePath, g.backImage, g.inGateInDate) "
+			+ "from GateIn g LEFT OUTER JOIN Party p ON g.companyId=p.companyId and g.branchId=p.branchId and g.sl=p.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:gateinid and g.erpDocRefNo=:igmtrans and "
+			+ "g.docRefNo=:igm and g.status !='D'")
+	GateIn getData1(@Param("cid") String cid,@Param("bid") String bid,@Param("gateinid") String gateinid,@Param("igmtrans") String igmtrans,
+			@Param("igm") String igm);
+	
 }

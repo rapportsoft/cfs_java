@@ -3219,6 +3219,21 @@ public GateIn(String gateInId, String docRefNo,
 }
 
 
+public GateIn(String companyId, String branchId, String gateInId, String erpDocRefNo, String docRefNo, String lineNo,
+		String sl, String imagePath, String backImage, Date inGateInDate) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.gateInId = gateInId;
+	this.erpDocRefNo = erpDocRefNo;
+	this.docRefNo = docRefNo;
+	this.lineNo = lineNo;
+	this.sl = sl;
+	this.imagePath = imagePath;
+	this.backImage = backImage;
+	this.inGateInDate = inGateInDate;
+}
+
 
 
 }

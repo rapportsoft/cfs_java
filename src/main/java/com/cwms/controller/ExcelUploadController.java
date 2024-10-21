@@ -3,6 +3,7 @@ package com.cwms.controller;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +35,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.repository.query.Param;
@@ -53,6 +56,7 @@ import com.cwms.entities.CFIgm;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.GateIn;
+import com.cwms.entities.IgmDocumentUpload;
 import com.cwms.entities.ImportInventory;
 import com.cwms.entities.IsoContainer;
 import com.cwms.entities.Party;
@@ -65,6 +69,7 @@ import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.CompanyRepo;
 import com.cwms.repository.GateInRepository;
+import com.cwms.repository.IGMDocumentUploadRepository;
 import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.IsoContainerRepository;
 import com.cwms.repository.PartyRepository;
@@ -106,18 +111,27 @@ public class ExcelUploadController {
 	@Autowired
 	private BranchRepo branchrepo;
 
+	@Autowired
+	private IGMDocumentUploadRepository igmdocumentuploadrepo;
+
 	@Value("${file.igmFormat}")
 	private String filePath;
 
 	@Value("${file.igmFiles}")
 	private String igmFiles;
 
+	@Value("${file.upload.igmUpload}")
+	private String igmUploadPath;
+	
+	@Value("${file.upload.eirUpload}")
+	private String eirUploadPath;
+
 	@Autowired
 	private GateInRepository gateinrepo;
 
 	@Autowired
 	private ImportInventoryRepository importinventoryrepo;
-	
+
 	@Autowired
 	private ScanDetailRepository scandetailrepo;
 
@@ -1970,7 +1984,7 @@ public class ExcelUploadController {
 			if (igm == null) {
 				return new ResponseEntity<>("Igm data not found", HttpStatus.CONFLICT);
 			}
-			
+
 			String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05079", "2024");
 
 			int lastNextNumericId2 = Integer.parseInt(holdId2.substring(4));
@@ -1978,9 +1992,8 @@ public class ExcelUploadController {
 			int nextNumericNextID2 = lastNextNumericId2 + 1;
 
 			String HoldNextIdD2 = String.format("SCAN%06d", nextNumericNextID2);
-			
-			System.out.println("tableData "+tableData.size());
 
+			System.out.println("tableData " + tableData.size());
 
 			for (Map<String, String> data : tableData) {
 				String con = data.get("ContainerNo");
@@ -2017,7 +2030,7 @@ public class ExcelUploadController {
 						scannerTypeValue = finalScannerType; // Fallback to the original scannerType
 					}
 					System.out.println(line.length());
-					
+
 					ScanDetail scan = new ScanDetail();
 					scan.setBranchId(bid);
 					scan.setCompanyId(cid);
@@ -2041,7 +2054,7 @@ public class ExcelUploadController {
 						scan.setScanType("Other");
 					}
 					scan.setScanningUpdated("Y");
-					
+
 					scandetailrepo.save(scan);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05079", HoldNextIdD2, "2024");
 					// Create a final variable to use inside the lambda
@@ -2065,7 +2078,7 @@ public class ExcelUploadController {
 
 								gateinrepo.save(gate);
 							}
-							
+
 							ImportInventory inventory = importinventoryrepo.getById(cid, bid, c.getIgmTransId(),
 									c.getIgmNo(), c.getContainerNo(), c.getGateInId());
 
@@ -2076,52 +2089,48 @@ public class ExcelUploadController {
 							}
 						}
 
-				
 					});
 				}
 			}
-			
+
 			List<ScanDetail> detail = scandetailrepo.getDataByTransId(cid, bid, HoldNextIdD2);
-			
-			Map<String,Object> result = new HashMap<>();
+
+			Map<String, Object> result = new HashMap<>();
 			result.put("success", "File uploaded successfully!!");
 			result.put("scanDetail", detail);
 
-			return new ResponseEntity<>(result,HttpStatus.OK);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 
 		} catch (IOException e) {
 			return ResponseEntity.status(500).body("Failed to read the file.");
 		}
 	}
-	
+
 	@GetMapping("/searchScanningData")
-	public ResponseEntity<?> searchScanningData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			@RequestParam(name="id",required = false) String id) {
-	
+	public ResponseEntity<?> searchScanningData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "id", required = false) String id) {
+
 		List<Object[]> data = scandetailrepo.searchData(cid, bid, id);
-		
-		if(data.isEmpty()) {
-			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
-		
-		return new ResponseEntity<>(data,HttpStatus.OK);
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/getScanningData")
-	public ResponseEntity<?> getScanningData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			@RequestParam(name="id",required = false) String id) {
-	
+	public ResponseEntity<?> getScanningData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "id", required = false) String id) {
+
 		List<ScanDetail> data = scandetailrepo.getDataByTransId(cid, bid, id);
-		
-		if(data.isEmpty()) {
-			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
 		}
-		
-		return new ResponseEntity<>(data,HttpStatus.OK);
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
-	
-	
 
 	public List<List<String>> readAndParseIgmFile(MultipartFile file) throws IOException {
 		List<List<String>> records = new ArrayList<>();
@@ -2295,6 +2304,263 @@ public class ExcelUploadController {
 		}
 
 		return records;
+	}
+
+	@PostMapping("/igmUpload")
+	private ResponseEntity<?> igmUpload(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestParam("igmtrans") String igmtrans,
+			@RequestParam("igm") String igm, @RequestParam("igmLine") String igmLine,
+			@RequestParam("files") MultipartFile[] files, @RequestParam("docType") String[] docTypes) {
+
+		try {
+			for (int i = 0; i < files.length; i++) {
+				MultipartFile file = files[i];
+				String docType = docTypes[i];
+
+				String fileName = file.getOriginalFilename();
+				Path filePath = Paths.get(igmUploadPath, fileName);
+
+				// Check if the file already exists
+				if (Files.exists(filePath)) {
+					// Get the file extension (if present)
+					String extension = "";
+					String baseName = fileName;
+
+					int dotIndex = fileName.lastIndexOf(".");
+					if (dotIndex > 0) {
+						extension = fileName.substring(dotIndex);
+						baseName = fileName.substring(0, dotIndex);
+					}
+
+					// Append a timestamp or unique identifier to the file name
+					String newFileName = baseName + "_" + System.currentTimeMillis() + extension;
+					filePath = Paths.get(igmUploadPath, newFileName);
+				}
+
+				// Save the file
+				Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				int sr = igmdocumentuploadrepo.srNo(cid, bid, igmtrans, igm, igmLine);
+
+				IgmDocumentUpload upload = new IgmDocumentUpload();
+				upload.setCompanyId(cid);
+				upload.setBranchId(bid);
+				upload.setIgmTransId(igmtrans);
+				upload.setIgmNo(igm);
+				upload.setIgmLineNo(igmLine);
+				upload.setSrNo(sr);
+				upload.setDocType(docType);
+				upload.setDocPath(filePath.toString());
+				upload.setCreatedBy(user);
+				upload.setStatus("A");
+				upload.setCreatedDate(new Date());
+
+				igmdocumentuploadrepo.save(upload);
+
+			}
+
+			List<IgmDocumentUpload> data = igmdocumentuploadrepo.getData(cid, bid, igmtrans, igm, igmLine);
+			return new ResponseEntity<>(data, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error uploading files: " + e.getMessage());
+		}
+
+	}
+
+	@GetMapping("/getData")
+	private ResponseEntity<?> getData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igmtrans") String igmtrans, @RequestParam("igm") String igm,
+			@RequestParam("igmLine") String igmLine) {
+
+		List<IgmDocumentUpload> data = igmdocumentuploadrepo.getData(cid, bid, igmtrans, igm, igmLine);
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+
+	@GetMapping("/downloadExistingFile")
+	private ResponseEntity<?> downloadFile(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igmtrans") String igmtrans, @RequestParam("igm") String igm,
+			@RequestParam("igmLine") String igmLine, @RequestParam("sr") int sr) throws FileNotFoundException {
+
+		IgmDocumentUpload data = igmdocumentuploadrepo.getSingleData(cid, bid, igmtrans, igm, igmLine, sr);
+
+		if (data == null) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.NOT_FOUND); // Change to NOT_FOUND for clarity
+		}
+
+		// Create a File object from the complete file path
+		File file = new File(data.getDocPath());
+
+		if (!file.exists() || !file.canRead()) {
+			throw new FileNotFoundException("File not found: " + data.getDocPath());
+		}
+
+		// Get the filename from the File object
+		String fileName = file.getName();
+		if (fileName == null) {
+			// Handle case where filename could not be extracted
+			return new ResponseEntity<>("Filename could not be extracted", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		// Create a Resource from the File object
+		Resource resource = new FileSystemResource(file);
+
+		// Return the file as a response
+		return ResponseEntity.ok()
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"").body(resource);
+	}
+
+	@GetMapping("/searchDataForContainerEir")
+	public ResponseEntity<?> searchDataForContainerEir(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igm") String igm, @RequestParam("con") String con) {
+
+		GateIn gate = gateinrepo.getDataByIgmNoAndContainerNo(cid, bid, igm, con);
+
+		if (gate == null) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<>(gate, HttpStatus.OK);
+	}
+
+	@PostMapping("/saveContainerEIRUpload")
+	public ResponseEntity<?> saveContainerEIRUpload(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestParam("igmtrans") String igmtrans,
+			@RequestParam("igm") String igm, @RequestParam("gateInId") String gateInId,
+			@RequestParam(name="files",required = false) MultipartFile file,@RequestParam(name="files1",required = false) MultipartFile file1) {
+
+		try {
+			
+			
+			GateIn gate = gateinrepo.getData(cid, bid, gateInId, igmtrans, igm);
+			
+			if(gate == null) {
+				return new ResponseEntity<>("Data not found!!",HttpStatus.CONFLICT);
+			}
+
+
+
+			if (file != null) {
+				String fileName = file.getOriginalFilename();
+				Path filePath = Paths.get(eirUploadPath, fileName);
+
+				// Check if the file already exists
+				if (Files.exists(filePath)) {
+					// Get the file extension (if present)
+					String extension = "";
+					String baseName = fileName;
+
+					int dotIndex = fileName.lastIndexOf(".");
+					if (dotIndex > 0) {
+						extension = fileName.substring(dotIndex);
+						baseName = fileName.substring(0, dotIndex);
+					}
+
+					// Append a timestamp or unique identifier to the file name
+					String newFileName = baseName + "_" + System.currentTimeMillis() + extension;
+					filePath = Paths.get(eirUploadPath, newFileName);
+				}
+
+				// Save the file
+				Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				gate.setImagePath(filePath.toString());
+
+			}
+
+		
+
+			if (file1 != null) {
+				String fileName = file1.getOriginalFilename();
+				Path filePath = Paths.get(eirUploadPath, fileName);
+
+				// Check if the file already exists
+				if (Files.exists(filePath)) {
+					// Get the file extension (if present)
+					String extension = "";
+					String baseName = fileName;
+
+					int dotIndex = fileName.lastIndexOf(".");
+					if (dotIndex > 0) {
+						extension = fileName.substring(dotIndex);
+						baseName = fileName.substring(0, dotIndex);
+					}
+
+					// Append a timestamp or unique identifier to the file name
+					String newFileName = baseName + "_" + System.currentTimeMillis() + extension;
+					filePath = Paths.get(eirUploadPath, newFileName);
+				}
+
+				// Save the file
+				Files.copy(file1.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				gate.setBackImage(filePath.toString());
+
+			}
+			gate.setEditedBy(user);
+			gate.setEditedDate(new Date());
+			
+			gateinrepo.save(gate);
+			
+			GateIn gate1 = gateinrepo.getData1(cid, bid, gateInId, igmtrans, igm);
+
+			return new ResponseEntity<>(gate1,HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error uploading files: " + e.getMessage());
+		}
+
+	}
+	
+	
+	@GetMapping("/downloadExistingEIRFile")
+	private ResponseEntity<?> downloadEIRFile(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			 @RequestParam("igmtrans") String igmtrans,@RequestParam("request") String request,
+			@RequestParam("igm") String igm, @RequestParam("gateInId") String gateInId) throws FileNotFoundException {
+
+		GateIn data = gateinrepo.getData(cid, bid, gateInId, igmtrans, igm);
+		
+		if(data == null) {
+			return new ResponseEntity<>("Data not found!!",HttpStatus.CONFLICT);
+		}
+
+		String path = null;
+		
+		if("image".equals(request)) {
+			path = data.getImagePath();
+		}
+		else {
+			path = data.getBackImage();
+		}
+
+		// Create a File object from the complete file path
+		File file = new File(path);
+
+		if (!file.exists() || !file.canRead()) {
+			throw new FileNotFoundException("File not found: " + path);
+		}
+
+		// Get the filename from the File object
+		String fileName = file.getName();
+		if (fileName == null) {
+			// Handle case where filename could not be extracted
+			return new ResponseEntity<>("Filename could not be extracted", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		// Create a Resource from the File object
+		Resource resource = new FileSystemResource(file);
+
+		// Return the file as a response
+		return ResponseEntity.ok()
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"").body(resource);
 	}
 
 }
