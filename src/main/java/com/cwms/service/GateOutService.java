@@ -95,6 +95,7 @@ public class GateOutService {
 						gateOutDtl.setCompanyId(companyId);
 						gateOutDtl.setBranchId(branchId);
 						gateOutDtl.setFinYear("2025");
+						gateOutDtl.setProcessId("P00500");
 						gateOutDtl.setCreatedBy(user);
 						gateOutDtl.setCreatedDate(new Date());
 						gateOutDtl.setApprovedBy(user);
@@ -214,7 +215,7 @@ public class GateOutService {
 
 						gateOutDtl.setEditedBy(user);
 						gateOutDtl.setEditedDate(new Date());
-
+						gateOutDtl.setProcessId("P00500");
 						gateOutDtl.setDeliveryOrderDate(gatePass.getDeliveryOrderDate());
 						gateOutDtl.setDeliveryOrderNo(gatePass.getDeliveryOrderNo());
 						gateOutDtl.setDoValidityDate(gatePass.getDoValidityDate());
