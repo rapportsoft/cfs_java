@@ -20,6 +20,7 @@ import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.CfinbondcrgHDR;
 import com.cwms.entities.Party;
 import com.cwms.service.CfinbondCrgService;
+import com.lowagie.text.DocumentException;
 
 
 @RestController
@@ -119,4 +120,48 @@ public class CfinbondCrgController {
 	        BigDecimal sumOfInBondPackages = cfinbondCrgService.getSumOfInBondPackagesForCommodity(companyId, branchId, inBondingId, cfBondDtlId, nocTransId);
 	        return ResponseEntity.ok(sumOfInBondPackages);
 	    }
+	   
+	   
+//	   
+//	   
+//	   @GetMapping("/generateCustomeInBondPrint")
+//	    public ResponseEntity<String> generateSurveyPdf(
+//	    		@RequestParam(name = "companyId") String companyId,
+//				@RequestParam(name = "branchId") String branchId, @RequestParam(name = "uname") String username,
+//				@RequestParam(name = "type") String type, @RequestParam(name = "cname") String companyname,
+//				@RequestParam(name = "bname") String branchname, @RequestParam(name = "inBondingId") String inBondingId) throws DocumentException {
+//	        try {
+//	            // Call the service method and return the response
+//	            return cfinbondCrgService.getPrintOfCutomesBondInBondCargo(companyId, branchId, username, type, companyname, branchname, inBondingId);
+//	        } catch (Exception e) {
+//	            // In case of an error, you can handle the exception and return an appropriate response
+//	            return ResponseEntity.status(500).body("Error generating PDF: " + e.getMessage());
+//	        }
+//	    }
+	   
+	   
+	   @GetMapping("/generateCustomeInBondPrint")
+	   public ResponseEntity<String> generateSurveyPdf(
+	       @RequestParam(name = "companyId") String companyId,
+	       @RequestParam(name = "branchId") String branchId, 
+	       @RequestParam(name = "uname") String username,
+	       @RequestParam(name = "type") String type, 
+	       @RequestParam(name = "cname") String companyname,
+	       @RequestParam(name = "bname") String branchname, 
+	       @RequestParam(name = "inBondingId") String inBondingId) throws DocumentException {
+
+	       try {
+	           // Call the service to generate the PDF and return the response
+	           return cfinbondCrgService.getPrintOfCutomesBondInBondCargo(
+	               companyId, branchId, username, type, companyname, branchname, inBondingId
+	           );
+	       } catch (Exception e) {
+	           // Log the error for debugging
+	           System.err.println("Error generating PDF: " + e.getMessage());
+
+	           // Return a 500 status with the error message
+	           return ResponseEntity.status(500).body("Error generating PDF: " + e.getMessage());
+	       }
+	   }
+
 }

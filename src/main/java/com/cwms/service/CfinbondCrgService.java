@@ -2,16 +2,25 @@ package com.cwms.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.cwms.entities.Branch;
+import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.CfInBondGrid;
 import com.cwms.entities.Cfbondnoc;
@@ -19,20 +28,25 @@ import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.CfinbondcrgHDR;
 import com.cwms.entities.CfinbondcrgHDRDtl;
-import com.cwms.entities.GateIn;
+import com.cwms.entities.Company;
 import com.cwms.entities.YardBlockCell;
+import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfBondNocDtlRepository;
 import com.cwms.repository.CfInBondGridRepository;
+import com.cwms.repository.CfbondGatePassRepository;
 import com.cwms.repository.CfbondnocRepository;
 import com.cwms.repository.CfinbondCrgHdrDtlRepo;
 import com.cwms.repository.CfinbondCrgHdrRepo;
 import com.cwms.repository.CfinbondcrgDtlRepo;
 import com.cwms.repository.CfinbondcrgRepo;
+import com.cwms.repository.CompanyRepo;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.YardBlockCellRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.lowagie.text.DocumentException;
 
 @Service
 public class CfinbondCrgService {
@@ -60,9 +74,29 @@ public class CfinbondCrgService {
 
 	@Autowired
 	public CfInBondGridRepository cfInBondGridRepository;
-
+	
+	
 	@Autowired
 	public YardBlockCellRepository yardBlockCellRepository;
+	
+	@Autowired
+	private TemplateEngine templateEngine;
+
+	@Autowired
+	private CompanyRepo companyRepo;
+
+	@Autowired
+	private BranchRepo branchRepo;
+	
+	
+	
+	
+	
+	
+	
+	@Autowired
+	public CfbondGatePassRepository cfbondGatePassRepository;
+
 //	if(cfGateIn.getYardLocationId()!=null)
 //	{
 //		
@@ -119,7 +153,6 @@ public class CfinbondCrgService {
 //		    }
 //		
 //	}
-
 	public ResponseEntity<?> saveDataOfCfInbondCrg(String companyId, String branchId, String user, String flag,
 			Map<String, Object> requestBody) {
 		ObjectMapper object = new ObjectMapper();
@@ -158,12 +191,14 @@ public class CfinbondCrgService {
 
 		CfInBondGrid saved = null;
 
-		if (cfinbondcrg != null) {
+		if (cfinbondcrg != null) 
+		{
 			if ("add".equals(flag)) 
 			{
 				Boolean exists = cfinbondCrgHdrRepo.isDataExist(companyId, branchId, cfinbondcrg.getNocTransId(),
 						cfinbondcrg.getNocNo());
-				if (exists) {
+				if (exists) 
+				{
 					CfinbondcrgHDR cfinbondHDR = cfinbondCrgHdrRepo.findCfInBondCrgHdrForUpdationg(companyId, branchId,
 							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
 
@@ -262,7 +297,8 @@ public class CfinbondCrgService {
 					BigDecimal totalWeight = BigDecimal.ZERO;
 					BigDecimal totalArea = BigDecimal.ZERO;
 
-					for (CfinbondcrgDtl item : cfinbondcrgDtlList) {
+					for (CfinbondcrgDtl item : cfinbondcrgDtlList) 
+					{
 
 						totalCif1 = totalCif1.add(item.getInbondCifValue());
 						totalInbondedd = totalInbondedd.add(item.getInBondedPackages());
@@ -279,9 +315,8 @@ public class CfinbondCrgService {
 						crgDetails.setApprovedBy(user);
 						crgDetails.setApprovedDate(new Date());
 						crgDetails.setBoeNo(cfinbondcrg.getBoeNo());
-						crgDetails.setBondingDate(cfinbondcrg.getInBondingDate());
-						crgDetails.setBondingNo(cfinbondcrg.getInBondingId());
-
+						crgDetails.setBondingDate(cfinbondcrg.getBondingDate());
+						crgDetails.setBondingNo(cfinbondcrg.getBondingNo());
 						crgDetails.setBranchId(branchId);
 						crgDetails.setCompanyId(companyId);
 						crgDetails.setBreakage(item.getBreakage());
@@ -375,7 +410,8 @@ public class CfinbondCrgService {
 
 							saved = cfInBondGridRepository.save(cf);
 
-							if (saved != null) {
+							if (saved != null) 
+							{
 								YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
 										saved.getYardLocation(), saved.getYardBlock(), saved.getBlockCellNo());
 
@@ -510,7 +546,10 @@ public class CfinbondCrgService {
 						System.out.println("Update noc after inbond in exist" + updateInCfBondNoc);
 					}
 
-				} else {
+				} 
+				
+				else
+				{
 
 					System.out.println("flag_jgjhjhvnvnbvbvbvbcgf_______________" + flag);
 					String holdId1 = processNextIdRepository.findAuditTrail(companyId, branchId, "P03205", "2242");
@@ -683,8 +722,8 @@ public class CfinbondCrgService {
 						crgDetails.setApprovedBy(user);
 						crgDetails.setApprovedDate(new Date());
 						crgDetails.setBoeNo(cfinbondcrg.getBoeNo());
-						crgDetails.setBondingDate(cfinbondcrg.getInBondingDate());
-						crgDetails.setBondingNo(cfinbondcrg.getInBondingId());
+						crgDetails.setBondingDate(cfinbondcrg.getBondingDate());
+						crgDetails.setBondingNo(cfinbondcrg.getBondingNo());
 
 						crgDetails.setBranchId(branchId);
 						crgDetails.setCompanyId(companyId);
@@ -877,6 +916,8 @@ public class CfinbondCrgService {
 				}
 
 			}
+			
+			
 
 			else {
 				CfinbondcrgHDR findCfBondCrgHDRData = null;
@@ -1066,8 +1107,7 @@ public class CfinbondCrgService {
 
 							}
 
-							findCfBondCrgData.setInBondedPackages(cfinbondcrg.getInBondedPackages());
-
+							
 							findCfBondCrgData.setInBond20Ft(cfinbondcrg.getInBond20Ft());
 							findCfBondCrgData.setInBond40Ft(cfinbondcrg.getInBond40Ft());
 							findCfBondCrgData.setOtlNo(cfinbondcrg.getOtlNo());
@@ -1075,10 +1115,24 @@ public class CfinbondCrgService {
 							findCfBondCrgData.setSection49(cfinbondcrg.getSection49());
 							findCfBondCrgData.setInbondInsuranceValue(totalInsurance);
 							findCfBondCrgData.setInbondGrossWt(totalWeight);
+							
+							
+							
+//							BigDecimal totalInbondedd = BigDecimal.ZERO;
+//							BigDecimal totalCif = BigDecimal.ZERO;
+//							BigDecimal totalCargo = BigDecimal.ZERO;
+//							BigDecimal totalInsurance = BigDecimal.ZERO;
+//							BigDecimal totalWeight = BigDecimal.ZERO;
+//							BigDecimal totalArea = BigDecimal.ZERO;
+							
+							
+							findCfBondCrgData.setInBondedPackages(totalInbondedd);
+							findCfBondCrgData.setAreaOccupied(totalArea);
 
 //							findCfBondCrgData.setInbondGrossWt(totalWeight);
 //							findCfBondCrgData.setInbondInsuranceValue(totalInsurance);
-							findCfBondCrgData.setAreaOccupied(cfinbondcrg.getAreaOccupied());
+//							findCfBondCrgData.setInBondedPackages(cfinbondcrg.getInBondedPackages());
+//							findCfBondCrgData.setAreaOccupied(cfinbondcrg.getAreaOccupied());
 							findCfBondCrgData.setShortagePackages(cfinbondcrg.getShortagePackages());
 							findCfBondCrgData.setBreakage(cfinbondcrg.getBreakage());
 							findCfBondCrgData.setDamagedQty(cfinbondcrg.getDamagedQty());
@@ -1149,8 +1203,8 @@ public class CfinbondCrgService {
 							crgDetails.setApprovedBy(user);
 							crgDetails.setApprovedDate(new Date());
 							crgDetails.setBoeNo(cfinbondcrg.getBoeNo());
-							crgDetails.setBondingDate(cfinbondcrg.getInBondingDate());
-							crgDetails.setBondingNo(cfinbondcrg.getInBondingId());
+							crgDetails.setBondingDate(cfinbondcrg.getBondingDate());
+							crgDetails.setBondingNo(cfinbondcrg.getBondingNo());
 							crgDetails.setAreaOccupied(item.getAreaOccupied());
 							crgDetails.setBranchId(branchId);
 							crgDetails.setCompanyId(companyId);
@@ -1456,5 +1510,126 @@ public class CfinbondCrgService {
 	public Cfinbondcrg getDataOfBoeNoForEntryInExbond(String companyId, String branchId, String nocTransId,
 			String nocNo, String boeNo) {
 		return cfinbondCrgHdrRepo.getDataOfBoeNoForEntryInExbond(companyId, branchId, nocTransId, nocNo, boeNo);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public ResponseEntity<String> getPrintOfCutomesBondInBondCargo( String companyId,
+			String branchId,  String username,
+			 String type,String companyname,
+			 String branchname,  String inBondingId) throws DocumentException {
+		
+		Context context = new Context();
+
+		Cfinbondcrg dataForPrint = null;
+
+		List<Cfinbondcrg> result = cfinbondcrgRepo.getDataForCustomesBondInBondPrint(companyId,
+				branchId, inBondingId);
+		if (!result.isEmpty()) {
+			dataForPrint = result.get(0);
+			// Process the firstResult
+		}
+		
+			System.out.println("gatePassdata____________________________________________"+result);
+			
+			
+		String c1 = username;
+		String b1 = companyname;
+		String u1 = branchname;
+
+		Company companyAddress = companyRepo.findByCompany_Id(companyId);
+
+		Branch branchAddress = branchRepo.findByBranchId(branchId);
+
+		String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
+				+ companyAddress.getAddress_3() + companyAddress.getCity();
+
+		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress1() + " "
+				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+		String city = companyAddress.getCity();
+
+		String bondCode = branchAddress.getBondCode();
+		context.setVariable("inBondingId", dataForPrint.getInBondingId());
+		context.setVariable("inBondingIdDate", dataForPrint.getInBondingDate());
+		context.setVariable("boeNo", dataForPrint.getBoeNo());
+//		context.setVariable("boeNo", boeNosBuilder.toString());
+		context.setVariable("boeDate", dataForPrint.getBoeDate());
+		context.setVariable("igmNo", dataForPrint.getIgmNo());
+		
+		context.setVariable("nocNo", dataForPrint.getNocNo());
+		context.setVariable("nocDate", dataForPrint.getNocDate());
+
+		context.setVariable("igmLineNo", dataForPrint.getIgmLineNo());
+		context.setVariable("bondingNo", dataForPrint.getBondingNo());
+		
+		context.setVariable("bondingDate", dataForPrint.getBondingDate());
+
+		context.setVariable("inBondPackages", dataForPrint.getInBondedPackages());
+		context.setVariable("inBondWt", dataForPrint.getInbondGrossWt());
+		
+	
+		context.setVariable("consignee", dataForPrint.getImporterName());
+		
+		context.setVariable("section", dataForPrint.getSection49() == "Y" ? "YES" :"NO");
+		
+		context.setVariable("area", dataForPrint.getAreaAllocated());
+		context.setVariable("week", dataForPrint.getNocWeek());
+		
+		
+		context.setVariable("ftinbond", dataForPrint.getInBond20Ft());
+		context.setVariable("ft", dataForPrint.getInBond40Ft());
+		context.setVariable("spaceType", dataForPrint.getSpaceType());
+		
+		
+		context.setVariable("exBondGrWeight", dataForPrint.getExBondedGw());
+		context.setVariable("consignee", dataForPrint.getImporterName());
+		
+		context.setVariable("typeOfPackages", dataForPrint.getTypeOfPackage());
+		context.setVariable("cha", dataForPrint.getCha());
+		context.setVariable("address", dataForPrint.getImporterAddress1() + " " + dataForPrint.getImporterAddress2()
+				+ " " + dataForPrint.getImporterAddress3());
+		
+		context.setVariable("cargoDiscrpition", dataForPrint.getCommodityDescription());
+
+		context.setVariable("cargoDesc", dataForPrint.getCommodityDescription());
+	
+		context.setVariable("result", result);
+		context.setVariable("c1", c1);
+		context.setVariable("b1", b1);
+		context.setVariable("u1", u1);
+		context.setVariable("companyAdd", companyAdd);
+		context.setVariable("branchAdd", branchAdd);
+		context.setVariable("bondCode", bondCode);
+		context.setVariable("city", city);
+
+		String htmlContent = templateEngine.process("CustomeBondInbond", context);
+
+		ITextRenderer renderer = new ITextRenderer();
+
+		renderer.setDocumentFromString(htmlContent);
+		renderer.layout();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		renderer.createPDF(outputStream);
+
+		byte[] pdfBytes = outputStream.toByteArray();
+
+		String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
 	}
 }

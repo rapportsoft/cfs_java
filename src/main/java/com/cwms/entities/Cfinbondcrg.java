@@ -12,295 +12,290 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @IdClass(CfinbondcrgId.class)
 public class Cfinbondcrg implements Serializable {
 
-    @Id
-    @Column(name = "Company_Id", length = 6, nullable = true)
-    private String companyId;
-
-    @Id
-    @Column(name = "Branch_Id", length = 6, nullable = true)
-    private String branchId;
-
-    @Id
-    @Column(name = "Fin_Year", length = 4, nullable = true)
-    private String finYear;
-
-    @Id
-    @Column(name = "In_Bonding_HDR_Id", length = 10, nullable = true)
-    private String inBondingHdrId;
-    
-    @Id
-    @Column(name = "In_Bonding_Id", length = 10, nullable = true)
-    private String inBondingId;
-
-    @Column(name = "In_Bonding_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date inBondingDate;
-
-    @Id
-    @Column(name = "Profitcentre_Id", length = 6, nullable = true)
-    private String profitcentreId;
-
-    @Id
-    @Column(name = "NOC_Trans_Id", length = 10, nullable = true)
-    private String nocTransId;
+	@Id
+	@Column(name = "Company_Id", length = 6, nullable = true)
+	private String companyId;
 
-    @Column(name = "NOC_Trans_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date nocTransDate;
-
-    @Column(name = "IGM_No", length = 10, nullable = true)
-    private String igmNo;
+	@Id
+	@Column(name = "Branch_Id", length = 6, nullable = true)
+	private String branchId;
 
-    @Column(name = "IGM_Date")
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date igmDate;
+	@Id
+	@Column(name = "Fin_Year", length = 4, nullable = true)
+	private String finYear;
+
+	@Id
+	@Column(name = "In_Bonding_HDR_Id", length = 10, nullable = true)
+	private String inBondingHdrId;
 
-    @Column(name = "IGM_Line_No", length = 10, nullable = true)
-    private String igmLineNo;
+	@Id
+	@Column(name = "In_Bonding_Id", length = 10, nullable = true)
+	private String inBondingId;
 
-    @Id
-    @Column(name = "NOC_No", length = 25, nullable = true)
-    private String nocNo;
+	@Column(name = "In_Bonding_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date inBondingDate;
 
-    @Column(name = "NOC_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date nocDate;
+	@Id
+	@Column(name = "Profitcentre_Id", length = 6, nullable = true)
+	private String profitcentreId;
 
-    @Column(name = "NOC_Validity_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date nocValidityDate;
+	@Id
+	@Column(name = "NOC_Trans_Id", length = 10, nullable = true)
+	private String nocTransId;
 
-    @Column(name = "NOC_From_Date")
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date nocFromDate;
+	@Column(name = "NOC_Trans_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date nocTransDate;
 
-    @Column(name = "Shift", length = 6)
-    private String shift;
+	@Column(name = "IGM_No", length = 10, nullable = true)
+	private String igmNo;
 
-    @Column(name = "Gate_In_id", length = 10)
-    private String gateInId;
+	@Column(name = "IGM_Date")
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date igmDate;
 
-    @Column(name = "BOE_No", length = 20, nullable = true)
-    private String boeNo;
+	@Column(name = "IGM_Line_No", length = 10, nullable = true)
+	private String igmLineNo;
 
-    @Column(name = "BOE_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date boeDate;
+	@Id
+	@Column(name = "NOC_No", length = 25, nullable = true)
+	private String nocNo;
 
-    @Column(name = "Acc_Sr_no", nullable = true)
-    private int accSrNo;
+	@Column(name = "NOC_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date nocDate;
 
-    @Column(name = "On_Account_Of", length = 6, nullable = true)
-    private String onAccountOf;
+	@Column(name = "NOC_Validity_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date nocValidityDate;
 
-    @Column(name = "Shipping_Agent", length = 6, nullable = true)
-    private String shippingAgent;
+	@Column(name = "NOC_From_Date")
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date nocFromDate;
 
-    @Column(name = "Shipping_Line", length = 6, nullable = true)
-    private String shippingLine;
+	@Column(name = "Shift", length = 6)
+	private String shift;
 
-    @Column(name = "Bonding_no", length = 25)
-    private String bondingNo;
+	@Column(name = "Gate_In_id", length = 10)
+	private String gateInId;
 
-    @Column(name = "Bonding_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date bondingDate;
+	@Column(name = "BOE_No", length = 20, nullable = true)
+	private String boeNo;
 
-    @Column(name = "Bond_Validity_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date bondValidityDate;
-    
-    
+	@Column(name = "BOE_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date boeDate;
 
-    @Column(name = "INVOICE_UPTO_DATE", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date invoiceUptoDate;
+	@Column(name = "Acc_Sr_no", nullable = true)
+	private int accSrNo;
 
-    @Column(name = "cha_sr_no", nullable = true)
-    private int chaSrNo;
+	@Column(name = "On_Account_Of", length = 6, nullable = true)
+	private String onAccountOf;
 
-    @Column(name = "CHA", length = 6, nullable = true)
-    private String cha;
+	@Column(name = "Shipping_Agent", length = 6, nullable = true)
+	private String shippingAgent;
 
-    @Column(name = "CHA_Code", length = 18, nullable = true)
-    private String chaCode;
+	@Column(name = "Shipping_Line", length = 6, nullable = true)
+	private String shippingLine;
 
-    @Column(name = "Billing_Party", length = 6, nullable = true)
-    private String billingParty;
+	@Column(name = "Bonding_no", length = 25)
+	private String bondingNo;
 
-    @Column(name = "IGST", length = 1, nullable = true)
-    private String igst;
+	@Column(name = "Bonding_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date bondingDate;
 
-    @Column(name = "CGST", length = 1, nullable = true)
-    private String cgst;
+	@Column(name = "Bond_Validity_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date bondValidityDate;
 
-    @Column(name = "SGST", length = 1, nullable = true)
-    private String sgst;
+	@Column(name = "INVOICE_UPTO_DATE", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date invoiceUptoDate;
 
-    @Column(name = "imp_sr_no", nullable = true)
-    private int impSrNo;
+	@Column(name = "cha_sr_no", nullable = true)
+	private int chaSrNo;
 
-    @Column(name = "Importer_Id", length = 7, nullable = true)
-    private String importerId;
+	@Column(name = "CHA", length = 6, nullable = true)
+	private String cha;
 
-    @Column(name = "Importer_Name", length = 60, nullable = true)
-    private String importerName;
+	@Column(name = "CHA_Code", length = 18, nullable = true)
+	private String chaCode;
 
-    @Column(name = "importer_address1", length = 250)
-    private String importerAddress1;
+	@Column(name = "Billing_Party", length = 6, nullable = true)
+	private String billingParty;
 
-    @Column(name = "importer_address2", length = 100)
-    private String importerAddress2;
+	@Column(name = "IGST", length = 1, nullable = true)
+	private String igst;
 
-    @Column(name = "importer_address3", length = 100)
-    private String importerAddress3;
+	@Column(name = "CGST", length = 1, nullable = true)
+	private String cgst;
 
-    @Column(name = "Number_Of_Marks", length = 150, nullable = true)
-    private String numberOfMarks;
+	@Column(name = "SGST", length = 1, nullable = true)
+	private String sgst;
 
-    @Column(name = "Commodity_Description", length = 250, nullable = true)
-    private String commodityDescription;
+	@Column(name = "imp_sr_no", nullable = true)
+	private int impSrNo;
 
-    @Column(name = "Gross_Weight", precision = 12, scale = 3, nullable = true)
-    private BigDecimal grossWeight;
+	@Column(name = "Importer_Id", length = 7, nullable = true)
+	private String importerId;
 
-    @Column(name = "UOM", length = 6, nullable = true)
-    private String uom;
+	@Column(name = "Importer_Name", length = 60, nullable = true)
+	private String importerName;
 
-    @Column(name = "CONTAINER_NO", length = 11)
-    private String containerNo;
+	@Column(name = "importer_address1", length = 250)
+	private String importerAddress1;
 
-    @Column(name = "NOC_Packages", length = 6, nullable = true)
-    private String nocPackages;
+	@Column(name = "importer_address2", length = 100)
+	private String importerAddress2;
 
-    @Column(name = "Sample_Qty")
-    private int sampleQty;
+	@Column(name = "importer_address3", length = 100)
+	private String importerAddress3;
 
-    @Column(name = "Area_Allocated", precision = 5, scale = 0, nullable = true)
-    private BigDecimal areaAllocated;
+	@Column(name = "Number_Of_Marks", length = 150, nullable = true)
+	private String numberOfMarks;
 
-    @Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
-    private BigDecimal areaOccupied;
+	@Column(name = "Commodity_Description", length = 250, nullable = true)
+	private String commodityDescription;
 
-    @Column(name = "Cargo_Condition", length = 6)
-    private String cargoCondition;
+	@Column(name = "Gross_Weight", precision = 12, scale = 3, nullable = true)
+	private BigDecimal grossWeight;
 
-    @Column(name = "Gate_In_Packages", precision = 8, scale = 0, nullable = true)
-    private BigDecimal gateInPackages;
+	@Column(name = "UOM", length = 6, nullable = true)
+	private String uom;
 
-    @Column(name = "In_Bonded_Packages", precision = 8, scale = 0, nullable = true)
-    private BigDecimal inBondedPackages;
+	@Column(name = "CONTAINER_NO", length = 11)
+	private String containerNo;
 
-    @Column(name = "Ex_Bonded_Packages", precision = 8, scale = 0)
-    private BigDecimal exBondedPackages;
+	@Column(name = "NOC_Packages", length = 6, nullable = true)
+	private String nocPackages;
 
-    @Column(name = "To_Bonded_Packages", precision = 10, scale = 0, nullable = true)
-    private BigDecimal toBondedPackages;
+	@Column(name = "Sample_Qty")
+	private int sampleQty;
 
-    @Column(name = "Space_Allocated", length = 10, nullable = true)
-    private String spaceAllocated;
+	@Column(name = "Area_Allocated", precision = 5, scale = 0, nullable = true)
+	private BigDecimal areaAllocated;
 
-    @Column(name = "Section_49", length = 1, nullable = true)
-    private String section49;
+	@Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
+	private BigDecimal areaOccupied;
 
-    @Column(name = "Container_Size", length = 6, nullable = true)
-    private String containerSize;
+	@Column(name = "Cargo_Condition", length = 6)
+	private String cargoCondition;
 
-    @Column(name = "Container_Type", length = 6, nullable = true)
-    private String containerType;
+	@Column(name = "Gate_In_Packages", precision = 8, scale = 0, nullable = true)
+	private BigDecimal gateInPackages;
 
-    @Column(name = "Examination_Id", length = 10)
-    private String examinationId;
+	@Column(name = "In_Bonded_Packages", precision = 8, scale = 0, nullable = true)
+	private BigDecimal inBondedPackages;
 
-    @Column(name = "Comments", length = 150, nullable = true)
-    private String comments;
+	@Column(name = "Ex_Bonded_Packages", precision = 8, scale = 0)
+	private BigDecimal exBondedPackages;
 
-    @Column(name = "CIF_Value", precision = 15, scale = 3, nullable = true)
-    private BigDecimal cifValue;
+	@Column(name = "To_Bonded_Packages", precision = 10, scale = 0, nullable = true)
+	private BigDecimal toBondedPackages;
 
-    @Column(name = "Cargo_Duty", precision = 15, scale = 3, nullable = true)
-    private BigDecimal cargoDuty;
+	@Column(name = "Space_Allocated", length = 10, nullable = true)
+	private String spaceAllocated;
 
-    @Column(name = "Insurance_Value", precision = 15, scale = 3, nullable = true)
-    private BigDecimal insuranceValue;
+	@Column(name = "Section_49", length = 1, nullable = true)
+	private String section49;
 
-    @Column(name = "inbond_gross_wt", precision = 10, scale = 2)
-    private BigDecimal inbondGrossWt;
+	@Column(name = "Container_Size", length = 6, nullable = true)
+	private String containerSize;
 
+	@Column(name = "Container_Type", length = 6, nullable = true)
+	private String containerType;
 
-    @Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
-    private BigDecimal inbondInsuranceValue;
+	@Column(name = "Examination_Id", length = 10)
+	private String examinationId;
 
-    @Column(name = "In_Bond_20FT", length = 5, nullable = true)
-    private String inBond20Ft;
+	@Column(name = "Comments", length = 150, nullable = true)
+	private String comments;
 
-    @Column(name = "In_Bond_40FT", length = 5, nullable = true)
-    private String inBond40Ft;
+	@Column(name = "CIF_Value", precision = 15, scale = 3, nullable = true)
+	private BigDecimal cifValue;
 
-    @Column(name = "Ex_Bond_20FT", length = 5, nullable = true)
-    private String exBond20Ft;
+	@Column(name = "Cargo_Duty", precision = 15, scale = 3, nullable = true)
+	private BigDecimal cargoDuty;
 
-    @Column(name = "Ex_Bond_40FT", length = 5, nullable = true)
-    private String exBond40Ft;
+	@Column(name = "Insurance_Value", precision = 15, scale = 3, nullable = true)
+	private BigDecimal insuranceValue;
 
-    @Column(name = "OTL_No", length = 15, nullable = true)
-    private String otlNo;
+	@Column(name = "inbond_gross_wt", precision = 10, scale = 2)
+	private BigDecimal inbondGrossWt;
 
-    @Column(name = "Bond_Yard", length = 20, nullable = true)
-    private String bondYard;
+	@Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+	private BigDecimal inbondInsuranceValue;
 
-    @Column(name = "Status", length = 1, nullable = true)
-    private String status;
+	@Column(name = "In_Bond_20FT", length = 5, nullable = true)
+	private String inBond20Ft;
 
-    @Column(name = "Created_By", length = 10)
-    private String createdBy;
+	@Column(name = "In_Bond_40FT", length = 5, nullable = true)
+	private String inBond40Ft;
 
-    @Column(name = "Created_Date", nullable = true)
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+	@Column(name = "Ex_Bond_20FT", length = 5, nullable = true)
+	private String exBond20Ft;
 
-    @Column(name = "Edited_By", length = 10)
-    private String editedBy;
+	@Column(name = "Ex_Bond_40FT", length = 5, nullable = true)
+	private String exBond40Ft;
 
-    @Column(name = "Edited_Date")
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date editedDate;
+	@Column(name = "OTL_No", length = 15, nullable = true)
+	private String otlNo;
 
-    @Column(name = "Approved_By", length = 10)
-    private String approvedBy;
+	@Column(name = "Bond_Yard", length = 20, nullable = true)
+	private String bondYard;
 
-    @Column(name = "Approved_Date")
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date approvedDate;
+	@Column(name = "Status", length = 1, nullable = true)
+	private String status;
 
-    @Column(name = "Reason_For_Change", length = 150)
-    private String reasonForChange;
+	@Column(name = "Created_By", length = 10)
+	private String createdBy;
 
-    @Column(name = "Reason_For_Change_Details", length = 250)
-    private String reasonForChangeDetails;
+	@Column(name = "Created_Date", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdDate;
 
-    @Column(name = "SyncFlag", length = 1, nullable = true)
-    private String syncFlag;
+	@Column(name = "Edited_By", length = 10)
+	private String editedBy;
 
-    @Column(name = "Document_Status", length = 1, nullable = true)
-    private String documentStatus;
-    
-    
-    
-    @Column(name = "Shortage_Packages")
+	@Column(name = "Edited_Date")
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date editedDate;
+
+	@Column(name = "Approved_By", length = 10)
+	private String approvedBy;
+
+	@Column(name = "Approved_Date")
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date approvedDate;
+
+	@Column(name = "Reason_For_Change", length = 150)
+	private String reasonForChange;
+
+	@Column(name = "Reason_For_Change_Details", length = 250)
+	private String reasonForChangeDetails;
+
+	@Column(name = "SyncFlag", length = 1, nullable = true)
+	private String syncFlag;
+
+	@Column(name = "Document_Status", length = 1, nullable = true)
+	private String documentStatus;
+
+	@Column(name = "Shortage_Packages")
 	private BigDecimal shortagePackages;
 
 	@Column(name = "Damaged_Qty")
@@ -309,21 +304,128 @@ public class Cfinbondcrg implements Serializable {
 	@Column(name = "Breakage")
 	private BigDecimal breakage;
 
+	@Column(name = "Ex_Bonded_Cargo_Duty", precision = 15, scale = 3)
+	private BigDecimal exBondedCargoDuty = BigDecimal.ZERO;
+
+	@Column(name = "Ex_Bonded_Insurance", precision = 15, scale = 3)
+	private BigDecimal exBondedInsurance = BigDecimal.ZERO;
+
+	@Column(name = "Ex_Bonded_CIF", precision = 15, scale = 3)
+	private BigDecimal exBondedCif = BigDecimal.ZERO;
+
+	@Column(name = "Ex_Bonded_GW", precision = 10, scale = 3)
+	private BigDecimal exBondedGw = BigDecimal.ZERO;
+
+	@Transient
+	private String cfBondDtlId;
+
+	@Transient
+	private String typeOfPackage;
+
+	@Transient
+	private BigDecimal inBondedPackagesDtl;
+
+	@Transient
+	private BigDecimal inbondInsuranceValueDtl;
+
+	@Transient
+	private BigDecimal inbondCifValue;
+
+	@Transient
+	private BigDecimal inbondCargoDuty;
+
+	@Transient
+	private BigDecimal inbondGrossWtDtl;
+
+	@Transient
+	private String nocWeek;
 	
 	
+	@Transient
+	private String spaceType;
 	
-	 @Column(name = "Ex_Bonded_Cargo_Duty", precision = 15, scale = 3)
-	    private BigDecimal exBondedCargoDuty=BigDecimal.ZERO;
-	 
-	  @Column(name = "Ex_Bonded_Insurance", precision = 15, scale = 3)
-	    private BigDecimal exBondedInsurance=BigDecimal.ZERO;
-	  
-	  @Column(name = "Ex_Bonded_CIF", precision = 15, scale = 3)
-	    private BigDecimal exBondedCif=BigDecimal.ZERO;
-	  
-	  
-	  @Column(name = "Ex_Bonded_GW", precision = 10, scale = 3)
-	    private BigDecimal exBondedGw=BigDecimal.ZERO;
+	@Transient
+	private BigDecimal grossWeightDtl;
+	
+	public BigDecimal getGrossWeightDtl() {
+		return grossWeightDtl;
+	}
+
+	public void setGrossWeightDtl(BigDecimal grossWeightDtl) {
+		this.grossWeightDtl = grossWeightDtl;
+	}
+
+	public String getSpaceType() {
+		return spaceType;
+	}
+
+	public void setSpaceType(String spaceType) {
+		this.spaceType = spaceType;
+	}
+
+	public String getCfBondDtlId() {
+		return cfBondDtlId;
+	}
+
+	public void setCfBondDtlId(String cfBondDtlId) {
+		this.cfBondDtlId = cfBondDtlId;
+	}
+
+	public String getTypeOfPackage() {
+		return typeOfPackage;
+	}
+
+	public void setTypeOfPackage(String typeOfPackage) {
+		this.typeOfPackage = typeOfPackage;
+	}
+
+	public BigDecimal getInBondedPackagesDtl() {
+		return inBondedPackagesDtl;
+	}
+
+	public void setInBondedPackagesDtl(BigDecimal inBondedPackagesDtl) {
+		this.inBondedPackagesDtl = inBondedPackagesDtl;
+	}
+
+	public BigDecimal getInbondInsuranceValueDtl() {
+		return inbondInsuranceValueDtl;
+	}
+
+	public void setInbondInsuranceValueDtl(BigDecimal inbondInsuranceValueDtl) {
+		this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+	}
+
+	public BigDecimal getInbondCifValue() {
+		return inbondCifValue;
+	}
+
+	public void setInbondCifValue(BigDecimal inbondCifValue) {
+		this.inbondCifValue = inbondCifValue;
+	}
+
+	public BigDecimal getInbondCargoDuty() {
+		return inbondCargoDuty;
+	}
+
+	public void setInbondCargoDuty(BigDecimal inbondCargoDuty) {
+		this.inbondCargoDuty = inbondCargoDuty;
+	}
+
+	public BigDecimal getInbondGrossWtDtl() {
+		return inbondGrossWtDtl;
+	}
+
+	public void setInbondGrossWtDtl(BigDecimal inbondGrossWtDtl) {
+		this.inbondGrossWtDtl = inbondGrossWtDtl;
+	}
+
+	public String getNocWeek() {
+		return nocWeek;
+	}
+
+	public void setNocWeek(String nocWeek) {
+		this.nocWeek = nocWeek;
+	}
 
 	public String getCompanyId() {
 		return companyId;
@@ -1013,8 +1115,6 @@ public class Cfinbondcrg implements Serializable {
 		this.breakage = breakage;
 	}
 
-	
-	
 	public BigDecimal getExBondedCargoDuty() {
 		return exBondedCargoDuty;
 	}
@@ -1046,11 +1146,6 @@ public class Cfinbondcrg implements Serializable {
 	public void setExBondedGw(BigDecimal exBondedGw) {
 		this.exBondedGw = exBondedGw;
 	}
-
-
-	
-	
-	
 
 	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
 			Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
@@ -1201,18 +1296,6 @@ public class Cfinbondcrg implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	// for search data
 	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
@@ -1305,9 +1388,6 @@ public class Cfinbondcrg implements Serializable {
 		this.breakage = breakage;
 	}
 
-	
-	
-	
 	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingId, Date inBondingDate,
 			String profitcentreId, String nocTransId, String nocNo, Date nocTransDate, String igmNo, Date igmDate,
 			String igmLineNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String shift, String gateInId,
@@ -1320,7 +1400,7 @@ public class Cfinbondcrg implements Serializable {
 			String spaceAllocated, String section49, String comments, BigDecimal cifValue, BigDecimal cargoDuty,
 			BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue, String inBond20Ft,
 			String inBond40Ft, String exBond20Ft, String exBond40Ft, String otlNo, String bondYard, String status,
-			BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage,BigDecimal exBondedCargoDuty,
+			BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, BigDecimal exBondedCargoDuty,
 			BigDecimal exBondedInsurance, BigDecimal exBondedCif, BigDecimal exBondedGw) {
 		super();
 		this.companyId = companyId;
@@ -1390,17 +1470,180 @@ public class Cfinbondcrg implements Serializable {
 		this.exBondedCif = exBondedCif;
 		this.exBondedGw = exBondedGw;
 	}
-	
+
 	public Cfinbondcrg(String inBondingHdrId) {
 		super();
 		this.inBondingHdrId = inBondingHdrId;
 	}
-	
-	
-	public Cfinbondcrg(String inBondingId,String boeNo) {
+
+	public Cfinbondcrg(String inBondingId, String boeNo) {
 		super();
 		this.inBondingId = inBondingId;
 		this.boeNo = boeNo;
 	}
+	
+	
+
+
+	// constructor to get data for costumes bond in bond report please check for any
+	// modifications
+//	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+//			Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+//			String igmLineNo, String nocNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String boeNo,
+//			Date boeDate, String bondingNo, Date bondingDate, Date bondValidityDate, String cha, String chaCode,
+//			String importerId, String importerName, String importerAddress1, String importerAddress2,
+//			String importerAddress3, String commodityDescription, BigDecimal grossWeight, String uom,
+//			String nocPackages, BigDecimal areaAllocated, BigDecimal areaOccupied, String cargoCondition,
+//			BigDecimal gateInPackages, BigDecimal inBondedPackages, BigDecimal exBondedPackages,
+//			BigDecimal toBondedPackages, String spaceAllocated, String section49, BigDecimal cifValue,
+//			BigDecimal cargoDuty, BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
+//			String inBond20Ft, String inBond40Ft, String otlNo, String bondYard, String status,
+//			BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage,String cfBondDtlId,String typeOfPackage,BigDecimal inBondedPackagesDtl,
+//			BigDecimal inbondInsuranceValueDtl,BigDecimal inbondCifValue,BigDecimal inbondCargoDuty,BigDecimal inbondGrossWtDtl,String nocWeek) {
+//		super();
+//		this.companyId = companyId;
+//		this.branchId = branchId;
+//		this.finYear = finYear;
+//		this.inBondingHdrId = inBondingHdrId;
+//		this.inBondingId = inBondingId;
+//		this.inBondingDate = inBondingDate;
+//		this.profitcentreId = profitcentreId;
+//		this.nocTransId = nocTransId;
+//		this.nocTransDate = nocTransDate;
+//		this.igmNo = igmNo;
+//		this.igmDate = igmDate;
+//		this.igmLineNo = igmLineNo;
+//		this.nocNo = nocNo;
+//		this.nocDate = nocDate;
+//		this.nocValidityDate = nocValidityDate;
+//		this.nocFromDate = nocFromDate;
+//		this.boeNo = boeNo;
+//		this.boeDate = boeDate;
+//		this.bondingNo = bondingNo;
+//		this.bondingDate = bondingDate;
+//		this.bondValidityDate = bondValidityDate;
+//		this.cha = cha;
+//		this.chaCode = chaCode;
+//		this.importerId = importerId;
+//		this.importerName = importerName;
+//		this.importerAddress1 = importerAddress1;
+//		this.importerAddress2 = importerAddress2;
+//		this.importerAddress3 = importerAddress3;
+//		this.commodityDescription = commodityDescription;
+//		this.grossWeight = grossWeight;
+//		this.uom = uom;
+//		this.nocPackages = nocPackages;
+//		this.areaAllocated = areaAllocated;
+//		this.areaOccupied = areaOccupied;
+//		this.cargoCondition = cargoCondition;
+//		this.gateInPackages = gateInPackages;
+//		this.inBondedPackages = inBondedPackages;
+//		this.exBondedPackages = exBondedPackages;
+//		this.toBondedPackages = toBondedPackages;
+//		this.spaceAllocated = spaceAllocated;
+//		this.section49 = section49;
+//		this.cifValue = cifValue;
+//		this.cargoDuty = cargoDuty;
+//		this.insuranceValue = insuranceValue;
+//		this.inbondGrossWt = inbondGrossWt;
+//		this.inbondInsuranceValue = inbondInsuranceValue;
+//		this.inBond20Ft = inBond20Ft;
+//		this.inBond40Ft = inBond40Ft;
+//		this.otlNo = otlNo;
+//		this.bondYard = bondYard;
+//		this.status = status;
+//		this.shortagePackages = shortagePackages;
+//		this.damagedQty = damagedQty;
+//		this.breakage = breakage;
+//		this.cfBondDtlId = cfBondDtlId;
+//		this.typeOfPackage = typeOfPackage;
+//		this.inBondedPackagesDtl = inBondedPackagesDtl;
+//		this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+//		this.inbondCifValue = inbondCifValue;
+//		this.inbondCargoDuty = inbondCargoDuty;
+//		this.inbondGrossWtDtl = inbondGrossWtDtl;
+//		this.nocWeek = nocWeek;
+//	}
+	
+	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+            Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+            String igmLineNo, String nocNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String boeNo,
+            Date boeDate, String bondingNo, Date bondingDate, Date bondValidityDate, 
+            String partyName, String chaCode, String customerCode, 
+            String importerId, String importerPartyName, String importerAddress1, String importerAddress2, String importerAddress3, 
+            String commodityDescription, BigDecimal grossWeight, String uom, String nocPackages, 
+            BigDecimal areaAllocated, BigDecimal areaOccupied, String cargoCondition, BigDecimal gateInPackages, 
+            BigDecimal inBondedPackages, BigDecimal exBondedPackages, BigDecimal toBondedPackages, 
+            String spaceAllocated, String section49, BigDecimal cifValue, BigDecimal cargoDuty, BigDecimal insuranceValue, 
+            BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue, 
+            String inBond20Ft, String inBond40Ft, String otlNo, String bondYard, String status, 
+            BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, String cfBondDtlId, 
+            String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl, 
+            BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl, String nocWeek,String spaceType,BigDecimal grossWeightDtl) {
+this.companyId = companyId;
+this.branchId = branchId;
+this.finYear = finYear;
+this.inBondingHdrId = inBondingHdrId;
+this.inBondingId = inBondingId;
+this.inBondingDate = inBondingDate;
+this.profitcentreId = profitcentreId;
+this.nocTransId = nocTransId;
+this.nocTransDate = nocTransDate;
+this.igmNo = igmNo;
+this.igmDate = igmDate;
+this.igmLineNo = igmLineNo;
+this.nocNo = nocNo;
+this.nocDate = nocDate;
+this.nocValidityDate = nocValidityDate;
+this.nocFromDate = nocFromDate;
+this.boeNo = boeNo;
+this.boeDate = boeDate;
+this.bondingNo = bondingNo;
+this.bondingDate = bondingDate;
+this.bondValidityDate = bondValidityDate;
+this.cha = partyName;  // Mapped from Party
+this.chaCode = chaCode;
+this.importerId = importerId;
+this.importerName = importerPartyName; // Mapped from Party
+this.importerAddress1 = importerAddress1;
+this.importerAddress2 = importerAddress2;
+this.importerAddress3 = importerAddress3;
+this.commodityDescription = commodityDescription;
+this.grossWeight = grossWeight;
+this.uom = uom;
+this.nocPackages = nocPackages;
+this.areaAllocated = areaAllocated;
+this.areaOccupied = areaOccupied;
+this.cargoCondition = cargoCondition;
+this.gateInPackages = gateInPackages;
+this.inBondedPackages = inBondedPackages;
+this.exBondedPackages = exBondedPackages;
+this.toBondedPackages = toBondedPackages;
+this.spaceAllocated = spaceAllocated;
+this.section49 = section49;
+this.cifValue = cifValue;
+this.cargoDuty = cargoDuty;
+this.insuranceValue = insuranceValue;
+this.inbondGrossWt = inbondGrossWt;
+this.inbondInsuranceValue = inbondInsuranceValue;
+this.inBond20Ft = inBond20Ft;
+this.inBond40Ft = inBond40Ft;
+this.otlNo = otlNo;
+this.bondYard = bondYard;
+this.status = status;
+this.shortagePackages = shortagePackages;
+this.damagedQty = damagedQty;
+this.breakage = breakage;
+this.cfBondDtlId = cfBondDtlId;
+this.typeOfPackage = typeOfPackage;
+this.inBondedPackagesDtl = inBondedPackagesDtl;
+this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+this.inbondCifValue = inbondCifValue;
+this.inbondCargoDuty = inbondCargoDuty;
+this.inbondGrossWtDtl = inbondGrossWtDtl;
+this.nocWeek = nocWeek;
+this.spaceType = spaceType;
+this.grossWeightDtl = grossWeightDtl;
 }
 
+}

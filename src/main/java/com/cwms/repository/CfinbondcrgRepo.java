@@ -160,4 +160,34 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 	         @Param("inBondingId") String inBondingId,
 	         @Param("nocNo") String nocNo,
 	         @Param("nocTransId") String nocTransId);
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.profitcentreId, c.nocTransId, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.nocValidityDate, c.nocFromDate, c.boeNo, c.boeDate, c.bondingNo, c.bondingDate, c.bondValidityDate, " +
+		       "p.partyName, c.chaCode, p.customerCode, c.importerId, pa.partyName, c.importerAddress1, c.importerAddress2, c.importerAddress3, " +
+		       "cf.commodityDescription, c.grossWeight, c.uom, c.nocPackages, c.areaAllocated, cf.areaOccupied, c.cargoCondition, cf.nocPackages, " +
+		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.cifValue, c.cargoDuty, " +
+		       "c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, c.inBond40Ft, c.otlNo, c.bondYard, c.status, " +
+		       "c.shortagePackages, c.damagedQty, c.breakage, cf.cfBondDtlId, cf.typeOfPackage, cf.inBondedPackages, cf.inbondInsuranceValue, " +
+		       "cf.inbondCifValue, cf.inbondCargoDuty, cf.inbondGrossWt, noc.nocWeek,noc.spaceType,cf.grossWeight) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.importerId = pa.partyId " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId and c.nocTransId =cf.nocTransId and c.nocNo =cf.nocNo " +
+		       "LEFT OUTER JOIN Cfbondnoc noc ON c.companyId = noc.companyId AND c.branchId = noc.branchId AND  c.nocTransId =noc.nocTransId and c.nocNo =noc.nocNo " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.inBondingId = :inBondingId " +
+		       "AND c.status != 'D' ")
+		List<Cfinbondcrg> getDataForCustomesBondInBondPrint(@Param("companyId") String companyId, 
+		                                                                       @Param("branchId") String branchId, 
+		                                                                       @Param("inBondingId") String inBondingId);
+
 }
