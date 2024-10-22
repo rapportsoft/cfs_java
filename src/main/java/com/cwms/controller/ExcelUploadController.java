@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
@@ -1813,109 +1815,101 @@ public class ExcelUploadController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadIgmFile(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("user") String user, @RequestParam("finYear") String finYear,
-			@RequestParam("file") MultipartFile file, @RequestParam("igm") String igmData) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			CFIgm igm = objectMapper.readValue(igmData, CFIgm.class); // Deseriali
+	                                       @RequestParam("user") String user, @RequestParam("finYear") String finYear,
+	                                       @RequestParam("file") MultipartFile file, @RequestParam("igm") String igmData) {
+	    try {
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        CFIgm igm = objectMapper.readValue(igmData, CFIgm.class); // Deserialize igm data
 
-			if (file.isEmpty()) {
-				return ResponseEntity.badRequest().body("File is empty.");
-			}
+	        if (file.isEmpty()) {
+	            return ResponseEntity.badRequest().body("File is empty.");
+	        }
 
-			// Create timestamp for the new file name
-			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-			String newFileName = "IGM_File_" + igm.getIgmNo() + "_" + igm.getShippingLine() + "_" + timestamp + ".txt";
+	        // Create timestamp for the new file name
+	        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	        String newFileName = "IGM_File_" + igm.getIgmNo() + "_" + igm.getShippingLine() + "_" + timestamp + ".txt";
 
-			// Define the path where the new file will be saved
-			Path newFilePath = Paths.get(igmFiles + newFileName);
+	        // Define the path where the new file will be saved
+	        Path newFilePath = Paths.get(igmFiles, newFileName);
 
-			// Save the uploaded MultipartFile to a temporary file first
-			File tempFile = File.createTempFile("upload", file.getOriginalFilename());
-			file.transferTo(tempFile);
+	        // Use try-with-resources to handle streams and ensure proper encoding
+	        try (InputStream inputStream = file.getInputStream();
+	             OutputStream outputStream = Files.newOutputStream(newFilePath, StandardOpenOption.CREATE)) {
 
-			// Read the content of the temporary file
-			List<String> fileContent = Files.readAllLines(tempFile.toPath(), StandardCharsets.UTF_8);
+	            // Transfer file content while preserving special characters
+	            byte[] buffer = new byte[8192];
+	            int bytesRead;
+	            while ((bytesRead = inputStream.read(buffer)) != -1) {
+	                outputStream.write(buffer, 0, bytesRead);
+	            }
+	        }
 
-			// Write the content to the new file
-			Files.write(newFilePath, fileContent, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
+	        // Now, create a new File object for the newly created file
+	        File newFile = newFilePath.toFile();
 
-			// Optionally, delete the temporary file after processing
-			tempFile.delete();
+	        // Call the service to process the new file
+	        List<List<String>> content = readAndParseCargoSection(newFile);
+	        List<List<String>> content1 = readAndParseContainerSection(newFile);
 
-			// Now, create a new File object for the newly created file
-			File newFile = newFilePath.toFile();
+	        List<Map<String, String>> itemData = new ArrayList<>();
+	        List<Map<String, String>> conData = new ArrayList<>();
+	        Branch b = branchrepo.findByBranchIdWithCompanyId(cid, bid);
+	        List<String> itemList = new ArrayList<>();
+	        
+	        System.out.println(content.size());
 
-			// Call the service to process the new file
-			List<List<String>> content = readAndParseCargoSection(newFile);
-			List<List<String>> content1 = readAndParseContainerSection(newFile);
+	        content.forEach(c -> {
+	        	
+	            if (b.getCfsCode().equals(c.get(25).toString())) {
+	            	
+	                Map<String, String> add = new HashMap<>();
+	                add.put("Item no", c.get(6));
+	                add.put("Bl no", c.get(8));
+	                add.put("Bl Date", c.get(9));
+	                add.put("Origin", c.get(10));
+	                add.put("Importer name", c.get(14));
+	                add.put("Importer address1", c.get(15));
+	                add.put("Importer address2", c.get(16));
+	                add.put("Importer address3", c.get(17));
+	                add.put("Notify Party", c.get(18));
+	                add.put("Notify Party address1", c.get(19));
+	                add.put("Notify Party address2", c.get(20));
+	                add.put("Notify Party address3", c.get(21));
+	                add.put("Cargo type", c.get(24));
+	                add.put("Cfs code", c.get(25));
+	                add.put("Packages", c.get(26));
+	                add.put("Package Type", c.get(27));
+	                add.put("Cargo wt", c.get(28));
+	                add.put("Commodity", c.get(29));
+	                itemData.add(add);
+	                itemList.add(c.get(6));
+	            }
+	        });
 
-			List<Map<String, String>> itemData = new ArrayList<>();
+	        if (!content.isEmpty()) {
+	            content1.forEach(c -> {
+	                Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
+	                if (check) {
+	                    Map<String, String> add = new HashMap<>();
+	                    add.put("Container no", c.get(8));
+	                    add.put("Item no", c.get(6));
+	                    add.put("Seal No", c.get(9));
+	                    add.put("Container Status", c.get(11));
+	                    add.put("Packages", c.get(12));
+	                    add.put("Cargo Wt.", c.get(13));
+	                    add.put("ISO", c.get(14));
+	                    conData.add(add);
+	                }
+	            });
+	        }
 
-			List<Map<String, String>> conData = new ArrayList<>();
+	        return saveIgm(cid, bid, user, finYear, itemData, conData, igm);
 
-			Branch b = branchrepo.findByBranchIdWithCompanyId(cid, bid);
-
-			List<String> itemList = new ArrayList<>();
-
-			content.stream().forEach(c -> {
-
-				if (b.getCfsCode().equals(c.get(25).toString())) {
-					Map<String, String> add = new HashMap<>();
-					add.put("Item no", c.get(6));
-					add.put("Bl no", c.get(8));
-					add.put("Bl Date", c.get(9));
-					add.put("Origin", c.get(10));
-					add.put("Importer name", c.get(14));
-					add.put("Importer address1", c.get(15));
-					add.put("Importer address2", c.get(16));
-					add.put("Importer address3", c.get(17));
-					add.put("Notify Party", c.get(18));
-					add.put("Notify Party address1", c.get(19));
-					add.put("Notify Party address2", c.get(20));
-					add.put("Notify Party address3", c.get(21));
-					add.put("Cargo type", c.get(24));
-					add.put("Cfs code", c.get(25));
-					add.put("Packages", c.get(26));
-					add.put("Package Type", c.get(27));
-					add.put("Cargo wt", c.get(28));
-					add.put("Commodity", c.get(29));
-
-					itemData.add(add);
-
-					itemList.add(c.get(6));
-				}
-
-			});
-
-			if (content.size() > 0) {
-				content1.stream().forEach(c -> {
-
-					Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
-
-					if (check) {
-						Map<String, String> add = new HashMap<>();
-						add.put("Container no", c.get(8));
-						add.put("Item no", c.get(6));
-						add.put("Seal No", c.get(9));
-						add.put("Container Status", c.get(11));
-						add.put("Packages", c.get(12));
-						add.put("Cargo Wt.", c.get(13));
-						add.put("ISO", c.get(14));
-
-						conData.add(add);
-					}
-
-				});
-
-			}
-
-			return saveIgm(cid, bid, user, finYear, itemData, conData, igm);
-			// return ResponseEntity.ok(data);
-		} catch (IOException e) {
-			return ResponseEntity.status(500).body("Failed to read the file.");
-		}
+	    } catch (IOException e) {
+	        return ResponseEntity.status(500).body("Failed to read the file.");
+	    }
 	}
+
 
 	@PostMapping("/uploadScanningList")
 	public ResponseEntity<?> uploadScanningListFile(@RequestParam("cid") String cid,
@@ -2208,22 +2202,37 @@ public class ExcelUploadController {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				// Check if we are inside the <cargo> section
-				if (line.contains("<cargo>")) {
-					isCargoSection = true;
-					continue; // Skip the <cargo> line itself
-				}
+				
+				 String cleanedLine = line.chars()
+                         .filter(c -> c > 0)  // Filter out characters with ASCII value 0
+                         .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                         .toString();
 
-				// If we hit <END-cargo>, stop processing
-				if (line.contains("<END-cargo>")) {
-					isCargoSection = false;
-					break; // Stop reading further
-				}
+// Append the cleaned line to content
+               
 
-				// Only process lines within <cargo> and <END-cargo>
-				if (isCargoSection) {
-					content.append(line);
-				}
+			    // Check if we are inside the <cargo> section
+			    if (cleanedLine.contains("<cargo>")) {
+			        isCargoSection = true;
+			        continue; // Skip the <cargo> line itself
+			    }
+
+			  
+			    // Only process lines within <cargo> and <END-cargo>
+			    if (isCargoSection) {
+			        // Remove zero ASCII value characters (and any other control characters if needed)
+			      
+			        content.append(cleanedLine);
+
+			       
+			    }
+			    
+			    
+			    if (cleanedLine.contains("<END-cargo>")) {
+			        isCargoSection = false;
+			        break; // Stop reading further
+			    }
+
 			}
 		}
 
@@ -2261,21 +2270,27 @@ public class ExcelUploadController {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 			String line;
 			while ((line = br.readLine()) != null) {
+				
+				String cleanedLine = line.chars()
+                        .filter(c -> c > 0)  // Filter out characters with ASCII value 0
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString();
+
 				// Check if we are inside the <cargo> section
-				if (line.contains("<contain>")) {
+				if (cleanedLine.contains("<contain>")) {
 					isCargoSection = true;
 					continue; // Skip the <cargo> line itself
 				}
 
 				// If we hit <END-cargo>, stop processing
-				if (line.contains("<END-contain>")) {
+				if (cleanedLine.contains("<END-contain>")) {
 					isCargoSection = false;
 					break; // Stop reading further
 				}
 
 				// Only process lines within <cargo> and <END-cargo>
 				if (isCargoSection) {
-					content.append(line);
+					content.append(cleanedLine);
 				}
 			}
 		}
