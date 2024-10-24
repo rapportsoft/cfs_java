@@ -107,7 +107,7 @@ public interface CfExBondCrgRepository extends JpaRepository<CfExBondCrg, String
 		       "c.exBondedInsurance, c.remainingInsurance, c.balanceInsurance, c.cifQty, c.exBondNo, c.exBondDate, " +
 		       "c.noOf20Ft, c.noOf40Ft, c.comments, c.giTransporterStatus, c.giTransporter, c.giTransporterName, c.giVehicleNo, " +
 		       "c.giDriverName, c.gateOutId, c.gateOutDate, c.gateOutTransporter, c.gateOutVehicleNo, c.gateOutDriverName, " +
-		       "c.status, c.createdBy, c.createdDate, c.editedBy, c.approvedBy, c.approvedDate,p.partyName,pp.partyName ) " +
+		       "c.status, c.createdBy, c.createdDate, c.editedBy, c.approvedBy, c.approvedDate,p.partyName,pp.partyName,c.gateInType,c.spaceType ) " +
 		       "FROM CfExBondCrg c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "LEFT OUTER JOIN Party pp ON c.companyId = pp.companyId AND c.branchId = pp.branchId AND c.giTransporterName = pp.partyId " +
@@ -198,5 +198,66 @@ List<Object[]> getAddressOfImporterOfCha(@Param("cid") String cid, @Param("bid")
         "and c.status != 'D'")
 List<Object[]> getAllExbondBeNofromExbondCrgDtl(@Param("cid") String cid, @Param("bid") String bid, @Param("cha") String cha);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Query("SELECT NEW com.cwms.entities.CfExBondCrg(c.companyId, c.branchId, c.finYear, c.exBondingId, c.exBondingDate, " +
+	       "c.profitcentreId, c.nocTransId, c.nocNo, c.nocValidityDate, c.boeNo, c.bondingNo, c.bondingDate, c.exBondBeNo, " +
+	       "c.exBondBeDate, c.inBondingId, c.inBondingDate, c.igmNo, c.igmLineNo, p.partyName, c.commodityDescription, " +
+	       "c.grossWeight, c.inBondedGw, c.exBondedGw, c.uom, c.nocPackages, c.areaOccupied, c.areaReleased, c.inBondedPackages, " +
+	       "c.exBondedPackages, c.cifValue, c.inBondedCif, c.exBondedCif, c.inBondedCargoDuty, c.exBondedCargoDuty, " +
+	       "c.remainingCargoDuty, c.balanceCargoDuty, c.inBondedInsurance, pp.partyName, c.gateInType, c.spaceType, " +
+	       "cf.exBondedPackages, cf.exBondedCIF, cf.exBondedCargoDuty, cf.exBondedGW, " +
+	       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondGrossWt, cf.inbondInsuranceValue, cf.inbondCifValue, cf.inbondCargoDuty,pa.address1,pa.address2,pa.address3,pp.partyName) " +
+	       "FROM CfExBondCrg c " +
+	       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+	       "LEFT OUTER JOIN Party pp ON c.companyId = pp.companyId AND c.branchId = pp.branchId AND c.giTransporterName = pp.partyId " +
+	       "LEFT OUTER JOIN PartyAddress pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.giTransporterName = pa.partyId " +
+	       "LEFT OUTER JOIN CfexBondCrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.exBondingId = cf.exBondingId and c.inBondingId=cf.inBondingId and c.nocTransId=cf.nocTransId and c.boeNo =cf.boeNo " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.exBondingId = :exBondingId " +
+	       "AND c.status != 'D' ")
+	List<CfExBondCrg> getDataForCustomsBondExbondReport(
+	      @Param("companyId") String companyId,
+	      @Param("branchId") String branchId,
+	      @Param("exBondingId") String exBondingId
+	);
+
+
+@Query("SELECT NEW com.cwms.entities.CfExBondCrg(c.companyId, c.branchId, c.finYear, c.exBondingId, c.exBondingDate, " +
+	       "c.profitcentreId, c.nocTransId, c.nocNo, c.nocValidityDate, c.boeNo, c.bondingNo, c.bondingDate, c.exBondBeNo, " +
+	       "c.exBondBeDate, c.inBondingId, c.inBondingDate, c.igmNo, c.igmLineNo, p.partyName, c.commodityDescription, " +
+	       "c.grossWeight, c.inBondedGw, c.exBondedGw, c.uom, c.nocPackages, c.areaOccupied, c.areaReleased, c.inBondedPackages, " +
+	       "c.exBondedPackages, c.cifValue, c.inBondedCif, c.exBondedCif, c.inBondedCargoDuty, c.exBondedCargoDuty, " +
+	       "c.remainingCargoDuty, c.balanceCargoDuty, c.inBondedInsurance, pp.partyName, c.gateInType, c.spaceType, " +
+	       "cf.exBondedPackages, cf.exBondedCIF, cf.exBondedCargoDuty, cf.exBondedGW, " +
+	       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondGrossWt, cf.inbondInsuranceValue, cf.inbondCifValue, cf.inbondCargoDuty,pp.partyName) " +
+	       "FROM CfExBondCrg c " +
+	       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+	       "LEFT OUTER JOIN Party pp ON c.companyId = pp.companyId AND c.branchId = pp.branchId AND c.giTransporterName = pp.partyId " +
+//	       "LEFT OUTER JOIN PartyAddress pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.giTransporterName = pa.partyId " +
+	       "LEFT OUTER JOIN CfexBondCrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.exBondingId = cf.exBondingId and c.inBondingId=cf.inBondingId and c.nocTransId=cf.nocTransId " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.exBondingId = :exBondingId " +
+	       "AND c.status != 'D' ")
+	List<CfExBondCrg> getDataForCustomsBondExbond(
+	      @Param("companyId") String companyId,
+	      @Param("branchId") String branchId,
+	      @Param("exBondingId") String exBondingId
+	);
 
 }

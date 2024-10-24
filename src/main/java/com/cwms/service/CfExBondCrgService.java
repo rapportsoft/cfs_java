@@ -1,11 +1,32 @@
 package com.cwms.service;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.util.SystemPropertiesUtil;
 
+import com.cwms.entities.Branch;
+import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.CfExBondCrg;
 import com.cwms.entities.CfExBondGrid;
@@ -17,8 +38,10 @@ import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.CfinbondcrgHDR;
 import com.cwms.entities.CfinbondcrgHDRDtl;
+import com.cwms.entities.Company;
 import com.cwms.entities.Party;
 import com.cwms.entities.YardBlockCell;
+import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfBondNocDtlRepository;
 import com.cwms.repository.CfExBondCrgDtlRepository;
 import com.cwms.repository.CfExBondCrgRepository;
@@ -29,15 +52,20 @@ import com.cwms.repository.CfinbondCrgHdrDtlRepo;
 import com.cwms.repository.CfinbondCrgHdrRepo;
 import com.cwms.repository.CfinbondcrgDtlRepo;
 import com.cwms.repository.CfinbondcrgRepo;
+import com.cwms.repository.CompanyRepo;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.YardBlockCellRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.lowagie.text.DocumentException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +110,19 @@ public class CfExBondCrgService {
 	
 	@Autowired
 	public CfInBondGridRepository cfInBondGridRepository;
+	
+	
+	
+	
+	
+	@Autowired
+	private TemplateEngine templateEngine;
+
+	@Autowired
+	private CompanyRepo companyRepo;
+
+	@Autowired
+	private BranchRepo branchRepo;
 
 	public List<CfinbondcrgDtl> findAllCfBondNocDtl(String companyId, String branchId, String nocTransId, String nocNo,
 			String inBondingId, String boeNo) {
@@ -111,6 +152,8 @@ public class CfExBondCrgService {
 
 		CfExBondCrg cfexbondcrg = object.convertValue(requestBody.get("exBond"), CfExBondCrg.class);
 
+		System.out.println("cfexbondcrg_________________________________________________________"+cfexbondcrg.getSpaceType() +""+cfexbondcrg.getGateInType());
+		
 		Object nocDtlObj = requestBody.get("exbondDtl");
 		List<CfinbondcrgDtl> cfexbondcrgDtlList = new ArrayList();
 
@@ -144,6 +187,8 @@ public class CfExBondCrgService {
 				String nectExBondingId = String.format("EXBL%06d", nextNumericNextID1);
 
 				cfexbondcrg.setCompanyId(companyId);
+				cfexbondcrg.setSpaceType(cfexbondcrg.getSpaceType());
+				cfexbondcrg.setGateInType(cfexbondcrg.getGateInType());
 				cfexbondcrg.setBranchId(branchId);
 				cfexbondcrg.setCreatedBy(user);
 				cfexbondcrg.setCreatedDate(new Date());
@@ -252,7 +297,8 @@ public class CfExBondCrgService {
 						exBondDtl.setYardLocationId(item.getYardLocationId());
 						exBondDtl.setBlockId(item.getBlockId());
 						exBondDtl.setCellNoRow(item.getCellNoRow());
-						
+						exBondDtl.setIgmNo(cfexbondcrg.getIgmNo());
+						exBondDtl.setIgmLineNo(cfexbondcrg.getIgmLineNo());
 						exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
 						exBondDtl.setExBondGridArea(item.getExBondGridArea());
 						
@@ -442,7 +488,8 @@ public class CfExBondCrgService {
 				if (existingExBond != null) {
 					existingExBond.setAreaRemaining(cfexbondcrg.getAreaRemaining());
 					existingExBond.setAreaReleased(cfexbondcrg.getAreaReleased());
-
+					existingExBond.setGateInType(cfexbondcrg.getGateInType());
+					existingExBond.setSpaceType(cfexbondcrg.getSpaceType());
 					existingExBond.setExBondedPackages(cfexbondcrg.getExBondedPackages());
 					existingExBond.setExBondedCif(cfexbondcrg.getExBondedCif());
 					existingExBond.setExBondedCargoDuty(cfexbondcrg.getExBondedCargoDuty());
@@ -680,7 +727,8 @@ public class CfExBondCrgService {
 							exBondDtl.setBlockId(item.getBlockId());
 							exBondDtl.setCellNoRow(item.getCellNoRow());
 
-							
+							exBondDtl.setIgmNo(cfexbondcrg.getIgmNo());
+							exBondDtl.setIgmLineNo(cfexbondcrg.getIgmLineNo());
 							exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
 							exBondDtl.setExBondGridArea(item.getExBondGridArea());
 
@@ -891,7 +939,9 @@ public class CfExBondCrgService {
 
 	    CfExBondCrg cfinbondcrg = object.convertValue(requestBody.get("exBond"), CfExBondCrg.class);
 	    
-	    System.out.println("cfinbondcrg________________________"+cfinbondcrg.getInBondingId());
+	    CfexBondCrgDtl dataForPrint =null;
+	    
+	    System.out.println("cfinbondcrg________________________"+cfinbondcrg);
 	    
 	    if (cfinbondcrg.getExBondingId()==null || cfinbondcrg.getExBondingId().isEmpty() || cfinbondcrg.getExBondingId().isBlank())
 	    {
@@ -934,11 +984,18 @@ public class CfExBondCrgService {
 
 	        		    // Batch save all records in one go
 	        		    cfExBondCrgDtlRepository.saveAll(updateAfterApprove);
+	        		    
+	        		    
+	        		    dataForPrint = updateAfterApprove.get(0);
+		        		 
+		        		 
+		        		 System.out.println("dataForPrint_____________________"+dataForPrint);
+		        		 return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
 	        	 }
 	        }
 	    }
 	   
-	    return new ResponseEntity<>("", HttpStatus.OK);
+	    return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
 	}
 
 
@@ -1004,4 +1061,137 @@ public class CfExBondCrgService {
 	public List<Object[]> getDataOfExbondBeNoCargo(String cid, String bid, String exbondBeNo, String val) {
 		return cfExBondCrgDtlRepository.getAllExbondCargoFromExbondDtl(cid, bid, exbondBeNo, val);
 	}
-}
+	
+	
+	
+	
+	
+	
+	
+	
+	public ResponseEntity<String> getPrintOfCutomesBondExBondCargo( String companyId,
+			String branchId,  String username,
+			 String type,String companyname,
+			 String branchname,  String exBondingId) throws DocumentException {
+		
+		Context context = new Context();
+
+		CfExBondCrg dataForPrint = null;
+		
+		
+		List<CfExBondCrg> result1 = cfExBondCrgRepository.getDataForCustomsBondExbond(companyId,
+				branchId, exBondingId);
+
+		List<CfExBondCrg> result = cfExBondCrgRepository.getDataForCustomsBondExbondReport(companyId,
+				branchId, exBondingId);
+		if (!result.isEmpty()) {
+			dataForPrint = result.get(0);
+			// Process the firstResult
+		}
+		
+			System.out.println("gatePassdata____________________________________________"+result);
+			
+			
+		String c1 = username;
+		String b1 = companyname;
+		String u1 = branchname;
+
+		Company companyAddress = companyRepo.findByCompany_Id(companyId);
+
+		Branch branchAddress = branchRepo.findByBranchId(branchId);
+
+		String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
+				+ companyAddress.getAddress_3() + companyAddress.getCity();
+
+		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress1() + " "
+				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+		String city = companyAddress.getCity();
+
+		String bondCode = branchAddress.getBondCode();
+		
+		context.setVariable("exBondingId", dataForPrint.getExBondingId());
+		context.setVariable("exBondingIdDate", dataForPrint.getExBondingDate());
+		
+		context.setVariable("inBondingId", dataForPrint.getInBondingId());
+		context.setVariable("inBondingIdDate", dataForPrint.getInBondingDate());
+		
+		context.setVariable("exboeNo", dataForPrint.getExBondBeNo());
+		context.setVariable("exBondBeDate", dataForPrint.getExBondBeDate());
+		
+		context.setVariable("boeNo", dataForPrint.getBoeNo());
+//		context.setVariable("boeNo", boeNosBuilder.toString());
+		context.setVariable("boeDate", dataForPrint.getInBondingDate());
+		context.setVariable("igmNo", dataForPrint.getIgmNo());
+		
+		context.setVariable("nocNo", dataForPrint.getNocNo());
+
+		context.setVariable("igmLineNo", dataForPrint.getIgmLineNo());
+		context.setVariable("bondingNo", dataForPrint.getBondingNo());
+		
+		context.setVariable("bondingDate", dataForPrint.getBondingDate());
+
+		context.setVariable("inBondPackages", dataForPrint.getInBondedPackages());
+		context.setVariable("inBondWt", dataForPrint.getInbondGrossWt());
+		
+	
+		context.setVariable("consignee", dataForPrint.getGiTransporterName());
+		
+		context.setVariable("area", dataForPrint.getAreaOccupied());
+		
+		context.setVariable("gateInType", dataForPrint.getGateInType());
+		
+		context.setVariable("spaceType", dataForPrint.getSpaceType());
+		context.setVariable("exBondGrWeight", dataForPrint.getExBondedGw());
+		context.setVariable("consignee", dataForPrint.getImporterName());
+		
+		context.setVariable("typeOfPackages", dataForPrint.getTypeOfPackage());
+		context.setVariable("cha", dataForPrint.getCha());
+		context.setVariable("address", dataForPrint.getImporterAddress1() + " " + dataForPrint.getImporterAddress2()
+				+ " " + dataForPrint.getImporterAddress3());
+		
+		context.setVariable("cargoDiscrpition", dataForPrint.getCommodityDescription());
+
+		context.setVariable("cargoDesc", dataForPrint.getCommodityDescription());
+	
+		context.setVariable("result", result1);
+		context.setVariable("c1", c1);
+		context.setVariable("b1", b1);
+		context.setVariable("u1", u1);
+		context.setVariable("companyAdd", companyAdd);
+		context.setVariable("branchAdd", branchAdd);
+		context.setVariable("bondCode", bondCode);
+		context.setVariable("city", city);
+
+		String htmlContent = templateEngine.process("CustomsBondExbond", context);
+
+		ITextRenderer renderer = new ITextRenderer();
+
+		renderer.setDocumentFromString(htmlContent);
+		renderer.layout();
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		renderer.createPDF(outputStream);
+
+		byte[] pdfBytes = outputStream.toByteArray();
+
+		String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	}

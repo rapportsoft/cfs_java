@@ -1,21 +1,21 @@
 package com.cwms.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.CfExBondCrg;
 import com.cwms.entities.CfexBondCrgDtl;
 import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.Party;
 import com.cwms.service.CfExBondCrgService;
+import com.lowagie.text.DocumentException;
 
-import jakarta.mail.Part;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cfexbondcrg")
@@ -198,4 +198,46 @@ public class CfExBondCrgController {
         BigDecimal sumOfInBondPackages = cfExBondCrgService.getSumOfInBondPackagesForCommodity(companyId, branchId, exBondingId, cfBondDtlId, nocTransId);
         return ResponseEntity.ok(sumOfInBondPackages);
     }
-}
+    
+    
+    
+    
+    
+    
+    @GetMapping("/generateCustomeExBondPrint")
+	   public ResponseEntity<String> generateCustomsExbondPrint(
+	       @RequestParam(name = "companyId") String companyId,
+	       @RequestParam(name = "branchId") String branchId, 
+	       @RequestParam(name = "uname") String username,
+	       @RequestParam(name = "type") String type, 
+	       @RequestParam(name = "cname") String companyname,
+	       @RequestParam(name = "bname") String branchname, 
+	       @RequestParam(name = "exBondingId") String exBondingId) throws DocumentException {
+
+	       try {
+	           // Call the service to generate the PDF and return the response
+	           return cfExBondCrgService.getPrintOfCutomesBondExBondCargo(
+	               companyId, branchId, username, type, companyname, branchname, exBondingId
+	           );
+	       } catch (Exception e) {
+	           // Log the error for debugging
+	           System.err.println("Error generating PDF: " + e.getMessage());
+
+	           // Return a 500 status with the error message
+	           return ResponseEntity.status(500).body("Error generating PDF: " + e.getMessage());
+	       }
+	   }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
+	}
