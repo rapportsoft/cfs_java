@@ -3234,6 +3234,11 @@ public GateIn(String companyId, String branchId, String gateInId, String erpDocR
 	this.inGateInDate = inGateInDate;
 }
 
+public GateIn(String sa, String sl, String onAccountOf) {
+	this.sa = sa;
+	this.sl = sl;
+	this.onAccountOf = onAccountOf;
+}
 
 
 }

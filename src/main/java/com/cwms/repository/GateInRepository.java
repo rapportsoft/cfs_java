@@ -236,4 +236,25 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	GateIn getData1(@Param("cid") String cid,@Param("bid") String bid,@Param("gateinid") String gateinid,@Param("igmtrans") String igmtrans,
 			@Param("igm") String igm);
 	
+	
+	@Query(value="select g from GateIn g where g.companyId=:cid and g.branchId=:bid and g.gateInId=:gateinid and g.status !='D' and "
+			+ "g.profitcentreId=:profit")
+	GateIn getData3(@Param("cid") String cid,@Param("bid") String bid,@Param("gateinid") String gateinid,@Param("profit") String profit);
+	
+	
+	@Query(value="select NEW com.cwms.entities.GateIn(p1.partyName,p2.partyName,p3.partyName) from GateIn g "
+			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sa=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON g.companyId=p2.companyId and g.branchId=p2.branchId and g.sl=p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.onAccountOf=p3.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:gateinid and g.status !='D' and "
+			+ "g.profitcentreId=:profit")
+	GateIn getData4(@Param("cid") String cid,@Param("bid") String bid,@Param("gateinid") String gateinid,@Param("profit") String profit);
+	
+	
+	@Query(value="select g.gateInId, DATE_FORMAT(g.inGateInDate, '%d %M %Y %H:%i'), g.containerNo, g.vehicleNo from GateIn g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and g.profitcentreId=:profit and g.containerStatus='MTY' "
+			+ "and (:search is null OR :search = '' OR g.gateInId LIKE CONCAT ('%',:search,'%') OR g.containerNo LIKE CONCAT ('%',:search,'%') "
+			+ "OR g.vehicleNo LIKE CONCAT ('%',:search,'%'))")
+	List<Object[]> searchExportMtyContainerGateIn(@Param("cid") String cid,@Param("bid") String bid,@Param("profit") String profit,
+			@Param("search") String search);
 }

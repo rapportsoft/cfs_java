@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
+import com.cwms.entities.EmptyInventory;
+import com.cwms.entities.ExportInventory;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.GateOut;
 import com.cwms.entities.ImportInventory;
@@ -27,6 +29,8 @@ import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
+import com.cwms.repository.EmptyInventoryRepo;
+import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.GateOutRepository;
 import com.cwms.repository.ImportInventoryRepository;
@@ -62,6 +66,12 @@ public class GateInController {
 	
 	@Autowired
 	private ImportInventoryRepository importinventoryrepo;
+	
+	@Autowired
+	private ExportInventoryRepository exportinventoryrepo;
+	
+	@Autowired
+	private EmptyInventoryRepo emptyinventoryrepo;
 
 	@PostMapping("/saveGateIn")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -833,4 +843,262 @@ public class GateInController {
 		
 		
 	}
+	
+	
+	
+	@PostMapping("/saveExportEmptyContainer")
+	public ResponseEntity<?> saveExportEmptyContainer(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestBody GateIn gatein) {
+
+		if (gatein == null) {
+			return new ResponseEntity<>("Gate in data not found.", HttpStatus.CONFLICT);
+		}
+
+		if (gatein.getGateInId() == null || gatein.getGateInId().isEmpty()) {
+			Boolean check = vehicleTrackRepo.checkVehicleNo(cid, bid, gatein.getVehicleNo());
+
+			if (check) {
+				return new ResponseEntity<>("The vehicle is already inside.", HttpStatus.CONFLICT);
+			}
+			
+			Boolean checkInInv = exportinventoryrepo.checkContainerInInventory(cid, bid, gatein.getContainerNo());
+			
+			if (checkInInv) {
+				return new ResponseEntity<>("The container is already in the inventory.", HttpStatus.CONFLICT);
+			}
+
+			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05082", "2024");
+
+			int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+			int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+			String HoldNextIdD1 = String.format("EMDH%06d", nextNumericNextID1);
+
+			gatein.setGateInId(HoldNextIdD1);
+			gatein.setCompanyId(cid);
+			gatein.setLineNo("");
+			gatein.setSrNo(1);
+			gatein.setInGateInDate(new Date());
+			gatein.setBranchId(bid);
+			gatein.setRefer("RF".equals(gatein.getContainerType()) ? "Y" : "N");
+			gatein.setCreatedBy(user);
+			gatein.setCreatedDate(new Date());
+			gatein.setApprovedBy(user);
+			gatein.setApprovedDate(new Date());
+			gatein.setStatus("A");
+			gatein.setGateInType("EXP");
+			gatein.setErpDocRefNo("");
+			gatein.setProfitcentreId("N00004");
+			gatein.setDocRefNo("");
+
+			gateinrepo.save(gatein);
+
+			VehicleTrack v = new VehicleTrack();
+			v.setCompanyId(cid);
+			v.setBranchId(bid);
+			v.setFinYear(gatein.getFinYear());
+			v.setVehicleNo(gatein.getVehicleNo());
+			v.setProfitcentreId("N00004");
+			v.setSrNo(1);
+			v.setTransporterStatus('C');
+			v.setTransporterName(gatein.getTransporterName());
+			// v.setTransporter(gatein.getTransporter());
+			v.setDriverName(gatein.getDriverName());
+			v.setVehicleStatus('E');
+			v.setGateInId(HoldNextIdD1);
+			v.setGateInDate(new Date());
+			v.setGateNoIn("Gate01");
+			v.setShiftIn(gatein.getShift());
+			v.setStatus('A');
+			v.setCreatedBy(user);
+			v.setCreatedDate(new Date());
+			v.setApprovedBy(user);
+			v.setApprovedDate(new Date());
+
+			vehicleTrackRepo.save(v);
+
+			ExportInventory inventory = new ExportInventory();
+			inventory.setCompanyId(cid);
+			inventory.setBranchId(bid);
+			inventory.setSbTransId("");
+			inventory.setSbNo("");
+			inventory.setProfitcentreId("N00004");
+			inventory.setGateInId(HoldNextIdD1);
+			inventory.setGateInDate(new Date());
+			inventory.setContainerNo(gatein.getContainerNo());
+			inventory.setContainerSealNo(gatein.getContainerSealNo());
+			inventory.setContainerSize(gatein.getContainerSize());
+			inventory.setContainerType(gatein.getContainerType());
+			inventory.setContainerStatus(gatein.getContainerStatus());
+			inventory.setContainerWeight(gatein.getTareWeight());
+			inventory.setIso(gatein.getIsoCode());
+			inventory.setSa(gatein.getSa());
+			inventory.setSl(gatein.getSl());
+			inventory.setCreatedBy(user);
+			inventory.setCreatedDate(new Date());
+			inventory.setApprovedBy(user);
+			inventory.setApprovedDate(new Date());
+			inventory.setStatus("A");
+
+			exportinventoryrepo.save(inventory);
+			
+			EmptyInventory empinv = new EmptyInventory();
+			empinv.setBranchId(bid);
+		//	empinv.setCha(con.get(0).getCha());
+			empinv.setCompanyId(cid);
+			empinv.setContainerNo(gatein.getContainerNo());
+			empinv.setContainerSize(gatein.getContainerSize());
+			empinv.setContainerType(gatein.getContainerType());
+			empinv.setDeStuffId("");
+			empinv.setDocRefNo("");
+			empinv.setEmptyDate(new Date());
+			empinv.setErpDocRefNo("");
+			empinv.setFinYear(gatein.getFinYear());
+			empinv.setGateInDate(new Date());
+			empinv.setGateInId(gatein.getGateInId());
+			empinv.setIsoCode(gatein.getIsoCode());
+			empinv.setMovementCode("RCVE");
+			empinv.setOnAccountOf(gatein.getOnAccountOf());
+			empinv.setProfitcentreId("N00004");
+			empinv.setSa(gatein.getSa());
+			empinv.setSl(gatein.getSl());
+			empinv.setSubDocRefNo("");
+			empinv.setStatus("A");
+			empinv.setCreatedBy(user);
+			empinv.setCreatedDate(new Date());
+
+			emptyinventoryrepo.save(empinv);
+
+			processnextidrepo.updateAuditTrail(cid, bid, "P05082", HoldNextIdD1, "2024");
+
+			Map<String, Object> result = new HashMap<>();
+
+			GateIn gate = gateinrepo.getData4(cid, bid, HoldNextIdD1, "N00004");
+
+			result.put("gateInData", gatein);
+
+			if (gate != null) {
+				result.put("sa", gate.getSa());
+				result.put("sl", gate.getSl());
+				result.put("onAccounOf", gate.getOnAccountOf());
+			}
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+
+			GateIn data = gateinrepo.getData3(cid, bid, gatein.getGateInId(), "N00004");
+
+			if (data == null) {
+				return new ResponseEntity<>("Gate in data not found.", HttpStatus.CONFLICT);
+			}
+
+			Boolean check = vehicleTrackRepo.checkVehicleNo1(cid, bid, gatein.getVehicleNo(), gatein.getGateInId());
+
+			if (check) {
+				return new ResponseEntity<>("The vehicle is already inside.", HttpStatus.CONFLICT);
+			}
+
+			data.setOnAccountOf(gatein.getOnAccountOf());
+			data.setTareWeight(gatein.getTareWeight());
+			data.setContainerSealNo(gatein.getContainerSealNo());
+			data.setVehicleNo(gatein.getVehicleNo());
+			data.setDriverName(gatein.getDriverName());
+			data.setTransporterName(gatein.getTransporterName());
+			data.setDeliveryOrderNo(data.getDeliveryOrderNo());
+			data.setDeliveryOrderDate(data.getDeliveryOrderDate());
+			data.setDoValidityDate(gatein.getDoValidityDate());
+			data.setSa(gatein.getSa());
+			data.setSl(gatein.getSl());
+			data.setContainerHealth(gatein.getContainerHealth());
+			data.setJobOrderId(gatein.getJobOrderId());
+			data.setJobDate(gatein.getJobDate());
+			data.setOrigin(gatein.getOrigin());
+			data.setComments(gatein.getComments());
+			data.setEditedBy(user);
+			data.setEditedDate(new Date());
+
+			gateinrepo.save(data);
+
+			VehicleTrack veh = vehicleTrackRepo.getByGateInId(cid, bid, gatein.getGateInId());
+
+			if (veh != null) {
+				veh.setVehicleNo(gatein.getVehicleNo());
+				veh.setDriverName(gatein.getDriverName());
+				veh.setEditedBy(user);
+				veh.setEditedDate(new Date());
+
+				vehicleTrackRepo.save(veh);
+			}
+
+			ExportInventory inv = exportinventoryrepo.getSingleDataByGateInId(cid, bid, gatein.getGateInId());
+
+			if (inv != null) {
+				inv.setEditedBy(user);
+				inv.setEditedDate(new Date());
+				inv.setContainerSealNo(gatein.getContainerSealNo());
+				inv.setContainerWeight(gatein.getTareWeight());
+				inv.setSa(gatein.getSa());
+				inv.setSl(gatein.getSl());
+
+				exportinventoryrepo.save(inv);
+			}
+
+			Map<String, Object> result = new HashMap<>();
+
+			GateIn gate = gateinrepo.getData4(cid, bid, gatein.getGateInId(), "N00004");
+
+			result.put("gateInData", data);
+
+			if (gate != null) {
+				result.put("sa", gate.getSa());
+				result.put("sl", gate.getSl());
+				result.put("onAccounOf", gate.getOnAccountOf());
+			}
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+
+	}
+	
+	@GetMapping("/searchExportEmptyContainerGateIn")
+	public ResponseEntity<?> searchExportEmptyContainerGateIn(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam(name="search",required = false) String search){
+		
+		List<Object[]> data = gateinrepo.searchExportMtyContainerGateIn(cid, bid, "N00004", search);
+		
+		if(data.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!",HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<>(data,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getExportSearchSelectedData")
+	public ResponseEntity<?> getExportSearchSelectedData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			@RequestParam(name="gateInId",required = false) String gateInId){
+		
+		GateIn data = gateinrepo.getData3(cid, bid, gateInId, "N00004");
+
+		if (data == null) {
+			return new ResponseEntity<>("Gate in data not found.", HttpStatus.CONFLICT);
+		}
+
+		
+		Map<String, Object> result = new HashMap<>();
+
+		GateIn gate = gateinrepo.getData4(cid, bid, gateInId, "N00004");
+
+		result.put("gateInData", data);
+
+		if (gate != null) {
+			result.put("sa", gate.getSa());
+			result.put("sl", gate.getSl());
+			result.put("onAccounOf", gate.getOnAccountOf());
+		}
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	
 }
