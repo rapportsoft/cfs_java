@@ -293,6 +293,13 @@ public class CfExBondCrg {
     @Column(name = "Space_Type", length = 10)
     private String spaceType;
 
+    
+    @Transient
+	private Date bondValidityDate;
+    
+    @Transient
+	private Date nocDate;
+    
     @Transient
     private String chaName;
 
@@ -343,6 +350,30 @@ public class CfExBondCrg {
     }
 
    
+
+	public Date getNocDate() {
+		return nocDate;
+	}
+
+
+
+	public void setNocDate(Date nocDate) {
+		this.nocDate = nocDate;
+	}
+
+
+
+	public Date getBondValidityDate() {
+		return bondValidityDate;
+	}
+
+
+
+	public void setBondValidityDate(Date bondValidityDate) {
+		this.bondValidityDate = bondValidityDate;
+	}
+
+
 
 	public String getImporterAddress1() {
 		return importerAddress1;
@@ -1679,5 +1710,58 @@ public class CfExBondCrg {
 		
 		this.importerName = importerName;
 	}
+
+
+
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	// used this to get bond delivery report of the exbond please check for any correction 
+	public CfExBondCrg(String companyId, String branchId, String finYear, String exBondingId, Date exBondingDate,
+			String profitcentreId, String nocTransId, String nocNo, Date nocDate,Date nocValidityDate, String boeNo,
+			String bondingNo, Date bondingDate, String exBondBeNo, Date exBondBeDate, String inBondingId,
+			Date inBondingDate, String igmNo, String igmLineNo, String onAccountOf, String commodityDescription,
+			String numberOfMarks, String exBondNo, Date exBondDate, String giTransporterName, Date bondValidityDate,
+			BigDecimal exBondedPackagesdtl, BigDecimal exBondedCIFdtl, BigDecimal exBondedCargoDutydtl,
+			BigDecimal exBondedGWdtl, String typeOfPackage,String cha) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.exBondingId = exBondingId;
+		this.exBondingDate = exBondingDate;
+		this.profitcentreId = profitcentreId;
+		this.nocTransId = nocTransId;
+		this.nocNo = nocNo;
+		this.nocDate=nocDate;
+		this.nocValidityDate = nocValidityDate;
+		this.boeNo = boeNo;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.exBondBeNo = exBondBeNo;
+		this.exBondBeDate = exBondBeDate;
+		this.inBondingId = inBondingId;
+		this.inBondingDate = inBondingDate;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
+		this.onAccountOf = onAccountOf;
+		this.commodityDescription = commodityDescription;
+		this.numberOfMarks = numberOfMarks;
+		this.exBondNo = exBondNo;
+		this.exBondDate = exBondDate;
+		this.giTransporterName = giTransporterName;
+		this.bondValidityDate = bondValidityDate;
+		this.exBondedPackagesdtl = exBondedPackagesdtl;
+		this.exBondedCIFdtl = exBondedCIFdtl;
+		this.exBondedCargoDutydtl = exBondedCargoDutydtl;
+		this.exBondedGWdtl = exBondedGWdtl;
+		this.typeOfPackage = typeOfPackage;
+		this.cha =cha;
+	}
 }

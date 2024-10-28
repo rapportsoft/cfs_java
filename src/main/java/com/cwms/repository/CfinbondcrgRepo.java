@@ -1,6 +1,7 @@
 package com.cwms.repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.cwms.entities.Cfinbondcrg;
 
+import jakarta.persistence.Column;
 import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.Transactional;
 
@@ -47,7 +49,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.examinationId, c.comments, " +
 		       "c.cifValue, c.cargoDuty, c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, c.inBond40Ft, " +
 		       "c.exBond20Ft, c.exBond40Ft, c.otlNo, c.bondYard, c.status, c.createdBy, c.createdDate, c.editedBy, c.editedDate, " +
-		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage) " +
+		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage,c.extenstionDate1,c.extenstionDate2,c.extenstionDate3) " +
 		       "FROM Cfinbondcrg c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.inBondingId = :inBondingId AND c.nocNo = :nocNo AND c.status !='D' " +
@@ -70,7 +72,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.examinationId, c.comments, " +
 		       "c.cifValue, c.cargoDuty, c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, c.inBond40Ft, " +
 		       "c.exBond20Ft, c.exBond40Ft, c.otlNo, c.bondYard, c.status, c.createdBy, c.createdDate, c.editedBy, c.editedDate, " +
-		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage) " +
+		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage,c.extenstionDate1,c.extenstionDate2,c.extenstionDate3) " +
 		       "FROM Cfinbondcrg c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "WHERE c.companyId = :companyId " +
@@ -190,4 +192,177 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		                                                                       @Param("branchId") String branchId, 
 		                                                                       @Param("inBondingId") String inBondingId);
 
+	 
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.profitcentreId, c.nocTransId, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.boeNo, c.boeDate, c.accSrNo, c.onAccountOf, c.bondingNo, c.bondingDate, p.partyName, c.importerId, c.importerName, " +
+		       "cf.commodityDescription, c.grossWeight, c.uom, c.nocPackages, " +
+		       "c.areaAllocated, c.areaOccupied, c.gateInPackages, c.inBondedPackages, c.exBondedPackages, " +
+		       "c.section49, c.cifValue, c.cargoDuty, c.insuranceValue, cf.cfBondDtlId, " +
+		       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondInsuranceValue, cf.inbondCifValue, " +
+		       "cf.inbondCargoDuty, cf.inbondGrossWt, cf.grossWeight, " +
+		       "cx.exBondedInsurance, cx.exBondedCIF, cx.exBondedCargoDuty, cx.exBondedGW, cx.exBondedPackages,cfx.areaReleased) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN CfExBondCrg cfx ON c.companyId = cfx.companyId AND c.branchId = cfx.branchId AND c.inBondingId = cfx.inBondingId " +
+		       "AND c.nocTransId = cfx.nocTransId AND cfx.status = 'A' " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId " +
+		       "AND c.nocTransId = cf.nocTransId AND cf.status = 'A' " +
+		       "LEFT OUTER JOIN CfexBondCrgDtl cx ON c.companyId = cx.companyId AND c.branchId = c.branchId AND c.inBondingId = cx.inBondingId  and cf.cfBondDtlId=cx.cfBondDtlId " +
+		       "AND c.nocTransId = cx.nocTransId AND cx.status = 'A' " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND (cf.inBondedPackages - COALESCE(cf.exBondedPackages, 0)) > 0 " +
+		       "AND (c.inBondingDate BETWEEN :startDate AND :endDate " +
+		       "OR (:startDate IS NULL OR :startDate = '') AND c.inBondingDate <= :endDate) " +
+		       "AND c.status = 'A' "+
+			   "ORDER BY c.inBondingDate, c.boeNo " )
+		List<Cfinbondcrg> getDataForInBondInventoryReport(@Param("companyId") String companyId, 
+		                                                 @Param("branchId") String branchId, 
+		                                                 @Param("startDate") Date startDate,
+		                                                 @Param("endDate") Date endDate);
+	 
+	 
+	
+	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.nocTransId, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.boeNo, c.boeDate, c.accSrNo, c.onAccountOf, c.bondingNo, c.bondingDate, p.partyName, c.importerId, c.importerName, " +
+		       "cf.commodityDescription, c.grossWeight, c.nocPackages, " +
+		       "c.areaAllocated, c.areaOccupied, c.gateInPackages, c.inBondedPackages, c.exBondedPackages, " +
+		       "c.section49, c.cifValue, c.cargoDuty, c.insuranceValue, cf.cfBondDtlId, " +
+		       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondInsuranceValue, cf.inbondCifValue, " +
+		       "cf.inbondCargoDuty, cf.inbondGrossWt, cf.grossWeight, c.numberOfMarks,cf.shortagePackages,cf.damagedQty,cf.breakage) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId " +
+		       "AND c.nocTransId = cf.nocTransId AND cf.status = 'A' " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND (c.boeNo = :boeNo OR :boeNo IS NULL OR :boeNo = '') " + // Allow null or empty boeNo
+		       "AND c.inBondingDate BETWEEN :startDate AND :endDate " + // Keep the date range check
+		       "AND c.status = 'A' " +
+		       "ORDER BY c.inBondingDate, c.boeNo")
+		List<Cfinbondcrg> getDataForInBondDepositeReport(@Param("companyId") String companyId, 
+		                                                 @Param("branchId") String branchId, 
+		                                                 @Param("startDate") Date startDate,
+		                                                 @Param("endDate") Date endDate,
+		                                                 @Param("boeNo") String boeNo);
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.nocTransId, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.boeNo, c.boeDate, c.accSrNo, c.onAccountOf, c.bondingNo, c.bondingDate, p.partyName, c.importerId, c.importerName, " +
+		       "cf.commodityDescription, c.grossWeight, c.nocPackages, " +
+		       "c.areaAllocated, c.areaOccupied, c.gateInPackages, c.inBondedPackages, c.exBondedPackages, " +
+		       "c.section49, c.cifValue, c.cargoDuty, c.insuranceValue, cf.cfBondDtlId, " +
+		       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondInsuranceValue, cf.inbondCifValue, " +
+		       "cf.inbondCargoDuty, cf.inbondGrossWt, cf.grossWeight, c.numberOfMarks,cf.shortagePackages,cf.damagedQty,cf.breakage) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId " +
+		       "AND c.nocTransId = cf.nocTransId AND cf.status = 'A' " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND (c.boeNo = :boeNo OR :boeNo IS NULL OR :boeNo = '') " + // Allow null or empty boeNo
+		       "AND c.status = 'A' " +
+		       "ORDER BY c.inBondingDate, c.boeNo")
+		List<Cfinbondcrg> getDataForInBondDepositeReportWithoutDates(@Param("companyId") String companyId, 
+		                                                 @Param("branchId") String branchId,
+		                                                 @Param("boeNo") String boeNo);
+
+
+	
+	 
+	 
+	 
+	 
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 //"AND COALESCE(GREATEST(c.bondValidityDate, c.extensionDate1, c.extensionDate2, c.extensionDate3), c.bondValidityDate) < CURRENT_DATE " + 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.nocTransId, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.boeNo, c.boeDate, c.bondingNo, c.bondingDate, p.partyName, c.importerId, c.importerName, " +
+		       "cf.commodityDescription, c.grossWeight,c.nocPackages, " +
+		       "c.areaAllocated, c.areaOccupied, c.gateInPackages, c.inBondedPackages, c.exBondedPackages, " +
+		       "c.section49, c.cifValue, c.cargoDuty, c.insuranceValue, cf.cfBondDtlId, " +
+		       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondInsuranceValue, cf.inbondCifValue, " +
+		       "cf.inbondCargoDuty, cf.inbondGrossWt, cf.grossWeight, " +
+		       "cx.exBondedInsurance, cx.exBondedCIF, cx.exBondedCargoDuty, cx.exBondedGW, cx.exBondedPackages,cfx.areaReleased,c.comments,c.bondValidityDate) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN CfExBondCrg cfx ON c.companyId = cfx.companyId AND c.branchId = cfx.branchId AND c.inBondingId = cfx.inBondingId " +
+		       "AND c.nocTransId = cfx.nocTransId AND cfx.status = 'A' " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId " +
+		       "AND c.nocTransId = cf.nocTransId AND cf.status = 'A' " +
+		       "LEFT OUTER JOIN CfexBondCrgDtl cx ON c.companyId = cx.companyId AND c.branchId = c.branchId AND c.inBondingId = cx.inBondingId  and cf.cfBondDtlId=cx.cfBondDtlId " +
+		       "AND c.nocTransId = cx.nocTransId AND cx.status = 'A' " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND COALESCE(GREATEST( " +
+		       "  CASE WHEN c.bondValidityDate IS NOT NULL THEN c.bondValidityDate ELSE NULL END, " +
+		       "  CASE WHEN c.extenstionDate1 IS NOT NULL THEN c.extenstionDate1 ELSE NULL END, " +
+		       "  CASE WHEN c.extenstionDate2 IS NOT NULL THEN c.extenstionDate2 ELSE NULL END, " +
+		       "  CASE WHEN c.extenstionDate3 IS NOT NULL THEN c.extenstionDate3 ELSE NULL END " +
+		       "), c.bondValidityDate) < CURRENT_DATE " + // Bond validity expired condition
+		       "AND (cf.inBondedPackages - COALESCE(cf.exBondedPackages, 0)) > 0 " +
+		       "AND (c.inBondingDate BETWEEN :startDate AND :endDate " +
+		       "OR (:startDate IS NULL OR :startDate = '') AND c.inBondingDate <= :endDate) " +
+		       "AND c.status = 'A' "+
+			   "ORDER BY c.inBondingDate, c.boeNo " )
+		List<Cfinbondcrg> getDataForExpiredBondReport(@Param("companyId") String companyId, 
+		                                                 @Param("branchId") String branchId, 
+		                                                 @Param("startDate") Date startDate,
+		                                                 @Param("endDate") Date endDate);
+
+	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.nocTransId, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.boeNo, c.boeDate, c.bondingNo, c.bondingDate, p.partyName, c.importerId, c.importerName, " +
+		       "cf.commodityDescription, c.grossWeight,c.nocPackages, " +
+		       "c.areaAllocated, c.areaOccupied, c.gateInPackages, c.inBondedPackages, c.exBondedPackages, " +
+		       "c.section49, c.cifValue, c.cargoDuty, c.insuranceValue, " +
+		       "cf.typeOfPackage, cf.inBondedPackages, cf.inbondInsuranceValue, cf.inbondCifValue, " +
+		       "cf.inbondCargoDuty, cf.inbondGrossWt, cf.grossWeight, " +
+		       "cx.exBondedInsurance, cx.exBondedCIF, cx.exBondedCargoDuty, cx.exBondedGW, cx.exBondedPackages,cfx.areaReleased,c.comments,c.bondValidityDate) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN CfExBondCrg cfx ON c.companyId = cfx.companyId AND c.branchId = cfx.branchId AND c.inBondingId = cfx.inBondingId " +
+		       "AND c.nocTransId = cfx.nocTransId AND cfx.status = 'A' " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId " +
+		       "AND c.nocTransId = cf.nocTransId AND cf.status = 'A' " +
+		       "LEFT OUTER JOIN CfexBondCrgDtl cx ON c.companyId = cx.companyId AND c.branchId = c.branchId AND c.inBondingId = cx.inBondingId  and cf.cfBondDtlId=cx.cfBondDtlId " +
+		       "AND c.nocTransId = cx.nocTransId AND cx.status = 'A' " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND COALESCE(GREATEST( " +
+		       "  CASE WHEN c.bondValidityDate IS NOT NULL THEN c.bondValidityDate ELSE NULL END, " +
+		       "  CASE WHEN c.extenstionDate1 IS NOT NULL THEN c.extenstionDate1 ELSE NULL END, " +
+		       "  CASE WHEN c.extenstionDate2 IS NOT NULL THEN c.extenstionDate2 ELSE NULL END, " +
+		       "  CASE WHEN c.extenstionDate3 IS NOT NULL THEN c.extenstionDate3 ELSE NULL END " +
+		       "), c.bondValidityDate) < CURRENT_DATE " + // Bond validity expired condition
+		       "AND (cf.inBondedPackages - COALESCE(cf.exBondedPackages, 0)) > 0 " +
+		       "AND (c.inBondingDate BETWEEN :startDate AND :endDate " +
+		       "OR (:startDate IS NULL OR :startDate = '') AND c.inBondingDate <= :endDate) " +
+		       "AND c.status = 'A' "+
+		       "AND c.section49 = 'Y' "+
+			   "ORDER BY c.inBondingDate, c.boeNo " )
+		List<Cfinbondcrg> getDataForSection49ExpiredBondReport(@Param("companyId") String companyId, 
+		                                                 @Param("branchId") String branchId, 
+		                                                 @Param("startDate") Date startDate,
+		                                                 @Param("endDate") Date endDate);
 }

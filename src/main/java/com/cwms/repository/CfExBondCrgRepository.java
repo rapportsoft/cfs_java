@@ -1,6 +1,7 @@
 package com.cwms.repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -259,5 +260,63 @@ List<Object[]> getAllExbondBeNofromExbondCrgDtl(@Param("cid") String cid, @Param
 	      @Param("branchId") String branchId,
 	      @Param("exBondingId") String exBondingId
 	);
+
+
+
+@Query("SELECT NEW com.cwms.entities.CfExBondCrg(c.companyId, c.branchId, c.finYear, c.exBondingId, " +
+	       "c.exBondingDate, c.profitcentreId, c.nocTransId, cf.nocNo, cff.nocDate, " +  // Added nocNo from c
+	       "c.nocValidityDate, c.boeNo, c.bondingNo, c.bondingDate, c.exBondBeNo, c.exBondBeDate, " +  // Updated exBondBeNo and exBondBeDate
+	       "c.inBondingId, c.inBondingDate, c.igmNo, c.igmLineNo, c.onAccountOf, " + 
+	       "cf.commodityDescription, c.numberOfMarks, c.exBondNo, c.exBondDate, " +
+	       "pa.partyName, cff.bondValidityDate, " +
+	       "cf.exBondedPackages, cf.exBondedCIF, cf.exBondedCargoDuty, " +
+	       "cf.exBondedGW, cf.typeOfPackage,p.partyName) " +
+	       "FROM CfExBondCrg c " +
+	       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+	       "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.giTransporterName = pa.partyId " +
+	       "LEFT OUTER JOIN CfexBondCrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.exBondingId = cf.exBondingId " +
+	       "LEFT OUTER JOIN Cfinbondcrg cff ON c.companyId = cff.companyId AND c.branchId = cff.branchId AND c.inBondingId = cff.inBondingId " +
+	       "AND cf.status = 'A' " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.exBondingDate BETWEEN :startDate AND :endDate " + // Keep the date range check
+	       "AND (c.boeNo = :boeNo OR :boeNo IS NULL OR :boeNo = '') " + // Allow null or empty boeNo
+	       "AND (c.exBondBeNo = :exBondBeNo OR :exBondBeNo IS NULL OR :exBondBeNo = '') " + // Allow null or empty exBondBeNo
+	       "AND c.status = 'A' " +
+	       "ORDER BY c.exBondingDate, c.boeNo")
+	List<CfExBondCrg> getDataForBondDeliveryReport(@Param("companyId") String companyId, 
+	                                                 @Param("branchId") String branchId, 
+	                                                 @Param("startDate") Date startDate,
+	                                                 @Param("endDate") Date endDate,
+	                                                 @Param("boeNo") String boeNo,
+	                                                 @Param("exBondBeNo") String exBondBeNo);
+
+
+
+@Query("SELECT NEW com.cwms.entities.CfExBondCrg(c.companyId, c.branchId, c.finYear, c.exBondingId, " +
+        "c.exBondingDate, c.profitcentreId, c.nocTransId, cf.nocNo, cff.nocDate, " +
+        "c.nocValidityDate, c.boeNo, c.bondingNo, c.bondingDate, c.exBondBeNo, c.exBondBeDate, " +
+        "c.inBondingId, c.inBondingDate, c.igmNo, c.igmLineNo, c.onAccountOf, " + 
+        "cf.commodityDescription, c.numberOfMarks, c.exBondNo, c.exBondDate, " +
+        "pa.partyName, cff.bondValidityDate, " +
+        "cf.exBondedPackages, cf.exBondedCIF, cf.exBondedCargoDuty, " +
+        "cf.exBondedGW, cf.typeOfPackage, p.partyName) " +
+        "FROM CfExBondCrg c " +
+        "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+        "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.giTransporterName = pa.partyId " +
+        "LEFT OUTER JOIN CfexBondCrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.exBondingId = cf.exBondingId " +
+        "LEFT OUTER JOIN Cfinbondcrg cff ON c.companyId = cff.companyId AND c.branchId = cff.branchId AND c.inBondingId = cff.inBondingId " +
+        "WHERE c.companyId = :companyId " +
+        "AND c.branchId = :branchId " +
+        "AND (c.boeNo = :boeNo OR :boeNo IS NULL OR :boeNo = '') " +
+        "AND (c.exBondBeNo = :exBondBeNo OR :exBondBeNo IS NULL OR :exBondBeNo = '') " +
+        "AND c.status = 'A' " +
+        "ORDER BY c.exBondingDate, c.boeNo")
+List<CfExBondCrg> getDataForBondDeliveryReportWithoutDates(@Param("companyId") String companyId,
+                                                           @Param("branchId") String branchId,
+                                                           @Param("boeNo") String boeNo,
+                                                           @Param("exBondBeNo") String exBondBeNo);
+
+
 
 }

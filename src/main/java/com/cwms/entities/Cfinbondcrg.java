@@ -316,6 +316,22 @@ public class Cfinbondcrg implements Serializable {
 	@Column(name = "Ex_Bonded_GW", precision = 10, scale = 3)
 	private BigDecimal exBondedGw = BigDecimal.ZERO;
 
+	
+	@Column(name = "Extension_Date1", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date extenstionDate1;
+	
+	@Column(name = "Extension_Date2", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date extenstionDate2;
+	
+	@Column(name = "Extension_Date3", nullable = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date extenstionDate3;
+
 	@Transient
 	private String cfBondDtlId;
 
@@ -339,14 +355,107 @@ public class Cfinbondcrg implements Serializable {
 
 	@Transient
 	private String nocWeek;
-	
-	
+
 	@Transient
 	private String spaceType;
-	
+
 	@Transient
 	private BigDecimal grossWeightDtl;
 	
+	
+	
+	@Transient
+	private BigDecimal exBondedPackagesDtl;
+
+	@Transient
+	private BigDecimal exbondInsuranceValueDtl;
+
+	@Transient
+	private BigDecimal exbondCifValue;
+
+	@Transient
+	private BigDecimal exbondCargoDuty;
+
+	@Transient
+	private BigDecimal exbondGrossWtDtl;
+	
+	@Transient
+	private BigDecimal areaRelesed;
+	
+	
+
+	public Date getExtenstionDate1() {
+		return extenstionDate1;
+	}
+
+	public void setExtenstionDate1(Date extenstionDate1) {
+		this.extenstionDate1 = extenstionDate1;
+	}
+
+	public Date getExtenstionDate2() {
+		return extenstionDate2;
+	}
+
+	public void setExtenstionDate2(Date extenstionDate2) {
+		this.extenstionDate2 = extenstionDate2;
+	}
+
+	public Date getExtenstionDate3() {
+		return extenstionDate3;
+	}
+
+	public void setExtenstionDate3(Date extenstionDate3) {
+		this.extenstionDate3 = extenstionDate3;
+	}
+
+	public BigDecimal getAreaRelesed() {
+		return areaRelesed;
+	}
+
+	public void setAreaRelesed(BigDecimal areaRelesed) {
+		this.areaRelesed = areaRelesed;
+	}
+
+	public BigDecimal getExBondedPackagesDtl() {
+		return exBondedPackagesDtl;
+	}
+
+	public void setExBondedPackagesDtl(BigDecimal exBondedPackagesDtl) {
+		this.exBondedPackagesDtl = exBondedPackagesDtl;
+	}
+
+	public BigDecimal getExbondInsuranceValueDtl() {
+		return exbondInsuranceValueDtl;
+	}
+
+	public void setExbondInsuranceValueDtl(BigDecimal exbondInsuranceValueDtl) {
+		this.exbondInsuranceValueDtl = exbondInsuranceValueDtl;
+	}
+
+	public BigDecimal getExbondCifValue() {
+		return exbondCifValue;
+	}
+
+	public void setExbondCifValue(BigDecimal exbondCifValue) {
+		this.exbondCifValue = exbondCifValue;
+	}
+
+	public BigDecimal getExbondCargoDuty() {
+		return exbondCargoDuty;
+	}
+
+	public void setExbondCargoDuty(BigDecimal exbondCargoDuty) {
+		this.exbondCargoDuty = exbondCargoDuty;
+	}
+
+	public BigDecimal getExbondGrossWtDtl() {
+		return exbondGrossWtDtl;
+	}
+
+	public void setExbondGrossWtDtl(BigDecimal exbondGrossWtDtl) {
+		this.exbondGrossWtDtl = exbondGrossWtDtl;
+	}
+
 	public BigDecimal getGrossWeightDtl() {
 		return grossWeightDtl;
 	}
@@ -1257,6 +1366,17 @@ public class Cfinbondcrg implements Serializable {
 		this.exBondedCif = exBondedCif;
 		this.exBondedGw = exBondedGw;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public String toString() {
@@ -1292,6 +1412,143 @@ public class Cfinbondcrg implements Serializable {
 				+ ", breakage=" + breakage + "]";
 	}
 
+	
+	// class constructor
+	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+		Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+		String igmLineNo, String nocNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String shift,
+		String gateInId, String boeNo, Date boeDate, int accSrNo, String onAccountOf, String shippingAgent,
+		String shippingLine, String bondingNo, Date bondingDate, Date bondValidityDate, Date invoiceUptoDate,
+		int chaSrNo, String cha, String chaCode, String billingParty, String igst, String cgst, String sgst,
+		int impSrNo, String importerId, String importerName, String importerAddress1, String importerAddress2,
+		String importerAddress3, String numberOfMarks, String commodityDescription, BigDecimal grossWeight, String uom,
+		String containerNo, String nocPackages, int sampleQty, BigDecimal areaAllocated, BigDecimal areaOccupied,
+		String cargoCondition, BigDecimal gateInPackages, BigDecimal inBondedPackages, BigDecimal exBondedPackages,
+		BigDecimal toBondedPackages, String spaceAllocated, String section49, String containerSize,
+		String containerType, String examinationId, String comments, BigDecimal cifValue, BigDecimal cargoDuty,
+		BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue, String inBond20Ft,
+		String inBond40Ft, String exBond20Ft, String exBond40Ft, String otlNo, String bondYard, String status,
+		String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
+		String reasonForChange, String reasonForChangeDetails, String syncFlag, String documentStatus,
+		BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, BigDecimal exBondedCargoDuty,
+		BigDecimal exBondedInsurance, BigDecimal exBondedCif, BigDecimal exBondedGw, Date extenstionDate1,
+		Date extenstionDate2, Date extenstionDate3, String cfBondDtlId, String typeOfPackage,
+		BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl, BigDecimal inbondCifValue,
+		BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl, String nocWeek, String spaceType,
+		BigDecimal grossWeightDtl, BigDecimal exBondedPackagesDtl, BigDecimal exbondInsuranceValueDtl,
+		BigDecimal exbondCifValue, BigDecimal exbondCargoDuty, BigDecimal exbondGrossWtDtl, BigDecimal areaRelesed) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.finYear = finYear;
+	this.inBondingHdrId = inBondingHdrId;
+	this.inBondingId = inBondingId;
+	this.inBondingDate = inBondingDate;
+	this.profitcentreId = profitcentreId;
+	this.nocTransId = nocTransId;
+	this.nocTransDate = nocTransDate;
+	this.igmNo = igmNo;
+	this.igmDate = igmDate;
+	this.igmLineNo = igmLineNo;
+	this.nocNo = nocNo;
+	this.nocDate = nocDate;
+	this.nocValidityDate = nocValidityDate;
+	this.nocFromDate = nocFromDate;
+	this.shift = shift;
+	this.gateInId = gateInId;
+	this.boeNo = boeNo;
+	this.boeDate = boeDate;
+	this.accSrNo = accSrNo;
+	this.onAccountOf = onAccountOf;
+	this.shippingAgent = shippingAgent;
+	this.shippingLine = shippingLine;
+	this.bondingNo = bondingNo;
+	this.bondingDate = bondingDate;
+	this.bondValidityDate = bondValidityDate;
+	this.invoiceUptoDate = invoiceUptoDate;
+	this.chaSrNo = chaSrNo;
+	this.cha = cha;
+	this.chaCode = chaCode;
+	this.billingParty = billingParty;
+	this.igst = igst;
+	this.cgst = cgst;
+	this.sgst = sgst;
+	this.impSrNo = impSrNo;
+	this.importerId = importerId;
+	this.importerName = importerName;
+	this.importerAddress1 = importerAddress1;
+	this.importerAddress2 = importerAddress2;
+	this.importerAddress3 = importerAddress3;
+	this.numberOfMarks = numberOfMarks;
+	this.commodityDescription = commodityDescription;
+	this.grossWeight = grossWeight;
+	this.uom = uom;
+	this.containerNo = containerNo;
+	this.nocPackages = nocPackages;
+	this.sampleQty = sampleQty;
+	this.areaAllocated = areaAllocated;
+	this.areaOccupied = areaOccupied;
+	this.cargoCondition = cargoCondition;
+	this.gateInPackages = gateInPackages;
+	this.inBondedPackages = inBondedPackages;
+	this.exBondedPackages = exBondedPackages;
+	this.toBondedPackages = toBondedPackages;
+	this.spaceAllocated = spaceAllocated;
+	this.section49 = section49;
+	this.containerSize = containerSize;
+	this.containerType = containerType;
+	this.examinationId = examinationId;
+	this.comments = comments;
+	this.cifValue = cifValue;
+	this.cargoDuty = cargoDuty;
+	this.insuranceValue = insuranceValue;
+	this.inbondGrossWt = inbondGrossWt;
+	this.inbondInsuranceValue = inbondInsuranceValue;
+	this.inBond20Ft = inBond20Ft;
+	this.inBond40Ft = inBond40Ft;
+	this.exBond20Ft = exBond20Ft;
+	this.exBond40Ft = exBond40Ft;
+	this.otlNo = otlNo;
+	this.bondYard = bondYard;
+	this.status = status;
+	this.createdBy = createdBy;
+	this.createdDate = createdDate;
+	this.editedBy = editedBy;
+	this.editedDate = editedDate;
+	this.approvedBy = approvedBy;
+	this.approvedDate = approvedDate;
+	this.reasonForChange = reasonForChange;
+	this.reasonForChangeDetails = reasonForChangeDetails;
+	this.syncFlag = syncFlag;
+	this.documentStatus = documentStatus;
+	this.shortagePackages = shortagePackages;
+	this.damagedQty = damagedQty;
+	this.breakage = breakage;
+	this.exBondedCargoDuty = exBondedCargoDuty;
+	this.exBondedInsurance = exBondedInsurance;
+	this.exBondedCif = exBondedCif;
+	this.exBondedGw = exBondedGw;
+	this.extenstionDate1 = extenstionDate1;
+	this.extenstionDate2 = extenstionDate2;
+	this.extenstionDate3 = extenstionDate3;
+	this.cfBondDtlId = cfBondDtlId;
+	this.typeOfPackage = typeOfPackage;
+	this.inBondedPackagesDtl = inBondedPackagesDtl;
+	this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+	this.inbondCifValue = inbondCifValue;
+	this.inbondCargoDuty = inbondCargoDuty;
+	this.inbondGrossWtDtl = inbondGrossWtDtl;
+	this.nocWeek = nocWeek;
+	this.spaceType = spaceType;
+	this.grossWeightDtl = grossWeightDtl;
+	this.exBondedPackagesDtl = exBondedPackagesDtl;
+	this.exbondInsuranceValueDtl = exbondInsuranceValueDtl;
+	this.exbondCifValue = exbondCifValue;
+	this.exbondCargoDuty = exbondCargoDuty;
+	this.exbondGrossWtDtl = exbondGrossWtDtl;
+	this.areaRelesed = areaRelesed;
+}
+
 	public Cfinbondcrg() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -1312,7 +1569,8 @@ public class Cfinbondcrg implements Serializable {
 			BigDecimal inbondInsuranceValue, String inBond20Ft, String inBond40Ft, String exBond20Ft, String exBond40Ft,
 			String otlNo, String bondYard, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, BigDecimal shortagePackages, BigDecimal damagedQty,
-			BigDecimal breakage) {
+			BigDecimal breakage,Date extenstionDate1,
+			Date extenstionDate2, Date extenstionDate3) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1386,6 +1644,9 @@ public class Cfinbondcrg implements Serializable {
 		this.shortagePackages = shortagePackages;
 		this.damagedQty = damagedQty;
 		this.breakage = breakage;
+		this.extenstionDate1 = extenstionDate1;
+		this.extenstionDate2 = extenstionDate2;
+		this.extenstionDate3 = extenstionDate3;
 	}
 
 	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingId, Date inBondingDate,
@@ -1481,169 +1742,395 @@ public class Cfinbondcrg implements Serializable {
 		this.inBondingId = inBondingId;
 		this.boeNo = boeNo;
 	}
+
 	
 	
-
-
+	
+	
+	
+	
 	// constructor to get data for costumes bond in bond report please check for any
 	// modifications
-//	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
-//			Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
-//			String igmLineNo, String nocNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String boeNo,
-//			Date boeDate, String bondingNo, Date bondingDate, Date bondValidityDate, String cha, String chaCode,
-//			String importerId, String importerName, String importerAddress1, String importerAddress2,
-//			String importerAddress3, String commodityDescription, BigDecimal grossWeight, String uom,
-//			String nocPackages, BigDecimal areaAllocated, BigDecimal areaOccupied, String cargoCondition,
-//			BigDecimal gateInPackages, BigDecimal inBondedPackages, BigDecimal exBondedPackages,
-//			BigDecimal toBondedPackages, String spaceAllocated, String section49, BigDecimal cifValue,
-//			BigDecimal cargoDuty, BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
-//			String inBond20Ft, String inBond40Ft, String otlNo, String bondYard, String status,
-//			BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage,String cfBondDtlId,String typeOfPackage,BigDecimal inBondedPackagesDtl,
-//			BigDecimal inbondInsuranceValueDtl,BigDecimal inbondCifValue,BigDecimal inbondCargoDuty,BigDecimal inbondGrossWtDtl,String nocWeek) {
-//		super();
-//		this.companyId = companyId;
-//		this.branchId = branchId;
-//		this.finYear = finYear;
-//		this.inBondingHdrId = inBondingHdrId;
-//		this.inBondingId = inBondingId;
-//		this.inBondingDate = inBondingDate;
-//		this.profitcentreId = profitcentreId;
-//		this.nocTransId = nocTransId;
-//		this.nocTransDate = nocTransDate;
-//		this.igmNo = igmNo;
-//		this.igmDate = igmDate;
-//		this.igmLineNo = igmLineNo;
-//		this.nocNo = nocNo;
-//		this.nocDate = nocDate;
-//		this.nocValidityDate = nocValidityDate;
-//		this.nocFromDate = nocFromDate;
-//		this.boeNo = boeNo;
-//		this.boeDate = boeDate;
-//		this.bondingNo = bondingNo;
-//		this.bondingDate = bondingDate;
-//		this.bondValidityDate = bondValidityDate;
-//		this.cha = cha;
-//		this.chaCode = chaCode;
-//		this.importerId = importerId;
-//		this.importerName = importerName;
-//		this.importerAddress1 = importerAddress1;
-//		this.importerAddress2 = importerAddress2;
-//		this.importerAddress3 = importerAddress3;
-//		this.commodityDescription = commodityDescription;
-//		this.grossWeight = grossWeight;
-//		this.uom = uom;
-//		this.nocPackages = nocPackages;
-//		this.areaAllocated = areaAllocated;
-//		this.areaOccupied = areaOccupied;
-//		this.cargoCondition = cargoCondition;
-//		this.gateInPackages = gateInPackages;
-//		this.inBondedPackages = inBondedPackages;
-//		this.exBondedPackages = exBondedPackages;
-//		this.toBondedPackages = toBondedPackages;
-//		this.spaceAllocated = spaceAllocated;
-//		this.section49 = section49;
-//		this.cifValue = cifValue;
-//		this.cargoDuty = cargoDuty;
-//		this.insuranceValue = insuranceValue;
-//		this.inbondGrossWt = inbondGrossWt;
-//		this.inbondInsuranceValue = inbondInsuranceValue;
-//		this.inBond20Ft = inBond20Ft;
-//		this.inBond40Ft = inBond40Ft;
-//		this.otlNo = otlNo;
-//		this.bondYard = bondYard;
-//		this.status = status;
-//		this.shortagePackages = shortagePackages;
-//		this.damagedQty = damagedQty;
-//		this.breakage = breakage;
-//		this.cfBondDtlId = cfBondDtlId;
-//		this.typeOfPackage = typeOfPackage;
-//		this.inBondedPackagesDtl = inBondedPackagesDtl;
-//		this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
-//		this.inbondCifValue = inbondCifValue;
-//		this.inbondCargoDuty = inbondCargoDuty;
-//		this.inbondGrossWtDtl = inbondGrossWtDtl;
-//		this.nocWeek = nocWeek;
-//	}
-	
 	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
-            Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
-            String igmLineNo, String nocNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String boeNo,
-            Date boeDate, String bondingNo, Date bondingDate, Date bondValidityDate, 
-            String partyName, String chaCode, String customerCode, 
-            String importerId, String importerPartyName, String importerAddress1, String importerAddress2, String importerAddress3, 
-            String commodityDescription, BigDecimal grossWeight, String uom, String nocPackages, 
-            BigDecimal areaAllocated, BigDecimal areaOccupied, String cargoCondition, BigDecimal gateInPackages, 
-            BigDecimal inBondedPackages, BigDecimal exBondedPackages, BigDecimal toBondedPackages, 
-            String spaceAllocated, String section49, BigDecimal cifValue, BigDecimal cargoDuty, BigDecimal insuranceValue, 
-            BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue, 
-            String inBond20Ft, String inBond40Ft, String otlNo, String bondYard, String status, 
-            BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, String cfBondDtlId, 
-            String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl, 
-            BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl, String nocWeek,String spaceType,BigDecimal grossWeightDtl) {
-this.companyId = companyId;
-this.branchId = branchId;
-this.finYear = finYear;
-this.inBondingHdrId = inBondingHdrId;
-this.inBondingId = inBondingId;
-this.inBondingDate = inBondingDate;
-this.profitcentreId = profitcentreId;
-this.nocTransId = nocTransId;
-this.nocTransDate = nocTransDate;
-this.igmNo = igmNo;
-this.igmDate = igmDate;
-this.igmLineNo = igmLineNo;
-this.nocNo = nocNo;
-this.nocDate = nocDate;
-this.nocValidityDate = nocValidityDate;
-this.nocFromDate = nocFromDate;
-this.boeNo = boeNo;
-this.boeDate = boeDate;
-this.bondingNo = bondingNo;
-this.bondingDate = bondingDate;
-this.bondValidityDate = bondValidityDate;
-this.cha = partyName;  // Mapped from Party
-this.chaCode = chaCode;
-this.importerId = importerId;
-this.importerName = importerPartyName; // Mapped from Party
-this.importerAddress1 = importerAddress1;
-this.importerAddress2 = importerAddress2;
-this.importerAddress3 = importerAddress3;
-this.commodityDescription = commodityDescription;
-this.grossWeight = grossWeight;
-this.uom = uom;
-this.nocPackages = nocPackages;
-this.areaAllocated = areaAllocated;
-this.areaOccupied = areaOccupied;
-this.cargoCondition = cargoCondition;
-this.gateInPackages = gateInPackages;
-this.inBondedPackages = inBondedPackages;
-this.exBondedPackages = exBondedPackages;
-this.toBondedPackages = toBondedPackages;
-this.spaceAllocated = spaceAllocated;
-this.section49 = section49;
-this.cifValue = cifValue;
-this.cargoDuty = cargoDuty;
-this.insuranceValue = insuranceValue;
-this.inbondGrossWt = inbondGrossWt;
-this.inbondInsuranceValue = inbondInsuranceValue;
-this.inBond20Ft = inBond20Ft;
-this.inBond40Ft = inBond40Ft;
-this.otlNo = otlNo;
-this.bondYard = bondYard;
-this.status = status;
-this.shortagePackages = shortagePackages;
-this.damagedQty = damagedQty;
-this.breakage = breakage;
-this.cfBondDtlId = cfBondDtlId;
-this.typeOfPackage = typeOfPackage;
-this.inBondedPackagesDtl = inBondedPackagesDtl;
-this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
-this.inbondCifValue = inbondCifValue;
-this.inbondCargoDuty = inbondCargoDuty;
-this.inbondGrossWtDtl = inbondGrossWtDtl;
-this.nocWeek = nocWeek;
-this.spaceType = spaceType;
-this.grossWeightDtl = grossWeightDtl;
-}
+			Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+			String igmLineNo, String nocNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String boeNo,
+			Date boeDate, String bondingNo, Date bondingDate, Date bondValidityDate, String partyName, String chaCode,
+			String customerCode, String importerId, String importerPartyName, String importerAddress1,
+			String importerAddress2, String importerAddress3, String commodityDescription, BigDecimal grossWeight,
+			String uom, String nocPackages, BigDecimal areaAllocated, BigDecimal areaOccupied, String cargoCondition,
+			BigDecimal gateInPackages, BigDecimal inBondedPackages, BigDecimal exBondedPackages,
+			BigDecimal toBondedPackages, String spaceAllocated, String section49, BigDecimal cifValue,
+			BigDecimal cargoDuty, BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
+			String inBond20Ft, String inBond40Ft, String otlNo, String bondYard, String status,
+			BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, String cfBondDtlId,
+			String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl,
+			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl, String nocWeek,
+			String spaceType, BigDecimal grossWeightDtl) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.inBondingHdrId = inBondingHdrId;
+		this.inBondingId = inBondingId;
+		this.inBondingDate = inBondingDate;
+		this.profitcentreId = profitcentreId;
+		this.nocTransId = nocTransId;
+		this.nocTransDate = nocTransDate;
+		this.igmNo = igmNo;
+		this.igmDate = igmDate;
+		this.igmLineNo = igmLineNo;
+		this.nocNo = nocNo;
+		this.nocDate = nocDate;
+		this.nocValidityDate = nocValidityDate;
+		this.nocFromDate = nocFromDate;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.bondValidityDate = bondValidityDate;
+		this.cha = partyName; // Mapped from Party
+		this.chaCode = chaCode;
+		this.importerId = importerId;
+		this.importerName = importerPartyName; // Mapped from Party
+		this.importerAddress1 = importerAddress1;
+		this.importerAddress2 = importerAddress2;
+		this.importerAddress3 = importerAddress3;
+		this.commodityDescription = commodityDescription;
+		this.grossWeight = grossWeight;
+		this.uom = uom;
+		this.nocPackages = nocPackages;
+		this.areaAllocated = areaAllocated;
+		this.areaOccupied = areaOccupied;
+		this.cargoCondition = cargoCondition;
+		this.gateInPackages = gateInPackages;
+		this.inBondedPackages = inBondedPackages;
+		this.exBondedPackages = exBondedPackages;
+		this.toBondedPackages = toBondedPackages;
+		this.spaceAllocated = spaceAllocated;
+		this.section49 = section49;
+		this.cifValue = cifValue;
+		this.cargoDuty = cargoDuty;
+		this.insuranceValue = insuranceValue;
+		this.inbondGrossWt = inbondGrossWt;
+		this.inbondInsuranceValue = inbondInsuranceValue;
+		this.inBond20Ft = inBond20Ft;
+		this.inBond40Ft = inBond40Ft;
+		this.otlNo = otlNo;
+		this.bondYard = bondYard;
+		this.status = status;
+		this.shortagePackages = shortagePackages;
+		this.damagedQty = damagedQty;
+		this.breakage = breakage;
+		this.cfBondDtlId = cfBondDtlId;
+		this.typeOfPackage = typeOfPackage;
+		this.inBondedPackagesDtl = inBondedPackagesDtl;
+		this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+		this.inbondCifValue = inbondCifValue;
+		this.inbondCargoDuty = inbondCargoDuty;
+		this.inbondGrossWtDtl = inbondGrossWtDtl;
+		this.nocWeek = nocWeek;
+		this.spaceType = spaceType;
+		this.grossWeightDtl = grossWeightDtl;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	// constructor for bond inventory report for bonding report.
+	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+			Date inBondingDate, String profitcentreId, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+			String igmLineNo, String nocNo, Date nocDate, String boeNo, Date boeDate, int accSrNo, String onAccountOf,
+			String bondingNo, Date bondingDate, String cha, String importerId, String importerName,
+			String commodityDescription, BigDecimal grossWeight, String uom, String nocPackages,
+			BigDecimal areaAllocated, BigDecimal areaOccupied, BigDecimal gateInPackages, BigDecimal inBondedPackages,
+			BigDecimal exBondedPackages, String section49, BigDecimal cifValue, BigDecimal cargoDuty,
+			BigDecimal insuranceValue,String cfBondDtlId,
+			String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl,
+			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl,
+			 BigDecimal grossWeightDtl,
+				BigDecimal exbondInsuranceValueDtl, BigDecimal exbondCifValue, BigDecimal exbondCargoDuty,
+				 BigDecimal exbondGrossWtDtl,BigDecimal exBondedPackagesDtl,BigDecimal areaRelesed) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.inBondingHdrId = inBondingHdrId;
+		this.inBondingId = inBondingId;
+		this.inBondingDate = inBondingDate;
+		this.profitcentreId = profitcentreId;
+		this.nocTransId = nocTransId;
+		this.nocTransDate = nocTransDate;
+		this.igmNo = igmNo;
+		this.igmDate = igmDate;
+		this.igmLineNo = igmLineNo;
+		this.nocNo = nocNo;
+		this.nocDate = nocDate;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.accSrNo = accSrNo;
+		this.onAccountOf = onAccountOf;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.cha = cha;
+		this.importerId = importerId;
+		this.importerName = importerName;
+		this.commodityDescription = commodityDescription;
+		this.grossWeight = grossWeight;
+		this.uom = uom;
+		this.nocPackages = nocPackages;
+		this.areaAllocated = areaAllocated;
+		this.areaOccupied = areaOccupied;
+		this.gateInPackages = gateInPackages;
+		this.inBondedPackages = inBondedPackages;
+		this.exBondedPackages = exBondedPackages;
+		this.section49 = section49;
+		this.cifValue = cifValue;
+		this.cargoDuty = cargoDuty;
+		this.insuranceValue = insuranceValue;
+		this.cfBondDtlId = cfBondDtlId;
+		this.typeOfPackage = typeOfPackage;
+		this.inBondedPackagesDtl = inBondedPackagesDtl;
+		this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+		this.inbondCifValue = inbondCifValue;
+		this.inbondCargoDuty = inbondCargoDuty;
+		this.inbondGrossWtDtl = inbondGrossWtDtl;
+		this.grossWeightDtl = grossWeightDtl;
+		this.exbondInsuranceValueDtl = exbondInsuranceValueDtl;
+		this.exbondCifValue = exbondCifValue;
+		this.exbondCargoDuty = exbondCargoDuty;
+		this.exbondGrossWtDtl = exbondGrossWtDtl;
+		this.exBondedPackagesDtl = exBondedPackagesDtl;
+		this.areaRelesed = areaRelesed;
+		
+	}
+	
+	
+
+	
+	
+	
+	
+	// constructor for bond deposite report for bonding report.
+		public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+				Date inBondingDate, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+				String igmLineNo, String nocNo, Date nocDate, String boeNo, Date boeDate, int accSrNo, String onAccountOf,
+				String bondingNo, Date bondingDate, String cha, String importerId, String importerName,
+				String commodityDescription, BigDecimal grossWeight, String nocPackages,
+				BigDecimal areaAllocated, BigDecimal areaOccupied, BigDecimal gateInPackages, BigDecimal inBondedPackages,
+				BigDecimal exBondedPackages, String section49, BigDecimal cifValue, BigDecimal cargoDuty,
+				BigDecimal insuranceValue,String cfBondDtlId,
+				String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl,
+				BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl,
+				 BigDecimal grossWeightDtl,String numberOfMarks,BigDecimal shortagePackages,BigDecimal damagedQty,BigDecimal breakage) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.inBondingHdrId = inBondingHdrId;
+			this.inBondingId = inBondingId;
+			this.inBondingDate = inBondingDate;
+			this.nocTransId = nocTransId;
+			this.nocTransDate = nocTransDate;
+			this.igmNo = igmNo;
+			this.igmDate = igmDate;
+			this.igmLineNo = igmLineNo;
+			this.nocNo = nocNo;
+			this.nocDate = nocDate;
+			this.boeNo = boeNo;
+			this.boeDate = boeDate;
+			this.accSrNo = accSrNo;
+			this.onAccountOf = onAccountOf;
+			this.bondingNo = bondingNo;
+			this.bondingDate = bondingDate;
+			this.cha = cha;
+			this.importerId = importerId;
+			this.importerName = importerName;
+			this.commodityDescription = commodityDescription;
+			this.grossWeight = grossWeight;
+			this.nocPackages = nocPackages;
+			this.areaAllocated = areaAllocated;
+			this.areaOccupied = areaOccupied;
+			this.gateInPackages = gateInPackages;
+			this.inBondedPackages = inBondedPackages;
+			this.exBondedPackages = exBondedPackages;
+			this.section49 = section49;
+			this.cifValue = cifValue;
+			this.cargoDuty = cargoDuty;
+			this.insuranceValue = insuranceValue;
+			this.cfBondDtlId = cfBondDtlId;
+			this.typeOfPackage = typeOfPackage;
+			this.inBondedPackagesDtl = inBondedPackagesDtl;
+			this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+			this.inbondCifValue = inbondCifValue;
+			this.inbondCargoDuty = inbondCargoDuty;
+			this.inbondGrossWtDtl = inbondGrossWtDtl;
+			this.grossWeightDtl = grossWeightDtl;
+			this.numberOfMarks = numberOfMarks;
+			this.shortagePackages = shortagePackages;
+			this.damagedQty = damagedQty;
+			this.breakage = breakage;
+			
+		}
+	
+		
+		
+		
+		
+		
+		
+		// constructor for bond expired report in cfs bonding report section.
+		public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+				Date inBondingDate, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+				String igmLineNo, String nocNo, Date nocDate, String boeNo, Date boeDate,
+				String bondingNo, Date bondingDate, String cha, String importerId, String importerName,
+				String commodityDescription, BigDecimal grossWeight,String nocPackages,
+				BigDecimal areaAllocated, BigDecimal areaOccupied, BigDecimal gateInPackages, BigDecimal inBondedPackages,
+				BigDecimal exBondedPackages, String section49, BigDecimal cifValue, BigDecimal cargoDuty,
+				BigDecimal insuranceValue,String cfBondDtlId,
+				String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl,
+				BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl,
+				 BigDecimal grossWeightDtl,
+					BigDecimal exbondInsuranceValueDtl, BigDecimal exbondCifValue, BigDecimal exbondCargoDuty,
+					 BigDecimal exbondGrossWtDtl,BigDecimal exBondedPackagesDtl,BigDecimal areaRelesed,String comments,Date bondValidityDate) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.inBondingHdrId = inBondingHdrId;
+			this.inBondingId = inBondingId;
+			this.inBondingDate = inBondingDate;
+			this.nocTransId = nocTransId;
+			this.nocTransDate = nocTransDate;
+			this.igmNo = igmNo;
+			this.igmDate = igmDate;
+			this.igmLineNo = igmLineNo;
+			this.nocNo = nocNo;
+			this.nocDate = nocDate;
+			this.boeNo = boeNo;
+			this.boeDate = boeDate;
+			this.bondingNo = bondingNo;
+			this.bondingDate = bondingDate;
+			this.cha = cha;
+			this.importerId = importerId;
+			this.importerName = importerName;
+			this.commodityDescription = commodityDescription;
+			this.grossWeight = grossWeight;
+			this.nocPackages = nocPackages;
+			this.areaAllocated = areaAllocated;
+			this.areaOccupied = areaOccupied;
+			this.gateInPackages = gateInPackages;
+			this.inBondedPackages = inBondedPackages;
+			this.exBondedPackages = exBondedPackages;
+			this.section49 = section49;
+			this.cifValue = cifValue;
+			this.cargoDuty = cargoDuty;
+			this.insuranceValue = insuranceValue;
+			this.cfBondDtlId = cfBondDtlId;
+			this.typeOfPackage = typeOfPackage;
+			this.inBondedPackagesDtl = inBondedPackagesDtl;
+			this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+			this.inbondCifValue = inbondCifValue;
+			this.inbondCargoDuty = inbondCargoDuty;
+			this.inbondGrossWtDtl = inbondGrossWtDtl;
+			this.grossWeightDtl = grossWeightDtl;
+			this.exbondInsuranceValueDtl = exbondInsuranceValueDtl;
+			this.exbondCifValue = exbondCifValue;
+			this.exbondCargoDuty = exbondCargoDuty;
+			this.exbondGrossWtDtl = exbondGrossWtDtl;
+			this.exBondedPackagesDtl = exBondedPackagesDtl;
+			this.areaRelesed = areaRelesed;
+			this.comments=comments;
+			this.bondValidityDate=bondValidityDate;
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// constructor for section 49 bond expired report in cfs bonding report section.
+				public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingHdrId, String inBondingId,
+						Date inBondingDate, String nocTransId, Date nocTransDate, String igmNo, Date igmDate,
+						String igmLineNo, String nocNo, Date nocDate, String boeNo, Date boeDate,
+						String bondingNo, Date bondingDate, String cha, String importerId, String importerName,
+						String commodityDescription, BigDecimal grossWeight,String nocPackages,
+						BigDecimal areaAllocated, BigDecimal areaOccupied, BigDecimal gateInPackages, BigDecimal inBondedPackages,
+						BigDecimal exBondedPackages, String section49, BigDecimal cifValue, BigDecimal cargoDuty,
+						BigDecimal insuranceValue,
+						String typeOfPackage, BigDecimal inBondedPackagesDtl, BigDecimal inbondInsuranceValueDtl,
+						BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, BigDecimal inbondGrossWtDtl,
+						 BigDecimal grossWeightDtl,
+							BigDecimal exbondInsuranceValueDtl, BigDecimal exbondCifValue, BigDecimal exbondCargoDuty,
+							 BigDecimal exbondGrossWtDtl,BigDecimal exBondedPackagesDtl,BigDecimal areaRelesed,String comments,Date bondValidityDate) {
+					super();
+					this.companyId = companyId;
+					this.branchId = branchId;
+					this.finYear = finYear;
+					this.inBondingHdrId = inBondingHdrId;
+					this.inBondingId = inBondingId;
+					this.inBondingDate = inBondingDate;
+					this.nocTransId = nocTransId;
+					this.nocTransDate = nocTransDate;
+					this.igmNo = igmNo;
+					this.igmDate = igmDate;
+					this.igmLineNo = igmLineNo;
+					this.nocNo = nocNo;
+					this.nocDate = nocDate;
+					this.boeNo = boeNo;
+					this.boeDate = boeDate;
+					this.bondingNo = bondingNo;
+					this.bondingDate = bondingDate;
+					this.cha = cha;
+					this.importerId = importerId;
+					this.importerName = importerName;
+					this.commodityDescription = commodityDescription;
+					this.grossWeight = grossWeight;
+					this.nocPackages = nocPackages;
+					this.areaAllocated = areaAllocated;
+					this.areaOccupied = areaOccupied;
+					this.gateInPackages = gateInPackages;
+					this.inBondedPackages = inBondedPackages;
+					this.exBondedPackages = exBondedPackages;
+					this.section49 = section49;
+					this.cifValue = cifValue;
+					this.cargoDuty = cargoDuty;
+					this.insuranceValue = insuranceValue;
+					this.typeOfPackage = typeOfPackage;
+					this.inBondedPackagesDtl = inBondedPackagesDtl;
+					this.inbondInsuranceValueDtl = inbondInsuranceValueDtl;
+					this.inbondCifValue = inbondCifValue;
+					this.inbondCargoDuty = inbondCargoDuty;
+					this.inbondGrossWtDtl = inbondGrossWtDtl;
+					this.grossWeightDtl = grossWeightDtl;
+					this.exbondInsuranceValueDtl = exbondInsuranceValueDtl;
+					this.exbondCifValue = exbondCifValue;
+					this.exbondCargoDuty = exbondCargoDuty;
+					this.exbondGrossWtDtl = exbondGrossWtDtl;
+					this.exBondedPackagesDtl = exBondedPackagesDtl;
+					this.areaRelesed = areaRelesed;
+					this.comments=comments;
+					this.bondValidityDate=bondValidityDate;
+					
+				}
+	
 
 }
