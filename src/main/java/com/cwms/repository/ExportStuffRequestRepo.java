@@ -270,9 +270,26 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
 	
 	
 	
+//	@Query("SELECT E.sbNo, E.sbDate, E.sbTransId, E.hSbTransId, E.exporterId, E.exporterName, E.totalPackages, E.pod, E.onAccountOf, E.srNo, "
+//            + "ec.commodity, ec.typeOfPackage, g.containerNo, g.containerSize, g.containerType, g.containerSealNo, "
+//            + "g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.sa, psa.partyName, g.sl, psl.partyName, oa.partyName, E.pol, g.gateInId, ec.grossWeight, ec.stuffedQty "
+//        + "FROM ExportSbEntry E "
+//        + "LEFT JOIN ExportSbCargoEntry ec ON E.companyId = ec.companyId AND E.branchId = ec.branchId AND E.sbNo = ec.sbNo AND E.sbTransId = ec.sbTransId AND E.hSbTransId = ec.hSbTransId AND ec.status <> 'D' "
+//        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND E.onAccountOf = g.onAccountOf AND g.containerStatus = 'MTY' AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' and (stuffRequestId = '' OR stuffRequestId IS NULL) "
+//        + "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.sa = psa.partyId AND psa.status <> 'D' "
+//        + "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
+//        + "LEFT JOIN Party oa ON E.companyId = oa.companyId AND E.branchId = oa.branchId AND E.onAccountOf = oa.partyId AND oa.status <> 'D' "
+//        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+//        + "AND E.sbNo = :sbNo "	  
+//        + "AND ec.noOfPackages = ec.cartedPackages AND (E.totalPackages - ec.stuffedQty) > 0 "
+//        + "AND E.status <> 'D'")
+//List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
+
+	
+	
 	@Query("SELECT E.sbNo, E.sbDate, E.sbTransId, E.hSbTransId, E.exporterId, E.exporterName, E.totalPackages, E.pod, E.onAccountOf, E.srNo, "
             + "ec.commodity, ec.typeOfPackage, g.containerNo, g.containerSize, g.containerType, g.containerSealNo, "
-            + "g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.sa, psa.partyName, g.sl, psl.partyName, oa.partyName, E.pol, g.gateInId, ec.grossWeight, ec.stuffedQty "
+            + "g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.sa, psa.partyName, g.sl, psl.partyName, oa.partyName, E.pol, g.gateInId, ec.grossWeight, ec.stuffReqQty "
         + "FROM ExportSbEntry E "
         + "LEFT JOIN ExportSbCargoEntry ec ON E.companyId = ec.companyId AND E.branchId = ec.branchId AND E.sbNo = ec.sbNo AND E.sbTransId = ec.sbTransId AND E.hSbTransId = ec.hSbTransId AND ec.status <> 'D' "
         + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND E.onAccountOf = g.onAccountOf AND g.containerStatus = 'MTY' AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' and (stuffRequestId = '' OR stuffRequestId IS NULL) "
@@ -281,13 +298,10 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
         + "LEFT JOIN Party oa ON E.companyId = oa.companyId AND E.branchId = oa.branchId AND E.onAccountOf = oa.partyId AND oa.status <> 'D' "
         + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
         + "AND E.sbNo = :sbNo "	  
-        + "AND ec.noOfPackages = ec.cartedPackages AND (E.totalPackages - E.stuffedQty) > 0 "
+        + "AND ec.noOfPackages = ec.cartedPackages AND (E.totalPackages - (ec.stuffReqQty * 1.0)) > 0 "
         + "AND E.status <> 'D'")
 List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
 
-	
-	
-	
 	
 	
 	

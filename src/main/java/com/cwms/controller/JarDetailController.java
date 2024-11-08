@@ -208,6 +208,12 @@ public class JarDetailController {
 	        return map;
 	    }).collect(Collectors.toList());
 	}
-	
+	@GetMapping("/getJarDetailSelect")
+	public ResponseEntity<?> getJarDetailSelect(@RequestParam("companyId") String companyId,
+			@RequestParam("jarId") String jarId) {
+		List<Object[]> jars = jarDetailRepository.getJarDtlById(companyId, jarId);		
+		List<Map<String, String>>jarList = convertToValueLabelList(jars);		
+		return ResponseEntity.ok(jarList);
+	}
 
 }
