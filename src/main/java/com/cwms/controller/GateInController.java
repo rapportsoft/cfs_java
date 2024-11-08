@@ -981,7 +981,7 @@ public class GateInController {
 			if (gate != null) {
 				result.put("sa", gate.getSa());
 				result.put("sl", gate.getSl());
-				result.put("onAccounOf", gate.getOnAccountOf());
+				result.put("onAccountOf", gate.getOnAccountOf());
 			}
 
 			return new ResponseEntity<>(result, HttpStatus.OK);
@@ -1053,7 +1053,7 @@ public class GateInController {
 			if (gate != null) {
 				result.put("sa", gate.getSa());
 				result.put("sl", gate.getSl());
-				result.put("onAccounOf", gate.getOnAccountOf());
+				result.put("onAccountOf", gate.getOnAccountOf());
 			}
 
 			return new ResponseEntity<>(result, HttpStatus.OK);
@@ -1094,7 +1094,7 @@ public class GateInController {
 		if (gate != null) {
 			result.put("sa", gate.getSa());
 			result.put("sl", gate.getSl());
-			result.put("onAccounOf", gate.getOnAccountOf());
+			result.put("onAccountOf", gate.getOnAccountOf());
 		}
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
