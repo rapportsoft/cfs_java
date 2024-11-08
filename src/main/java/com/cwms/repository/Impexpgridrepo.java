@@ -70,4 +70,17 @@ public interface Impexpgridrepo extends JpaRepository<Impexpgrid, String> {
 	@Query(value="select i from Impexpgrid i where i.companyId=:cid and i.branchId=:bid and i.processTransId=:id and i.status != 'D' and "
 			+ "i.transType='IMP' and i.lineNo=:line")
 	Impexpgrid getDataByIdAndLineId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("line") String line);
+	
+	
+	@Query(value = "select i from Impexpgrid i where i.companyId = :cid and i.branchId = :bid and i.processTransId = :id " +
+            "and i.status != 'D' and i.lineNo = :line and (COALESCE(i.yardPackages, 0) - COALESCE(i.qtyTakenOut, 0)) > 0 " +
+            "order by (COALESCE(i.yardPackages, 0) - COALESCE(i.qtyTakenOut, 0)) asc")
+List<Impexpgrid> getDataForTally(@Param("cid") String cid, @Param("bid") String bid, 
+                              @Param("id") String id, @Param("line") String line);
+	
+	@Query(value = "select i from Impexpgrid i where i.companyId = :cid and i.branchId = :bid and i.processTransId = :id " +
+            "and i.status != 'D' and i.lineNo = :line " +
+            "order by (COALESCE(i.yardPackages, 0) - COALESCE(i.qtyTakenOut, 0)) asc")
+List<Impexpgrid> getDataForTally1(@Param("cid") String cid, @Param("bid") String bid, 
+                              @Param("id") String id, @Param("line") String line);
 }

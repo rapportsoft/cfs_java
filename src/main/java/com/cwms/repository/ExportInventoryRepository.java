@@ -47,4 +47,9 @@ public interface ExportInventoryRepository extends JpaRepository<ExportInventory
 	@Query(value="select COUNT(e) > 0 from ExportInventory e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
 			+ "(e.gateOutId is not null OR e.gateOutId != '') and e.containerNo=:con")
 	Boolean checkContainerInInventory(@Param("cid") String cid,@Param("bid") String bId,@Param("con") String con);
+	
+	
+	@Query(value="select i from ExportInventory i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and i.containerNo=:con "
+			+ "and (i.gateOutId is null OR i.gateOutId = '')")
+	ExportInventory getDataByContainerNo(@Param("cid") String cid,@Param("bid") String bId,@Param("con") String con);
 }

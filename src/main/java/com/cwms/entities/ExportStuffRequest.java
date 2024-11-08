@@ -231,6 +231,38 @@ public class ExportStuffRequest {
     
     @Transient
     private String vesselName;
+    
+
+    
+    @Transient
+    private String cha;
+    
+    @Transient
+    private String consignee;
+    
+    @Transient
+    private BigDecimal fob;
+    
+    @Transient
+    private BigDecimal cellAreaAllocated;
+    
+    @Transient
+    private BigDecimal yardPackages;
+    
+    @Transient
+    private BigDecimal sbPackages;
+    
+    @Transient
+    private BigDecimal stuffedQuantity;
+    
+    @Transient
+    private BigDecimal sbWt;
+    
+    @Transient
+    private String cargoType;
+
+    @Column(name = "Stuffed_Qty", precision = 8, scale = 0)
+    private BigDecimal stuffedQty;
 
 
 	public ExportStuffRequest() {
@@ -245,6 +277,332 @@ public class ExportStuffRequest {
 
 
 	
+	public String getCha() {
+		return cha;
+	}
+
+
+
+
+
+
+
+
+	public void setCha(String cha) {
+		this.cha = cha;
+	}
+
+
+
+
+
+
+
+
+	public String getConsignee() {
+		return consignee;
+	}
+
+
+
+
+
+
+
+
+	public void setConsignee(String consignee) {
+		this.consignee = consignee;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getFob() {
+		return fob;
+	}
+
+
+
+
+
+
+
+
+	public void setFob(BigDecimal fob) {
+		this.fob = fob;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getCellAreaAllocated() {
+		return cellAreaAllocated;
+	}
+
+
+
+
+
+
+
+
+	public void setCellAreaAllocated(BigDecimal cellAreaAllocated) {
+		this.cellAreaAllocated = cellAreaAllocated;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getYardPackages() {
+		return yardPackages;
+	}
+
+
+
+
+
+
+
+
+	public void setYardPackages(BigDecimal yardPackages) {
+		this.yardPackages = yardPackages;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getSbPackages() {
+		return sbPackages;
+	}
+
+
+
+
+
+
+
+
+	public void setSbPackages(BigDecimal sbPackages) {
+		this.sbPackages = sbPackages;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getStuffedQuantity() {
+		return stuffedQuantity;
+	}
+
+
+
+
+
+
+
+
+	public void setStuffedQuantity(BigDecimal stuffedQuantity) {
+		this.stuffedQuantity = stuffedQuantity;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getSbWt() {
+		return sbWt;
+	}
+
+
+
+
+
+
+
+
+	public void setSbWt(BigDecimal sbWt) {
+		this.sbWt = sbWt;
+	}
+
+
+
+
+
+
+
+
+	public String getCargoType() {
+		return cargoType;
+	}
+
+
+
+
+
+
+
+
+	public void setCargoType(String cargoType) {
+		this.cargoType = cargoType;
+	}
+
+
+
+
+
+
+
+
+	public BigDecimal getStuffedQty() {
+		return stuffedQty;
+	}
+
+
+
+
+
+
+
+
+	public void setStuffedQty(BigDecimal stuffedQty) {
+		this.stuffedQty = stuffedQty;
+	}
+
+
+
+
+
+
+
+
+	
+
+
+
+	public ExportStuffRequest(String companyId, String branchId, String finYear, String stuffReqId, String sbTransId,
+			int stuffReqLineId, String sbLineNo, String profitcentreId, Date stuffReqDate, String sbNo, Date sbDate,
+			String shift, char stuffTally, String stuffTallyId, BigDecimal totalCargoWeight, String shippingAgent,
+			String shippingLine, String exporterName, String cargoDescription, String onAccountOf, String vesselId,
+			String viaNo, String voyageNo, String terminal, String coverDetails, Date coverDate, Date berthingDate,
+			Date gateOpenDate, String gateInId, String agentSealNo, BigDecimal tareWeight, String containerSize,
+			String containerType, String pod, String comments, String typeOfPackage, BigDecimal noOfPackages,
+			BigDecimal noOfPackagesStuffed, BigDecimal contStuffPackages, String cbm, String containerNo,
+			String currentLocation, Date periodFrom, String containerHealth, BigDecimal cargoWeight, String status,
+			String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
+			char labour, char fk3mt, char fk5mt, char fk10mt, char hydra12mt, char crane, String ssrTransId,
+			String deliveryOrderNo, String rotationNo, Date rotationDate, Date containerGateInDate,
+			String shippingLineName, String shippingAgentName, String onAccountName, String vesselName, String cha,
+			String consignee, BigDecimal fob, BigDecimal cellAreaAllocated, BigDecimal yardPackages,
+			BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt, String cargoType,
+			BigDecimal stuffedQty) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.stuffReqId = stuffReqId;
+		this.sbTransId = sbTransId;
+		this.stuffReqLineId = stuffReqLineId;
+		this.sbLineNo = sbLineNo;
+		this.profitcentreId = profitcentreId;
+		this.stuffReqDate = stuffReqDate;
+		this.sbNo = sbNo;
+		this.sbDate = sbDate;
+		this.shift = shift;
+		this.stuffTally = stuffTally;
+		this.stuffTallyId = stuffTallyId;
+		this.totalCargoWeight = totalCargoWeight;
+		this.shippingAgent = shippingAgent;
+		this.shippingLine = shippingLine;
+		this.exporterName = exporterName;
+		this.cargoDescription = cargoDescription;
+		this.onAccountOf = onAccountOf;
+		this.vesselId = vesselId;
+		this.viaNo = viaNo;
+		this.voyageNo = voyageNo;
+		this.terminal = terminal;
+		this.coverDetails = coverDetails;
+		this.coverDate = coverDate;
+		this.berthingDate = berthingDate;
+		this.gateOpenDate = gateOpenDate;
+		this.gateInId = gateInId;
+		this.agentSealNo = agentSealNo;
+		this.tareWeight = tareWeight;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.pod = pod;
+		this.comments = comments;
+		this.typeOfPackage = typeOfPackage;
+		this.noOfPackages = noOfPackages;
+		this.noOfPackagesStuffed = noOfPackagesStuffed;
+		this.contStuffPackages = contStuffPackages;
+		this.cbm = cbm;
+		this.containerNo = containerNo;
+		this.currentLocation = currentLocation;
+		this.periodFrom = periodFrom;
+		this.containerHealth = containerHealth;
+		this.cargoWeight = cargoWeight;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.labour = labour;
+		fk3MT = fk3mt;
+		fk5MT = fk5mt;
+		fk10MT = fk10mt;
+		hydra12MT = hydra12mt;
+		this.crane = crane;
+		this.ssrTransId = ssrTransId;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.rotationNo = rotationNo;
+		this.rotationDate = rotationDate;
+		this.containerGateInDate = containerGateInDate;
+		this.shippingLineName = shippingLineName;
+		this.shippingAgentName = shippingAgentName;
+		this.onAccountName = onAccountName;
+		this.vesselName = vesselName;
+		this.cha = cha;
+		this.consignee = consignee;
+		this.fob = fob;
+		this.cellAreaAllocated = cellAreaAllocated;
+		this.yardPackages = yardPackages;
+		this.sbPackages = sbPackages;
+		this.stuffedQuantity = stuffedQuantity;
+		this.sbWt = sbWt;
+		this.cargoType = cargoType;
+		this.stuffedQty = stuffedQty;
+	}
+
+
+
+
+
+
+
+
 	public ExportStuffRequest(String companyId, String branchId, String finYear, String stuffReqId, String sbTransId,
 			int stuffReqLineId, String sbLineNo, String profitcentreId, Date stuffReqDate, String sbNo, Date sbDate,
 			String shift, char stuffTally, String stuffTallyId, BigDecimal totalCargoWeight, String shippingAgent,
@@ -1111,6 +1469,112 @@ public class ExportStuffRequest {
 	}
 
 	
+	public ExportStuffRequest(String sbTransId, String profitcentreId, String sbNo, Date sbDate, String shippingAgent,
+			String shippingLine, String cargoDescription, String onAccountOf, String vesselId, String viaNo,
+			String voyageNo, String terminal, Date berthingDate, Date gateOpenDate, String gateInId, String agentSealNo,
+			BigDecimal tareWeight, String containerSize, String containerType, String pod, BigDecimal noOfPackagesStuffed,
+			String containerNo, BigDecimal cargoWeight, String status, String deliveryOrderNo, String rotationNo,
+			Date rotationDate, Date containerGateInDate, String vesselName, String consignee, BigDecimal fob,String cha,
+			String exporterName,BigDecimal sbPackages,BigDecimal sbWt, BigDecimal stuffedQuantity, String stuffReqId, String cargoType) {
+		this.sbTransId = sbTransId;
+		this.profitcentreId = profitcentreId;
+		this.sbNo = sbNo;
+		this.sbDate = sbDate;
+		this.shippingAgent = shippingAgent;
+		this.shippingLine = shippingLine;
+		this.cargoDescription = cargoDescription;
+		this.onAccountOf = onAccountOf;
+		this.vesselId = vesselId;
+		this.viaNo = viaNo;
+		this.voyageNo = voyageNo;
+		this.terminal = terminal;
+		this.berthingDate = berthingDate;
+		this.gateOpenDate = gateOpenDate;
+		this.gateInId = gateInId;
+		this.agentSealNo = agentSealNo;
+		this.tareWeight = tareWeight;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.pod = pod;
+		this.noOfPackagesStuffed = noOfPackagesStuffed;
+		this.containerNo = containerNo;
+		this.cargoWeight = cargoWeight;
+		this.status = status;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.rotationNo = rotationNo;
+		this.rotationDate = rotationDate;
+		this.containerGateInDate = containerGateInDate;
+		this.vesselName = vesselName;
+		this.consignee = consignee;
+		this.fob = fob;
+		this.cha = cha;
+		this.exporterName = exporterName;
+		this.sbPackages = sbPackages;
+		this.sbWt = sbWt;
+		this.stuffedQuantity = stuffedQuantity;
+		this.stuffReqId = stuffReqId;
+		this.cargoType = cargoType;
+	}
 	
+	
+	
+
+	public ExportStuffRequest(String stuffReqId, String sbTransId, int stuffReqLineId, String sbLineNo,
+			String profitcentreId, Date stuffReqDate, String sbNo, Date sbDate, char stuffTally, BigDecimal totalCargoWeight, 
+			String shippingAgent,
+			String shippingLine, String exporterName, String cargoDescription, String onAccountOf, String vesselId,
+			String viaNo, String voyageNo, String terminal, Date berthingDate, Date gateOpenDate, String gateInId,
+			String agentSealNo, BigDecimal tareWeight, String containerSize, String containerType, BigDecimal yardPackages,
+			BigDecimal cellAreaAllocated,String pod, String typeOfPackage, BigDecimal noOfPackages,
+			BigDecimal noOfPackagesStuffed, String containerNo, String currentLocation, Date periodFrom,
+			String containerHealth, BigDecimal cargoWeight, String deliveryOrderNo, String rotationNo,
+			Date rotationDate, String vesselName, String consignee, BigDecimal fob, BigDecimal contStuffPackages) {
+		this.stuffReqId = stuffReqId;
+		this.sbTransId = sbTransId;
+		this.stuffReqLineId = stuffReqLineId;
+		this.sbLineNo = sbLineNo;
+		this.profitcentreId = profitcentreId;
+		this.stuffReqDate = stuffReqDate;
+		this.sbNo = sbNo;
+		this.sbDate = sbDate;
+		this.stuffTally = stuffTally;
+		this.totalCargoWeight = totalCargoWeight;
+		this.shippingAgent = shippingAgent;
+		this.shippingLine = shippingLine;
+		this.exporterName = exporterName;
+		this.cargoDescription = cargoDescription;
+		this.onAccountOf = onAccountOf;
+		this.vesselId = vesselId;
+		this.viaNo = viaNo;
+		this.voyageNo = voyageNo;
+		this.terminal = terminal;
+		this.berthingDate = berthingDate;
+		this.gateOpenDate = gateOpenDate;
+		this.gateInId = gateInId;
+		this.agentSealNo = agentSealNo;
+		this.tareWeight = tareWeight;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.yardPackages = yardPackages;
+		this.cellAreaAllocated = cellAreaAllocated;
+		this.pod = pod;
+		this.typeOfPackage = typeOfPackage;
+		this.noOfPackages = noOfPackages;
+		this.noOfPackagesStuffed = noOfPackagesStuffed;
+		this.containerNo = containerNo;
+		this.currentLocation = currentLocation;
+		this.periodFrom = periodFrom;
+		this.containerHealth = containerHealth;
+		this.cargoWeight = cargoWeight;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.rotationNo = rotationNo;
+		this.rotationDate = rotationDate;
+		this.vesselName = vesselName;
+		this.consignee = consignee;
+		this.fob = fob;
+		this.contStuffPackages = contStuffPackages;
+	}
+
+
 	
 }

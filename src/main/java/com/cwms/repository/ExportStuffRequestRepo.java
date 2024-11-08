@@ -301,4 +301,127 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 	List<ExportStuffRequest> searchContainerNoForStuffingSaved(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
 	
 	
+	
+	
+	
+	
+	
+	//Sanket
+	
+	
+	@Query(value="select e.stuffReqId from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
+			+ "(e.stuffTallyId is null OR e.stuffTallyId = '') and (:id is null OR :id = '' OR e.stuffReqId LIKE CONCAT('%',:id,'%')) "
+			+ "and (COALESCE(e.noOfPackagesStuffed,0)-COALESCE(e.stuffedQty,0) > 0)")
+	List<String> getDataBystuffReqId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	
+	@Query(value="select NEW com.cwms.entities.ExportStuffRequest(e.stuffReqId, e.sbTransId, e.stuffReqLineId, e.sbLineNo,"
+			+ "pr.profitcentreDesc, e.stuffReqDate, e.sbNo, e.sbDate, e.stuffTally, e.totalCargoWeight, p1.partyName,"
+			+ "p2.partyName, e.exporterName, e.cargoDescription, e.onAccountOf, e.vesselId,"
+			+ "e.viaNo, e.voyageNo, e.terminal, e.berthingDate, e.gateOpenDate, e.gateInId,"
+			+ "e.agentSealNo, e.tareWeight, e.containerSize, e.containerType, c.cartedPackages, SUM(car.areaOccupied),"
+			+ "e.pod, e.typeOfPackage, e.noOfPackages,"
+			+ "(e.noOfPackagesStuffed - COALESCE(e.stuffedQty,0)), e.containerNo, e.currentLocation, e.periodFrom,"
+			+ "e.containerHealth, e.cargoWeight, e.deliveryOrderNo, e.rotationNo,"
+			+ "e.rotationDate, v.vesselName, sb.consigneeName, c.fob, e.noOfPackagesStuffed) "
+			+ "from ExportStuffRequest e LEFT OUTER JOIN ExportSbCargoEntry c ON e.companyId=c.companyId "
+			+ "and e.branchId=c.branchId and e.sbNo=c.sbNo and e.sbTransId=c.sbTransId and e.sbLineNo=c.sbLineNo "
+			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo "
+			+ "and e.sbTransId=sb.sbTransId "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent = p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.shippingLine = p2.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId = v.vesselId "
+			+ "LEFT OUTER JOIN ExportCarting car ON e.companyId=car.companyId and e.branchId=car.branchId and e.sbTransId=car.sbTransId and e.sbNo=car.sbNo "
+			+ "LEFT OUTER JOIN Profitcentre pr ON e.companyId=pr.companyId and e.branchId=pr.branchId and e.profitcentreId = pr.profitcentreId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
+			+ "e.stuffReqId=:id and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+	List<ExportStuffRequest> getDataByStuffReqId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+//	@Query(value = "select NEW com.cwms.entities.ExportStuffRequest(e.stuffReqId, e.sbTransId, e.stuffReqLineId, e.sbLineNo, "
+//	        + "pr.profitcentreDesc, e.stuffReqDate, e.sbNo, e.sbDate, e.stuffTally, e.totalCargoWeight, p1.partyName, "
+//	        + "p2.partyName, e.exporterName, e.cargoDescription, e.onAccountOf, e.vesselId, "
+//	        + "e.viaNo, e.voyageNo, e.terminal, e.berthingDate, e.gateOpenDate, e.gateInId, "
+//	        + "e.agentSealNo, e.tareWeight, e.containerSize, e.containerType, c.cartedPackages, "
+//	        + "(SELECT SUM(car.areaOccupied) FROM ExportCarting car WHERE car.companyId = e.companyId AND car.branchId = e.branchId AND car.sbTransId = e.sbTransId AND car.sbNo = e.sbNo), "
+//	        + "e.pod, e.typeOfPackage, e.noOfPackages, "
+//	        + "e.noOfPackagesStuffed, e.containerNo, e.currentLocation, e.periodFrom, "
+//	        + "e.containerHealth, e.cargoWeight, e.deliveryOrderNo, e.rotationNo, "
+//	        + "e.rotationDate, v.vesselName, sb.consigneeName, c.fob) "
+//	        + "from ExportStuffRequest e "
+//	        + "LEFT OUTER JOIN ExportSbCargoEntry c ON e.companyId = c.companyId "
+//	        + "and e.branchId = c.branchId and e.sbNo = c.sbNo and e.sbTransId = c.sbTransId and e.sbLineNo = c.sbLineNo "
+//	        + "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId = sb.companyId and e.branchId = sb.branchId and e.sbNo = sb.sbNo "
+//	        + "and e.sbTransId = sb.sbTransId "
+//	        + "LEFT OUTER JOIN Party p1 ON e.companyId = p1.companyId and e.branchId = p1.branchId and e.shippingAgent = p1.partyId "
+//	        + "LEFT OUTER JOIN Party p2 ON e.companyId = p2.companyId and e.branchId = p2.branchId and e.shippingLine = p2.partyId "
+//	        + "LEFT OUTER JOIN Vessel v ON e.companyId = v.companyId and e.branchId = v.branchId and e.vesselId = v.vesselId "
+//	        + "LEFT OUTER JOIN Profitcentre pr ON e.companyId = pr.companyId and e.branchId = pr.branchId and e.profitcentreId = pr.profitcentreId "
+//	        + "where e.companyId = :cid and e.branchId = :bid and e.status != 'D' and "
+//	        + "e.stuffReqId = :id and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+//	List<ExportStuffRequest> getDataByStuffReqId(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+
+	
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqLineId=:line and e.status != 'D' and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+	ExportStuffRequest getDataBySbNoSbTransAndStuffReqLineId(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("line") int line);
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqId=:con and e.status != 'D' and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+	ExportStuffRequest getDataBySbNoSbTransAndStuffReqLineId2(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("con") String con);
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqId=:con and e.status != 'D'")
+	ExportStuffRequest getDataBySbNoSbTransAndStuffReqLineId3(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("con") String con);
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqLineId=:line and e.status != 'D'")
+	ExportStuffRequest getDataBySbNoSbTransAndStuffReqLineId1(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("line") int line);
+	
+	
+	@Query(value = "select distinct e.sbNo,e.sbTransId from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and "
+			+ "(:sb is null OR :sb = '' OR e.sbNo LIKE CONCAT ('%',:sb,'%')) and e.status != 'D'")
+	List<Object[]> getSbNoForTally(@Param("cid") String cid,@Param("bid") String bid,@Param("sb") String sb);
+	
+	@Query(value = "select distinct e.sbNo,e.sbTransId from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and "
+			+ "(:con is null OR :con = '' OR  e.containerNo LIKE CONCAT ('%',:con,'%')) and e.status != 'D'")
+	List<Object[]> getSbNoForTally1(@Param("cid") String cid,@Param("bid") String bid,@Param("con") String con);
+	
+	@Query(value="select NEW com.cwms.entities.ExportStuffRequest(e.sbTransId, e.profitcentreId, e.sbNo, e.sbDate, p1.partyName,"
+			+ "p2.partyName, e.cargoDescription, p3.partyName, e.vesselId, e.viaNo,"
+			+ "e.voyageNo, e.terminal, e.berthingDate, e.gateOpenDate, e.gateInId, e.agentSealNo,"
+			+ "e.tareWeight, e.containerSize, e.containerType, e.pod, e.noOfPackagesStuffed,"
+			+ "e.containerNo, e.cargoWeight, e.status, e.deliveryOrderNo, e.rotationNo,"
+			+ "e.rotationDate, g.inGateInDate, v.vesselName, sb.consigneeName, c.fob, p4.partyName, e.exporterName,"
+			+ "c.noOfPackages,c.grossWeight, c.stuffedQty, e.stuffReqId, c.cargoType) "
+			+ "from ExportStuffRequest e LEFT OUTER JOIN ExportSbCargoEntry c ON e.companyId=c.companyId "
+			+ "and e.branchId=c.branchId and e.sbNo=c.sbNo and e.sbTransId=c.sbTransId "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent = p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.shippingLine = p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON e.companyId=p3.companyId and e.branchId=p3.branchId and e.onAccountOf = p3.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId = v.vesselId "
+			+ "LEFT OUTER JOIN GateIn g ON e.companyId=g.companyId and e.branchId=g.branchId and e.gateInId = g.gateInId "
+			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo "
+			+ "and e.sbTransId=sb.sbTransId "
+			+ "LEFT OUTER JOIN Party p4 ON sb.companyId=p4.companyId and sb.branchId=p4.branchId and sb.cha = p4.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and e.sbNo=:sb and e.status != 'D' "
+			+ "and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+	List<ExportStuffRequest> getDataForSbWiseStuff(@Param("cid") String cid,@Param("bid") String bid,@Param("sb") String sb,
+			@Param("sbtrans") String sbtrans);
+	
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqId=:id and e.status != 'D' and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+	ExportStuffRequest getDataBySbNoSbTransAndStuffReqId(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("id") String id);
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqId!=:id and e.status != 'D' and (e.noOfPackagesStuffed - e.stuffedQty) > 0 order by "
+			+ "(e.noOfPackagesStuffed - e.stuffedQty) asc")
+	List<ExportStuffRequest> getDataBySbNoSbTrans(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("id") String id);
 }

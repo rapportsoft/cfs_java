@@ -189,9 +189,24 @@ public class ExportSbCargoEntry {
     @Column(name = "SCMTR_Charge", nullable = false, length = 1)
     private String scmtrCharge = "N";
 
+    @Column(name="Stuffed_Wt",precision = 16,scale = 3)
+    private BigDecimal stuffedWt;
     
     
     
+    
+    
+    
+		public BigDecimal getStuffedWt() {
+		return stuffedWt;
+	}
+
+
+	public void setStuffedWt(BigDecimal stuffedWt) {
+		this.stuffedWt = stuffedWt;
+	}
+
+
 		public String getHazStatus() {
 		return hazStatus;
 	}
@@ -206,8 +221,79 @@ public class ExportSbCargoEntry {
 			super();
 			// TODO Auto-generated constructor stub
 		}
+		
+		
 
 		
+		public ExportSbCargoEntry(Long srno, String companyId, String branchId, String finYear, String profitcentreId,
+				String sbTransId, String sbLineNo, String sbNo, String commodity, Date sbDate, String numberOfMarks,
+				BigDecimal noOfPackages, BigDecimal gateInPackages, BigDecimal cartedPackages, Integer stuffReqQty,
+				BigDecimal stuffedQty, Integer backToTownPack, BigDecimal bttOutQty, BigDecimal transferPackages,
+				BigDecimal nilPackages, String typeOfPackage, BigDecimal grossWeight, BigDecimal fob, String createdBy,
+				Date createdDate, String approvedBy, Date approvedDate, String status, String hSbTransId, String sbType,
+				String cargoType, BigDecimal drawBackValue, String invoiceNo, Date invoiceDate, String hazStatus,
+				String haz, String unNo, String newCommodity, String invoiceAssesed, String assesmentId,
+				String crgInvoiceNo, String cartingType, String isBos, String zeroCartingFlag, Date zeroCartingDate,
+				String zeroCartingApproval, String zeroRemarks, String bufferStuffing, Date lastStorageInvoiceDate,
+				String lastStorageInvoiceDone, String storageInvoiceAssesed, String storageAssesmentId,
+				String scmtrCharge, BigDecimal stuffedWt) {
+			this.srno = srno;
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.profitcentreId = profitcentreId;
+			this.sbTransId = sbTransId;
+			this.sbLineNo = sbLineNo;
+			this.sbNo = sbNo;
+			this.commodity = commodity;
+			this.sbDate = sbDate;
+			this.numberOfMarks = numberOfMarks;
+			this.noOfPackages = noOfPackages;
+			this.gateInPackages = gateInPackages;
+			this.cartedPackages = cartedPackages;
+			this.stuffReqQty = stuffReqQty;
+			this.stuffedQty = stuffedQty;
+			this.backToTownPack = backToTownPack;
+			this.bttOutQty = bttOutQty;
+			this.transferPackages = transferPackages;
+			this.nilPackages = nilPackages;
+			this.typeOfPackage = typeOfPackage;
+			this.grossWeight = grossWeight;
+			this.fob = fob;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.status = status;
+			this.hSbTransId = hSbTransId;
+			this.sbType = sbType;
+			this.cargoType = cargoType;
+			this.drawBackValue = drawBackValue;
+			this.invoiceNo = invoiceNo;
+			this.invoiceDate = invoiceDate;
+			this.hazStatus = hazStatus;
+			this.haz = haz;
+			this.unNo = unNo;
+			this.newCommodity = newCommodity;
+			this.invoiceAssesed = invoiceAssesed;
+			this.assesmentId = assesmentId;
+			this.crgInvoiceNo = crgInvoiceNo;
+			this.cartingType = cartingType;
+			this.isBos = isBos;
+			this.zeroCartingFlag = zeroCartingFlag;
+			this.zeroCartingDate = zeroCartingDate;
+			this.zeroCartingApproval = zeroCartingApproval;
+			this.zeroRemarks = zeroRemarks;
+			this.bufferStuffing = bufferStuffing;
+			this.lastStorageInvoiceDate = lastStorageInvoiceDate;
+			this.lastStorageInvoiceDone = lastStorageInvoiceDone;
+			this.storageInvoiceAssesed = storageInvoiceAssesed;
+			this.storageAssesmentId = storageAssesmentId;
+			this.scmtrCharge = scmtrCharge;
+			this.stuffedWt = stuffedWt;
+		}
+
+
 		public ExportSbCargoEntry(String companyId, String branchId, String finYear, String profitcentreId,
 				String sbTransId, String sbLineNo, String sbNo, String commodity, Date sbDate, String numberOfMarks,
 				BigDecimal noOfPackages, BigDecimal gateInPackages, BigDecimal cartedPackages, Integer stuffReqQty,

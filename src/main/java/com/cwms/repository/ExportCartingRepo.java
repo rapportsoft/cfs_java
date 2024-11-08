@@ -98,7 +98,33 @@ public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 	
 	
 	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.sbTransId = :sbTransId "
+			+ "AND E.sbNo = :sbNo "
+			+ "AND E.sbLineNo = :sbline "
+			+ "AND (E.actualNoOfPackages -  E.stuffedNoOfPackages) > 0 "
+			+ "AND E.status <> 'D' order by (E.actualNoOfPackages -  E.stuffedNoOfPackages) asc")
+	List<ExportCarting> getDataBySbNoSbTransAndLineNo(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo, @Param("sbline") String sbline);
 	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.sbTransId = :sbTransId "
+			+ "AND E.sbNo = :sbNo "
+			+ "AND E.cartingTransId = :cartrans "
+			+ "AND E.cartingLineId = :cartline "
+			+ "AND E.status <> 'D'")
+	ExportCarting getDataBySbNoSbTransAndLineNoAndCartingTransId(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo,@Param("cartrans") String cartrans, @Param("cartline") String cartline);
+	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.sbTransId = :sbTransId "
+			+ "AND E.sbNo = :sbNo "
+			+ "AND E.status <> 'D' order by (E.actualNoOfPackages -  E.stuffedNoOfPackages) asc")
+	List<ExportCarting> getDataBySbNoSbTrans(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo);
 	
 	
 }

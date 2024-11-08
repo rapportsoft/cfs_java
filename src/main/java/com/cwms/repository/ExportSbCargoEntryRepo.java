@@ -196,6 +196,12 @@ public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry
 	        @Param("newSbDate") Date newSbDate
 	);
 	
-	
+	@Query("SELECT E FROM ExportSbCargoEntry E WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.sbNo = :sbNo " 
+	        + "AND E.sbTransId = :sbTransId "
+	        + "AND E.sbLineNo = :sbLineNo "
+	        + "AND E.status != 'D'")
+	ExportSbCargoEntry getExportSbEntryBySbNoAndSbTransIdAndSbLine(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("sbNo") String sbNo, @Param("sbTransId") String sbTransId,@Param("sbLineNo") String sbLineNo);
 	
 }

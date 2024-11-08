@@ -153,5 +153,14 @@ public interface ExportEntryRepo extends JpaRepository<ExportSbEntry, String> {
 	        
 	);
 	
+	
+	
+	@Query(value="select e.cha,c.partyName from ExportSbEntry e LEFT OUTER JOIN Party c ON e.companyId=c.companyId and "
+			+ "e.branchId=c.branchId and e.cha = c.partyId where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbTransid "
+			+ "and e.sbNo=:sb and e.status != 'D'")
+	Object[] getChaName(@Param("cid") String companyId,
+	        @Param("bid") String branchId,
+	        @Param("sb") String sbNo,
+	        @Param("sbTransid") String sbTransId);
 
 }

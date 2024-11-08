@@ -116,6 +116,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/holdDetail/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/excelUpload/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/ssr/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/stuffTally/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
