@@ -1448,5 +1448,55 @@ public class ProcessNextIdService {
 				    return nextIdDholi;
 				}
 				
+				@Transactional
+				public synchronized String autoExportStuffingId(String companyId, String branchId, String processId) {
+				    // Find the next vehicle ID from the database CPAQ054141
+				    String nextholi = processNextIdRepository.findNextIdByCompositeKey(companyId, branchId, processId);
+
+				    // Extract the first two characters and the last 5 digits from nextholi
+				    String firstTwoCharacters = nextholi.substring(0, 4);
+				    String lastFiveDigits = nextholi.substring(nextholi.length() - 6);
+				    System.out.println("financialYear: firstTwoCharacters: " + firstTwoCharacters + " lastFiveDigits: " + lastFiveDigits);
+
+				    // Increment the last 5 digits by 1
+				    int incrementedNumber = Integer.parseInt(lastFiveDigits) + 1;
+
+				    // Format the incremented number to ensure it has 5 digits
+				    String formattedIncrementedNumber = String.format("%06d", incrementedNumber);
+
+				    // Concatenate the first two characters, the financial year, and the formatted incremented number
+				    String nextIdDholi = firstTwoCharacters  + formattedIncrementedNumber;
+
+				    // Update the Next_Id directly in the database using the repository
+				    processNextIdRepository.updateNextIdByCompositeKey(companyId, branchId, processId, nextIdDholi);
+
+				    return nextIdDholi;
+				}
+				
+				@Transactional
+				public synchronized String autoIncrementVesselId(String companyId, String branchId, String processId) {
+				    // Find the next vehicle ID from the database
+				    String nextholi = processNextIdRepository.findNextIdByCompositeKey(companyId, branchId, processId);
+				    
+				    // Extract the first character and the last 5 digits
+				    char firstCharacter = nextholi.charAt(0); // Get the first character (e.g., 'V')
+				    String lastFiveDigits = nextholi.substring(1); // Get everything after the first character (e.g., '00005')
+				    
+				    // Increment the last 5 digits by 1
+				    int incrementedNumber = Integer.parseInt(lastFiveDigits) + 1;
+
+				    // Format the incremented number to ensure it has 5 digits
+				    String formattedIncrementedNumber = String.format("%05d", incrementedNumber); // Format to 5 digits
+
+				    // Concatenate the first character with the formatted incremented number
+				    String nextIdDholi = firstCharacter + formattedIncrementedNumber; // Recreate the ID
+
+				    // Update the Next_Id directly in the database using the repository
+				    processNextIdRepository.updateNextIdByCompositeKey(companyId, branchId, processId, nextIdDholi);
+
+				    return nextIdDholi;
+				}
+				
+				
 				
 }

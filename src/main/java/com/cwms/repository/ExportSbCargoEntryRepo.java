@@ -13,6 +13,38 @@ import jakarta.transaction.Transactional;
 
 public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry, String>
 {
+	@Modifying
+    @Transactional
+    @Query("UPDATE ExportSbCargoEntry e SET e.stuffReqQty = e.stuffReqQty - :oldValue + :newValue " +
+           "WHERE e.companyId = :companyId AND e.branchId = :branchId " +
+           "AND e.sbNo = :sbNo AND e.sbTransId = :sbTransId AND e.status <> 'D'")
+    int updateStuffReqQtyUpdate(
+        @Param("oldValue") int oldValue,
+        @Param("newValue") int newValue,
+        @Param("companyId") String companyId,
+        @Param("branchId") String branchId,
+        @Param("sbNo") String sbNo,
+        @Param("sbTransId") String sbTransId
+    );
+		
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE ExportSbCargoEntry e " +
+	        "SET e.stuffReqQty = COALESCE(e.stuffReqQty, 0) + :stuffQuantity " +
+	        "WHERE e.companyId = :companyId " +
+	        "AND e.branchId = :branchId " +
+	        "AND e.sbNo = :sbNo " +
+	        "AND e.sbTransId = :sbTransId " +
+	        "AND e.status <> 'D'")
+	int updateStuffRequest(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("stuffQuantity") Integer stuffQuantity
+	);
+
 	
 //	@Query("SELECT s.sbNo " +
 //		       "FROM ExportSbEntry s " +		       

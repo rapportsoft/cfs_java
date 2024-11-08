@@ -13,6 +13,20 @@ import com.cwms.entities.Voyage;
 import jakarta.transaction.Transactional;
 
 public interface VoyageRepository extends JpaRepository<Voyage, String> {
+	
+
+	@Query(value="select NEW com.cwms.entities.Voyage(v.vesselCode, v.voyageNo, v.viaNo, v.gateOpenDate, v.berthDate,"
+			+ "v.rotationNo, v.rotationNoDate, v1.vesselName) from Voyage v "
+			+ "LEFT OUTER JOIN Vessel v1 ON v.companyId=v1.companyId and v.branchId=v1.branchId and v.vesselCode=v1.vesselId "
+			+ "where v.companyId=:cid and v.branchId=:bid and v.status != 'D' and (:search is null OR :search = '' OR "
+			+ "v.voyageNo LIKE CONCAT('%',:search,'%') OR v.viaNo LIKE CONCAT('%',:search,'%'))")
+	List<Voyage> searchData(@Param("cid") String cid, 
+            @Param("bid") String bid, 
+            @Param("search") String search);
+	
+	
+	
+	
 
 	@Query(value = "select p.portName, p1.portName, v.vesselCode, v.voyageNo, v.viaNo, DATE_FORMAT(v.eta,'%d/%m/%Y'),"
 			+ "DATE_FORMAT(v.gateOpenDate,'%d/%m/%Y'),DATE_FORMAT(v.atb,'%d/%m/%Y'), DATE_FORMAT(v.atd,'%d/%m/%Y'), "

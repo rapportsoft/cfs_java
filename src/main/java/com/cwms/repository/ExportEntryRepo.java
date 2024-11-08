@@ -16,7 +16,15 @@ import jakarta.transaction.Transactional;
 
 public interface ExportEntryRepo extends JpaRepository<ExportSbEntry, String> {
 	
-	
+	@Query("SELECT NEW com.cwms.entities.ExportSbEntry(e.pod, e.pol)"
+	        + "FROM ExportSbEntry e "
+			+ "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+	        + "AND e.sbNo = :sbNo " 
+	        + "AND e.sbTransId = :sbTransId "	      
+	        + "AND e.status <> 'D'")
+	ExportSbEntry getDataForVesselEntry(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                                    @Param("sbNo") String sbNo, @Param("sbTransId") String sbTransId);
+
 	
 	@Query("SELECT NEW com.cwms.entities.ExportSbEntry(e.sbTransId, e.sbNo, "
 	        + "e.profitcentreId, e.outOfCharge, e.outOfChargeDate, e.hSbTransId, e.leoDate) "

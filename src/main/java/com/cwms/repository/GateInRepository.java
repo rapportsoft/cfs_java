@@ -4,13 +4,41 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE GateIn E SET E.stuffRequestId = :stuffReqId "
+	     + "WHERE E.companyId = :companyId "
+	     + "AND E.branchId = :branchId "
+	     + "AND E.profitcentreId = :profitcentreId "
+	     + "AND E.gateInId = :gateInId "
+	     + "AND E.gateInType = :type "
+	     + "AND E.status <> 'D'")
+	int updateStuffReqIdInGateIn(@Param("stuffReqId") String stuffReqId,
+	                             @Param("companyId") String companyId,
+	                             @Param("branchId") String branchId,
+	                             @Param("profitcentreId") String profitcentreId,
+	                             @Param("gateInId") String gateInId,
+	                             @Param("type") String type);
+
+	
+	@Query("SELECT E FROM GateIn E "
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.profitcentreId = :profitcentreId " 	        
+	        + "AND E.gateInId = :gateInId "
+	        + "AND E.gateInType = :type "
+	        + "AND E.status <> 'D'")
+	GateIn getGateInByIdsForStuffing(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("profitcentreId") String profitcentreId, @Param("gateInId") String gateInId, @Param("type") String type);
 	
 	
 	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.docRefNo, E.erpDocRefNo, E.vehicleNo, E.grossWeight) " +

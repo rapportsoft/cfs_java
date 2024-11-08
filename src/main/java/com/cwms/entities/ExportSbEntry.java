@@ -869,6 +869,10 @@ public class ExportSbEntry {
 		this.leoDate = leoDate;
 	}
     
-	
+	public ExportSbEntry(String pod, String pol) {
+		super();		
+		this.pod = pod;
+		this.pol = pol;		
+	}
 
 }

@@ -441,6 +441,10 @@ public class GateIn {
 
 	@Column(name = "Hold_Remarks", length = 250, columnDefinition = "varchar(250) default ''")
 	private String holdRemarks = "";
+	
+	@Column(name = "Stuff_Request_Id", length = 20, columnDefinition = "varchar(20) default ''")
+	private String stuffRequestId = "";
+
 
 	@Column(name = "Stuff_Tally_Id", length = 20, columnDefinition = "varchar(20) default ''")
 	private String stuffTallyId = "";
@@ -698,7 +702,13 @@ public class GateIn {
 	}
 	
 	
-	
+	public String getStuffRequestId() {
+		return stuffRequestId;
+	}
+
+	public void setStuffRequestId(String stuffRequestId) {
+		this.stuffRequestId = stuffRequestId;
+	}
 	
 	
 

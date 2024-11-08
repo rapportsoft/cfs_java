@@ -15,6 +15,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "voyage")
@@ -190,6 +191,19 @@ public class Voyage {
 	
 	@Column(name="status",length = 1)
 	private String status;
+	
+	@Transient
+	private String vesselName;	
+	
+	
+
+	public String getVesselName() {
+		return vesselName;
+	}
+
+	public void setVesselName(String vesselName) {
+		this.vesselName = vesselName;
+	}
 
 	public Voyage() {
 		super();
@@ -609,6 +623,19 @@ public class Voyage {
 	}
 	
 	
-	
+
+//	Voyage search
+	public Voyage(String vesselCode, String voyageNo, String viaNo, Date gateOpenDate, Date berthDate,
+			String rotationNo, Date rotationNoDate, String vesselName) {
+		this.vesselCode = vesselCode;
+		this.voyageNo = voyageNo;
+		this.viaNo = viaNo;
+		this.gateOpenDate = gateOpenDate;
+		this.berthDate = berthDate;
+		this.rotationNo = rotationNo;
+		this.rotationNoDate = rotationNoDate;
+		this.vesselName = vesselName;
+	}
+
 
 }
