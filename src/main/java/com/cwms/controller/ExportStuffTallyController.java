@@ -360,34 +360,43 @@ public class ExportStuffTallyController {
 					if (!grid.isEmpty()) {
 						AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 						grid.stream().forEach(g -> {
-							if (gridVal.get()
-									.compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
+							BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert yardPackages to BigDecimal once
+							BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+							BigDecimal gridValue = gridVal.get();
+							BigDecimal remainingYardPackages = yardPackages.subtract(qtyTakenOut); // Calculate remaining yard packages
 
-								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-										.add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
+							if (gridValue.compareTo(remainingYardPackages) >= 0) {
+							    // Case where gridValue is greater than or equal to remaining yard packages
 
-								BigDecimal tenArea = (g.getCellAreaAllocated()
-										.multiply(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())))
-										.divide(new BigDecimal(g.getYardPackages()), BigDecimal.ROUND_HALF_UP);
+							    // Update QtyTakenOut to include the remaining yard packages
+							    g.setQtyTakenOut(qtyTakenOut.add(remainingYardPackages));
 
-								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
-										.add(tenArea));
+							    // Calculate area to release based on remaining yard packages
+							    BigDecimal tenArea = g.getCellAreaAllocated().multiply(remainingYardPackages)
+							                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-								gridVal.set(gridVal.get()
-										.subtract((new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut()))));
+							    // Update AreaReleased, adding the calculated tenArea
+							    g.setAreaReleased((g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea));
+
+							    // Subtract remaining yard packages from gridVal
+							    gridVal.set(gridValue.subtract(remainingYardPackages));
 							} else {
+							    // Case where gridValue is less than remaining yard packages
 
-								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-										.add(gridVal.get()));
-								BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-										.divide(new BigDecimal(g.getYardPackages()), BigDecimal.ROUND_HALF_UP);
-								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
-										.add(tenArea));
+							    // Partially update QtyTakenOut by adding gridValue
+							    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-								gridVal.set(gridVal.get()
-										.subtract((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-												.add(gridVal.get())));
+							    // Calculate the area to release based on gridValue amount
+							    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+							                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+
+							    // Update AreaReleased by adding the calculated tenArea
+							    g.setAreaReleased((g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea));
+
+							    // Set gridVal to zero after deduction
+							    gridVal.set(BigDecimal.ZERO);
 							}
+
 
 							impexpgridrepo.save(g);
 						});
@@ -636,33 +645,40 @@ public class ExportStuffTallyController {
 								if (!grid.isEmpty()) {
 									AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 									grid.stream().forEach(g -> {
-										if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
+										BigDecimal gridValue = gridVal.get();
+										BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+										BigDecimal areaReleased = g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO;
+										BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
 
-											g.setQtyTakenOut(
-													(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-															.subtract(g.getQtyTakenOut()));
+										// Case when gridVal is greater than or equal to qtyTakenOut
+										if (gridValue.compareTo(qtyTakenOut) >= 0) {
+										    // Since you want to "remove" qtyTakenOut, it's more logical to set it to zero
+										    g.setQtyTakenOut(BigDecimal.ZERO);  // Reset qtyTakenOut to zero
 
-											BigDecimal tenArea = (g.getCellAreaAllocated().multiply(g.getQtyTakenOut()))
-													.divide(new BigDecimal(g.getYardPackages()),
-															BigDecimal.ROUND_HALF_UP);
+										    // Calculate the area released based on qtyTakenOut
+										    BigDecimal tenArea = g.getCellAreaAllocated().multiply(qtyTakenOut)
+										                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-											g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-													: g.getAreaReleased()).subtract(tenArea));
+										    // Update the area released
+										    g.setAreaReleased(areaReleased.subtract(tenArea));
 
-											gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
+										    // Subtract qtyTakenOut from gridVal
+										    gridVal.set(gridValue.subtract(qtyTakenOut));
 										} else {
+										    // Case when gridVal is less than qtyTakenOut, we need to subtract gridVal from qtyTakenOut
+										    g.setQtyTakenOut(qtyTakenOut.subtract(gridValue));
 
-											g.setQtyTakenOut(
-													(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-															.subtract(gridVal.get()));
-											BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-													.divide(new BigDecimal(g.getYardPackages()),
-															BigDecimal.ROUND_HALF_UP);
-											g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-													: g.getAreaReleased()).subtract(tenArea));
+										    // Calculate the area released based on gridVal
+										    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+										                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-											gridVal.set(gridVal.get().subtract(gridVal.get()));
+										    // Update the area released
+										    g.setAreaReleased(areaReleased.subtract(tenArea));
+
+										    // Reset gridVal to zero after using its value
+										    gridVal.set(BigDecimal.ZERO);
 										}
+
 
 										impexpgridrepo.save(g);
 									});
@@ -770,29 +786,35 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
+											BigDecimal gridValue = gridVal.get();
+											BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+											BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
 
-												g.setQtyTakenOut(BigDecimal.ZERO);
+											// Case when gridVal is greater than or equal to qtyTakenOut
+											if (gridValue.compareTo(qtyTakenOut) >= 0) {
+											    // Reset qtyTakenOut and areaReleased to zero
+											    g.setQtyTakenOut(BigDecimal.ZERO);
+											    g.setAreaReleased(BigDecimal.ZERO);
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(g.getQtyTakenOut()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Since qtyTakenOut is zero, tenArea will also be zero, no need for calculation
+											    BigDecimal tenArea = BigDecimal.ZERO;
 
-												g.setAreaReleased(BigDecimal.ZERO);
-
-												gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
+											    // Subtract qtyTakenOut (which is now zero) from gridVal
+											    gridVal.set(gridValue.subtract(qtyTakenOut));
 											} else {
+											    // Case when gridVal is less than qtyTakenOut, we subtract gridVal from qtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.subtract(gridValue));
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).subtract(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).subtract(tenArea));
+											    // Calculate the area released based on the remaining qtyTakenOut after gridVal subtraction
+											    BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridValue))
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Update the area released
+											    g.setAreaReleased(areaReleased.subtract(tenArea));
+
+											    // Reset gridVal to zero after use
+											    gridVal.set(BigDecimal.ZERO);
 											}
 
 											impexpgridrepo.save(g);
@@ -936,36 +958,41 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())) >= 0) {
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+											BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+											BigDecimal gridValue = gridVal.get();
+											BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut())
-														.add(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())));
+											// If gridValue is greater than or equal to the remaining qty to be taken out
+											if (gridValue.compareTo(yardPackages.subtract(qtyTakenOut)) >= 0) {
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Add the remaining qty to qtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(yardPackages.subtract(qtyTakenOut)));
 
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
+											    // Calculate the area released based on the remaining qty
+											    BigDecimal tenArea = (g.getCellAreaAllocated()
+											            .multiply(yardPackages.subtract(qtyTakenOut)))
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())));
+											    // Update the areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
+
+											    // Subtract the quantity that was taken out from gridValue
+											    gridVal.set(gridValue.subtract(yardPackages.subtract(qtyTakenOut)));
+
 											} else {
+											    // If gridValue is less than the remaining qty to be taken out
+											    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).add(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
+											    // Calculate the area released based on gridValue
+											    BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridValue))
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Update the areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
+
+											    // Subtract gridValue from gridVal to update the remaining gridValue
+											    gridVal.set(gridValue.subtract(gridValue));
 											}
 
 											impexpgridrepo.save(g);
@@ -1078,39 +1105,42 @@ public class ExportStuffTallyController {
 										if (!grid.isEmpty()) {
 											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 											grid.stream().forEach(g -> {
-												if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())) >= 0) {
+												BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+												BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+												BigDecimal gridValue = gridVal.get();
+												BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
 
-													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-															: g.getQtyTakenOut())
-															.add(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())));
+												// If gridValue is greater than or equal to the remaining qty to be taken out
+												if (gridValue.compareTo(yardPackages.subtract(qtyTakenOut)) >= 0) {
+												    // Add the remaining qty to qtyTakenOut
+												    g.setQtyTakenOut(qtyTakenOut.add(yardPackages.subtract(qtyTakenOut)));
 
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
+												    // Calculate the area released based on the remaining qty
+												    BigDecimal tenArea = g.getCellAreaAllocated()
+												            .multiply(yardPackages.subtract(qtyTakenOut))
+												            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-															: g.getAreaReleased()).add(tenArea));
+												    // Update the areaReleased
+												    g.setAreaReleased(areaReleased.add(tenArea));
 
-													gridVal.set(
-															gridVal.get().subtract(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())));
+												    // Subtract the quantity that was taken out from gridValue
+												    gridVal.set(gridValue.subtract(yardPackages.subtract(qtyTakenOut)));
 												} else {
+												    // If gridValue is less than the remaining qty to be taken out
+												    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-															: g.getQtyTakenOut()).add(gridVal.get()));
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(gridVal.get()))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
-													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-															: g.getAreaReleased()).add(tenArea));
+												    // Calculate the area released based on gridValue
+												    BigDecimal tenArea = g.getCellAreaAllocated()
+												            .multiply(gridValue)
+												            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												    // Update the areaReleased
+												    g.setAreaReleased(areaReleased.add(tenArea));
+
+												    // Subtract gridValue from gridVal to update the remaining gridValue
+												    gridVal.set(gridValue.subtract(gridValue));
 												}
+
 
 												impexpgridrepo.save(g);
 											});
@@ -1348,43 +1378,43 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())) >= 0) {
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+											BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+											BigDecimal remainingQty2 = yardPackages.subtract(qtyTakenOut);
+											BigDecimal gridValue = gridVal.get();
+											BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
 
-												g.setQtyTakenOut(
-														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																: g.getQtyTakenOut())
-																.add(new BigDecimal(g.getYardPackages())
-																		.subtract(g.getQtyTakenOut())));
+											// If gridValue is greater than or equal to the remaining quantity
+											if (gridValue.compareTo(remainingQty2) >= 0) {
+											    // Update QtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(remainingQty2));
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Calculate area released
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(remainingQty2)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+											    
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
 
-												g.setAreaReleased(
-														(g.getAreaReleased() == null ? BigDecimal.ZERO
-																: g.getAreaReleased()).add(tenArea));
-
-												gridVal.set(gridVal.get()
-														.subtract(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())));
+											    // Subtract the remaining quantity from gridValue
+											    gridVal.set(gridValue.subtract(remainingQty2));
 											} else {
+											    // Update QtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-												g.setQtyTakenOut(
-														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																: g.getQtyTakenOut()).add(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased(
-														(g.getAreaReleased() == null ? BigDecimal.ZERO
-																: g.getAreaReleased()).add(tenArea));
+											    // Calculate area released based on gridValue
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(gridValue)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+											    
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Reset gridValue to 0 by subtracting gridValue from itself
+											    gridVal.set(gridValue.subtract(gridValue));  // This sets gridVal to zero
 											}
+
 
 											impexpgridrepo.save(g);
 										});
@@ -1528,38 +1558,42 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())) >= 0) {
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+											BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+											BigDecimal remainingQty2 = yardPackages.subtract(qtyTakenOut);
+											BigDecimal gridValue = gridVal.get();
+											BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
 
-												g.setQtyTakenOut(
-														(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-																.add(new BigDecimal(g.getYardPackages())
-																		.subtract(g.getQtyTakenOut())));
+											// If gridValue is greater than or equal to the remaining quantity
+											if (gridValue.compareTo(remainingQty2) >= 0) {
+											    // Update QtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(remainingQty2));
 
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(
-														new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Calculate area released
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(remainingQty2)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+											    
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
 
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
-
-												gridVal.set(gridVal.get().subtract(
-														new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
+											    // Subtract the remaining quantity from gridValue
+											    gridVal.set(gridValue.subtract(remainingQty2));
 											} else {
+											    // Update QtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-												g.setQtyTakenOut(
-														(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-																.add(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
+											    // Calculate area released based on gridValue
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(gridValue)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+											    
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Reset gridValue to 0 by subtracting gridValue from itself
+											    gridVal.set(gridValue.subtract(gridValue));  // This sets gridVal to zero
 											}
-
 											impexpgridrepo.save(g);
 										});
 									}
@@ -1731,42 +1765,41 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())) >= 0) {
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+											BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+											BigDecimal remainingQty = yardPackages.subtract(qtyTakenOut);
+											BigDecimal gridValue = gridVal.get();
+											BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
 
-												g.setQtyTakenOut(
-														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																: g.getQtyTakenOut())
-																.add(new BigDecimal(g.getYardPackages())
-																		.subtract(g.getQtyTakenOut())));
+											// If gridValue is greater than or equal to the remaining quantity
+											if (gridValue.compareTo(remainingQty) >= 0) {
+											    // Update QtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(remainingQty));
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Calculate area released
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(remainingQty)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												g.setAreaReleased(
-														(g.getAreaReleased() == null ? BigDecimal.ZERO
-																: g.getAreaReleased()).add(tenArea));
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
 
-												gridVal.set(gridVal.get()
-														.subtract(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())));
+											    // Subtract the remaining quantity from gridValue
+											    gridVal.set(gridValue.subtract(remainingQty));
 											} else {
+											    // Update QtyTakenOut with gridValue
+											    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-												g.setQtyTakenOut(
-														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																: g.getQtyTakenOut()).add(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased(
-														(g.getAreaReleased() == null ? BigDecimal.ZERO
-																: g.getAreaReleased()).add(tenArea));
+											    // Calculate area released based on gridValue
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(gridValue)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
+
+											    // Reset gridValue to 0 by subtracting it from itself
+											    gridVal.set(gridValue.subtract(gridValue)); // This sets gridVal to zero
 											}
 
 											impexpgridrepo.save(g);
@@ -1941,44 +1974,42 @@ public class ExportStuffTallyController {
 											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(
 													qty);
 											grid.stream().forEach(g -> {
-												if (gridVal.get()
-														.compareTo(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())) >= 0) {
+												// Convert values to BigDecimal once to avoid recalculating
+												BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+												BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null) ? BigDecimal.ZERO : g.getQtyTakenOut();
+												BigDecimal remainingQty = yardPackages.subtract(qtyTakenOut);
+												BigDecimal gridValue = gridVal.get();
+												BigDecimal areaReleased = (g.getAreaReleased() == null) ? BigDecimal.ZERO : g.getAreaReleased();
 
-													g.setQtyTakenOut(
-															(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																	: g.getQtyTakenOut())
-																	.add(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())));
+												// If gridValue is greater than or equal to remainingQty
+												if (gridValue.compareTo(remainingQty) >= 0) {
+												    // Update QtyTakenOut
+												    g.setQtyTakenOut(qtyTakenOut.add(remainingQty));
 
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
+												    // Calculate area released based on remaining quantity
+												    BigDecimal tenArea = g.getCellAreaAllocated()
+												            .multiply(remainingQty)
+												            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													g.setAreaReleased(
-															(g.getAreaReleased() == null ? BigDecimal.ZERO
-																	: g.getAreaReleased()).add(tenArea));
+												    // Update areaReleased
+												    g.setAreaReleased(areaReleased.add(tenArea));
 
-													gridVal.set(gridVal.get()
-															.subtract(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())));
+												    // Subtract remainingQty from gridValue
+												    gridVal.set(gridValue.subtract(remainingQty));
 												} else {
+												    // Update QtyTakenOut with gridValue
+												    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-													g.setQtyTakenOut(
-															(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																	: g.getQtyTakenOut())
-																	.add(gridVal.get()));
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(gridVal.get()))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
-													g.setAreaReleased(
-															(g.getAreaReleased() == null ? BigDecimal.ZERO
-																	: g.getAreaReleased()).add(tenArea));
+												    // Calculate area released based on gridValue
+												    BigDecimal tenArea = g.getCellAreaAllocated()
+												            .multiply(gridValue)
+												            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												    // Update areaReleased
+												    g.setAreaReleased(areaReleased.add(tenArea));
+
+												    // Reset gridValue to zero
+												    gridVal.set(BigDecimal.ZERO);
 												}
 
 												impexpgridrepo.save(g);
@@ -2192,37 +2223,44 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())) >= 0) {
+											// Calculate yardPackages and qtyTakenOut just once
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages());
+											BigDecimal qtyTakenOut = (g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut());
+											BigDecimal remainingQty2 = yardPackages.subtract(qtyTakenOut);
+											BigDecimal gridValue = gridVal.get();
+											BigDecimal areaReleased = (g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased());
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut())
-														.add(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())));
+											// Check if gridValue is greater than or equal to remainingQty
+											if (gridValue.compareTo(remainingQty2) >= 0) {
+											    // Set QtyTakenOut to qtyTakenOut + remainingQty
+											    g.setQtyTakenOut(qtyTakenOut.add(remainingQty2));
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Calculate the area to be released
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(remainingQty2)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
 
-												gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())));
+											    // Subtract remainingQty from gridValue
+											    gridVal.set(gridValue.subtract(remainingQty2));
 											} else {
+											    // Set QtyTakenOut to qtyTakenOut + gridValue
+											    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).add(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
+											    // Calculate the area to be released
+											    BigDecimal tenArea = g.getCellAreaAllocated()
+											            .multiply(gridValue)
+											            .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Update areaReleased
+											    g.setAreaReleased(areaReleased.add(tenArea));
+
+											    // Reset gridVal to zero
+											    gridVal.set(BigDecimal.ZERO);
 											}
+
 
 											impexpgridrepo.save(g);
 										});
@@ -2810,27 +2848,40 @@ public class ExportStuffTallyController {
 					if (!grid.isEmpty()) {
 						AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 						grid.stream().forEach(g -> {
-							if (gridVal.get()
-									.compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
+							BigDecimal yardPackages = new BigDecimal(g.getYardPackages()); // Convert int to BigDecimal
+							BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
 
-								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-										.add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
-								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
-										.add(g.getCellAreaAllocated()));
+							if (gridVal.get().compareTo(yardPackages.subtract(qtyTakenOut)) >= 0) {
+							    // Calculate and set QtyTakenOut
+							    BigDecimal updatedQtyTakenOut = (g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO)
+							                                    .add(yardPackages.subtract(qtyTakenOut));
+							    g.setQtyTakenOut(updatedQtyTakenOut);
 
-								gridVal.set(gridVal.get()
-										.subtract(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
+							    // Calculate and set AreaReleased
+							    BigDecimal updatedAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO)
+							                                    .add(g.getCellAreaAllocated());
+							    g.setAreaReleased(updatedAreaReleased);
+
+							    // Update gridVal by subtracting the difference
+							    gridVal.set(gridVal.get().subtract(yardPackages.subtract(qtyTakenOut)));
 							} else {
+							    // Partial deduction as gridVal is less than available quantity
+							    BigDecimal updatedQtyTakenOut = (g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO)
+							                                    .add(gridVal.get());
+							    g.setQtyTakenOut(updatedQtyTakenOut);
 
-								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-										.add(gridVal.get()));
-								BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-										.divide(new BigDecimal(g.getYardPackages()), BigDecimal.ROUND_HALF_UP);
-								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
-										.add(tenArea));
+							    // Calculate the area proportional to the gridVal
+							    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridVal.get())
+							                                    .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-								gridVal.set(gridVal.get().subtract(gridVal.get()));
+							    BigDecimal updatedAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO)
+							                                    .add(tenArea);
+							    g.setAreaReleased(updatedAreaReleased);
+
+							    // Set gridVal to zero after partial deduction
+							    gridVal.set(BigDecimal.ZERO);
 							}
+
 
 							impexpgridrepo.save(g);
 						});
@@ -3004,36 +3055,31 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())) >= 0) {
+											BigDecimal yardPackages = new BigDecimal(g.getYardPackages()); // Convert int to BigDecimal
+											BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut())
-														.add(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())));
+											if (gridVal.get().compareTo(yardPackages.subtract(qtyTakenOut)) >= 0) {
+											    // Update QtyTakenOut
+											    g.setQtyTakenOut(qtyTakenOut.add(yardPackages.subtract(qtyTakenOut)));
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Calculate and update AreaReleased proportionally
+											    BigDecimal tenArea = g.getCellAreaAllocated().multiply(yardPackages.subtract(qtyTakenOut))
+											                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+											    g.setAreaReleased((g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea));
 
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
-
-												gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())));
+											    // Update gridVal by subtracting the difference
+											    gridVal.set(gridVal.get().subtract(yardPackages.subtract(qtyTakenOut)));
 											} else {
+											    // Partial deduction
+											    g.setQtyTakenOut(qtyTakenOut.add(gridVal.get()));
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).add(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).add(tenArea));
+											    // Calculate the proportional area based on gridVal
+											    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridVal.get())
+											                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
+											    g.setAreaReleased((g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea));
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Set gridVal to zero after deduction
+											    gridVal.set(BigDecimal.ZERO);
 											}
 
 											impexpgridrepo.save(g);
@@ -3109,38 +3155,39 @@ public class ExportStuffTallyController {
 										if (!grid.isEmpty()) {
 											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 											grid.stream().forEach(g -> {
-												if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())) >= 0) {
+												BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal
+												BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+												BigDecimal gridValue = gridVal.get();
 
-													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-															: g.getQtyTakenOut())
-															.add(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())));
+												if (gridValue.compareTo(yardPackages.subtract(qtyTakenOut)) >= 0) {
+												    // Update QtyTakenOut with the remaining amount
+												    BigDecimal newQtyTakenOut = qtyTakenOut.add(yardPackages.subtract(qtyTakenOut));
+												    g.setQtyTakenOut(newQtyTakenOut);
 
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
+												    // Calculate the proportionate area to release
+												    BigDecimal tenArea = g.getCellAreaAllocated().multiply(yardPackages.subtract(qtyTakenOut))
+												                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-															: g.getAreaReleased()).add(tenArea));
+												    // Update AreaReleased
+												    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+												    g.setAreaReleased(newAreaReleased);
 
-													gridVal.set(
-															gridVal.get().subtract(new BigDecimal(g.getYardPackages())
-																	.subtract(g.getQtyTakenOut())));
+												    // Subtract the difference from gridVal
+												    gridVal.set(gridValue.subtract(yardPackages.subtract(qtyTakenOut)));
 												} else {
+												    // Partial deduction since gridVal is less than the required amount
+												    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-															: g.getQtyTakenOut()).add(gridVal.get()));
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(gridVal.get()))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
-													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-															: g.getAreaReleased()).add(tenArea));
+												    // Calculate the proportionate area to release based on gridVal
+												    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+												                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												    // Update AreaReleased
+												    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+												    g.setAreaReleased(newAreaReleased);
+
+												    // Set gridVal to zero after the deduction
+												    gridVal.set(BigDecimal.ZERO);
 												}
 
 												impexpgridrepo.save(g);
@@ -3263,43 +3310,41 @@ public class ExportStuffTallyController {
 												if (!grid.isEmpty()) {
 													AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 													grid.stream().forEach(g -> {
-														if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())) >= 0) {
+														BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal
+														BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+														BigDecimal gridValue = gridVal.get();
 
-															g.setQtyTakenOut(
-																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																			: g.getQtyTakenOut())
-																			.add(new BigDecimal(g.getYardPackages())
-																					.subtract(g.getQtyTakenOut())));
+														if (gridValue.compareTo(yardPackages.subtract(qtyTakenOut)) >= 0) {
+														    // Update QtyTakenOut with the remaining amount
+														    BigDecimal newQtyTakenOut = qtyTakenOut.add(yardPackages.subtract(qtyTakenOut));
+														    g.setQtyTakenOut(newQtyTakenOut);
 
-															BigDecimal tenArea = (g.getCellAreaAllocated()
-																	.multiply(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())))
-																	.divide(new BigDecimal(g.getYardPackages()),
-																			BigDecimal.ROUND_HALF_UP);
+														    // Calculate the proportionate area to release
+														    BigDecimal tenArea = g.getCellAreaAllocated().multiply(yardPackages.subtract(qtyTakenOut))
+														                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-															g.setAreaReleased(
-																	(g.getAreaReleased() == null ? BigDecimal.ZERO
-																			: g.getAreaReleased()).add(tenArea));
+														    // Update AreaReleased
+														    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+														    g.setAreaReleased(newAreaReleased);
 
-															gridVal.set(gridVal.get()
-																	.subtract(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())));
+														    // Subtract the difference from gridVal
+														    gridVal.set(gridValue.subtract(yardPackages.subtract(qtyTakenOut)));
 														} else {
+														    // Partial deduction since gridVal is less than the required amount
+														    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-															g.setQtyTakenOut(
-																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																			: g.getQtyTakenOut()).add(gridVal.get()));
-															BigDecimal tenArea = (g.getCellAreaAllocated()
-																	.multiply(gridVal.get()))
-																	.divide(new BigDecimal(g.getYardPackages()),
-																			BigDecimal.ROUND_HALF_UP);
-															g.setAreaReleased(
-																	(g.getAreaReleased() == null ? BigDecimal.ZERO
-																			: g.getAreaReleased()).add(tenArea));
+														    // Calculate the proportionate area to release based on gridVal
+														    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+														                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-															gridVal.set(gridVal.get().subtract(gridVal.get()));
+														    // Update AreaReleased
+														    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+														    g.setAreaReleased(newAreaReleased);
+
+														    // Set gridVal to zero after the deduction
+														    gridVal.set(BigDecimal.ZERO);
 														}
+
 
 														impexpgridrepo.save(g);
 													});
@@ -3447,43 +3492,42 @@ public class ExportStuffTallyController {
 												if (!grid.isEmpty()) {
 													AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 													grid.stream().forEach(g -> {
-														if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())) >= 0) {
+														BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal once
+														BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+														BigDecimal gridValue = gridVal.get();
 
-															g.setQtyTakenOut(
-																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																			: g.getQtyTakenOut())
-																			.add(new BigDecimal(g.getYardPackages())
-																					.subtract(g.getQtyTakenOut())));
+														BigDecimal availablePackages = yardPackages.subtract(qtyTakenOut);
 
-															BigDecimal tenArea = (g.getCellAreaAllocated()
-																	.multiply(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())))
-																	.divide(new BigDecimal(g.getYardPackages()),
-																			BigDecimal.ROUND_HALF_UP);
+														if (gridValue.compareTo(availablePackages) >= 0) {
+														    // Update QtyTakenOut to include all available packages
+														    g.setQtyTakenOut(qtyTakenOut.add(availablePackages));
 
-															g.setAreaReleased(
-																	(g.getAreaReleased() == null ? BigDecimal.ZERO
-																			: g.getAreaReleased()).add(tenArea));
+														    // Calculate the proportional area to release based on the entire available amount
+														    BigDecimal tenArea = g.getCellAreaAllocated().multiply(availablePackages)
+														                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-															gridVal.set(gridVal.get()
-																	.subtract(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())));
+														    // Update AreaReleased, accounting for potential null values
+														    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+														    g.setAreaReleased(newAreaReleased);
+
+														    // Deduct the entire available packages from gridVal
+														    gridVal.set(gridValue.subtract(availablePackages));
 														} else {
+														    // Partial deduction based on gridVal's amount
+														    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-															g.setQtyTakenOut(
-																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																			: g.getQtyTakenOut()).add(gridVal.get()));
-															BigDecimal tenArea = (g.getCellAreaAllocated()
-																	.multiply(gridVal.get()))
-																	.divide(new BigDecimal(g.getYardPackages()),
-																			BigDecimal.ROUND_HALF_UP);
-															g.setAreaReleased(
-																	(g.getAreaReleased() == null ? BigDecimal.ZERO
-																			: g.getAreaReleased()).add(tenArea));
+														    // Calculate the proportional area based on gridVal
+														    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+														                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-															gridVal.set(gridVal.get().subtract(gridVal.get()));
+														    // Update AreaReleased
+														    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+														    g.setAreaReleased(newAreaReleased);
+
+														    // Set gridVal to zero after deduction
+														    gridVal.set(BigDecimal.ZERO);
 														}
+
 
 														impexpgridrepo.save(g);
 													});
@@ -3620,43 +3664,42 @@ public class ExportStuffTallyController {
 												if (!grid.isEmpty()) {
 													AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 													grid.stream().forEach(g -> {
-														if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
-																.subtract(g.getQtyTakenOut())) >= 0) {
+														BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal once
+														BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+														BigDecimal gridValue = gridVal.get();
 
-															g.setQtyTakenOut(
-																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																			: g.getQtyTakenOut())
-																			.add(new BigDecimal(g.getYardPackages())
-																					.subtract(g.getQtyTakenOut())));
+														BigDecimal availablePackages = yardPackages.subtract(qtyTakenOut);
 
-															BigDecimal tenArea = (g.getCellAreaAllocated()
-																	.multiply(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())))
-																	.divide(new BigDecimal(g.getYardPackages()),
-																			BigDecimal.ROUND_HALF_UP);
+														if (gridValue.compareTo(availablePackages) >= 0) {
+														    // Update QtyTakenOut to include all available packages
+														    g.setQtyTakenOut(qtyTakenOut.add(availablePackages));
 
-															g.setAreaReleased(
-																	(g.getAreaReleased() == null ? BigDecimal.ZERO
-																			: g.getAreaReleased()).add(tenArea));
+														    // Calculate the proportional area to release based on the entire available amount
+														    BigDecimal tenArea = g.getCellAreaAllocated().multiply(availablePackages)
+														                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-															gridVal.set(gridVal.get()
-																	.subtract(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())));
+														    // Update AreaReleased, accounting for potential null values
+														    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+														    g.setAreaReleased(newAreaReleased);
+
+														    // Deduct the entire available packages from gridVal
+														    gridVal.set(gridValue.subtract(availablePackages));
 														} else {
+														    // Partial deduction based on gridVal's amount
+														    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-															g.setQtyTakenOut(
-																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																			: g.getQtyTakenOut()).add(gridVal.get()));
-															BigDecimal tenArea = (g.getCellAreaAllocated()
-																	.multiply(gridVal.get()))
-																	.divide(new BigDecimal(g.getYardPackages()),
-																			BigDecimal.ROUND_HALF_UP);
-															g.setAreaReleased(
-																	(g.getAreaReleased() == null ? BigDecimal.ZERO
-																			: g.getAreaReleased()).add(tenArea));
+														    // Calculate the proportional area based on gridVal
+														    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+														                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-															gridVal.set(gridVal.get().subtract(gridVal.get()));
+														    // Update AreaReleased
+														    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+														    g.setAreaReleased(newAreaReleased);
+
+														    // Set gridVal to zero after deduction
+														    gridVal.set(BigDecimal.ZERO);
 														}
+
 
 														impexpgridrepo.save(g);
 													});
@@ -3832,44 +3875,40 @@ public class ExportStuffTallyController {
 														AtomicReference<BigDecimal> gridVal = new AtomicReference<>(
 																qty);
 														grid.stream().forEach(g -> {
-															if (gridVal.get()
-																	.compareTo(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())) >= 0) {
+															BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal once
+															BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+															BigDecimal gridValue = gridVal.get();
 
-																g.setQtyTakenOut(
-																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																				: g.getQtyTakenOut())
-																				.add(new BigDecimal(g.getYardPackages())
-																						.subtract(g.getQtyTakenOut())));
+															BigDecimal availablePackages = yardPackages.subtract(qtyTakenOut);
 
-																BigDecimal tenArea = (g.getCellAreaAllocated()
-																		.multiply(new BigDecimal(g.getYardPackages())
-																				.subtract(g.getQtyTakenOut())))
-																		.divide(new BigDecimal(g.getYardPackages()),
-																				BigDecimal.ROUND_HALF_UP);
+															if (gridValue.compareTo(availablePackages) >= 0) {
+															    // Update QtyTakenOut to include all available packages
+															    g.setQtyTakenOut(qtyTakenOut.add(availablePackages));
 
-																g.setAreaReleased(
-																		(g.getAreaReleased() == null ? BigDecimal.ZERO
-																				: g.getAreaReleased()).add(tenArea));
+															    // Calculate the proportional area to release based on the entire available amount
+															    BigDecimal tenArea = g.getCellAreaAllocated().multiply(availablePackages)
+															                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-																gridVal.set(gridVal.get()
-																		.subtract(new BigDecimal(g.getYardPackages())
-																				.subtract(g.getQtyTakenOut())));
+															    // Update AreaReleased, accounting for potential null values
+															    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+															    g.setAreaReleased(newAreaReleased);
+
+															    // Deduct the entire available packages from gridVal
+															    gridVal.set(gridValue.subtract(availablePackages));
 															} else {
+															    // Partial deduction based on gridVal's amount
+															    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-																g.setQtyTakenOut(
-																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																				: g.getQtyTakenOut())
-																				.add(gridVal.get()));
-																BigDecimal tenArea = (g.getCellAreaAllocated()
-																		.multiply(gridVal.get()))
-																		.divide(new BigDecimal(g.getYardPackages()),
-																				BigDecimal.ROUND_HALF_UP);
-																g.setAreaReleased(
-																		(g.getAreaReleased() == null ? BigDecimal.ZERO
-																				: g.getAreaReleased()).add(tenArea));
+															    // Calculate the proportional area based on gridVal
+															    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+															                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-																gridVal.set(gridVal.get().subtract(gridVal.get()));
+															    // Update AreaReleased
+															    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+															    g.setAreaReleased(newAreaReleased);
+
+															    // Set gridVal to zero after deduction
+															    gridVal.set(BigDecimal.ZERO);
 															}
 
 															impexpgridrepo.save(g);
@@ -4054,45 +4093,42 @@ public class ExportStuffTallyController {
 														AtomicReference<BigDecimal> gridVal = new AtomicReference<>(
 																qty);
 														grid.stream().forEach(g -> {
-															if (gridVal.get()
-																	.compareTo(new BigDecimal(g.getYardPackages())
-																			.subtract(g.getQtyTakenOut())) >= 0) {
+															BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal once
+															BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+															BigDecimal gridValue = gridVal.get();
 
-																g.setQtyTakenOut(
-																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																				: g.getQtyTakenOut())
-																				.add(new BigDecimal(g.getYardPackages())
-																						.subtract(g.getQtyTakenOut())));
+															BigDecimal availablePackages = yardPackages.subtract(qtyTakenOut);
 
-																BigDecimal tenArea = (g.getCellAreaAllocated()
-																		.multiply(new BigDecimal(g.getYardPackages())
-																				.subtract(g.getQtyTakenOut())))
-																		.divide(new BigDecimal(g.getYardPackages()),
-																				BigDecimal.ROUND_HALF_UP);
+															if (gridValue.compareTo(availablePackages) >= 0) {
+															    // Update QtyTakenOut to include all available packages
+															    g.setQtyTakenOut(qtyTakenOut.add(availablePackages));
 
-																g.setAreaReleased(
-																		(g.getAreaReleased() == null ? BigDecimal.ZERO
-																				: g.getAreaReleased()).add(tenArea));
+															    // Calculate the proportional area to release based on the entire available amount
+															    BigDecimal tenArea = g.getCellAreaAllocated().multiply(availablePackages)
+															                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-																gridVal.set(gridVal.get()
-																		.subtract(new BigDecimal(g.getYardPackages())
-																				.subtract(g.getQtyTakenOut())));
+															    // Update AreaReleased, accounting for potential null values
+															    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+															    g.setAreaReleased(newAreaReleased);
+
+															    // Deduct the entire available packages from gridVal
+															    gridVal.set(gridValue.subtract(availablePackages));
 															} else {
+															    // Partial deduction based on gridVal's amount
+															    g.setQtyTakenOut(qtyTakenOut.add(gridValue));
 
-																g.setQtyTakenOut(
-																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
-																				: g.getQtyTakenOut())
-																				.add(gridVal.get()));
-																BigDecimal tenArea = (g.getCellAreaAllocated()
-																		.multiply(gridVal.get()))
-																		.divide(new BigDecimal(g.getYardPackages()),
-																				BigDecimal.ROUND_HALF_UP);
-																g.setAreaReleased(
-																		(g.getAreaReleased() == null ? BigDecimal.ZERO
-																				: g.getAreaReleased()).add(tenArea));
+															    // Calculate the proportional area based on gridVal
+															    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+															                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-																gridVal.set(gridVal.get().subtract(gridVal.get()));
+															    // Update AreaReleased
+															    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).add(tenArea);
+															    g.setAreaReleased(newAreaReleased);
+
+															    // Set gridVal to zero after deduction
+															    gridVal.set(BigDecimal.ZERO);
 															}
+
 
 															impexpgridrepo.save(g);
 														});
@@ -4165,32 +4201,40 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
+											BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal once
+											BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+											BigDecimal gridValue = gridVal.get();
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).subtract(g.getQtyTakenOut()));
+											if (gridValue.compareTo(qtyTakenOut) >= 0) {
+											    // Full deduction of qtyTakenOut from gridVal
+											    g.setQtyTakenOut(BigDecimal.ZERO); // Set qtyTakenOut to zero after fully deducting it
 
-												BigDecimal tenArea = (g.getCellAreaAllocated()
-														.multiply(g.getQtyTakenOut()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
+											    // Calculate area to be released based on the amount in qtyTakenOut
+											    BigDecimal tenArea = g.getCellAreaAllocated().multiply(qtyTakenOut)
+											                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).subtract(tenArea));
+											    // Safely subtract the calculated tenArea from AreaReleased, handling null
+											    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).subtract(tenArea);
+											    g.setAreaReleased(newAreaReleased);
 
-												gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
+											    // Deduct qtyTakenOut amount from gridVal
+											    gridVal.set(gridValue.subtract(qtyTakenOut));
 											} else {
+											    // Partial deduction from gridVal based on gridVal’s amount
+											    g.setQtyTakenOut(qtyTakenOut.subtract(gridValue));
 
-												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).subtract(gridVal.get()));
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-														.divide(new BigDecimal(g.getYardPackages()),
-																BigDecimal.ROUND_HALF_UP);
-												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased()).subtract(tenArea));
+											    // Calculate area to release based on gridVal
+											    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+											                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											    // Update AreaReleased by subtracting tenArea
+											    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).subtract(tenArea);
+											    g.setAreaReleased(newAreaReleased);
+
+											    // Set gridVal to zero after full deduction
+											    gridVal.set(BigDecimal.ZERO);
 											}
+
 
 											impexpgridrepo.save(g);
 										});
@@ -4259,31 +4303,40 @@ public class ExportStuffTallyController {
 										if (!grid.isEmpty()) {
 											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 											grid.stream().forEach(g -> {
-												if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
+												BigDecimal yardPackages = BigDecimal.valueOf(g.getYardPackages()); // Convert int to BigDecimal once
+												BigDecimal qtyTakenOut = g.getQtyTakenOut() != null ? g.getQtyTakenOut() : BigDecimal.ZERO;
+												BigDecimal gridValue = gridVal.get();
 
-													g.setQtyTakenOut(BigDecimal.ZERO);
+												if (gridValue.compareTo(qtyTakenOut) >= 0) {
+												    // Full deduction of qtyTakenOut from gridVal
+												    g.setQtyTakenOut(BigDecimal.ZERO); // Set qtyTakenOut to zero after fully deducting it
 
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(g.getQtyTakenOut()))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
+												    // Calculate area to be released based on the amount in qtyTakenOut
+												    BigDecimal tenArea = g.getCellAreaAllocated().multiply(qtyTakenOut)
+												                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													g.setAreaReleased(BigDecimal.ZERO);
+												    // Safely subtract the calculated tenArea from AreaReleased, handling null
+												    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).subtract(tenArea);
+												    g.setAreaReleased(newAreaReleased);
 
-													gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
+												    // Deduct qtyTakenOut amount from gridVal
+												    gridVal.set(gridValue.subtract(qtyTakenOut));
 												} else {
+												    // Partial deduction from gridVal based on gridVal’s amount
+												    g.setQtyTakenOut(qtyTakenOut.subtract(gridValue));
 
-													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-															: g.getQtyTakenOut()).subtract(gridVal.get()));
-													BigDecimal tenArea = (g.getCellAreaAllocated()
-															.multiply(gridVal.get()))
-															.divide(new BigDecimal(g.getYardPackages()),
-																	BigDecimal.ROUND_HALF_UP);
-													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-															: g.getAreaReleased()).subtract(tenArea));
+												    // Calculate area to release based on gridVal
+												    BigDecimal tenArea = g.getCellAreaAllocated().multiply(gridValue)
+												                          .divide(yardPackages, BigDecimal.ROUND_HALF_UP);
 
-													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												    // Update AreaReleased by subtracting tenArea
+												    BigDecimal newAreaReleased = (g.getAreaReleased() != null ? g.getAreaReleased() : BigDecimal.ZERO).subtract(tenArea);
+												    g.setAreaReleased(newAreaReleased);
+
+												    // Set gridVal to zero after full deduction
+												    gridVal.set(BigDecimal.ZERO);
 												}
+
 
 												impexpgridrepo.save(g);
 											});
