@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "cfstuffrq")
 @IdClass(ExportStuffRequestId.class)
-public class ExportStuffRequest {
+public class ExportStuffRequest implements Cloneable {
 
 	@Id
     @Column(name = "Company_Id", length = 6, nullable = false)
@@ -1575,6 +1575,13 @@ public class ExportStuffRequest {
 		this.contStuffPackages = contStuffPackages;
 	}
 
+	   
+    
+		@Override
+		public Object clone() throws CloneNotSupportedException {
+		    return super.clone();
+		}
 
+		
 	
 }

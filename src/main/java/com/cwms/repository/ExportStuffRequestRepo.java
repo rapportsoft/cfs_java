@@ -438,4 +438,10 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 			+ "(e.noOfPackagesStuffed - e.stuffedQty) asc")
 	List<ExportStuffRequest> getDataBySbNoSbTrans(@Param("cid") String cid,@Param("bid") String bid,
 			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("id") String id);
+	
+	
+	@Query(value="select e from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:sbtrans and "
+			+ "e.sbNo=:sb and e.stuffReqId=:id and e.status != 'D'")
+	ExportStuffRequest getDataBySbNoSbTransAndStuffReqId1(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("id") String id);
 }

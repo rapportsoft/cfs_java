@@ -3,6 +3,7 @@ package com.cwms.controller;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -359,22 +360,21 @@ public class ExportStuffTallyController {
 					if (!grid.isEmpty()) {
 						AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 						grid.stream().forEach(g -> {
-							if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
+							if (gridVal.get()
+									.compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
 
-								g.setQtyTakenOut(
-										(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-												.add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
-								
-								BigDecimal tenArea = (g.getCellAreaAllocated().multiply(new BigDecimal(g.getYardPackages())
-										.subtract(g.getQtyTakenOut())))
-										.divide(new BigDecimal(g.getYardPackages()),
-												BigDecimal.ROUND_HALF_UP);
-								
-								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-										: g.getAreaReleased()).add(tenArea));
+								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
+										.add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
 
-								gridVal.set(gridVal.get().subtract(
-										(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut()))));
+								BigDecimal tenArea = (g.getCellAreaAllocated()
+										.multiply(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())))
+										.divide(new BigDecimal(g.getYardPackages()), BigDecimal.ROUND_HALF_UP);
+
+								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
+										.add(tenArea));
+
+								gridVal.set(gridVal.get()
+										.subtract((new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut()))));
 							} else {
 
 								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
@@ -440,10 +440,10 @@ public class ExportStuffTallyController {
 			if (existingData.isEmpty()) {
 				return new ResponseEntity<>("Movement already done!!", HttpStatus.CONFLICT);
 			}
-			
-		 ExportStuffTally e3 = (ExportStuffTally) existingData.get(0).clone();
-			
-			System.out.println("rotation "+singleTally.getRotationNo()+" "+e3.getRotationNo());
+
+			ExportStuffTally e3 = (ExportStuffTally) existingData.get(0).clone();
+
+			System.out.println("rotation " + singleTally.getRotationNo() + " " + e3.getRotationNo());
 
 			for (ExportStuffTally t : tally) {
 
@@ -465,10 +465,9 @@ public class ExportStuffTallyController {
 				final BigDecimal existStuffQty1 = t.getCargoWeight();
 
 				System.out.println("existStuffQty " + existStuffQty + " " + existCargoWt);
-				BigDecimal existAreaRelease = data1.stream().map(ExportStuffTally::getAreaReleased).reduce(BigDecimal.ZERO,BigDecimal::add);
+				BigDecimal existAreaRelease = data1.stream().map(ExportStuffTally::getAreaReleased)
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
 				String existtype = e3.getTypeOfPackage();
-
-			
 
 				ExportStuffRequest stuffReq = exportstuffrepo.getDataBySbNoSbTransAndStuffReqLineId3(cid, bid,
 						t.getSbTransId(), t.getSbNo(), singleTally.getStuffId());
@@ -476,6 +475,8 @@ public class ExportStuffTallyController {
 				if (stuffReq == null) {
 					return new ResponseEntity<>("Stuffing request data not found", HttpStatus.CONFLICT);
 				}
+				
+				ExportStuffRequest stuffReq1 = (ExportStuffRequest) stuffReq.clone();
 
 				ExportSbCargoEntry cargo = exportsbcargorepo.getExportSbEntryBySbNoAndSbTransIdAndSbLine(cid, bid,
 						t.getSbNo(), t.getSbTransId(), t.getSbLineId());
@@ -573,16 +574,15 @@ public class ExportStuffTallyController {
 //								} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
 //									qty = remainingQty;
 //								}
-								
-								System.out.println("remainingQty "+remainingQty+" "+val+" "+stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty()));
+
+								System.out.println("remainingQty " + remainingQty + " " + val + " "
+										+ stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty()));
 
 								if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
 
-									if (remainingQty.compareTo(
-											exist.getStuffedQty()) > 0) {
+									if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
 										qty = exist.getStuffedQty();
-									} else if (remainingQty.compareTo(
-											exist.getStuffedQty()) < 0) {
+									} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
 										qty = remainingQty;
 									} else {
 										qty = remainingQty;
@@ -590,29 +590,25 @@ public class ExportStuffTallyController {
 
 								} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
 
-									if (val.compareTo(
-											exist.getStuffedQty()) > 0) {
+									if (val.compareTo(exist.getStuffedQty()) > 0) {
 										qty = exist.getStuffedQty();
-									} else if (val.compareTo(
-											exist.getStuffedQty()) < 0) {
+									} else if (val.compareTo(exist.getStuffedQty()) < 0) {
 										qty = val;
 									} else {
 										qty = val;
 									}
 
 								} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
-									if (remainingQty.compareTo(
-											exist.getStuffedQty()) > 0) {
+									if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
 										qty = exist.getStuffedQty();
-									} else if (remainingQty.compareTo(
-											exist.getStuffedQty()) < 0) {
+									} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
 										qty = remainingQty;
 									} else {
 										qty = remainingQty;
 									}
 								}
-								
-								System.out.println("less qty "+qty);
+
+								System.out.println("less qty " + qty);
 
 								BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
 										.divide(existCar.getYardPackages());
@@ -645,11 +641,11 @@ public class ExportStuffTallyController {
 											g.setQtyTakenOut(
 													(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
 															.subtract(g.getQtyTakenOut()));
-											
+
 											BigDecimal tenArea = (g.getCellAreaAllocated().multiply(g.getQtyTakenOut()))
 													.divide(new BigDecimal(g.getYardPackages()),
 															BigDecimal.ROUND_HALF_UP);
-											
+
 											g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
 													: g.getAreaReleased()).subtract(tenArea));
 
@@ -718,11 +714,9 @@ public class ExportStuffTallyController {
 								if (req != null) {
 									if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
 
-										if (remainingQty.compareTo(
-												exist.getStuffedQty()) > 0) {
+										if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
 											qty = exist.getStuffedQty();
-										} else if (remainingQty.compareTo(
-												exist.getStuffedQty()) < 0) {
+										} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
 											qty = remainingQty;
 										} else {
 											qty = remainingQty;
@@ -730,22 +724,18 @@ public class ExportStuffTallyController {
 
 									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
 
-										if (val.compareTo(
-												exist.getStuffedQty()) > 0) {
+										if (val.compareTo(exist.getStuffedQty()) > 0) {
 											qty = exist.getStuffedQty();
-										} else if (val.compareTo(
-												exist.getStuffedQty()) < 0) {
+										} else if (val.compareTo(exist.getStuffedQty()) < 0) {
 											qty = val;
 										} else {
 											qty = val;
 										}
 
 									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
-										if (remainingQty.compareTo(
-												exist.getStuffedQty()) > 0) {
+										if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
 											qty = exist.getStuffedQty();
-										} else if (remainingQty.compareTo(
-												exist.getStuffedQty()) < 0) {
+										} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
 											qty = remainingQty;
 										} else {
 											qty = remainingQty;
@@ -783,11 +773,12 @@ public class ExportStuffTallyController {
 											if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
 
 												g.setQtyTakenOut(BigDecimal.ZERO);
-												
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(g.getQtyTakenOut()))
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(g.getQtyTakenOut()))
 														.divide(new BigDecimal(g.getYardPackages()),
 																BigDecimal.ROUND_HALF_UP);
-												
+
 												g.setAreaReleased(BigDecimal.ZERO);
 
 												gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
@@ -952,15 +943,15 @@ public class ExportStuffTallyController {
 														: g.getQtyTakenOut())
 														.add(new BigDecimal(g.getYardPackages())
 																.subtract(g.getQtyTakenOut())));
-												
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())))
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())))
 														.divide(new BigDecimal(g.getYardPackages()),
 																BigDecimal.ROUND_HALF_UP);
-												
+
 												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-														: g.getAreaReleased())
-														.add(tenArea));
+														: g.getAreaReleased()).add(tenArea));
 
 												gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages())
 														.subtract(g.getQtyTakenOut())));
@@ -1094,15 +1085,15 @@ public class ExportStuffTallyController {
 															: g.getQtyTakenOut())
 															.add(new BigDecimal(g.getYardPackages())
 																	.subtract(g.getQtyTakenOut())));
-													
-													BigDecimal tenArea = (g.getCellAreaAllocated().multiply(new BigDecimal(g.getYardPackages())
-															.subtract(g.getQtyTakenOut())))
+
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(new BigDecimal(g.getYardPackages())
+																	.subtract(g.getQtyTakenOut())))
 															.divide(new BigDecimal(g.getYardPackages()),
 																	BigDecimal.ROUND_HALF_UP);
-													
+
 													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-															: g.getAreaReleased())
-															.add(tenArea));
+															: g.getAreaReleased()).add(tenArea));
 
 													gridVal.set(
 															gridVal.get().subtract(new BigDecimal(g.getYardPackages())
@@ -1238,8 +1229,17 @@ public class ExportStuffTallyController {
 								+ stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty()));
 
 						for (ExportCarting c : cartingData) {
+							
+							ExportStuffTally exist1 = exportstufftallyrepo
+									.getDataByStuffTallyIdANDStuffIdAndCartingTransId2(cid, bid,
+											singleTally.getStuffTallyId(), singleTally.getStuffId(), c.getCartingTransId(), t.getSbNo(),t.getSbTransId());
+
+							BigDecimal remainingQty1 = c.getActualNoOfPackages()
+									.subtract(c.getStuffedNoOfPackages());
+							
 							if (stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())
-									.compareTo(BigDecimal.ZERO) > 0) {
+									.compareTo(BigDecimal.ZERO) > 0 && val.compareTo(BigDecimal.ZERO) > 0
+									&& remainingQty1.compareTo(BigDecimal.ZERO) > 0) {
 								BigDecimal remainingQty = c.getActualNoOfPackages()
 										.subtract(c.getStuffedNoOfPackages());
 
@@ -1247,179 +1247,324 @@ public class ExportStuffTallyController {
 									break;
 								}
 
-								BigDecimal qty = BigDecimal.ZERO;
-
-								if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+				                
+								if(exist1 != null) {
 									
-									if(remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) > 0){
-										qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
-									}
-									else if(remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) < 0) {
-										qty = remainingQty;
-									}
-									else {
-										qty = remainingQty;
-									}
+									BigDecimal qty = BigDecimal.ZERO;
 									
-									
-								} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
-									if(val.compareTo(stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) > 0){
-										qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
-									}
-									else if(val.compareTo(stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) < 0) {
-										qty = val;
-									}
-									else {
-										qty = val;
-									}
-									
-								} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+									if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
 
-							
-									
-									
-									if(remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) > 0){
-										qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
-									}
-									else if(remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) < 0) {
-										qty = remainingQty;
-									}
-									else {
-										qty = remainingQty;
-									}
-
-								}
-
-								System.out.println("qty qty " + qty);
-
-								BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
-
-								ExportStuffTally newTally = new ExportStuffTally();
-
-								int sr = exportstufftallyrepo.countOfStuffRecords(cid, bid,
-										singleTally.getStuffTallyId());
-
-								newTally.setCompanyId(cid);
-								newTally.setBranchId(bid);
-								newTally.setStuffTallyId(singleTally.getStuffTallyId());
-								newTally.setSbTransId(c.getSbTransId());
-								newTally.setStuffTallyLineId(sr + 1);
-								newTally.setProfitcentreId(c.getProfitcentreId());
-								newTally.setCartingTransId(c.getCartingTransId());
-								newTally.setCartingLineId(c.getCartingLineId());
-								newTally.setSbLineId(c.getSbLineNo());
-								newTally.setSbNo(c.getSbNo());
-								newTally.setStuffTallyWoTransId(singleTally.getStuffTallyWoTransId());
-								newTally.setStuffTallyCutWoTransDate(singleTally.getStuffTallyCutWoTransDate());
-								newTally.setStuffTallyDate(singleTally.getStuffTallyDate());
-								newTally.setStuffId(stuffReq.getStuffReqId());
-								newTally.setStuffDate(stuffReq.getStuffReqDate());
-								newTally.setSbDate(cargo.getSbDate());
-								newTally.setShift(singleTally.getShift());
-								newTally.setAgentSealNo(singleTally.getAgentSealNo());
-								newTally.setVesselId(singleTally.getVesselId());
-								newTally.setVoyageNo(singleTally.getVoyageNo());
-								newTally.setRotationNo(singleTally.getRotationNo());
-								newTally.setRotationDate(singleTally.getRotationDate());
-								newTally.setPol(singleTally.getPol());
-								newTally.setTerminal(singleTally.getTerminal());
-								newTally.setPod(singleTally.getPod());
-								newTally.setFinalPod(singleTally.getFinalPod());
-								newTally.setContainerNo(singleTally.getContainerNo());
-								newTally.setContainerSize(singleTally.getContainerSize());
-								newTally.setPeriodFrom(singleTally.getPeriodFrom());
-								newTally.setGateInId(stuffReq.getGateInId());
-								newTally.setContainerStatus(singleTally.getContainerStatus());
-								newTally.setContainerType(singleTally.getContainerType());
-								newTally.setContainerCondition(stuffReq.getContainerHealth());
-								newTally.setYardPackages(c.getYardPackages());
-								newTally.setCellAreaAllocated(t.getCellAreaAllocated());
-								newTally.setOnAccountOf(stuffReq.getOnAccountOf());
-								newTally.setCha(singleTally.getCha());
-								newTally.setTotalGrossWeight(singleTally.getTotalGrossWeight());
-								newTally.setCargoWeight(t.getCargoWeight());
-								newTally.setStuffRequestQty(t.getStuffRequestQty());
-								newTally.setStuffedQty(qty);
-								stuffReq.setStuffedQty(stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
-										: stuffReq.getStuffedQty().add(qty));
-								newTally.setBalanceQty(c.getYardPackages().subtract(qty));
-								newTally.setTareWeight(singleTally.getTareWeight());
-								newTally.setAreaReleased(area);
-								newTally.setGenSetRequired(singleTally.getGenSetRequired());
-								newTally.setHaz(singleTally.getHaz());
-								newTally.setImoCode(e2.getImoCode());
-								newTally.setShippingAgent(stuffReq.getShippingAgent());
-								newTally.setShippingLine(stuffReq.getShippingLine());
-								newTally.setCommodity(t.getCommodity());
-								newTally.setCustomsSealNo(singleTally.getCustomsSealNo());
-								newTally.setViaNo(singleTally.getViaNo());
-								newTally.setCartingDate(c.getCartingTransDate());
-								newTally.setExporterName(e2.getExporterName());
-								newTally.setConsignee(t.getConsignee());
-								newTally.setFob(t.getFob());
-								newTally.setBerthingDate(singleTally.getBerthingDate());
-								newTally.setGateOpenDate(singleTally.getGateOpenDate());
-								newTally.setDocType(singleTally.getDocType());
-								newTally.setDocNo(singleTally.getDocNo());
-								newTally.setStatus("A");
-								newTally.setCreatedBy(user);
-								newTally.setCreatedDate(new Date());
-								newTally.setApprovedBy(user);
-								newTally.setApprovedDate(new Date());
-								newTally.setDeliveryOrderNo(singleTally.getDeliveryOrderNo());
-								newTally.setStuffMode(singleTally.getStuffMode());
-								newTally.setStuffLineId(stuffReq.getStuffReqLineId());
-								newTally.setTypeOfPackage(t.getTypeOfPackage());
-								newTally.setSealType(singleTally.getSealType());
-								newTally.setTotalCargoWeight(t.getTotalCargoWeight());
-
-								exportstufftallyrepo.save(newTally);
-
-								c.setStuffedNoOfPackages((c.getStuffedNoOfPackages() == null ? BigDecimal.ZERO
-										: c.getStuffedNoOfPackages()).add(qty));
-
-								exportcartingrepo.save(c);
-
-								val = val.subtract(qty);
-
-								List<Impexpgrid> grid = impexpgridrepo.getDataForTally(cid, bid, c.getCartingTransId(),
-										c.getCartingLineId());
-
-								if (!grid.isEmpty()) {
-									AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
-									grid.stream().forEach(g -> {
-										if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
-
-											g.setQtyTakenOut(
-													(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-															.add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
-											
-											BigDecimal tenArea = (g.getCellAreaAllocated().multiply(new BigDecimal(g.getYardPackages())
-													.subtract(g.getQtyTakenOut())))
-													.divide(new BigDecimal(g.getYardPackages()),
-															BigDecimal.ROUND_HALF_UP);
-											
-											g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-													: g.getAreaReleased()).add(tenArea));
-
-											gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
+										if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed()
+													.subtract(stuffReq.getStuffedQty());
+										} else if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = remainingQty1;
 										} else {
-
-											g.setQtyTakenOut(
-													(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-															.add(gridVal.get()));
-											BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
-													.divide(new BigDecimal(g.getYardPackages()),
-															BigDecimal.ROUND_HALF_UP);
-											g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
-													: g.getAreaReleased()).add(tenArea));
-
-											gridVal.set(gridVal.get().subtract(gridVal.get()));
+											qty = remainingQty1;
 										}
 
-										impexpgridrepo.save(g);
-									});
+									} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+										if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed()
+													.subtract(stuffReq.getStuffedQty());
+										} else if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = val;
+										} else {
+											qty = val;
+										}
+
+									} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+										if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed()
+													.subtract(stuffReq.getStuffedQty());
+										} else if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = remainingQty1;
+										} else {
+											qty = remainingQty1;
+										}
+									}
+
+								
+
+									BigDecimal area = (c.getAreaOccupied().multiply(qty))
+											.divide(c.getYardPackages());
+
+									exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
+									exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
+									exist1.setAreaReleased(exist1.getAreaReleased().add(area));
+
+									exist1.setStuffMode(singleTally.getStuffMode());
+									exist1.setShift(singleTally.getShift());
+									exist1.setAgentSealNo(singleTally.getAgentSealNo());
+									exist1.setCustomsSealNo(singleTally.getCustomsSealNo());
+									exist1.setContainerStatus(singleTally.getContainerStatus());
+									exist1.setVesselId(singleTally.getVesselId());
+									exist1.setVoyageNo(singleTally.getVoyageNo());
+									exist1.setViaNo(singleTally.getViaNo());
+									exist1.setTerminal(singleTally.getTerminal());
+									exist1.setPod(singleTally.getPod());
+									exist1.setContainerCondition(singleTally.getContainerCondition());
+									exist1.setTareWeight(singleTally.getTareWeight());
+									exist1.setFinalPod(singleTally.getFinalPod());
+									exist1.setCha(singleTally.getCha());
+									exist1.setHaz(singleTally.getHaz());
+									exist1.setSealType(singleTally.getSealType());
+									exist1.setGenSetRequired(singleTally.getGenSetRequired());
+									exist1.setDocType(singleTally.getDocType());
+									exist1.setDocNo(singleTally.getDocNo());
+									exist1.setRotationNo(singleTally.getRotationNo());
+									exist1.setRotationDate(singleTally.getRotationDate());
+									exist1.setBerthingDate(singleTally.getBerthingDate());
+									exist1.setGateOpenDate(singleTally.getGateOpenDate());
+									exist1.setTypeOfPackage(t.getTypeOfPackage());
+									exist1.setEditedBy(user);
+									exist1.setEditedDate(new Date());
+									exist1.setTotalGrossWeight(singleTally.getTotalGrossWeight());
+									exist1.setCargoWeight(t.getCargoWeight());
+
+									exportstufftallyrepo.save(exist1);
+									stuffReq.setStuffedQty(
+											stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+													: stuffReq.getStuffedQty().add(qty));
+
+									val = val.subtract(qty);
+
+									c.setStuffedNoOfPackages(
+											(c.getStuffedNoOfPackages() == null ? BigDecimal.ZERO
+													: c.getStuffedNoOfPackages()).add(qty));
+
+									exportcartingrepo.save(c);
+
+									List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+											c.getCartingTransId(), c.getCartingLineId());
+
+									if (!grid.isEmpty()) {
+										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+										grid.stream().forEach(g -> {
+											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+													.subtract(g.getQtyTakenOut())) >= 0) {
+
+												g.setQtyTakenOut(
+														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																: g.getQtyTakenOut())
+																.add(new BigDecimal(g.getYardPackages())
+																		.subtract(g.getQtyTakenOut())));
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+
+												g.setAreaReleased(
+														(g.getAreaReleased() == null ? BigDecimal.ZERO
+																: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get()
+														.subtract(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())));
+											} else {
+
+												g.setQtyTakenOut(
+														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																: g.getQtyTakenOut()).add(gridVal.get()));
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(gridVal.get()))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+												g.setAreaReleased(
+														(g.getAreaReleased() == null ? BigDecimal.ZERO
+																: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											}
+
+											impexpgridrepo.save(g);
+										});
+									}
 								}
+								else {
+									BigDecimal qty = BigDecimal.ZERO;
+
+									if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+										if (remainingQty.compareTo(
+												stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
+										} else if (remainingQty.compareTo(
+												stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = remainingQty;
+										} else {
+											qty = remainingQty;
+										}
+
+									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+										if (val.compareTo(
+												stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
+										} else if (val.compareTo(
+												stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = val;
+										} else {
+											qty = val;
+										}
+
+									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+
+										if (remainingQty.compareTo(
+												stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
+										} else if (remainingQty.compareTo(
+												stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = remainingQty;
+										} else {
+											qty = remainingQty;
+										}
+
+									}
+
+									System.out.println("qty qty " + qty);
+
+									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+
+									ExportStuffTally newTally = new ExportStuffTally();
+
+									int sr = exportstufftallyrepo.countOfStuffRecords(cid, bid,
+											singleTally.getStuffTallyId());
+
+									newTally.setCompanyId(cid);
+									newTally.setBranchId(bid);
+									newTally.setStuffTallyId(singleTally.getStuffTallyId());
+									newTally.setSbTransId(c.getSbTransId());
+									newTally.setStuffTallyLineId(sr + 1);
+									newTally.setProfitcentreId(c.getProfitcentreId());
+									newTally.setCartingTransId(c.getCartingTransId());
+									newTally.setCartingLineId(c.getCartingLineId());
+									newTally.setSbLineId(c.getSbLineNo());
+									newTally.setSbNo(c.getSbNo());
+									newTally.setStuffTallyWoTransId(singleTally.getStuffTallyWoTransId());
+									newTally.setStuffTallyCutWoTransDate(singleTally.getStuffTallyCutWoTransDate());
+									newTally.setStuffTallyDate(singleTally.getStuffTallyDate());
+									newTally.setStuffId(stuffReq.getStuffReqId());
+									newTally.setStuffDate(stuffReq.getStuffReqDate());
+									newTally.setSbDate(cargo.getSbDate());
+									newTally.setShift(singleTally.getShift());
+									newTally.setAgentSealNo(singleTally.getAgentSealNo());
+									newTally.setVesselId(singleTally.getVesselId());
+									newTally.setVoyageNo(singleTally.getVoyageNo());
+									newTally.setRotationNo(singleTally.getRotationNo());
+									newTally.setRotationDate(singleTally.getRotationDate());
+									newTally.setPol(singleTally.getPol());
+									newTally.setTerminal(singleTally.getTerminal());
+									newTally.setPod(singleTally.getPod());
+									newTally.setFinalPod(singleTally.getFinalPod());
+									newTally.setContainerNo(singleTally.getContainerNo());
+									newTally.setContainerSize(singleTally.getContainerSize());
+									newTally.setPeriodFrom(singleTally.getPeriodFrom());
+									newTally.setGateInId(stuffReq.getGateInId());
+									newTally.setContainerStatus(singleTally.getContainerStatus());
+									newTally.setContainerType(singleTally.getContainerType());
+									newTally.setContainerCondition(stuffReq.getContainerHealth());
+									newTally.setYardPackages(c.getYardPackages());
+									newTally.setCellAreaAllocated(t.getCellAreaAllocated());
+									newTally.setOnAccountOf(stuffReq.getOnAccountOf());
+									newTally.setCha(singleTally.getCha());
+									newTally.setTotalGrossWeight(singleTally.getTotalGrossWeight());
+									newTally.setCargoWeight(t.getCargoWeight());
+									newTally.setStuffRequestQty(t.getStuffRequestQty());
+									newTally.setStuffedQty(qty);
+									stuffReq.setStuffedQty(stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+											: stuffReq.getStuffedQty().add(qty));
+									newTally.setBalanceQty(c.getYardPackages().subtract(qty));
+									newTally.setTareWeight(singleTally.getTareWeight());
+									newTally.setAreaReleased(area);
+									newTally.setGenSetRequired(singleTally.getGenSetRequired());
+									newTally.setHaz(singleTally.getHaz());
+									newTally.setImoCode(e2.getImoCode());
+									newTally.setShippingAgent(stuffReq.getShippingAgent());
+									newTally.setShippingLine(stuffReq.getShippingLine());
+									newTally.setCommodity(t.getCommodity());
+									newTally.setCustomsSealNo(singleTally.getCustomsSealNo());
+									newTally.setViaNo(singleTally.getViaNo());
+									newTally.setCartingDate(c.getCartingTransDate());
+									newTally.setExporterName(e2.getExporterName());
+									newTally.setConsignee(t.getConsignee());
+									newTally.setFob(t.getFob());
+									newTally.setBerthingDate(singleTally.getBerthingDate());
+									newTally.setGateOpenDate(singleTally.getGateOpenDate());
+									newTally.setDocType(singleTally.getDocType());
+									newTally.setDocNo(singleTally.getDocNo());
+									newTally.setStatus("A");
+									newTally.setCreatedBy(user);
+									newTally.setCreatedDate(new Date());
+									newTally.setApprovedBy(user);
+									newTally.setApprovedDate(new Date());
+									newTally.setDeliveryOrderNo(singleTally.getDeliveryOrderNo());
+									newTally.setStuffMode(singleTally.getStuffMode());
+									newTally.setStuffLineId(stuffReq.getStuffReqLineId());
+									newTally.setTypeOfPackage(t.getTypeOfPackage());
+									newTally.setSealType(singleTally.getSealType());
+									newTally.setTotalCargoWeight(t.getTotalCargoWeight());
+
+									exportstufftallyrepo.save(newTally);
+
+									c.setStuffedNoOfPackages((c.getStuffedNoOfPackages() == null ? BigDecimal.ZERO
+											: c.getStuffedNoOfPackages()).add(qty));
+
+									exportcartingrepo.save(c);
+
+									val = val.subtract(qty);
+
+									List<Impexpgrid> grid = impexpgridrepo.getDataForTally(cid, bid, c.getCartingTransId(),
+											c.getCartingLineId());
+
+									if (!grid.isEmpty()) {
+										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+										grid.stream().forEach(g -> {
+											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+													.subtract(g.getQtyTakenOut())) >= 0) {
+
+												g.setQtyTakenOut(
+														(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
+																.add(new BigDecimal(g.getYardPackages())
+																		.subtract(g.getQtyTakenOut())));
+
+												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(
+														new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+
+												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+														: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get().subtract(
+														new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
+											} else {
+
+												g.setQtyTakenOut(
+														(g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
+																.add(gridVal.get()));
+												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+														: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											}
+
+											impexpgridrepo.save(g);
+										});
+									}
+								}
+								
 							}
 
 						}
@@ -1448,6 +1593,420 @@ public class ExportStuffTallyController {
 				
 				
 				
+				
+				
+				
+				
+				if (val.compareTo(BigDecimal.ZERO) > 0) {
+
+					if ((cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())))
+							.compareTo(BigDecimal.ZERO) > 0) {
+						List<ExportCarting> cartingData1 = exportcartingrepo.getDataBySbNoSbTrans1(cid, bid,
+								t.getSbTransId(), t.getSbNo());
+
+						if (cartingData1.isEmpty()) {
+							return new ResponseEntity<>("Carting data not found1", HttpStatus.CONFLICT);
+						}
+
+						List<ExportCarting> cartingData2 = new ArrayList<>();
+
+						for (ExportCarting c : cartingData1) {
+
+							if (val.compareTo(BigDecimal.ZERO) > 0 && (cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())))
+									.compareTo(BigDecimal.ZERO) > 0) {
+								ExportStuffTally exist1 = exportstufftallyrepo
+										.getDataByStuffTallyIdANDStuffIdAndCartingTransId2(cid, bid,
+												singleTally.getStuffTallyId(), singleTally.getStuffId(), c.getCartingTransId(),
+												t.getSbNo(),t.getSbTransId());
+
+								BigDecimal remainingQty1 = c.getActualNoOfPackages()
+										.subtract(c.getStuffedNoOfPackages());
+
+						
+
+								if (exist1 != null && remainingQty1.compareTo(BigDecimal.ZERO) > 0 && val.compareTo(BigDecimal.ZERO)>0) {
+									BigDecimal qty = BigDecimal.ZERO;
+
+									if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+										if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+											qty = remainingQty1;
+										}
+										else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+											qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+										}
+										else {
+											qty = remainingQty1;
+										}
+										
+										
+
+									} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+										if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)>0){
+											qty = val;
+										}
+										else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)<0){
+											qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+										}
+										else {
+											qty = val;
+										}
+										
+										
+
+									} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+
+										if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+											qty = remainingQty1;
+										}
+										else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+											qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+										}
+										else {
+											qty = remainingQty1;
+										}
+
+									}
+
+					
+
+									BigDecimal area = (c.getAreaOccupied().multiply(qty))
+											.divide(c.getYardPackages());
+
+									exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
+									exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
+									exist1.setAreaReleased(exist1.getAreaReleased().add(area));
+
+									exist1.setStuffMode(singleTally.getStuffMode());
+									exist1.setShift(singleTally.getShift());
+									exist1.setAgentSealNo(singleTally.getAgentSealNo());
+									exist1.setCustomsSealNo(singleTally.getCustomsSealNo());
+									exist1.setContainerStatus(singleTally.getContainerStatus());
+									exist1.setVesselId(singleTally.getVesselId());
+									exist1.setVoyageNo(singleTally.getVoyageNo());
+									exist1.setViaNo(singleTally.getViaNo());
+									exist1.setTerminal(singleTally.getTerminal());
+									exist1.setPod(singleTally.getPod());
+									exist1.setContainerCondition(singleTally.getContainerCondition());
+									exist1.setTareWeight(singleTally.getTareWeight());
+									exist1.setFinalPod(singleTally.getFinalPod());
+									exist1.setCha(singleTally.getCha());
+									exist1.setHaz(singleTally.getHaz());
+									exist1.setSealType(singleTally.getSealType());
+									exist1.setGenSetRequired(singleTally.getGenSetRequired());
+									exist1.setDocType(singleTally.getDocType());
+									exist1.setDocNo(singleTally.getDocNo());
+									exist1.setRotationNo(singleTally.getRotationNo());
+									exist1.setRotationDate(singleTally.getRotationDate());
+									exist1.setBerthingDate(singleTally.getBerthingDate());
+									exist1.setGateOpenDate(singleTally.getGateOpenDate());
+									exist1.setTypeOfPackage(t.getTypeOfPackage());
+									exist1.setEditedBy(user);
+									exist1.setEditedDate(new Date());
+									exist1.setTotalGrossWeight(singleTally.getTotalGrossWeight());
+									exist1.setCargoWeight(t.getCargoWeight());
+
+									exportstufftallyrepo.save(exist1);
+
+									stuffReq.setStuffedQty(
+											stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+													: stuffReq.getStuffedQty().add(qty));
+									stuffReq.setNoOfPackagesStuffed(
+											stuffReq.getNoOfPackagesStuffed().add(qty));
+
+									
+									cargo.setStuffReqQty(
+											cargo.getStuffReqQty() + Integer.parseInt(qty.toString()));
+
+									val = val.subtract(qty);
+
+									c.setStuffedNoOfPackages(c.getStuffedNoOfPackages().add(qty));
+
+									exportcartingrepo.save(c);
+
+									List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+											c.getCartingTransId(), c.getCartingLineId());
+
+									if (!grid.isEmpty()) {
+										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+										grid.stream().forEach(g -> {
+											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+													.subtract(g.getQtyTakenOut())) >= 0) {
+
+												g.setQtyTakenOut(
+														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																: g.getQtyTakenOut())
+																.add(new BigDecimal(g.getYardPackages())
+																		.subtract(g.getQtyTakenOut())));
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+
+												g.setAreaReleased(
+														(g.getAreaReleased() == null ? BigDecimal.ZERO
+																: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get()
+														.subtract(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())));
+											} else {
+
+												g.setQtyTakenOut(
+														(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																: g.getQtyTakenOut()).add(gridVal.get()));
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(gridVal.get()))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+												g.setAreaReleased(
+														(g.getAreaReleased() == null ? BigDecimal.ZERO
+																: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											}
+
+											impexpgridrepo.save(g);
+										});
+									}
+								} else {
+									cartingData2.add(c);
+								}
+							}
+
+						}
+
+						
+
+						if (val.compareTo(BigDecimal.ZERO) > 0 && cartingData2.size() > 0) {
+
+							for (ExportCarting c : cartingData2) {
+								if (val.compareTo(BigDecimal.ZERO) > 0 && (cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())))
+										.compareTo(BigDecimal.ZERO) > 0) {
+									BigDecimal remainingQty1 = c.getActualNoOfPackages()
+											.subtract(c.getStuffedNoOfPackages());
+
+					
+
+									if (remainingQty1.compareTo(BigDecimal.ZERO) > 0 && val.compareTo(BigDecimal.ZERO)>0) {
+										BigDecimal qty = BigDecimal.ZERO;
+
+										if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+											if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+												qty = remainingQty1;
+											}
+											else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+												qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+											}
+											else {
+												qty = remainingQty1;
+											}
+											
+											
+
+										} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+											if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)>0){
+												qty = val;
+											}
+											else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)<0){
+												qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+											}
+											else {
+												qty = val;
+											}
+											
+											
+
+										} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+
+											if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+												qty = remainingQty1;
+											}
+											else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+												qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+											}
+											else {
+												qty = remainingQty1;
+											}
+
+										}
+
+										BigDecimal area = (c.getAreaOccupied().multiply(qty))
+												.divide(c.getYardPackages());
+
+										ExportStuffTally newTally = new ExportStuffTally();
+
+										int sr = exportstufftallyrepo.countOfStuffRecords(cid, bid,
+												singleTally.getStuffTallyId());
+
+										newTally.setCompanyId(cid);
+										newTally.setBranchId(bid);
+										newTally.setStuffTallyId(singleTally.getStuffTallyId());
+										newTally.setSbTransId(c.getSbTransId());
+										newTally.setStuffTallyLineId(sr + 1);
+										newTally.setProfitcentreId(c.getProfitcentreId());
+										newTally.setCartingTransId(c.getCartingTransId());
+										newTally.setCartingLineId(c.getCartingLineId());
+										newTally.setSbLineId(c.getSbLineNo());
+										newTally.setSbNo(c.getSbNo());
+										newTally.setStuffTallyWoTransId(singleTally.getStuffTallyWoTransId());
+										newTally.setStuffTallyCutWoTransDate(singleTally.getStuffTallyCutWoTransDate());
+										newTally.setStuffTallyDate(singleTally.getStuffTallyDate());
+										newTally.setStuffId(stuffReq.getStuffReqId());
+										newTally.setStuffDate(stuffReq.getStuffReqDate());
+										newTally.setSbDate(cargo.getSbDate());
+										newTally.setShift(singleTally.getShift());
+										newTally.setAgentSealNo(singleTally.getAgentSealNo());
+										newTally.setVesselId(singleTally.getVesselId());
+										newTally.setVoyageNo(singleTally.getVoyageNo());
+										newTally.setRotationNo(singleTally.getRotationNo());
+										newTally.setRotationDate(singleTally.getRotationDate());
+										newTally.setPol(singleTally.getPol());
+										newTally.setTerminal(singleTally.getTerminal());
+										newTally.setPod(singleTally.getPod());
+										newTally.setFinalPod(singleTally.getFinalPod());
+										newTally.setContainerNo(singleTally.getContainerNo());
+										newTally.setContainerSize(singleTally.getContainerSize());
+										newTally.setPeriodFrom(singleTally.getPeriodFrom());
+										newTally.setGateInId(stuffReq.getGateInId());
+										newTally.setContainerStatus(singleTally.getContainerStatus());
+										newTally.setContainerType(singleTally.getContainerType());
+										newTally.setContainerCondition(stuffReq.getContainerHealth());
+										newTally.setYardPackages(c.getYardPackages());
+										newTally.setCellAreaAllocated(t.getCellAreaAllocated());
+										newTally.setOnAccountOf(stuffReq.getOnAccountOf());
+										newTally.setCha(singleTally.getCha());
+										newTally.setTotalGrossWeight(singleTally.getTotalGrossWeight());
+										newTally.setCargoWeight(t.getCargoWeight());
+										newTally.setStuffRequestQty(t.getStuffRequestQty());
+										newTally.setStuffedQty(qty);
+									
+										newTally.setBalanceQty(c.getYardPackages().subtract(qty));
+										newTally.setTareWeight(singleTally.getTareWeight());
+										newTally.setAreaReleased(area);
+										newTally.setGenSetRequired(singleTally.getGenSetRequired());
+										newTally.setHaz(singleTally.getHaz());
+										newTally.setImoCode(e2.getImoCode());
+										newTally.setShippingAgent(stuffReq.getShippingAgent());
+										newTally.setShippingLine(stuffReq.getShippingLine());
+										newTally.setCommodity(t.getCommodity());
+										newTally.setCustomsSealNo(singleTally.getCustomsSealNo());
+										newTally.setViaNo(singleTally.getViaNo());
+										newTally.setCartingDate(c.getCartingTransDate());
+										newTally.setExporterName(e2.getExporterName());
+										newTally.setConsignee(t.getConsignee());
+										newTally.setFob(t.getFob());
+										newTally.setBerthingDate(singleTally.getBerthingDate());
+										newTally.setGateOpenDate(singleTally.getGateOpenDate());
+										newTally.setDocType(singleTally.getDocType());
+										newTally.setDocNo(singleTally.getDocNo());
+										newTally.setStatus("A");
+										newTally.setCreatedBy(user);
+										newTally.setCreatedDate(new Date());
+										newTally.setApprovedBy(user);
+										newTally.setApprovedDate(new Date());
+										newTally.setDeliveryOrderNo(singleTally.getDeliveryOrderNo());
+										newTally.setStuffMode(singleTally.getStuffMode());
+										newTally.setStuffLineId(stuffReq.getStuffReqLineId());
+										newTally.setTypeOfPackage(t.getTypeOfPackage());
+										newTally.setSealType(singleTally.getSealType());
+										newTally.setTotalCargoWeight(t.getTotalCargoWeight());
+										exportstufftallyrepo.save(newTally);
+
+										stuffReq.setStuffedQty(
+												stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+														: stuffReq.getStuffedQty().add(qty));
+										stuffReq.setNoOfPackagesStuffed(
+												stuffReq.getNoOfPackagesStuffed().add(qty));
+
+			
+										cargo.setStuffReqQty(
+												cargo.getStuffReqQty() + Integer.parseInt(qty.toString()));
+
+										c.setStuffedNoOfPackages(c.getStuffedNoOfPackages().add(qty));
+
+										exportcartingrepo.save(c);
+
+										val = val.subtract(qty);
+
+										List<Impexpgrid> grid = impexpgridrepo.getDataForTally(cid, bid,
+												c.getCartingTransId(), c.getCartingLineId());
+
+										if (!grid.isEmpty()) {
+											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(
+													qty);
+											grid.stream().forEach(g -> {
+												if (gridVal.get()
+														.compareTo(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())) >= 0) {
+
+													g.setQtyTakenOut(
+															(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																	: g.getQtyTakenOut())
+																	.add(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())));
+
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(new BigDecimal(g.getYardPackages())
+																	.subtract(g.getQtyTakenOut())))
+															.divide(new BigDecimal(g.getYardPackages()),
+																	BigDecimal.ROUND_HALF_UP);
+
+													g.setAreaReleased(
+															(g.getAreaReleased() == null ? BigDecimal.ZERO
+																	: g.getAreaReleased()).add(tenArea));
+
+													gridVal.set(gridVal.get()
+															.subtract(new BigDecimal(g.getYardPackages())
+																	.subtract(g.getQtyTakenOut())));
+												} else {
+
+													g.setQtyTakenOut(
+															(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																	: g.getQtyTakenOut())
+																	.add(gridVal.get()));
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(gridVal.get()))
+															.divide(new BigDecimal(g.getYardPackages()),
+																	BigDecimal.ROUND_HALF_UP);
+													g.setAreaReleased(
+															(g.getAreaReleased() == null ? BigDecimal.ZERO
+																	: g.getAreaReleased()).add(tenArea));
+
+													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												}
+
+												impexpgridrepo.save(g);
+											});
+										}
+
+									}
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+
 				System.out.println("val " + val);
 				if (stuffReq.getNoOfPackagesStuffed().compareTo(t.getStuffedQty()) < 0
 						&& val.compareTo(BigDecimal.ZERO) > 0) {
@@ -1460,7 +2019,6 @@ public class ExportStuffTallyController {
 					if (!remainingStuffReq.isEmpty()) {
 						for (ExportStuffRequest e : remainingStuffReq) {
 							if (incrementVal.compareTo(BigDecimal.ZERO) != 0) {
-								
 
 //								if ((e.getNoOfPackagesStuffed().subtract(e.getStuffedQty()))
 //										.compareTo(incrementVal) >= 0) {
@@ -1504,34 +2062,33 @@ public class ExportStuffTallyController {
 									BigDecimal qty = BigDecimal.ZERO;
 
 									if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
-										if(remainingQty.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) > 0) {
+										if (remainingQty.compareTo(
+												e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) > 0) {
 											qty = e.getNoOfPackagesStuffed().subtract(e.getStuffedQty());
-										}
-										else if(remainingQty.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) < 0) {
+										} else if (remainingQty.compareTo(
+												e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) < 0) {
+											qty = remainingQty;
+										} else {
 											qty = remainingQty;
 										}
-										else {
-											qty = remainingQty;
-										}
-										
+
 									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
-										if(val.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) > 0) {
+										if (val.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) > 0) {
 											qty = e.getNoOfPackagesStuffed().subtract(e.getStuffedQty());
-										}
-										else if(val.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) < 0) {
+										} else if (val.compareTo(
+												e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) < 0) {
 											qty = val;
-										}
-										else {
+										} else {
 											qty = val;
 										}
 									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
-										if(remainingQty.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) > 0) {
+										if (remainingQty.compareTo(
+												e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) > 0) {
 											qty = e.getNoOfPackagesStuffed().subtract(e.getStuffedQty());
-										}
-										else if(remainingQty.compareTo(e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) < 0) {
+										} else if (remainingQty.compareTo(
+												e.getNoOfPackagesStuffed().subtract(e.getStuffedQty())) < 0) {
 											qty = remainingQty;
-										}
-										else {
+										} else {
 											qty = remainingQty;
 										}
 									}
@@ -1635,21 +2192,25 @@ public class ExportStuffTallyController {
 									if (!grid.isEmpty()) {
 										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 										grid.stream().forEach(g -> {
-											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
+											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+													.subtract(g.getQtyTakenOut())) >= 0) {
 
 												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
-														: g.getQtyTakenOut()).add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
-												
-												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(new BigDecimal(g.getYardPackages())
-														.subtract(g.getQtyTakenOut())))
+														: g.getQtyTakenOut())
+														.add(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())));
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())))
 														.divide(new BigDecimal(g.getYardPackages()),
 																BigDecimal.ROUND_HALF_UP);
-												
+
 												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
 														: g.getAreaReleased()).add(tenArea));
 
-												gridVal.set(gridVal.get()
-														.subtract(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
+												gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages())
+														.subtract(g.getQtyTakenOut())));
 											} else {
 
 												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
@@ -1660,8 +2221,7 @@ public class ExportStuffTallyController {
 												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
 														: g.getAreaReleased()).add(tenArea));
 
-												gridVal.set(gridVal.get()
-														.subtract(gridVal.get()));
+												gridVal.set(gridVal.get().subtract(gridVal.get()));
 											}
 
 											impexpgridrepo.save(g);
@@ -1714,6 +2274,14 @@ public class ExportStuffTallyController {
 				cargo.setStuffedWt(((cargo.getStuffedWt() == null ? BigDecimal.ZERO : cargo.getStuffedWt())
 						.add(t.getCargoWeight())).subtract(existCargoWt));
 				exportsbcargorepo.save(cargo);
+				
+				System.out.println("stuffReq1.getNoOfPackagesStuffed() "+stuffReq1.getNoOfPackagesStuffed()+" "+t.getStuffedQty());
+				
+				if (stuffReq1.getNoOfPackagesStuffed().compareTo(t.getStuffedQty()) != 0) {
+					int updateQty = exportstufftallyrepo.updateStuffReqQuantity(cid, bid, singleTally.getStuffTallyId(),
+							singleTally.getStuffId(), stuffReq.getNoOfPackagesStuffed(), t.getSbTransId(), t.getSbNo());
+
+				}
 
 				if (!singleTally.getStuffMode().equals(e3.getStuffMode())) {
 					checkAndUpdateAudit(cid, bid, user, "Stuff Mode", e3.getStuffMode(), singleTally.getStuffMode(),
@@ -1822,10 +2390,10 @@ public class ExportStuffTallyController {
 					checkAndUpdateAudit(cid, bid, user, "Doc Number", e3.getDocNo(), singleTally.getDocNo(), e3);
 
 				}
-				System.out.println("rotation "+singleTally.getRotationNo()+" "+e3.getRotationNo());
+				System.out.println("rotation " + singleTally.getRotationNo() + " " + e3.getRotationNo());
 
 				if (!singleTally.getRotationNo().equals(e3.getRotationNo())) {
-					System.out.println("rotation "+singleTally.getRotationNo()+" "+e3.getRotationNo());
+					System.out.println("rotation " + singleTally.getRotationNo() + " " + e3.getRotationNo());
 					checkAndUpdateAudit(cid, bid, user, "Rotation No", e3.getRotationNo(), singleTally.getRotationNo(),
 							e3);
 
@@ -1833,38 +2401,30 @@ public class ExportStuffTallyController {
 
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-				if (!singleTally.getRotationDate().equals(e3.getRotationDate())) {
-					String oldRotationDate = e3.getRotationDate() != null ? dateFormat.format(e3.getRotationDate())
-							: null;
-					String newRotationDate = singleTally.getRotationDate() != null
-							? dateFormat.format(singleTally.getRotationDate())
-							: null;
+				if ((singleTally.getRotationDate() != null && !singleTally.getRotationDate().equals(e3.getRotationDate())) ||
+					    (singleTally.getRotationDate() == null && e3.getRotationDate() != null)) {
+					    String oldRotationDate = e3.getRotationDate() != null ? dateFormat.format(e3.getRotationDate()) : null;
+					    String newRotationDate = singleTally.getRotationDate() != null ? dateFormat.format(singleTally.getRotationDate()) : null;
 
-					checkAndUpdateAudit(cid, bid, user, "Rotation Date", oldRotationDate, newRotationDate, e3);
+					    checkAndUpdateAudit(cid, bid, user, "Rotation Date", oldRotationDate, newRotationDate, e3);
+					}
 
-				}
+					if ((singleTally.getBerthingDate() != null && !singleTally.getBerthingDate().equals(e3.getBerthingDate())) ||
+					    (singleTally.getBerthingDate() == null && e3.getBerthingDate() != null)) {
+					    String oldBerthingDate = e3.getBerthingDate() != null ? dateFormat.format(e3.getBerthingDate()) : null;
+					    String newBerthingDate = singleTally.getBerthingDate() != null ? dateFormat.format(singleTally.getBerthingDate()) : null;
 
-				if (!singleTally.getBerthingDate().equals(e3.getBerthingDate())) {
-					String oldRotationDate = e3.getBerthingDate() != null ? dateFormat.format(e3.getBerthingDate())
-							: null;
-					String newRotationDate = singleTally.getBerthingDate() != null
-							? dateFormat.format(singleTally.getBerthingDate())
-							: null;
+					    checkAndUpdateAudit(cid, bid, user, "Berthing Date", oldBerthingDate, newBerthingDate, e3);
+					}
 
-					checkAndUpdateAudit(cid, bid, user, "Berthing Date", oldRotationDate, newRotationDate, e3);
+					if ((singleTally.getGateOpenDate() != null && !singleTally.getGateOpenDate().equals(e3.getGateOpenDate())) ||
+					    (singleTally.getGateOpenDate() == null && e3.getGateOpenDate() != null)) {
+					    String oldGateOpenDate = e3.getGateOpenDate() != null ? dateFormat.format(e3.getGateOpenDate()) : null;
+					    String newGateOpenDate = singleTally.getGateOpenDate() != null ? dateFormat.format(singleTally.getGateOpenDate()) : null;
 
-				}
+					    checkAndUpdateAudit(cid, bid, user, "Gate Open Date", oldGateOpenDate, newGateOpenDate, e3);
+					}
 
-				if (!singleTally.getGateOpenDate().equals(e3.getGateOpenDate())) {
-					String oldRotationDate = e3.getGateOpenDate() != null ? dateFormat.format(e3.getGateOpenDate())
-							: null;
-					String newRotationDate = singleTally.getGateOpenDate() != null
-							? dateFormat.format(singleTally.getGateOpenDate())
-							: null;
-
-					checkAndUpdateAudit(cid, bid, user, "Gate Open Date", oldRotationDate, newRotationDate, e3);
-
-				}
 
 				if (!t.getTypeOfPackage().equals(existtype)) {
 
@@ -2034,11 +2594,13 @@ public class ExportStuffTallyController {
 	@PostMapping("/saveSbWiseTallyRecord")
 	private ResponseEntity<?> saveSbWiseTallyRecord(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("user") String user, @RequestBody Map<String, Object> data)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException, CloneNotSupportedException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		ExportStuffTally singleTally = mapper.readValue(mapper.writeValueAsString(data.get("singleTally")),
 				ExportStuffTally.class);
+		
+		
 
 		List<ExportStuffTally> tally = mapper.readValue(mapper.writeValueAsString(data.get("tally")),
 				new TypeReference<List<ExportStuffTally>>() {
@@ -2107,21 +2669,21 @@ public class ExportStuffTallyController {
 				return new ResponseEntity<>("Export cargo data not found", HttpStatus.CONFLICT);
 			}
 
-			List<ExportCarting> cartingData = exportcartingrepo.getDataBySbNoSbTrans(cid, bid,
-					singleTally.getSbTransId(), singleTally.getSbNo());
-
-			if (cartingData.isEmpty()) {
-				return new ResponseEntity<>("Carting data not found", HttpStatus.CONFLICT);
-			}
-
-			ExportStuffRequest stuffReq = exportstuffrepo.getDataBySbNoSbTransAndStuffReqId(cid, bid,
-					singleTally.getSbTransId(), singleTally.getSbNo(), e.getStuffId());
-
-			if (stuffReq == null) {
-				return new ResponseEntity<>("Stuffing request data not found", HttpStatus.CONFLICT);
-			}
+			
 
 			if (e.getStuffTallyId().isEmpty() || e.getStuffTallyId() == null) {
+				List<ExportCarting> cartingData = exportcartingrepo.getDataBySbNoSbTrans1(cid, bid,
+						singleTally.getSbTransId(), singleTally.getSbNo());
+
+				if (cartingData.isEmpty()) {
+					return new ResponseEntity<>("Carting data not found", HttpStatus.CONFLICT);
+				}
+				ExportStuffRequest stuffReq = exportstuffrepo.getDataBySbNoSbTransAndStuffReqId(cid, bid,
+						singleTally.getSbTransId(), singleTally.getSbNo(), e.getStuffId());
+
+				if (stuffReq == null) {
+					return new ResponseEntity<>("Stuffing request data not found", HttpStatus.CONFLICT);
+				}
 
 				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05083", "2024");
 
@@ -2177,7 +2739,8 @@ public class ExportStuffTallyController {
 					newTally.setVesselId(singleTally.getVesselId());
 					newTally.setVoyageNo(singleTally.getVoyageNo());
 					newTally.setRotationNo(singleTally.getRotationNo());
-
+                    newTally.setMovementType(singleTally.getMovementType());
+                    newTally.setCargoType(e.getCargoType());
 					newTally.setPol(sbENtry.getPol());
 					newTally.setTerminal(singleTally.getTerminal());
 					newTally.setPod(singleTally.getPod());
@@ -2247,16 +2810,16 @@ public class ExportStuffTallyController {
 					if (!grid.isEmpty()) {
 						AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
 						grid.stream().forEach(g -> {
-							if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())) >= 0) {
+							if (gridVal.get()
+									.compareTo(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())) >= 0) {
 
 								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-										.add(new BigDecimal(g.getYardPackages())));
+										.add(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
 								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
 										.add(g.getCellAreaAllocated()));
 
 								gridVal.set(gridVal.get()
-										.subtract((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-												.add(new BigDecimal(g.getYardPackages()))));
+										.subtract(new BigDecimal(g.getYardPackages()).subtract(g.getQtyTakenOut())));
 							} else {
 
 								g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
@@ -2266,9 +2829,7 @@ public class ExportStuffTallyController {
 								g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO : g.getAreaReleased())
 										.add(tenArea));
 
-								gridVal.set(gridVal.get()
-										.subtract((g.getQtyTakenOut() == null ? BigDecimal.ZERO : g.getQtyTakenOut())
-												.add(gridVal.get())));
+								gridVal.set(gridVal.get().subtract(gridVal.get()));
 							}
 
 							impexpgridrepo.save(g);
@@ -2291,8 +2852,12 @@ public class ExportStuffTallyController {
 				stuffReq.setViaNo(singleTally.getViaNo());
 				stuffReq.setEditedBy(user);
 				stuffReq.setEditedDate(new Date());
+				stuffReq.setStuffedQty((stuffReq.getStuffedQty() == null ? BigDecimal.ZERO : stuffReq.getStuffedQty())
+						.add(e.getStuffedQty()));
 
 				exportstuffrepo.save(stuffReq);
+
+				System.out.println("e.getStuffedQty() " + e.getStuffedQty());
 
 				cargo.setStuffedQty((cargo.getStuffedQty() == null ? BigDecimal.ZERO : cargo.getStuffedQty())
 						.add(e.getStuffedQty()));
@@ -2309,9 +2874,1568 @@ public class ExportStuffTallyController {
 
 					exportinvrepo.save(inv);
 				}
+			} else {
+
+				ExportStuffRequest stuffReq = exportstuffrepo.getDataBySbNoSbTransAndStuffReqId1(cid, bid,
+						singleTally.getSbTransId(), singleTally.getSbNo(), e.getStuffId());
+
+				System.out.println("e.getStuffId() " + e.getStuffId());
+				if (stuffReq == null) {
+					return new ResponseEntity<>("Stuffing request data not found", HttpStatus.CONFLICT);
+				}
+
+				List<ExportStuffTally> existingData = exportstufftallyrepo.getDataByStuffTallyId(cid, bid,
+						e.getStuffTallyId());
+
+				if (existingData.isEmpty()) {
+					return new ResponseEntity<>("Data not found stuff tally Id " + e.getStuffTallyId(),
+							HttpStatus.CONFLICT);
+				}
+
+				BigDecimal existStuffQty = existingData.stream().map(ExportStuffTally::getStuffedQty)
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+				ExportStuffTally existData = (ExportStuffTally) existingData.get(0).clone();
+				
+				final String cargoType = cargo.getCargoType();
+
+				BigDecimal totalStuffedQty = existingData.stream().map(ExportStuffTally::getStuffedQty)
+						.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+				BigDecimal val = BigDecimal.ZERO;
+
+				if (totalStuffedQty.compareTo(e.getStuffedQty()) < 0) {
+					val = e.getStuffedQty().subtract(totalStuffedQty);
+				} else if (totalStuffedQty.compareTo(e.getStuffedQty()) > 0) {
+					val = totalStuffedQty.subtract(e.getStuffedQty());
+				}
+
+				System.out.println("val " + val);
+				System.out.println("t.getCustomsSealNo() " + e.getCustomsSealNo());
+
+				for (ExportStuffTally exist : existingData) {
+
+					ExportCarting existCar = exportcartingrepo.getDataBySbNoSbTransAndLineNoAndCartingTransId(cid, bid,
+							singleTally.getSbTransId(), singleTally.getSbNo(), exist.getCartingTransId(),
+							exist.getCartingLineId());
+
+					if (existCar != null) {
+
+						exist.setVesselId(singleTally.getVesselId());
+						exist.setVoyageNo(singleTally.getVoyageNo());
+						exist.setViaNo(singleTally.getViaNo());
+						exist.setPod(singleTally.getPod());
+						exist.setFinalPod(singleTally.getFinalPod());
+						exist.setBerthingDate(singleTally.getBerthingDate());
+						exist.setTerminal(singleTally.getTerminal());
+						exist.setRotationNo(singleTally.getRotationNo());
+						exist.setRotationDate(singleTally.getBerthingDate());
+						exist.setStuffMode(singleTally.getStuffMode());
+						exist.setAgentSealNo(e.getAgentSealNo());
+						exist.setCustomsSealNo(e.getCustomsSealNo());
+						exist.setTareWeight(e.getTareWeight());
+						exist.setCargoType(e.getCargoType());
+						exist.setTotalGrossWeight(e.getCargoWeight());
+						exist.setCargoWeight(e.getCargoWeight());
+
+						if (totalStuffedQty.compareTo(e.getStuffedQty()) < 0) {
+							BigDecimal remainingQty = existCar.getActualNoOfPackages()
+									.subtract(existCar.getStuffedNoOfPackages());
+
+							if (remainingQty.compareTo(BigDecimal.ZERO) > 0 && val.compareTo(BigDecimal.ZERO) > 0) {
+
+								if (exist.getStuffId().equals(e.getStuffId())) {
+									BigDecimal qty = BigDecimal.ZERO;
+
+									if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+										if (remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
+										} else if (remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = remainingQty;
+										} else {
+											qty = remainingQty;
+										}
+
+									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+										if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
+										} else if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = val;
+										} else {
+											qty = val;
+										}
+
+									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+										if (remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) > 0) {
+											qty = stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty());
+										} else if (remainingQty.compareTo(stuffReq.getNoOfPackagesStuffed()
+												.subtract(stuffReq.getStuffedQty())) < 0) {
+											qty = remainingQty;
+										} else {
+											qty = remainingQty;
+										}
+									}
+
+									BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
+											.divide(existCar.getYardPackages());
+
+									exist.setStuffedQty(exist.getStuffedQty().add(qty));
+									exist.setBalanceQty(exist.getBalanceQty().subtract(qty));
+									exist.setAreaReleased(exist.getAreaReleased().add(area));
+									stuffReq.setStuffedQty(stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+											: stuffReq.getStuffedQty().add(qty));
+
+									val = val.subtract(qty);
+
+									existCar.setStuffedNoOfPackages(existCar.getStuffedNoOfPackages().add(qty));
+
+									exportcartingrepo.save(existCar);
+
+									List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+											existCar.getCartingTransId(), existCar.getCartingLineId());
+
+									if (!grid.isEmpty()) {
+										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+										grid.stream().forEach(g -> {
+											if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+													.subtract(g.getQtyTakenOut())) >= 0) {
+
+												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+														: g.getQtyTakenOut())
+														.add(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())));
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+
+												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+														: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get().subtract(new BigDecimal(g.getYardPackages())
+														.subtract(g.getQtyTakenOut())));
+											} else {
+
+												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+														: g.getQtyTakenOut()).add(gridVal.get()));
+												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+														: g.getAreaReleased()).add(tenArea));
+
+												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											}
+
+											impexpgridrepo.save(g);
+										});
+									}
+
+								}
+
+								else {
+									BigDecimal qty = BigDecimal.ZERO;
+
+									ExportStuffRequest req = exportstuffrepo.getDataBySbNoSbTransAndStuffReqLineId3(cid,
+											bid, singleTally.getSbTransId(), singleTally.getSbNo(), exist.getStuffId());
+
+									if (req != null) {
+										if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+											if (remainingQty.compareTo(
+													req.getNoOfPackagesStuffed().subtract(req.getStuffedQty())) > 0) {
+												qty = req.getNoOfPackagesStuffed().subtract(req.getStuffedQty());
+											} else if (remainingQty.compareTo(
+													req.getNoOfPackagesStuffed().subtract(req.getStuffedQty())) > 0) {
+												qty = remainingQty;
+											} else {
+												qty = remainingQty;
+											}
+
+										} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+											if (val.compareTo(
+													req.getNoOfPackagesStuffed().subtract(req.getStuffedQty())) > 0) {
+												qty = req.getNoOfPackagesStuffed().subtract(req.getStuffedQty());
+											} else if (val.compareTo(
+													req.getNoOfPackagesStuffed().subtract(req.getStuffedQty())) > 0) {
+												qty = val;
+											} else {
+												qty = val;
+											}
+
+										} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+											if (remainingQty.compareTo(
+													req.getNoOfPackagesStuffed().subtract(req.getStuffedQty())) > 0) {
+												qty = req.getNoOfPackagesStuffed().subtract(req.getStuffedQty());
+											} else if (remainingQty.compareTo(
+													req.getNoOfPackagesStuffed().subtract(req.getStuffedQty())) > 0) {
+												qty = remainingQty;
+											} else {
+												qty = remainingQty;
+											}
+										}
+
+										BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
+												.divide(existCar.getYardPackages());
+
+										exist.setStuffedQty(exist.getStuffedQty().add(qty));
+										exist.setBalanceQty(exist.getBalanceQty().subtract(qty));
+										exist.setAreaReleased(exist.getAreaReleased().add(area));
+
+										req.setStuffedQty(req.getStuffedQty() == null ? BigDecimal.ZERO
+												: req.getStuffedQty().add(qty));
+
+										exportstuffrepo.save(req);
+
+										val = val.subtract(qty);
+
+										existCar.setStuffedNoOfPackages(existCar.getStuffedNoOfPackages().add(qty));
+
+										exportcartingrepo.save(existCar);
+
+										List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+												existCar.getCartingTransId(), existCar.getCartingLineId());
+
+										if (!grid.isEmpty()) {
+											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+											grid.stream().forEach(g -> {
+												if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+														.subtract(g.getQtyTakenOut())) >= 0) {
+
+													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+															: g.getQtyTakenOut())
+															.add(new BigDecimal(g.getYardPackages())
+																	.subtract(g.getQtyTakenOut())));
+
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(new BigDecimal(g.getYardPackages())
+																	.subtract(g.getQtyTakenOut())))
+															.divide(new BigDecimal(g.getYardPackages()),
+																	BigDecimal.ROUND_HALF_UP);
+
+													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+															: g.getAreaReleased()).add(tenArea));
+
+													gridVal.set(
+															gridVal.get().subtract(new BigDecimal(g.getYardPackages())
+																	.subtract(g.getQtyTakenOut())));
+												} else {
+
+													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+															: g.getQtyTakenOut()).add(gridVal.get()));
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(gridVal.get()))
+															.divide(new BigDecimal(g.getYardPackages()),
+																	BigDecimal.ROUND_HALF_UP);
+													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+															: g.getAreaReleased()).add(tenArea));
+
+													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												}
+
+												impexpgridrepo.save(g);
+											});
+
+										}
+									}
+
+								}
+
+							}
+
+							if (val.compareTo(BigDecimal.ZERO) > 0) {
+								List<ExportCarting> cartingData1 = exportcartingrepo.getDataBySbNoSbTrans1(cid, bid,
+										singleTally.getSbTransId(), singleTally.getSbNo());
+
+								if (!cartingData1.isEmpty()) {
+
+									for (ExportCarting c : cartingData1) {
+										ExportStuffTally exist1 = exportstufftallyrepo
+												.getDataByStuffTallyIdANDStuffIdAndCartingTransId2(cid, bid,
+														e.getStuffTallyId(), e.getStuffId(), c.getCartingTransId(), singleTally.getSbNo(),
+														singleTally.getSbTransId());
+
+										BigDecimal remainingQty1 = c.getActualNoOfPackages()
+												.subtract(c.getStuffedNoOfPackages());
+
+										if (stuffReq.getNoOfPackagesStuffed().subtract(stuffReq.getStuffedQty())
+												.compareTo(BigDecimal.ZERO) > 0 && val.compareTo(BigDecimal.ZERO) > 0
+												&& remainingQty1.compareTo(BigDecimal.ZERO) > 0) {
+
+											if (val.compareTo(BigDecimal.ZERO) <= 0) {
+												break;
+											}
+
+											if (exist1 != null) {
+												BigDecimal qty = BigDecimal.ZERO;
+
+												if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+													if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) > 0) {
+														qty = stuffReq.getNoOfPackagesStuffed()
+																.subtract(stuffReq.getStuffedQty());
+													} else if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) < 0) {
+														qty = remainingQty1;
+													} else {
+														qty = remainingQty1;
+													}
+
+												} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+													if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) > 0) {
+														qty = stuffReq.getNoOfPackagesStuffed()
+																.subtract(stuffReq.getStuffedQty());
+													} else if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) < 0) {
+														qty = val;
+													} else {
+														qty = val;
+													}
+
+												} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+													if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) > 0) {
+														qty = stuffReq.getNoOfPackagesStuffed()
+																.subtract(stuffReq.getStuffedQty());
+													} else if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) < 0) {
+														qty = remainingQty1;
+													} else {
+														qty = remainingQty1;
+													}
+												}
+
+												System.out.println("qty11 " + qty);
+
+												BigDecimal area = (c.getAreaOccupied().multiply(qty))
+														.divide(c.getYardPackages());
+
+												exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
+												exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
+												exist1.setAreaReleased(exist1.getAreaReleased().add(area));
+
+												exist1.setVesselId(singleTally.getVesselId());
+												exist1.setVoyageNo(singleTally.getVoyageNo());
+												exist1.setViaNo(singleTally.getViaNo());
+												exist1.setPod(singleTally.getPod());
+												exist1.setFinalPod(singleTally.getFinalPod());
+												exist1.setBerthingDate(singleTally.getBerthingDate());
+												exist1.setTerminal(singleTally.getTerminal());
+												exist1.setRotationNo(singleTally.getRotationNo());
+												exist1.setRotationDate(singleTally.getBerthingDate());
+												exist1.setStuffMode(singleTally.getStuffMode());
+												exist1.setAgentSealNo(e.getAgentSealNo());
+												exist1.setCustomsSealNo(e.getCustomsSealNo());
+												exist1.setTareWeight(e.getTareWeight());
+												exist1.setCargoType(e.getCargoType());
+												exist1.setTotalGrossWeight(e.getCargoWeight());
+												exist1.setCargoWeight(e.getCargoWeight());
+
+												exportstufftallyrepo.save(exist1);
+												stuffReq.setStuffedQty(
+														stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+																: stuffReq.getStuffedQty().add(qty));
+
+												val = val.subtract(qty);
+
+												c.setStuffedNoOfPackages(
+														(c.getStuffedNoOfPackages() == null ? BigDecimal.ZERO
+																: c.getStuffedNoOfPackages()).add(qty));
+
+												exportcartingrepo.save(c);
+
+												List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+														c.getCartingTransId(), c.getCartingLineId());
+
+												if (!grid.isEmpty()) {
+													AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+													grid.stream().forEach(g -> {
+														if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())) >= 0) {
+
+															g.setQtyTakenOut(
+																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																			: g.getQtyTakenOut())
+																			.add(new BigDecimal(g.getYardPackages())
+																					.subtract(g.getQtyTakenOut())));
+
+															BigDecimal tenArea = (g.getCellAreaAllocated()
+																	.multiply(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())))
+																	.divide(new BigDecimal(g.getYardPackages()),
+																			BigDecimal.ROUND_HALF_UP);
+
+															g.setAreaReleased(
+																	(g.getAreaReleased() == null ? BigDecimal.ZERO
+																			: g.getAreaReleased()).add(tenArea));
+
+															gridVal.set(gridVal.get()
+																	.subtract(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())));
+														} else {
+
+															g.setQtyTakenOut(
+																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																			: g.getQtyTakenOut()).add(gridVal.get()));
+															BigDecimal tenArea = (g.getCellAreaAllocated()
+																	.multiply(gridVal.get()))
+																	.divide(new BigDecimal(g.getYardPackages()),
+																			BigDecimal.ROUND_HALF_UP);
+															g.setAreaReleased(
+																	(g.getAreaReleased() == null ? BigDecimal.ZERO
+																			: g.getAreaReleased()).add(tenArea));
+
+															gridVal.set(gridVal.get().subtract(gridVal.get()));
+														}
+
+														impexpgridrepo.save(g);
+													});
+												}
+											} else {
+												BigDecimal qty = BigDecimal.ZERO;
+
+												if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+													if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) > 0) {
+														qty = stuffReq.getNoOfPackagesStuffed()
+																.subtract(stuffReq.getStuffedQty());
+													} else if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) < 0) {
+														qty = remainingQty1;
+													} else {
+														qty = remainingQty1;
+													}
+
+												} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+													if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) > 0) {
+														qty = stuffReq.getNoOfPackagesStuffed()
+																.subtract(stuffReq.getStuffedQty());
+													} else if (val.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) < 0) {
+														qty = val;
+													} else {
+														qty = val;
+													}
+
+												} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+
+													if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) > 0) {
+														qty = stuffReq.getNoOfPackagesStuffed()
+																.subtract(stuffReq.getStuffedQty());
+													} else if (remainingQty1.compareTo(stuffReq.getNoOfPackagesStuffed()
+															.subtract(stuffReq.getStuffedQty())) < 0) {
+														qty = remainingQty1;
+													} else {
+														qty = remainingQty1;
+													}
+
+												}
+
+												BigDecimal area = (c.getAreaOccupied().multiply(qty))
+														.divide(c.getYardPackages());
+
+												ExportStuffTally newTally = new ExportStuffTally();
+
+												int sr = exportstufftallyrepo.countOfStuffRecords(cid, bid,
+														e.getStuffTallyId());
+
+												newTally.setCompanyId(cid);
+												newTally.setBranchId(bid);
+												newTally.setStuffTallyId(e.getStuffTallyId());
+												newTally.setSbTransId(c.getSbTransId());
+												newTally.setStuffTallyLineId(sr + 1);
+												newTally.setProfitcentreId(c.getProfitcentreId());
+												newTally.setCartingTransId(c.getCartingTransId());
+												newTally.setCartingLineId(c.getCartingLineId());
+												newTally.setSbLineId(c.getSbLineNo());
+												newTally.setSbNo(c.getSbNo());
+												newTally.setStuffTallyWoTransId(singleTally.getStuffTallyWoTransId());
+												newTally.setStuffTallyCutWoTransDate(
+														singleTally.getStuffTallyCutWoTransDate());
+												newTally.setStuffTallyDate(e.getStuffTallyDate());
+												newTally.setStuffId(stuffReq.getStuffReqId());
+												newTally.setStuffDate(stuffReq.getStuffReqDate());
+												newTally.setSbDate(cargo.getSbDate());
+												newTally.setShift(singleTally.getShift());
+												newTally.setAgentSealNo(e.getAgentSealNo());
+												newTally.setVesselId(singleTally.getVesselId());
+												newTally.setVoyageNo(singleTally.getVoyageNo());
+												newTally.setRotationNo(singleTally.getRotationNo());
+												newTally.setPol(sbENtry.getPol());
+												newTally.setTerminal(singleTally.getTerminal());
+												newTally.setPod(singleTally.getPod());
+												newTally.setFinalPod(singleTally.getFinalPod());
+												newTally.setContainerNo(e.getContainerNo());
+												newTally.setContainerSize(e.getContainerSize());
+												newTally.setPeriodFrom(singleTally.getPeriodFrom());
+												newTally.setGateInId(stuffReq.getGateInId());
+												newTally.setContainerStatus(e.getContainerStatus());
+												newTally.setContainerType(e.getContainerType());
+												newTally.setContainerCondition(stuffReq.getContainerHealth());
+												newTally.setYardPackages(c.getYardPackages());
+												newTally.setCellAreaAllocated(e.getCellAreaAllocated());
+												newTally.setOnAccountOf(stuffReq.getOnAccountOf());
+												newTally.setCha(sbENtry.getCha());
+												newTally.setTotalGrossWeight(e.getCargoWeight());
+												newTally.setCargoWeight(e.getCargoWeight());
+												newTally.setStuffRequestQty(e.getStuffRequestQty());
+												newTally.setStuffedQty(qty);
+												newTally.setBalanceQty(c.getYardPackages().subtract(qty));
+												newTally.setTareWeight(e.getTareWeight());
+												newTally.setAreaReleased(area);
+												newTally.setGenSetRequired(singleTally.getGenSetRequired());
+												newTally.setHaz(singleTally.getHaz());
+												newTally.setImoCode(sbENtry.getImoCode());
+												newTally.setShippingAgent(stuffReq.getShippingAgent());
+												newTally.setShippingLine(stuffReq.getShippingLine());
+												newTally.setCommodity(singleTally.getCommodity());
+												newTally.setCustomsSealNo(e.getCustomsSealNo());
+												newTally.setViaNo(singleTally.getViaNo());
+												newTally.setCartingDate(c.getCartingTransDate());
+												newTally.setExporterName(sbENtry.getExporterName());
+												newTally.setConsignee(singleTally.getConsignee());
+												newTally.setFob(singleTally.getFob());
+												newTally.setBerthingDate(singleTally.getBerthingDate());
+												newTally.setGateOpenDate(singleTally.getGateOpenDate());
+												newTally.setDocType(singleTally.getDocType());
+												newTally.setDocNo(singleTally.getDocNo());
+												newTally.setStatus("A");
+												newTally.setCreatedBy(user);
+												newTally.setCreatedDate(new Date());
+												newTally.setApprovedBy(user);
+												newTally.setApprovedDate(new Date());
+												newTally.setDeliveryOrderNo(e.getDeliveryOrderNo());
+												newTally.setStuffMode(singleTally.getStuffMode());
+												newTally.setStuffLineId(stuffReq.getStuffReqLineId());
+												newTally.setTypeOfPackage(cargo.getTypeOfPackage());
+												newTally.setSealType(singleTally.getSealType());
+												newTally.setRotationDate(singleTally.getRotationDate());
+
+												exportstufftallyrepo.save(newTally);
+
+												stuffReq.setStuffedQty(
+														stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+																: stuffReq.getStuffedQty().add(qty));
+
+												c.setStuffedNoOfPackages(
+														(c.getStuffedNoOfPackages() == null ? BigDecimal.ZERO
+																: c.getStuffedNoOfPackages()).add(qty));
+
+												exportcartingrepo.save(c);
+
+												val = val.subtract(qty);
+
+												List<Impexpgrid> grid = impexpgridrepo.getDataForTally(cid, bid,
+														c.getCartingTransId(), c.getCartingLineId());
+
+												if (!grid.isEmpty()) {
+													AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+													grid.stream().forEach(g -> {
+														if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())) >= 0) {
+
+															g.setQtyTakenOut(
+																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																			: g.getQtyTakenOut())
+																			.add(new BigDecimal(g.getYardPackages())
+																					.subtract(g.getQtyTakenOut())));
+
+															BigDecimal tenArea = (g.getCellAreaAllocated()
+																	.multiply(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())))
+																	.divide(new BigDecimal(g.getYardPackages()),
+																			BigDecimal.ROUND_HALF_UP);
+
+															g.setAreaReleased(
+																	(g.getAreaReleased() == null ? BigDecimal.ZERO
+																			: g.getAreaReleased()).add(tenArea));
+
+															gridVal.set(gridVal.get()
+																	.subtract(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())));
+														} else {
+
+															g.setQtyTakenOut(
+																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																			: g.getQtyTakenOut()).add(gridVal.get()));
+															BigDecimal tenArea = (g.getCellAreaAllocated()
+																	.multiply(gridVal.get()))
+																	.divide(new BigDecimal(g.getYardPackages()),
+																			BigDecimal.ROUND_HALF_UP);
+															g.setAreaReleased(
+																	(g.getAreaReleased() == null ? BigDecimal.ZERO
+																			: g.getAreaReleased()).add(tenArea));
+
+															gridVal.set(gridVal.get().subtract(gridVal.get()));
+														}
+
+														impexpgridrepo.save(g);
+													});
+												}
+											}
+										}
+
+									}
+								}
+
+							}
+
+						
+
+							if (val.compareTo(BigDecimal.ZERO) > 0) {
+
+								if ((cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())))
+										.compareTo(BigDecimal.ZERO) > 0) {
+									List<ExportCarting> cartingData1 = exportcartingrepo.getDataBySbNoSbTrans1(cid, bid,
+											singleTally.getSbTransId(), singleTally.getSbNo());
+
+									if (cartingData1.isEmpty()) {
+										return new ResponseEntity<>("Carting data not found", HttpStatus.CONFLICT);
+									}
+
+									List<ExportCarting> cartingData2 = new ArrayList<>();
+
+									for (ExportCarting c : cartingData1) {
+
+										if (val.compareTo(BigDecimal.ZERO) > 0 && (cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())))
+												.compareTo(BigDecimal.ZERO) > 0) {
+											ExportStuffTally exist1 = exportstufftallyrepo
+													.getDataByStuffTallyIdANDStuffIdAndCartingTransId2(cid, bid,
+															e.getStuffTallyId(), e.getStuffId(), c.getCartingTransId(),
+															singleTally.getSbNo(),singleTally.getSbTransId());
+
+											BigDecimal remainingQty1 = c.getActualNoOfPackages()
+													.subtract(c.getStuffedNoOfPackages());
+
+									
+
+											if (exist1 != null && remainingQty1.compareTo(BigDecimal.ZERO) > 0) {
+												BigDecimal qty = BigDecimal.ZERO;
+
+												if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+													if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+														qty = remainingQty1;
+													}
+													else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+														qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+													}
+													else {
+														qty = remainingQty1;
+													}
+													
+													
+
+												} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+													if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)>0){
+														qty = val;
+													}
+													else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)<0){
+														qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+													}
+													else {
+														qty = val;
+													}
+													
+													
+
+												} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+
+													if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+														qty = remainingQty1;
+													}
+													else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+														qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+													}
+													else {
+														qty = remainingQty1;
+													}
+
+												}
+
+								
+
+												BigDecimal area = (c.getAreaOccupied().multiply(qty))
+														.divide(c.getYardPackages());
+
+												exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
+												exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
+												exist1.setAreaReleased(exist1.getAreaReleased().add(area));
+
+												exist1.setVesselId(singleTally.getVesselId());
+												exist1.setVoyageNo(singleTally.getVoyageNo());
+												exist1.setViaNo(singleTally.getViaNo());
+												exist1.setPod(singleTally.getPod());
+												exist1.setFinalPod(singleTally.getFinalPod());
+												exist1.setBerthingDate(singleTally.getBerthingDate());
+												exist1.setTerminal(singleTally.getTerminal());
+												exist1.setRotationNo(singleTally.getRotationNo());
+												exist1.setRotationDate(singleTally.getBerthingDate());
+												exist1.setStuffMode(singleTally.getStuffMode());
+												exist1.setAgentSealNo(e.getAgentSealNo());
+												exist1.setCustomsSealNo(e.getCustomsSealNo());
+												exist1.setTareWeight(e.getTareWeight());
+												exist1.setCargoType(e.getCargoType());
+												exist1.setTotalGrossWeight(e.getCargoWeight());
+												exist1.setCargoWeight(e.getCargoWeight());
+
+												exportstufftallyrepo.save(exist1);
+
+												stuffReq.setStuffedQty(
+														stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+																: stuffReq.getStuffedQty().add(qty));
+												stuffReq.setNoOfPackagesStuffed(
+														stuffReq.getNoOfPackagesStuffed().add(qty));
+
+												
+												cargo.setStuffReqQty(
+														cargo.getStuffReqQty() + Integer.parseInt(qty.toString()));
+
+												val = val.subtract(qty);
+
+												c.setStuffedNoOfPackages(c.getStuffedNoOfPackages().add(qty));
+
+												exportcartingrepo.save(c);
+
+												List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+														c.getCartingTransId(), c.getCartingLineId());
+
+												if (!grid.isEmpty()) {
+													AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+													grid.stream().forEach(g -> {
+														if (gridVal.get().compareTo(new BigDecimal(g.getYardPackages())
+																.subtract(g.getQtyTakenOut())) >= 0) {
+
+															g.setQtyTakenOut(
+																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																			: g.getQtyTakenOut())
+																			.add(new BigDecimal(g.getYardPackages())
+																					.subtract(g.getQtyTakenOut())));
+
+															BigDecimal tenArea = (g.getCellAreaAllocated()
+																	.multiply(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())))
+																	.divide(new BigDecimal(g.getYardPackages()),
+																			BigDecimal.ROUND_HALF_UP);
+
+															g.setAreaReleased(
+																	(g.getAreaReleased() == null ? BigDecimal.ZERO
+																			: g.getAreaReleased()).add(tenArea));
+
+															gridVal.set(gridVal.get()
+																	.subtract(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())));
+														} else {
+
+															g.setQtyTakenOut(
+																	(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																			: g.getQtyTakenOut()).add(gridVal.get()));
+															BigDecimal tenArea = (g.getCellAreaAllocated()
+																	.multiply(gridVal.get()))
+																	.divide(new BigDecimal(g.getYardPackages()),
+																			BigDecimal.ROUND_HALF_UP);
+															g.setAreaReleased(
+																	(g.getAreaReleased() == null ? BigDecimal.ZERO
+																			: g.getAreaReleased()).add(tenArea));
+
+															gridVal.set(gridVal.get().subtract(gridVal.get()));
+														}
+
+														impexpgridrepo.save(g);
+													});
+												}
+											} else {
+												cartingData2.add(c);
+											}
+										}
+
+									}
+
+									
+
+									if (val.compareTo(BigDecimal.ZERO) > 0 && cartingData2.size() > 0) {
+
+										for (ExportCarting c : cartingData2) {
+											if (val.compareTo(BigDecimal.ZERO) > 0 && (cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())))
+													.compareTo(BigDecimal.ZERO) > 0) {
+												BigDecimal remainingQty1 = c.getActualNoOfPackages()
+														.subtract(c.getStuffedNoOfPackages());
+
+								
+
+												if (remainingQty1.compareTo(BigDecimal.ZERO) > 0) {
+													BigDecimal qty = BigDecimal.ZERO;
+
+													if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+														if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+															qty = remainingQty1;
+														}
+														else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+															qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+														}
+														else {
+															qty = remainingQty1;
+														}
+														
+														
+
+													} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+														if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)>0){
+															qty = val;
+														}
+														else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(val)<0){
+															qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+														}
+														else {
+															qty = val;
+														}
+														
+														
+
+													} else if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+
+														if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)>0){
+															qty = remainingQty1;
+														}
+														else if(cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty())).compareTo(remainingQty1)<0){
+															qty = cargo.getCartedPackages().subtract(new BigDecimal(cargo.getStuffReqQty()));
+														}
+														else {
+															qty = remainingQty1;
+														}
+
+													}
+
+													BigDecimal area = (c.getAreaOccupied().multiply(qty))
+															.divide(c.getYardPackages());
+
+													ExportStuffTally newTally = new ExportStuffTally();
+
+													int sr = exportstufftallyrepo.countOfStuffRecords(cid, bid,
+															e.getStuffTallyId());
+
+													newTally.setCompanyId(cid);
+													newTally.setBranchId(bid);
+													newTally.setStuffTallyId(e.getStuffTallyId());
+													newTally.setSbTransId(c.getSbTransId());
+													newTally.setStuffTallyLineId(sr + 1);
+													newTally.setProfitcentreId(c.getProfitcentreId());
+													newTally.setCartingTransId(c.getCartingTransId());
+													newTally.setCartingLineId(c.getCartingLineId());
+													newTally.setSbLineId(c.getSbLineNo());
+													newTally.setSbNo(c.getSbNo());
+													newTally.setStuffTallyWoTransId(
+															singleTally.getStuffTallyWoTransId());
+													newTally.setStuffTallyCutWoTransDate(
+															singleTally.getStuffTallyCutWoTransDate());
+													newTally.setStuffTallyDate(e.getStuffTallyDate());
+													newTally.setStuffId(stuffReq.getStuffReqId());
+													newTally.setStuffDate(stuffReq.getStuffReqDate());
+													newTally.setSbDate(cargo.getSbDate());
+													newTally.setShift(singleTally.getShift());
+													newTally.setAgentSealNo(e.getAgentSealNo());
+													newTally.setVesselId(singleTally.getVesselId());
+													newTally.setVoyageNo(singleTally.getVoyageNo());
+													newTally.setRotationNo(singleTally.getRotationNo());
+													newTally.setPol(sbENtry.getPol());
+													newTally.setTerminal(singleTally.getTerminal());
+													newTally.setPod(singleTally.getPod());
+													newTally.setFinalPod(singleTally.getFinalPod());
+													newTally.setContainerNo(e.getContainerNo());
+													newTally.setContainerSize(e.getContainerSize());
+													newTally.setPeriodFrom(singleTally.getPeriodFrom());
+													newTally.setGateInId(stuffReq.getGateInId());
+													newTally.setContainerStatus(e.getContainerStatus());
+													newTally.setContainerType(e.getContainerType());
+													newTally.setContainerCondition(stuffReq.getContainerHealth());
+													newTally.setYardPackages(c.getYardPackages());
+													newTally.setCellAreaAllocated(e.getCellAreaAllocated());
+													newTally.setOnAccountOf(stuffReq.getOnAccountOf());
+													newTally.setCha(sbENtry.getCha());
+													newTally.setTotalGrossWeight(e.getCargoWeight());
+													newTally.setCargoWeight(e.getCargoWeight());
+													newTally.setStuffRequestQty(e.getStuffRequestQty());
+													newTally.setStuffedQty(qty);
+													newTally.setBalanceQty(c.getYardPackages().subtract(qty));
+													newTally.setTareWeight(e.getTareWeight());
+													newTally.setAreaReleased(area);
+													newTally.setGenSetRequired(singleTally.getGenSetRequired());
+													newTally.setHaz(singleTally.getHaz());
+													newTally.setImoCode(sbENtry.getImoCode());
+													newTally.setShippingAgent(stuffReq.getShippingAgent());
+													newTally.setShippingLine(stuffReq.getShippingLine());
+													newTally.setCommodity(singleTally.getCommodity());
+													newTally.setCustomsSealNo(e.getCustomsSealNo());
+													newTally.setViaNo(singleTally.getViaNo());
+													newTally.setCartingDate(c.getCartingTransDate());
+													newTally.setExporterName(sbENtry.getExporterName());
+													newTally.setConsignee(singleTally.getConsignee());
+													newTally.setFob(singleTally.getFob());
+													newTally.setBerthingDate(singleTally.getBerthingDate());
+													newTally.setGateOpenDate(singleTally.getGateOpenDate());
+													newTally.setDocType(singleTally.getDocType());
+													newTally.setDocNo(singleTally.getDocNo());
+													newTally.setStatus("A");
+													newTally.setCreatedBy(user);
+													newTally.setCreatedDate(new Date());
+													newTally.setApprovedBy(user);
+													newTally.setApprovedDate(new Date());
+													newTally.setDeliveryOrderNo(e.getDeliveryOrderNo());
+													newTally.setStuffMode(singleTally.getStuffMode());
+													newTally.setStuffLineId(stuffReq.getStuffReqLineId());
+													newTally.setTypeOfPackage(cargo.getTypeOfPackage());
+													newTally.setSealType(singleTally.getSealType());
+													newTally.setRotationDate(singleTally.getRotationDate());
+
+													exportstufftallyrepo.save(newTally);
+
+													stuffReq.setStuffedQty(
+															stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+																	: stuffReq.getStuffedQty().add(qty));
+													stuffReq.setNoOfPackagesStuffed(
+															stuffReq.getNoOfPackagesStuffed().add(qty));
+
+													System.out.println(
+															"cargo.getStuffReqQty()2 " + cargo.getStuffReqQty());
+													cargo.setStuffReqQty(
+															cargo.getStuffReqQty() + Integer.parseInt(qty.toString()));
+
+													c.setStuffedNoOfPackages(c.getStuffedNoOfPackages().add(qty));
+
+													exportcartingrepo.save(c);
+
+													val = val.subtract(qty);
+
+													List<Impexpgrid> grid = impexpgridrepo.getDataForTally(cid, bid,
+															c.getCartingTransId(), c.getCartingLineId());
+
+													if (!grid.isEmpty()) {
+														AtomicReference<BigDecimal> gridVal = new AtomicReference<>(
+																qty);
+														grid.stream().forEach(g -> {
+															if (gridVal.get()
+																	.compareTo(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())) >= 0) {
+
+																g.setQtyTakenOut(
+																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																				: g.getQtyTakenOut())
+																				.add(new BigDecimal(g.getYardPackages())
+																						.subtract(g.getQtyTakenOut())));
+
+																BigDecimal tenArea = (g.getCellAreaAllocated()
+																		.multiply(new BigDecimal(g.getYardPackages())
+																				.subtract(g.getQtyTakenOut())))
+																		.divide(new BigDecimal(g.getYardPackages()),
+																				BigDecimal.ROUND_HALF_UP);
+
+																g.setAreaReleased(
+																		(g.getAreaReleased() == null ? BigDecimal.ZERO
+																				: g.getAreaReleased()).add(tenArea));
+
+																gridVal.set(gridVal.get()
+																		.subtract(new BigDecimal(g.getYardPackages())
+																				.subtract(g.getQtyTakenOut())));
+															} else {
+
+																g.setQtyTakenOut(
+																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																				: g.getQtyTakenOut())
+																				.add(gridVal.get()));
+																BigDecimal tenArea = (g.getCellAreaAllocated()
+																		.multiply(gridVal.get()))
+																		.divide(new BigDecimal(g.getYardPackages()),
+																				BigDecimal.ROUND_HALF_UP);
+																g.setAreaReleased(
+																		(g.getAreaReleased() == null ? BigDecimal.ZERO
+																				: g.getAreaReleased()).add(tenArea));
+
+																gridVal.set(gridVal.get().subtract(gridVal.get()));
+															}
+
+															impexpgridrepo.save(g);
+														});
+													}
+
+												}
+											}
+
+										}
+
+									}
+
+								}
+
+							}
+
+							if (val.compareTo(BigDecimal.ZERO) > 0) {
+
+								BigDecimal incrementVal = e.getStuffedQty().subtract(stuffReq.getNoOfPackagesStuffed());
+
+								List<ExportStuffRequest> remainingStuffReq = exportstuffrepo.getDataBySbNoSbTrans(cid,
+										bid, singleTally.getSbTransId(), singleTally.getSbNo(), e.getStuffId());
+
+								if (!remainingStuffReq.isEmpty()) {
+									for (ExportStuffRequest s : remainingStuffReq) {
+										if (incrementVal.compareTo(BigDecimal.ZERO) != 0
+												&& val.compareTo(BigDecimal.ZERO) > 0) {
+
+											List<ExportCarting> cartingData1 = exportcartingrepo.getDataBySbNoSbTrans1(
+													cid, bid, singleTally.getSbTransId(), singleTally.getSbNo());
+
+											if (!cartingData1.isEmpty()) {
+												for (ExportCarting c : cartingData1) {
+
+													BigDecimal remainingQty1 = c.getActualNoOfPackages()
+															.subtract(c.getStuffedNoOfPackages());
+
+													if (val.compareTo(BigDecimal.ZERO) <= 0) {
+														break;
+													}
+
+													BigDecimal qty = BigDecimal.ZERO;
+
+													if (remainingQty1.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+														if (remainingQty1.compareTo(s.getNoOfPackagesStuffed()
+																.subtract(s.getStuffedQty())) > 0) {
+															qty = s.getNoOfPackagesStuffed()
+																	.subtract(s.getStuffedQty());
+														} else if (remainingQty1.compareTo(s.getNoOfPackagesStuffed()
+																.subtract(s.getStuffedQty())) < 0) {
+															qty = remainingQty1;
+														} else {
+															qty = remainingQty1;
+														}
+
+													} else if (remainingQty1.subtract(val)
+															.compareTo(BigDecimal.ZERO) > 0) {
+														if (val.compareTo(s.getNoOfPackagesStuffed()
+																.subtract(s.getStuffedQty())) > 0) {
+															qty = s.getNoOfPackagesStuffed()
+																	.subtract(s.getStuffedQty());
+														} else if (val.compareTo(s.getNoOfPackagesStuffed()
+																.subtract(s.getStuffedQty())) < 0) {
+															qty = val;
+														} else {
+															qty = val;
+														}
+													} else if (remainingQty1.subtract(val)
+															.compareTo(BigDecimal.ZERO) < 0) {
+														if (remainingQty1.compareTo(s.getNoOfPackagesStuffed()
+																.subtract(s.getStuffedQty())) > 0) {
+															qty = s.getNoOfPackagesStuffed()
+																	.subtract(s.getStuffedQty());
+														} else if (remainingQty1.compareTo(s.getNoOfPackagesStuffed()
+																.subtract(s.getStuffedQty())) < 0) {
+															qty = remainingQty1;
+														} else {
+															qty = remainingQty1;
+														}
+													}
+
+													BigDecimal area = (c.getAreaOccupied().multiply(qty))
+															.divide(c.getYardPackages());
+
+													ExportStuffTally newTally = new ExportStuffTally();
+
+													int sr = exportstufftallyrepo.countOfStuffRecords(cid, bid,
+															e.getStuffTallyId());
+
+													newTally.setCompanyId(cid);
+													newTally.setBranchId(bid);
+													newTally.setStuffTallyId(e.getStuffTallyId());
+													newTally.setSbTransId(c.getSbTransId());
+													newTally.setStuffTallyLineId(sr + 1);
+													newTally.setProfitcentreId(c.getProfitcentreId());
+													newTally.setCartingTransId(c.getCartingTransId());
+													newTally.setCartingLineId(c.getCartingLineId());
+													newTally.setSbLineId(c.getSbLineNo());
+													newTally.setSbNo(c.getSbNo());
+													newTally.setStuffTallyWoTransId(
+															singleTally.getStuffTallyWoTransId());
+													newTally.setStuffTallyCutWoTransDate(
+															singleTally.getStuffTallyCutWoTransDate());
+													newTally.setStuffTallyDate(e.getStuffTallyDate());
+													newTally.setStuffId(s.getStuffReqId());
+													newTally.setStuffDate(s.getStuffReqDate());
+													newTally.setSbDate(cargo.getSbDate());
+													newTally.setShift(singleTally.getShift());
+													newTally.setAgentSealNo(e.getAgentSealNo());
+													newTally.setVesselId(singleTally.getVesselId());
+													newTally.setVoyageNo(singleTally.getVoyageNo());
+													newTally.setRotationNo(singleTally.getRotationNo());
+													newTally.setPol(sbENtry.getPol());
+													newTally.setTerminal(singleTally.getTerminal());
+													newTally.setPod(singleTally.getPod());
+													newTally.setFinalPod(singleTally.getFinalPod());
+													newTally.setContainerNo(e.getContainerNo());
+													newTally.setContainerSize(e.getContainerSize());
+													newTally.setPeriodFrom(singleTally.getPeriodFrom());
+													newTally.setGateInId(stuffReq.getGateInId());
+													newTally.setContainerStatus(e.getContainerStatus());
+													newTally.setContainerType(e.getContainerType());
+													newTally.setContainerCondition(stuffReq.getContainerHealth());
+													newTally.setYardPackages(c.getYardPackages());
+													newTally.setCellAreaAllocated(e.getCellAreaAllocated());
+													newTally.setOnAccountOf(stuffReq.getOnAccountOf());
+													newTally.setCha(sbENtry.getCha());
+													newTally.setTotalGrossWeight(e.getCargoWeight());
+													newTally.setCargoWeight(e.getCargoWeight());
+													newTally.setStuffRequestQty(e.getStuffRequestQty());
+													newTally.setStuffedQty(qty);
+													s.setStuffedQty(s.getStuffedQty() == null ? BigDecimal.ZERO
+															: s.getStuffedQty().add(qty));
+													newTally.setBalanceQty(c.getYardPackages().subtract(qty));
+													newTally.setTareWeight(e.getTareWeight());
+													newTally.setAreaReleased(area);
+													newTally.setGenSetRequired(singleTally.getGenSetRequired());
+													newTally.setHaz(singleTally.getHaz());
+													newTally.setImoCode(sbENtry.getImoCode());
+													newTally.setShippingAgent(stuffReq.getShippingAgent());
+													newTally.setShippingLine(stuffReq.getShippingLine());
+													newTally.setCommodity(singleTally.getCommodity());
+													newTally.setCustomsSealNo(e.getCustomsSealNo());
+													newTally.setViaNo(singleTally.getViaNo());
+													newTally.setCartingDate(c.getCartingTransDate());
+													newTally.setExporterName(sbENtry.getExporterName());
+													newTally.setConsignee(singleTally.getConsignee());
+													newTally.setFob(singleTally.getFob());
+													newTally.setBerthingDate(singleTally.getBerthingDate());
+													newTally.setGateOpenDate(singleTally.getGateOpenDate());
+													newTally.setDocType(singleTally.getDocType());
+													newTally.setDocNo(singleTally.getDocNo());
+													newTally.setStatus("A");
+													newTally.setCreatedBy(user);
+													newTally.setCreatedDate(new Date());
+													newTally.setApprovedBy(user);
+													newTally.setApprovedDate(new Date());
+													newTally.setDeliveryOrderNo(e.getDeliveryOrderNo());
+													newTally.setStuffMode(singleTally.getStuffMode());
+													newTally.setStuffLineId(stuffReq.getStuffReqLineId());
+													newTally.setTypeOfPackage(cargo.getTypeOfPackage());
+													newTally.setSealType(singleTally.getSealType());
+													newTally.setRotationDate(singleTally.getRotationDate());
+
+													exportstufftallyrepo.save(newTally);
+
+													exportstuffrepo.save(s);
+
+													c.setStuffedNoOfPackages(
+															(c.getStuffedNoOfPackages() == null ? BigDecimal.ZERO
+																	: c.getStuffedNoOfPackages()).add(qty));
+
+													exportcartingrepo.save(c);
+
+													val = val.subtract(qty);
+
+													List<Impexpgrid> grid = impexpgridrepo.getDataForTally(cid, bid,
+															c.getCartingTransId(), c.getCartingLineId());
+
+													if (!grid.isEmpty()) {
+														AtomicReference<BigDecimal> gridVal = new AtomicReference<>(
+																qty);
+														grid.stream().forEach(g -> {
+															if (gridVal.get()
+																	.compareTo(new BigDecimal(g.getYardPackages())
+																			.subtract(g.getQtyTakenOut())) >= 0) {
+
+																g.setQtyTakenOut(
+																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																				: g.getQtyTakenOut())
+																				.add(new BigDecimal(g.getYardPackages())
+																						.subtract(g.getQtyTakenOut())));
+
+																BigDecimal tenArea = (g.getCellAreaAllocated()
+																		.multiply(new BigDecimal(g.getYardPackages())
+																				.subtract(g.getQtyTakenOut())))
+																		.divide(new BigDecimal(g.getYardPackages()),
+																				BigDecimal.ROUND_HALF_UP);
+
+																g.setAreaReleased(
+																		(g.getAreaReleased() == null ? BigDecimal.ZERO
+																				: g.getAreaReleased()).add(tenArea));
+
+																gridVal.set(gridVal.get()
+																		.subtract(new BigDecimal(g.getYardPackages())
+																				.subtract(g.getQtyTakenOut())));
+															} else {
+
+																g.setQtyTakenOut(
+																		(g.getQtyTakenOut() == null ? BigDecimal.ZERO
+																				: g.getQtyTakenOut())
+																				.add(gridVal.get()));
+																BigDecimal tenArea = (g.getCellAreaAllocated()
+																		.multiply(gridVal.get()))
+																		.divide(new BigDecimal(g.getYardPackages()),
+																				BigDecimal.ROUND_HALF_UP);
+																g.setAreaReleased(
+																		(g.getAreaReleased() == null ? BigDecimal.ZERO
+																				: g.getAreaReleased()).add(tenArea));
+
+																gridVal.set(gridVal.get().subtract(gridVal.get()));
+															}
+
+															impexpgridrepo.save(g);
+														});
+													}
+												}
+											}
+
+										}
+
+									}
+								}
+							}
+
+						} else if (totalStuffedQty.compareTo(e.getStuffedQty()) > 0) {
+							BigDecimal remainingQty = existCar.getStuffedNoOfPackages();
+
+							if (val.compareTo(BigDecimal.ZERO) > 0) {
+
+								if (exist.getStuffId().equals(e.getStuffId())) {
+									BigDecimal qty = BigDecimal.ZERO;
+
+									if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+										if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
+											qty = exist.getStuffedQty();
+										} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
+											qty = remainingQty;
+										} else {
+											qty = remainingQty;
+										}
+
+									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+										if (val.compareTo(exist.getStuffedQty()) > 0) {
+											qty = exist.getStuffedQty();
+										} else if (val.compareTo(exist.getStuffedQty()) < 0) {
+											qty = val;
+										} else {
+											qty = val;
+										}
+
+									} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+										if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
+											qty = exist.getStuffedQty();
+										} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
+											qty = remainingQty;
+										} else {
+											qty = remainingQty;
+										}
+									}
+
+									BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
+											.divide(existCar.getYardPackages());
+
+									exist.setStuffedQty(exist.getStuffedQty().subtract(qty));
+									exist.setBalanceQty(exist.getBalanceQty().add(qty));
+									exist.setAreaReleased(exist.getAreaReleased().subtract(area));
+									stuffReq.setStuffedQty(stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
+											: stuffReq.getStuffedQty().subtract(qty));
+
+									val = val.subtract(qty);
+
+									existCar.setStuffedNoOfPackages(existCar.getStuffedNoOfPackages().subtract(qty));
+
+									exportcartingrepo.save(existCar);
+
+									List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+											existCar.getCartingTransId(), existCar.getCartingLineId());
+
+									if (!grid.isEmpty()) {
+										AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+										grid.stream().forEach(g -> {
+											if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
+
+												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+														: g.getQtyTakenOut()).subtract(g.getQtyTakenOut()));
+
+												BigDecimal tenArea = (g.getCellAreaAllocated()
+														.multiply(g.getQtyTakenOut()))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+
+												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+														: g.getAreaReleased()).subtract(tenArea));
+
+												gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
+											} else {
+
+												g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+														: g.getQtyTakenOut()).subtract(gridVal.get()));
+												BigDecimal tenArea = (g.getCellAreaAllocated().multiply(gridVal.get()))
+														.divide(new BigDecimal(g.getYardPackages()),
+																BigDecimal.ROUND_HALF_UP);
+												g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+														: g.getAreaReleased()).subtract(tenArea));
+
+												gridVal.set(gridVal.get().subtract(gridVal.get()));
+											}
+
+											impexpgridrepo.save(g);
+										});
+									}
+								}
+
+								else {
+
+									BigDecimal qty = BigDecimal.ZERO;
+
+									ExportStuffRequest req = exportstuffrepo.getDataBySbNoSbTransAndStuffReqLineId3(cid,
+											bid, singleTally.getSbTransId(), singleTally.getSbNo(), exist.getStuffId());
+
+									if (req != null) {
+										if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) == 0) {
+
+											if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
+												qty = exist.getStuffedQty();
+											} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
+												qty = remainingQty;
+											} else {
+												qty = remainingQty;
+											}
+
+										} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) > 0) {
+
+											if (val.compareTo(exist.getStuffedQty()) > 0) {
+												qty = exist.getStuffedQty();
+											} else if (val.compareTo(exist.getStuffedQty()) < 0) {
+												qty = val;
+											} else {
+												qty = val;
+											}
+
+										} else if (remainingQty.subtract(val).compareTo(BigDecimal.ZERO) < 0) {
+											if (remainingQty.compareTo(exist.getStuffedQty()) > 0) {
+												qty = exist.getStuffedQty();
+											} else if (remainingQty.compareTo(exist.getStuffedQty()) < 0) {
+												qty = remainingQty;
+											} else {
+												qty = remainingQty;
+											}
+										}
+
+										BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
+												.divide(existCar.getYardPackages());
+
+										exist.setStuffedQty(exist.getStuffedQty().subtract(qty));
+										exist.setBalanceQty(exist.getBalanceQty().add(qty));
+										exist.setAreaReleased(exist.getAreaReleased().subtract(area));
+										req.setStuffedQty(req.getStuffedQty() == null ? BigDecimal.ZERO
+												: req.getStuffedQty().subtract(qty));
+
+										exportstuffrepo.save(req);
+
+										val = val.subtract(qty);
+
+										existCar.setStuffedNoOfPackages(
+												existCar.getStuffedNoOfPackages().subtract(qty));
+
+										exportcartingrepo.save(existCar);
+
+										List<Impexpgrid> grid = impexpgridrepo.getDataForTally1(cid, bid,
+												existCar.getCartingTransId(), existCar.getCartingLineId());
+
+										if (!grid.isEmpty()) {
+											AtomicReference<BigDecimal> gridVal = new AtomicReference<>(qty);
+											grid.stream().forEach(g -> {
+												if (gridVal.get().compareTo(g.getQtyTakenOut()) >= 0) {
+
+													g.setQtyTakenOut(BigDecimal.ZERO);
+
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(g.getQtyTakenOut()))
+															.divide(new BigDecimal(g.getYardPackages()),
+																	BigDecimal.ROUND_HALF_UP);
+
+													g.setAreaReleased(BigDecimal.ZERO);
+
+													gridVal.set(gridVal.get().subtract(g.getQtyTakenOut()));
+												} else {
+
+													g.setQtyTakenOut((g.getQtyTakenOut() == null ? BigDecimal.ZERO
+															: g.getQtyTakenOut()).subtract(gridVal.get()));
+													BigDecimal tenArea = (g.getCellAreaAllocated()
+															.multiply(gridVal.get()))
+															.divide(new BigDecimal(g.getYardPackages()),
+																	BigDecimal.ROUND_HALF_UP);
+													g.setAreaReleased((g.getAreaReleased() == null ? BigDecimal.ZERO
+															: g.getAreaReleased()).subtract(tenArea));
+
+													gridVal.set(gridVal.get().subtract(gridVal.get()));
+												}
+
+												impexpgridrepo.save(g);
+											});
+										}
+									}
+								}
+							}
+
+						}
+
+						exportstufftallyrepo.save(exist);
+					}
+
+				}
+
+				stuffReq.setAgentSealNo(e.getAgentSealNo());
+				stuffReq.setTareWeight(e.getTareWeight());
+				stuffReq.setRotationNo(singleTally.getRotationNo());
+				stuffReq.setRotationDate(singleTally.getRotationDate());
+				stuffReq.setBerthingDate(singleTally.getBerthingDate());
+				stuffReq.setGateOpenDate(singleTally.getGateOpenDate());
+				stuffReq.setTypeOfPackage(cargo.getTypeOfPackage());
+				stuffReq.setVesselId(singleTally.getVesselId());
+				stuffReq.setVesselName(singleTally.getVesselName());
+				stuffReq.setVoyageNo(singleTally.getVoyageNo());
+				stuffReq.setViaNo(singleTally.getViaNo());
+				stuffReq.setEditedBy(user);
+				stuffReq.setEditedDate(new Date());
+
+				exportstuffrepo.save(stuffReq);
+
+				if (stuffReq.getNoOfPackagesStuffed().compareTo(existData.getStuffRequestQty()) > 0) {
+					int updateQty = exportstufftallyrepo.updateStuffReqQuantity(cid, bid, existData.getStuffTallyId(),
+							stuffReq.getStuffReqId(), stuffReq.getNoOfPackagesStuffed(), singleTally.getSbTransId(), singleTally.getSbNo());
+
+				}
+
+				cargo.setStuffedQty(((cargo.getStuffedQty() == null ? BigDecimal.ZERO : cargo.getStuffedQty())
+						.add(e.getStuffedQty().compareTo(cargo.getCartedPackages()) > 0 ? cargo.getCartedPackages(): e.getStuffedQty())).subtract(existStuffQty));
+				cargo.setStuffedWt(((cargo.getStuffedWt() == null ? BigDecimal.ZERO : cargo.getStuffedWt())
+						.add(e.getCargoWeight())).subtract(existData.getCargoWeight()));
+				cargo.setCargoType(e.getCargoType());
+
+				exportsbcargorepo.save(cargo);
+				
+				
+				if (!e.getAgentSealNo().equals(existData.getAgentSealNo())) {
+					checkAndUpdateAudit1(cid, bid, user, "Agent Seal No", existData.getAgentSealNo(), e.getAgentSealNo(), existData);
+
+				}
+
+				if (!e.getCustomsSealNo().equals(existData.getCustomsSealNo())) {
+					checkAndUpdateAudit1(cid, bid, user, "Customs Seal No", existData.getCustomsSealNo(), e.getCustomsSealNo(), existData);
+
+				}
+				
+				if (e.getStuffedQty().compareTo(existStuffQty) != 0) {
+					checkAndUpdateAudit1(cid, bid, user, "Stuffed Quantity", existStuffQty.toString(), e.getStuffedQty().toString(), existData);
+
+				}
+				
+				if (e.getCargoWeight().compareTo(existData.getCargoWeight()) != 0) {
+					checkAndUpdateAudit1(cid, bid, user, "Stuff Tally Wt", existData.getCargoWeight().toString(), e.getCargoWeight().toString(), existData);
+
+				}
+				
+				if (e.getTareWeight().compareTo(existData.getTareWeight()) != 0) {
+					checkAndUpdateAudit1(cid, bid, user, "Tare Wt.", existData.getTareWeight().toString(), e.getTareWeight().toString(), existData);
+
+				}
+				
+				if (!e.getCargoType().equals(cargoType)) {
+					checkAndUpdateAudit1(cid, bid, user, "Cargo Type", cargoType, e.getCargoType(), existData);
+
+				}
+				if (!singleTally.getMovementType().equals(existData.getMovementType())) {
+					checkAndUpdateAudit1(cid, bid, user, "Movement Type", existData.getMovementType(), singleTally.getMovementType(), existData);
+
+				}
+				
+				if (!singleTally.getVesselId().equals(existData.getVesselId())) {
+					checkAndUpdateAudit1(cid, bid, user, "Vessel", existData.getVesselId(), singleTally.getVesselId(), existData);
+
+				}
+				
+				
+				if (!singleTally.getVoyageNo().equals(existData.getVoyageNo())) {
+					checkAndUpdateAudit1(cid, bid, user, "Voyage No", existData.getVoyageNo(), singleTally.getVoyageNo(), existData);
+
+				}
+				
+				if (!singleTally.getViaNo().equals(existData.getViaNo())) {
+					checkAndUpdateAudit1(cid, bid, user, "Via No", existData.getViaNo(), singleTally.getViaNo(), existData);
+
+				}
+				
+				if (!singleTally.getTerminal().equals(existData.getTerminal())) {
+					checkAndUpdateAudit1(cid, bid, user, "Terminal Name", existData.getTerminal(), singleTally.getTerminal(), existData);
+
+				}
+				
+				if (!singleTally.getRotationNo().equals(existData.getRotationNo())) {
+					checkAndUpdateAudit1(cid, bid, user, "Rotation No", existData.getRotationNo(), singleTally.getRotationNo(), existData);
+
+				}
+				
+				if (!singleTally.getPod().equals(existData.getPod())) {
+					checkAndUpdateAudit1(cid, bid, user, "Port Of Discharge", existData.getPod(), singleTally.getPod(), existData);
+
+				}
+				
+				if (!singleTally.getFinalPod().equals(existData.getFinalPod())) {
+					checkAndUpdateAudit1(cid, bid, user, "Final POD", existData.getFinalPod(), singleTally.getFinalPod(), existData);
+
+				}
+				
+				if (!singleTally.getStuffMode().equals(existData.getStuffMode())) {
+					checkAndUpdateAudit1(cid, bid, user, "Stuff Mode", existData.getStuffMode(), singleTally.getStuffMode(), existData);
+
+				}
+				
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				if ((singleTally.getRotationDate() != null && !singleTally.getRotationDate().equals(existData.getRotationDate())) ||
+					    (singleTally.getRotationDate() == null && existData.getRotationDate() != null)) {
+					    String oldRotationDate = existData.getRotationDate() != null ? dateFormat.format(existData.getRotationDate()) : null;
+					    String newRotationDate = singleTally.getRotationDate() != null ? dateFormat.format(singleTally.getRotationDate()) : null;
+
+					    checkAndUpdateAudit1(cid, bid, user, "Rotation Date", oldRotationDate, newRotationDate, existData);
+					}
+
+					if ((singleTally.getBerthingDate() != null && !singleTally.getBerthingDate().equals(existData.getBerthingDate())) ||
+					    (singleTally.getBerthingDate() == null && existData.getBerthingDate() != null)) {
+					    String oldBerthingDate = existData.getBerthingDate() != null ? dateFormat.format(existData.getBerthingDate()) : null;
+					    String newBerthingDate = singleTally.getBerthingDate() != null ? dateFormat.format(singleTally.getBerthingDate()) : null;
+
+					    checkAndUpdateAudit1(cid, bid, user, "Berthing Date", oldBerthingDate, newBerthingDate, existData);
+					}
+
 			}
+			
+			
+			
 
 		}
+		
+		
+		
+		
+		
+		
+		
+		
 		List<ExportStuffTally> existData = exportstufftallyrepo.getDataBySbNo(cid, bid, singleTally.getSbTransId(),
 				singleTally.getSbNo());
 
@@ -2320,6 +4444,41 @@ public class ExportStuffTallyController {
 		}
 
 		return new ResponseEntity<>(existData, HttpStatus.OK);
+
+	}
+	
+	
+	public void checkAndUpdateAudit1(String cid, String bid, String user, String field, String oldValue, String newValue,
+			ExportStuffTally existingData) {
+
+		// Generate next ID for the audit record
+		String holdId = processnextidrepo.findAuditTrail(cid, bid, "P05085", "2024");
+		int lastNumericId = Integer.parseInt(holdId.substring(4));
+		int nextNumericId = lastNumericId + 1;
+		String nextAuditId = String.format("EXPA%06d", nextNumericId);
+
+		// Create new audit record
+		ExportAudit audit = new ExportAudit();
+		audit.setCompanyId(cid);
+		audit.setBranchId(bid);
+		audit.setApprovedBy(user);
+		audit.setApprovedDate(new Date());
+		audit.setAuditDate(new Date());
+		audit.setAuditId(nextAuditId);
+		audit.setContainerNo(existingData.getContainerNo());
+		audit.setCreatedBy(user);
+		audit.setCreatedDate(new Date());
+		audit.setField(field);
+		audit.setProfitcentreId(existingData.getProfitcentreId());
+		audit.setSbNo(existingData.getSbNo());
+		audit.setStatus("A");
+		audit.setTableName("SB Wise Tally/CLP");
+		audit.setOldValue(oldValue);
+		audit.setNewValue(newValue);
+		exportauditrepo.save(audit);
+
+		// Update process ID
+		processnextidrepo.updateAuditTrail(cid, bid, "P05085", nextAuditId, "2024");
 
 	}
 
