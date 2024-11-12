@@ -14,6 +14,18 @@ import java.util.*;
 
 public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, String> {
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE ExportStuffTally e SET e.movementReqId = :movementReqId, e.movementType = :movementType WHERE e.companyId =:companyId and e.branchId =:branchId and e.gateInId = :gateInId")
+	int updateExportTallyMovement(
+	    @Param("movementReqId") String movementReqId,
+	    @Param("movementType") String movementType,
+	    @Param("gateInId") String gateInId,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId
+	);
+	
+	
 	@Query(value = "SELECT NEW com.cwms.entities.ExportStuffTally(e.companyId, e.branchId, e.stuffTallyId, e.sbTransId, "
 	        + "e.stuffTallyLineId, pr.profitcentreDesc, e.sbLineId, e.sbNo, e.stuffTallyDate, "
 	        + "e.stuffId, e.stuffDate, e.sbDate, e.shift, e.agentSealNo, e.vesselId, "

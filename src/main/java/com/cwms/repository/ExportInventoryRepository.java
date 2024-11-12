@@ -10,6 +10,27 @@ import com.cwms.entities.ExportInventory;
 
 public interface ExportInventoryRepository extends JpaRepository<ExportInventory, String> {
 
+	
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE ExportInventory e SET e.movementReqId = :movementReqId, e.movementReqDate = :movementReqDate, e.movementEditedBy = :movementEditedBy, e.movementEditedDate = :movementEditedDate WHERE e.companyId =:companyId and e.branchId =:branchId and e.gateInId = :gateInId")
+	int updateExportInventoryMovement(
+	    @Param("movementReqId") String movementReqId,
+	    @Param("movementReqDate") Date movementReqDate,
+	    @Param("movementEditedBy") String movementEditedBy,
+	    @Param("movementEditedDate") Date movementEditedDate,
+	    @Param("gateInId") String gateInId,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId
+	);
+	
+	
+	
+	
+	
+	
+	
 	@Query("SELECT e "
 	        + "FROM ExportInventory e "
 			+ "WHERE e.companyId = :companyId AND e.branchId = :branchId "

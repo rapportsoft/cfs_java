@@ -1497,6 +1497,30 @@ public class ProcessNextIdService {
 				    return nextIdDholi;
 				}
 				
+				@Transactional
+				public synchronized String autoExportMovementId(String companyId, String branchId, String processId) {
+				    // Find the next vehicle ID from the database CPAQ054141
+				    String nextholi = processNextIdRepository.findNextIdByCompositeKey(companyId, branchId, processId);
+
+				    // Extract the first two characters and the last 5 digits from nextholi
+				    String firstTwoCharacters = nextholi.substring(0, 3);
+				    String lastFiveDigits = nextholi.substring(nextholi.length() - 7);
+				    System.out.println("financialYear: firstTwoCharacters: " + firstTwoCharacters + " lastFiveDigits: " + lastFiveDigits);
+
+				    // Increment the last 5 digits by 1
+				    int incrementedNumber = Integer.parseInt(lastFiveDigits) + 1;
+
+				    // Format the incremented number to ensure it has 5 digits
+				    String formattedIncrementedNumber = String.format("%07d", incrementedNumber);
+
+				    // Concatenate the first two characters, the financial year, and the formatted incremented number
+				    String nextIdDholi = firstTwoCharacters  + formattedIncrementedNumber;
+
+				    // Update the Next_Id directly in the database using the repository
+				    processNextIdRepository.updateNextIdByCompositeKey(companyId, branchId, processId, nextIdDholi);
+
+				    return nextIdDholi;
+				}
 				
 				
 }
