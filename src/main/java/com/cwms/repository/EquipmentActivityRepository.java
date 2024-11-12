@@ -173,4 +173,37 @@ public interface EquipmentActivityRepository extends JpaRepository<EquipmentActi
 	                              @Param("profitcentreId") String profitcentreId, @Param("processId") String processId,
 	                              @Param("erpDocRefNo") String erpDocRefNo, @Param("docRefNo") String docRefNo, @Param("deStuffId") String deStuffId);
 
+	
+	
+	@Query(value = "SELECT j.jar_dtl_desc, p.party_name, e.equipment, e.vendor_id, e.de_stuff_id "
+	        + "FROM cfequipmentactivity e "
+	        + "LEFT OUTER JOIN jar_detail j ON e.company_id = j.company_id AND e.equipment = j.jar_dtl_id "
+	        + "LEFT OUTER JOIN Party p ON e.company_id = p.company_id AND e.branch_id = p.branch_id AND e.vendor_id = p.party_id "
+	        + "WHERE e.company_id = :cid AND e.branch_id = :bid "
+	        + "AND (:contain IS NULL OR e.container_no = :contain) "
+	        + "AND e.status != 'D' "
+	        + "AND e.de_stuff_id IN (:id1, :id2) "
+	        + "GROUP BY j.jar_dtl_desc, p.party_name, e.equipment, e.vendor_id, e.de_stuff_id",
+	        nativeQuery = true)
+	List<Object[]> getDataByContainerNo1(
+	        @Param("cid") String cid,
+	        @Param("bid") String bid,
+	        @Param("contain") String contain,
+	        @Param("id1") String id1,
+	        @Param("id2") String id2);
+	
+	
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE EquipmentActivity e SET e.status = 'D', e.editedBy = :edit, e.editedDate = :edate "
+            + "WHERE e.companyId = :cid AND e.branchId = :bid AND e.deStuffId = :deStuffId "
+            + "AND e.equipment = :equip AND e.vendorId = :vendor AND e.status != 'D' and e.containerNo=:con")
+    int deleteData2(@Param("cid") String cid,
+                   @Param("bid") String bid,
+                   @Param("deStuffId") String deStuffId,
+                   @Param("equip") String equip,
+                   @Param("vendor") String vendor,
+                   @Param("edit") String edit,
+                   @Param("edate") Date edate,
+                   @Param("con") String con);
 }

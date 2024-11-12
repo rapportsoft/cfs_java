@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.EquipmentActivity;
 import com.cwms.entities.ExportCarting;
+import com.cwms.entities.ExportStuffTally;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.JarDetail;
 import com.cwms.entities.Party;
@@ -26,6 +27,7 @@ import com.cwms.helper.HelperMethods;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.EquipmentActivityRepository;
 import com.cwms.repository.ExportCartingRepo;
+import com.cwms.repository.ExportStuffTallyRepo;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.JarDetailRepository;
 import com.cwms.repository.PartyRepository;
@@ -55,6 +57,9 @@ public class EquipmentActivityController {
 
 	@Autowired
 	private HelperMethods helperMethods;
+	
+	@Autowired
+	private ExportStuffTallyRepo exportstufftallyrepo;
 	
 	@GetMapping("/getVendor")
 	public Map<String, Object> getParty(@RequestParam("cid") String cid,@RequestParam("bid") String bid) {
@@ -647,7 +652,139 @@ public class EquipmentActivityController {
 		}
 	}
 
+	@GetMapping("/getContainerDataForStuffing")
+	public ResponseEntity<?> getDataByContainerNo(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, 
+			@RequestParam("con") String con, @RequestParam(name = "val1", required = false) String val1,
+			@RequestParam(name = "val2", required = false) String val2) {
+
+		List<Object[]> data = equipmentActivityRepository.getDataByContainerNo1(companyId, branchId, con,
+				 val1, val2);
+		
+		System.out.println(data.size());
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+
+	@PostMapping("/saveStuffTallyContainerEquipment")
+	public ResponseEntity<?> saveStuffTallyContainerEquipment(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid, @RequestParam("user") String user, @RequestParam("equipment") String equip,
+			@RequestParam("vendor") String vendor, @RequestParam("finYear") String finYear,
+			@RequestParam("container") String container, @RequestParam("stuffId") String stuffId) {
+		if (container.isEmpty() || container == null) {
+			return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
+		}
+
+		List<ExportStuffTally> result = exportstufftallyrepo.getDataByTallyId(cid, bid, stuffId);
+
+		if (result.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		}
+		
+		result.stream().forEach(c->{
+			int srNo = equipmentActivityRepository.getCount(cid, bid, c.getSbTransId(), c.getSbNo(), c.getStuffId());
+			EquipmentActivity equipment = new EquipmentActivity();
+			equipment.setCompanyId(cid);
+			equipment.setBranchId(bid);
+			equipment.setApprovedBy(user);
+			equipment.setApprovedDate(new Date());
+			equipment.setContainerNo(c.getContainerNo());
+			equipment.setContainerSize(c.getContainerSize());
+			equipment.setContainerType(c.getContainerType());
+			equipment.setCreatedBy(user);
+			equipment.setCreatedDate(new Date());
+			equipment.setDeStuffId(c.getStuffTallyId());
+			equipment.setDocRefNo(c.getSbNo());
+			equipment.setEditedBy(user);
+			equipment.setEditedDate(new Date());
+			equipment.setEquipment(equip);
+			equipment.setEquipmentNm(equip);
+			equipment.setErpDocRefNo(c.getSbTransId());
+			equipment.setFinYear(finYear);
+			equipment.setProcessId("P00221");
+			equipment.setProfitCenterId("N00004");
+			equipment.setSrNo(srNo + 1);
+			equipment.setSubDocRefNo(c.getStuffId());
+			equipment.setVendorId(vendor);
+			equipment.setVendorNm(vendor);
+			equipment.setStatus("A");
+			equipmentActivityRepository.save(equipment);
+
+		});
+
+		
+		return new ResponseEntity<>("Data save successfully!!!", HttpStatus.OK);
+	}
 	
+	@PostMapping("/saveStuffTallySbWiseContainerEquipment")
+	public ResponseEntity<?> saveStuffTallySbWiseContainerEquipment(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid, @RequestParam("user") String user, @RequestParam("equipment") String equip,
+			@RequestParam("vendor") String vendor, @RequestParam("finYear") String finYear,
+			@RequestParam("container") String container, @RequestParam("stuffId") String stuffId) {
+		if (container.isEmpty() || container == null) {
+			return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
+		}
+
+		List<ExportStuffTally> result = exportstufftallyrepo.getDataByTallyId1(cid, bid, stuffId, container);
+
+		if (result.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		}
+		
+		result.stream().forEach(c->{
+			int srNo = equipmentActivityRepository.getCount(cid, bid, c.getSbTransId(), c.getSbNo(), c.getStuffId());
+			EquipmentActivity equipment = new EquipmentActivity();
+			equipment.setCompanyId(cid);
+			equipment.setBranchId(bid);
+			equipment.setApprovedBy(user);
+			equipment.setApprovedDate(new Date());
+			equipment.setContainerNo(c.getContainerNo());
+			equipment.setContainerSize(c.getContainerSize());
+			equipment.setContainerType(c.getContainerType());
+			equipment.setCreatedBy(user);
+			equipment.setCreatedDate(new Date());
+			equipment.setDeStuffId(c.getStuffTallyId());
+			equipment.setDocRefNo(c.getSbNo());
+			equipment.setEditedBy(user);
+			equipment.setEditedDate(new Date());
+			equipment.setEquipment(equip);
+			equipment.setEquipmentNm(equip);
+			equipment.setErpDocRefNo(c.getSbTransId());
+			equipment.setFinYear(finYear);
+			equipment.setProcessId("P00222");
+			equipment.setProfitCenterId("N00004");
+			equipment.setSrNo(srNo + 1);
+			equipment.setSubDocRefNo(c.getStuffId());
+			equipment.setVendorId(vendor);
+			equipment.setVendorNm(vendor);
+			equipment.setStatus("A");
+			equipmentActivityRepository.save(equipment);
+
+		});
+
+		
+		return new ResponseEntity<>("Data save successfully!!!", HttpStatus.OK);
+	}
+
+	
+	@PostMapping("/deleteContainerEquipmentsForStuffingTally")
+	public ResponseEntity<?> deleteContainerEquipmentsForStuffingTally(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestParam("equipment") String equip,
+			@RequestParam("vendor") String vendor, @RequestParam("destuff") String destuff,
+			@RequestParam("container") String container) {
+
+		int data = equipmentActivityRepository.deleteData2(cid, bid, destuff, equip, vendor, user,
+				new Date(), container);
+
+		if (data > 0) {
+			return new ResponseEntity<>("Data deleted successfully!!!", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("Data not found!!!", HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	
 }
