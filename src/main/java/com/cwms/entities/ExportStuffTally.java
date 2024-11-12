@@ -2725,9 +2725,9 @@ public class ExportStuffTally implements Cloneable {
 
 		public ExportStuffTally(String stuffTallyId, String sbTransId, String sbNo, String movementType,
 				Date stuffTallyDate, Date sbDate, String agentSealNo, String vesselId, String voyageNo,
-				String rotationNo, Date rotationDate, String terminal, String pod, String finalPod, String containerNo,
+				String rotationNo, Date rotationDate, String terminal, String pod, String finalPod, String containerNo,String stuffId,
 				String gateInId, String containerSize, String containerType, String onAccountOf, String cha,
-				BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal cargoWeight, BigDecimal totalCargoWeight,
+				BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal balanceQty,BigDecimal cargoWeight, BigDecimal totalCargoWeight,
 				BigDecimal tareWeight, String shippingAgent, String shippingLine, String commodity,
 				String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
 				String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
@@ -2748,6 +2748,7 @@ public class ExportStuffTally implements Cloneable {
 			this.pod = pod;
 			this.finalPod = finalPod;
 			this.containerNo = containerNo;
+			this.stuffId = stuffId;
 			this.gateInId = gateInId;
 			this.containerSize = containerSize;
 			this.containerType = containerType;
@@ -2755,6 +2756,7 @@ public class ExportStuffTally implements Cloneable {
 			this.cha = cha;
 			this.stuffRequestQty = stuffRequestQty;
 			this.stuffedQty = stuffedQty;
+			this.balanceQty = balanceQty;
 			this.cargoWeight = cargoWeight;
 			this.totalCargoWeight = totalCargoWeight;
 			this.tareWeight = tareWeight;
