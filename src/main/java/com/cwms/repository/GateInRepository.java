@@ -282,7 +282,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	@Query(value="select g.gateInId, DATE_FORMAT(g.inGateInDate, '%d %M %Y %H:%i'), g.containerNo, g.vehicleNo from GateIn g "
 			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and g.profitcentreId=:profit and g.containerStatus='MTY' "
 			+ "and (:search is null OR :search = '' OR g.gateInId LIKE CONCAT ('%',:search,'%') OR g.containerNo LIKE CONCAT ('%',:search,'%') "
-			+ "OR g.vehicleNo LIKE CONCAT ('%',:search,'%'))")
+			+ "OR g.vehicleNo LIKE CONCAT ('%',:search,'%')) order by g.gateInId desc")
 	List<Object[]> searchExportMtyContainerGateIn(@Param("cid") String cid,@Param("bid") String bid,@Param("profit") String profit,
 			@Param("search") String search);
 }
