@@ -121,6 +121,28 @@ public interface ExportMovementRepo extends JpaRepository<ExportMovement, String
 	        + "AND E.status <> 'D'")
 	List<Object[]> searchContainerNoForMovement(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
 
-		
+	@Query(value="select distinct e.containerNo,e.movementReqId from ExportMovement e where e.companyId=:cid and e.branchId=:bid "
+			+ "and e.status != 'D' and (e.gateOutId = '' OR e.gateOutId is null) and (:val = '' OR :val is null OR e.containerNo "
+			+ "LIKE CONCAT ('%',:val,'%'))")
+	List<Object[]> getDataForGatePass(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+
+
+	@Query(value="select NEW com.cwms.entities.ExportMovement(e.movementReqId, e.movementReqLineId, e.sbNo, sb.sbTransId,"
+			+ "e.sbDate, e.agentSealNo, e.pol, e.pod, e.containerNo, e.containerSize,"
+			+ "e.containerType, e.containerStatus, e.grossWeight, e.customsSealNo,"
+			+ "e.viaNo, sb.cha,p.partyName) "
+			+ "from ExportMovement e LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId "
+			+ "and e.sbNo=sb.sbNo "
+			+ "LEFT OUTER JOIN Party p ON sb.companyId=p.companyId and sb.branchId=p.branchId and sb.cha=p.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.movementReqId=:reqId "
+			+ "and e.containerNo=:con and e.status != 'D' and (e.gateOutId = '' OR e.gateOutId is null)")
+	ExportMovement getSingleDataForGatePass(@Param("cid") String cid,@Param("bid") String bid,@Param("reqId") String reqId,
+			@Param("con") String con);
+	
+	
+	@Query(value="select e from ExportMovement e where e.companyId=:cid and e.branchId=:bid and e.movementReqId=:reqId "
+			+ "and e.containerNo=:con and e.status != 'D' and (e.gateOutId = '' OR e.gateOutId is null)")
+	ExportMovement getSingleDataForGatePass1(@Param("cid") String cid,@Param("bid") String bid,@Param("reqId") String reqId,
+			@Param("con") String con);
 	
 }

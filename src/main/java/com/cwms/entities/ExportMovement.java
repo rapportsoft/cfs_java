@@ -295,7 +295,33 @@ public class ExportMovement {
 	    @Transient
 	    private String gateInId;
 	    
+	    @Transient
+	    private String cha;
 	    
+	    @Transient
+	    private String chaName;
+	    
+	    
+	    
+	    
+	    
+	    
+		public String getCha() {
+			return cha;
+		}
+
+		public void setCha(String cha) {
+			this.cha = cha;
+		}
+
+		public String getChaName() {
+			return chaName;
+		}
+
+		public void setChaName(String chaName) {
+			this.chaName = chaName;
+		}
+
 		public String getGateInId() {
 			return gateInId;
 		}
@@ -307,6 +333,112 @@ public class ExportMovement {
 		public ExportMovement() {
 			super();
 			// TODO Auto-generated constructor stub
+		}
+		
+		
+		
+
+		public ExportMovement(String companyId, String branchId, String finYear, String movementReqId,
+				String movementReqLineId, Date movementReqDate, Date movementOrderDate, String stuffTallyId,
+				String movReqType, String stuffTallyLineId, String profitcentreId, Date stuffTallyDate, String stuffId,
+				Date stuffDate, String sbNo, String sbTransId, Date sbDate, String shift, String agentSealNo,
+				String vesselId, String voyageNo, String pol, String pod, String containerNo, String containerSize,
+				String containerType, String containerStatus, Date periodFrom, int accSrNo, String onAccountOf,
+				BigDecimal totalCargoWt, BigDecimal grossWeight, BigDecimal tareWeight, String shippingAgent,
+				String shippingLine, String customsSealNo, String viaNo, String holdingAgent, String holdingAgentName,
+				Date holdDate, Date releaseDate, String holdRemarks, String gatePassNo, String addServices,
+				String typeOfContainer, String gateOutId, Date gateOutDate, int impSrNo, String billingParty,
+				String igst, String cgst, String sgst, String status, String comments, String createdBy,
+				Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
+				String currentLocation, String othPartyId, String invoiceAssessed, String assessmentId,
+				String invoiceNo, Date invoiceDate, String creditType, String invoiceCategory, BigDecimal billAmt,
+				BigDecimal invoiceAmt, String forceEntryFlag, Date forceEntryDate, String forceEntryApproval,
+				String forceEntryRemarks, String sSRTransId, String forceEntryFlagInv, String trailerType,
+				String shippingLineName, String shippingAgentName, String vesselName, String gateInId, String cha,
+				String chaName) {
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.movementReqId = movementReqId;
+			this.movementReqLineId = movementReqLineId;
+			this.movementReqDate = movementReqDate;
+			this.movementOrderDate = movementOrderDate;
+			this.stuffTallyId = stuffTallyId;
+			this.movReqType = movReqType;
+			this.stuffTallyLineId = stuffTallyLineId;
+			this.profitcentreId = profitcentreId;
+			this.stuffTallyDate = stuffTallyDate;
+			this.stuffId = stuffId;
+			this.stuffDate = stuffDate;
+			this.sbNo = sbNo;
+			this.sbTransId = sbTransId;
+			this.sbDate = sbDate;
+			this.shift = shift;
+			this.agentSealNo = agentSealNo;
+			this.vesselId = vesselId;
+			this.voyageNo = voyageNo;
+			this.pol = pol;
+			this.pod = pod;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.containerStatus = containerStatus;
+			this.periodFrom = periodFrom;
+			this.accSrNo = accSrNo;
+			this.onAccountOf = onAccountOf;
+			this.totalCargoWt = totalCargoWt;
+			this.grossWeight = grossWeight;
+			this.tareWeight = tareWeight;
+			this.shippingAgent = shippingAgent;
+			this.shippingLine = shippingLine;
+			this.customsSealNo = customsSealNo;
+			this.viaNo = viaNo;
+			this.holdingAgent = holdingAgent;
+			this.holdingAgentName = holdingAgentName;
+			this.holdDate = holdDate;
+			this.releaseDate = releaseDate;
+			this.holdRemarks = holdRemarks;
+			this.gatePassNo = gatePassNo;
+			this.addServices = addServices;
+			this.typeOfContainer = typeOfContainer;
+			this.gateOutId = gateOutId;
+			this.gateOutDate = gateOutDate;
+			this.impSrNo = impSrNo;
+			this.billingParty = billingParty;
+			this.igst = igst;
+			this.cgst = cgst;
+			this.sgst = sgst;
+			this.status = status;
+			this.comments = comments;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.currentLocation = currentLocation;
+			this.othPartyId = othPartyId;
+			this.invoiceAssessed = invoiceAssessed;
+			this.assessmentId = assessmentId;
+			this.invoiceNo = invoiceNo;
+			this.invoiceDate = invoiceDate;
+			this.creditType = creditType;
+			this.invoiceCategory = invoiceCategory;
+			this.billAmt = billAmt;
+			this.invoiceAmt = invoiceAmt;
+			this.forceEntryFlag = forceEntryFlag;
+			this.forceEntryDate = forceEntryDate;
+			this.forceEntryApproval = forceEntryApproval;
+			this.forceEntryRemarks = forceEntryRemarks;
+			this.sSRTransId = sSRTransId;
+			this.forceEntryFlagInv = forceEntryFlagInv;
+			this.trailerType = trailerType;
+			this.shippingLineName = shippingLineName;
+			this.shippingAgentName = shippingAgentName;
+			this.vesselName = vesselName;
+			this.gateInId = gateInId;
+			this.cha = cha;
+			this.chaName = chaName;
 		}
 
 		public ExportMovement(String companyId, String branchId, String finYear, String movementReqId,
@@ -1181,6 +1313,29 @@ public class ExportMovement {
 			this.shippingAgentName = shippingAgentName;
 			this.vesselName = vesselName;
 			this.gateInId = gateInId;
+		}
+
+		public ExportMovement(String movementReqId, String movementReqLineId, String sbNo, String sbTransId,
+				Date sbDate, String agentSealNo, String pol, String pod, String containerNo, String containerSize,
+				String containerType, String containerStatus, BigDecimal grossWeight, String customsSealNo,
+				String viaNo, String cha,String chaName) {
+			this.movementReqId = movementReqId;
+			this.movementReqLineId = movementReqLineId;
+			this.sbNo = sbNo;
+			this.sbTransId = sbTransId;
+			this.sbDate = sbDate;
+			this.agentSealNo = agentSealNo;
+			this.pol = pol;
+			this.pod = pod;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.containerStatus = containerStatus;
+			this.grossWeight = grossWeight;
+			this.customsSealNo = customsSealNo;
+			this.viaNo = viaNo;
+			this.cha = cha;
+			this.chaName = chaName;
 		}
 
 		    

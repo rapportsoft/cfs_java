@@ -117,6 +117,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/excelUpload/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/ssr/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/stuffTally/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/exportGatePass/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

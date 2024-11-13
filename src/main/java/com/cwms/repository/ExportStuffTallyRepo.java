@@ -85,7 +85,7 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 
     
 	@Query(value="select distinct e.stuffTallyId,DATE_FORMAT(e.stuffTallyDate, '%d %M %Y %H:%i'),e.containerNo from ExportStuffTally e where e.companyId=:cid and e.status != 'D' and "
-			+ "e.branchId=:bid and (:id is null OR :id = '' OR e.stuffTallyId LIKE CONCAT ('%',:id,'%') OR e.containerNo LIKE CONCAT ('%',:id,'%'))")
+			+ "e.branchId=:bid and (:id is null OR :id = '' OR e.stuffTallyId LIKE CONCAT ('%',:id,'%') OR e.containerNo LIKE CONCAT ('%',:id,'%')) order by e.stuffTallyId desc")
 	List<Object[]> search(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
 	
 	
@@ -177,5 +177,13 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			+ "and e.stuffTallyId = :id and e.stuffId=:stuffid and e.sbTransId=:sbtrans and e.sbNo=:sb")
 	int updateStuffReqQuantity(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
 			@Param("stuffid") String stuffid,@Param("qty") BigDecimal qty,@Param("sbtrans") String sbtrans,@Param("sb") String sb);
+	
+	
+	@Transactional
+	@Modifying
+	@Query(value = "Update ExportStuffTally e SET e.gatePassNo=:id where e.companyId=:cid and e.branchId=:bid and e.status != 'D' "
+			+ "and e.stuffTallyId = :stuffid and e.containerNo=:con")
+	int updateGatePassNo(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
+			@Param("stuffid") String stuffid, @Param("con") String con);
 
 }
