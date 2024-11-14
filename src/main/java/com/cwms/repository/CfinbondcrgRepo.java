@@ -323,6 +323,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		       "AND (c.inBondingDate BETWEEN :startDate AND :endDate " +
 		       "OR (:startDate IS NULL OR :startDate = '') AND c.inBondingDate <= :endDate) " +
 		       "AND c.status = 'A' "+
+		       "AND c.status = 'A' "+
 			   "ORDER BY c.inBondingDate, c.boeNo " )
 		List<Cfinbondcrg> getDataForExpiredBondReport(@Param("companyId") String companyId, 
 		                                                 @Param("branchId") String branchId, 
@@ -365,4 +366,106 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		                                                 @Param("branchId") String branchId, 
 		                                                 @Param("startDate") Date startDate,
 		                                                 @Param("endDate") Date endDate);
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.Cfinbondcrg(" +
+		       "c.companyId, c.branchId, c.finYear, c.inBondingHdrId, c.inBondingId, " +
+		       "c.inBondingDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocNo, " +
+		       "c.nocDate, c.boeNo, c.boeDate, c.bondingNo, c.bondingDate, " +
+		       "p.partyName, c.importerId, c.importerName, cf.commodityDescription, " +
+		       "c.grossWeight, c.nocPackages, c.areaAllocated, c.areaOccupied, " +
+		       "c.gateInPackages, c.inBondedPackages, c.exBondedPackages, c.cifValue, " +
+		       "c.cargoDuty, c.insuranceValue, cf.cfBondDtlId, cf.typeOfPackage, " +
+		       "cf.inBondedPackages, cf.inbondInsuranceValue, cf.inbondCifValue, " +
+		       "cf.inbondCargoDuty, cf.inbondGrossWt, cf.grossWeight, " +
+		       "cf.shortagePackages, cf.damagedQty, cf.breakage, c.bondValidityDate) " +
+		       "FROM Cfinbondcrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN CfinbondcrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.inBondingId = cf.inBondingId " +
+		       "AND c.nocTransId = cf.nocTransId AND cf.status = 'A' " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.inBondingDate BETWEEN :startDate AND :endDate " +
+		       "AND c.status = 'A' " +
+		       "AND c.section49 = :section49 " +
+		       "ORDER BY c.inBondingDate, c.boeNo")
+		List<Cfinbondcrg> getDataForInBondInLiveInBondReport(@Param("companyId") String companyId, 
+		                                                     @Param("branchId") String branchId, 
+		                                                     @Param("startDate") Date startDate,
+		                                                     @Param("endDate") Date endDate,
+		                                                     @Param("section49") String section49);
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 @Modifying
+	 @Transactional
+	 @Query("UPDATE Cfinbondcrg c SET c.exBondedPackages = :exBondedPackages, c.exBondedCargoDuty = :exBondedCargoDuty, c.exBondedCif = :exBondedCif, c.exBondedInsurance = :exBondedInsurance, "
+	 		+ "c.exBondedGw = :exBondedGw " +
+	        "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.inBondingId = :inBondingId AND c.nocNo = :nocNo AND c.nocTransId = :nocTransId AND c.boeNo = :boeNo")
+	 int updateCfInBondCrgAfterExBondAuditTrail(
+	         @Param("exBondedPackages") BigDecimal exBondedPackages,
+	         @Param("exBondedCargoDuty") BigDecimal exBondedCargoDuty,
+	         @Param("exBondedCif") BigDecimal exBondedCif,
+	         @Param("exBondedInsurance") BigDecimal exBondedInsurance,
+	         @Param("exBondedGw") BigDecimal exBondedGw,
+	         @Param("companyId") String companyId,
+	         @Param("branchId") String branchId,
+	         @Param("inBondingId") String inBondingId,
+	         @Param("nocNo") String nocNo,
+	         @Param("nocTransId") String nocTransId,
+	         @Param("boeNo") String boeNo
+	 );
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+		@Modifying
+		@Transactional
+		@Query("UPDATE Cfbondinsbal c SET c.exbondArea = :exbondArea, c.exbondCargoDuty = :exbondCargoDuty, c.exbondCifValue = :exbondCifValue WHERE c.companyId = :companyId AND c.branchId = :branchId")
+		int updateCfbondinsbalAfterInbond(
+		    @Param("exbondArea") BigDecimal exbondArea,
+		    @Param("exbondCargoDuty") BigDecimal exbondCargoDuty,
+		    @Param("exbondCifValue") BigDecimal exbondCifValue,
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId
+		);
+		
+		
+		@Modifying
+		@Transactional
+		@Query("UPDATE Cfbondinsbal c SET c.exbondCargoDuty = :exbondCargoDuty, c.exbondCifValue = :exbondCifValue WHERE c.companyId = :companyId AND c.branchId = :branchId")
+		int updateCfbondinsbalAfterInbondAuditTrail(
+		    @Param("exbondCargoDuty") BigDecimal exbondCargoDuty,
+		    @Param("exbondCifValue") BigDecimal exbondCifValue,
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId
+		);
 }

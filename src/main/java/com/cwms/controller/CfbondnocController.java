@@ -201,7 +201,8 @@ public class CfbondnocController {
 	}
 
 	@GetMapping("/getNocCerificatePrint")
-	public ResponseEntity<String> printOfSurveyDetails(@RequestParam(name = "companyId") String companyId,
+	public ResponseEntity<String> printOfSurveyDetails(
+			@RequestParam(name = "companyId") String companyId,
 			@RequestParam(name = "branchId") String branchId, @RequestParam(name = "uname") String username,
 			@RequestParam(name = "type") String type, @RequestParam(name = "cname") String companyname,
 			@RequestParam(name = "bname") String branchname, @RequestParam(name = "nocTransId") String nocTransId,

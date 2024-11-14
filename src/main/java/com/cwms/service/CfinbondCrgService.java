@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -153,6 +154,8 @@ public class CfinbondCrgService {
 //		    }
 //		
 //	}
+	
+	@Transactional
 	public ResponseEntity<?> saveDataOfCfInbondCrg(String companyId, String branchId, String user, String flag,
 			Map<String, Object> requestBody) {
 		ObjectMapper object = new ObjectMapper();
@@ -212,6 +215,9 @@ public class CfinbondCrgService {
 					cfinbondcrgDtlList.forEach(item -> 
 					{
 						BigDecimal cifValue = item.getInbondCifValue();
+						
+System.out.println("item.getInbondCifValue()______________________________________________"+item.getInbondCifValue());
+
 						BigDecimal cargoValue = item.getInbondCargoDuty();
 						BigDecimal insuranceValue = item.getInbondInsuranceValue();
 						BigDecimal inGrossWeight = item.getInbondGrossWt();
@@ -274,6 +280,11 @@ public class CfinbondCrgService {
 					cfinbondcrg.setInbondGrossWt(totalInGrossWeight[0]);
 
 					cfinbondcrg.setInbondInsuranceValue(totalInsurance[0]);
+					
+					
+					cfinbondcrg.setCifValue(totalCif[0]);
+					cfinbondcrg.setCargoDuty(totalCargo[0]);
+					
 					cfinbondcrgRepo.save(cfinbondcrg);
 
 					processNextIdRepository.updateAuditTrail(companyId, branchId, "P03205", nectInBondingId, "2242");
@@ -329,7 +340,10 @@ public class CfinbondCrgService {
 						crgDetails.setFinYear("2242");
 						crgDetails.setGrossWeight(item.getGrossWeight());
 						crgDetails.setInbondCargoDuty(item.getInbondCargoDuty());
-						crgDetails.setInbondCifValue(item.getInBondedPackages());
+						
+//						crgDetails.setInbondCifValue(item.getInBondedPackages());
+						crgDetails.setInbondCifValue(item.getInbondCifValue());
+						
 						crgDetails.setInBondedPackages(item.getInBondedPackages());
 						crgDetails.setInbondGrossWt(item.getInbondGrossWt());
 						crgDetails.setInBondingDate(cfinbondcrg.getInBondingDate());
@@ -429,7 +443,8 @@ public class CfinbondCrgService {
 						CfBondNocDtl getDataOfDtlId = cfBondNocDtlRepository.getDataOfDtlId(companyId, branchId,
 								item.getCfBondDtlId(), item.getNocTransId(), item.getNocNo());
 
-						if (getDataOfDtlId != null) {
+						if (getDataOfDtlId != null) 
+						{
 
 							int updateNoCDtl = cfBondNocDtlRepository.updateNocDtlFromInBonding(
 									getDataOfDtlId.getInBondedPackages().add(item.getInBondedPackages()),
@@ -532,7 +547,8 @@ public class CfinbondCrgService {
 
 					Cfbondnoc findCfBondNocForUpdationg = cfbondnocRepository.findCfBondNocForUpdationg(companyId,
 							branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
-					if (findCfBondNocForUpdationg != null) {
+					if (findCfBondNocForUpdationg != null) 
+					{
 						int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(
 								findCfBondNocForUpdationg.getInBondedPackages().add(totalInbondedd),
 								findCfBondNocForUpdationg.getInbondGrossWt().add(totalWeight),
@@ -611,6 +627,10 @@ public class CfinbondCrgService {
 					cfinbondcrg.setInBondingHdrId(nectInBondingHDRId);
 					cfinbondcrg.setBondValidityDate(cfinbondcrg.getBondValidityDate());
 
+					
+					cfinbondcrg.setCifValue(totalCif[0]);
+					cfinbondcrg.setCargoDuty(totalCargo[0]);
+					
 					CfinbondcrgHDR cfinbondHDR = new CfinbondcrgHDR();
 
 					cfinbondHDR.setApprovedBy(user);
@@ -737,7 +757,8 @@ public class CfinbondCrgService {
 						crgDetails.setFinYear("2242");
 						crgDetails.setGrossWeight(item.getGrossWeight());
 						crgDetails.setInbondCargoDuty(item.getInbondCargoDuty());
-						crgDetails.setInbondCifValue(item.getInBondedPackages());
+//						crgDetails.setInbondCifValue(item.getInBondedPackages());
+						crgDetails.setInbondCifValue(item.getInbondCifValue());
 						crgDetails.setInBondedPackages(item.getInBondedPackages());
 						crgDetails.setInbondGrossWt(item.getInbondGrossWt());
 						crgDetails.setInBondingDate(cfinbondcrg.getInBondingDate());
@@ -900,22 +921,75 @@ public class CfinbondCrgService {
 					cfinbondcrg.setInbondGrossWt(totalWeightd);
 					cfinbondcrg.setInbondInsuranceValue(totalInsuranced);
 
+					
+					Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
+							cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
+					
+					
+					if (findCfBondCrgData!=null)
+					{
+						Cfbondnoc findCfBondNocForUpdationg = cfbondnocRepository.findCfBondNocForUpdationg(companyId,
+								branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+						if (findCfBondNocForUpdationg != null) 
+						{
+							int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(
+									findCfBondNocForUpdationg.getInBondedPackages().add(totalInbonded).subtract(findCfBondCrgData.getInBondedPackages()),
+									findCfBondNocForUpdationg.getInbondGrossWt().add(totalWeightd).subtract(findCfBondCrgData.getInbondGrossWt()),
+									findCfBondNocForUpdationg.getInbondInsuranceValue().add(totalInsuranced).subtract(findCfBondCrgData.getInbondInsuranceValue()),
+									findCfBondNocForUpdationg.getInbondCifValue().add(totalCifD).subtract(findCfBondCrgData.getCifValue()),
+									findCfBondNocForUpdationg.getInbondCargoDuty().add(totalCargod).subtract(findCfBondCrgData.getCargoDuty()),
+									cfinbondcrg.getBondingNo(), cfinbondcrg.getBondingDate(),
+									cfinbondcrg.getBondValidityDate(), companyId, branchId, cfinbondcrg.getNocTransId(),
+									cfinbondcrg.getNocNo());
+
+							System.out.println("Update noc after inbond in exist" + updateInCfBondNoc);
+						}
+					}
+
+					
 					cfinbondCrgHdrRepo.save(cfinbondHDR);
 					cfinbondcrgRepo.save(cfinbondcrg);
+					
+					
+					
 
 					processNextIdRepository.updateAuditTrail(companyId, branchId, "P03205", nectInBondingId, "2242");
 					processNextIdRepository.updateAuditTrail(companyId, branchId, "P03206", nectInBondingHDRId, "2243");
 
-					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(totalInbonded,
-							totalWeightd, totalInsuranced, totalCifD, totalCargod, cfinbondcrg.getBondingNo(),
-							cfinbondcrg.getBondingDate(), cfinbondcrg.getBondValidityDate(), companyId, branchId,
-							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
-
-					System.out.println("Update noc after inbond " + updateInCfBondNoc);
+					
+					
+					
+				
+					
+					
+//					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(totalInbonded,
+//							totalWeightd, totalInsuranced, totalCifD, totalCargod, cfinbondcrg.getBondingNo(),
+//							cfinbondcrg.getBondingDate(), cfinbondcrg.getBondValidityDate(), companyId, branchId,
+//							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+//					System.out.println("Update noc after inbond " + updateInCfBondNoc);
 
 				}
 
 			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 
@@ -926,7 +1000,8 @@ public class CfinbondCrgService {
 				Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
 						cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
 
-				if (findCfBondCrgData != null) {
+				if (findCfBondCrgData != null) 
+				{
 					System.out.println("in edit");
 					BigDecimal totalInbondedd = BigDecimal.ZERO;
 					BigDecimal totalCif = BigDecimal.ZERO;
@@ -937,7 +1012,8 @@ public class CfinbondCrgService {
 
 //					 cfinbondcrgDtlList.forEach(item -> {
 
-					for (CfinbondcrgDtl item : cfinbondcrgDtlList) {
+					for (CfinbondcrgDtl item : cfinbondcrgDtlList) 
+					{
 
 						System.out.println("yardLocation_____________________cfinbondcrgDtlList :" + cfinbondcrgDtlList);
 
@@ -1116,7 +1192,9 @@ public class CfinbondCrgService {
 							findCfBondCrgData.setInbondInsuranceValue(totalInsurance);
 							findCfBondCrgData.setInbondGrossWt(totalWeight);
 							
-							
+							findCfBondCrgData.setExtenstionDate1(cfinbondcrg.getExtenstionDate1()!=null ? cfinbondcrg.getExtenstionDate1() :null);	
+							findCfBondCrgData.setExtenstionDate2(cfinbondcrg.getExtenstionDate2()!=null ? cfinbondcrg.getExtenstionDate2() :null);		
+							findCfBondCrgData.setExtenstionDate3(cfinbondcrg.getExtenstionDate3()!=null ? cfinbondcrg.getExtenstionDate3() :null);		
 							
 //							BigDecimal totalInbondedd = BigDecimal.ZERO;
 //							BigDecimal totalCif = BigDecimal.ZERO;
@@ -1141,6 +1219,9 @@ public class CfinbondCrgService {
 							findCfBondCrgData.setStatus("N");
 							findCfBondCrgData.setEditedDate(new Date());
 
+							findCfBondCrgData.setCifValue(totalCif);
+							findCfBondCrgData.setCargoDuty(totalCargo);
+							
 							String yardLocationId = item.getEditedBy();
 							String[] parts = yardLocationId.split("-");
 
@@ -1218,7 +1299,8 @@ public class CfinbondCrgService {
 							crgDetails.setFinYear("2242");
 							crgDetails.setGrossWeight(item.getGrossWeight());
 							crgDetails.setInbondCargoDuty(item.getInbondCargoDuty());
-							crgDetails.setInbondCifValue(item.getInBondedPackages());
+//							crgDetails.setInbondCifValue(item.getInBondedPackages());
+							crgDetails.setInbondCifValue(item.getInbondCifValue());
 							crgDetails.setInBondedPackages(item.getInBondedPackages());
 							crgDetails.setInbondGrossWt(item.getInbondGrossWt());
 							crgDetails.setInBondingDate(cfinbondcrg.getInBondingDate());
@@ -1380,7 +1462,8 @@ public class CfinbondCrgService {
 
 					CfinbondcrgDtl savedlist = cfinbondcrgDtlRepo.save(findCfBondCrgDTLData);
 
-					if (savedlist != null) {
+					if (savedlist != null) 
+					{
 						CfInBondGrid toEditData = cfInBondGridRepository.toEditData(companyId, branchId,
 								savedlist.getInBondingId(), savedlist.getCfBondDtlId(), savedlist.getYardLocationId(),
 								savedlist.getBlockId(), savedlist.getCellNoRow());
@@ -1389,6 +1472,7 @@ public class CfinbondCrgService {
 							toEditData.setInBondPackages(toEditData.getInBondPackages().add(savedlist.getYardPackages())
 									.subtract(findCfBondCrgDTLData.getYardPackages()));
 
+						
 							CfInBondGrid savedGrid = cfInBondGridRepository.save(toEditData);
 
 							if (savedGrid != null) {
@@ -1436,6 +1520,14 @@ public class CfinbondCrgService {
 		return new ResponseEntity<>(cfinbondcrg, HttpStatus.OK);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	@Transactional
 	public ResponseEntity<?> approveDataOfInCFbondGrid(String companyId, String branchId, String flag, String user,
 	        Map<String, Object> requestBody) {
 

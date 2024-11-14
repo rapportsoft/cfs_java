@@ -381,4 +381,38 @@ public interface CfBondNocDtlRepository extends JpaRepository<CfBondNocDtl,Strin
 		// In your repository method, limit the result to 1:
 
 
+
+	 
+	 
+	 @Modifying
+		@Transactional
+		@Query("update CfBondNocDtl c set c.inBondedPackages = :inBondedPackages, c.inbondGrossWt = :inbondGrossWt, c.inbondInsuranceValue = :inbondInsuranceValue,"
+				+ " c.inbondCifValue = :inbondCifValue, "
+				+ "c.inbondCargoDuty = :inbondCargoDuty, "
+				+ "c.shortagePackages = :shortagePackages, "
+				+ "c.damagedQty = :damagedQty, "
+				+ "c.breakage = :breakage, "
+				+ "c.bondingNo = :bondingNo, "
+				+ "c.boeNo = :boeNo "
+		        + "where c.companyId = :companyId and "
+		        + "c.branchId = :branchId and "
+		        + "c.nocTransId = :nocTransId and "
+		        + "c.nocNo = :nocNo and "
+		        + "c.cfBondDtlId = :cfBondDtlId")
+		int updateNocDtlAfterAuditTrail( 
+		       @Param("inBondedPackages") BigDecimal inBondedPackages,
+		       @Param("inbondGrossWt") BigDecimal inbondGrossWt,
+		       @Param("inbondInsuranceValue") BigDecimal inbondInsuranceValue,
+		       @Param("inbondCifValue") BigDecimal inbondCifValue,
+		       @Param("inbondCargoDuty") BigDecimal inbondCargoDuty,
+		       @Param("shortagePackages") BigDecimal shortagePackages,
+		       @Param("damagedQty") BigDecimal damagedQty,
+		       @Param("breakage") BigDecimal breakage,
+		       @Param("bondingNo") String bondingNo,
+		       @Param("boeNo") String boeNo,
+		       @Param("companyId") String companyId,
+		       @Param("branchId") String branchId,
+		       @Param("nocTransId") String nocTransId,
+		       @Param("nocNo") String nocNo,
+		       @Param("cfBondDtlId") String cfBondDtlId);
 }

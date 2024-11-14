@@ -136,6 +136,12 @@ public class CfbondnocService {
 		return cfbondnocRepository.findCfbondnocByCompanyIdAndBranchIdOrSerach(companyId, branchId, transId, nocNo);
 	}
 
+	
+	
+	
+	
+	
+	@Transactional
 	public ResponseEntity<?> saveDataOfCfBondNoc(String cid, String bid, String user, String flag,
 			Cfbondnoc cfBondNoc) {
 
@@ -287,6 +293,8 @@ public class CfbondnocService {
 		}
 	}
 
+	
+	@Transactional
 	public ResponseEntity<?> saveData(String cid, String bid, String user, String flag,
 			Map<String, Object> requestBody) {
 
@@ -602,6 +610,7 @@ public class CfbondnocService {
 		}
 	}
 
+	@Transactional
 	public ResponseEntity<?> saveDataOfGateIn(String cid, String bid, String user, String flag,
 			Map<String, Object> requestBody) {
 

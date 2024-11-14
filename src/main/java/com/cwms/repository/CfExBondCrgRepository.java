@@ -31,6 +31,17 @@ public interface CfExBondCrgRepository extends JpaRepository<CfExBondCrg, String
 	    @Param("companyId") String companyId,
 	    @Param("branchId") String branchId
 	);
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE Cfbondinsbal c SET c.exbondCargoDuty = :exbondCargoDuty, c.exbondCifValue = :exbondCifValue WHERE c.companyId = :companyId AND c.branchId = :branchId")
+	int updateCfbondinsbalAfterExbondAuditTrail(
+	    @Param("exbondCargoDuty") BigDecimal exbondCargoDuty,
+	    @Param("exbondCifValue") BigDecimal exbondCifValue,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId
+	);
 	 
 	
 	@Modifying
@@ -121,6 +132,42 @@ public interface CfExBondCrgRepository extends JpaRepository<CfExBondCrg, String
 		       "AND c.status != 'D' " +
 		       "ORDER BY c.exBondingId DESC")
 	CfExBondCrg  getDataOfExbond(
+		      @Param("companyId") String companyId,
+		      @Param("branchId") String branchId,
+		      @Param("nocTransId") String nocTransId,
+		      @Param("nocNo") String nocNo,
+		      @Param("exBondingId") String exBondingId,
+		      @Param("inBondingId") String inBondingId
+		);
+	 
+	
+	 
+	 
+	 @Query("SELECT NEW com.cwms.entities.CfExBondCrg(c.companyId, c.branchId, c.finYear, c.exBondingId, c.exBondingDate, " +
+		       "c.profitcentreId, c.nocTransId, c.nocNo, c.nocValidityDate, c.boeNo, c.bondingNo, c.bondingDate, c.exBondBeNo, " +
+		       "c.exBondBeDate, c.inBondingId, c.inBondingDate, c.invoiceUptoDate, c.igmNo, c.igmLineNo, c.accSrNo, c.onAccountOf, " +
+		       "c.chaSrNo, c.cha, c.shift, c.commodityDescription, c.grossWeight, c.inBondedGw, c.exBondedGw, c.remainingGw, " +
+		       "c.balanceGw, c.numberOfMarks, c.uom, c.periodicBill, c.nocPackages, c.areaOccupied, c.areaReleased, c.areaBalanced, " +
+		       "c.areaRemaining, c.inBondedPackages, c.exBondedPackages, c.remainingPackages, c.balancedQty, c.balancedPackages, " +
+		       "c.qtyTakenOut, c.spaceAllocated, c.cifValue, c.inBondedCif, c.exBondedCif, c.remainingCif, c.balanceCif, " +
+		       "c.inBondedCargoDuty, c.exBondedCargoDuty, c.remainingCargoDuty, c.balanceCargoDuty, c.inBondedInsurance, " +
+		       "c.exBondedInsurance, c.remainingInsurance, c.balanceInsurance, c.cifQty, c.exBondNo, c.exBondDate, " +
+		       "c.noOf20Ft, c.noOf40Ft, c.comments, c.giTransporterStatus, c.giTransporter, c.giTransporterName, c.giVehicleNo, " +
+		       "c.giDriverName, c.gateOutId, c.gateOutDate, c.gateOutTransporter, c.gateOutVehicleNo, c.gateOutDriverName, " +
+		       "c.status, c.createdBy, c.createdDate, c.editedBy, c.approvedBy, c.approvedDate,p.partyName,pp.partyName,c.gateInType,c.spaceType,"
+		       + "c.exBondType ,c.sbNo,c.sbDate,c.sbValue,c.sbDuty,c.sbQty,c.trnsferBondNo,c.trnsferBondDate,c.section49 ) " +
+		       "FROM CfExBondCrg c " +
+		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+		       "LEFT OUTER JOIN Party pp ON c.companyId = pp.companyId AND c.branchId = pp.branchId AND c.giTransporterName = pp.partyId " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND (:nocTransId IS NULL OR c.nocTransId = :nocTransId) " +
+		       "AND (:nocNo IS NULL OR c.nocNo = :nocNo) " +
+		       "AND (:exBondingId IS NULL OR c.exBondingId = :exBondingId) " +
+		       "AND (:inBondingId IS NULL OR c.inBondingId = :inBondingId) " +
+		       "AND c.status != 'D' " +
+		       "ORDER BY c.exBondingId DESC")
+	CfExBondCrg  getDataOfExbond1(
 		      @Param("companyId") String companyId,
 		      @Param("branchId") String branchId,
 		      @Param("nocTransId") String nocTransId,
@@ -317,6 +364,80 @@ List<CfExBondCrg> getDataForBondDeliveryReportWithoutDates(@Param("companyId") S
                                                            @Param("boeNo") String boeNo,
                                                            @Param("exBondBeNo") String exBondBeNo);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Query("SELECT NEW com.cwms.entities.CfExBondCrg(" +
+	       "c.companyId, c.branchId, c.exBondingId, c.exBondingDate, c.nocTransId, c.boeNo, " +
+	       "c.bondingNo, c.bondingDate, c.exBondBeNo, c.exBondBeDate, c.inBondingId, " +
+	       "c.inBondingDate, c.igmNo, cf.commodityDescription, c.exBondNo, c.exBondDate, cff.bondValidityDate, " +
+	       "cf.exBondedPackages, cf.exBondedCIF, cf.exBondedCargoDuty, cf.exBondedGW, " +
+	       "cf.typeOfPackage, p.partyName, cff.igmDate) " +
+	       "FROM CfExBondCrg c " +
+	       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
+	       "LEFT OUTER JOIN CfexBondCrgDtl cf ON c.companyId = cf.companyId AND c.branchId = cf.branchId AND c.exBondingId = cf.exBondingId " +
+	       "LEFT OUTER JOIN Cfinbondcrg cff ON c.companyId = cff.companyId AND c.branchId = cff.branchId AND c.inBondingId = cff.inBondingId " +
+	       "AND cf.status = 'A' " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.exBondingDate BETWEEN :startDate AND :endDate " +
+	       "AND c.status = 'A' " +
+	       "AND cff.section49 =:section49 " +
+	       "ORDER BY c.exBondingDate, c.boeNo")
+	List<CfExBondCrg> getDataForExbondReportInLiveBondReport(@Param("companyId") String companyId, 
+	                                                         @Param("branchId") String branchId, 
+	                                                         @Param("startDate") Date startDate,
+	                                                         @Param("endDate") Date endDate,
+		                                                     @Param("section49") String section49);
+
+
+
+
+
+
+
+
+
+
+
+
+@Query("SELECT c " +
+	       "FROM CfExBondCrg c " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.nocTransId = :nocTransId " +
+	       "AND c.inBondingId = :inBondingId " +
+	       "AND c.nocNo = :nocNo " +
+	       "AND c.exBondingId = :exBondingId " +
+	       "ORDER BY c.inBondingId DESC")
+	CfExBondCrg getCfExBondCrgAfterExBondAuditTrail(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocTransId") String nocTransId,
+	    @Param("inBondingId") String inBondingId,
+	    @Param("nocNo") String nocNo,
+	    @Param("exBondingId") String exBondingId
+	);
 
 
 }

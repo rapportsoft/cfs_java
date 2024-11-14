@@ -1,38 +1,19 @@
 package com.cwms.service;
-
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.RichTextString;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-import org.xhtmlrenderer.util.SystemPropertiesUtil;
-
 import com.cwms.entities.Branch;
-import com.cwms.entities.CFBondGatePass;
-import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.CfExBondCrg;
 import com.cwms.entities.CfExBondGrid;
 import com.cwms.entities.CfInBondGrid;
 import com.cwms.entities.Cfbondinsbal;
-import com.cwms.entities.Cfbondnoc;
 import com.cwms.entities.CfexBondCrgDtl;
 import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.CfinbondcrgDtl;
@@ -40,7 +21,6 @@ import com.cwms.entities.CfinbondcrgHDR;
 import com.cwms.entities.CfinbondcrgHDRDtl;
 import com.cwms.entities.Company;
 import com.cwms.entities.Party;
-import com.cwms.entities.YardBlockCell;
 import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfBondNocDtlRepository;
 import com.cwms.repository.CfExBondCrgDtlRepository;
@@ -60,10 +40,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.lowagie.text.DocumentException;
-
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -144,6 +121,10 @@ public class CfExBondCrgService {
 		return (value != null && !value.isEmpty()) ? Integer.parseInt(value) : 0;
 	}
 
+	
+	
+	
+	@Transactional
 	public ResponseEntity<?> saveDataOfCfexbondCrgAndExbondCrgDtl(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
 		ObjectMapper object = new ObjectMapper();
@@ -197,6 +178,10 @@ public class CfExBondCrgService {
 				cfexbondcrg.setApprovedDate(new Date());
 				cfexbondcrg.setExBondingId(nectExBondingId);
 				cfexbondcrg.setFinYear("2025");
+				
+				cfexbondcrg.setSbValue(cfexbondcrg.getExBondedCif());
+				cfexbondcrg.setSbDuty(cfexbondcrg.getExBondedCargoDuty());
+				cfexbondcrg.setSbQty(cfexbondcrg.getExBondedPackages());
 
 				cfexbondcrg.setBalancedPackages(cfexbondcrg.getRemainingPackages()
 						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedPackages()).orElse(BigDecimal.ZERO)));
@@ -221,10 +206,27 @@ public class CfExBondCrgService {
 
 				cfExBondCrgRepository.save(cfexbondcrg);
 
-				int updateCfBalance = cfExBondCrgRepository.updateCfbondinsbalAfterExbond(cfexbondcrg.getAreaReleased(),
-						cfexbondcrg.getExBondedCargoDuty(), cfexbondcrg.getExBondedCif(), companyId, branchId);
+				
+				
+				Cfbondinsbal existingBalance = cfbondnocDtlRepository.getDataOfCfBondCifForValidation(companyId,
+						branchId);
 
-				System.out.println("updateCfBalance row is " + updateCfBalance);
+				if (existingBalance != null) {
+					int updateCfBalance = cfExBondCrgRepository
+							.updateCfbondinsbalAfterExbond(
+									existingBalance.getExbondArea()
+											.add(cfexbondcrg.getAreaReleased()),
+									existingBalance.getExbondCargoDuty().add(cfexbondcrg.getExBondedCargoDuty()),
+									existingBalance.getExbondCifValue().add(cfexbondcrg.getExBondedCif()),
+									companyId, branchId);
+
+					System.out.println("updateCfBalance row is after edit" + updateCfBalance);
+				}
+				
+//				int updateCfBalance = cfExBondCrgRepository.updateCfbondinsbalAfterExbond(cfexbondcrg.getAreaReleased(),
+//						cfexbondcrg.getExBondedCargoDuty(), cfexbondcrg.getExBondedCif(), companyId, branchId);
+
+//				System.out.println("updateCfBalance row is " + updateCfBalance);
 
 				int updateCfinbondcrgAfterExbond = cfinbondcrgRepo.updateCfinbondCrgAfterExbond(
 						cfexbondcrg.getExBondedPackages(), cfexbondcrg.getExBondedCargoDuty(),
@@ -301,8 +303,7 @@ public class CfExBondCrgService {
 						exBondDtl.setIgmLineNo(cfexbondcrg.getIgmLineNo());
 						exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
 						exBondDtl.setExBondGridArea(item.getExBondGridArea());
-						
-						
+						exBondDtl.setExBondType(cfexbondcrg.getExBondType());
 			
 						CfexBondCrgDtl saved=	cfExBondCrgDtlRepository.save(exBondDtl);
 						
@@ -320,6 +321,7 @@ public class CfExBondCrgService {
 								for (CfInBondGrid data : existList)
 								{
 									System.out.println("data________________________"+data);
+									
 									CfExBondGrid cf1 = new CfExBondGrid();
 									
 									
@@ -474,18 +476,24 @@ public class CfExBondCrgService {
 						}
 
 					}
+					
+					
+					
+					
 				}
 
 			}
 
-			else {
+			else 
+			{
 
 				System.out.println("In Edit loop ");
 
 				CfExBondCrg existingExBond = cfExBondCrgRepository.findExistingCfexbondCrg(companyId, branchId,
 						cfexbondcrg.getNocTransId(), cfexbondcrg.getNocNo(), cfexbondcrg.getExBondingId());
 
-				if (existingExBond != null) {
+				if (existingExBond != null) 
+				{
 					existingExBond.setAreaRemaining(cfexbondcrg.getAreaRemaining());
 					existingExBond.setAreaReleased(cfexbondcrg.getAreaReleased());
 					existingExBond.setGateInType(cfexbondcrg.getGateInType());
@@ -501,6 +509,16 @@ public class CfExBondCrgService {
 					existingExBond.setStatus("N");
 					existingExBond.setEditedBy(user);
 					existingExBond.setEditedDate(new Date());
+					
+					existingExBond.setSbDate(cfexbondcrg.getSbDate());
+					existingExBond.setSbNo(cfexbondcrg.getSbNo());
+					existingExBond.setTrnsferBondDate(cfexbondcrg.getTrnsferBondDate());
+					existingExBond.setTrnsferBondNo(cfexbondcrg.getTrnsferBondNo());
+					existingExBond.setExBondType(cfexbondcrg.getExBondType());
+					
+					existingExBond.setSbDuty(cfexbondcrg.getExBondedCargoDuty());
+					existingExBond.setSbValue(cfexbondcrg.getExBondedCif());
+					existingExBond.setSbQty(cfexbondcrg.getExBondedPackages());
 
 					existingExBond.setBalancedPackages(cfexbondcrg.getRemainingPackages()
 							.subtract(Optional.ofNullable(cfexbondcrg.getExBondedPackages()).orElse(BigDecimal.ZERO)));
@@ -589,15 +607,20 @@ public class CfExBondCrgService {
 						if (findCfBondCrgHDRData != null) {
 							int updateCfInbondCrdHDR = cfinbondCrgHdrRepo.updateCfInbondHeaderAfterExbond(
 									findCfBondCrgHDRData.getExBondedPackages().add(cfexbondcrg.getExBondedPackages())
-											.subtract(existingExBond.getInBondedPackages()),
+											.subtract(existingExBond.getExBondedPackages()),
+											
 									findCfBondCrgHDRData.getExBondedCargoDuty().add(cfexbondcrg.getExBondedCargoDuty())
 											.subtract(existingExBond.getExBondedCargoDuty()),
+											
 									findCfBondCrgHDRData.getExBondedInsurance().add(cfexbondcrg.getExBondedInsurance())
 											.subtract(existingExBond.getExBondedInsurance()),
+											
 									findCfBondCrgHDRData.getExBondedCif().add(cfexbondcrg.getExBondedCif())
 											.subtract(existingExBond.getExBondedCif()),
+											
 									findCfBondCrgHDRData.getExBondedGw().add(cfexbondcrg.getExBondedGw())
 											.subtract(existingExBond.getExBondedGw()),
+											
 									companyId, branchId, cfexbondcrg.getNocTransId(), cfexbondcrg.getNocNo(),
 									existing.getInBondingHdrId(), cfexbondcrg.getBoeNo());
 
@@ -606,7 +629,8 @@ public class CfExBondCrgService {
 
 					}
 
-					for (CfinbondcrgDtl item : cfexbondcrgDtlList) {
+					for (CfinbondcrgDtl item : cfexbondcrgDtlList) 
+					{
 
 						CfexBondCrgDtl findExistingCfexbondCrgDtl = cfExBondCrgDtlRepository.findExistingCfexbondCrgDtl(
 								companyId, branchId, item.getNocTransId(), item.getNocNo(), item.getCfBondDtlId(),
@@ -731,10 +755,9 @@ public class CfExBondCrgService {
 							exBondDtl.setIgmLineNo(cfexbondcrg.getIgmLineNo());
 							exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
 							exBondDtl.setExBondGridArea(item.getExBondGridArea());
-
+							exBondDtl.setExBondType(cfexbondcrg.getExBondType());
 							CfexBondCrgDtl saved=	cfExBondCrgDtlRepository.save(exBondDtl);
 							
-//							CfexBondCrgDtl saved=	cfExBondCrgDtlRepository.save(exBondDtl);
 							
 							if (saved!=null)
 							{
@@ -802,44 +825,6 @@ public class CfExBondCrgService {
 								}
 								
 							}
-//							if (saved!=null)
-//							{
-//								CfExBondGrid cf1 = new CfExBondGrid();
-//								
-//								Integer maxSrNo = cfExBondGridRepository.getMaxSrNo(companyId, branchId, saved.getExBondingId(),
-//										saved.getCfBondDtlId());
-//
-//								cf1.setSrNo((maxSrNo == null) ? 1 : maxSrNo + 1);
-//								cf1.setCompanyId(companyId);
-//								cf1.setBranchId(branchId);
-//								cf1.setCreatedBy(user);
-//								cf1.setCreatedDate(new Date());
-//								cf1.setApprovedBy(user);
-//								cf1.setApprovedDate(new Date());
-//								cf1.setInBondingId(saved.getInBondingId());
-//								cf1.setExBondingId(saved.getExBondingId());
-//								cf1.setCfBondDtlId(saved.getCfBondDtlId());
-//								
-//								cf1.setYardLocation(saved.getYardLocationId());
-//								cf1.setYardBlock(saved.getBlockId());
-//								cf1.setBlockCellNo(saved.getCellNoRow());
-////								cf1.setGridReleased(saved.getExBondGridArea());
-//								cf1.setExCellAreaAllocated(saved.getExBondGridArea());
-//								cf1.setExBondPackages(saved.getExBondyardPackages());
-//								cf1.setInBondPackages(saved.getInBondedPackages());
-////								cf1.setCellAreaAllocated(saved.getCellAreaAllocated());
-//								cf1.setCellAreaAllocated(cfexbondcrg.getAreaOccupied());
-//								cf1.setNocTransId(saved.getNocTransId());
-//								cf1.setFinYear("2025");
-//							
-//								cf1.setInBondPackages(saved.getInBondedPackages());
-//								cf1.setStatus("A");
-//
-//								CfExBondGrid  saved1 = cfExBondGridRepository.save(cf1);
-//								
-//							
-//							}
-							
 		
 							
 							CfinbondcrgDtl toUpdateInBondCrgDtl = cfexbondcrgDtlRepo.toUpdateInBondCrgDtl(companyId,
@@ -930,7 +915,7 @@ public class CfExBondCrgService {
 	}
 	
 	
-	
+	@Transactional
 	public ResponseEntity<?> approveDataOfInCFbondGrid(String companyId, String branchId, String flag, String user,
 	        Map<String, Object> requestBody) {
 
@@ -1011,7 +996,7 @@ public class CfExBondCrgService {
 
 	public CfExBondCrg getDataOfExbond(String companyId, String branchId, String nocTransId, String nocNo,
 			String exBondingId, String inBondingId) {
-		return cfExBondCrgRepository.getDataOfExbond(companyId, branchId, nocTransId, nocNo, exBondingId, inBondingId);
+		return cfExBondCrgRepository.getDataOfExbond1(companyId, branchId, nocTransId, nocNo, exBondingId, inBondingId);
 	}
 
 	public List<CfexBondCrgDtl> getCfBondInBondDTLData(String companyId, String branchId, String nocTransId,

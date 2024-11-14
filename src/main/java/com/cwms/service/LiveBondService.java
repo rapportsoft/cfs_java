@@ -9,8 +9,10 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -27,12 +29,13 @@ public class LiveBondService {
 	private com.cwms.repository.InbondCFRepositary InbondCFRepositary;
 	
 	
-	public Sheet fillInbondSheetData(Sheet inbondSheet, Date startDate, Date endDate, String company, String branch,
-			String wareHouse) {
+	public Sheet fillInbondSheetData(Sheet inbondSheet, Date startDate, Date endDate, String company, String branch) {
 
 		List<Object[]> inbondData = InbondCFRepositary.findinbondDataLiveBondInbond(company, branch, startDate,
 				endDate);
 
+		
+		System.out.println("inbondData_______________"+inbondData.size());
 		Font boldFont = inbondSheet.getWorkbook().createFont();
 		boldFont.setBold(true);
 
@@ -191,12 +194,13 @@ public class LiveBondService {
 	
 	
 	
-	public Sheet fillExbondSheetData(Sheet exbondSheet, Date startDate, Date endDate, String company, String branch,
-			String wareHouse) {
+	public Sheet fillExbondSheetData(Sheet exbondSheet, Date startDate, Date endDate, String company, String branch) {
 
 		List<Object[]> inbondData = InbondCFRepositary.findinbondDataLiveBondExbond(company, branch, startDate,
 				endDate);
 
+		
+		System.out.println("inbondData_______________fillExbondSheetData"+inbondData.size()); 
 		Font boldFont = exbondSheet.getWorkbook().createFont();
 		boldFont.setBold(true);
 
@@ -362,8 +366,9 @@ public class LiveBondService {
 
         return cal.getTime();
     }
-	public Sheet fillLivebondSheetData(Sheet livebondSheet, Date startDate, Date endDate, String company, String branch,
-            String wareHouse) {
+    
+    
+	public Sheet fillLivebondSheetData(Sheet livebondSheet, Date startDate, Date endDate, String company, String branch,String section49) {
 
         try {
             System.out.println("Hiii");
@@ -388,11 +393,13 @@ public class LiveBondService {
             Date end23y = getLastDateOfMonth(startDate, 15);
 
             List<Object[]> getLiveOpeningBalance1 = InbondCFRepositary.getLiveOpeningBalance(company, branch, startDate,
-                    endDate);
+                    endDate,section49);
             System.out.println("hiii1");
+            
+            System.out.println("getLiveOpeningBalance1______________getLiveOpeningBalance1"+getLiveOpeningBalance1.size()); 
 
             List<Object[]> getLiveReceiptsAndDisposal1 = InbondCFRepositary.getLiveReceiptsAndDisposal(company,
-                    branch, startDate, endDate, aprilDate, lastDateOfPreviousMonth);
+                    branch, startDate, endDate, aprilDate, lastDateOfPreviousMonth,section49);
 
             List<Object[]> getLiveBreckUp1 = InbondCFRepositary.getLiveBreckUp(company, branch, endDate, startDate,
                     endDate, start13, lastDateOfPreviousMonth, start36, end36, start612, end612, start12y, end12y,
@@ -450,9 +457,7 @@ public class LiveBondService {
             int totalBreakPack = 0;
             BigDecimal totalBreakCif = new BigDecimal("0.0");
             BigDecimal totalBreakCargo = new BigDecimal("0.0");
-            
-            
-            
+
             int b11 = Integer.parseInt(String.valueOf(b1[0]));
             BigDecimal b12 = new BigDecimal(String.valueOf(b1[1]));
             BigDecimal b13 = new BigDecimal(String.valueOf(b1[2]));
@@ -536,7 +541,7 @@ public class LiveBondService {
 
             Row headerRow3 = livebondSheet.createRow(rowIndex++);
             Cell headerCell2 = headerRow3.createCell(0);
-            headerCell2.setCellValue(" WAREHOUSE CODE : " + wareHouse);
+            headerCell2.setCellValue(" WAREHOUSE CODE : " + company);
             livebondSheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 18));
             applyBorderToMergedCells(livebondSheet, 2, 0, 17);
 
@@ -553,45 +558,74 @@ public class LiveBondService {
             applyBorderToMergedCells(livebondSheet, 4, 0, 18);
 
             livebondSheet.createRow(rowIndex++);
-            
-            
-            
-            
-         
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
             Row headersRow = livebondSheet.createRow(rowIndex);
 
             for (int i = 0; i < 4; i++) {
                 headersRow.createCell(i);
             }
 
+//            Cell receiptsHeaderCell = headersRow.createCell(4);
+//            receiptsHeaderCell.setCellValue("RECEIPTS");
+//            livebondSheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 4, 6));
+//
+//            Cell disposalHeaderCell = headersRow.createCell(7);
+//            disposalHeaderCell.setCellValue("DISPOSAL");
+//            livebondSheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 7, 9));
+//            headersRow.createCell(10);
+//
+//            Cell breakupHeaderCell = headersRow.createCell(11);
+//            breakupHeaderCell.setCellValue("BREAK UP OF THE PENDENCY AT THE END OF THE MONTH");
+//            livebondSheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 11, 18));
+
+            
+            
+         // Create the header style with light orange background and white font color
+            CellStyle headerStyle = livebondSheet.getWorkbook().createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            // Create a font with white color and bold styling
+            Font headerFont = livebondSheet.getWorkbook().createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(headerFont);
+
+            // Apply the style to each header cell and its merged region
+
+            // Set "RECEIPTS" header with background color and white font
             Cell receiptsHeaderCell = headersRow.createCell(4);
             receiptsHeaderCell.setCellValue("RECEIPTS");
+            receiptsHeaderCell.setCellStyle(headerStyle);
             livebondSheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 4, 6));
+            for (int i = 5; i <= 6; i++) {
+                Cell cell = headersRow.createCell(i);
+                cell.setCellStyle(headerStyle); // Apply style to merged cells without setting value
+            }
 
+            // Set "DISPOSAL" header with background color and white font
             Cell disposalHeaderCell = headersRow.createCell(7);
             disposalHeaderCell.setCellValue("DISPOSAL");
+            disposalHeaderCell.setCellStyle(headerStyle);
             livebondSheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 7, 9));
-            		
-            		  
+            for (int i = 8; i <= 9; i++) {
+                Cell cell = headersRow.createCell(i);
+                cell.setCellStyle(headerStyle); // Apply style to merged cells without setting value
+            }
 
-            headersRow.createCell(10);
-
+            // Set "BREAK UP OF THE PENDENCY AT THE END OF THE MONTH" with background color and white font
             Cell breakupHeaderCell = headersRow.createCell(11);
             breakupHeaderCell.setCellValue("BREAK UP OF THE PENDENCY AT THE END OF THE MONTH");
+            breakupHeaderCell.setCellStyle(headerStyle);
             livebondSheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 11, 18));
+            for (int i = 12; i <= 18; i++) {
+                Cell cell = headersRow.createCell(i);
+                cell.setCellStyle(headerStyle); // Apply style to merged cells without setting value
+            }
 
+
+            
             applyBorderToMergedCells(livebondSheet, rowIndex, 0, 18);
 
             rowIndex++;
@@ -604,17 +638,19 @@ public class LiveBondService {
                     "< 1 MONTHS", "1---3 MONTHS", "3---6 MONTHS", "6---12 MONTHS", "1-2 YEARS", "2-3 YEARS",
                     "ABOVE 3 YEARS", "Total" };
 
-            CellStyle headerStyle = livebondSheet.getWorkbook().createCellStyle();
-            headerStyle.setBorderBottom(BorderStyle.THIN);
-            headerStyle.setBorderTop(BorderStyle.THIN);
-            headerStyle.setBorderLeft(BorderStyle.THIN);
-            headerStyle.setBorderRight(BorderStyle.THIN);
-            headerStyle.setAlignment(HorizontalAlignment.CENTER);
-            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
+//            CellStyle headerStyle = livebondSheet.getWorkbook().createCellStyle();
+//            headerStyle.setBorderBottom(BorderStyle.THIN);
+//            headerStyle.setBorderTop(BorderStyle.THIN);
+//            headerStyle.setBorderLeft(BorderStyle.THIN);
+//            headerStyle.setBorderRight(BorderStyle.THIN);
+//            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+//            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+//          
+            
             Font boldFont = livebondSheet.getWorkbook().createFont();
             boldFont.setBold(true);
             headerStyle.setFont(boldFont);
+
 
             for (int i = 0; i < headers.length; i++) {
                 Cell headerCell9 = headersRow2.createCell(i);
@@ -640,15 +676,10 @@ public class LiveBondService {
 
             rowIndex = rowIndex + 3;
             
-            
-            
-            
-            
-            
-            List<Object[]> openingBalanceList = InbondCFRepositary.getLiveOpeningBalance1(company, branch, startDate, endDate);
+            List<Object[]> openingBalanceList = InbondCFRepositary.getLiveOpeningBalance1(company, branch, startDate, endDate,section49);
             System.out.println("hiii1");
 
-            List<Object[]> receiptsAndDisposalList = InbondCFRepositary.getLiveReceiptsAndDisposal1(company, branch, startDate, endDate, aprilDate, lastDateOfPreviousMonth);
+            List<Object[]> receiptsAndDisposalList = InbondCFRepositary.getLiveReceiptsAndDisposal1(company, branch, startDate, endDate, aprilDate, lastDateOfPreviousMonth,section49);
 
             List<Object[]> breckUpList = InbondCFRepositary.getLiveBreckUp1(company, branch, endDate, startDate, endDate, start13, lastDateOfPreviousMonth, start36, end36, start612, end612, start12y, end12y, start23y, end23y, start23y);
 
@@ -802,6 +833,11 @@ public class LiveBondService {
                 livebondSheet.autoSizeColumn(i);
             }
 
+            livebondSheet.createFreezePane(0, 7);
+
+         // Enable auto-filter for the header row (adjust column range as needed)
+//         livebondSheet.setAutoFilter(new CellRangeAddress(5, 5, 0, headers.length - 1));
+	        
             String[] valuesForRow4 = {"1", "SKNC", "NO", String.valueOf(openingBalanceInt), String.valueOf(receiptsDataInt1), String.valueOf(receiptsDataInt2),
                     String.valueOf(totalIn1), String.valueOf(receiptsDataInt3), String.valueOf(receiptsDataInt4), String.valueOf(totalEx1), String.valueOf(totalClosePack1),
                     String.valueOf(breckUpDataInt1), String.valueOf(breckUpDataInt2), String.valueOf(breckUpDataInt3), String.valueOf(breckUpDataInt4), String.valueOf(breckUpDataInt5),
@@ -825,6 +861,10 @@ public class LiveBondService {
         }
     }
 
+	
+	
+	
+	
 	private String formatDate(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
 		return sdf.format(date);

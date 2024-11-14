@@ -126,4 +126,27 @@ public interface CfInBondGridRepository extends JpaRepository<CfInBondGrid, Stri
 			@Param ("blockCellNo") String blockCellNo,
 			@Param ("srNo") Integer srNo);
 	
+	
+	
+	
+	
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE CfInBondGrid c SET c.inBondPackages = :inBondPackages, c.cellAreaAllocated = :cellAreaAllocated " +
+	       "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.inBondingId = :inBondingId " +
+	       "AND c.cfBondDtlId = :cfBondDtlId AND c.yardLocation = :yardLocation AND c.yardBlock = :yardBlock AND c.blockCellNo = :blockCellNo ")
+	int updateInbondGridAfterAuditTrail(
+	    @Param("inBondPackages") BigDecimal inBondPackages,
+	    @Param("cellAreaAllocated") BigDecimal cellAreaAllocated,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("inBondingId") String inBondingId,
+	    @Param("cfBondDtlId") String cfBondDtlId,
+	    @Param("yardLocation") String yardLocation,
+	    @Param("yardBlock") String yardBlock,
+	    @Param("blockCellNo") String blockCellNo
+	);
+	
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.CfExBondCrg;
+import com.cwms.entities.CfexbondcrgEdit;
 import com.cwms.entities.Cfinbondcrg;
 import com.cwms.service.CFSBondingReportService;
 import com.cwms.service.LiveBondService;
@@ -35,9 +36,8 @@ public class CFSBondingReportController {
 	
 	@Autowired
 	public LiveBondService InBondService;
-	
-	
-	 @GetMapping("/cBondcargoInventoryReport")
+	    
+	    @GetMapping("/cBondcargoInventoryReport")
 		public ResponseEntity<byte[]> generateExcelDoNoHistory( @RequestParam(name = "companyId") String companyId,
 			       @RequestParam(name = "branchId") String branchId, 
 			       @RequestParam(name = "uname") String username,
@@ -174,13 +174,13 @@ public class CFSBondingReportController {
 					       @RequestParam(name = "type") String type, 
 					       @RequestParam(name = "cname") String companyname,
 					       @RequestParam(name = "bname") String branchname, 
-					       @RequestParam(name = "exBondingId") String exBondingId,
 					       @RequestParam(name = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
-					       @RequestParam(name = "endDate",required = false ) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) throws DocumentException {
+					       @RequestParam(name = "endDate",required = false ) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+					       @RequestParam(name = "section49",required = false) String section49) throws DocumentException {
 				
-					byte[] excelBytes = cFSBondingReportService.createExcelReportOfLiveBondReport(companyId,branchId,username,type,companyname,branchname,exBondingId,startDate,endDate);
+					byte[] excelBytes = cFSBondingReportService.createExcelReportOfLiveBondReport(companyId,branchId,username,type,companyname,branchname,startDate,endDate,section49);
 					
-					String fileName = "Live Bond Report" + exBondingId + ".xlsx";
+					String fileName = "Live Bond Report.xlsx";
 					HttpHeaders headers = new HttpHeaders();
 					
 					headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -302,11 +302,13 @@ public class CFSBondingReportController {
 					       @RequestParam(name = "type") String type, 
 					       @RequestParam(name = "cname") String companyname,
 					       @RequestParam(name = "bname") String branchname, 
-					       @RequestParam(name = "exBondingId") String exBondingId) throws DocumentException {
+					       @RequestParam(name = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+					       @RequestParam(name = "endDate",required = false ) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+					       @RequestParam(name = "boeNo",required = false ) String boeNo) throws DocumentException {
 				
-					byte[] excelBytes = cFSBondingReportService.createExcelReportOfAuditTrailReport(companyId,branchId,username,type,companyname,branchname,exBondingId);
+					byte[] excelBytes = cFSBondingReportService.createExcelReportOfAuditTrailReport(companyId,branchId,username,type,companyname,branchname,startDate,endDate,boeNo);
 					
-					String fileName = "AuditTrail Report" + exBondingId + ".xlsx";
+					String fileName = "AuditTrail Report.xlsx";
 					HttpHeaders headers = new HttpHeaders();
 					
 					headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -316,13 +318,28 @@ public class CFSBondingReportController {
 				}
 				
 				
+				 @GetMapping("/showAuditTrailReport")
+				    public ResponseEntity<List<CfexbondcrgEdit>> showAuditTrailReport(
+				    		@RequestParam(name = "companyId") String companyId,
+				    		 @RequestParam(name = "branchId") String branchId, 
+						       @RequestParam(name = "uname") String username,
+						       @RequestParam(name = "type") String type, 
+						       @RequestParam(name = "cname") String companyname,
+						       @RequestParam(name = "bname") String branchname, 
+						       @RequestParam(name = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+						       @RequestParam(name = "endDate",required = false ) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+						       @RequestParam(name = "boeNo",required = false ) String boeNo) throws DocumentException {
+					
+				        return cFSBondingReportService.showAuditTrailReport(companyId, branchId, username, type, companyname, branchname, startDate, endDate,boeNo);
+				    }
+				
 				
 				@GetMapping("/downLoadmontlyReport")
-				public ResponseEntity<?> downLoadMonthlyreport(@RequestParam(name = "companyid", required = false) String companyid,
+				public ResponseEntity<?> downLoadMonthlyreport(@RequestParam(name = "companyId", required = false) String companyId,
 						@RequestParam(name = "branchId", required = false) String branchId,
-						@RequestParam(name = "warehouse", required = false) String warehouse,
 						@RequestParam(name = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-						@RequestParam(name = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+						@RequestParam(name = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+						@RequestParam(name = "section49", required = false) String section49) {
 					try {
 								
 						  // Create a new workbook
@@ -330,15 +347,15 @@ public class CFSBondingReportController {
 
 				        // Create INBOND sheet and fill data
 				        Sheet inbondSheet = workbook.createSheet("INBOND");
-				        Sheet fillInbondSheetData = InBondService.fillInbondSheetData(inbondSheet, startDate, endDate,companyid,branchId,warehouse );
+				        Sheet fillInbondSheetData = InBondService.fillInbondSheetData(inbondSheet, startDate, endDate,companyId,branchId );
 
 				        // Create EXBOND sheet and fill data
 				        Sheet exbondSheet = workbook.createSheet("EXBOND");
-				        Sheet fillExbondSheetData = InBondService.fillExbondSheetData(exbondSheet, startDate, endDate,companyid,branchId,warehouse);
+				        Sheet fillExbondSheetData = InBondService.fillExbondSheetData(exbondSheet, startDate, endDate,companyId,branchId);
 
 				        // Create LIVEBOND sheet and fill data
 				        Sheet livebondSheet = workbook.createSheet("LIVEBOND");
-				        Sheet fillLivebondSheetData = InBondService.fillLivebondSheetData(livebondSheet, startDate, endDate,companyid,branchId,warehouse);
+				        Sheet fillLivebondSheetData = InBondService.fillLivebondSheetData(livebondSheet, startDate, endDate,companyId,branchId,section49);
 
 				        // Adjust column sizes (optional)
 				        for (int i = 0; i < 13; i++) {

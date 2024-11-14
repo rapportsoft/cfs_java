@@ -29,7 +29,7 @@ public class CfinbondcrgDtlId implements Serializable{
 	private String cfBondDtlId;
  
 	
-	private String boeNo;
+//	private String boeNo;
 
 
 	public CfinbondcrgDtlId() {
@@ -118,18 +118,20 @@ public class CfinbondcrgDtlId implements Serializable{
 	}
 
 
-	public String getBoeNo() {
-		return boeNo;
-	}
-
-
-	public void setBoeNo(String boeNo) {
-		this.boeNo = boeNo;
-	}
+//	public String getBoeNo() {
+//		return boeNo;
+//	}
+//
+//
+//	public void setBoeNo(String boeNo) {
+//		this.boeNo = boeNo;
+//	}
 
 
 	public CfinbondcrgDtlId(String companyId, String branchId, String finYear, String inBondingDtlId,
-			String inBondingId, String nocTransId, String nocNo, String cfBondDtlId, String boeNo) {
+			String inBondingId, String nocTransId, String nocNo, String cfBondDtlId
+//			, String boeNo
+			) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -139,7 +141,7 @@ public class CfinbondcrgDtlId implements Serializable{
 		this.nocTransId = nocTransId;
 		this.nocNo = nocNo;
 		this.cfBondDtlId = cfBondDtlId;
-		this.boeNo = boeNo;
+//		this.boeNo = boeNo;
 	}
 
 
@@ -147,7 +149,7 @@ public class CfinbondcrgDtlId implements Serializable{
 	public String toString() {
 		return "CfinbondcrgDtlId [companyId=" + companyId + ", branchId=" + branchId + ", finYear=" + finYear
 				+ ", inBondingDtlId=" + inBondingDtlId + ", inBondingId=" + inBondingId + ", nocTransId=" + nocTransId
-				+ ", nocNo=" + nocNo + ", cfBondDtlId=" + cfBondDtlId + ", boeNo=" + boeNo + "]";
+				+ ", nocNo=" + nocNo + ", cfBondDtlId=" + cfBondDtlId + ", inBondingId=" + inBondingId + "]";
 	}
     
 	

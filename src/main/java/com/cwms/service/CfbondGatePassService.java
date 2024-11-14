@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.TemplateEngine;
@@ -91,6 +92,12 @@ public class CfbondGatePassService {
 
 	
 
+	
+	
+	
+	
+	
+	@Transactional
 	public ResponseEntity<?> saveDataOfGatePassAndGatePassDtl(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
 		ObjectMapper object = new ObjectMapper();
@@ -694,6 +701,7 @@ public class CfbondGatePassService {
 	
 	
 	
+	@Transactional
 	public ResponseEntity<?> approveDataOfInCFbondGrid(String companyId, String branchId, String flag, String user,
 	        Map<String, Object> requestBody) {
 

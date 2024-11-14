@@ -181,13 +181,7 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 		List<Cfbondnoc> findCfbondnocByCompanyIdAndBranchId(@Param("companyId") String companyId, 
 		                                                     @Param("branchId") String branchId,
 		                                                     @Param("partyName") String partyName);
-	
-	
-	
-	
 
-	
-	
 //	
 //	@Query("SELECT NEW com.cwms.entities.Cfbondnoc(c.companyId, c.branchId, c.nocTransId,c.nocTransDate, c.profitcentreId, c.nocNo, " +
 //		       "c.nocDate, c.source, c.gateInId, c.igmTransId, c.igmNo, c.igmDate, " +
@@ -576,4 +570,43 @@ Cfbondnoc getForBondingSearch(@Param("companyId") String companyId,
                                                @Param("bondingNo") String bondingNo);
 
 
+
+
+
+
+
+
+@Modifying
+@Transactional
+@Query("UPDATE Cfbondnoc c SET c.inBondedPackages = :inBondedPackages, " +
+       "c.inbondGrossWt = :inbondGrossWt, c.inbondInsuranceValue = :inbondInsuranceValue, " +
+       "c.inbondCifValue = :inbondCifValue, c.inbondCargoDuty = :inbondCargoDuty, " +
+       "c.bondingNo = :bondingNo, c.bondingDate = :bondingDate, c.bondValidityDate = :bondValidityDate , c.boeNo = :boeNo , c.boeDate = :boeDate ,"
+       + "c.cha =:cha ,c.chaCode=:chaCode ,c.importerId =:importerId ,c.importerName =:importerName , c.importerAddress1=:importerAddress1 ,c.importerAddress2=:importerAddress2 ,c.importerAddress3=:importerAddress3 " +
+       "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo")
+int updateCfBondNocAfterAuditTrail(
+    @Param("inBondedPackages") BigDecimal inBondedPackages,
+    @Param("inbondGrossWt") BigDecimal inbondGrossWt,
+    @Param("inbondInsuranceValue") BigDecimal inbondInsuranceValue,
+    @Param("inbondCifValue") BigDecimal inbondCifValue,
+    @Param("inbondCargoDuty") BigDecimal inbondCargoDuty,
+    @Param("bondingNo") String bondingNo,
+    @Param("bondingDate") Date bondingDate,
+    @Param("bondValidityDate") Date bondValidityDate,
+    @Param("boeNo") String boeNo,
+    @Param("boeDate") Date boeDate,
+    
+    @Param("cha") String cha,
+    @Param("chaCode") String chaCode,
+    @Param("importerId") String importerId,
+    @Param("importerName") String importerName,
+    @Param("importerAddress1") String importerAddress1,
+    @Param("importerAddress2") String importerAddress2,
+    @Param("importerAddress3") String importerAddress3,
+    
+    @Param("companyId") String companyId,
+    @Param("branchId") String branchId,
+    @Param("nocTransId") String nocTransId,
+    @Param("nocNo") String nocNo
+);
 }

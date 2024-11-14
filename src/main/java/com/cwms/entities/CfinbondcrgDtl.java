@@ -51,11 +51,11 @@ public class CfinbondcrgDtl {
 	@Column(name = "Cfbond_Detail_Id", length = 6, nullable = true)
 	private String cfBondDtlId;
     
-    @Id
+//    @Id
 	@Column(name = "BOE_No", length = 15, nullable = true)
 	private String boeNo;
     
-    @Column(name = "In_Bonding_Date", nullable = true)
+	@Column(name = "In_Bonding_Date", nullable = true)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     private Date inBondingDate;
@@ -104,10 +104,6 @@ public class CfinbondcrgDtl {
 	private String commodityDescription;
 
 
-	
-
-	
- 
     @Column(name = "Ex_Bonded_Packages", precision = 8, scale = 0)
     private BigDecimal exBondedPackages;
 
@@ -221,6 +217,8 @@ public class CfinbondcrgDtl {
 	@Column(name = "ExBond_Grid_Area", precision = 16, scale = 3)
 	private BigDecimal exBondGridArea;
 	
+	@Transient
+	private BigDecimal gateInPackages;
 	
 	public CfinbondcrgDtl() {
 		super();
@@ -228,6 +226,16 @@ public class CfinbondcrgDtl {
 	}
 
 	
+	public BigDecimal getGateInPackages() {
+		return gateInPackages;
+	}
+
+
+	public void setGateInPackages(BigDecimal gateInPackages) {
+		this.gateInPackages = gateInPackages;
+	}
+
+
 	public BigDecimal getCellArea() {
 		return cellArea;
 	}
@@ -949,5 +957,52 @@ public String toString() {
 	
 	
 
-	
+
+
+// query for this in bond audit trail report please check for any correction
+public CfinbondcrgDtl(String companyId, String branchId, String inBondingDtlId, String inBondingId,
+		String nocTransId, String nocNo, String cfBondDtlId, String boeNo, Date inBondingDate, Date nocTransDate,
+		Date nocDate, String bondingNo, Date bondingDate, String typeOfPackage, String commodityDescription,
+		BigDecimal exBondedPackages, BigDecimal inBondedPackages, BigDecimal inbondGrossWt,
+		BigDecimal inbondInsuranceValue, BigDecimal inbondCifValue, BigDecimal inbondCargoDuty,
+		BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, String yardLocationId,
+		String blockId, String cellNoRow, BigDecimal areaOccupied, BigDecimal yardPackages,
+		BigDecimal cellAreaAllocated, BigDecimal cellArea,BigDecimal gateInPackages,BigDecimal cifValue,
+		BigDecimal cargoDuty) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.inBondingDtlId = inBondingDtlId;
+	this.inBondingId = inBondingId;
+	this.nocTransId = nocTransId;
+	this.nocNo = nocNo;
+	this.cfBondDtlId = cfBondDtlId;
+	this.boeNo = boeNo;
+	this.inBondingDate = inBondingDate;
+	this.nocTransDate = nocTransDate;
+	this.nocDate = nocDate;
+	this.bondingNo = bondingNo;
+	this.bondingDate = bondingDate;
+	this.typeOfPackage = typeOfPackage;
+	this.commodityDescription = commodityDescription;
+	this.exBondedPackages = exBondedPackages;
+	this.inBondedPackages = inBondedPackages;
+	this.inbondGrossWt = inbondGrossWt;
+	this.inbondInsuranceValue = inbondInsuranceValue;
+	this.inbondCifValue = inbondCifValue;
+	this.inbondCargoDuty = inbondCargoDuty;
+	this.shortagePackages = shortagePackages;
+	this.damagedQty = damagedQty;
+	this.breakage = breakage;
+	this.yardLocationId = yardLocationId;
+	this.blockId = blockId;
+	this.cellNoRow = cellNoRow;
+	this.areaOccupied = areaOccupied;
+	this.yardPackages = yardPackages;
+	this.cellAreaAllocated = cellAreaAllocated;
+	this.cellArea = cellArea;
+	this.gateInPackages = gateInPackages;
+	this.cifValue = cifValue;
+	this.cargoDuty = cargoDuty;
+}
 }

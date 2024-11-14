@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfExBondGrid;
@@ -64,6 +65,12 @@ public class CfExBondGridService {
         return new ResponseEntity<List<CfExBondGrid>>(list,HttpStatus.OK);
     }
 	
+	
+	
+	
+	
+	
+	@Transactional
 	public ResponseEntity<?> saveDataInCFExbondGrid(String companyId, String branchId, String flag, String user,
 			Map<String, Object> dataToSave) {
 
@@ -267,7 +274,7 @@ public class CfExBondGridService {
 	
 	
 
-	
+	@Transactional
 	public ResponseEntity<?> updateDataInExbondGridAfterBondGatePass(String companyId, String branchId, String flag, String user,
 			Map<String, Object> dataToSave) {
 

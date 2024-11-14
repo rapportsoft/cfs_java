@@ -80,7 +80,7 @@ public class CfInBondGrid {
     @Column(name = "Created_By", length = 10, nullable = true)
     private String createdBy;
 
-    @Column(name = "Created_Date", nullable = true)
+    @Column(name = "Created_Date", nullable = true, columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date createdDate;
@@ -88,7 +88,7 @@ public class CfInBondGrid {
     @Column(name = "Edited_By", length = 10)
     private String editedBy;
 
-    @Column(name = "Edited_Date")
+    @Column(name = "Edited_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date editedDate;
@@ -96,7 +96,7 @@ public class CfInBondGrid {
     @Column(name = "Approved_By", length = 10)
     private String approvedBy;
 
-    @Column(name = "Approved_Date")
+    @Column(name = "Approved_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvedDate;

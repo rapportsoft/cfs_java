@@ -16,6 +16,7 @@ import org.springframework.boot.actuate.autoconfigure.observation.ObservationPro
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -161,14 +162,9 @@ public class CfInBondGridService {
 	
 	
 	
-	
+	@Transactional
 	public ResponseEntity<?> saveDataInCFbondGrid(String companyId, String branchId, String flag, String user,
 			Map<String, Object> dataToSave) {
-
-		
-		
-		
-		
 		System.out.println("flag________________________________" + flag);
 
 		List<CfInBondGrid> existingData = null;
@@ -203,12 +199,8 @@ public class CfInBondGridService {
 		} else {
 			throw new IllegalArgumentException("Invalid type for nocDtl: " + nocDtlObj.getClass());
 		}
-		
-		
+
 		System.out.println("cfinbondcrgDtlList________________________________"+cfinbondcrgDtlList);
-		
-
-
         for (CfInBondGrid impexpgrid : cfinbondcrgDtlList) 
         {
             // Create a unique key based on relevant fields
@@ -246,10 +238,9 @@ public class CfInBondGridService {
             return ResponseEntity.badRequest().body(errorYardLocations);
         }
 
-		
+	
 		System.out.println("existingData_____________________________________"+existingData);
 
-//		if (cfinbondcrgDtlList != null && "add".equals(flag)) 
 		if (cfinbondcrgDtlList != null) 
 		{
 		

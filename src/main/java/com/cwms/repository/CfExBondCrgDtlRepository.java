@@ -47,7 +47,10 @@ public interface CfExBondCrgDtlRepository extends JpaRepository<CfexBondCrgDtl, 
 	@Modifying
 	@Transactional
 	@Query("update CfexBondCrgDtl c set c.editedBy=:editedBy, c.editedDate=:editedDate, c.exBondedPackages=:exBondedPackages, "
-	        + "c.exBondedCIF=:exBondedCIF, c.exBondedCargoDuty=:exBondedCargoDuty, c.exBondedInsurance=:exBondedInsurance, c.exBondedGW=:exBondedGW ,c.exBondyardPackages=:exBondyardPackages,c.exBondGridArea=:exBondGridArea ,c.status=:status "
+	        + "c.exBondedCIF=:exBondedCIF, c.exBondedCargoDuty=:exBondedCargoDuty, c.exBondedInsurance=:exBondedInsurance,"
+	        + " c.exBondedGW=:exBondedGW ,c.exBondyardPackages=:exBondyardPackages,"
+	        + "c.exBondGridArea=:exBondGridArea ,"
+	        + "c.status=:status "
 	        + "where c.companyId=:companyId and "
 	        + "c.branchId=:branchId and "
 	        + "c.cfBondDtlId=:cfBondDtlId and "
@@ -248,5 +251,45 @@ int updateAfterApprove(
 	                                        @Param("boeNo") String boeNo,
 	                                        @Param("exBondingId") String exBondingId);
 
+
+
+
+
+
+
+
+@Modifying
+@Transactional
+@Query("update CfexBondCrgDtl c set c.editedBy=:editedBy, c.editedDate=:editedDate, c.exBondedPackages=:exBondedPackages, "
+        + "c.exBondedCIF=:exBondedCIF, c.exBondedCargoDuty=:exBondedCargoDuty, c.exBondedInsurance=:exBondedInsurance,"
+        + " c.exBondedGW=:exBondedGW ,c.exBondyardPackages=:exBondyardPackages,"
+        + "c.exBondGridArea=:exBondGridArea ,"
+        + "c.exBondBeNo=:exBondBeNo ,"
+        + "c.status=:status "
+        + "where c.companyId=:companyId and "
+        + "c.branchId=:branchId and "
+        + "c.cfBondDtlId=:cfBondDtlId and "
+        + "c.nocTransId=:nocTransId and "
+        + "c.nocNo=:nocNo and "
+        + "c.inBondingId=:inBondingId and "
+        + "c.exBondingId=:exBondingId")
+int updateExbondCrgDetailAfterExBondAuditTrail(@Param("editedBy") String editedBy,
+                          @Param("editedDate") Date editedDate,
+                          @Param("exBondedPackages") BigDecimal exBondedPackages,
+                          @Param("exBondedCIF") BigDecimal exBondedCIF,
+                          @Param("exBondedCargoDuty") BigDecimal exBondedCargoDuty,
+                          @Param("exBondedInsurance") BigDecimal exBondedInsurance,
+                          @Param("exBondedGW") BigDecimal exBondedGW,
+                          @Param("exBondyardPackages") BigDecimal exBondyardPackages,
+                          @Param("exBondGridArea") BigDecimal exBondGridArea,
+                          @Param("exBondBeNo") String exBondBeNo,
+                          @Param("status") Character status,
+                          @Param("companyId") String companyId,
+                          @Param("branchId") String branchId,
+                          @Param("cfBondDtlId") String cfBondDtlId,
+                          @Param("nocTransId") String nocTransId,
+                          @Param("nocNo") String nocNo,
+                          @Param("inBondingId") String inBondingId,
+                          @Param("exBondingId") String exBondingId);
 
 }
