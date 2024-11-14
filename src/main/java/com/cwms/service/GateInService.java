@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cwms.entities.ExportInventory;
 import com.cwms.entities.ExportSbCargoEntry;
 import com.cwms.entities.ExportSbEntry;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.helper.HelperMethods;
+import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.VehicleTrackRepository;
 
@@ -40,6 +42,8 @@ public class GateInService {
 	@Autowired
 	private VehicleTrackRepository vehicleRepo;
 	
+	@Autowired
+	private ExportInventoryRepository exportinventoryrepo;
 	
 	private List<Map<String, String>> convertToValueLabelList(List<String> data) {
 	    return data.stream().map(obj -> {
@@ -255,4 +259,168 @@ public class GateInService {
 	    }
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+
+	@Transactional
+	public ResponseEntity<?> addGateInBuffer(String companyId, String branchId, GateIn gateInLoop, String user) {
+	    Date currentDate = new Date();	    
+	    String financialYear = helperMethods.getFinancialYear();
+	    try {
+	    	
+	    	System.out.println("gateInLoop "+ gateInLoop);
+	    	 	
+	            if (gateInLoop.getGateInId() != null && !gateInLoop.getGateInId().trim().isEmpty()) {
+	            	
+	            	System.out.println("Here for : "+ gateInLoop.getGateInId() + " gateInLoop.getDocRefNo() "+gateInLoop.getDocRefNo());
+	            	
+	                GateIn gateInByIds = gateInRepo.getGateInByIdsBuffer(companyId, branchId, gateInLoop.getProfitcentreId(), 
+	                                                               gateInLoop.getGateInId(), gateInLoop.getProcessId());
+	            	
+	            	if(gateInByIds != null)
+	            	{
+	            		
+	            		gateInByIds.setOrigin(gateInLoop.getOrigin());
+	            		gateInByIds.setGrossWeight(gateInLoop.getGrossWeight());
+	            		gateInByIds.setTareWeight(gateInLoop.getTareWeight());
+	            		gateInByIds.setCommodityDescription(gateInLoop.getCommodityDescription());
+	            		gateInByIds.setRemarks(gateInLoop.getRemarks());
+	            		gateInByIds.setRefer(gateInLoop.getRefer());
+	            		
+	            		
+	            		gateInByIds.setContainerSealNo(gateInLoop.getContainerSealNo());
+	            		gateInByIds.setInvoiceNo(gateInLoop.getInvoiceNo());
+	            		gateInByIds.setInvoiceDate(gateInLoop.getInvoiceDate());
+	            		
+	            		
+	            		gateInByIds.setDeliveryOrderNo(gateInLoop.getDeliveryOrderNo());
+	            		gateInByIds.setDeliveryOrderDate(gateInLoop.getDeliveryOrderDate());
+	            		gateInByIds.setDoValidityDate(gateInLoop.getDoValidityDate());
+	            		gateInByIds.setDriverName(gateInLoop.getDriverName());
+	            		gateInByIds.setHazardous(gateInLoop.getHazardous());
+	            		gateInByIds.setHazClass(gateInLoop.getHazClass());
+	            		gateInByIds.setUnNo(gateInLoop.getUnNo());
+	            		
+	            		
+	            		gateInLoop.setEditedBy(user);
+		                gateInLoop.setEditedDate(currentDate);
+	            		
+	 	                GateIn save = gateInRepo.save(gateInByIds);
+	 	               System.out.println("Before gateInByIds "+ gateInLoop); 
+	 	               
+	 	               System.out.println("After gateInByIds "+ save); 
+	 	               
+	            	}
+	            	
+	            } else {	            	
+	            	
+	            	Boolean checkInInv = exportinventoryrepo.checkContainerInInventoryWithoutGateOut(companyId, branchId, gateInLoop.getContainerNo());
+	    			
+	    			if (checkInInv) {
+	    				
+	    				return	ResponseEntity.status(HttpStatus.CONFLICT).body("The container is already in the inventory.");
+	    			}
+	            	
+	            	String autoGateInId = processService.autoExportGateInId(companyId, branchId, "P00109");
+
+	                gateInLoop.setGateInId(autoGateInId);
+	                gateInLoop.setStatus("A");
+	                gateInLoop.setCreatedBy(user);
+	                gateInLoop.setCreatedDate(currentDate);
+	                gateInLoop.setEditedBy(user);
+	                gateInLoop.setEditedDate(currentDate);
+	                gateInLoop.setApprovedBy(user);
+	                gateInLoop.setApprovedDate(currentDate);        
+	                gateInLoop.setFob(new BigDecimal("0"));
+	                gateInLoop.setFinYear(financialYear);
+	               gateInRepo.save(gateInLoop);             
+	                
+	                
+	                
+	                VehicleTrack v = new VehicleTrack();
+					v.setCompanyId(companyId);
+					v.setBranchId(branchId);
+					v.setFinYear(gateInLoop.getFinYear());
+					v.setVehicleNo(gateInLoop.getVehicleNo());
+					v.setProfitcentreId(gateInLoop.getProfitcentreId());
+					v.setSrNo(1);
+					v.setTransporterStatus(gateInLoop.getTransporterStatus().charAt(0));
+					v.setTransporterName(gateInLoop.getTransporterName());
+					v.setTransporter(gateInLoop.getTransporter());
+					v.setDriverName(gateInLoop.getDriverName());					
+					v.setVehicleStatus('B');
+					v.setGateInId(gateInLoop.getGateInId());
+					v.setGateInDate(new Date());
+					v.setGateNoIn(gateInLoop.getGateNo());
+					v.setShiftIn(gateInLoop.getShift());
+					v.setStatus('A');
+					v.setCreatedBy(user);
+					v.setCreatedDate(new Date());
+					v.setApprovedBy(user);
+					v.setApprovedDate(new Date());              
+	                
+	                vehicleRepo.save(v);
+	                
+	                
+	                ExportInventory inventory = new ExportInventory();
+	    			inventory.setCompanyId(companyId);
+	    			inventory.setBranchId(branchId);
+	    			inventory.setSbTransId("");
+	    			inventory.setSbNo("");
+	    			inventory.setProfitcentreId(gateInLoop.getProfitcentreId());
+	    			inventory.setGateInId(gateInLoop.getGateInId());
+	    			inventory.setGateInDate(currentDate);
+	    			inventory.setContainerNo(gateInLoop.getContainerNo());
+	    			inventory.setContainerSealNo(gateInLoop.getContainerSealNo());
+	    			inventory.setContainerSize(gateInLoop.getContainerSize());
+	    			inventory.setContainerType(gateInLoop.getContainerType());
+	    			inventory.setContainerStatus(gateInLoop.getContainerStatus());
+	    			inventory.setContainerWeight(gateInLoop.getTareWeight());
+	    			inventory.setIso(gateInLoop.getIsoCode());
+	    			inventory.setSa(gateInLoop.getSa());
+	    			inventory.setSl(gateInLoop.getSl());
+	    			inventory.setCreatedBy(user);
+	    			inventory.setCreatedDate(new Date());
+	    			inventory.setApprovedBy(user);
+	    			inventory.setApprovedDate(new Date());
+	    			inventory.setStatus("A");
+
+	    			exportinventoryrepo.save(inventory);
+	                
+	            }
+	        
+	        GateIn selectedGateInEntry = gateInRepo.getSelectedGateInEntryNew(companyId, branchId, gateInLoop.getProfitcentreId(), gateInLoop.getGateInId(), gateInLoop.getProcessId());
+
+	        return ResponseEntity.ok(selectedGateInEntry);
+	    } catch (Exception e) {
+	        System.out.println("An error occurred while adding export gate-in entries: " + e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("An error occurred while processing the gate-in entries.");
+	    }
+	}
+	
+	
+	
+	
+	public ResponseEntity<?> getSavedGateInRecords(String companyId, String branchId, String profitCenterId, String gateInId, String processId)
+	{		
+		GateIn selectedGateInEntry = gateInRepo.getSelectedGateInEntryNew(companyId, branchId, profitCenterId, gateInId, processId);
+		return ResponseEntity.ok(selectedGateInEntry);	
+	}
+	
+	
+	public List<Object[]> getGateInEntriesToSelectNew(String companyId, String branchId, String searchValue, String processId)
+	{				
+		return gateInRepo.getGateInEntriesDataNew(companyId, branchId, searchValue, processId);
+	}
+	
+	
+	
+	
 }

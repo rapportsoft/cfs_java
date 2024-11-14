@@ -1100,5 +1100,48 @@ public class GateInController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+
+	@PostMapping("/addGateInBuffer")
+	public ResponseEntity<?> addGateInBuffer(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestBody GateIn gateIn,
+			@RequestParam("userId") String User) {
+
+		ResponseEntity<?> addExportSbEntry = gateInService.addGateInBuffer(companyId, branchId, gateIn, User);
+		return addExportSbEntry;
+	}
+
 	
+	
+	@GetMapping("/getSavedGateInRecordsBuffer")
+	public ResponseEntity<?> getSavedGateInRecordsBuffer(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam("profitCenterId") String profitCenterId, 
+	        @RequestParam("processId") String processId, 
+	        @RequestParam("gateInId") String gateInId) {	    
+	    try {	    	
+	    	ResponseEntity<?>  gateInEntries = gateInService.getSavedGateInRecords(companyId, branchId, profitCenterId, gateInId, processId);
+	        return gateInEntries;
+	    } catch (Exception e) {	 
+	    	System.out.println("Errro : "+e);
+	        // Return an appropriate error response
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+	@GetMapping("/getGateInEntriesToSelectNew")
+	public ResponseEntity<?> getGateInEntriesToSelectNew(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId,@RequestParam("processId") String processId,
+			@RequestParam(value = "searchValue", required = false) String searchValue) {
+		try {
+			List<Object[]> gateInEntries = gateInService.getGateInEntriesToSelectNew(companyId, branchId, searchValue,processId);
+			return ResponseEntity.ok(gateInEntries);
+		} catch (Exception e) {
+			// Return an appropriate error response
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+
 }

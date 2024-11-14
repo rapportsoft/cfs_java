@@ -323,7 +323,7 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 	//Sanket
 	
 	
-	@Query(value="select e.stuffReqId from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
+	@Query(value="select Distinct e.stuffReqId from ExportStuffRequest e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
 			+ "(e.stuffTallyId is null OR e.stuffTallyId = '') and (:id is null OR :id = '' OR e.stuffReqId LIKE CONCAT('%',:id,'%')) "
 			+ "and (COALESCE(e.noOfPackagesStuffed,0)-COALESCE(e.stuffedQty,0) > 0)")
 	List<String> getDataBystuffReqId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);

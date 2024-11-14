@@ -10,6 +10,11 @@ import com.cwms.entities.ExportInventory;
 
 public interface ExportInventoryRepository extends JpaRepository<ExportInventory, String> {
 
+	@Query("SELECT COUNT(e) > 0 FROM ExportInventory e WHERE e.companyId = :cid AND e.branchId = :bid AND e.status != 'D' AND e.containerNo = :con AND (e.gateOutId IS NULL OR e.gateOutId = '')")
+	Boolean checkContainerInInventoryWithoutGateOut(@Param("cid") String cid, @Param("bid") String bId, @Param("con") String con);
+
+	
+	
 	
 
 	@Transactional

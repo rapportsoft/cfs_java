@@ -95,7 +95,10 @@ package com.cwms.controller;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -222,6 +225,32 @@ public class IsoContainerController {
     public List<IsoContainer> getIsoCodes(
             @RequestParam("companyId") String companyId) {
         return isoContainerRepository.findIsoContainersByCriteria1(companyId);
+    }
+	
+	
+	
+	
+	
+	@GetMapping("/searchByIsoCodeList")
+    public ResponseEntity<?> searchByIsoCodeList(
+            @RequestParam("companyId") String companyId) {
+		
+		List<IsoContainer> findIsoContainersByCriteria1 = isoContainerRepository.findIsoContainersByCriteria1(companyId);
+		List<Map<String, Object>> collect = findIsoContainersByCriteria1.stream().map(iso ->
+		{
+			 Map<String, Object> map = new HashMap<>();
+		        map.put("value", iso.getIsoCode());
+		        map.put("label", iso.getIsoCode());
+		        
+		        map.put("containerType", iso.getContainerType());
+		        map.put("containerSize", iso.getContainerSize());
+		        map.put("tareWeight", iso.getTareWeight());
+		        
+		        return map;
+		    }).collect(Collectors.toList());
+		
+		
+        return ResponseEntity.ok(collect);
     }
 	
 }

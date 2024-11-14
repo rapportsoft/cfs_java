@@ -622,5 +622,20 @@ public class PartyController {
 		return ResponseEntity.ok(toSendGetParties);
 	}
 	
+	@GetMapping("/getPartyByTypeValue")
+	public ResponseEntity<?> getPartyByTypeValue(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,
+			@RequestParam("searchValue") String searchValue, @RequestParam(name="type",required = false) String type){
+		List<Map<String, Object>>  toSendGetParties = new ArrayList<>();
+		
+		List<Object[]> partyByTypeValue = partyrepo.getPartyByTypeValue(companyId, branchId, searchValue, type);
 	
+		  toSendGetParties = partyByTypeValue.stream().map(row -> {
+		        Map<String, Object> map = new HashMap<>();
+		        map.put("value", row[0]);
+		        map.put("label", row[1]);
+		        return map;
+		    }).collect(Collectors.toList());	
+	
+	return ResponseEntity.ok(toSendGetParties);
+	}
 }

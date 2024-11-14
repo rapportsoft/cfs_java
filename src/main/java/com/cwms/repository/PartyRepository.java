@@ -13,6 +13,29 @@ import com.cwms.entities.Port;
 public interface PartyRepository extends JpaRepository<Party, String> {
 	
 	
+	@Query(value = "SELECT p.party_id, p.party_name " +
+            "FROM party p " +
+            "WHERE p.company_id = :cid " +
+            "AND p.branch_id = :bid " +
+            "AND p.status != 'D' " +
+            "AND (" +
+            "   (:type = 'cha' AND p.cha = 'Y') " +
+            "   OR (:type = 'on' AND p.agt = 'Y') " +
+            "   OR (:type = 'exp' AND p.exp = 'Y') " +
+            "   OR (:type = 'sa' AND p.agt = 'Y') " +
+            "   OR (:type = 'sl' AND p.lin = 'Y') " +
+            ") " +
+            "AND (:val IS NULL OR :val = '' OR p.party_name LIKE CONCAT(:val, '%'))", 
+            nativeQuery = true)
+List<Object[]> getPartyByTypeValue(
+    @Param("cid") String cid,
+    @Param("bid") String bid,
+    @Param("val") String val,
+    @Param("type") String type
+);
+
+	
+	
 	@Query(value = "select p from Party p where p.companyId=:cid and p.branchId=:bid and p.customerCode=:pid and p.status != 'D' and p.lin='Y'")
 	Party getDataByCustomerCode1(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
 	

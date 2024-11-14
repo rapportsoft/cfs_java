@@ -14,6 +14,79 @@ import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
+	
+	
+	
+	@Query(value = "select c.gateInId, c.inGateInDate, c.profitcentreId,c.gateNo, c.shift, c.containerNo, c.containerSize, c.containerType, c.driverName, c.vehicleNo, c.status "
+	        + "from GateIn c "
+	        + "where c.companyId = :companyId and c.branchId = :branchId and c.status != 'D' AND c.processId = :processId "
+	        + "and (:searchValue is null OR :searchValue = '' OR c.containerNo LIKE %:searchValue% OR c.gateInId LIKE %:searchValue% OR c.vehicleNo LIKE %:searchValue% OR c.containerSize LIKE %:searchValue% OR c.containerType LIKE %:searchValue%) "
+	        + "ORDER BY c.inGateInDate DESC")
+	List<Object[]> getGateInEntriesDataNew(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                                @Param("searchValue") String searchValue,@Param("processId") String processId);
+	
+	
+	
+	
+	
+	@Query(value = "select c.gateInId, c.inGateInDate, c.docRefNo, c.erpDocRefNo, c.profitcentreId, po.profitcentreDesc, c.transporterStatus, c.transporterName, c.driverName, c.vehicleNo, c.status "
+	        + "from GateIn c "
+	        + "Left Join Profitcentre po on c.companyId = po.companyId and c.branchId = po.branchId and c.profitcentreId = po.profitcentreId and po.status != 'D' "
+	        + "where c.companyId = :companyId and c.branchId = :branchId and c.status != 'D' and c.gateInType= :type AND c.processId = :processId "
+	        + "and (:searchValue is null OR :searchValue = '' OR c.docRefNo LIKE %:searchValue% OR c.gateInId LIKE %:searchValue% OR c.vehicleNo LIKE %:searchValue%) "
+	        + "ORDER BY c.inGateInDate DESC")
+	List<Object[]> getGateInEntriesData(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                                @Param("searchValue") String searchValue,@Param("processId") String processId, @Param("type") String type);
+	
+	
+	@Query("SELECT NEW com.cwms.entities.GateIn(" +
+		       "E.companyId, E.branchId, E.gateInId, E.finYear, E.lineNo, E.srNo, E.invoiceNo, " +
+		       "E.invoiceDate, E.gateInType, E.profitcentreId, E.processId, E.containerNo, " +
+		       "E.containerSize, E.containerType, E.containerStatus, E.containerSealNo, " +
+		       "E.customsSealNo, E.actualSealNo, E.sealMismatch, E.isoCode, E.grossWeight, " +
+		       "E.tareWeight, E.weighmentDone, E.overDimension, E.hazardous, E.hazClass, E.sa, E.sl, " +
+		       "E.onAccountOf, E.cha, E.importerName, E.commodityDescription, " +
+		       "E.deliveryOrderNo, E.deliveryOrderDate, E.doValidityDate, E.shift, E.terminal, " +
+		       "E.origin, E.refer, E.containerHealth, E.transporterStatus, E.transporterName, " +
+		       "E.transporter, E.vehicleNo, E.driverName, E.comments, E.status, E.approvedBy, " +
+		       "E.backToTown, E.backToTownRemark, E.backToTownDate, E.unNo, E.commodity, " +
+		       "E.inGateInDate, E.commodityCode, E.bufferCode, E.gateNo, E.remarks, " +
+		       "sa.partyName, sl.partyName, c.partyName, o.partyName) " +
+		       "FROM GateIn E " +
+		       "LEFT JOIN Party c ON E.companyId = c.companyId AND E.branchId = c.branchId AND E.cha = c.partyId AND c.status != 'D' " +
+		       "LEFT JOIN Party o ON E.companyId = o.companyId AND E.branchId = o.branchId AND E.onAccountOf = o.partyId AND o.status != 'D' " +
+		       "LEFT JOIN Party sa ON E.companyId = sa.companyId AND E.branchId = sa.branchId AND E.sa = sa.partyId AND sa.status != 'D' " +
+		       "LEFT JOIN Party sl ON E.companyId = sl.companyId AND E.branchId = sl.branchId AND E.sl = sl.partyId AND sl.status != 'D' " +
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.gateInId = :gateInId " +
+		       "AND E.processId = :processId " +
+		       "AND E.status <> 'D'")
+		GateIn getSelectedGateInEntryNew(@Param("companyId") String companyId, 
+		                                 @Param("branchId") String branchId,
+		                                 @Param("profitcentreId") String profitcentreId, 
+		                                 @Param("gateInId") String gateInId,
+		                                 @Param("processId") String processId);
+
+	
+	
+	@Query("SELECT E FROM GateIn E "
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.profitcentreId = :profitcentreId " 
+	        + "AND E.processId = :processId "
+	        + "AND E.gateInId = :gateInId "
+	        + "AND E.status <> 'D'")
+	GateIn getGateInByIdsBuffer(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("profitcentreId") String profitcentreId, @Param("gateInId") String gateInId,
+	                              @Param("processId") String processId);
+	
+	
+	
+	
+	
+	
+	
+	
 	@Modifying
 	@Transactional
 	@Query("UPDATE GateIn E SET E.stuffRequestId = :stuffReqId "

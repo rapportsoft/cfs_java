@@ -263,6 +263,11 @@ public class ExportCartingService {
 				
 				existing.setStatus(status.equals("A") ? status : existing.getStatus());
 				
+				if(existing.getApprovedBy().equals("N"))
+				{
+					existing.setApprovedBy(status.equals("A") ? User : existing.getApprovedBy());
+				}
+				
 				ExportCarting save = cartingRepo.save(existing);
 				cartingListToSend.add(save);
 				
@@ -296,7 +301,7 @@ public class ExportCartingService {
                 cartingEntry.setFinYear(helperMethods.getFinancialYear());				
 				cartingEntry.setCreatedBy(User);
 				cartingEntry.setCreatedDate(currentDate);	
-				cartingEntry.setApprovedBy(User);
+				cartingEntry.setApprovedBy(status.equals("A") ? User : " ");
 				cartingEntry.setApprovedDate(currentDate);
 //				cartingEntry.setStatus("A");	
 				

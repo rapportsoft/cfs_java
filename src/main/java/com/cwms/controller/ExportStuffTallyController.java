@@ -236,7 +236,9 @@ public class ExportStuffTallyController {
 				}
 
 				ExportSbCargoEntry cargo = exportsbcargorepo.getExportSbEntryBySbNoAndSbTransIdAndSbLine(cid, bid,
-						e.getSbNo(), e.getSbTransId(), e.getSbLineId());
+						e.getSbNo(), e.getSbTransId());
+				
+				System.out.println(cid+ " " +  bid+ " sbNo " +e.getSbNo()+ "  Trans Id " + e.getSbTransId()+ " lineId " + e.getSbLineId());
 
 				if (cargo == null) {
 					return new ResponseEntity<>("Export cargo data not found", HttpStatus.CONFLICT);
@@ -514,7 +516,7 @@ public class ExportStuffTallyController {
 				ExportStuffRequest stuffReq1 = (ExportStuffRequest) stuffReq.clone();
 
 				ExportSbCargoEntry cargo = exportsbcargorepo.getExportSbEntryBySbNoAndSbTransIdAndSbLine(cid, bid,
-						t.getSbNo(), t.getSbTransId(), t.getSbLineId());
+						t.getSbNo(), t.getSbTransId());
 
 				if (cargo == null) {
 					return new ResponseEntity<>("Export cargo data not found", HttpStatus.CONFLICT);
