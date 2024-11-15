@@ -213,8 +213,7 @@ public class ExportGatePassController {
 				processnextidrepo.updateAuditTrail(cid, bid, "P05086", HoldNextIdD1, "2024");
 				sr++;
 
-				ExportInventory inv = exportinvrepo.getDataByContainerNoAndSb(cid, bid, g.getContainerNo(),
-						g.getSbNo());
+				ExportInventory inv = exportinvrepo.getDataByContainerNo(cid, bid, g.getContainerNo());
 
 				if (inv != null) {
 					inv.setGatePassNo(HoldNextIdD1);
@@ -387,8 +386,7 @@ public class ExportGatePassController {
 					return new ResponseEntity<>("Movement data not found.", HttpStatus.CONFLICT);
 				}
 				
-				ExportInventory inv = exportinvrepo.getDataByContainerNoAndSb(cid, bid, exist.getContainerNo(),
-						exist.getSbNo());
+				ExportInventory inv = exportinvrepo.getDataByContainerNo(cid, bid, exist.getContainerNo());
 				
 				if (inv == null) {
 					return new ResponseEntity<>("Export inventory data not found.", HttpStatus.CONFLICT);
