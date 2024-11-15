@@ -226,6 +226,11 @@ public class CfexbondcrgEditService {
 		CfInBondGrid saved = null;
 
 		CfexbondcrgEdit savedEdit = null;
+		
+		if(cfinbondcrg.getInBondingId()==null || cfinbondcrg.getInBondingId().isEmpty() || cfinbondcrg.getInBondingId().isEmpty())
+		{
+			return new ResponseEntity<>("Please Select Boe No to save data.....",HttpStatus.BAD_REQUEST);
+		}
 
 		if (cfinbondcrg != null)
 		{
@@ -406,6 +411,7 @@ public class CfexbondcrgEditService {
 
 							if (findCfBondCrgDTLData != null) {
 								
+								BigDecimal yardPackages = getValidBigDecimal(savedDtl.getNewYardPackages(), savedDtl.getOldYardPackages());
 								
 								findCfBondCrgDTLData.setInBondedPackages(savedDtl.getNewBondPackages());
 								findCfBondCrgDTLData.setInbondCargoDuty(savedDtl.getNewBondCargoDuty());
@@ -415,7 +421,7 @@ public class CfexbondcrgEditService {
 								findCfBondCrgDTLData.setBreakage(savedDtl.getNewBreakage());
 								findCfBondCrgDTLData.setDamagedQty(savedDtl.getNewDamagedQty());
 
-								findCfBondCrgDTLData.setYardPackages(savedDtl.getNewYardPackages());
+								findCfBondCrgDTLData.setYardPackages(yardPackages);
 								findCfBondCrgDTLData.setCellAreaAllocated(savedDtl.getCellAreaAllocated());
 
 								if (savedEdit.getBoeNo().isEmpty() || savedEdit.getBoeNo().isBlank()
@@ -856,6 +862,10 @@ public class CfexbondcrgEditService {
 
 		CfexbondcrgEdit savedEdit = null;
 
+		if(cfinbondcrg.getExBondBeNoOld()==null || cfinbondcrg.getExBondBeNoOld().isEmpty() || cfinbondcrg.getExBondBeNoOld().isEmpty())
+		{
+			return new ResponseEntity<>("please select exbondbe no to save data.....",HttpStatus.BAD_REQUEST);
+		}
 		if (cfinbondcrg != null) 
 		{
 			cfinbondcrg.setApprovedBy(user);
