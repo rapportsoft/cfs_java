@@ -1190,7 +1190,7 @@ public class ExportGatePass {
 
 
 		public ExportGatePass(String movementReqId,String gatePassId, String sbTransId, Date gatePassDate, String transType, String sbNo,
-				Date sbDate, String tripType, String vehicleNo, String vehicleId, String pol, String transporterName,
+				Date sbDate, String tripType, String vehicleNo, String vehicleId, String driverName,String pol, String transporterName,
 				String transporter, String customsSealNo, String agentSealNo, String pod, String containerNo,
 				String containerSize, String containerType, BigDecimal grossWt, String containerStatus, String comments,
 				String status, String createdBy, String chaName, String viaNo) {
@@ -1204,6 +1204,7 @@ public class ExportGatePass {
 			this.tripType = tripType;
 			this.vehicleNo = vehicleNo;
 			this.vehicleId = vehicleId;
+			this.driverName = driverName;
 			this.pol = pol;
 			this.transporterName = transporterName;
 			this.transporter = transporter;
@@ -1220,6 +1221,34 @@ public class ExportGatePass {
 			this.createdBy = createdBy;
 			this.chaName = chaName;
 			this.viaNo = viaNo;
+		}
+
+
+
+
+
+		public ExportGatePass(String gatePassId, Date gatePassDate, String transType, String vehicleNo,
+				String vehicleId, String pol, String driverName, String transporterName, String transporterStatus,
+				String customsSealNo, String sl, String vesselId, String pod, String viaNo, String containerNo,
+				String containerSize, String containerType, BigDecimal grossWt) {
+			this.gatePassId = gatePassId;
+			this.gatePassDate = gatePassDate;
+			this.transType = transType;
+			this.vehicleNo = vehicleNo;
+			this.vehicleId = vehicleId;
+			this.pol = pol;
+			this.driverName = driverName;
+			this.transporterName = transporterName;
+			this.transporterStatus = transporterStatus;
+			this.customsSealNo = customsSealNo;
+			this.sl = sl;
+			this.vesselId = vesselId;
+			this.pod = pod;
+			this.viaNo = viaNo;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.grossWt = grossWt;
 		}
 	    
 	    

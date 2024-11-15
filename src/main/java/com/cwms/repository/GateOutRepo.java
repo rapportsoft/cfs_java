@@ -80,4 +80,26 @@ public interface GateOutRepo extends JpaRepository<GateOut, String>{
 	    @Param("vehicleNo") String vehicleNo);
 
 	
+	
+	@Query("SELECT NEW com.cwms.entities.GateOut(c.gateOutId, c.transType, c.gateOutDate, c.gateNoOut, p.partyName," +
+		    "c.transporterStatus, c.transporterName, c.vehicleNo, c.driverName, c.gatePassNo," +
+	        "c.gatePassDate, c.comments, c.status, c.createdBy) " +
+		    "FROM GateOut c " +
+	        "LEFT OUTER JOIN Party p ON c.companyId=p.companyId and c.branchId=p.branchId and c.sl=p.partyId " +
+		    "WHERE c.companyId = :companyId " +
+		    "AND c.branchId = :branchId " +
+		    "AND c.gateOutId = :gateOutId " +
+		    "AND c.status != 'D' ")
+		List<GateOut> getEportGateOutData(
+		    @Param("companyId") String companyId, 
+		    @Param("branchId") String branchId, 
+		    @Param("gateOutId") String gateOutId);
+
+		
+		@Query(value="select g.gateOutId,DATE_FORMAT(g.gateOutDate,'%d %M %y'),g.gatePassNo,DATE_FORMAT(g.gatePassDate,'%d %M %y'),"
+				+ "g.containerNo,g.vehicleNo "
+				+ "from GateOut g where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and g.processId='P00223' "
+				+ "and (:val is null OR :val = '' OR g.gateOutId LIKE CONCAT('%',:val,'%') OR g.gatePassNo LIKE CONCAT('%',:val,'%') "
+				+ "OR g.containerNo LIKE CONCAT('%',:val,'%') OR g.vehicleNo LIKE CONCAT('%',:val,'%'))")
+		List<Object[]> searchExportGateOut(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 }

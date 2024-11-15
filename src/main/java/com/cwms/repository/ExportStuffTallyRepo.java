@@ -185,5 +185,14 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			+ "and e.stuffTallyId = :stuffid and e.containerNo=:con")
 	int updateGatePassNo(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
 			@Param("stuffid") String stuffid, @Param("con") String con);
-
+	
+	
+	@Transactional
+	@Modifying
+	@Query(value = "Update ExportStuffTally e SET e.gateOutId=:id, e.gateOutDate = CURRENT_DATE where e.companyId=:cid and e.branchId=:bid and e.status != 'D' "
+			+ "and e.stuffTallyId = :stuffid and e.containerNo=:con")
+	int updateGateOutNo(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
+			@Param("stuffid") String stuffid, @Param("con") String con);
+	
+	
 }

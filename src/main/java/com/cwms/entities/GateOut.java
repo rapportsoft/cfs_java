@@ -1821,5 +1821,31 @@ public class GateOut {
 			this.docRefDate = docRefDate;
 			this.exBondBeNo = exBondBeNo;
 		}
+
+
+
+
+
+		public GateOut(String gateOutId, String transType, Date gateOutDate, String gateNoOut, String sl,
+				char transporterStatus, String transporterName, String vehicleNo, String driverName, String gatePassNo,
+				Date gatePassDate, String comments, char status, String createdBy) {
+			this.gateOutId = gateOutId;
+			this.transType = transType;
+			this.gateOutDate = gateOutDate;
+			this.gateNoOut = gateNoOut;
+			this.sl = sl;
+			this.transporterStatus = transporterStatus;
+			this.transporterName = transporterName;
+			this.vehicleNo = vehicleNo;
+			this.driverName = driverName;
+			this.gatePassNo = gatePassNo;
+			this.gatePassDate = gatePassDate;
+			this.comments = comments;
+			this.status = status;
+			this.createdBy = createdBy;
+		}
 	    
+		
+		
+		
 }
