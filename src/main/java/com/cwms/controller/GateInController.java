@@ -440,10 +440,10 @@ public class GateInController {
 
 	@GetMapping("/getGateInEntriesToSelect")
 	public ResponseEntity<?> getGateInEntriesToSelect(@RequestParam("companyId") String companyId,
-			@RequestParam("branchId") String branchId,
+			@RequestParam("branchId") String branchId,@RequestParam("processId") String processId,
 			@RequestParam(value = "searchValue", required = false) String searchValue) {
 		try {
-			List<Object[]> gateInEntries = gateInService.getGateInEntriesToSelect(companyId, branchId, searchValue);
+			List<Object[]> gateInEntries = gateInService.getGateInEntriesToSelect(companyId, branchId, searchValue, processId);
 			return ResponseEntity.ok(gateInEntries);
 		} catch (Exception e) {
 			// Return an appropriate error response

@@ -10,6 +10,21 @@ import com.cwms.entities.Port;
 
 public interface PortRepository extends JpaRepository<Port, String> {
     
+	@Query("SELECT NEW com.cwms.entities.Port(i.portCode, i.portName) " +
+		       "FROM Port i " +
+		       "WHERE " +       
+		       "i.companyId = :companyId " +
+		       "AND i.branchId = :branchId " +
+		       "AND (:searchValue IS NULL OR :searchValue = '' OR i.portCode LIKE %:searchValue% OR i.portName LIKE %:searchValue%) " +
+		       "ORDER BY i.portName DESC")
+		List<Port> searchPortData(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("searchValue") String searchValue  
+		);
+
+	
+	
 	@Query(value="select p.portCode,p.portName from Port p where p.companyId=:cid and p.branchId=:bid and p.status != 'D'")
 	List<Object[]> getData(@Param("cid") String cid,@Param("bid") String bid);
 	

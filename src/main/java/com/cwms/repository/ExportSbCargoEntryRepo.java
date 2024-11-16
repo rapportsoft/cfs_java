@@ -1,5 +1,6 @@
 package com.cwms.repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,66 @@ import jakarta.transaction.Transactional;
 
 public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry, String>
 {
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbCargoEntry e " +
+	       "SET e.stuffedQty = COALESCE(e.stuffedQty, 0) - :oldValue + :newValue, " +
+	       "    e.stuffedWt = COALESCE(e.stuffedWt, 0) - :oldWeight + :newWeight " +
+	       "WHERE e.companyId = :companyId " +
+	       "AND e.branchId = :branchId " +
+	       "AND e.sbNo = :sbNo " +
+	       "AND e.sbTransId = :sbTransId " +
+	       "AND e.status <> 'D'")
+	int updateStuffTallyQtyUpdateBuffer(
+	        @Param("oldValue") int oldValue,
+	        @Param("newValue") int newValue,
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("oldWeight") BigDecimal oldWeight,
+	        @Param("newWeight") BigDecimal newWeight
+	);
+
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE ExportSbCargoEntry e " +
+	        "SET e.stuffedQty = COALESCE(e.stuffedQty, 0) + :stuffedQty, " +
+	        "    e.bufferStuffing = 'Y', " +
+	        "    e.stuffedWt = COALESCE(e.stuffedWt, 0) + :stuffedWt " +
+	        "WHERE e.companyId = :companyId " +
+	        "AND e.branchId = :branchId " +
+	        "AND e.sbNo = :sbNo " +
+	        "AND e.sbTransId = :sbTransId " +
+	        "AND e.status <> 'D'")
+	int updateStuffTallyBuffer(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("stuffedQty") Integer stuffedQty,
+	        @Param("stuffedWt") BigDecimal stuffedWt
+	);
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Modifying
     @Transactional
     @Query("UPDATE ExportSbCargoEntry e SET e.stuffReqQty = e.stuffReqQty - :oldValue + :newValue " +
@@ -61,6 +122,7 @@ public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry
 		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
 		       "AND (s.totalPackages - s.gateInPackages) <> 0 " +
 		       "AND s.sbNo LIKE %:searchValue% " +
+		       "AND s.sbType = 'Normal' " +
 		       "AND s.status <> 'D'")
 		List<String> searchSbNosToGateIn(
 		    @Param("companyId") String companyId,

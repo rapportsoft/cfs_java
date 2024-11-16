@@ -1,5 +1,6 @@
 package com.cwms.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,20 @@ import com.cwms.entities.GateIn;
 public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
 	
-	
+	@Modifying
+	@Transactional
+	@Query("UPDATE GateIn E SET E.stuffTallyId = :stuffTallyId, E.stuffTallyDate = :stuffTallyDate, E.stuffTallyStatus = 'Y' "
+	     + "WHERE E.companyId = :companyId "
+	     + "AND E.branchId = :branchId "
+	     + "AND E.profitcentreId = :profitcentreId "
+	     + "AND E.gateInId = :gateInId "
+	     + "AND E.status <> 'D'")
+	int updateStuffTallyBufferdGateIn(@Param("stuffTallyId") String stuffTallyId,
+	                             @Param("companyId") String companyId,
+	                             @Param("branchId") String branchId,
+	                             @Param("profitcentreId") String profitcentreId,
+	                             @Param("gateInId") String gateInId,
+	                             @Param("stuffTallyDate") Date stuffTallyDate);
 	
 	@Query(value = "select c.gateInId, c.inGateInDate, c.profitcentreId,c.gateNo, c.shift, c.containerNo, c.containerSize, c.containerType, c.driverName, c.vehicleNo, c.status "
 	        + "from GateIn c "
@@ -158,6 +172,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
 		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
 		       "AND s.status <> 'D' " +
+		       "AND s.containerStatus != 'MTY' " +		       
 		       "AND s.vehicleNo LIKE %:searchValue% " +
 		       "ORDER BY s.createdDate")
 		List<String> searchVehicleNosToCarting(
@@ -246,10 +261,11 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	        + "from GateIn c "
 	        + "Left Join Profitcentre po on c.companyId = po.companyId and c.branchId = po.branchId and c.profitcentreId = po.profitcentreId and po.status != 'D' "
 	        + "where c.companyId = :companyId and c.branchId = :branchId and c.status != 'D' and c.gateInType='EXP' "
+	        + "AND c.processId = :processId "
 	        + "and (:searchValue is null OR :searchValue = '' OR c.docRefNo LIKE %:searchValue% OR c.gateInId LIKE %:searchValue% OR c.vehicleNo LIKE %:searchValue%) "
 	        + "ORDER BY c.inGateInDate DESC")
 	List<Object[]> getGateInEntriesData(@Param("companyId") String companyId, @Param("branchId") String branchId,
-	                                @Param("searchValue") String searchValue);
+	                                @Param("searchValue") String searchValue, String processId);
 	
 	
 	

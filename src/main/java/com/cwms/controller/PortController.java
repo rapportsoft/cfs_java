@@ -106,4 +106,11 @@ public class PortController {
 	    return ResponseEntity.ok(portList);
 	}
 
+	
+	@GetMapping("/getPortListToSelectTally")
+	public ResponseEntity<?> getPortListToSelectTally(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,@RequestParam("searchValue") String jobPrefix) {
+		 List<Map<String, String>> portList = portService.getPortToSelectTally(companyId, branchId, jobPrefix); 
+	   
+	    return ResponseEntity.ok(portList);
+	}
 }

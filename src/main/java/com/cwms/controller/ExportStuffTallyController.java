@@ -49,6 +49,7 @@ import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VesselRepository;
 import com.cwms.repository.VoyageRepository;
 import com.cwms.repository.YardBlockCellRepository;
+import com.cwms.service.ExportStuffTallyService;
 import com.cwms.service.ProcessNextIdService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -101,6 +102,19 @@ public class ExportStuffTallyController {
 
 	@Autowired
 	private YardBlockCellRepository yardBlockCellRepository;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@GetMapping("/searchVoyage")
 	public ResponseEntity<?> searchVessel(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -4932,4 +4946,93 @@ public class ExportStuffTallyController {
 
 	}
 
+	
+	
+	
+	
+//	Export Buffer
+	
+	
+	@Autowired
+	private ExportStuffTallyService stuffTallyService;
+	
+	
+//Export Buffer Tally...	
+	
+	
+	@GetMapping("/searchContainerNoBuffer")
+	public ResponseEntity<?> searchContainerNoBuffer(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
+		return stuffTallyService.searchContainerNoBuffer(companyId, branchId, containerNo, profitcentreId);
+	}
+	
+	
+	@GetMapping("/searchSbNoForBuffer")
+	public ResponseEntity<?> searchSbNoForBuffer(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,	@RequestParam("searchValue") String searchValue, 
+			@RequestParam("profitcentreId") String profitcentreId, @RequestParam(value = "stuffTallyId", required = false) String stuffTallyId,@RequestParam("sbType") String sbType){
+		return stuffTallyService.searchSbNoForBuffer(companyId, branchId, searchValue, profitcentreId, stuffTallyId, sbType);
+	}
+	
+	
+	
+
+	@PostMapping("/saveExportTallyBuffer")
+	public ResponseEntity<?> saveExportTallyBuffer(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestBody List<ExportStuffTally> exportStuffTally,
+			@RequestParam("userId") String user) {
+		ResponseEntity<?> saveExportStuffRequest = stuffTallyService.saveExportTallyBuffer(companyId, branchId, exportStuffTally, user);
+		return saveExportStuffRequest;
+	}
+	
+	
+	
+	
+	
+
+	@GetMapping("/getSelectedBufferStuffingEntry")
+	public ResponseEntity<?> getSelectedBufferStuffingEntry(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam("profitCenterId") String profitCenterId, 
+	        @RequestParam("containerNo") String containerNo, 
+	        @RequestParam("stuffTallyId") String stuffTallyId) {	    
+	    try {	    	
+	    	ResponseEntity<?>  gateInEntries = stuffTallyService.getSelectedBufferStuffingEntry(companyId, branchId, profitCenterId, stuffTallyId, containerNo);
+	        return gateInEntries;
+	    } catch (Exception e) {	 
+	    	System.out.println("Errro : "+e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+	    }
+	}
+	
+	
+	@GetMapping("/getBufferStuffingToSelect")
+	public ResponseEntity<?> getBufferStuffingToSelect(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId,
+			@RequestParam(value = "searchValue", required = false) String searchValue) {
+		try {
+			List<Object[]> gateInEntries = stuffTallyService.getBufferStuffingToSelect(companyId, branchId, searchValue);
+			return ResponseEntity.ok(gateInEntries);
+		} catch (Exception e) {
+			// Return an appropriate error response
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

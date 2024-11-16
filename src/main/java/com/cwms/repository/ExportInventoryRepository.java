@@ -10,6 +10,33 @@ import com.cwms.entities.ExportInventory;
 
 public interface ExportInventoryRepository extends JpaRepository<ExportInventory, String> {
 
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE ExportInventory e SET e.sbNo = :sbNo, e.sbTransId = :sbTransId, e.vesselId = :vesselId, e.viaNo = :viaNo, e.stuffTallyId = :stuffTallyId, e.stuffTallyDate = :stuffTallyDate, e.stuffTallyEditedBy = :stuffTallyEditedBy, e.stuffTallyEditedDate = :stuffTallyEditedDate WHERE e.companyId =:companyId and e.branchId =:branchId and e.gateInId = :gateInId")
+	int updateExportInventoryStuffingTally(
+	    @Param("sbNo") String sbNo,
+	    @Param("sbTransId") String sbTransId,
+	    @Param("vesselId") String vesselId,
+	    @Param("viaNo") String viaNo,
+	    @Param("stuffTallyId") String stuffTallyId,
+	    @Param("stuffTallyDate") Date stuffTallyDate,
+	    @Param("stuffTallyEditedBy") String stuffTallyEditedBy,
+	    @Param("stuffTallyEditedDate") Date stuffTallyEditedDate,
+	    @Param("gateInId") String gateInId,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId
+	);
+
+	
+	
+	
+	
+	
+	
+	
+	
 	@Query("SELECT COUNT(e) > 0 FROM ExportInventory e WHERE e.companyId = :cid AND e.branchId = :bid AND e.status != 'D' AND e.containerNo = :con AND (e.gateOutId IS NULL OR e.gateOutId = '')")
 	Boolean checkContainerInInventoryWithoutGateOut(@Param("cid") String cid, @Param("bid") String bId, @Param("con") String con);
 

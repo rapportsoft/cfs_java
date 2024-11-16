@@ -39,7 +39,7 @@ public interface ExportMovementRepo extends JpaRepository<ExportMovement, String
 	        + "e.forceEntryDate, e.forceEntryApproval, e.forceEntryRemarks, e.sSRTransId, e.forceEntryFlagInv, "
 	        + "e.trailerType, psl.partyName, psa.partyName, vs.vesselName, st.gateInId) "
 	        + "FROM ExportMovement e "
-	        + "LEFT JOIN ExportStuffTally st ON e.companyId = st.companyId AND e.branchId = st.branchId AND st.profitcentreId = e.profitcentreId AND e.stuffTallyId = st.stuffTallyId AND st.status <> 'D' "
+	        + "LEFT JOIN ExportStuffTally st ON e.companyId = st.companyId AND e.branchId = st.branchId AND st.profitcentreId = e.profitcentreId AND e.stuffTallyId = st.stuffTallyId AND st.stuffTallyLineId = 1 AND st.status <> 'D' "
 	        + "LEFT JOIN Vessel vs ON e.companyId = vs.companyId AND e.branchId = vs.branchId AND e.vesselId = vs.vesselId AND vs.status <> 'D' "
 	        + "LEFT JOIN Party psa ON e.companyId = psa.companyId AND e.branchId = psa.branchId AND e.shippingAgent = psa.partyId AND psa.status <> 'D' "
 	        + "LEFT JOIN Party psl ON e.companyId = psl.companyId AND e.branchId = psl.branchId AND e.shippingLine = psl.partyId AND psl.status <> 'D' "

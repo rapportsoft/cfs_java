@@ -14,6 +14,195 @@ import java.util.*;
 
 public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, String> {
 
+	
+//	Export Buffer
+	
+
+	@Query(value = "select c.stuffTallyId, c.stuffTallyDate, c.stuffTallyLineId,c.profitcentreId, p.profitcentreDesc,psa.partyName, psa.partyName, c.containerNo, c.status "
+	        + "from ExportStuffTally c "
+	        + "LEFT JOIN Profitcentre p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.profitcentreId = p.profitcentreId "
+	        + "LEFT JOIN Party psa ON c.companyId = psa.companyId AND c.branchId = psa.branchId AND c.shippingAgent = psa.partyId AND psa.status <> 'D' "
+	        + "LEFT JOIN Party psl ON c.companyId = psl.companyId AND c.branchId = psl.branchId AND c.shippingLine = psl.partyId AND psl.status <> 'D' "
+	        + "where c.companyId = :companyId and c.branchId = :branchId and c.status != 'D' AND c.movementType IN ('Buffer', 'ONWH') "
+	        + "and (:searchValue is null OR :searchValue = '' OR c.containerNo LIKE %:searchValue% OR c.stuffTallyId LIKE %:searchValue%) "
+	        + "ORDER BY c.stuffTallyDate DESC")
+	List<Object[]> getBufferStuffingToSelect(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue);
+	
+	
+	
+	
+	@Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END " +
+		       "FROM ExportInventory e " +		       
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.containerNo = :containerNo " +
+		       "AND e.gateInId = :gateInId " +
+		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND e.status <> 'D' " +
+		       "AND (e.stuffTallyId IS NOT NULL AND e.stuffTallyId <> '') " +  // Ensure stuffTallyId is not NULL or empty
+		       "AND (:stuffTallyId IS NULL OR :stuffTallyId = '' OR e.stuffTallyId <> :stuffTallyId)")
+		boolean existsContainerNo(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("containerNo") String containerNo,
+		    @Param("gateInId") String gateInId,
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("stuffTallyId") String stuffTallyId
+		);
+
+	
+	
+	
+	@Query("SELECT new com.cwms.entities.ExportStuffTally(E.companyId, E.branchId, E.stuffTallyId, E.sbTransId, "
+	        + "E.stuffTallyLineId, E.profitcentreId, E.sbLineId, E.sbNo, E.movementType, "
+	        + "E.stuffTallyDate, E.sbDate, E.shift, E.agentSealNo, E.vesselId, E.voyageNo, "
+	        + "E.rotationNo, E.rotationDate, E.pol, E.terminal, E.pod, E.finalPod, "
+	        + "E.containerNo, E.containerStatus, E.periodFrom, E.gateInId, E.containerSize, "
+	        + "E.containerType, E.containerCondition, E.onAccountOf, E.cha, E.stuffedQty, "
+	        + "ec.stuffedQty, E.cargoWeight, E.totalCargoWeight, E.totalGrossWeight, "
+	        + "E.grossWeight, E.tareWeight, E.areaReleased, E.haz, E.imoCode, "
+	        + "E.shippingAgent, E.shippingLine, E.commodity, E.customsSealNo, E.viaNo, "
+	        + "E.exporterName, E.consignee, E.fob, E.berthingDate, E.gateOpenDate, "
+	        + "E.status, E.createdBy, E.createdDate, E.editedBy, E.editedDate, "
+	        + "E.approvedBy, E.approvedDate, E.stuffTallyFlag, E.nopGrossWeight, "
+	        + "E.deliveryOrderNo, E.stuffMode, E.typeOfPackage, v.vesselName, "
+	        + "ec.noOfPackages, ec.stuffedWt, psl.partyName, "
+	        + "psa.partyName, COALESCE(pt.portName, E.terminal), COALESCE(pf.portName, E.finalPod)) "
+	           + "FROM ExportStuffTally E "
+	           + "LEFT JOIN Party psa ON E.companyId = psa.companyId AND E.branchId = psa.branchId AND E.shippingAgent = psa.partyId AND psa.status <> 'D' "
+	           + "LEFT JOIN Party psl ON E.companyId = psl.companyId AND E.branchId = psl.branchId AND E.shippingLine = psl.partyId AND psl.status <> 'D' "
+	           + "LEFT JOIN Vessel v ON E.companyId = v.companyId AND E.branchId = v.branchId AND E.vesselId = v.vesselId AND v.status <> 'D' "          	           
+	           + "LEFT JOIN ExportSbCargoEntry ec ON E.companyId = ec.companyId AND E.branchId = ec.branchId AND E.sbNo = ec.sbNo AND E.sbTransId = ec.sbTransId AND ec.status <> 'D' "
+	           + "LEFT JOIN Port pt ON E.companyId = pt.companyId AND E.branchId = pt.branchId AND E.terminal = pt.portCode AND pt.status <> 'D' "
+	           + "LEFT JOIN Port pf ON E.companyId = pf.companyId AND E.branchId = pf.branchId AND E.finalPod = pf.portCode AND pf.status <> 'D' "    
+	           + "WHERE E.companyId = :companyId "
+	           + "AND E.branchId = :branchId "
+	           + "AND E.stuffTallyId = :stuffTallyId "
+	           + "AND E.profitcentreId = :profitcentreId "
+	           + "AND E.containerNo = :containerNo "
+	           + "AND E.status <> 'D'")
+	    List<ExportStuffTally> searchStuffTallySaved(
+	        @Param("companyId") String companyId,	        @
+	        Param("branchId") String branchId,
+	        @Param("stuffTallyId") String stuffTallyId,
+	        @Param("containerNo") String containerNo,
+	        @Param("profitcentreId") String profitcentreId
+	    );
+	
+	
+	@Query("SELECT e "
+	        + "FROM ExportStuffTally e "
+			+ "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+	        + "AND e.sbNo = :sbNo " 
+	        + "AND e.sbTransId = :sbTransId "
+	        + "AND e.stuffTallyId = :stuffTallyId " 
+	        + "AND e.stuffTallyLineId = :stuffTallyLineId "
+	        + "AND e.status <> 'D'")
+	ExportStuffTally getDataForUpdateEntry(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                                    @Param("sbNo") String sbNo, @Param("sbTransId") String sbTransId,
+	                                    @Param("stuffTallyId") String stuffTallyId, @Param("stuffTallyLineId") int stuffTallyLineId);
+
+	
+	
+	
+	
+	@Query("SELECT COALESCE(MAX(E.stuffTallyLineId), 0) FROM ExportStuffTally E "
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId " + "AND E.profitcentreId = :profitcentreId "
+			+ "AND E.stuffTallyId = :stuffTallyId")
+	int getMaxLineId(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("profitcentreId") String profitcentreId, @Param("stuffTallyId") String stuffTallyId);
+
+	
+
+	@Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END " +
+		       "FROM ExportStuffTally e " +
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.sbNo = :sbNo " +
+		       "AND e.sbTransId = :sbTransId " +
+		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND e.status <> 'D' " +
+		       "AND e.stuffTallyLineId = :stuffTallyLineId " +
+		       "AND e.stuffTallyId = :stuffTallyId")
+		boolean existsBySbNoForstuffingTally(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("sbNo") String sbNo,
+		    @Param("sbTransId") String sbTransId,
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("stuffTallyId") String stuffTallyId,
+		    @Param("stuffTallyLineId") Integer stuffTallyLineId
+		);
+
+
+	
+	
+	@Query("SELECT E.sbNo, E.sbTransId, E.srno, g.exporterId, g.exporterName, E.sbDate, E.stuffedQty, E.commodity, E.noOfPackages, g.pod, E.grossWeight, E.stuffedWt,g.cha " +
+		       "FROM ExportSbCargoEntry E " +
+		       "LEFT JOIN ExportSbEntry g ON E.companyId = g.companyId AND E.branchId = g.branchId AND g.sbNo = E.sbNo AND g.sbTransId = E.sbTransId AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' " +
+		       "LEFT JOIN ExportStuffTally st ON E.companyId = st.companyId AND E.branchId = st.branchId AND st.sbNo = E.sbNo AND st.sbTransId = E.sbTransId AND st.profitcentreId = E.profitcentreId AND st.status <> 'D' AND st.stuffTallyId = :stuffTallyId " +
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +
+		       "AND (:searchValue IS NULL OR :searchValue = '' OR E.sbNo LIKE CONCAT('%', :searchValue, '%')) " +
+		       "AND (g.holdStatus IS NULL OR g.holdStatus = '' OR g.holdStatus <> 'H') " +
+		       "AND (E.noOfPackages - E.stuffedQty) > 0 " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.sbType =:sbType " +
+		       "AND st.stuffTallyId IS NULL " +
+		       "AND E.status <> 'D'")
+		List<Object[]> searchSbNoForTallyBuffer(
+		    @Param("companyId") String companyId, 
+		    @Param("branchId") String branchId, 
+		    @Param("searchValue") String searchValue, 
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("stuffTallyId") String stuffTallyId,
+		    @Param("sbType") String sbType
+		);
+
+	
+	
+	
+	
+	
+		@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, g.onAccountOf, g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.gateInId, g.gateInType,g.containerHealth,g.customsSealNo "          
+		        + "FROM ExportInventory E "
+		        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' AND (g.stuffTallyId = '' OR g.stuffTallyId IS NULL) AND g.containerNo = E.containerNo "
+		        + "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.sa = psa.partyId AND psa.status <> 'D' "
+		        + "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
+		        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+		        + "AND (:searchValue IS NULL OR :searchValue = '' OR E.containerNo LIKE CONCAT('%', :searchValue, '%')) "
+		        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
+		        + "AND (E.stuffTallyId = '' OR E.stuffTallyId IS NULL) "
+		        + "AND E.profitcentreId = :profitcentreId "
+		        + "AND g.gateInType In ('Buffer','ONWH') "
+		        + "AND E.status <> 'D'")
+		List<Object[]> searchContainerNoForTallyBuffer(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Transactional
 	@Modifying
 	@Query("UPDATE ExportStuffTally e SET e.movementReqId = :movementReqId, e.movementType = :movementType WHERE e.companyId =:companyId and e.branchId =:branchId and e.gateInId = :gateInId")

@@ -97,4 +97,25 @@ public class PortService {
 		
 		return portList;
 	}
+	
+	
+	public List<Map<String, String>> getPortToSelectTally(String companyId, String branchId, String searchValue)
+	{
+				
+		List<Port> portIdList = portRepo.searchPortData(companyId, branchId, searchValue);
+		List<Map<String, String>> portList = convertToValueLabelListTally(portIdList); 
+		
+		return portList;
+	}
+	private List<Map<String, String>> convertToValueLabelListTally(List<Port> data) {
+	    return data.stream().map(obj -> {
+	        Map<String, String> map = new HashMap<>();
+	        map.put("value", obj.getPortCode());
+	        map.put("label", obj.getPortName());
+	        return map;
+	    }).collect(Collectors.toList());
+	}
+	
+	
+	
 }

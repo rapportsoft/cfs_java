@@ -87,9 +87,9 @@ public class GateInService {
 	}
 	
 	
-	public List<Object[]> getGateInEntriesToSelect(String companyId, String branchId, String searchValue)
+	public List<Object[]> getGateInEntriesToSelect(String companyId, String branchId, String searchValue, String processId)
 	{				
-		return gateInRepo.getGateInEntriesData(companyId, branchId, searchValue);
+		return gateInRepo.getGateInEntriesData(companyId, branchId, searchValue, processId);
 	}
 	
 	
