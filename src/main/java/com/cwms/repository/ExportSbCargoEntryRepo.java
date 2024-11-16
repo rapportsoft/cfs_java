@@ -266,4 +266,24 @@ public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry
 	ExportSbCargoEntry getExportSbEntryBySbNoAndSbTransIdAndSbLine(@Param("companyId") String companyId, @Param("branchId") String branchId,
 	                              @Param("sbNo") String sbNo, @Param("sbTransId") String sbTransId);
 	
+	
+	@Query(value = "select e.sbNo, e.sbTransId from ExportSbCargoEntry e where e.companyId = :cid and e.branchId = :bid "
+			+ "and e.status != 'D' and e.cartedPackages > 0 and (e.stuffReqQty is null OR e.stuffReqQty <= 0) "
+			+ "and (:val is null OR :val = '' OR e.sbNo LIKE CONCAT('%', :val, '%')) and "
+			+ "(COALESCE(e.cartedPackages,0) - COALESCE(e.backToTownPack,0)) > 0")
+	List<Object[]> searchDataForBacktoTown(@Param("cid") String cid, @Param("bid") String bid,
+			@Param("val") String val);
+
+	
+	@Query(value = "select e.sbTransId,sb.sbTransDate,e.sbNo,e.sbDate,sb.exporterName,sb.exporterAddress1,sb.exporterAddress2,"
+			+ "sb.exporterAddress3,sb.onAccountOf,p.partyName,e.commodity,e.numberOfMarks,e.cartedPackages,(e.cartedPackages - e.backToTownPack),"
+			+ "e.grossWeight "
+			+ "from ExportSbCargoEntry e "
+			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo and e.sbTransId=sb.sbTransId "
+			+ "LEFT OUTER JOIN Party p ON sb.companyId=p.companyId and sb.branchId=p.branchId and sb.onAccountOf=p.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' "
+			+ "and e.sbNo=:sb and e.sbTransId=:trans")
+	Object[] getSelectedBackToTownData(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb,
+			@Param("trans") String trans);
+	
 }

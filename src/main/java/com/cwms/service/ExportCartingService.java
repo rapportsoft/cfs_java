@@ -321,7 +321,7 @@ public class ExportCartingService {
 				grid.setBlockCellNo(cartingEntry.getGridBlock());
 				grid.setYardPackages(cartingEntry.getYardPackages().intValue());				
 				grid.setTransType("EXP");
-				grid.setAreaReleased(cartingEntry.getAreaOccupied());
+				grid.setAreaReleased(BigDecimal.ZERO);
 				grid.setCellArea(cartingEntry.getAreaOccupied());
 				grid.setCellAreaAllocated(cartingEntry.getAreaOccupied());
 				grid.setCellAreaUsed(new BigDecimal("0"));

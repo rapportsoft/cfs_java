@@ -1230,7 +1230,8 @@ public class ExportGatePass {
 		public ExportGatePass(String gatePassId, Date gatePassDate, String transType, String vehicleNo,
 				String vehicleId, String pol, String driverName, String transporterName, String transporterStatus,
 				String customsSealNo, String sl, String vesselId, String pod, String viaNo, String containerNo,
-				String containerSize, String containerType, BigDecimal grossWt) {
+				String containerSize, String containerType, BigDecimal grossWt, String sbNo, Date sbDate, 
+				BigDecimal backToTownPackages, String commodity, int srNo) {
 			this.gatePassId = gatePassId;
 			this.gatePassDate = gatePassDate;
 			this.transType = transType;
@@ -1249,6 +1250,40 @@ public class ExportGatePass {
 			this.containerSize = containerSize;
 			this.containerType = containerType;
 			this.grossWt = grossWt;
+			this.sbNo = sbNo;
+			this.sbDate = sbDate;
+			this.backToTownPackages = backToTownPackages;
+			this.commodity = commodity;
+			this.srNo = srNo;
+		}
+
+
+
+
+
+		public ExportGatePass(String gatePassId, String sbTransId, String stuffTallyId, Date gatePassDate,
+				String transType, String sbNo, Date sbDate, String vehicleNo, String vehicleId, String importerName,
+				String commodity, String driverName, String transporterName, String transporter,
+				BigDecimal backToTownPackages, BigDecimal vehicleWt, String comments, String status, String createdBy) {
+			this.gatePassId = gatePassId;
+			this.sbTransId = sbTransId;
+			this.stuffTallyId = stuffTallyId;
+			this.gatePassDate = gatePassDate;
+			this.transType = transType;
+			this.sbNo = sbNo;
+			this.sbDate = sbDate;
+			this.vehicleNo = vehicleNo;
+			this.vehicleId = vehicleId;
+			this.importerName = importerName;
+			this.commodity = commodity;
+			this.driverName = driverName;
+			this.transporterName = transporterName;
+			this.transporter = transporter;
+			this.backToTownPackages = backToTownPackages;
+			this.vehicleWt = vehicleWt;
+			this.comments = comments;
+			this.status = status;
+			this.createdBy = createdBy;
 		}
 	    
 	    

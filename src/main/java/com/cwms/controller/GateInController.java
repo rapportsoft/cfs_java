@@ -889,6 +889,7 @@ public class GateInController {
 			gatein.setStatus("A");
 			gatein.setGateInType("EXP");
 			gatein.setErpDocRefNo("");
+			gatein.setProcessId("P00219");
 			gatein.setProfitcentreId("N00004");
 			gatein.setDocRefNo("");
 

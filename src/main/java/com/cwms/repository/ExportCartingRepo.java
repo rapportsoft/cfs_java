@@ -135,6 +135,15 @@ public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 			+ "AND E.status <> 'D' order by (E.actualNoOfPackages -  E.stuffedNoOfPackages) asc")
 	List<ExportCarting> getDataBySbNoSbTrans1(@Param("companyId") String companyId, @Param("branchId") String branchId,
 			@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo);
+
+	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.sbTransId = :sbTransId "
+			+ "AND E.sbNo = :sbNo "
+			+ "AND E.status <> 'D'")
+	List<ExportCarting> getDataBySbNoSbTrans2(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo);
 	
 	
 }
