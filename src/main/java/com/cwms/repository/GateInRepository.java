@@ -138,6 +138,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		       "WHERE E.companyId = :companyId " +
 		       "AND E.branchId = :branchId " +
 		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.containerStatus != 'MTY' " +
 		       "AND E.vehicleNo = :vehicleNo " +
 		       "AND E.gateInType = :type " +		       
 		       "AND E.status <> 'D' " +

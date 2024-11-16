@@ -348,7 +348,7 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 			+ "LEFT OUTER JOIN ExportCarting car ON e.companyId=car.companyId and e.branchId=car.branchId and e.sbTransId=car.sbTransId and e.sbNo=car.sbNo "
 			+ "LEFT OUTER JOIN Profitcentre pr ON e.companyId=pr.companyId and e.branchId=pr.branchId and e.profitcentreId = pr.profitcentreId "
 			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
-			+ "e.stuffReqId=:id and (e.stuffTallyId is null OR e.stuffTallyId = '')")
+			+ "e.stuffReqId=:id and (e.stuffTallyId is null OR e.stuffTallyId = '')  group by e.sbTransId,e.sbNo")
 	List<ExportStuffRequest> getDataByStuffReqId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 	
 //	@Query(value = "select NEW com.cwms.entities.ExportStuffRequest(e.stuffReqId, e.sbTransId, e.stuffReqLineId, e.sbLineNo, "
