@@ -71,10 +71,16 @@ public class ExportMovementController {
 	}
 	
 	
+//	@GetMapping("/searchContainerNoForMovementWork")
+//	public ResponseEntity<?> searchContainerNoForMovementWork(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+//			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
+//		return movementService.searchContainerNoForStuffingConteinerWise(companyId, branchId, containerNo, profitcentreId);
+//	}
+//	
 	@GetMapping("/searchContainerNoForMovementWork")
 	public ResponseEntity<?> searchContainerNoForMovementWork(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
-			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
-		return movementService.searchContainerNoForStuffingConteinerWise(companyId, branchId, containerNo, profitcentreId);
+			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId, @RequestParam("movementType") String movementType) {
+		return movementService.searchContainerNoForStuffingConteinerWise(companyId, branchId, containerNo, profitcentreId, movementType);
 	}
 	
 	@GetMapping("/getSelectedCartingEntry")

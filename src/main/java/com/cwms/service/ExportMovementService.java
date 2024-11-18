@@ -82,52 +82,102 @@ public class ExportMovementService {
 	
 	
 
-	public ResponseEntity<?> searchContainerNoForStuffingConteinerWise(String companyId, String branchId, String containerNo, String profitcentreId) {
+//	public ResponseEntity<?> searchContainerNoForStuffingConteinerWise(String companyId, String branchId, String containerNo, String profitcentreId) {
+//
+//		
+//			List<Object[]> result = movementRepo.searchContainerNoForMovement(companyId, branchId, containerNo, profitcentreId);	
+//			
+//			List<Map<String, Object>> containerMap = result.stream().map(row -> {
+//			    Map<String, Object> map = new HashMap<>();
+//			    map.put("value", row[0]);
+//			    map.put("label", row[0]);
+//			    map.put("containerNo", row[0]);
+//			    map.put("containerSize", row[1]);
+//			    map.put("containerType", row[2]);
+//			    map.put("shippingAgent", row[3]);
+//			    map.put("shippingAgentName", row[4]);
+//			    map.put("shippingLine", row[5]);
+//			    map.put("shippingLineName", row[6]);
+//			    map.put("onAccountOf", row[7]);
+//			    map.put("viaNo", row[8]);
+//			    map.put("voyageNo", row[9]);
+//			    map.put("vesselId", row[10]);
+//			    map.put("vesselName", row[11]);
+//			    map.put("stuffTallyId", row[12]);
+//			    map.put("gateInId", row[13]);
+//			    map.put("agentSealNo", row[14]);
+//			    map.put("customsSealNo", row[15]);
+//			    map.put("grossWeight", row[16]);
+//			    map.put("sbNo", row[17]);
+//			    
+//			    map.put("pod", row[18]);
+//			    map.put("pol", row[19]);
+//			    map.put("sbDate", row[20]);
+//			    
+//			    map.put("stuffId", row[21]);
+//			    map.put("stuffDate", row[22]);
+//			    
+//			    map.put("stuffTallyDate", row[23]);
+//			    map.put("stuffTallyLineId", row[24]);
+//			    
+//			    
+//			    return map;
+//			}).collect(Collectors.toList());			
+//
+//			System.out.println("result : "+result + "  \n containerMap" + containerMap);
+//			
+//			return ResponseEntity.ok(containerMap);
+//	}
+//	
+	
+	public ResponseEntity<?> searchContainerNoForStuffingConteinerWise(String companyId, String branchId, String containerNo, String profitcentreId, String movementType) {
 
 		
-			List<Object[]> result = movementRepo.searchContainerNoForMovement(companyId, branchId, containerNo, profitcentreId);	
-			
-			List<Map<String, Object>> containerMap = result.stream().map(row -> {
-			    Map<String, Object> map = new HashMap<>();
-			    map.put("value", row[0]);
-			    map.put("label", row[0]);
-			    map.put("containerNo", row[0]);
-			    map.put("containerSize", row[1]);
-			    map.put("containerType", row[2]);
-			    map.put("shippingAgent", row[3]);
-			    map.put("shippingAgentName", row[4]);
-			    map.put("shippingLine", row[5]);
-			    map.put("shippingLineName", row[6]);
-			    map.put("onAccountOf", row[7]);
-			    map.put("viaNo", row[8]);
-			    map.put("voyageNo", row[9]);
-			    map.put("vesselId", row[10]);
-			    map.put("vesselName", row[11]);
-			    map.put("stuffTallyId", row[12]);
-			    map.put("gateInId", row[13]);
-			    map.put("agentSealNo", row[14]);
-			    map.put("customsSealNo", row[15]);
-			    map.put("grossWeight", row[16]);
-			    map.put("sbNo", row[17]);
-			    
-			    map.put("pod", row[18]);
-			    map.put("pol", row[19]);
-			    map.put("sbDate", row[20]);
-			    
-			    map.put("stuffId", row[21]);
-			    map.put("stuffDate", row[22]);
-			    
-			    map.put("stuffTallyDate", row[23]);
-			    map.put("stuffTallyLineId", row[24]);
-			    
-			    
-			    return map;
-			}).collect(Collectors.toList());			
+		List<Object[]> result = movementRepo.searchContainerNoForMovement(companyId, branchId, containerNo, profitcentreId, movementType);	
+		
+		List<Map<String, Object>> containerMap = result.stream().map(row -> {
+		    Map<String, Object> map = new HashMap<>();
+		    map.put("value", row[0]);
+		    map.put("label", row[0]);
+		    map.put("containerNo", row[0]);
+		    map.put("containerSize", row[1]);
+		    map.put("containerType", row[2]);
+		    map.put("shippingAgent", row[3]);
+		    map.put("shippingAgentName", row[4]);
+		    map.put("shippingLine", row[5]);
+		    map.put("shippingLineName", row[6]);
+		    map.put("onAccountOf", row[7]);
+		    map.put("viaNo", row[8]);
+		    map.put("voyageNo", row[9]);
+		    map.put("vesselId", row[10]);
+		    map.put("vesselName", row[11]);
+		    map.put("stuffTallyId", row[12]);
+		    map.put("gateInId", row[13]);
+		    map.put("agentSealNo", row[14]);
+		    map.put("customsSealNo", row[15]);
+		    map.put("grossWeight", row[16]);
+		    map.put("sbNo", row[17]);
+		    
+		    map.put("pod", row[18]);
+		    map.put("pol", row[19]);
+		    map.put("sbDate", row[20]);
+		    
+		    map.put("stuffId", row[21]);
+		    map.put("stuffDate", row[22]);
+		    
+		    map.put("stuffTallyDate", row[23]);
+		    map.put("stuffTallyLineId", row[24]);
+		    
+		    
+		    return map;
+		}).collect(Collectors.toList());			
 
-			System.out.println("result : "+result + "  \n containerMap" + containerMap);
-			
-			return ResponseEntity.ok(containerMap);
-	}
+		System.out.println("result : "+result + "  \n containerMap" + containerMap);
+		
+		return ResponseEntity.ok(containerMap);
+}
+	
+	
 	
 	@Transactional
 	public ResponseEntity<?> saveExportMovement(String companyId, String branchId, List<ExportMovement> exportMovement, String user) {

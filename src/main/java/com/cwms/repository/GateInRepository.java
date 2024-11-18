@@ -15,6 +15,25 @@ import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
+	@Query("SELECT DISTINCT s.vehicleNo " +
+		       "FROM GateIn s " +
+		       "LEFT JOIN VehicleTrack v ON s.companyId = v.companyId AND s.branchId = v.branchId AND s.profitcentreId = v.profitcentreId AND v.vehicleStatus = 'G' " +
+		       "WHERE s.companyId = :companyId " +
+		       "AND s.branchId = :branchId " +
+		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
+		       "AND s.status <> 'D' " +
+		       "AND s.containerStatus != 'MTY' " +
+		       "AND s.profitcentreId = :profitcentreId " +	
+		       "AND (v.gateOutId IS NULL OR v.gateOutId = '') " + // Grouped the OR condition
+		       "AND s.vehicleNo LIKE %:searchValue% " +
+		       "ORDER BY s.createdDate")
+		List<String> searchVehicleNosToCarting(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("searchValue") String searchValue,
+		    @Param("profitcentreId") String profitcentreId
+		);
+
 	
 	@Modifying
 	@Transactional
@@ -167,19 +186,19 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
 	
 	
-	@Query("SELECT Distinct s.vehicleNo " +
-		       "FROM GateIn s " +		       
-		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
-		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
-		       "AND s.status <> 'D' " +
-		       "AND s.containerStatus != 'MTY' " +		       
-		       "AND s.vehicleNo LIKE %:searchValue% " +
-		       "ORDER BY s.createdDate")
-		List<String> searchVehicleNosToCarting(
-		    @Param("companyId") String companyId,
-		    @Param("branchId") String branchId,
-		    @Param("searchValue") String searchValue
-		);
+//	@Query("SELECT Distinct s.vehicleNo " +
+//		       "FROM GateIn s " +		       
+//		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
+//		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
+//		       "AND s.status <> 'D' " +
+//		       "AND s.containerStatus != 'MTY' " +		       
+//		       "AND s.vehicleNo LIKE %:searchValue% " +
+//		       "ORDER BY s.createdDate")
+//		List<String> searchVehicleNosToCarting(
+//		    @Param("companyId") String companyId,
+//		    @Param("branchId") String branchId,
+//		    @Param("searchValue") String searchValue
+//		);
 
 
 	

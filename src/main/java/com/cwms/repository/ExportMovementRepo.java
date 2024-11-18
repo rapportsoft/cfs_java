@@ -7,6 +7,23 @@ import org.springframework.data.repository.query.Param;
 import com.cwms.entities.ExportMovement;
 
 public interface ExportMovementRepo extends JpaRepository<ExportMovement, String>{
+	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, st.onAccountOf, st.viaNo, st.voyageNo ,E.vesselId, vs.vesselName, st.stuffTallyId, E.gateInId, st.agentSealNo, st.customsSealNo, st.totalGrossWeight, st.sbNo, st.pod, st.pol, st.sbDate, st.stuffId, st.stuffDate,st.stuffTallyDate, st.stuffTallyLineId "          
+	        + "FROM ExportInventory E "
+	        + "LEFT JOIN Vessel vs ON E.companyId = vs.companyId AND E.branchId = vs.branchId AND E.vesselId = vs.vesselId AND vs.status <> 'D' "
+	        + "LEFT JOIN Party psa ON E.companyId = psa.companyId AND E.branchId = psa.branchId AND E.sa = psa.partyId AND psa.status <> 'D' "
+	        + "LEFT JOIN Party psl ON E.companyId = psl.companyId AND E.branchId = psl.branchId AND E.sl = psl.partyId AND psl.status <> 'D' "
+	        + "LEFT JOIN ExportStuffTally st ON E.companyId = st.companyId AND E.branchId = st.branchId AND st.profitcentreId = E.profitcentreId AND E.stuffTallyId = st.stuffTallyId AND st.status <> 'D' AND (st.movementReqId = '' OR st.movementReqId IS NULL) "
+	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
+	        + "AND (E.stuffTallyId <> '' OR E.stuffTallyId IS NOT NULL) "
+	        + "AND (E.movementReqId = '' OR E.movementReqId IS NULL) "
+	        + "AND (E.gateOutId = '' OR E.gateOutId IS NULL) "
+	        + "AND E.profitcentreId = :profitcentreId "
+	        + "AND st.movementType = :movementType "
+	        + "AND E.containerNo LIKE %:searchValue% "
+	        + "AND E.status <> 'D'")
+	List<Object[]> searchContainerNoForMovement(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId , @Param("movementType") String movementType);
+
 	
 	
 	
@@ -103,23 +120,23 @@ public interface ExportMovementRepo extends JpaRepository<ExportMovement, String
 	
 	
 	
-	
-	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, st.onAccountOf, st.viaNo, st.voyageNo ,E.vesselId, vs.vesselName, st.stuffTallyId, E.gateInId, st.agentSealNo, st.customsSealNo, st.totalGrossWeight, st.sbNo, st.pod, st.pol, st.sbDate, st.stuffId, st.stuffDate,st.stuffTallyDate, st.stuffTallyLineId "          
-	        + "FROM ExportInventory E "
-	        + "LEFT JOIN Vessel vs ON E.companyId = vs.companyId AND E.branchId = vs.branchId AND E.vesselId = vs.vesselId AND vs.status <> 'D' "
-	        + "LEFT JOIN Party psa ON E.companyId = psa.companyId AND E.branchId = psa.branchId AND E.sa = psa.partyId AND psa.status <> 'D' "
-	        + "LEFT JOIN Party psl ON E.companyId = psl.companyId AND E.branchId = psl.branchId AND E.sl = psl.partyId AND psl.status <> 'D' "
-	        + "LEFT JOIN ExportStuffTally st ON E.companyId = st.companyId AND E.branchId = st.branchId AND st.profitcentreId = E.profitcentreId AND E.stuffTallyId = st.stuffTallyId AND st.status <> 'D' AND (st.movementReqId = '' OR st.movementReqId IS NULL) "
-	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
-	        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
-	        + "AND (E.stuffTallyId <> '' OR E.stuffTallyId IS NOT NULL) "
-	        + "AND (E.movementReqId = '' OR E.movementReqId IS NULL) "
-	        + "AND (E.gateOutId = '' OR E.gateOutId IS NULL) "
-	        + "AND E.profitcentreId = :profitcentreId "
-//	        + "AND E.containerNo = :searchValue "
-	        + "AND E.containerNo LIKE %:searchValue% "
-	        + "AND E.status <> 'D'")
-	List<Object[]> searchContainerNoForMovement(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
+//	
+//	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, st.onAccountOf, st.viaNo, st.voyageNo ,E.vesselId, vs.vesselName, st.stuffTallyId, E.gateInId, st.agentSealNo, st.customsSealNo, st.totalGrossWeight, st.sbNo, st.pod, st.pol, st.sbDate, st.stuffId, st.stuffDate,st.stuffTallyDate, st.stuffTallyLineId "          
+//	        + "FROM ExportInventory E "
+//	        + "LEFT JOIN Vessel vs ON E.companyId = vs.companyId AND E.branchId = vs.branchId AND E.vesselId = vs.vesselId AND vs.status <> 'D' "
+//	        + "LEFT JOIN Party psa ON E.companyId = psa.companyId AND E.branchId = psa.branchId AND E.sa = psa.partyId AND psa.status <> 'D' "
+//	        + "LEFT JOIN Party psl ON E.companyId = psl.companyId AND E.branchId = psl.branchId AND E.sl = psl.partyId AND psl.status <> 'D' "
+//	        + "LEFT JOIN ExportStuffTally st ON E.companyId = st.companyId AND E.branchId = st.branchId AND st.profitcentreId = E.profitcentreId AND E.stuffTallyId = st.stuffTallyId AND st.status <> 'D' AND (st.movementReqId = '' OR st.movementReqId IS NULL) "
+//	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+//	        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
+//	        + "AND (E.stuffTallyId <> '' OR E.stuffTallyId IS NOT NULL) "
+//	        + "AND (E.movementReqId = '' OR E.movementReqId IS NULL) "
+//	        + "AND (E.gateOutId = '' OR E.gateOutId IS NULL) "
+//	        + "AND E.profitcentreId = :profitcentreId "
+////	        + "AND E.containerNo = :searchValue "
+//	        + "AND E.containerNo LIKE %:searchValue% "
+//	        + "AND E.status <> 'D'")
+//	List<Object[]> searchContainerNoForMovement(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
 
 	@Query(value="select distinct e.containerNo,e.movementReqId from ExportMovement e where e.companyId=:cid and e.branchId=:bid "
 			+ "and e.status != 'D' and (e.gateOutId = '' OR e.gateOutId is null) and (:val = '' OR :val is null OR e.containerNo "

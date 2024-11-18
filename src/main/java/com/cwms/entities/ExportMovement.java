@@ -66,12 +66,12 @@ public class ExportMovement {
 	    @Column(name = "Stuff_Tally_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
 	    private Date stuffTallyDate;
 
-	    @Column(name = "Stuff_Id", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+	    @Column(name = "Stuff_Id", length = 10, columnDefinition = "varchar(10) default ''")
 	    private String stuffId;
 
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    @Column(name = "Stuff_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
+	    @Column(name = "Stuff_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
 	    private Date stuffDate;
 
 	  
@@ -89,20 +89,20 @@ public class ExportMovement {
 	    @Column(name = "Shift", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
 	    private String shift;
 
-	    @Column(name = "Agent_Seal_No", length = 15, nullable = false, columnDefinition = "varchar(15) default ''")
+	    @Column(name = "Agent_Seal_No", length = 15, columnDefinition = "varchar(15) default ''")
 	    private String agentSealNo;
 
-	    @Column(name = "Vessel_Id", length = 7, nullable = false, columnDefinition = "varchar(7) default ''")
+	    @Column(name = "Vessel_Id", length = 7, columnDefinition = "varchar(7) default ''")
 	    private String vesselId;
 
-	    @Column(name = "Voyage_No", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+	    @Column(name = "Voyage_No", length = 10, columnDefinition = "varchar(10) default ''")
 	    private String voyageNo;
 
 	    
-	    @Column(name = "POL", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
+	    @Column(name = "POL", length = 100, nullable = false, columnDefinition = "varchar(100) default ''")
 	    private String pol;
 
-	    @Column(name = "pod", length = 40, nullable = false, columnDefinition = "varchar(40) default ''")
+	    @Column(name = "pod", length = 140, nullable = false, columnDefinition = "varchar(140) default ''")
 	    private String pod;
 
 	    @Column(name = "Container_No", length = 11, nullable = false, columnDefinition = "varchar(11) default ''")
@@ -122,7 +122,7 @@ public class ExportMovement {
 	    @Column(name = "Period_From", columnDefinition = "datetime default '0000-00-00 00:00:00'")
 	    private Date periodFrom;
 
-	    @Column(name = "Acc_Sr_no", nullable = false, columnDefinition = "int default 1")
+	    @Column(name = "Acc_Sr_no", columnDefinition = "int default 1")
 	    private int accSrNo;
 
 	    @Column(name = "On_Account_Of", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
@@ -144,17 +144,17 @@ public class ExportMovement {
 	    private String shippingLine;
 
 
-	    @Column(name = "Customs_Seal_No", length = 15, nullable = false, columnDefinition = "varchar(15) default ''")
+	    @Column(name = "Customs_Seal_No", length = 15, columnDefinition = "varchar(15) default ''")
 	    private String customsSealNo;
 
-	    @Column(name = "VIA_No", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+	    @Column(name = "VIA_No", length = 10, columnDefinition = "varchar(10) default ''")
 	    private String viaNo;
 	    
 
-	    @Column(name = "Holding_Agent", length = 1, nullable = false, columnDefinition = "char(1) default ''")
+	    @Column(name = "Holding_Agent", length = 1, columnDefinition = "char(1) default ''")
 	    private String holdingAgent;
 
-	    @Column(name = "Holding_Agent_Name", length = 35, nullable = false, columnDefinition = "varchar(35) default ''")
+	    @Column(name = "Holding_Agent_Name", length = 35, columnDefinition = "varchar(35) default ''")
 	    private String holdingAgentName;
 
 	    @Column(name = "Hold_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
@@ -165,14 +165,14 @@ public class ExportMovement {
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	    private Date releaseDate;
 
-	    @Column(name = "Hold_Remarks", length = 150, nullable = false, columnDefinition = "varchar(150) default ''")
+	    @Column(name = "Hold_Remarks", length = 150, columnDefinition = "varchar(150) default ''")
 	    private String holdRemarks;
 	   
 
 	    @Column(name = "Gate_Pass_No", length = 10, columnDefinition = "varchar(10) default ''")
 	    private String gatePassNo;
 
-	    @Column(name = "Add_Services", length = 1, nullable = false, columnDefinition = "char(1) default 'N'")
+	    @Column(name = "Add_Services", length = 1, columnDefinition = "char(1) default 'N'")
 	    private String addServices;
 
 	    @Column(name = "Type_of_Container", length = 30, columnDefinition = "varchar(30) default ''")
@@ -185,26 +185,26 @@ public class ExportMovement {
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	    private Date gateOutDate;
 
-	    @Column(name = "imp_Sr_no", nullable = false, columnDefinition = "int default 1")
+	    @Column(name = "imp_Sr_no", columnDefinition = "int default 1")
 	    private int impSrNo;
 
 	   
-	    @Column(name = "Billing_Party", length = 3, nullable = false, columnDefinition = "char(3) default 'CHA'")
+	    @Column(name = "Billing_Party", length = 3, columnDefinition = "char(3) default 'CHA'")
 	    private String billingParty;
 
-	    @Column(name = "IGST", length = 1, nullable = false, columnDefinition = "char(1) default 'N'")
+	    @Column(name = "IGST", length = 1, columnDefinition = "char(1) default 'N'")
 	    private String igst;
 
-	    @Column(name = "CGST", length = 1, nullable = false, columnDefinition = "char(1) default 'N'")
+	    @Column(name = "CGST", length = 1, columnDefinition = "char(1) default 'N'")
 	    private String cgst;
 
-	    @Column(name = "SGST", length = 1, nullable = false, columnDefinition = "char(1) default 'N'")
+	    @Column(name = "SGST", length = 1, columnDefinition = "char(1) default 'N'")
 	    private String sgst;
 
-	    @Column(name = "Status", length = 1, nullable = false, columnDefinition = "char(1) default ''")
+	    @Column(name = "Status", length = 1, columnDefinition = "char(1) default ''")
 	    private String status;
 
-	    @Column(name = "comments", length = 150, nullable = true, columnDefinition = "varchar(150) DEFAULT NULL")
+	    @Column(name = "comments", length = 150, columnDefinition = "varchar(150) DEFAULT NULL")
 	    private String comments = null; // varchar(150) DEFAULT NULL
 
 	    @Column(name = "Created_By", length = 10, nullable = false, columnDefinition = "varchar(10) NOT NULL DEFAULT ''")
@@ -231,32 +231,32 @@ public class ExportMovement {
 	    @Column(name = "CURRENT_LOCATION", length = 30, nullable = true, columnDefinition = "varchar(30) DEFAULT NULL")
 	    private String currentLocation = null; // varchar(30) DEFAULT NULL
 
-	    @Column(name = "oth_party_Id", length = 10, nullable = false, columnDefinition = "varchar(10) NOT NULL DEFAULT ''")
+	    @Column(name = "oth_party_Id", length = 10, columnDefinition = "varchar(10) NOT NULL DEFAULT ''")
 	    private String othPartyId = ""; // varchar(10) NOT NULL DEFAULT ''
 
-	    @Column(name = "Invoice_Assesed", nullable = false, columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
+	    @Column(name = "Invoice_Assesed", columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
 	    private String invoiceAssessed = "N"; // char(1) NOT NULL DEFAULT 'N'
 
-	    @Column(name = "Assesment_Id", length = 20, nullable = false, columnDefinition = "varchar(20) NOT NULL DEFAULT ''")
+	    @Column(name = "Assesment_Id", length = 20, columnDefinition = "varchar(20) NOT NULL DEFAULT ''")
 	    private String assessmentId = ""; // varchar(20) NOT NULL DEFAULT ''
 
-	    @Column(name = "Invoice_No", length = 16, nullable = false, columnDefinition = "varchar(16) NOT NULL DEFAULT ''")
+	    @Column(name = "Invoice_No", length = 16, columnDefinition = "varchar(16) NOT NULL DEFAULT ''")
 	    private String invoiceNo = ""; // varchar(16) NOT NULL DEFAULT ''
 
 	    @Column(name = "Invoice_Date", columnDefinition = "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'")
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	    private Date invoiceDate = new Date(0); // datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 
-	    @Column(name = "Credit_Type", nullable = false, columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
+	    @Column(name = "Credit_Type", columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
 	    private String creditType = "N"; // char(1) NOT NULL DEFAULT 'N'
 
-	    @Column(name = "Invoice_Category", length = 10, nullable = false, columnDefinition = "varchar(10) NOT NULL DEFAULT 'SINGLE'")
+	    @Column(name = "Invoice_Category", length = 10, columnDefinition = "varchar(10) NOT NULL DEFAULT 'SINGLE'")
 	    private String invoiceCategory = "SINGLE"; // varchar(10) NOT NULL DEFAULT 'SINGLE'
 
-	    @Column(name = "Bill_Amt", nullable = false, columnDefinition = "decimal(12,2) NOT NULL DEFAULT '0.00'")
+	    @Column(name = "Bill_Amt", columnDefinition = "decimal(12,2) NOT NULL DEFAULT '0.00'")
 	    private BigDecimal billAmt = BigDecimal.ZERO; // decimal(12,2) NOT NULL DEFAULT '0.00'
 
-	    @Column(name = "Invoice_Amt", nullable = false, columnDefinition = "decimal(12,2) NOT NULL DEFAULT '0.00'")
+	    @Column(name = "Invoice_Amt", columnDefinition = "decimal(12,2) NOT NULL DEFAULT '0.00'")
 	    private BigDecimal invoiceAmt = BigDecimal.ZERO; // decimal(12,2) NOT NULL DEFAULT '0.00'
 
 	    @Column(name = "Force_Entry_Flag", nullable = true, columnDefinition = "char(1) DEFAULT 'N'")
@@ -272,13 +272,13 @@ public class ExportMovement {
 	    @Column(name = "Force_Entry_Remarks", length = 250, nullable = true, columnDefinition = "varchar(250) DEFAULT NULL")
 	    private String forceEntryRemarks = null; // varchar(250) DEFAULT NULL
 
-	    @Column(name = "SSR_Trans_Id", length = 12, nullable = false, columnDefinition = "varchar(12) NOT NULL DEFAULT ''")
+	    @Column(name = "SSR_Trans_Id", length = 12, columnDefinition = "varchar(12) NOT NULL DEFAULT ''")
 	    private String sSRTransId = ""; // varchar(12) NOT NULL DEFAULT ''
 
 	    @Column(name = "Force_Entry_Flag_INV", nullable = false, columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
 	    private String forceEntryFlagInv = "N"; // char(1) NOT NULL DEFAULT 'N'
 
-	    @Column(name = "Trailer_Type", length = 30, nullable = false, columnDefinition = "varchar(30) NOT NULL DEFAULT ''")
+	    @Column(name = "Trailer_Type", length = 30, columnDefinition = "varchar(30) NOT NULL DEFAULT ''")
 	    private String trailerType = ""; // varchar(30) NOT NULL DEFAULT ''
 
 	    

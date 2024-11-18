@@ -479,14 +479,31 @@ public class GateInController {
 	    }
 	}
 	
+//	@GetMapping("/searchVehicleNos")
+//	public ResponseEntity<?> searchVehicleNos(
+//	        @RequestParam("companyId") String companyId, 
+//	        @RequestParam("branchId") String branchId,	        
+//	        @RequestParam("searchValue") String searchValue      
+//	       ) {	    
+//	    try {	    	
+//	    	ResponseEntity<?> sbCargoGateIn = gateInService.searchSbNosToGateIn(companyId, branchId, searchValue);
+//	        return sbCargoGateIn;
+//	    } catch (Exception e) {	       
+//	        // Return an appropriate error response
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while checking duplicate SB No.");
+//	    }
+//	}
+	
+	
 	@GetMapping("/searchVehicleNos")
 	public ResponseEntity<?> searchVehicleNos(
 	        @RequestParam("companyId") String companyId, 
 	        @RequestParam("branchId") String branchId,	        
-	        @RequestParam("searchValue") String searchValue      
+	        @RequestParam("searchValue") String searchValue  ,
+	        @RequestParam("profitCenterId") String profitCenterId
 	       ) {	    
 	    try {	    	
-	    	ResponseEntity<?> sbCargoGateIn = gateInService.searchSbNosToGateIn(companyId, branchId, searchValue);
+	    	ResponseEntity<?> sbCargoGateIn = gateInService.searchSbNosToGateIn(companyId, branchId, searchValue, profitCenterId);
 	        return sbCargoGateIn;
 	    } catch (Exception e) {	       
 	        // Return an appropriate error response

@@ -60,13 +60,12 @@ public class GateInService {
 		return ResponseEntity.ok(gateInEntries);
 	}
 	
-	public ResponseEntity<?> searchSbNosToGateIn(String companyId, String branchId, String searchValue)
+	public ResponseEntity<?> searchSbNosToGateIn(String companyId, String branchId, String searchValue, String profitCenterId)
 	{			
-		List<String> sbNos = gateInRepo.searchVehicleNosToCarting(companyId, branchId, searchValue);
+		List<String> sbNos = gateInRepo.searchVehicleNosToCarting(companyId, branchId, searchValue, profitCenterId);
 		List<Map<String, String>> sbNoList = convertToValueLabelList(sbNos);		
 		return ResponseEntity.ok(sbNoList);
 	}
-	
 	
 	
 	

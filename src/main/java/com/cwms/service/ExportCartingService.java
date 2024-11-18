@@ -263,11 +263,14 @@ public class ExportCartingService {
 				
 				existing.setStatus(status.equals("A") ? status : existing.getStatus());
 				
-				if(existing.getApprovedBy().equals("N"))
-				{
-					existing.setApprovedBy(status.equals("A") ? User : existing.getApprovedBy());
+				System.out.println( "status "+ status + " getApprovedBy \n" + existing.getApprovedBy());
+				if (existing.getApprovedBy() == null || existing.getApprovedBy().trim().isEmpty()) {
+				    System.out.println(" IN ");
+				    existing.setApprovedBy(status.equals("A") ? User : existing.getApprovedBy());
 				}
+
 				
+				System.out.println(" AFTER "+existing.getApprovedBy());
 				ExportCarting save = cartingRepo.save(existing);
 				cartingListToSend.add(save);
 				
@@ -304,6 +307,11 @@ public class ExportCartingService {
 				cartingEntry.setApprovedBy(status.equals("A") ? User : " ");
 				cartingEntry.setApprovedDate(currentDate);
 //				cartingEntry.setStatus("A");	
+				
+				if (cartingEntry.getApprovedBy() == null || cartingEntry.getApprovedBy().trim().isEmpty()) {
+				    System.out.println(" IN ");
+				    cartingEntry.setApprovedBy(status.equals("A") ? User : cartingEntry.getApprovedBy());
+				}
 				
 				cartingEntry.setStatus(status.equals("A") ? status : "N");
 				ExportCarting save = cartingRepo.save(cartingEntry);
