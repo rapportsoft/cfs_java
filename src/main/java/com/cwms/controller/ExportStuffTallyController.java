@@ -361,6 +361,7 @@ public class ExportStuffTallyController {
 					newTally.setTypeOfPackage(e.getTypeOfPackage());
 					newTally.setSealType(singleTally.getSealType());
 					newTally.setTotalCargoWeight(e.getTotalCargoWeight());
+					newTally.setMovementType("CLP");
 
 					exportstufftallyrepo.save(newTally);
 					sr++;
@@ -1659,6 +1660,7 @@ public class ExportStuffTallyController {
 									newTally.setTypeOfPackage(t.getTypeOfPackage());
 									newTally.setSealType(singleTally.getSealType());
 									newTally.setTotalCargoWeight(t.getTotalCargoWeight());
+									newTally.setMovementType("CLP");
 
 									exportstufftallyrepo.save(newTally);
 
@@ -2051,7 +2053,7 @@ public class ExportStuffTallyController {
 										newTally.setCargoWeight(t.getCargoWeight());
 										newTally.setStuffRequestQty(t.getStuffRequestQty());
 										newTally.setStuffedQty(qty);
-
+										newTally.setMovementType("CLP");
 										newTally.setBalanceQty(c.getYardPackages().subtract(qty));
 										newTally.setTareWeight(singleTally.getTareWeight());
 										newTally.setAreaReleased(area);
@@ -2337,6 +2339,7 @@ public class ExportStuffTallyController {
 									newTally.setTypeOfPackage(t.getTypeOfPackage());
 									newTally.setSealType(singleTally.getSealType());
 									newTally.setTotalCargoWeight(t.getTotalCargoWeight());
+									newTally.setMovementType("CLP");
 
 									exportstufftallyrepo.save(newTally);
 
@@ -2981,6 +2984,7 @@ public class ExportStuffTallyController {
 					newTally.setTypeOfPackage(cargo.getTypeOfPackage());
 					newTally.setSealType(singleTally.getSealType());
 					newTally.setRotationDate(singleTally.getRotationDate());
+					newTally.setMovementType("CLP");
 
 					exportstufftallyrepo.save(newTally);
 					srNo++;
@@ -3696,6 +3700,7 @@ public class ExportStuffTallyController {
 												newTally.setTypeOfPackage(cargo.getTypeOfPackage());
 												newTally.setSealType(singleTally.getSealType());
 												newTally.setRotationDate(singleTally.getRotationDate());
+												newTally.setMovementType("CLP");
 
 												exportstufftallyrepo.save(newTally);
 
@@ -4132,6 +4137,7 @@ public class ExportStuffTallyController {
 													newTally.setTypeOfPackage(cargo.getTypeOfPackage());
 													newTally.setSealType(singleTally.getSealType());
 													newTally.setRotationDate(singleTally.getRotationDate());
+													newTally.setMovementType("CLP");
 
 													exportstufftallyrepo.save(newTally);
 
@@ -4389,6 +4395,7 @@ public class ExportStuffTallyController {
 													newTally.setTypeOfPackage(cargo.getTypeOfPackage());
 													newTally.setSealType(singleTally.getSealType());
 													newTally.setRotationDate(singleTally.getRotationDate());
+													newTally.setMovementType("CLP");
 
 													exportstufftallyrepo.save(newTally);
 
