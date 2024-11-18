@@ -3387,6 +3387,30 @@ public GateIn(String companyId, String branchId, String gateInId, String finYear
 }
 
 
+//New Carting
+public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, String onAccountOf, String cha,
+		String commodityDescription, BigDecimal actualNoOfPackages, BigDecimal qtyTakenIn, String vehicleNo,
+		BigDecimal cargoWeight,BigDecimal fob, Date inGateInDate, Date docRefDate, BigDecimal grossWeight, BigDecimal cartedPackages) {
+	super();
+	this.gateInId = gateInId;
+	this.erpDocRefNo = erpDocRefNo;
+	this.docRefNo = docRefNo;
+	this.srNo = srNo;
+	this.onAccountOf = onAccountOf;
+	this.cha = cha;
+	this.commodityDescription = commodityDescription;
+	this.actualNoOfPackages = actualNoOfPackages;
+	this.qtyTakenIn = qtyTakenIn;
+	this.vehicleNo = vehicleNo;
+	this.cargoWeight = cargoWeight;
+	this.fob = fob;
+	this.inGateInDate = inGateInDate;
+	this.docRefDate = docRefDate;
+	this.grossWeight = grossWeight;
+	this.cartedPackages = cartedPackages;
+	}
+
+
 
 
 }

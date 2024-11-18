@@ -358,8 +358,11 @@ public class ExportCartingService {
 			exportSbService.saveExportSbCargoEntry(exportSbCargoEntry);
 			
 		}
+ExportCarting exportCarting = cartingListToSend.get(0);
 		
-		return ResponseEntity.ok(cartingListToSend);
+		List<ExportCarting> selectedGateInEntry = cartingRepo.getSelectedCartingEntry(companyId, branchId, exportCarting.getProfitcentreId(), exportCarting.getCartingTransId(), "EXP");
+
+		return ResponseEntity.ok(selectedGateInEntry);
 	}
 	
 	

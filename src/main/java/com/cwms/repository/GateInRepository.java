@@ -20,7 +20,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		       "LEFT JOIN VehicleTrack v ON s.companyId = v.companyId AND s.branchId = v.branchId AND s.profitcentreId = v.profitcentreId AND v.vehicleStatus = 'G' " +
 		       "WHERE s.companyId = :companyId " +
 		       "AND s.branchId = :branchId " +
-		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
+		       "AND (s.qtyTakenIn - s.cartedPackages) > 0 " +
 		       "AND s.status <> 'D' " +
 		       "AND s.containerStatus != 'MTY' " +
 		       "AND s.profitcentreId = :profitcentreId " +	
@@ -33,6 +33,45 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		    @Param("searchValue") String searchValue,
 		    @Param("profitcentreId") String profitcentreId
 		);
+
+	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight, E.cartedPackages) " +
+		       "FROM GateIn E " +
+		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
+		       "WHERE E.companyId = :companyId " +
+		       "AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.containerStatus != 'MTY' " +
+		       "AND E.qtyTakenIn - E.cartedPackages > 0 " +
+		       "AND E.vehicleNo = :vehicleNo " +
+		       "AND E.gateInType = :type " +		       
+		       "AND E.status <> 'D' " +
+		       "ORDER BY E.createdDate DESC")
+		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
+		                                   @Param("branchId") String branchId,
+		                                   @Param("profitcentreId") String profitcentreId,
+		                                   @Param("vehicleNo") String vehicleNo,
+		                                   @Param("type") String type);
+
+	
+	
+	
+	
+//	
+//	@Query("SELECT Distinct s.vehicleNo " +
+//    "FROM GateIn s " +		       
+//    "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
+//    "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
+//    "AND s.status <> 'D' " +
+//    "AND s.containerStatus != 'MTY' " +	
+//    "AND s.profitcentreId = :profitcentreId " +
+//    "AND s.vehicleNo LIKE %:searchValue% " +
+//    "ORDER BY s.createdDate")
+//List<String> searchVehicleNosToCarting(
+// @Param("companyId") String companyId,
+// @Param("branchId") String branchId,
+// @Param("searchValue") String searchValue,
+// @Param("profitcentreId") String profitcentreId
+//);
 
 	
 	@Modifying
@@ -165,40 +204,27 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		                                   @Param("type") String type);
 
 	
-	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight) " +
-		       "FROM GateIn E " +
-		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
-		       "WHERE E.companyId = :companyId " +
-		       "AND E.branchId = :branchId " +
-		       "AND E.profitcentreId = :profitcentreId " +
-		       "AND E.containerStatus != 'MTY' " +
-		       "AND E.vehicleNo = :vehicleNo " +
-		       "AND E.gateInType = :type " +		       
-		       "AND E.status <> 'D' " +
-		       "ORDER BY E.createdDate DESC")
-		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
-		                                   @Param("branchId") String branchId,
-		                                   @Param("profitcentreId") String profitcentreId,
-		                                   @Param("vehicleNo") String vehicleNo,
-		                                   @Param("type") String type);
+//	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight) " +
+//		       "FROM GateIn E " +
+//		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
+//		       "WHERE E.companyId = :companyId " +
+//		       "AND E.branchId = :branchId " +
+//		       "AND E.profitcentreId = :profitcentreId " +
+//		       "AND E.containerStatus != 'MTY' " +
+//		       "AND E.vehicleNo = :vehicleNo " +
+//		       "AND E.gateInType = :type " +		       
+//		       "AND E.status <> 'D' " +
+//		       "ORDER BY E.createdDate DESC")
+//		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
+//		                                   @Param("branchId") String branchId,
+//		                                   @Param("profitcentreId") String profitcentreId,
+//		                                   @Param("vehicleNo") String vehicleNo,
+//		                                   @Param("type") String type);
 
 	
 	
 	
 	
-//	@Query("SELECT Distinct s.vehicleNo " +
-//		       "FROM GateIn s " +		       
-//		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
-//		       "AND (s.qtyTakenIn - s.cartedPackages) <> 0 " +
-//		       "AND s.status <> 'D' " +
-//		       "AND s.containerStatus != 'MTY' " +		       
-//		       "AND s.vehicleNo LIKE %:searchValue% " +
-//		       "ORDER BY s.createdDate")
-//		List<String> searchVehicleNosToCarting(
-//		    @Param("companyId") String companyId,
-//		    @Param("branchId") String branchId,
-//		    @Param("searchValue") String searchValue
-//		);
 
 
 	

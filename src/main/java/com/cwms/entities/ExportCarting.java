@@ -192,7 +192,23 @@ public class ExportCarting {
     @Column(name = "Damage_Packages", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal damagePackages;
     
-   
+    transient private BigDecimal cartedPackages;
+    
+    
+
+   	public BigDecimal getCartedPackages() {
+   		return cartedPackages;
+   	}
+
+
+
+
+
+
+   	public void setCartedPackages(BigDecimal cartedPackages) {
+   		this.cartedPackages = cartedPackages;
+   	}
+
 
 	public ExportCarting() {
 		super();
@@ -740,6 +756,74 @@ public class ExportCarting {
 	
 	
 	
+	public ExportCarting(String companyId, String branchId, String cartingTransId, String cartingLineId, String finYear,
+			String profitcentreId, String sbTransId, String sbNo, String sbLineNo, Date sbDate, Date cartingTransDate,
+			String gateInId, Date gateInDate, String crgExamId, String shift, String vehicleNo, String onAccountOf,
+			String commodity, BigDecimal gateInPackages, BigDecimal gateInWeight, BigDecimal actualNoOfPackages,
+			BigDecimal actualNoOfWeight, BigDecimal fob, String gateInType, String invoiceType, String gridLocation,
+			String gridBlock, String gridCellNo, String stuffReqId, BigDecimal stuffedNoOfPackages,
+			BigDecimal areaOccupied, BigDecimal yardPackages, String damageComments, String status, String createdBy,
+			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
+			String fromSbTransId, String fromSbNo, String fromSbLineNo, Date lastStorageInvoiceDate,
+			String lastStorageFlag, BigDecimal storageWeeks, BigDecimal storageDays, BigDecimal storageMonths,
+			BigDecimal handlingCharges, BigDecimal excessPackages, BigDecimal shortagePackages,
+			BigDecimal damagePackages, BigDecimal cartedPackages) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.cartingTransId = cartingTransId;
+		this.cartingLineId = cartingLineId;
+		this.finYear = finYear;
+		this.profitcentreId = profitcentreId;
+		this.sbTransId = sbTransId;
+		this.sbNo = sbNo;
+		this.sbLineNo = sbLineNo;
+		this.sbDate = sbDate;
+		this.cartingTransDate = cartingTransDate;
+		this.gateInId = gateInId;
+		this.gateInDate = gateInDate;
+		this.crgExamId = crgExamId;
+		this.shift = shift;
+		this.vehicleNo = vehicleNo;
+		this.onAccountOf = onAccountOf;
+		this.commodity = commodity;
+		this.gateInPackages = gateInPackages;
+		this.gateInWeight = gateInWeight;
+		this.actualNoOfPackages = actualNoOfPackages;
+		this.actualNoOfWeight = actualNoOfWeight;
+		this.fob = fob;
+		this.gateInType = gateInType;
+		this.invoiceType = invoiceType;
+		this.gridLocation = gridLocation;
+		this.gridBlock = gridBlock;
+		this.gridCellNo = gridCellNo;
+		this.stuffReqId = stuffReqId;
+		this.stuffedNoOfPackages = stuffedNoOfPackages;
+		this.areaOccupied = areaOccupied;
+		this.yardPackages = yardPackages;
+		this.damageComments = damageComments;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.fromSbTransId = fromSbTransId;
+		this.fromSbNo = fromSbNo;
+		this.fromSbLineNo = fromSbLineNo;
+		this.lastStorageInvoiceDate = lastStorageInvoiceDate;
+		this.lastStorageFlag = lastStorageFlag;
+		this.storageWeeks = storageWeeks;
+		this.storageDays = storageDays;
+		this.storageMonths = storageMonths;
+		this.handlingCharges = handlingCharges;
+		this.excessPackages = excessPackages;
+		this.shortagePackages = shortagePackages;
+		this.damagePackages = damagePackages;
+		this.cartedPackages = cartedPackages;
+		
+	}
 	
 	
 	
