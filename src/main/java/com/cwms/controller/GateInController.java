@@ -961,32 +961,32 @@ public class GateInController {
 
 			exportinventoryrepo.save(inventory);
 			
-			EmptyInventory empinv = new EmptyInventory();
-			empinv.setBranchId(bid);
-		//	empinv.setCha(con.get(0).getCha());
-			empinv.setCompanyId(cid);
-			empinv.setContainerNo(gatein.getContainerNo());
-			empinv.setContainerSize(gatein.getContainerSize());
-			empinv.setContainerType(gatein.getContainerType());
-			empinv.setDeStuffId("");
-			empinv.setDocRefNo("");
-			empinv.setEmptyDate(new Date());
-			empinv.setErpDocRefNo("");
-			empinv.setFinYear(gatein.getFinYear());
-			empinv.setGateInDate(new Date());
-			empinv.setGateInId(gatein.getGateInId());
-			empinv.setIsoCode(gatein.getIsoCode());
-			empinv.setMovementCode("RCVE");
-			empinv.setOnAccountOf(gatein.getOnAccountOf());
-			empinv.setProfitcentreId("N00004");
-			empinv.setSa(gatein.getSa());
-			empinv.setSl(gatein.getSl());
-			empinv.setSubDocRefNo("");
-			empinv.setStatus("A");
-			empinv.setCreatedBy(user);
-			empinv.setCreatedDate(new Date());
-
-			emptyinventoryrepo.save(empinv);
+//			EmptyInventory empinv = new EmptyInventory();
+//			empinv.setBranchId(bid);
+//		//	empinv.setCha(con.get(0).getCha());
+//			empinv.setCompanyId(cid);
+//			empinv.setContainerNo(gatein.getContainerNo());
+//			empinv.setContainerSize(gatein.getContainerSize());
+//			empinv.setContainerType(gatein.getContainerType());
+//			empinv.setDeStuffId("");
+//			empinv.setDocRefNo("");
+//			empinv.setEmptyDate(new Date());
+//			empinv.setErpDocRefNo("");
+//			empinv.setFinYear(gatein.getFinYear());
+//			empinv.setGateInDate(new Date());
+//			empinv.setGateInId(gatein.getGateInId());
+//			empinv.setIsoCode(gatein.getIsoCode());
+//			empinv.setMovementCode("RCVE");
+//			empinv.setOnAccountOf(gatein.getOnAccountOf());
+//			empinv.setProfitcentreId("N00004");
+//			empinv.setSa(gatein.getSa());
+//			empinv.setSl(gatein.getSl());
+//			empinv.setSubDocRefNo("");
+//			empinv.setStatus("A");
+//			empinv.setCreatedBy(user);
+//			empinv.setCreatedDate(new Date());
+//
+//			emptyinventoryrepo.save(empinv);
 
 			processnextidrepo.updateAuditTrail(cid, bid, "P05082", HoldNextIdD1, "2024");
 
