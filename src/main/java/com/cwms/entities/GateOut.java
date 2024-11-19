@@ -2098,7 +2098,39 @@ public class GateOut {
 			this.createdBy = createdBy;
 		}
 	    
-		
+		public GateOut(String gateOutId,String erpDocRefNo, String docRefNo, String onAccountOf, String containerNo,
+				String containerSize, String containerType, String containerStatus, String isoCode, String sa,
+				String sl, String commodityDescription, BigDecimal grossWt, char transporterStatus, String transporter,
+				String transporterName, String deliveryOrderNo, Date deliveryOrderDate, Date doValidityDate,
+				String onAccountOfName, String saName, String slName) {
+			this.gateOutId = gateOutId;
+			this.erpDocRefNo = erpDocRefNo;
+			this.docRefNo = docRefNo;
+			this.onAccountOf = onAccountOf;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.containerStatus = containerStatus;
+			this.isoCode = isoCode;
+			this.sa = sa;
+			this.sl = sl;
+			this.commodityDescription = commodityDescription;
+			this.grossWt = grossWt;
+			this.transporterStatus = transporterStatus;
+			this.transporter = transporter;
+			this.transporterName = transporterName;
+			this.deliveryOrderNo = deliveryOrderNo;
+			this.deliveryOrderDate = deliveryOrderDate;
+			this.doValidityDate = doValidityDate;
+			this.onAccountOfName = onAccountOfName;
+			this.saName = saName;
+			this.slName = slName;
+		}
+
+
+
+
+
 		
 		
 }

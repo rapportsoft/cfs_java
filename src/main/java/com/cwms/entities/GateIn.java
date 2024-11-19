@@ -3677,6 +3677,59 @@ public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, St
 	this.cartedPackages = cartedPackages;
 	}
 
+public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, Date docRefDate, String gateInType,
+		String profitcentreId, String cartingTransId, String containerNo, String containerSize, String containerType,
+		String containerStatus, String containerSealNo, String customsSealNo, String isoCode, BigDecimal grossWeight,
+		BigDecimal cargoWeight, String hazardous, String sa, String sl, String onAccountOf, String commodityDescription,
+		BigDecimal actualNoOfPackages, String deliveryOrderNo, Date deliveryOrderDate, Date doValidityDate,
+		String shift, String refer, String containerHealth, String transporterStatus, String transporterName,
+		String transporter, String vehicleNo, String driverName, String comments, String status, String createdBy,
+		String commodity, Date inGateInDate, String gateNo, String onAccountOfName, String saName, String slName) {
+	this.gateInId = gateInId;
+	this.erpDocRefNo = erpDocRefNo;
+	this.docRefNo = docRefNo;
+	this.srNo = srNo;
+	this.docRefDate = docRefDate;
+	this.gateInType = gateInType;
+	this.profitcentreId = profitcentreId;
+	this.cartingTransId = cartingTransId;
+	this.containerNo = containerNo;
+	this.containerSize = containerSize;
+	this.containerType = containerType;
+	this.containerStatus = containerStatus;
+	this.containerSealNo = containerSealNo;
+	this.customsSealNo = customsSealNo;
+	this.isoCode = isoCode;
+	this.grossWeight = grossWeight;
+	this.cargoWeight = cargoWeight;
+	this.hazardous = hazardous;
+	this.sa = sa;
+	this.sl = sl;
+	this.onAccountOf = onAccountOf;
+	this.commodityDescription = commodityDescription;
+	this.actualNoOfPackages = actualNoOfPackages;
+	this.deliveryOrderNo = deliveryOrderNo;
+	this.deliveryOrderDate = deliveryOrderDate;
+	this.doValidityDate = doValidityDate;
+	this.shift = shift;
+	this.refer = refer;
+	this.containerHealth = containerHealth;
+	this.transporterStatus = transporterStatus;
+	this.transporterName = transporterName;
+	this.transporter = transporter;
+	this.vehicleNo = vehicleNo;
+	this.driverName = driverName;
+	this.comments = comments;
+	this.status = status;
+	this.createdBy = createdBy;
+	this.commodity = commodity;
+	this.inGateInDate = inGateInDate;
+	this.gateNo = gateNo;
+	this.onAccountOfName = onAccountOfName;
+	this.saName = saName;
+	this.slName = slName;
+}
+
 
 
 
