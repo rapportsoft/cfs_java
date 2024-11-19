@@ -128,7 +128,7 @@ public class ExportMovement {
 	    @Column(name = "On_Account_Of", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
 	    private String onAccountOf;
 	  
-		@Column(name = "Total_Cargo_Wt", precision = 10, scale = 3, nullable = false, columnDefinition = "decimal(10,3) default 0.000")
+		@Column(name = "Total_Cargo_Wt", precision = 10, scale = 3, columnDefinition = "decimal(10,3) default 0.000")
 	    private BigDecimal totalCargoWt;
 
 	    @Column(name = "Gross_Weight", precision = 16, scale = 4, nullable = false, columnDefinition = "decimal(16,4) default 0.0000")

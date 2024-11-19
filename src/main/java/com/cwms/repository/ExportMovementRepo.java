@@ -7,6 +7,21 @@ import org.springframework.data.repository.query.Param;
 import com.cwms.entities.ExportMovement;
 
 public interface ExportMovementRepo extends JpaRepository<ExportMovement, String>{
+	
+	
+	
+	@Query(value = "SELECT DISTINCT e.containerNo, e.movementReqId " +
+            "FROM ExportMovement e " +
+            "WHERE e.companyId = :cid " +
+            "AND e.branchId = :bid " +
+            "AND e.status != 'D' " +
+            "AND (e.gateOutId IS NULL OR e.gateOutId = '') " +
+            "AND (e.gatePassNo IS NULL OR e.gatePassNo = '') " +
+            "AND (:val IS NULL OR :val = '' OR e.containerNo LIKE CONCAT('%', :val, '%'))")
+List<Object[]> getDataForGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
+	
+	
 	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, st.onAccountOf, st.viaNo, st.voyageNo ,E.vesselId, vs.vesselName, st.stuffTallyId, E.gateInId, st.agentSealNo, st.customsSealNo, st.totalGrossWeight, st.sbNo, st.pod, st.pol, st.sbDate, st.stuffId, st.stuffDate,st.stuffTallyDate, st.stuffTallyLineId "          
 	        + "FROM ExportInventory E "
 	        + "LEFT JOIN Vessel vs ON E.companyId = vs.companyId AND E.branchId = vs.branchId AND E.vesselId = vs.vesselId AND vs.status <> 'D' "
@@ -138,10 +153,10 @@ public interface ExportMovementRepo extends JpaRepository<ExportMovement, String
 //	        + "AND E.status <> 'D'")
 //	List<Object[]> searchContainerNoForMovement(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
 
-	@Query(value="select distinct e.containerNo,e.movementReqId from ExportMovement e where e.companyId=:cid and e.branchId=:bid "
-			+ "and e.status != 'D' and (e.gateOutId = '' OR e.gateOutId is null) and (:val = '' OR :val is null OR e.containerNo "
-			+ "LIKE CONCAT ('%',:val,'%'))")
-	List<Object[]> getDataForGatePass(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+//	@Query(value="select distinct e.containerNo,e.movementReqId from ExportMovement e where e.companyId=:cid and e.branchId=:bid "
+//			+ "and e.status != 'D' and (e.gateOutId = '' OR e.gateOutId is null) and (:val = '' OR :val is null OR e.containerNo "
+//			+ "LIKE CONCAT ('%',:val,'%'))")
+//	List<Object[]> getDataForGatePass(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 
 
 	@Query(value="select NEW com.cwms.entities.ExportMovement(e.movementReqId, e.movementReqLineId, e.sbNo, sb.sbTransId,"
