@@ -443,4 +443,23 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 			+ "g.gateInType = 'PortRn' and (:val is null OR :val = '' OR g.gateInId LIKE CONCAT('%',:val,'%') OR "
 			+ "g.containerNo LIKE CONCAT('%',:val,'%') OR g.vehicleNo LIKE CONCAT('%',:val,'%')) order by g.gateInId desc")
 	List<Object[]> searchPortRnDataList(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	
+	@Query(value = "select g.containerNo,g.containerSize,g.containerType,g.sa,psa.partyName,g.sl,psl.partyName,g.onAccountOf,"
+			+ "g.gateInId,  g.customsSealNo,g.grossWeight,g.docRefNo,g.docRefDate " + "from GateIn g "
+			+ "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.sa = psa.partyId AND psa.status <> 'D' "
+			+ "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "g.gateInType='PortRn' and (g.movementRequestId is null OR g.movementRequestId = '') and "
+			+ "(:val is null OR :val = '' OR g.containerNo LIKE CONCAT('%',:val,'%')) and g.profitcentreId=:profit group by g.containerNo")
+	List<Object[]> getPortRnDataForMovement(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val,
+			@Param("profit") String profit);
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update GateIn g SET g.movementRequestId=:id where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "g.gateInId=:gateId")
+    int updatePortReturnId(@Param("cid") String cid, @Param("bid") String bid, @Param("gateId") String gateId,
+			@Param("id") String id);
 }

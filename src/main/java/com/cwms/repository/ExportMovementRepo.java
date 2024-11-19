@@ -119,6 +119,7 @@ List<Object[]> getDataForGatePass(@Param("cid") String cid, @Param("bid") String
 		       "AND e.branchId = :branchId " +
 		       "AND e.containerNo = :containerNo " +
 		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND (e.gatePassNo is null OR e.gatePassNo = '') " +
 		       "AND e.status <> 'D' " +
 		       "AND (:movementReqLineId IS NULL OR e.movementReqLineId <> :movementReqLineId) " +
 		       "AND (:movementReqId IS NULL OR :movementReqId = '' OR e.movementReqId <> :movementReqId)")

@@ -647,8 +647,8 @@ public class GateIn {
 	@Column(name = "Gate_In_Packages", precision = 8, scale = 0, nullable = true)
 	private BigDecimal gateInPackages = BigDecimal.ZERO;
 	
-
-	
+    @Column(name="Movement_Request_Id",length = 10)
+	private String movementRequestId;
 	
 	
 	
@@ -677,6 +677,14 @@ public class GateIn {
 	
 	
 	
+
+	public String getMovementRequestId() {
+		return movementRequestId;
+	}
+
+	public void setMovementRequestId(String movementRequestId) {
+		this.movementRequestId = movementRequestId;
+	}
 
 	public String getOnAccountOfName() {
 		return onAccountOfName;
@@ -806,6 +814,238 @@ public class GateIn {
 	
 	
 	
+
+	public GateIn(String companyId, String branchId, String gateInId, String finYear, String erpDocRefNo,
+			String docRefNo, String lineNo, int srNo, String inBondingId, Date docRefDate, String boeNo, Date boeDate,
+			String invoiceNo, Date invoiceDate, String nocNo, Date nocDate, String gateInType, String profitcentreId,
+			String processId, String cartingTransId, BigDecimal cartedPackages, String viaNo, String containerNo,
+			String containerSize, String containerType, String containerStatus, String containerSealNo,
+			String customsSealNo, String actualSealNo, String sealMismatch, String vehicleType, String isoCode,
+			BigDecimal grossWeight, BigDecimal eirGrossWeight, BigDecimal tareWeight, BigDecimal cargoWeight,
+			BigDecimal weighmentWeight, String weighmentPassNo, String weighmentWtUser, Date weighmentWtDate,
+			String weighmentDone, String overDimension, String hazardous, String hazClass, String sa, String sl,
+			String onAccountOf, String cha, String chaCode, String importerName, String commodityDescription,
+			BigDecimal actualNoOfPackages, BigDecimal fob, BigDecimal qtyTakenIn, BigDecimal transferPackages,
+			BigDecimal nilPackages, String deliveryOrderNo, Date deliveryOrderDate, Date doValidityDate, String shift,
+			String portExitNo, Date portExitDate, String terminal, String origin, String refer, String temperature,
+			String containerHealth, String yardLocation, String yardBlock, String yardCell, String yardLocation1,
+			String yardBlock1, String yardCell1, String transporterStatus, String transporterName, String transporter,
+			String vehicleNo, String driverName, String damageDetails, String comments, String specialRemarks,
+			String bookingNo, String scanningDoneStatus, String scanningEditedBy, Date scanningDoneDate,
+			String weighmentFlag, String damageReportFlag, String eqId, Date eqDate, String eqIdIn, Date eqDateIn,
+			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
+			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
+			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
+			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
+			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
+			String stuffRequestId, String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate,
+			Date stuffTallyDate, String stuffTallyStatus, String backToTown, String backToTownRemark,
+			Date backToTownDate, String unNo, String commodity, String assesmentId, String pnStatus, String jobOrderId,
+			Date jobDate, String area, String cargoType, BigDecimal weightTakenIn, String rScanOut, String outVehicleNo,
+			String outTransporterStatus, String outTransporter, String outTransporterName, Date outGateOutDate,
+			String inVehicleNo, String inTransporterStatus, String inTransporter, String inTransporterName,
+			Date inGateInDate, String rScanIn, String hubStuffId, String scanningStatus, String odcStatus,
+			String invoiceAssesed, String commodityCode, String codeccoMtInStatus, Date codeccoMtInDate,
+			int factoryCode, int bufferCode, Date lastLocationReceivedDate, Date locationReceivedDate,
+			String tagRemoveStatus, Date tagRemoveDate, String rfTag, String tagReceiveStatus, Date tagReceiveDate,
+			String eqactivityFlg, String ediCusMenifestStatus, Date ediCusMenifestDate, Date ediCusInDate,
+			String ediCusInStatus, String lowBed, String vessel, String typeOfPackage, String gateNo, String remarks,
+			BigDecimal gateInPackages, String movementRequestId, String shippingAgentName, String shippingLineName,
+			String chaName, String onAccountName, String onAccountOfName, String saName, String slName) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.gateInId = gateInId;
+		this.finYear = finYear;
+		this.erpDocRefNo = erpDocRefNo;
+		this.docRefNo = docRefNo;
+		this.lineNo = lineNo;
+		this.srNo = srNo;
+		this.inBondingId = inBondingId;
+		this.docRefDate = docRefDate;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.invoiceNo = invoiceNo;
+		this.invoiceDate = invoiceDate;
+		this.nocNo = nocNo;
+		this.nocDate = nocDate;
+		this.gateInType = gateInType;
+		this.profitcentreId = profitcentreId;
+		this.processId = processId;
+		this.cartingTransId = cartingTransId;
+		this.cartedPackages = cartedPackages;
+		this.viaNo = viaNo;
+		this.containerNo = containerNo;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.containerStatus = containerStatus;
+		this.containerSealNo = containerSealNo;
+		this.customsSealNo = customsSealNo;
+		this.actualSealNo = actualSealNo;
+		this.sealMismatch = sealMismatch;
+		this.vehicleType = vehicleType;
+		this.isoCode = isoCode;
+		this.grossWeight = grossWeight;
+		this.eirGrossWeight = eirGrossWeight;
+		this.tareWeight = tareWeight;
+		this.cargoWeight = cargoWeight;
+		this.weighmentWeight = weighmentWeight;
+		this.weighmentPassNo = weighmentPassNo;
+		this.weighmentWtUser = weighmentWtUser;
+		this.weighmentWtDate = weighmentWtDate;
+		this.weighmentDone = weighmentDone;
+		this.overDimension = overDimension;
+		this.hazardous = hazardous;
+		this.hazClass = hazClass;
+		this.sa = sa;
+		this.sl = sl;
+		this.onAccountOf = onAccountOf;
+		this.cha = cha;
+		this.chaCode = chaCode;
+		this.importerName = importerName;
+		this.commodityDescription = commodityDescription;
+		this.actualNoOfPackages = actualNoOfPackages;
+		this.fob = fob;
+		this.qtyTakenIn = qtyTakenIn;
+		this.transferPackages = transferPackages;
+		this.nilPackages = nilPackages;
+		this.deliveryOrderNo = deliveryOrderNo;
+		this.deliveryOrderDate = deliveryOrderDate;
+		this.doValidityDate = doValidityDate;
+		this.shift = shift;
+		this.portExitNo = portExitNo;
+		this.portExitDate = portExitDate;
+		this.terminal = terminal;
+		this.origin = origin;
+		this.refer = refer;
+		this.temperature = temperature;
+		this.containerHealth = containerHealth;
+		this.yardLocation = yardLocation;
+		this.yardBlock = yardBlock;
+		this.yardCell = yardCell;
+		this.yardLocation1 = yardLocation1;
+		this.yardBlock1 = yardBlock1;
+		this.yardCell1 = yardCell1;
+		this.transporterStatus = transporterStatus;
+		this.transporterName = transporterName;
+		this.transporter = transporter;
+		this.vehicleNo = vehicleNo;
+		this.driverName = driverName;
+		this.damageDetails = damageDetails;
+		this.comments = comments;
+		this.specialRemarks = specialRemarks;
+		this.bookingNo = bookingNo;
+		this.scanningDoneStatus = scanningDoneStatus;
+		this.scanningEditedBy = scanningEditedBy;
+		this.scanningDoneDate = scanningDoneDate;
+		this.weighmentFlag = weighmentFlag;
+		this.damageReportFlag = damageReportFlag;
+		this.eqId = eqId;
+		this.eqDate = eqDate;
+		this.eqIdIn = eqIdIn;
+		this.eqDateIn = eqDateIn;
+		this.eqIdOut = eqIdOut;
+		this.eqDateOut = eqDateOut;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.tripType = tripType;
+		this.drt = drt;
+		this.scannerType = scannerType;
+		this.cartingStatus = cartingStatus;
+		this.labour = labour;
+		this.fk3mt = fk3mt;
+		this.fk5mt = fk5mt;
+		this.fk10mt = fk10mt;
+		this.hydra12mt = hydra12mt;
+		this.crane = crane;
+		this.fromSbTransId = fromSbTransId;
+		this.fromSbLineNo = fromSbLineNo;
+		this.fromSbNo = fromSbNo;
+		this.uploadUser = uploadUser;
+		this.uploadDate = uploadDate;
+		this.removeUser = removeUser;
+		this.removeDate = removeDate;
+		this.imagePath = imagePath;
+		this.backImage = backImage;
+		this.blNo = blNo;
+		this.blDate = blDate;
+		this.holdStatus = holdStatus;
+		this.holdType = holdType;
+		this.holdUser = holdUser;
+		this.holdDate = holdDate;
+		this.holdRemarks = holdRemarks;
+		this.stuffRequestId = stuffRequestId;
+		this.stuffTallyId = stuffTallyId;
+		this.prGatePassNo = prGatePassNo;
+		this.prGateOutId = prGateOutId;
+		this.prGateOutDate = prGateOutDate;
+		this.stuffTallyDate = stuffTallyDate;
+		this.stuffTallyStatus = stuffTallyStatus;
+		this.backToTown = backToTown;
+		this.backToTownRemark = backToTownRemark;
+		this.backToTownDate = backToTownDate;
+		this.unNo = unNo;
+		this.commodity = commodity;
+		this.assesmentId = assesmentId;
+		this.pnStatus = pnStatus;
+		this.jobOrderId = jobOrderId;
+		this.jobDate = jobDate;
+		this.area = area;
+		this.cargoType = cargoType;
+		this.weightTakenIn = weightTakenIn;
+		this.rScanOut = rScanOut;
+		this.outVehicleNo = outVehicleNo;
+		this.outTransporterStatus = outTransporterStatus;
+		this.outTransporter = outTransporter;
+		this.outTransporterName = outTransporterName;
+		this.outGateOutDate = outGateOutDate;
+		this.inVehicleNo = inVehicleNo;
+		this.inTransporterStatus = inTransporterStatus;
+		this.inTransporter = inTransporter;
+		this.inTransporterName = inTransporterName;
+		this.inGateInDate = inGateInDate;
+		this.rScanIn = rScanIn;
+		this.hubStuffId = hubStuffId;
+		this.scanningStatus = scanningStatus;
+		this.odcStatus = odcStatus;
+		this.invoiceAssesed = invoiceAssesed;
+		this.commodityCode = commodityCode;
+		this.codeccoMtInStatus = codeccoMtInStatus;
+		this.codeccoMtInDate = codeccoMtInDate;
+		this.factoryCode = factoryCode;
+		this.bufferCode = bufferCode;
+		this.lastLocationReceivedDate = lastLocationReceivedDate;
+		this.locationReceivedDate = locationReceivedDate;
+		this.tagRemoveStatus = tagRemoveStatus;
+		this.tagRemoveDate = tagRemoveDate;
+		this.rfTag = rfTag;
+		this.tagReceiveStatus = tagReceiveStatus;
+		this.tagReceiveDate = tagReceiveDate;
+		this.eqactivityFlg = eqactivityFlg;
+		this.ediCusMenifestStatus = ediCusMenifestStatus;
+		this.ediCusMenifestDate = ediCusMenifestDate;
+		this.ediCusInDate = ediCusInDate;
+		this.ediCusInStatus = ediCusInStatus;
+		this.lowBed = lowBed;
+		this.vessel = vessel;
+		this.typeOfPackage = typeOfPackage;
+		this.gateNo = gateNo;
+		this.remarks = remarks;
+		this.gateInPackages = gateInPackages;
+		this.movementRequestId = movementRequestId;
+		this.shippingAgentName = shippingAgentName;
+		this.shippingLineName = shippingLineName;
+		this.chaName = chaName;
+		this.onAccountName = onAccountName;
+		this.onAccountOfName = onAccountOfName;
+		this.saName = saName;
+		this.slName = slName;
+	}
 
 	public GateIn(String companyId, String branchId, String gateInId, String finYear, String erpDocRefNo,
 			String docRefNo, String lineNo, int srNo, String inBondingId, Date docRefDate, String boeNo, Date boeDate,
