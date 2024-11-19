@@ -19,7 +19,7 @@ public interface GateOutRepo extends JpaRepository<GateOut, String>{
             + "from GateOut g where g.companyId = :cid and g.branchId = :bid and g.status != 'D' and g.processId = 'P00223' "
             + "and (:val is null OR :val = '' OR g.gateOutId LIKE CONCAT('%', :val, '%') OR g.gatePassNo LIKE CONCAT('%', :val, '%') "
             + "OR g.containerNo LIKE CONCAT('%', :val, '%') OR g.vehicleNo LIKE CONCAT('%', :val, '%')) "
-            + "ORDER BY g.gateOutDate")
+            + "ORDER BY g.gateOutDate desc")
 List<Object[]> searchExportGateOut(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 
 	

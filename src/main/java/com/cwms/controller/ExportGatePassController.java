@@ -92,9 +92,9 @@ public class ExportGatePassController {
 
 	@GetMapping("/getMovementData")
 	public ResponseEntity<?> getMovementData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam(name = "val", required = false) String val) {
+			@RequestParam(name = "val", required = false) String val,@RequestParam("type") String type) {
 
-		List<Object[]> data = exportMovementRepo.getDataForGatePass(cid, bid, val);
+		List<Object[]> data = exportMovementRepo.getDataForGatePass(cid, bid, val, type);
 
 		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
@@ -396,7 +396,7 @@ public class ExportGatePassController {
 
 		List<ExportGatePass> result = new ArrayList<>();
 
-		if ("CONT".equals(type)) {
+		if ("CLP".equals(type) || "PortRn".equals(type) || "Buffer".equals(type)) {
 			result = exportgatepassrepo.getDataByGatePassId(cid, bid, val);
 		}
 		else if("CRG".equals(type)) {
@@ -781,7 +781,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 				System.out.println("g :3 "+g);
 				System.out.println("gatePass.getTransType() First : "+gatePass.getTransType());
 
-				if ("CONT".equals(gatePass.getTransType())) {
+				if ("CLP".equals(gatePass.getTransType())) {
 					ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, g.getMovementReqId(),
 							g.getContainerNo());
 
@@ -929,7 +929,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 				
 				
 				
-				else if ("BOWC".equals(gatePass.getTransType())) {
+				else if ("Buffer".equals(gatePass.getTransType())) {
 					ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, g.getMovementReqId(), g.getContainerNo());
 					System.out.println("mov : "+mov);
 					
@@ -1000,6 +1000,73 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 				
 				
 				
+				else if ("PortRn".equals(gatePass.getTransType())) {
+					ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, g.getMovementReqId(),
+							g.getContainerNo());
+
+					if (mov == null) {
+						return new ResponseEntity<>("Movement data not found.", HttpStatus.CONFLICT);
+					}
+
+					g.setCompanyId(cid);
+					g.setBranchId(bid);
+					g.setGatePassId(HoldNextIdD1);
+					g.setGatePassDate(new Date());
+					g.setTransType(gatePass.getTransType());
+					g.setMovementReqId(g.getMovementReqId());
+					g.setProfitcentreId("N00004");
+					g.setVehicleId(gatePass.getVehicleId());
+					g.setVehicleNo(gatePass.getVehicleNo());
+					g.setTransporter(gatePass.getTransporter());
+					g.setTransporterName(gatePass.getTransporterName());
+					g.setComments(gatePass.getComments());
+					g.setStatus("A");
+					g.setCreatedBy(user);
+					g.setCreatedDate(new Date());
+					g.setApprovedBy(user);
+					g.setApprovedDate(new Date());
+					g.setSrNo(sr);
+					g.setStuffTallyId("");
+					g.setStuffTallyLineId(BigDecimal.ZERO);
+					g.setMovReqType(mov.getMovReqType());
+					g.setShift("Day");
+					g.setInvoiceNo("");
+					g.setImporterName(sb.getExporterName());
+					g.setImporterAddress1(sb.getExporterAddress1());
+					g.setImporterAddress2(sb.getExporterAddress2());
+					g.setImporterAddress3(sb.getExporterAddress3());
+					g.setCommodity(cargo.getCommodity());
+					g.setTransporterStatus("C");
+					g.setSl(mov.getShippingLine());
+					g.setVesselId(mov.getVesselId());
+					g.setCellAreaAllocated(BigDecimal.ZERO);
+					g.setQtyTakenOut(BigDecimal.ZERO);
+					g.setAreaReleased(BigDecimal.ZERO);
+					g.setGwTakenOut(BigDecimal.ZERO);
+					g.setYardPackages(BigDecimal.ZERO);
+					g.setVehicleWt(BigDecimal.ZERO);
+					g.setContainerStatus("FCL");
+					g.setVoyageNo(mov.getVoyageNo());
+					g.setSa(mov.getShippingAgent());
+					g.setDriverName(gatePass.getDriverName());
+
+					exportgatepassrepo.save(g);
+
+					mov.setGatePassNo(HoldNextIdD1);
+
+					exportMovementRepo.save(mov);
+
+					ExportInventory inv = exportinvrepo.getDataByContainerNo(cid, bid, g.getContainerNo());
+
+					if (inv != null) {
+						inv.setGatePassNo(HoldNextIdD1);
+						inv.setGatePassDate(new Date());
+
+						exportinvrepo.save(inv);
+					}
+
+			
+				}
 				
 				
 				
@@ -1054,14 +1121,14 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 
 			System.out.println("gatePass.getTransType() : "+gatePass.getTransType());
 
-			if ("CONT".equals(gatePass.getTransType())) {
+			if ("CLP".equals(gatePass.getTransType()) || "PortRn".equals(gatePass.getTransType())) {
 				System.out.println("Here CONT");
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, HoldNextIdD1);
 			} else if ("CRG".equals(gatePass.getTransType())) {
 				System.out.println("Here CRG");
 				result = exportgatepassrepo.getDataByGatePassIdFORCRG(cid, bid, HoldNextIdD1);
 			}
-			else if ("BOWC".equals(gatePass.getTransType())) {
+			else if ("Buffer".equals(gatePass.getTransType())) {
 				System.out.println("Here BOWC");
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, HoldNextIdD1);
 			}
@@ -1126,12 +1193,12 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 
 			List<ExportGatePass> result = new ArrayList<>();
 
-			if ("CONT".equals(gatePass.getTransType())) {
+			if ("CLP".equals(gatePass.getTransType()) || "PortRn".equals(gatePass.getTransType())) {
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, gatePass.getGatePassId());
 			} else if ("CRG".equals(gatePass.getTransType())) {
 				result = exportgatepassrepo.getDataByGatePassIdFORCRG(cid, bid, gatePass.getGatePassId());
 			}
-			if ("BOWC".equals(gatePass.getTransType())) {
+			else if ("Buffer".equals(gatePass.getTransType())) {
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, gatePass.getGatePassId());
 			}
 
@@ -1193,7 +1260,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 					return new ResponseEntity<>("Gate pass data not found", HttpStatus.CONFLICT);
 				}
 
-                if("CONT".equals(gateOut.getTransType())) {
+                if("CLP".equals(gateOut.getTransType())) {
     				ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, exist.getMovementReqId(),
     						exist.getContainerNo());
 
@@ -1348,7 +1415,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
                 
                 
                 
-                if("BOWC".equals(gateOut.getTransType())) {
+                if("Buffer".equals(gateOut.getTransType())) {
     				ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, exist.getMovementReqId(),
     						exist.getContainerNo());
 
@@ -1430,7 +1497,83 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 
                 
                 
-                
+                if("PortRn".equals(gateOut.getTransType())) {
+    				ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, exist.getMovementReqId(),
+    						exist.getContainerNo());
+
+    				if (mov == null) {
+    					return new ResponseEntity<>("Movement data not found.", HttpStatus.CONFLICT);
+    				}
+
+    				ExportInventory inv = exportinvrepo.getDataByContainerNo(cid, bid, exist.getContainerNo());
+
+    				if (inv == null) {
+    					return new ResponseEntity<>("Export inventory data not found.", HttpStatus.CONFLICT);
+    				}
+
+    				GateOut out = new GateOut();
+    				out.setCompanyId(cid);
+    				out.setBranchId(bid);
+    				out.setApprovedBy(user);
+    				out.setApprovedDate(new Date());
+    				out.setCha(exist.getCha());
+    				out.setComments(gateOut.getComments());
+    				out.setCommodityDescription(exist.getCommodity());
+    				out.setContainerNo(pass.getContainerNo());
+    				out.setContainerSize(pass.getContainerSize());
+    				out.setContainerType(pass.getContainerType());
+    				out.setCreatedBy(user);
+    				out.setCreatedDate(new Date());
+    				out.setDocRefDate(exist.getSbDate());
+    				out.setDocRefNo(exist.getSbNo());
+    				out.setDriverName(gateOut.getDriverName());
+    				out.setErpDocRefNo(exist.getSbTransId());
+    				out.setExporterName(exist.getImporterName());
+    				out.setFinYear("2024");
+    				out.setGateInDate(inv.getGateInDate());
+    				out.setGateNoOut(gateOut.getGateNoOut());
+    				out.setShift(gateOut.getShift());
+    				out.setGateOutDate(new Date());
+    				out.setGateOutId(HoldNextIdD1);
+    				out.setGatePassDate(exist.getGatePassDate());
+    				out.setGatePassNo(gateOut.getGatePassNo());
+    				out.setGrossWt(pass.getGrossWt());
+    				out.setIsoCode(inv.getIso());
+    				out.setMovementType(mov.getMovReqType());
+    				out.setOnAccountOf(mov.getOnAccountOf());
+    				out.setProcessId("P00223");
+    				out.setProfitcentreId("N00004");
+    				out.setSl(exist.getSl());
+    				out.setSrNo(String.valueOf(srNo));
+    				out.setStatus('A');
+    				out.setTallyId(mov.getStuffTallyId());
+    				out.setTareWt(inv.getContainerWeight());
+    				out.setTransporter(exist.getTransporter());
+    				out.setTransporterName(exist.getTransporterName());
+    				out.setTransporterStatus(exist.getTransporterStatus().charAt(0));
+    				out.setTransType(gateOut.getTransType());
+    				out.setVehicleId(exist.getVehicleId());
+    				out.setVehicleNo(gateOut.getVehicleNo());
+    				out.setVesselId(exist.getVesselId());
+    				out.setViaNo(pass.getViaNo());
+
+    				gateoutrepo.save(out);
+
+    				
+
+    				if (inv != null) {
+    					inv.setGateOutId(HoldNextIdD1);
+    					inv.setGateOutDate(new Date());
+
+    					exportinvrepo.save(inv);
+    				}
+
+    				mov.setGateOutId(HoldNextIdD1);
+    				mov.setGateOutDate(new Date());
+
+    				exportMovementRepo.save(mov);
+    				
+                }
                 
                 
                 

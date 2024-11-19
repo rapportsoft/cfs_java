@@ -54,7 +54,7 @@ public class GateOut {
 	    @Column(name = "Profitcentre_Id", length = 6)
 	    private String profitcentreId;
 
-	    @Column(name = "Trans_Type", length = 5)
+	    @Column(name = "Trans_Type", length = 10)
 	    private String transType;
 
 	    @Column(name = "DRT", length = 1)

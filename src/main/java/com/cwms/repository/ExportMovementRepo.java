@@ -15,10 +15,12 @@ public interface ExportMovementRepo extends JpaRepository<ExportMovement, String
             "WHERE e.companyId = :cid " +
             "AND e.branchId = :bid " +
             "AND e.status != 'D' " +
+            "AND e.movReqType=:type " +
             "AND (e.gateOutId IS NULL OR e.gateOutId = '') " +
             "AND (e.gatePassNo IS NULL OR e.gatePassNo = '') " +
             "AND (:val IS NULL OR :val = '' OR e.containerNo LIKE CONCAT('%', :val, '%'))")
-List<Object[]> getDataForGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+List<Object[]> getDataForGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val,@Param("type") String type);
+
 
 	
 	

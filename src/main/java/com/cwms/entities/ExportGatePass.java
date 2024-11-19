@@ -263,7 +263,7 @@ public class ExportGatePass {
 	    private String sa;
 	    
 	    
-	    @Column(name="Voyage_No",length = 7)
+	    @Column(name="Voyage_No",length = 10)
 	    private String voyageNo;
 	    
 	    @Transient
