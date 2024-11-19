@@ -112,4 +112,34 @@ List<Object[]> searchExportGateOut(@Param("cid") String cid, @Param("bid") Strin
 //				+ "and (:val is null OR :val = '' OR g.gateOutId LIKE CONCAT('%',:val,'%') OR g.gatePassNo LIKE CONCAT('%',:val,'%') "
 //				+ "OR g.containerNo LIKE CONCAT('%',:val,'%') OR g.vehicleNo LIKE CONCAT('%',:val,'%'))")
 //		List<Object[]> searchExportGateOut(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	@Query(value="select distinct g.containerNo from GateOut g where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "(g.containerNo != '' AND g.containerNo is not null) and g.processId='P00223' and (g.portReturnFlag is null OR "
+			+ "g.portReturnFlag = '' OR g.portReturnFlag = 'N') "
+			+ "and (:val is null OR :val = '' OR g.containerNo LIKE CONCAT('%',:val,'%'))")
+	List<String> getContainerNosForPortReturn(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	@Query(value="select NEW com.cwms.entities.GateOut(g.gateOutId, g.erpDocRefNo, g.docRefNo, g.onAccountOf, g.containerNo,"
+			+ "g.containerSize, g.containerType, g.containerStatus, g.isoCode, g.sa,"
+			+ "g.sl, g.commodityDescription, g.grossWt, g.transporterStatus, g.transporter,"
+			+ "g.transporterName, g.deliveryOrderNo, g.deliveryOrderDate, g.doValidityDate,"
+			+ "p3.partyName, p1.partyName, p2.partyName) "
+			+ "from GateOut g "
+			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sa=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON g.companyId=p2.companyId and g.branchId=p2.branchId and g.sl=p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.onAccountOf=p3.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "(g.containerNo != '' AND g.containerNo is not null) and g.processId='P00223' and (g.portReturnFlag is null OR "
+			+ "g.portReturnFlag = '' OR g.portReturnFlag = 'N') and g.containerNo=:con order by g.createdDate desc LIMIT 1")
+	GateOut getSingleContainerNosForPortReturn(@Param("cid") String cid,@Param("bid") String bid,@Param("con") String con);
+	
+	
+	@Query(value="select g "
+			+ "from GateOut g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "(g.containerNo != '' AND g.containerNo is not null) and g.processId='P00223' and (g.portReturnFlag is null OR "
+			+ "g.portReturnFlag = '' OR g.portReturnFlag = 'N') and g.containerNo=:con order by g.createdDate desc LIMIT 1")
+	GateOut getSingleContainerNosForPortReturn1(@Param("cid") String cid,@Param("bid") String bid,@Param("con") String con);
 }

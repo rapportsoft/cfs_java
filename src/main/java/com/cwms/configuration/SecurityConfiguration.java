@@ -121,6 +121,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/stuffTally/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/exportGatePass/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/exportBackToTown/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/portReturn/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

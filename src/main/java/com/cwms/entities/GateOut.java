@@ -12,6 +12,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="cfgateout")
@@ -409,9 +410,24 @@ public class GateOut {
 		@Temporal(TemporalType.TIMESTAMP)
 		public Date gateInDate; // Default value
 	    
+	    
+	    @Column(name="Port_Return_Flag",length = 1)
+	    public String portReturnFlag = "N";
+	    
+	    @Column(name="Port_Return_Id",length = 10)
+	    public String portReturnId;
+	    
 	    private transient String holdStatus;
 
 	   
+		@Transient
+		private String onAccountOfName;
+		
+		@Transient
+		private String saName;
+		
+		@Transient
+		private String slName;
 	    
 		public GateOut() {
 			super();
@@ -421,6 +437,54 @@ public class GateOut {
 		
 		
 		
+
+		public String getOnAccountOfName() {
+			return onAccountOfName;
+		}
+
+
+
+
+
+		public void setOnAccountOfName(String onAccountOfName) {
+			this.onAccountOfName = onAccountOfName;
+		}
+
+
+
+
+
+		public String getSaName() {
+			return saName;
+		}
+
+
+
+
+
+		public void setSaName(String saName) {
+			this.saName = saName;
+		}
+
+
+
+
+
+		public String getSlName() {
+			return slName;
+		}
+
+
+
+
+
+		public void setSlName(String slName) {
+			this.slName = slName;
+		}
+
+
+
+
 
 		public String getVehicleId() {
 			return vehicleId;
@@ -528,6 +592,195 @@ public class GateOut {
 
 		public void setGateInDate(Date gateInDate) {
 			this.gateInDate = gateInDate;
+		}
+
+		
+		
+
+
+
+
+		
+
+
+
+
+		public String getPortReturnFlag() {
+			return portReturnFlag;
+		}
+
+
+
+
+
+		public void setPortReturnFlag(String portReturnFlag) {
+			this.portReturnFlag = portReturnFlag;
+		}
+
+
+
+
+
+		public String getPortReturnId() {
+			return portReturnId;
+		}
+
+
+
+
+
+		public void setPortReturnId(String portReturnId) {
+			this.portReturnId = portReturnId;
+		}
+
+
+
+
+
+		public GateOut(String companyId, String branchId, String finYear, String gateOutId, String erpDocRefNo,
+				String docRefNo, String srNo, Date docRefDate, String profitcentreId, String transType, char drt,
+				Date gateOutDate, String processId, String shift, String gateNoIn, String gateNoOut, String igmLineNo,
+				String invoiceNo, Date invoiceDate, String onAccountOf, String viaNo, String containerNo,
+				String containerSize, String containerType, String containerStatus, String containerHealth,
+				String imoCode, char haz, String isoCode, char refer, String sa, String sl, String cha, String chaName,
+				String exporterName, String importerName, String commodityDescription, BigDecimal grossWt,
+				String natureOfCargo, BigDecimal actualNoOfPackages, BigDecimal qtyTakenOut, String vesselId,
+				char transporterStatus, String transporter, String transporterName, String vehicleNo, String tripType,
+				String driverName, String deliveryOrderNo, Date deliveryOrderDate, Date doValidityDate,
+				String gatePassNo, Date gatePassDate, String location, String comments, String gateInType, String eirNo,
+				Date eirDate, char eirStatus, String eirCreatedBy, Date eirCreatedDate, String eirApprovedBy,
+				Date eirApprovedDate, String egmNo, Date egmDate, char status, String createdBy, Date createdDate,
+				String editedBy, Date editedDate, String approvedBy, Date approvedDate, String othPartyId,
+				BigDecimal weightTakenOut, char prStatus, char codeccoMtOutStatus, Date codeccoMtOutDate,
+				String licenceNo, String driverContactNo, String outDriverName, char customsExpOutStatus,
+				Date customsExpOutDate, String emptyOutId, Date emptyOutDate, String vehicalGateIn, Date emptyPassDate,
+				char tagRemoveStatus, Date tagRemoveDate, String tallyType, String outSealNo, String draftBillNo,
+				Date draftBillDate, String gstin, char internalMove, char doAssessStatus, Date doAssessDate,
+				String noOfTrips, String alternateContactNo, String transTypeSubtype, String invoiceType,
+				String tallyId, String sealType, String exportDocument, char invtStatus, char markForReview,
+				String reviewComments, String commodity, String exBondBeNo, String vehicleId, BigDecimal tareWt,
+				String movementType, String fromLocation, String shipper, Date gateInDate, String portReturnFlag,
+				String portReturnId, String holdStatus, String onAccountOfName, String saName, String slName) {
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.gateOutId = gateOutId;
+			this.erpDocRefNo = erpDocRefNo;
+			this.docRefNo = docRefNo;
+			this.srNo = srNo;
+			this.docRefDate = docRefDate;
+			this.profitcentreId = profitcentreId;
+			this.transType = transType;
+			this.drt = drt;
+			this.gateOutDate = gateOutDate;
+			this.processId = processId;
+			this.shift = shift;
+			this.gateNoIn = gateNoIn;
+			this.gateNoOut = gateNoOut;
+			this.igmLineNo = igmLineNo;
+			this.invoiceNo = invoiceNo;
+			this.invoiceDate = invoiceDate;
+			this.onAccountOf = onAccountOf;
+			this.viaNo = viaNo;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.containerStatus = containerStatus;
+			this.containerHealth = containerHealth;
+			this.imoCode = imoCode;
+			this.haz = haz;
+			this.isoCode = isoCode;
+			this.refer = refer;
+			this.sa = sa;
+			this.sl = sl;
+			this.cha = cha;
+			this.chaName = chaName;
+			this.exporterName = exporterName;
+			this.importerName = importerName;
+			this.commodityDescription = commodityDescription;
+			this.grossWt = grossWt;
+			this.natureOfCargo = natureOfCargo;
+			this.actualNoOfPackages = actualNoOfPackages;
+			this.qtyTakenOut = qtyTakenOut;
+			this.vesselId = vesselId;
+			this.transporterStatus = transporterStatus;
+			this.transporter = transporter;
+			this.transporterName = transporterName;
+			this.vehicleNo = vehicleNo;
+			this.tripType = tripType;
+			this.driverName = driverName;
+			this.deliveryOrderNo = deliveryOrderNo;
+			this.deliveryOrderDate = deliveryOrderDate;
+			this.doValidityDate = doValidityDate;
+			this.gatePassNo = gatePassNo;
+			this.gatePassDate = gatePassDate;
+			this.location = location;
+			this.comments = comments;
+			this.gateInType = gateInType;
+			this.eirNo = eirNo;
+			this.eirDate = eirDate;
+			this.eirStatus = eirStatus;
+			this.eirCreatedBy = eirCreatedBy;
+			this.eirCreatedDate = eirCreatedDate;
+			this.eirApprovedBy = eirApprovedBy;
+			this.eirApprovedDate = eirApprovedDate;
+			this.egmNo = egmNo;
+			this.egmDate = egmDate;
+			this.status = status;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.othPartyId = othPartyId;
+			this.weightTakenOut = weightTakenOut;
+			this.prStatus = prStatus;
+			this.codeccoMtOutStatus = codeccoMtOutStatus;
+			this.codeccoMtOutDate = codeccoMtOutDate;
+			this.licenceNo = licenceNo;
+			this.driverContactNo = driverContactNo;
+			this.outDriverName = outDriverName;
+			this.customsExpOutStatus = customsExpOutStatus;
+			this.customsExpOutDate = customsExpOutDate;
+			this.emptyOutId = emptyOutId;
+			this.emptyOutDate = emptyOutDate;
+			this.vehicalGateIn = vehicalGateIn;
+			this.emptyPassDate = emptyPassDate;
+			this.tagRemoveStatus = tagRemoveStatus;
+			this.tagRemoveDate = tagRemoveDate;
+			this.tallyType = tallyType;
+			this.outSealNo = outSealNo;
+			this.draftBillNo = draftBillNo;
+			this.draftBillDate = draftBillDate;
+			this.gstin = gstin;
+			this.internalMove = internalMove;
+			this.doAssessStatus = doAssessStatus;
+			this.doAssessDate = doAssessDate;
+			this.noOfTrips = noOfTrips;
+			this.alternateContactNo = alternateContactNo;
+			this.transTypeSubtype = transTypeSubtype;
+			this.invoiceType = invoiceType;
+			this.tallyId = tallyId;
+			this.sealType = sealType;
+			this.exportDocument = exportDocument;
+			this.invtStatus = invtStatus;
+			this.markForReview = markForReview;
+			this.reviewComments = reviewComments;
+			this.commodity = commodity;
+			this.exBondBeNo = exBondBeNo;
+			this.vehicleId = vehicleId;
+			this.tareWt = tareWt;
+			this.movementType = movementType;
+			this.fromLocation = fromLocation;
+			this.shipper = shipper;
+			this.gateInDate = gateInDate;
+			this.portReturnFlag = portReturnFlag;
+			this.portReturnId = portReturnId;
+			this.holdStatus = holdStatus;
+			this.onAccountOfName = onAccountOfName;
+			this.saName = saName;
+			this.slName = slName;
 		}
 
 

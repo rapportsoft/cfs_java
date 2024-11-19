@@ -420,4 +420,27 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 			+ "OR g.vehicleNo LIKE CONCAT ('%',:search,'%')) order by g.gateInId desc")
 	List<Object[]> searchExportMtyContainerGateIn(@Param("cid") String cid,@Param("bid") String bid,@Param("profit") String profit,
 			@Param("search") String search);
+	
+	
+	@Query(value="select NEW com.cwms.entities.GateIn(g.gateInId, g.erpDocRefNo, g.docRefNo, g.srNo, g.docRefDate, g.gateInType,"
+			+ "g.profitcentreId, g.cartingTransId, g.containerNo, g.containerSize, g.containerType,"
+			+ "g.containerStatus, g.containerSealNo, g.customsSealNo, g.isoCode, g.grossWeight,"
+			+ "g.cargoWeight, g.hazardous, g.sa, g.sl, g.onAccountOf, g.commodityDescription,"
+			+ "g.actualNoOfPackages, g.deliveryOrderNo, g.deliveryOrderDate, g.doValidityDate,"
+			+ "g.shift, g.refer, g.containerHealth, g.transporterStatus, g.transporterName,"
+			+ "g.transporter, g.vehicleNo, g.driverName, g.comments, g.status, g.createdBy,"
+			+ "g.commodity, g.inGateInDate, g.gateNo, p3.partyName, p1.partyName, p2.partyName) "
+			+ "from GateIn g "
+			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sa=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON g.companyId=p2.companyId and g.branchId=p2.branchId and g.sl=p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.onAccountOf=p3.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:id and g.status !='D'")
+	List<GateIn> getPrData(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	
+	@Query(value="select distinct g.gateInId,DATE_FORMAT(g.inGateInDate,'%d %M %y'),g.gateNo,g.containerNo,g.containerSize,g.containerType,g.vehicleNo "
+			+ "from GateIn g where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "g.gateInType = 'PortRn' and (:val is null OR :val = '' OR g.gateInId LIKE CONCAT('%',:val,'%') OR "
+			+ "g.containerNo LIKE CONCAT('%',:val,'%') OR g.vehicleNo LIKE CONCAT('%',:val,'%')) order by g.gateInId desc")
+	List<Object[]> searchPortRnDataList(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 }

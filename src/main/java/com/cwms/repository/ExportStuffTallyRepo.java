@@ -384,4 +384,11 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			@Param("stuffid") String stuffid, @Param("con") String con);
 	
 	
+	@Query(value = "select e.sbTransId,e.sbNo,e.sbDate,e.commodity,SUM(e.stuffedQty),SUM(e.cargoWeight),e.agentSealNo,e.customsSealNo,e.movementReqId,e.fob "
+			+ "from ExportStuffTally e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
+			+ "e.gateOutId=:outId and e.containerNo=:con group by e.sbTransId,e.sbNo")
+	List<Object[]> getStufftallyRecordsForPortContainerGateIn(@Param("cid") String cid, @Param("bid") String bid, 
+			@Param("outId") String outId,@Param("con") String con);
+	
+	
 }
