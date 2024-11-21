@@ -25,6 +25,7 @@ import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.CfInBondGrid;
 import com.cwms.entities.Cfbondnoc;
+import com.cwms.entities.CfinbondCommdtlEdit;
 import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.CfinbondcrgHDR;
@@ -98,62 +99,17 @@ public class CfinbondCrgService {
 	@Autowired
 	public CfbondGatePassRepository cfbondGatePassRepository;
 
-//	if(cfGateIn.getYardLocationId()!=null)
-//	{
-//		
-//		 String yardLocationId = cfGateIn.getYardLocationId();
-//		    String[] parts = yardLocationId.split("-");
-//
-//		    if (parts.length == 3) {
-//		        String yardLocation = parts[0];  // EYARD01
-//		        String blockId = parts[1];       // A
-//		        String cellNoRow = parts[2];     // 2
-//		        
-//		        System.out.println("yardLocation_____________________"+yardLocation);
-//		        System.out.println("blockId__________________________"+blockId);
-//		        System.out.println("cellNoRow________________________"+cellNoRow);
-//		        // Set extracted values to cfGateIn object
-//		        cfGateIn.setYardLocationId(yardLocation);
-//		        cfGateIn.setBlockId(blockId);
-//		        cfGateIn.setCellNoRow(cellNoRow);
-//		        
-//		        
-//		        String updateQuery = "UPDATE yardblockcell SET Cell_Status = 'Y' WHERE company_id = ? AND yard_id = ? AND yard_location_id = ? AND Block_Id = ?  AND Cell_No_Row = ? ";
-//
-//				int rowsUpdated = jdbcTemplate.update(updateQuery, cid,
-//						bid,
-//						yardLocation,
-//						blockId, cellNoRow);
-//				
-//				System.out.println("rowsUpdated__________________________"+rowsUpdated);
-//				
-//				if(rowsUpdated > 0)
-//				{
-//					
-//					CfLocTrck track = new CfLocTrck();
-//					
-//					track.setCompanyId(cid);
-//					track.setBranchId(bid);
-//					track.setSrNo(1);
-//					track.setProcess("Gate In");
-//					track.setGateInId(cfGateIn.getGateInId());
-//					track.setGateInDate(cfGateIn.getGateInDate());
-//					track.setContainerNo(cfGateIn.getContainerNo());
-//					track.setCreatedBy(uid);
-//					track.setCreatedDate(new Date());
-//					track.setStatus("N");
-//					track.setNewBlockId(blockId);
-//					track.setNewYardLocationId(yardLocation);
-//					track.setNewCellNo(cellNoRow);
-//					
-//					cfLocTrckRepository.save(track);
-//					
-//
-//				}
-//			
-//		    }
-//		
-//	}
+	
+	public ResponseEntity<List<CfinbondcrgDtl>> findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(
+			String compnayId, String branchId, String inBondingId, String nocTrandId) {
+
+		List<CfinbondcrgDtl> data = cfinbondcrgDtlRepo
+				.getAfterSave(compnayId, branchId, inBondingId,
+						nocTrandId);
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+	
 	
 	@Transactional
 	public ResponseEntity<?> saveDataOfCfInbondCrg(String companyId, String branchId, String user, String flag,
@@ -340,6 +296,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 						crgDetails.setFinYear("2242");
 						crgDetails.setGrossWeight(item.getGrossWeight());
 						crgDetails.setInbondCargoDuty(item.getInbondCargoDuty());
+						crgDetails.setInsuranceValue(item.getInsuranceValue());
 						
 //						crgDetails.setInbondCifValue(item.getInBondedPackages());
 						crgDetails.setInbondCifValue(item.getInbondCifValue());
@@ -547,6 +504,9 @@ System.out.println("item.getInbondCifValue()____________________________________
 
 					Cfbondnoc findCfBondNocForUpdationg = cfbondnocRepository.findCfBondNocForUpdationg(companyId,
 							branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+					
+					
+					System.out.println("findCfBondNocForUpdationg_______________________"+findCfBondNocForUpdationg);
 					if (findCfBondNocForUpdationg != null) 
 					{
 						int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(
@@ -764,7 +724,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 						crgDetails.setInBondingDate(cfinbondcrg.getInBondingDate());
 						crgDetails.setCellArea(item.getCellArea());
 						crgDetails.setInBondingDtlId(nectInBondingDTLId);
-
+						crgDetails.setInsuranceValue(item.getInsuranceValue());
 						crgDetails.setInBondingId(cfinbondcrg.getInBondingId());
 
 						crgDetails.setInbondInsuranceValue(item.getInbondInsuranceValue());
@@ -920,32 +880,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 
 					cfinbondcrg.setInbondGrossWt(totalWeightd);
 					cfinbondcrg.setInbondInsuranceValue(totalInsuranced);
-
 					
-					Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
-							cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
-					
-					
-					if (findCfBondCrgData!=null)
-					{
-						Cfbondnoc findCfBondNocForUpdationg = cfbondnocRepository.findCfBondNocForUpdationg(companyId,
-								branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
-						if (findCfBondNocForUpdationg != null) 
-						{
-							int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(
-									findCfBondNocForUpdationg.getInBondedPackages().add(totalInbonded).subtract(findCfBondCrgData.getInBondedPackages()),
-									findCfBondNocForUpdationg.getInbondGrossWt().add(totalWeightd).subtract(findCfBondCrgData.getInbondGrossWt()),
-									findCfBondNocForUpdationg.getInbondInsuranceValue().add(totalInsuranced).subtract(findCfBondCrgData.getInbondInsuranceValue()),
-									findCfBondNocForUpdationg.getInbondCifValue().add(totalCifD).subtract(findCfBondCrgData.getCifValue()),
-									findCfBondNocForUpdationg.getInbondCargoDuty().add(totalCargod).subtract(findCfBondCrgData.getCargoDuty()),
-									cfinbondcrg.getBondingNo(), cfinbondcrg.getBondingDate(),
-									cfinbondcrg.getBondValidityDate(), companyId, branchId, cfinbondcrg.getNocTransId(),
-									cfinbondcrg.getNocNo());
-
-							System.out.println("Update noc after inbond in exist" + updateInCfBondNoc);
-						}
-					}
-
 					
 					cfinbondCrgHdrRepo.save(cfinbondHDR);
 					cfinbondcrgRepo.save(cfinbondcrg);
@@ -962,11 +897,11 @@ System.out.println("item.getInbondCifValue()____________________________________
 				
 					
 					
-//					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(totalInbonded,
-//							totalWeightd, totalInsuranced, totalCifD, totalCargod, cfinbondcrg.getBondingNo(),
-//							cfinbondcrg.getBondingDate(), cfinbondcrg.getBondValidityDate(), companyId, branchId,
-//							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
-//					System.out.println("Update noc after inbond " + updateInCfBondNoc);
+					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(totalInbonded,
+							totalWeightd, totalInsuranced, totalCifD, totalCargod, cfinbondcrg.getBondingNo(),
+							cfinbondcrg.getBondingDate(), cfinbondcrg.getBondValidityDate(), companyId, branchId,
+							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+					System.out.println("Update noc after inbond " + updateInCfBondNoc);
 
 				}
 
@@ -1191,6 +1126,9 @@ System.out.println("item.getInbondCifValue()____________________________________
 							findCfBondCrgData.setSection49(cfinbondcrg.getSection49());
 							findCfBondCrgData.setInbondInsuranceValue(totalInsurance);
 							findCfBondCrgData.setInbondGrossWt(totalWeight);
+							findCfBondCrgData.setSection64(cfinbondcrg.getSection64());
+							findCfBondCrgData.setSection60(cfinbondcrg.getSection60());
+							findCfBondCrgData.setSourcePort(cfinbondcrg.getSourcePort());
 							
 							findCfBondCrgData.setExtenstionDate1(cfinbondcrg.getExtenstionDate1()!=null ? cfinbondcrg.getExtenstionDate1() :null);	
 							findCfBondCrgData.setExtenstionDate2(cfinbondcrg.getExtenstionDate2()!=null ? cfinbondcrg.getExtenstionDate2() :null);		
@@ -1250,6 +1188,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 							findCfBondCrgDTLData.setCellArea(item.getCellArea());
 							findCfBondCrgDTLData.setYardPackages(item.getYardPackages());
 							findCfBondCrgDTLData.setCellAreaAllocated(item.getCellAreaAllocated());
+							findCfBondCrgDTLData.setInsuranceValue(item.getInsuranceValue());
 
 							CfBondNocDtl getDataOfDtlId = cfBondNocDtlRepository.getDataOfDtlId(companyId, branchId,
 									item.getCfBondDtlId(), item.getNocTransId(), item.getNocNo());
@@ -1306,7 +1245,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 							crgDetails.setInBondingDate(cfinbondcrg.getInBondingDate());
 							crgDetails.setCellArea(item.getCellArea());
 							crgDetails.setInBondingDtlId(nectInBondingDTLId);
-
+							crgDetails.setInsuranceValue(item.getInsuranceValue());
 							crgDetails.setInBondingId(cfinbondcrg.getInBondingId());
 
 							crgDetails.setInbondInsuranceValue(item.getInbondInsuranceValue());
@@ -1501,12 +1440,36 @@ System.out.println("item.getInbondCifValue()____________________________________
 
 					cfinbondCrgHdrRepo.save(findCfBondCrgHDRData);
 
-					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(totalInbondedd,
-							totalWeight, totalInsurance, totalCif, totalCargo, cfinbondcrg.getBondingNo(),
-							cfinbondcrg.getBondingDate(), cfinbondcrg.getBondValidityDate(), companyId, branchId,
-							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+					
+					Cfinbondcrg findCfBondCrgData1 = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
+					cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
+			
+			
+			if (findCfBondCrgData1!=null)
+			{
+				Cfbondnoc findCfBondNocForUpdationg = cfbondnocRepository.findCfBondNocForUpdationg(companyId,
+						branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+				if (findCfBondNocForUpdationg != null) 
+				{
+					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(
+							findCfBondNocForUpdationg.getInBondedPackages().add(totalInbondedd).subtract(findCfBondCrgData1.getInBondedPackages()),
+							findCfBondNocForUpdationg.getInbondGrossWt().add(totalWeight).subtract(findCfBondCrgData1.getInbondGrossWt()),
+							findCfBondNocForUpdationg.getInbondInsuranceValue().add(totalInsurance).subtract(findCfBondCrgData1.getInbondInsuranceValue()),
+							findCfBondNocForUpdationg.getInbondCifValue().add(totalCif).subtract(findCfBondCrgData1.getCifValue()),
+							findCfBondNocForUpdationg.getInbondCargoDuty().add(totalCargo).subtract(findCfBondCrgData1.getCargoDuty()),
+							cfinbondcrg.getBondingNo(), cfinbondcrg.getBondingDate(),
+							cfinbondcrg.getBondValidityDate(), companyId, branchId, cfinbondcrg.getNocTransId(),
+							cfinbondcrg.getNocNo());
 
-					System.out.println("Update noc after inbond " + updateInCfBondNoc);
+					System.out.println("Update noc after inbond in exist" + updateInCfBondNoc);
+				}
+			}
+//					int updateInCfBondNoc = cfbondnocRepository.updateCfBondNocAfterInBonding(totalInbondedd,
+//							totalWeight, totalInsurance, totalCif, totalCargo, cfinbondcrg.getBondingNo(),
+//							cfinbondcrg.getBondingDate(), cfinbondcrg.getBondValidityDate(), companyId, branchId,
+//							cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
+//
+//					System.out.println("Update noc after inbond " + updateInCfBondNoc);
 				}
 
 			}
@@ -1676,7 +1639,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 	
 		context.setVariable("consignee", dataForPrint.getImporterName());
 		
-		context.setVariable("section", dataForPrint.getSection49() == "Y" ? "YES" :"NO");
+		context.setVariable("section", dataForPrint.getSection49().equals("Y") ? "YES" :"NO");
 		
 		context.setVariable("area", dataForPrint.getAreaAllocated());
 		context.setVariable("week", dataForPrint.getNocWeek());

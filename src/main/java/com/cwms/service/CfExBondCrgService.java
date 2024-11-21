@@ -1,4 +1,5 @@
 package com.cwms.service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -77,21 +78,16 @@ public class CfExBondCrgService {
 
 	@Autowired
 	private CfinbondCrgHdrDtlRepo cfinbondCrgHdrDtlRepo;
-	
-	
+
 	@Autowired
 	private CfExBondGridRepository cfExBondGridRepository;
 
 	@Autowired
 	public YardBlockCellRepository yardBlockCellRepository;
-	
+
 	@Autowired
 	public CfInBondGridRepository cfInBondGridRepository;
-	
-	
-	
-	
-	
+
 	@Autowired
 	private TemplateEngine templateEngine;
 
@@ -104,6 +100,12 @@ public class CfExBondCrgService {
 	public List<CfinbondcrgDtl> findAllCfBondNocDtl(String companyId, String branchId, String nocTransId, String nocNo,
 			String inBondingId, String boeNo) {
 		return cfexbondcrgDtlRepo.getCfBondInBondDTLData(companyId, branchId, nocTransId, nocNo, inBondingId, boeNo);
+	}
+
+	public List<CfexBondCrgDtl> getExBondCrgDtlDataAfterSave(String companyId, String branchId, String nocTransId,
+			String nocNo, String inBondingId, String boeNo, String exBondingId) {
+		return cfExBondCrgDtlRepository.getExBondCrgDtlDataAfterSave(companyId, branchId, nocTransId, nocNo,
+				inBondingId, boeNo, exBondingId);
 	}
 
 	public List<Party> findAllParty(String companyId, String branchId, String partyName) {
@@ -121,9 +123,6 @@ public class CfExBondCrgService {
 		return (value != null && !value.isEmpty()) ? Integer.parseInt(value) : 0;
 	}
 
-	
-	
-	
 	@Transactional
 	public ResponseEntity<?> saveDataOfCfexbondCrgAndExbondCrgDtl(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
@@ -133,8 +132,9 @@ public class CfExBondCrgService {
 
 		CfExBondCrg cfexbondcrg = object.convertValue(requestBody.get("exBond"), CfExBondCrg.class);
 
-		System.out.println("cfexbondcrg_________________________________________________________"+cfexbondcrg.getSpaceType() +""+cfexbondcrg.getGateInType());
-		
+		System.out.println("cfexbondcrg_________________________________________________________"
+				+ cfexbondcrg.getSpaceType() + "" + cfexbondcrg.getGateInType());
+
 		Object nocDtlObj = requestBody.get("exbondDtl");
 		List<CfinbondcrgDtl> cfexbondcrgDtlList = new ArrayList();
 
@@ -156,7 +156,6 @@ public class CfExBondCrgService {
 
 		System.out.println("flag________________" + flag);
 
-		
 		if (cfexbondcrg != null) {
 			if ("add".equals(flag)) {
 				String holdId1 = processNextIdRepository.findAuditTrail(companyId, branchId, "P03208", "2245");
@@ -167,6 +166,45 @@ public class CfExBondCrgService {
 
 				String nectExBondingId = String.format("EXBL%06d", nextNumericNextID1);
 
+				BigDecimal[] totalCif = { BigDecimal.ZERO };
+				BigDecimal[] totalCargo = { BigDecimal.ZERO };
+				BigDecimal[] totalInsurance = { BigDecimal.ZERO };
+				BigDecimal[] totalInGrossWeight = { BigDecimal.ZERO };
+				BigDecimal[] totalInBondPackages = { BigDecimal.ZERO };
+
+				cfexbondcrgDtlList.forEach(item -> {
+					System.out.println("item.getInbondCifValue()______________________________________________"
+							+ item.getExBondedCIF());
+					BigDecimal cifValue = item.getExBondedCIF();
+					BigDecimal cargoValue = item.getExBondedCargoDuty();
+					BigDecimal insuranceValue = item.getExBondedInsurance();
+					BigDecimal inGrossWeight = item.getExBondedGW();
+					BigDecimal inBondPack = item.getExBondedPackages();
+
+					if (cifValue != null) {
+						totalCif[0] = totalCif[0].add(cifValue);
+					}
+
+					if (inBondPack != null) {
+						totalInBondPackages[0] = totalInBondPackages[0].add(inBondPack);
+					}
+
+					if (cargoValue != null) {
+						totalCargo[0] = totalCargo[0].add(cargoValue);
+					}
+					if (insuranceValue != null) {
+						totalInsurance[0] = totalInsurance[0].add(insuranceValue);
+					}
+					if (inGrossWeight != null) {
+						totalInGrossWeight[0] = totalInGrossWeight[0].add(inGrossWeight);
+					}
+				});
+
+				cfexbondcrg.setExBondedCif(totalCif[0]);
+				cfexbondcrg.setExBondedCargoDuty(totalCargo[0]);
+				cfexbondcrg.setExBondedPackages(totalInBondPackages[0]);
+				cfexbondcrg.setExBondedInsurance(totalInsurance[0]);
+				cfexbondcrg.setExBondedGw(totalInGrossWeight[0]);
 				cfexbondcrg.setCompanyId(companyId);
 				cfexbondcrg.setSpaceType(cfexbondcrg.getSpaceType());
 				cfexbondcrg.setGateInType(cfexbondcrg.getGateInType());
@@ -178,344 +216,421 @@ public class CfExBondCrgService {
 				cfexbondcrg.setApprovedDate(new Date());
 				cfexbondcrg.setExBondingId(nectExBondingId);
 				cfexbondcrg.setFinYear("2025");
-				
 				cfexbondcrg.setSbValue(cfexbondcrg.getExBondedCif());
 				cfexbondcrg.setSbDuty(cfexbondcrg.getExBondedCargoDuty());
 				cfexbondcrg.setSbQty(cfexbondcrg.getExBondedPackages());
 
 				cfexbondcrg.setBalancedPackages(cfexbondcrg.getRemainingPackages()
-						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedPackages()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(totalInBondPackages[0]).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setBalanceCif(cfexbondcrg.getRemainingCif()
-						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedCif()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(totalCif[0]).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setBalanceCargoDuty(cfexbondcrg.getRemainingCargoDuty()
-						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedCargoDuty()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(totalCargo[0]).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setBalanceInsurance(cfexbondcrg.getRemainingInsurance()
-						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedInsurance()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(totalInsurance[0]).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setBalanceGw(cfexbondcrg.getRemainingGw()
-						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedGw()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(totalInGrossWeight[0]).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setAreaBalanced(cfexbondcrg.getAreaRemaining()
-						.subtract(Optional.ofNullable(cfexbondcrg.getAreaBalanced()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(cfexbondcrg.getAreaReleased()).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setBalancedQty(cfexbondcrg.getRemainingPackages()
-						.subtract(Optional.ofNullable(cfexbondcrg.getExBondedPackages()).orElse(BigDecimal.ZERO)));
+						.subtract(Optional.ofNullable(totalInBondPackages[0]).orElse(BigDecimal.ZERO)));
 
-				cfExBondCrgRepository.save(cfexbondcrg);
+				CfExBondCrg savedExBond = cfExBondCrgRepository.save(cfexbondcrg);
 
-				
-				
-				Cfbondinsbal existingBalance = cfbondnocDtlRepository.getDataOfCfBondCifForValidation(companyId,
-						branchId);
+				if (savedExBond != null) {
 
-				if (existingBalance != null) {
-					int updateCfBalance = cfExBondCrgRepository
-							.updateCfbondinsbalAfterExbond(
-									existingBalance.getExbondArea()
-											.add(cfexbondcrg.getAreaReleased()),
-									existingBalance.getExbondCargoDuty().add(cfexbondcrg.getExBondedCargoDuty()),
-									existingBalance.getExbondCifValue().add(cfexbondcrg.getExBondedCif()),
-									companyId, branchId);
+					Cfbondinsbal existingBalance = cfbondnocDtlRepository.getDataOfCfBondCifForValidation(companyId,
+							branchId);
 
-					System.out.println("updateCfBalance row is after edit" + updateCfBalance);
-				}
-				
+					if (existingBalance != null) {
+						int updateCfBalance = cfExBondCrgRepository.updateCfbondinsbalAfterExbond(
+								existingBalance.getExbondArea().add(cfexbondcrg.getAreaReleased()),
+								existingBalance.getExbondCargoDuty().add(cfexbondcrg.getExBondedCargoDuty()),
+								existingBalance.getExbondCifValue().add(cfexbondcrg.getExBondedCif()), companyId,
+								branchId);
+
+						System.out.println("updateCfBalance row is after edit" + updateCfBalance);
+					}
+
 //				int updateCfBalance = cfExBondCrgRepository.updateCfbondinsbalAfterExbond(cfexbondcrg.getAreaReleased(),
 //						cfexbondcrg.getExBondedCargoDuty(), cfexbondcrg.getExBondedCif(), companyId, branchId);
 
 //				System.out.println("updateCfBalance row is " + updateCfBalance);
 
-				int updateCfinbondcrgAfterExbond = cfinbondcrgRepo.updateCfinbondCrgAfterExbond(
-						cfexbondcrg.getExBondedPackages(), cfexbondcrg.getExBondedCargoDuty(),
-						cfexbondcrg.getExBondedCif(), cfexbondcrg.getExBondedInsurance(), cfexbondcrg.getExBondedGw(),
-						cfexbondcrg.getNoOf20Ft(), cfexbondcrg.getNoOf40Ft(), companyId, branchId,
-						cfexbondcrg.getInBondingId(), cfexbondcrg.getNocNo(), cfexbondcrg.getNocTransId(),
-						cfexbondcrg.getBoeNo());
+					Cfinbondcrg findCfinbondCrg = cfinbondcrgRepo.findCfinbondCrg(companyId, branchId,
+							savedExBond.getNocTransId(), savedExBond.getInBondingId(), savedExBond.getNocNo());
 
-				System.out.println("Update row count after exbond is" + updateCfinbondcrgAfterExbond);
+					if (findCfinbondCrg != null) {
 
-				Cfinbondcrg existing = cfinbondcrgRepo.findCfinbondHdr(companyId, branchId, cfexbondcrg.getNocTransId(),
-						cfexbondcrg.getInBondingId(), cfexbondcrg.getNocNo());
+						int updateCfinbondcrgAfterExbond = cfinbondcrgRepo.updateCfinbondCrgAfterExbond(
+								Optional.ofNullable(findCfinbondCrg.getExBondedPackages()).orElse(BigDecimal.ZERO).add(
+										Optional.ofNullable(savedExBond.getExBondedPackages()).orElse(BigDecimal.ZERO)),
 
-				if (existing != null) {
+								Optional.ofNullable(findCfinbondCrg.getExbondCargoDuty()).orElse(BigDecimal.ZERO)
+										.add(Optional.ofNullable(savedExBond.getExBondedCargoDuty())
+												.orElse(BigDecimal.ZERO)),
 
-					System.out.println(existing.getInBondingHdrId());
-					System.out.println(cfexbondcrg.getNocNo());
+								Optional.ofNullable(findCfinbondCrg.getExbondCifValue()).orElse(BigDecimal.ZERO)
+										.add(Optional.ofNullable(savedExBond.getExBondedCif()).orElse(BigDecimal.ZERO)),
 
-					System.out.println(cfexbondcrg.getBoeNo());
-					System.out.println(cfexbondcrg.getNocTransId());
+								Optional.ofNullable(findCfinbondCrg.getExBondedInsurance()).orElse(BigDecimal.ZERO)
+										.add(Optional.ofNullable(savedExBond.getExBondedInsurance())
+												.orElse(BigDecimal.ZERO)),
 
-					int updateCfInbondCrdHDR = cfinbondCrgHdrRepo.updateCfInbondHeaderAfterExbond(
-							cfexbondcrg.getExBondedPackages(), cfexbondcrg.getExBondedCargoDuty(),
-							cfexbondcrg.getExBondedInsurance(), cfexbondcrg.getExBondedCif(),
-							cfexbondcrg.getExBondedGw(), companyId, branchId, cfexbondcrg.getNocTransId(),
-							cfexbondcrg.getNocNo(), existing.getInBondingHdrId(), cfexbondcrg.getBoeNo());
+								Optional.ofNullable(findCfinbondCrg.getExBondedGw()).orElse(BigDecimal.ZERO)
+										.add(Optional.ofNullable(savedExBond.getExBondedGw()).orElse(BigDecimal.ZERO)),
 
-					System.out.println("Update row count after exbond hdr " + updateCfInbondCrdHDR);
-				}
+								savedExBond.getNoOf20Ft(), // Assuming Integer for `NoOf20Ft`
+								savedExBond.getNoOf40Ft(), // Assuming Integer for `NoOf40Ft`
 
-				processNextIdRepository.updateAuditTrail(companyId, branchId, "P03208", nectExBondingId, "2245");
+								companyId, branchId, savedExBond.getInBondingId(), // Assuming these cannot be null
+								savedExBond.getNocNo(), savedExBond.getNocTransId(), savedExBond.getBoeNo());
 
-				if (cfexbondcrgDtlList != null) {
+						System.out.println("Update row count after exbond is " + updateCfinbondcrgAfterExbond);
 
-					for (CfinbondcrgDtl item : cfexbondcrgDtlList) 
-					
+					} else {
+						int updateCfinbondcrgAfterExbond = cfinbondcrgRepo.updateCfinbondCrgAfterExbond(
+								savedExBond.getExBondedPackages(), savedExBond.getExBondedCargoDuty(),
+								savedExBond.getExBondedCif(), savedExBond.getExBondedInsurance(),
+								savedExBond.getExBondedGw(), savedExBond.getNoOf20Ft(), savedExBond.getNoOf40Ft(),
+								companyId, branchId, savedExBond.getInBondingId(), savedExBond.getNocNo(),
+								savedExBond.getNocTransId(), savedExBond.getBoeNo());
+
+						System.out.println("Update row count after exbond is" + updateCfinbondcrgAfterExbond);
+					}
+
+					Cfinbondcrg existing = cfinbondcrgRepo.findCfinbondHdr(companyId, branchId,
+							cfexbondcrg.getNocTransId(), cfexbondcrg.getInBondingId(), cfexbondcrg.getNocNo());
+
+					if (existing != null) {
+
+						System.out.println(existing.getInBondingHdrId());
+						System.out.println(cfexbondcrg.getNocNo());
+
+						System.out.println(cfexbondcrg.getBoeNo());
+						System.out.println(cfexbondcrg.getNocTransId());
+
+						int updateCfInbondCrdHDR = cfinbondCrgHdrRepo.updateCfInbondHeaderAfterExbond(
+								cfexbondcrg.getExBondedPackages(), cfexbondcrg.getExBondedCargoDuty(),
+								cfexbondcrg.getExBondedInsurance(), cfexbondcrg.getExBondedCif(),
+								cfexbondcrg.getExBondedGw(), companyId, branchId, cfexbondcrg.getNocTransId(),
+								cfexbondcrg.getNocNo(), existing.getInBondingHdrId(), cfexbondcrg.getBoeNo());
+
+						System.out.println("Update row count after exbond hdr " + updateCfInbondCrdHDR);
+					}
+
+					processNextIdRepository.updateAuditTrail(companyId, branchId, "P03208", nectExBondingId, "2245");
+
+					if (cfexbondcrgDtlList != null)
+
 					{
-						CfexBondCrgDtl exBondDtl = new CfexBondCrgDtl();
-						
-						exBondDtl.setCreatedBy(user);
-						exBondDtl.setCreatedDate(new Date());
-						exBondDtl.setApprovedBy(user);
-						exBondDtl.setApprovedDate(new Date());
-						exBondDtl.setFinYear("2025");
-						exBondDtl.setInBondedPackages(item.getInBondedPackages());
-						exBondDtl.setInbondCifValue(item.getInbondCifValue());
-						exBondDtl.setInbondCargoDuty(item.getInbondCargoDuty());
-						exBondDtl.setInbondInsuranceValue(item.getInbondInsuranceValue());
-						exBondDtl.setInbondGrossWt(item.getInbondGrossWt());
-						exBondDtl.setExBondedPackages(item.getExBondedPackages());
-						exBondDtl.setExBondedCIF(item.getExBondedCIF());
-						exBondDtl.setExBondedCargoDuty(item.getExBondedCargoDuty());
-						exBondDtl.setExBondedInsurance(item.getExBondedInsurance());
-						exBondDtl.setExBondedGW(item.getExBondedGW());
-						exBondDtl.setNocNo(item.getNocNo());
-						exBondDtl.setNocTransId(item.getNocTransId());
-						exBondDtl.setNocPackages(item.getNocPackages());
-						exBondDtl.setCommodityDescription(item.getCommodityDescription());
-						exBondDtl.setBoeNo(item.getBoeNo());
-						exBondDtl.setInBondingId(item.getInBondingId());
-						exBondDtl.setCompanyId(companyId);
-						exBondDtl.setBranchId(branchId);
-						exBondDtl.setStatus('N');
-						exBondDtl.setTypeOfPackage(item.getTypeOfPackage());
-						exBondDtl.setBondingDate(cfexbondcrg.getBondingDate());
-						exBondDtl.setBondingNo(cfexbondcrg.getBondingNo());
-						exBondDtl.setExBondBeNo(cfexbondcrg.getExBondBeNo());
-						exBondDtl.setExBondingId(cfexbondcrg.getExBondingId());
-						exBondDtl.setCfBondDtlId(item.getCfBondDtlId());
-						exBondDtl.setYardLocationId(item.getYardLocationId());
-						exBondDtl.setBlockId(item.getBlockId());
-						exBondDtl.setCellNoRow(item.getCellNoRow());
-						exBondDtl.setIgmNo(cfexbondcrg.getIgmNo());
-						exBondDtl.setIgmLineNo(cfexbondcrg.getIgmLineNo());
-						exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
-						exBondDtl.setExBondGridArea(item.getExBondGridArea());
-						exBondDtl.setExBondType(cfexbondcrg.getExBondType());
-			
-						CfexBondCrgDtl saved=	cfExBondCrgDtlRepository.save(exBondDtl);
-						
-						if (saved!=null)
-						{
-							
-							List<CfInBondGrid> existList =cfInBondGridRepository.getDataForExbondGrid(companyId, branchId, item.getInBondingId(), item.getNocTransId(), item.getCfBondDtlId());
-							
 
-							System.out.println("existList________________________"+existList);
-							
-							if(existList!=null)
-							{
-								
-								for (CfInBondGrid data : existList)
-								{
-									System.out.println("data________________________"+data);
-									
-									CfExBondGrid cf1 = new CfExBondGrid();
-									
-									
-									Integer maxSrNo = cfExBondGridRepository.getMaxSrNo(companyId, branchId, saved.getExBondingId(),
-											saved.getCfBondDtlId());
-									
-									
+						for (CfinbondcrgDtl item : cfexbondcrgDtlList)
+
+						{
+							CfexBondCrgDtl exBondDtl = new CfexBondCrgDtl();
+
+							exBondDtl.setCreatedBy(user);
+							exBondDtl.setCreatedDate(new Date());
+							exBondDtl.setApprovedBy(user);
+							exBondDtl.setApprovedDate(new Date());
+							exBondDtl.setFinYear("2025");
+							exBondDtl.setInBondedPackages(item.getInBondedPackages());
+							exBondDtl.setInbondCifValue(item.getInbondCifValue());
+							exBondDtl.setInbondCargoDuty(item.getInbondCargoDuty());
+							exBondDtl.setInbondInsuranceValue(item.getInbondInsuranceValue());
+							exBondDtl.setInbondGrossWt(item.getInbondGrossWt());
+							exBondDtl.setExBondedPackages(item.getExBondedPackages());
+							exBondDtl.setExBondedCIF(item.getExBondedCIF());
+							exBondDtl.setExBondedCargoDuty(item.getExBondedCargoDuty());
+							exBondDtl.setExBondedInsurance(item.getExBondedInsurance());
+							exBondDtl.setExBondedGW(item.getExBondedGW());
+							exBondDtl.setNocNo(item.getNocNo());
+							exBondDtl.setNocTransId(item.getNocTransId());
+							exBondDtl.setNocPackages(item.getNocPackages());
+							exBondDtl.setCommodityDescription(item.getCommodityDescription());
+							exBondDtl.setBoeNo(item.getBoeNo());
+							exBondDtl.setInBondingId(item.getInBondingId());
+							exBondDtl.setCompanyId(companyId);
+							exBondDtl.setBranchId(branchId);
+							exBondDtl.setStatus('N');
+							exBondDtl.setTypeOfPackage(item.getTypeOfPackage());
+							exBondDtl.setBondingDate(cfexbondcrg.getBondingDate());
+							exBondDtl.setBondingNo(cfexbondcrg.getBondingNo());
+							exBondDtl.setExBondBeNo(cfexbondcrg.getExBondBeNo());
+							exBondDtl.setExBondingId(cfexbondcrg.getExBondingId());
+							exBondDtl.setCfBondDtlId(item.getCfBondDtlId());
+							exBondDtl.setYardLocationId(item.getYardLocationId());
+							exBondDtl.setBlockId(item.getBlockId());
+							exBondDtl.setCellNoRow(item.getCellNoRow());
+							exBondDtl.setIgmNo(cfexbondcrg.getIgmNo());
+							exBondDtl.setIgmLineNo(cfexbondcrg.getIgmLineNo());
+							exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
+							exBondDtl.setExBondGridArea(item.getExBondGridArea());
+							exBondDtl.setExBondType(cfexbondcrg.getExBondType());
+
+							CfexBondCrgDtl saved = cfExBondCrgDtlRepository.save(exBondDtl);
+
+							if (saved != null) {
+
+								List<CfInBondGrid> existList = cfInBondGridRepository.getDataForExbondGrid(companyId,
+										branchId, item.getInBondingId(), item.getNocTransId(), item.getCfBondDtlId());
+
+								System.out.println("existList________________________" + existList);
+
+								if (existList != null) {
+
+									for (CfInBondGrid data : existList) {
+										System.out.println("data________________________" + data);
+
+										CfExBondGrid cf1 = new CfExBondGrid();
+
+										Integer maxSrNo = cfExBondGridRepository.getMaxSrNo(companyId, branchId,
+												saved.getExBondingId(), saved.getCfBondDtlId());
+
 //									cf1.setSrNo((maxSrNo == null) ? 1 : maxSrNo + 1);
-									cf1.setSrNo(data.getSrNo());
-									cf1.setCompanyId(companyId);
-									cf1.setBranchId(branchId);
-									cf1.setCreatedBy(user);
-									cf1.setCreatedDate(new Date());
-									cf1.setApprovedBy(user);
-									cf1.setApprovedDate(new Date());
-									cf1.setInBondingId(data.getInBondingId());
-									cf1.setExBondingId(saved.getExBondingId());
-									cf1.setCfBondDtlId(data.getCfBondDtlId());
-									
-									cf1.setYardLocation(data.getYardLocation());
-									cf1.setYardBlock(data.getYardBlock());
-									cf1.setBlockCellNo(data.getBlockCellNo());
+										cf1.setSrNo(data.getSrNo());
+										cf1.setCompanyId(companyId);
+										cf1.setBranchId(branchId);
+										cf1.setCreatedBy(user);
+										cf1.setCreatedDate(new Date());
+										cf1.setApprovedBy(user);
+										cf1.setApprovedDate(new Date());
+										cf1.setInBondingId(data.getInBondingId());
+										cf1.setExBondingId(saved.getExBondingId());
+										cf1.setCfBondDtlId(data.getCfBondDtlId());
+
+										cf1.setYardLocation(data.getYardLocation());
+										cf1.setYardBlock(data.getYardBlock());
+										cf1.setBlockCellNo(data.getBlockCellNo());
 //									cf1.setGridReleased(saved.getExBondGridArea());
-									cf1.setExCellAreaAllocated(BigDecimal.ZERO);
-									cf1.setExBondPackages(BigDecimal.ZERO);
-									
-									cf1.setInBondPackages(data.getInBondPackages());
-									cf1.setCellAreaAllocated(data.getCellAreaAllocated());
-								
-									cf1.setNocTransId(data.getNocTransId());
-									cf1.setFinYear("2025");
-									cf1.setStatus("A");
+										cf1.setExCellAreaAllocated(BigDecimal.ZERO);
+										cf1.setExBondPackages(BigDecimal.ZERO);
 
-									CfExBondGrid savedGrid =cfExBondGridRepository.save(cf1);
+										cf1.setInBondPackages(data.getInBondPackages());
+										cf1.setCellAreaAllocated(data.getCellAreaAllocated());
 
-									
-									if (savedGrid!=null)
-									{
-										 CfExBondGrid toEditData =cfExBondGridRepository.toEditData(companyId, branchId, saved.getExBondingId(), saved.getCfBondDtlId(), 
-			                                		saved.getYardLocationId(), saved.getBlockId(), saved.getCellNoRow());
-											
-											if (toEditData!=null)
-											{
-												int updateGrid =cfExBondGridRepository.updateCfexBondDtlAfterExBondGrid(saved.getExBondyardPackages(),saved.getExBondGridArea(),
-														companyId,branchId,saved.getExBondingId(), saved.getCfBondDtlId(), saved.getYardLocationId(), saved.getBlockId(), saved.getCellNoRow());
+										cf1.setNocTransId(data.getNocTransId());
+										cf1.setFinYear("2025");
+										cf1.setStatus("A");
 
-												System.out.println("updated row in cfexbond grid :"+updateGrid);
+										CfExBondGrid savedGrid = cfExBondGridRepository.save(cf1);
+
+										if (savedGrid != null) {
+											CfExBondGrid toEditData = cfExBondGridRepository.toEditData(companyId,
+													branchId, saved.getExBondingId(), saved.getCfBondDtlId(),
+													saved.getYardLocationId(), saved.getBlockId(),
+													saved.getCellNoRow());
+
+											if (toEditData != null) {
+												int updateGrid = cfExBondGridRepository
+														.updateCfexBondDtlAfterExBondGrid(saved.getExBondyardPackages(),
+																saved.getExBondGridArea(), companyId, branchId,
+																saved.getExBondingId(), saved.getCfBondDtlId(),
+																saved.getYardLocationId(), saved.getBlockId(),
+																saved.getCellNoRow());
+
+												System.out.println("updated row in cfexbond grid :" + updateGrid);
 											}
+										}
 									}
+
 								}
-								
+
+//								CfinbondcrgDtl toUpdateInBondCrgDtl = cfexbondcrgDtlRepo.toUpdateInBondCrgDtl(companyId,
+//										branchId, saved.getNocTransId(), saved.getCfBondDtlId(), saved.getNocNo(),
+//										saved.getInBondingId());
+
 							}
-							
-//							CfExBondGrid cf1 = new CfExBondGrid();
-//							
-//							Integer maxSrNo = cfExBondGridRepository.getMaxSrNo(companyId, branchId, saved.getExBondingId(),
-//									saved.getCfBondDtlId());
-//
-//							cf1.setSrNo((maxSrNo == null) ? 1 : maxSrNo + 1);
-//							cf1.setCompanyId(companyId);
-//							cf1.setBranchId(branchId);
-//							cf1.setCreatedBy(user);
-//							cf1.setCreatedDate(new Date());
-//							cf1.setApprovedBy(user);
-//							cf1.setApprovedDate(new Date());
-//							cf1.setInBondingId(saved.getInBondingId());
-//							cf1.setExBondingId(saved.getExBondingId());
-//							cf1.setCfBondDtlId(saved.getCfBondDtlId());
-//							
-//							cf1.setYardLocation(saved.getYardLocationId());
-//							cf1.setYardBlock(saved.getBlockId());
-//							cf1.setBlockCellNo(saved.getCellNoRow());
-////							cf1.setGridReleased(saved.getExBondGridArea());
-//							cf1.setExCellAreaAllocated(saved.getExBondGridArea());
-//							cf1.setExBondPackages(saved.getExBondyardPackages());
-//							cf1.setInBondPackages(saved.getInBondedPackages());
-//							cf1.setCellAreaAllocated(cfexbondcrg.getAreaOccupied());
-//						
-//							cf1.setNocTransId(saved.getNocTransId());
-//							cf1.setFinYear("2025");
-//						
-//							cf1.setInBondPackages(saved.getInBondedPackages());
-//							cf1.setStatus("A");
-//
-//							CfExBondGrid  saved1 = cfExBondGridRepository.save(cf1);
-						}
 
-						CfinbondcrgDtl toUpdateInBondCrgDtl = cfexbondcrgDtlRepo.toUpdateInBondCrgDtl(companyId,
-								branchId, item.getNocTransId(), item.getCfBondDtlId(), item.getNocNo(),
-								item.getInBondingId());
+							CfinbondcrgDtl toUpdateInBondCrgDtl = cfexbondcrgDtlRepo.toUpdateInBondCrgDtl(companyId,
+									branchId, item.getNocTransId(), item.getCfBondDtlId(), item.getNocNo(),
+									item.getInBondingId());
 
-						if (toUpdateInBondCrgDtl != null) 
-						{
-							int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo.updateCfinbondCrgDtlAfterExbond(
-									toUpdateInBondCrgDtl.getExBondedPackages()!=null ? toUpdateInBondCrgDtl.getExBondedPackages():BigDecimal.ZERO.add(item.getExBondedPackages()), 
-									toUpdateInBondCrgDtl.getExBondedCargoDuty()!=null ? toUpdateInBondCrgDtl.getExBondedCargoDuty():BigDecimal.ZERO.add(item.getExBondedCargoDuty()),
-									toUpdateInBondCrgDtl.getExBondedCIF()!=null ?toUpdateInBondCrgDtl.getExBondedCIF():BigDecimal.ZERO.add(item.getExBondedCIF()),
-									toUpdateInBondCrgDtl.getExBondedInsurance()!=null ? toUpdateInBondCrgDtl.getExBondedInsurance(): BigDecimal.ZERO.add(item.getExBondedInsurance()), 
-									toUpdateInBondCrgDtl.getExBondedGW()!=null?toUpdateInBondCrgDtl.getExBondedGW():BigDecimal.ZERO.add(item.getExBondedGW()), 
-									companyId, branchId,
-									item.getInBondingId(), item.getNocNo(), item.getNocTransId(), item.getBoeNo(),
+							System.out.println("toUpdateInBondCrgDtl______________________" + toUpdateInBondCrgDtl);
+							System.out.println("toUpdateInBondCrgDtl______________________" + item.getNocTransId());
+							System.out.println("toUpdateInBondCrgDtl______________________" + item.getCfBondDtlId());
+							System.out.println("toUpdateInBondCrgDtl______________________" + item.getNocNo());
+							System.out.println("toUpdateInBondCrgDtl______________________" + item.getInBondingId());
+
+							System.out.println("toUpdateInBondCrgDtl______________________" + companyId);
+							System.out.println("toUpdateInBondCrgDtl______________________" + branchId);
+
+							System.out.println("toUpdateInBondCrgDtl______________________" + branchId);
+
+							if (toUpdateInBondCrgDtl != null) {
+								System.out.println("toUpdateInBondCrgDtl______________________"
+										+ toUpdateInBondCrgDtl.getExBondedPackages());
+								System.out.println(
+										"toUpdateInBondCrgDtl______________________" + item.getExBondedPackages());
+
+								System.out.println(toUpdateInBondCrgDtl.getExBondedPackages() != null
+										? toUpdateInBondCrgDtl.getExBondedPackages()
+										: BigDecimal.ZERO.add(item.getExBondedPackages()));
+
+								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo
+										.updateCfinbondCrgDtlAfterExbond(
+												Optional.ofNullable(toUpdateInBondCrgDtl.getExBondedPackages())
+														.orElse(BigDecimal.ZERO)
+														.add(Optional.ofNullable(item.getExBondedPackages())
+																.orElse(BigDecimal.ZERO)),
+
+												Optional.ofNullable(toUpdateInBondCrgDtl.getExBondedCargoDuty())
+														.orElse(BigDecimal.ZERO)
+														.add(Optional.ofNullable(item.getExBondedCargoDuty())
+																.orElse(BigDecimal.ZERO)),
+
+												Optional.ofNullable(toUpdateInBondCrgDtl.getExBondedCIF())
+														.orElse(BigDecimal.ZERO)
+														.add(Optional.ofNullable(item.getExBondedCIF())
+																.orElse(BigDecimal.ZERO)),
+
+												Optional.ofNullable(toUpdateInBondCrgDtl.getExBondedInsurance())
+														.orElse(BigDecimal.ZERO)
+														.add(Optional.ofNullable(item.getExBondedInsurance())
+																.orElse(BigDecimal.ZERO)),
+
+												Optional.ofNullable(toUpdateInBondCrgDtl.getExBondedGW())
+														.orElse(BigDecimal.ZERO)
+														.add(Optional.ofNullable(item.getExBondedGW())
+																.orElse(BigDecimal.ZERO)),
+
+												companyId, branchId, item.getInBondingId(), item.getNocNo(),
+												item.getNocTransId(), item.getBoeNo(), item.getCfBondDtlId());
+								System.out.println(
+										"Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
+							}
+
+							else {
+								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo
+										.updateCfinbondCrgDtlAfterExbond(item.getExBondedPackages(),
+												item.getExBondedCargoDuty(), item.getExBondedCIF(),
+												item.getExBondedInsurance(), item.getExBondedGW(), companyId, branchId,
+												item.getInBondingId(), item.getNocNo(), item.getNocTransId(),
+												item.getBoeNo(), item.getCfBondDtlId());
+
+								System.out.println("Update row count after exbond details is in else "
+										+ updateCfinbondcrgDtlAfterExbond);
+							}
+
+//
+							CfinbondcrgHDRDtl findExistingHdrdtl = cfinbondCrgHdrDtlRepo.findExistingHdrdtl(companyId,
+									branchId, item.getNocTransId(), item.getNocNo(), item.getInBondingId(),
 									item.getCfBondDtlId());
-							System.out
-							.println("Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
-						}
-						
-						else
-						{
-							int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo.updateCfinbondCrgDtlAfterExbond(
-									item.getExBondedPackages(), item.getExBondedCargoDuty(), item.getExBondedCIF(),
-									item.getExBondedInsurance(), item.getExBondedGW(), companyId, branchId,
-									item.getInBondingId(), item.getNocNo(), item.getNocTransId(), item.getBoeNo(),
-									item.getCfBondDtlId());
 
-							System.out
-							.println("Update row count after exbond details is in else " + updateCfinbondcrgDtlAfterExbond);
-						}
+							System.out.println(item.getNocTransId());
+							System.out.println(item.getNocNo());
+							System.out.println(item.getInBondingId());
+							System.out.println(item.getCfBondDtlId());
+							System.out.println(companyId);
+							System.out.println(branchId);
+							System.out.println("findExistingHdrdtl________________________________________________"
+									+ findExistingHdrdtl);
+							if (findExistingHdrdtl != null) {
+								int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
+										findExistingHdrdtl.getExBondedPackages() != null
+												? findExistingHdrdtl.getExBondedPackages()
+												: BigDecimal.ZERO.add(item.getExBondedPackages()),
+										companyId, branchId, item.getInBondingId(), item.getNocNo(),
+										item.getNocTransId(), item.getBoeNo(), item.getCfBondDtlId());
 
-						
-						
-//
-						CfinbondcrgHDRDtl findExistingHdrdtl = cfinbondCrgHdrDtlRepo.findExistingHdrdtl(companyId,
-								branchId, item.getNocTransId(), item.getNocNo(), item.getInBondingId(),
-								item.getCfBondDtlId());
+								System.out
+										.println("Update row count after exbond details is" + updateCfInbondCrgHdrDtl);
 
-						System.out.println(item.getNocTransId());
-						System.out.println(item.getNocNo());
-						System.out.println(item.getInBondingId());
-						System.out.println(item.getCfBondDtlId());
-						System.out.println(companyId);
-						System.out.println(branchId);
-						System.out.println("findExistingHdrdtl________________________________________________"
-								+ findExistingHdrdtl);
-						if (findExistingHdrdtl != null) {
-							int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
-									findExistingHdrdtl.getExBondedPackages() != null
-											? findExistingHdrdtl.getExBondedPackages()
-											: BigDecimal.ZERO.add(item.getExBondedPackages()),
-									companyId, branchId, item.getInBondingId(), item.getNocNo(), item.getNocTransId(),
-									item.getBoeNo(), item.getCfBondDtlId());
+							} else {
+								int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
+										item.getExBondedPackages(), companyId, branchId, item.getInBondingId(),
+										item.getNocNo(), item.getNocTransId(), item.getBoeNo(), item.getCfBondDtlId());
 
-							System.out.println("Update row count after exbond details is" + updateCfInbondCrgHdrDtl);
+								System.out.println("Update row count after exbond details is in hder dtl "
+										+ updateCfInbondCrgHdrDtl);
 
-						} else 
-						{
-							int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
-									item.getExBondedPackages(), companyId, branchId, item.getInBondingId(),
-									item.getNocNo(), item.getNocTransId(), item.getBoeNo(), item.getCfBondDtlId());
-
-							System.out.println("Update row count after exbond details is in hder dtl " + updateCfInbondCrgHdrDtl);
+							}
 
 						}
 
 					}
-					
-					
-					
-					
+
 				}
 
 			}
 
-			else 
-			{
+			else {
 
 				System.out.println("In Edit loop ");
 
 				CfExBondCrg existingExBond = cfExBondCrgRepository.findExistingCfexbondCrg(companyId, branchId,
 						cfexbondcrg.getNocTransId(), cfexbondcrg.getNocNo(), cfexbondcrg.getExBondingId());
 
-				if (existingExBond != null) 
-				{
+				if (existingExBond != null) {
+					BigDecimal[] totalCif = { BigDecimal.ZERO };
+					BigDecimal[] totalCargo = { BigDecimal.ZERO };
+					BigDecimal[] totalInsurance = { BigDecimal.ZERO };
+					BigDecimal[] totalInGrossWeight = { BigDecimal.ZERO };
+					BigDecimal[] totalInBondPackages = { BigDecimal.ZERO };
+
+					cfexbondcrgDtlList.forEach(item -> {
+						System.out.println("item.getInbondCifValue()______________________________________________"
+								+ item.getExBondedCIF());
+						BigDecimal cifValue = item.getExBondedCIF();
+						BigDecimal cargoValue = item.getExBondedCargoDuty();
+						BigDecimal insuranceValue = item.getExBondedInsurance();
+						BigDecimal inGrossWeight = item.getExBondedGW();
+						BigDecimal inBondPack = item.getExBondedPackages();
+
+						if (cifValue != null) {
+							totalCif[0] = totalCif[0].add(cifValue);
+						}
+
+						if (inBondPack != null) {
+							totalInBondPackages[0] = totalInBondPackages[0].add(inBondPack);
+						}
+
+						if (cargoValue != null) {
+							totalCargo[0] = totalCargo[0].add(cargoValue);
+						}
+						if (insuranceValue != null) {
+							totalInsurance[0] = totalInsurance[0].add(insuranceValue);
+						}
+						if (inGrossWeight != null) {
+							totalInGrossWeight[0] = totalInGrossWeight[0].add(inGrossWeight);
+						}
+					});
+
+					existingExBond.setExBondedCif(totalCif[0]);
+					existingExBond.setExBondedCargoDuty(totalCargo[0]);
+					existingExBond.setExBondedPackages(totalInBondPackages[0]);
+					existingExBond.setExBondedInsurance(totalInsurance[0]);
+					existingExBond.setExBondedGw(totalInGrossWeight[0]);
+
 					existingExBond.setAreaRemaining(cfexbondcrg.getAreaRemaining());
 					existingExBond.setAreaReleased(cfexbondcrg.getAreaReleased());
 					existingExBond.setGateInType(cfexbondcrg.getGateInType());
 					existingExBond.setSpaceType(cfexbondcrg.getSpaceType());
-					existingExBond.setExBondedPackages(cfexbondcrg.getExBondedPackages());
-					existingExBond.setExBondedCif(cfexbondcrg.getExBondedCif());
-					existingExBond.setExBondedCargoDuty(cfexbondcrg.getExBondedCargoDuty());
-					existingExBond.setExBondedInsurance(cfexbondcrg.getExBondedInsurance());
-					existingExBond.setExBondedGw(cfexbondcrg.getExBondedGw());
+//					existingExBond.setExBondedPackages(cfexbondcrg.getExBondedPackages());
+//					existingExBond.setExBondedCif(cfexbondcrg.getExBondedCif());
+//					existingExBond.setExBondedCargoDuty(cfexbondcrg.getExBondedCargoDuty());
+//					existingExBond.setExBondedInsurance(cfexbondcrg.getExBondedInsurance());
+//					existingExBond.setExBondedGw(cfexbondcrg.getExBondedGw());
 
 					existingExBond.setNoOf20Ft(cfexbondcrg.getNoOf20Ft());
 					existingExBond.setNoOf40Ft(cfexbondcrg.getNoOf40Ft());
 					existingExBond.setStatus("N");
 					existingExBond.setEditedBy(user);
 					existingExBond.setEditedDate(new Date());
-					
+
 					existingExBond.setSbDate(cfexbondcrg.getSbDate());
 					existingExBond.setSbNo(cfexbondcrg.getSbNo());
 					existingExBond.setTrnsferBondDate(cfexbondcrg.getTrnsferBondDate());
 					existingExBond.setTrnsferBondNo(cfexbondcrg.getTrnsferBondNo());
 					existingExBond.setExBondType(cfexbondcrg.getExBondType());
-					
+
 					existingExBond.setSbDuty(cfexbondcrg.getExBondedCargoDuty());
 					existingExBond.setSbValue(cfexbondcrg.getExBondedCif());
 					existingExBond.setSbQty(cfexbondcrg.getExBondedPackages());
@@ -608,19 +723,19 @@ public class CfExBondCrgService {
 							int updateCfInbondCrdHDR = cfinbondCrgHdrRepo.updateCfInbondHeaderAfterExbond(
 									findCfBondCrgHDRData.getExBondedPackages().add(cfexbondcrg.getExBondedPackages())
 											.subtract(existingExBond.getExBondedPackages()),
-											
+
 									findCfBondCrgHDRData.getExBondedCargoDuty().add(cfexbondcrg.getExBondedCargoDuty())
 											.subtract(existingExBond.getExBondedCargoDuty()),
-											
+
 									findCfBondCrgHDRData.getExBondedInsurance().add(cfexbondcrg.getExBondedInsurance())
 											.subtract(existingExBond.getExBondedInsurance()),
-											
+
 									findCfBondCrgHDRData.getExBondedCif().add(cfexbondcrg.getExBondedCif())
 											.subtract(existingExBond.getExBondedCif()),
-											
+
 									findCfBondCrgHDRData.getExBondedGw().add(cfexbondcrg.getExBondedGw())
 											.subtract(existingExBond.getExBondedGw()),
-											
+
 									companyId, branchId, cfexbondcrg.getNocTransId(), cfexbondcrg.getNocNo(),
 									existing.getInBondingHdrId(), cfexbondcrg.getBoeNo());
 
@@ -629,21 +744,19 @@ public class CfExBondCrgService {
 
 					}
 
-					for (CfinbondcrgDtl item : cfexbondcrgDtlList) 
-					{
+					for (CfinbondcrgDtl item : cfexbondcrgDtlList) {
 
 						CfexBondCrgDtl findExistingCfexbondCrgDtl = cfExBondCrgDtlRepository.findExistingCfexbondCrgDtl(
 								companyId, branchId, item.getNocTransId(), item.getNocNo(), item.getCfBondDtlId(),
 								existingExBond.getInBondingId(), existingExBond.getExBondingId());
-						
 
-						if (findExistingCfexbondCrgDtl != null) 
-						{
-							
+						if (findExistingCfexbondCrgDtl != null) {
+
 							int editedRowInCfEcbondCrgDtl = cfExBondCrgDtlRepository.updateExbondCrgDetail(user,
 									new Date(), item.getExBondedPackages(), item.getExBondedCIF(),
-									item.getExBondedCargoDuty(), item.getExBondedInsurance(), item.getExBondedGW(),item.getExBondyardPackages(),item.getExBondGridArea(),'N',
-									companyId, branchId, item.getCfBondDtlId(), item.getNocTransId(), item.getNocNo(),
+									item.getExBondedCargoDuty(), item.getExBondedInsurance(), item.getExBondedGW(),
+									item.getExBondyardPackages(), item.getExBondGridArea(), 'N', companyId, branchId,
+									item.getCfBondDtlId(), item.getNocTransId(), item.getNocNo(),
 									existingExBond.getInBondingId(), existingExBond.getExBondingId());
 
 							System.out.println(
@@ -652,17 +765,18 @@ public class CfExBondCrgService {
 
 							if (editedRowInCfEcbondCrgDtl > 0) {
 
-								CfExBondGrid toEditData =cfExBondGridRepository.toEditData(companyId, branchId, existingExBond.getExBondingId(), item.getCfBondDtlId(), item.getYardLocationId(), item.getBlockId(), item.getCellNoRow());
-								
-								if (toEditData!=null)
-								{
-									int updateGrid =cfExBondGridRepository.updateCfexBondDtlAfterExBondGrid(item.getExBondyardPackages(),item.getExBondGridArea(),
-											companyId,branchId,existingExBond.getExBondingId(), item.getCfBondDtlId(), item.getYardLocationId(), item.getBlockId(), item.getCellNoRow());
-									
-									System.out.println("updated row in cfexbond grid :"+updateGrid);
+								CfExBondGrid toEditData = cfExBondGridRepository.toEditData(companyId, branchId,
+										existingExBond.getExBondingId(), item.getCfBondDtlId(),
+										item.getYardLocationId(), item.getBlockId(), item.getCellNoRow());
+
+								if (toEditData != null) {
+									int updateGrid = cfExBondGridRepository.updateCfexBondDtlAfterExBondGrid(
+											item.getExBondyardPackages(), item.getExBondGridArea(), companyId, branchId,
+											existingExBond.getExBondingId(), item.getCfBondDtlId(),
+											item.getYardLocationId(), item.getBlockId(), item.getCellNoRow());
+
+									System.out.println("updated row in cfexbond grid :" + updateGrid);
 								}
-								
-								
 
 								CfinbondcrgDtl toUpdateInBondCrgDtl = cfexbondcrgDtlRepo.toUpdateInBondCrgDtl(companyId,
 										branchId, item.getNocTransId(), item.getCfBondDtlId(), item.getNocNo(),
@@ -713,8 +827,7 @@ public class CfExBondCrgService {
 
 						}
 
-						else 
-						{
+						else {
 							CfexBondCrgDtl exBondDtl = new CfexBondCrgDtl();
 
 							exBondDtl.setCreatedBy(user);
@@ -756,26 +869,21 @@ public class CfExBondCrgService {
 							exBondDtl.setExBondyardPackages(item.getExBondyardPackages());
 							exBondDtl.setExBondGridArea(item.getExBondGridArea());
 							exBondDtl.setExBondType(cfexbondcrg.getExBondType());
-							CfexBondCrgDtl saved=	cfExBondCrgDtlRepository.save(exBondDtl);
-							
-							
-							if (saved!=null)
-							{
-								
-								List<CfInBondGrid> existList =cfInBondGridRepository.getDataForExbondGrid(companyId, branchId, item.getInBondingId(), item.getNocTransId(), item.getCfBondDtlId());
-								
+							CfexBondCrgDtl saved = cfExBondCrgDtlRepository.save(exBondDtl);
 
-								if(existList!=null)
-								{
+							if (saved != null) {
+
+								List<CfInBondGrid> existList = cfInBondGridRepository.getDataForExbondGrid(companyId,
+										branchId, item.getInBondingId(), item.getNocTransId(), item.getCfBondDtlId());
+
+								if (existList != null) {
 									existList.forEach(data -> {
-										
+
 										CfExBondGrid cf1 = new CfExBondGrid();
-										
-										
-										Integer maxSrNo = cfExBondGridRepository.getMaxSrNo(companyId, branchId, saved.getExBondingId(),
-												saved.getCfBondDtlId());
-										
-										
+
+										Integer maxSrNo = cfExBondGridRepository.getMaxSrNo(companyId, branchId,
+												saved.getExBondingId(), saved.getCfBondDtlId());
+
 //										cf1.setSrNo((maxSrNo == null) ? 1 : maxSrNo + 1);
 										cf1.setSrNo(data.getSrNo());
 										cf1.setCompanyId(companyId);
@@ -787,52 +895,53 @@ public class CfExBondCrgService {
 										cf1.setInBondingId(data.getInBondingId());
 										cf1.setExBondingId(saved.getExBondingId());
 										cf1.setCfBondDtlId(data.getCfBondDtlId());
-										
+
 										cf1.setYardLocation(data.getYardLocation());
 										cf1.setYardBlock(data.getYardBlock());
 										cf1.setBlockCellNo(data.getBlockCellNo());
 //										cf1.setGridReleased(saved.getExBondGridArea());
 										cf1.setExCellAreaAllocated(BigDecimal.ZERO);
 										cf1.setExBondPackages(BigDecimal.ZERO);
-										
+
 										cf1.setInBondPackages(data.getInBondPackages());
 										cf1.setCellAreaAllocated(data.getCellAreaAllocated());
-									
+
 										cf1.setNocTransId(data.getNocTransId());
 										cf1.setFinYear("2025");
 										cf1.setStatus("A");
 
-										CfExBondGrid savedGrid =cfExBondGridRepository.save(cf1);
-										
-										
-										if (savedGrid!=null)
-										{
-											 CfExBondGrid toEditData =cfExBondGridRepository.toEditData(companyId, branchId, saved.getExBondingId(), saved.getCfBondDtlId(), 
-				                                		saved.getYardLocationId(), saved.getBlockId(), saved.getCellNoRow());
-												
-												if (toEditData!=null)
-												{
-													int updateGrid =cfExBondGridRepository.updateCfexBondDtlAfterExBondGrid(saved.getExBondyardPackages(),saved.getExBondGridArea(),
-															companyId,branchId,saved.getExBondingId(), saved.getCfBondDtlId(), saved.getYardLocationId(), saved.getBlockId(), saved.getCellNoRow());
+										CfExBondGrid savedGrid = cfExBondGridRepository.save(cf1);
 
-													System.out.println("updated row in cfexbond grid :"+updateGrid);
-												}
+										if (savedGrid != null) {
+											CfExBondGrid toEditData = cfExBondGridRepository.toEditData(companyId,
+													branchId, saved.getExBondingId(), saved.getCfBondDtlId(),
+													saved.getYardLocationId(), saved.getBlockId(),
+													saved.getCellNoRow());
+
+											if (toEditData != null) {
+												int updateGrid = cfExBondGridRepository
+														.updateCfexBondDtlAfterExBondGrid(saved.getExBondyardPackages(),
+																saved.getExBondGridArea(), companyId, branchId,
+																saved.getExBondingId(), saved.getCfBondDtlId(),
+																saved.getYardLocationId(), saved.getBlockId(),
+																saved.getCellNoRow());
+
+												System.out.println("updated row in cfexbond grid :" + updateGrid);
+											}
 										}
-										
-									});	
-									
-								
+
+									});
+
 								}
-								
+
 							}
-		
-							
+
 							CfinbondcrgDtl toUpdateInBondCrgDtl = cfexbondcrgDtlRepo.toUpdateInBondCrgDtl(companyId,
 									branchId, item.getNocTransId(), item.getCfBondDtlId(), item.getNocNo(),
 									item.getInBondingId());
 
 							if (toUpdateInBondCrgDtl != null) {
-								
+
 //								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo.updateCfinbondCrgDtlAfterExbond(
 //										toUpdateInBondCrgDtl.getExBondedPackages().add(item.getExBondedPackages()), 
 //										toUpdateInBondCrgDtl.getExBondedCargoDuty().add(item.getExBondedCargoDuty()),
@@ -844,39 +953,47 @@ public class CfExBondCrgService {
 //										item.getCfBondDtlId());
 //								System.out
 //								.println("Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
-								
-								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo.updateCfinbondCrgDtlAfterExbond(
-										toUpdateInBondCrgDtl.getExBondedPackages()!=null ? toUpdateInBondCrgDtl.getExBondedPackages():BigDecimal.ZERO.add(item.getExBondedPackages()), 
-										toUpdateInBondCrgDtl.getExBondedCargoDuty()!=null ? toUpdateInBondCrgDtl.getExBondedCargoDuty():BigDecimal.ZERO.add(item.getExBondedCargoDuty()),
-										toUpdateInBondCrgDtl.getExBondedCIF()!=null ?toUpdateInBondCrgDtl.getExBondedCIF():BigDecimal.ZERO.add(item.getExBondedCIF()),
-										toUpdateInBondCrgDtl.getExBondedInsurance()!=null ? toUpdateInBondCrgDtl.getExBondedInsurance(): BigDecimal.ZERO.add(item.getExBondedInsurance()), 
-										toUpdateInBondCrgDtl.getExBondedGW()!=null?toUpdateInBondCrgDtl.getExBondedGW():BigDecimal.ZERO.add(item.getExBondedGW()), 
-										companyId, branchId,
-										item.getInBondingId(), item.getNocNo(), item.getNocTransId(), item.getBoeNo(),
-										item.getCfBondDtlId());
-								System.out
-								.println("Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
-							}
-							
-							else
-							{
-								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo.updateCfinbondCrgDtlAfterExbond(
-										item.getExBondedPackages(), item.getExBondedCargoDuty(), item.getExBondedCIF(),
-										item.getExBondedInsurance(), item.getExBondedGW(), companyId, branchId,
-										item.getInBondingId(), item.getNocNo(), item.getNocTransId(), item.getBoeNo(),
-										item.getCfBondDtlId());
 
-								System.out
-								.println("Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
+								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo
+										.updateCfinbondCrgDtlAfterExbond(
+												toUpdateInBondCrgDtl.getExBondedPackages() != null
+														? toUpdateInBondCrgDtl.getExBondedPackages()
+														: BigDecimal.ZERO.add(item.getExBondedPackages()),
+												toUpdateInBondCrgDtl.getExBondedCargoDuty() != null
+														? toUpdateInBondCrgDtl.getExBondedCargoDuty()
+														: BigDecimal.ZERO.add(item.getExBondedCargoDuty()),
+												toUpdateInBondCrgDtl.getExBondedCIF() != null
+														? toUpdateInBondCrgDtl.getExBondedCIF()
+														: BigDecimal.ZERO.add(item.getExBondedCIF()),
+												toUpdateInBondCrgDtl.getExBondedInsurance() != null
+														? toUpdateInBondCrgDtl.getExBondedInsurance()
+														: BigDecimal.ZERO.add(item.getExBondedInsurance()),
+												toUpdateInBondCrgDtl.getExBondedGW() != null
+														? toUpdateInBondCrgDtl.getExBondedGW()
+														: BigDecimal.ZERO.add(item.getExBondedGW()),
+												companyId, branchId, item.getInBondingId(), item.getNocNo(),
+												item.getNocTransId(), item.getBoeNo(), item.getCfBondDtlId());
+								System.out.println(
+										"Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
 							}
-							
+
+							else {
+								int updateCfinbondcrgDtlAfterExbond = cfexbondcrgDtlRepo
+										.updateCfinbondCrgDtlAfterExbond(item.getExBondedPackages(),
+												item.getExBondedCargoDuty(), item.getExBondedCIF(),
+												item.getExBondedInsurance(), item.getExBondedGW(), companyId, branchId,
+												item.getInBondingId(), item.getNocNo(), item.getNocTransId(),
+												item.getBoeNo(), item.getCfBondDtlId());
+
+								System.out.println(
+										"Update row count after exbond details is" + updateCfinbondcrgDtlAfterExbond);
+							}
 
 							CfinbondcrgHDRDtl findExistingHdrdtl = cfinbondCrgHdrDtlRepo.findExistingHdrdtl(companyId,
 									branchId, item.getNocTransId(), item.getNocNo(), item.getInBondingId(),
 									item.getCfBondDtlId());
 
-							if (findExistingHdrdtl != null) 
-							{
+							if (findExistingHdrdtl != null) {
 								int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
 										findExistingHdrdtl.getExBondedPackages() != null
 												? findExistingHdrdtl.getExBondedPackages()
@@ -887,14 +1004,15 @@ public class CfExBondCrgService {
 								System.out
 										.println("Update row count after exbond details is" + updateCfInbondCrgHdrDtl);
 
-							} else 
-								
+							} else
+
 							{
 								int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
 										item.getExBondedPackages(), companyId, branchId, item.getInBondingId(),
 										item.getNocNo(), item.getNocTransId(), item.getBoeNo(), item.getCfBondDtlId());
 
-								System.out.println("Update row count after exbond details is in hder dtl in edit " + updateCfInbondCrgHdrDtl);
+								System.out.println("Update row count after exbond details is in hder dtl in edit "
+										+ updateCfInbondCrgHdrDtl);
 
 							}
 
@@ -913,82 +1031,79 @@ public class CfExBondCrgService {
 
 		return new ResponseEntity<>(cfexbondcrg, HttpStatus.OK);
 	}
-	
-	
+
 	@Transactional
 	public ResponseEntity<?> approveDataOfInCFbondGrid(String companyId, String branchId, String flag, String user,
-	        Map<String, Object> requestBody) {
+			Map<String, Object> requestBody) {
 
-	    ObjectMapper object = new ObjectMapper();
-	    object.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ObjectMapper object = new ObjectMapper();
+		object.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-	    CfExBondCrg cfinbondcrg = object.convertValue(requestBody.get("exBond"), CfExBondCrg.class);
-	    
-	    CfexBondCrgDtl dataForPrint =null;
-	    
-	    System.out.println("cfinbondcrg________________________"+cfinbondcrg);
-	    
-	    if (cfinbondcrg.getExBondingId()==null || cfinbondcrg.getExBondingId().isEmpty() || cfinbondcrg.getExBondingId().isBlank())
-	    {
-	    	return new ResponseEntity<>("Please First Save Data", HttpStatus.BAD_REQUEST);
-	    }
-	    
-	    if (cfinbondcrg != null && cfinbondcrg.getExBondingId()!=null || !cfinbondcrg.getExBondingId().isEmpty() || !cfinbondcrg.getExBondingId().isBlank()) 	    	
-	    {
+		CfExBondCrg cfinbondcrg = object.convertValue(requestBody.get("exBond"), CfExBondCrg.class);
 
-	        BigDecimal sumOfInbondFromDtl = cfExBondCrgDtlRepository.getSumOfInBondPackages(companyId, branchId,
-	                cfinbondcrg.getExBondingId(), cfinbondcrg.getNocTransId());
+		CfexBondCrgDtl dataForPrint = null;
 
+		System.out.println("cfinbondcrg________________________" + cfinbondcrg);
 
-	        BigDecimal sumOfInbondFormGrid = cfExBondGridRepository.getSumOfInBondPackages(companyId, branchId,
-	                cfinbondcrg.getExBondingId(), cfinbondcrg.getNocTransId());
+		if (cfinbondcrg.getExBondingId() == null || cfinbondcrg.getExBondingId().isEmpty()
+				|| cfinbondcrg.getExBondingId().isBlank()) {
+			return new ResponseEntity<>("Please First Save Data", HttpStatus.BAD_REQUEST);
+		}
 
-	        System.out.println("sumOfInbondFromDtl: " + sumOfInbondFromDtl + " ______________ " + sumOfInbondFormGrid);
-	        
-	        if (sumOfInbondFromDtl == null || sumOfInbondFormGrid == null) {
-	            return new ResponseEntity<>("One of the sum values is null. Please check the data.", HttpStatus.BAD_REQUEST);
-	        }
+		if (cfinbondcrg != null && cfinbondcrg.getExBondingId() != null || !cfinbondcrg.getExBondingId().isEmpty()
+				|| !cfinbondcrg.getExBondingId().isBlank()) {
+
+			BigDecimal sumOfInbondFromDtl = cfExBondCrgDtlRepository.getSumOfInBondPackages(companyId, branchId,
+					cfinbondcrg.getExBondingId(), cfinbondcrg.getNocTransId());
+
+			BigDecimal sumOfInbondFormGrid = cfExBondGridRepository.getSumOfInBondPackages(companyId, branchId,
+					cfinbondcrg.getExBondingId(), cfinbondcrg.getNocTransId());
+
+			System.out.println("sumOfInbondFromDtl: " + sumOfInbondFromDtl + " ______________ " + sumOfInbondFormGrid);
+
+			if (sumOfInbondFromDtl == null || sumOfInbondFormGrid == null) {
+				return new ResponseEntity<>("One of the sum values is null. Please check the data.",
+						HttpStatus.BAD_REQUEST);
+			}
 
 //	        if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) < 0) {
 //	        	
 //	            return new ResponseEntity<>("ExbondPackages do not match in yard, please add packages in grid.", HttpStatus.BAD_REQUEST);
 //	        }
-	        if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) != 0) {
-	            return new ResponseEntity<>("ExbondPackages do not match in yard, please add packages in grid.", HttpStatus.BAD_REQUEST);
-	        }
-	        else
-	        {
-	        	 int updateAfterApprov =cfExBondCrgDtlRepository.updateAfterApprove("A", companyId, branchId, cfinbondcrg.getExBondingId(), cfinbondcrg.getNocNo(), cfinbondcrg.getNocTransId());
-	        	 System.out.println("updateAfterApprov row count "+updateAfterApprov);
-	        	 
-	        	 
-	        	 List<CfexBondCrgDtl> updateAfterApprove =cfExBondCrgDtlRepository.updateAfterApprove(companyId, branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo(), cfinbondcrg.getInBondingId(), cfinbondcrg.getBoeNo(), cfinbondcrg.getExBondingId());
-	        	 if (updateAfterApprove!=null)
-	        	 {
-	        		 updateAfterApprove.forEach(data -> data.setStatus('A'));
+			if (sumOfInbondFormGrid.compareTo(sumOfInbondFromDtl) != 0) {
+				return new ResponseEntity<>("ExbondPackages do not match in yard, please add packages in grid.",
+						HttpStatus.BAD_REQUEST);
+			} else {
+				int updateAfterApprov = cfExBondCrgDtlRepository.updateAfterApprove("A", companyId, branchId,
+						cfinbondcrg.getExBondingId(), cfinbondcrg.getNocNo(), cfinbondcrg.getNocTransId());
+				System.out.println("updateAfterApprov row count " + updateAfterApprov);
 
-	        		    // Batch save all records in one go
-	        		    cfExBondCrgDtlRepository.saveAll(updateAfterApprove);
-	        		    
-	        		    
-	        		    dataForPrint = updateAfterApprove.get(0);
-		        		 
-		        		 
-		        		 System.out.println("dataForPrint_____________________"+dataForPrint);
-		        		 return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
-	        	 }
-	        }
-	    }
-	   
-	    return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
+				List<CfexBondCrgDtl> updateAfterApprove = cfExBondCrgDtlRepository.updateAfterApprove(companyId,
+						branchId, cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo(), cfinbondcrg.getInBondingId(),
+						cfinbondcrg.getBoeNo(), cfinbondcrg.getExBondingId());
+				if (updateAfterApprove != null) {
+					updateAfterApprove.forEach(data -> data.setStatus('A'));
+
+					// Batch save all records in one go
+					cfExBondCrgDtlRepository.saveAll(updateAfterApprove);
+
+					dataForPrint = updateAfterApprove.get(0);
+
+					System.out.println("dataForPrint_____________________" + dataForPrint);
+					return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
+				}
+			}
+		}
+
+		return new ResponseEntity<>(dataForPrint, HttpStatus.OK);
 	}
 
+	public BigDecimal getSumOfInBondPackagesForCommodity(String companyId, String branchId, String exBondingId,
+			String cfBondDtlId, String nocTransId) {
+		return cfExBondCrgDtlRepository.getSumOfInBondPackagesForCommodity(companyId, branchId, exBondingId,
+				cfBondDtlId, nocTransId);
+	}
 
-	 public BigDecimal getSumOfInBondPackagesForCommodity(String companyId, String branchId, String exBondingId, String cfBondDtlId, String nocTransId) {
-	        return cfExBondCrgDtlRepository.getSumOfInBondPackagesForCommodity(companyId, branchId, exBondingId, cfBondDtlId, nocTransId);
-	    }
-	 
-	 
 	public List<CfExBondCrg> getAllSavedDataOfExbondcrg(String compnayId, String branchId, String partyName) {
 		return cfExBondCrgRepository.findCfinbondcrgByCompanyIdAndBranchIdForExbondScreen(compnayId, branchId,
 				partyName);
@@ -1046,37 +1161,25 @@ public class CfExBondCrgService {
 	public List<Object[]> getDataOfExbondBeNoCargo(String cid, String bid, String exbondBeNo, String val) {
 		return cfExBondCrgDtlRepository.getAllExbondCargoFromExbondDtl(cid, bid, exbondBeNo, val);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	public ResponseEntity<String> getPrintOfCutomesBondExBondCargo( String companyId,
-			String branchId,  String username,
-			 String type,String companyname,
-			 String branchname,  String exBondingId) throws DocumentException {
-		
+
+	public ResponseEntity<String> getPrintOfCutomesBondExBondCargo(String companyId, String branchId, String username,
+			String type, String companyname, String branchname, String exBondingId) throws DocumentException {
+
 		Context context = new Context();
 
 		CfExBondCrg dataForPrint = null;
-		
-		
-		List<CfExBondCrg> result1 = cfExBondCrgRepository.getDataForCustomsBondExbond(companyId,
-				branchId, exBondingId);
 
-		List<CfExBondCrg> result = cfExBondCrgRepository.getDataForCustomsBondExbondReport(companyId,
-				branchId, exBondingId);
+		List<CfExBondCrg> result1 = cfExBondCrgRepository.getDataForCustomsBondExbond(companyId, branchId, exBondingId);
+
+		List<CfExBondCrg> result = cfExBondCrgRepository.getDataForCustomsBondExbondReport(companyId, branchId,
+				exBondingId);
 		if (!result.isEmpty()) {
 			dataForPrint = result.get(0);
 			// Process the firstResult
 		}
-		
-			System.out.println("gatePassdata____________________________________________"+result);
-			
-			
+
+		System.out.println("gatePassdata____________________________________________" + result);
+
 		String c1 = username;
 		String b1 = companyname;
 		String u1 = branchname;
@@ -1094,51 +1197,50 @@ public class CfExBondCrgService {
 		String city = companyAddress.getCity();
 
 		String bondCode = branchAddress.getBondCode();
-		
+
 		context.setVariable("exBondingId", dataForPrint.getExBondingId());
 		context.setVariable("exBondingIdDate", dataForPrint.getExBondingDate());
-		
+
 		context.setVariable("inBondingId", dataForPrint.getInBondingId());
 		context.setVariable("inBondingIdDate", dataForPrint.getInBondingDate());
-		
+
 		context.setVariable("exboeNo", dataForPrint.getExBondBeNo());
 		context.setVariable("exBondBeDate", dataForPrint.getExBondBeDate());
-		
+
 		context.setVariable("boeNo", dataForPrint.getBoeNo());
 //		context.setVariable("boeNo", boeNosBuilder.toString());
 		context.setVariable("boeDate", dataForPrint.getInBondingDate());
 		context.setVariable("igmNo", dataForPrint.getIgmNo());
-		
+
 		context.setVariable("nocNo", dataForPrint.getNocNo());
 
 		context.setVariable("igmLineNo", dataForPrint.getIgmLineNo());
 		context.setVariable("bondingNo", dataForPrint.getBondingNo());
-		
+
 		context.setVariable("bondingDate", dataForPrint.getBondingDate());
 
 		context.setVariable("inBondPackages", dataForPrint.getInBondedPackages());
 		context.setVariable("inBondWt", dataForPrint.getInbondGrossWt());
-		
-	
+
 		context.setVariable("consignee", dataForPrint.getGiTransporterName());
-		
+
 		context.setVariable("area", dataForPrint.getAreaOccupied());
-		
+
 		context.setVariable("gateInType", dataForPrint.getGateInType());
-		
+
 		context.setVariable("spaceType", dataForPrint.getSpaceType());
 		context.setVariable("exBondGrWeight", dataForPrint.getExBondedGw());
 		context.setVariable("consignee", dataForPrint.getImporterName());
-		
+
 		context.setVariable("typeOfPackages", dataForPrint.getTypeOfPackage());
 		context.setVariable("cha", dataForPrint.getCha());
 		context.setVariable("address", dataForPrint.getImporterAddress1() + " " + dataForPrint.getImporterAddress2()
 				+ " " + dataForPrint.getImporterAddress3());
-		
+
 		context.setVariable("cargoDiscrpition", dataForPrint.getCommodityDescription());
 
 		context.setVariable("cargoDesc", dataForPrint.getCommodityDescription());
-	
+
 		context.setVariable("result", result1);
 		context.setVariable("c1", c1);
 		context.setVariable("b1", b1);
@@ -1164,19 +1266,5 @@ public class CfExBondCrgService {
 
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	}
+}

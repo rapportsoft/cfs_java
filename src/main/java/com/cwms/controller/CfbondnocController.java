@@ -112,6 +112,14 @@ public class CfbondnocController {
 			@RequestParam("nocNo") String nocNo) {
 		return cfbondnocService.findAllCfBondNocDtl(companyId, branchId, nocTransId, nocNo);
 	}
+	
+	
+	@GetMapping("/getCfBondNocDtlForNocScreen")
+	public List<CfBondNocDtl> getCfBondNocDtlForNocScreen(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("nocTransId") String nocTransId,
+			@RequestParam("nocNo") String nocNo) {
+		return cfbondnocService.getCfBondNocDtlForNocScreen(companyId, branchId, nocTransId, nocNo);
+	}
 
 	@GetMapping("/getDataByPartyIdAndGstNo")
 	public Party getDataByTransId(@RequestParam("companyId") String companyId,

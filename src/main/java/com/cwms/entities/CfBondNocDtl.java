@@ -148,7 +148,20 @@ public class CfBondNocDtl {
 	@Transient
 	 @Column(name = "In_Bonding_Id", length = 10, nullable = true)
 	    private String inBondingId;
-	 
+	
+	@Transient
+	private String inBondingDtlId;
+	
+	
+	
+	public String getInBondingDtlId() {
+		return inBondingDtlId;
+	}
+
+	public void setInBondingDtlId(String inBondingDtlId) {
+		this.inBondingDtlId = inBondingDtlId;
+	}
+
 	public String getInBondingId() {
 		return inBondingId;
 	}
@@ -616,7 +629,7 @@ public class CfBondNocDtl {
 			BigDecimal gateInPackages, BigDecimal weightTakenIn, BigDecimal inBondedPackages, BigDecimal inbondGrossWt,
 			BigDecimal inbondCargoDuty, BigDecimal inbondCifValue, BigDecimal shortagePackages, BigDecimal damagedQty,
 			BigDecimal breakage, String createdBy, String editedBy, String approvedBy, BigDecimal areaOccupied,BigDecimal yardPackages,
-			BigDecimal cellAreaAllocated, BigDecimal cellArea,String inBondingId) {
+			BigDecimal cellAreaAllocated, BigDecimal cellArea,String inBondingId,String inBondingDtlId) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -649,6 +662,7 @@ public class CfBondNocDtl {
 		this.cellAreaAllocated = cellAreaAllocated;
 		this.cellArea = cellArea;
 		this.inBondingId = inBondingId;
+		this.inBondingDtlId=inBondingDtlId;
 	}
 
 	@Override

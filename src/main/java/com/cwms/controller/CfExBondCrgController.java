@@ -36,6 +36,18 @@ public class CfExBondCrgController {
         return cfExBondCrgService.findAllCfBondNocDtl(companyId, branchId, nocTransId, nocNo, inBondigId, boeNo);
     }
     
+    @GetMapping("/getExBondDtlAfterSave")
+    public List<CfexBondCrgDtl> getExBondDtlAfterSave(
+            @RequestParam("companyId") String companyId,
+            @RequestParam("branchId") String branchId,
+            @RequestParam("nocTransId") String nocTransId,
+            @RequestParam("nocNo") String nocNo,
+            @RequestParam("inBondigId") String inBondigId,
+            @RequestParam("boeNo") String boeNo,
+            @RequestParam("exBondingId") String exBondingId) {
+        return cfExBondCrgService.getExBondCrgDtlDataAfterSave(companyId, branchId, nocTransId, nocNo, inBondigId, boeNo,exBondingId);
+    }
+    
     
     @GetMapping("/getALLForworder")
     public List<Party> getALLCfbondNocDtl(

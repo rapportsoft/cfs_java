@@ -95,6 +95,10 @@ public class CfbondnocService {
 		return cfbondnocDtlRepository.getCfBondNocDtl(companyId, branchId, nocTransId, nocNo);
 	}
 
+	public List<CfBondNocDtl> getCfBondNocDtlForNocScreen(String companyId, String branchId, String nocTransId, String nocNo) {
+		return cfbondnocDtlRepository.getCfBondNocDtlForNocScreen(companyId, branchId, nocTransId, nocNo);
+	}
+	
 	public Party getDataByPartyIdAndGstNoForImporter(String companyId, String branchId, String partyId, String gstNo,
 			String sr) {
 		return cfbondnocRepository.getDataOfImporter1(companyId, branchId, partyId, gstNo, sr);
@@ -522,6 +526,7 @@ public class CfbondnocService {
 				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
 				cfBondNoc.setEditedBy(user);
 				cfBondNoc.setEditedDate(new Date());
+				cfBondNoc.setVesselId(cfBondNoc.getVesselId());
 				cfbondnocRepository.save(cfBondNoc);
 
 //   				CfBondNocDtl existing =cfbondnocDtlRepository.getDataOfDtlId(cid, bid, bondnocDtl.getCfBondDtlId(), bondnocDtl.getNocTransId(), bondnocDtl.getNocNo());

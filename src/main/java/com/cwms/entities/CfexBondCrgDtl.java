@@ -12,6 +12,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "cfexbondcrgdtl")
@@ -175,6 +176,42 @@ public class CfexBondCrgDtl {
 	    private String igmLineNo;
 
 	    
+		@Transient
+		private BigDecimal yardPackages;
+		
+		
+		@Transient
+		private BigDecimal cellAreaAllocated;
+		
+		@Transient
+	    private BigDecimal cellArea;
+		
+		
+		
+	public BigDecimal getYardPackages() {
+			return yardPackages;
+		}
+
+		public void setYardPackages(BigDecimal yardPackages) {
+			this.yardPackages = yardPackages;
+		}
+
+		public BigDecimal getCellAreaAllocated() {
+			return cellAreaAllocated;
+		}
+
+		public void setCellAreaAllocated(BigDecimal cellAreaAllocated) {
+			this.cellAreaAllocated = cellAreaAllocated;
+		}
+
+		public BigDecimal getCellArea() {
+			return cellArea;
+		}
+
+		public void setCellArea(BigDecimal cellArea) {
+			this.cellArea = cellArea;
+		}
+
 	public String getIgmNo() {
 			return igmNo;
 		}
@@ -671,6 +708,81 @@ public CfexBondCrgDtl(String companyId, String branchId, String finYear, String 
 	public CfexBondCrgDtl(char status) {
 		super();
 		this.status = status;
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	// to get data after save in ExBond screen please check for any correction 
+	public CfexBondCrgDtl(String companyId, String branchId, String finYear, String cfBondDtlId, String nocTransId,
+			String exBondingId, String inBondingId, String nocNo, String boeNo, String bondingNo, Date bondingDate,
+			String exBondBeNo, BigDecimal nocPackages, BigDecimal exBondedPackages, String exBondType,
+			BigDecimal exBondedCIF, BigDecimal exBondedCargoDuty, BigDecimal exBondedInsurance, String sbNo,
+			String commodityDescription, String cargoType, BigDecimal grossWeight, BigDecimal exBondedGW,
+			BigDecimal remainingGW, BigDecimal balanceGW, String typeOfPackage, char status, BigDecimal outQty,
+			BigDecimal inBondedPackages, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
+			BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, String yardLocationId, String blockId,
+			String cellNoRow, BigDecimal exBondyardPackages, BigDecimal exBondGridArea, String igmNo,
+			String igmLineNo,BigDecimal yardPackages,BigDecimal cellAreaAllocated,BigDecimal cellArea) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.cfBondDtlId = cfBondDtlId;
+		this.nocTransId = nocTransId;
+		this.exBondingId = exBondingId;
+		this.inBondingId = inBondingId;
+		this.nocNo = nocNo;
+		this.boeNo = boeNo;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.exBondBeNo = exBondBeNo;
+		this.nocPackages = nocPackages;
+		this.exBondedPackages = exBondedPackages;
+		this.exBondType = exBondType;
+		this.exBondedCIF = exBondedCIF;
+		this.exBondedCargoDuty = exBondedCargoDuty;
+		this.exBondedInsurance = exBondedInsurance;
+		this.sbNo = sbNo;
+		this.commodityDescription = commodityDescription;
+		this.cargoType = cargoType;
+		this.grossWeight = grossWeight;
+		this.exBondedGW = exBondedGW;
+		this.remainingGW = remainingGW;
+		this.balanceGW = balanceGW;
+		this.typeOfPackage = typeOfPackage;
+		this.status = status;
+		this.outQty = outQty;
+		this.inBondedPackages = inBondedPackages;
+		this.inbondGrossWt = inbondGrossWt;
+		this.inbondInsuranceValue = inbondInsuranceValue;
+		this.inbondCifValue = inbondCifValue;
+		this.inbondCargoDuty = inbondCargoDuty;
+		this.yardLocationId = yardLocationId;
+		this.blockId = blockId;
+		this.cellNoRow = cellNoRow;
+		this.exBondyardPackages = exBondyardPackages;
+		this.exBondGridArea = exBondGridArea;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
+		this.yardPackages=yardPackages;
+		this.cellAreaAllocated=cellAreaAllocated;
+		this.cellArea=cellArea;
 	}
 
 	

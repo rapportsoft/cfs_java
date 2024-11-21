@@ -169,7 +169,7 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 		       "c.igmLineNo, c.boeNo, c.boeDate, c.importerId, c.importerName, c.importerAddress1, " +
 		       "c.importerAddress2, c.importerAddress3, c.grossWeight, c.nocValidityDate, c.nocFromDate, " +
 		       "c.licenceValidDate, c.uom, c.nocPackages, c.area, c.cifValue, c.cargoDuty, " +
-		       "c.insuranceValue, c.insuranceAmt, c.status, c.createdBy,c.editedBy,c.approvedBy, c.cha,c.chaCode,c.nocWeek,c.gateInPackages,c.noOf20ft, c.noOf40ft,c.numberOfMarks) " +
+		       "c.insuranceValue, c.insuranceAmt, c.status, c.createdBy,c.editedBy,c.approvedBy, c.cha,c.chaCode,c.nocWeek,c.gateInPackages,c.noOf20ft, c.noOf40ft,c.numberOfMarks,c.sourcePort,c.vesselId ) " +
 		   "FROM Cfbondnoc c " +
 		   "WHERE c.companyId = :companyId " +
 		   "AND c.branchId = :branchId " +
@@ -402,9 +402,10 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 			       "c.igmLineNo, c.boeNo, c.boeDate, c.importerId, c.importerName, c.importerAddress1, " +
 			       "c.importerAddress2, c.importerAddress3, c.grossWeight, c.nocValidityDate, c.nocFromDate, " +
 			       "c.licenceValidDate, c.uom, c.nocPackages, c.area, c.cifValue, c.cargoDuty, " +
-			       "c.insuranceValue, c.insuranceAmt, c.status,c.createdBy,pa.partyName,c.approvedBy,c.cha,pa.customerCode,c.nocWeek,c.gateInPackages,c.noOf20ft, c.noOf40ft,c.numberOfMarks) " +
+			       "c.insuranceValue, c.insuranceAmt, c.status,c.createdBy,pa.partyName,c.approvedBy,c.cha,pa.customerCode,c.nocWeek,c.gateInPackages,c.noOf20ft, c.noOf40ft,c.numberOfMarks,c.sourcePort,v.vesselName) " +
 			   "FROM Cfbondnoc c " +
 		       "LEFT OUTER JOIN Party pa ON c.companyId =pa.companyId AND c.branchId =pa.branchId AND c.cha =pa.partyId "+
+		       "LEFT OUTER JOIN Vessel v ON c.companyId =v.companyId AND c.branchId =v.branchId AND c.vesselId =v.vesselId "+
 			   "WHERE c.companyId = :companyId " +
 			   "AND c.branchId = :branchId " +
 			   "AND c.nocTransId = :nocTransId " +
@@ -418,6 +419,8 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 		
 	 
 	 
+		
+		
 //		@Modifying
 //		@Transactional
 //		@Query("UPDATE Cfbondnoc c SET c.inBondedPackages = :inBondedPackages,c.inbondGrossWt=:inbondGrossWt,c.inbondInsuranceValue=:inbondInsuranceValue,c.inbondCifValue=:inbondCifValue,c.inbondCargoDuty=:inbondCargoDuty,c.bondingNo=:bondingNo,c.bondingDate=:bondingDate,c.bondValidityDate WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId=:nocTransId AND c.nocNo=:nocNo")

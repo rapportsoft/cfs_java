@@ -94,7 +94,7 @@ public class CfinbondcrgDtl {
 	
 	
 	@Column(name = "Gross_Weight", precision = 16, scale = 3, nullable = true)
-	private BigDecimal grossWeight;
+	private BigDecimal grossWeight=BigDecimal.ZERO;
 	
 
 	@Column(name = "TYPE_OF_PACKAGE", length = 15)
@@ -105,10 +105,10 @@ public class CfinbondcrgDtl {
 
 
     @Column(name = "Ex_Bonded_Packages", precision = 8, scale = 0)
-    private BigDecimal exBondedPackages;
+    private BigDecimal exBondedPackages=BigDecimal.ZERO;
 
     @Column(name = "To_Bonded_Packages", precision = 10, scale = 0, nullable = true)
-    private BigDecimal toBondedPackages;
+    private BigDecimal toBondedPackages=BigDecimal.ZERO;
 
    
     @Column(name = "Comments", length = 150, nullable = true)
@@ -160,13 +160,13 @@ public class CfinbondcrgDtl {
 
     
     @Column(name = "Shortage_Packages")
-	private BigDecimal shortagePackages;
+	private BigDecimal shortagePackages=BigDecimal.ZERO;
 
 	@Column(name = "Damaged_Qty")
-	private BigDecimal damagedQty;
+	private BigDecimal damagedQty=BigDecimal.ZERO;
 
 	@Column(name = "Breakage")
-	private BigDecimal breakage;
+	private BigDecimal breakage=BigDecimal.ZERO;
 
 	
     @Column(name = "yard_location_id", length = 20, nullable = false)
@@ -185,16 +185,16 @@ public class CfinbondcrgDtl {
     
     
     @Column(name = "Ex_Bonded_CIF", precision = 12, scale = 3)
-	private BigDecimal exBondedCIF;
+	private BigDecimal exBondedCIF=BigDecimal.ZERO;
 
 	@Column(name = "Ex_Bonded_Cargo_Duty", precision = 12, scale = 3)
-	private BigDecimal exBondedCargoDuty;
+	private BigDecimal exBondedCargoDuty=BigDecimal.ZERO;
 
 	@Column(name = "Ex_Bonded_Insurance", precision = 12, scale = 3)
-	private BigDecimal exBondedInsurance;
+	private BigDecimal exBondedInsurance=BigDecimal.ZERO;
 
 	@Column(name = "Ex_Bonded_GW", precision = 16, scale = 3)
-	private BigDecimal exBondedGW;
+	private BigDecimal exBondedGW=BigDecimal.ZERO;
 	
 	
 	@Column(name = "Yard_Packages", precision = 16, scale = 3)
@@ -1005,4 +1005,97 @@ public CfinbondcrgDtl(String companyId, String branchId, String inBondingDtlId, 
 	this.cifValue = cifValue;
 	this.cargoDuty = cargoDuty;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// after save
+public CfinbondcrgDtl(String companyId, String branchId, String finYear, String inBondingDtlId, String inBondingId,
+		String nocTransId, String nocNo, String cfBondDtlId, String boeNo, Date inBondingDate, Date nocTransDate,
+		Date nocDate, String bondingNo, Date bondingDate, BigDecimal nocPackages, BigDecimal cifValue,
+		BigDecimal cargoDuty, BigDecimal insuranceValue, BigDecimal grossWeight, String typeOfPackage,
+		String commodityDescription, BigDecimal exBondedPackages, BigDecimal toBondedPackages, String comments,
+		BigDecimal inBondedPackages, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
+		BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, String status, String createdBy, Date createdDate,
+		String editedBy, Date editedDate, String approvedBy, Date approvedDate, BigDecimal shortagePackages,
+		BigDecimal damagedQty, BigDecimal breakage, String yardLocationId, String blockId, String cellNoRow,
+		BigDecimal areaOccupied, BigDecimal yardPackages, BigDecimal cellAreaAllocated, BigDecimal cellArea,
+		BigDecimal gateInPackages) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.finYear = finYear;
+	this.inBondingDtlId = inBondingDtlId;
+	this.inBondingId = inBondingId;
+	this.nocTransId = nocTransId;
+	this.nocNo = nocNo;
+	this.cfBondDtlId = cfBondDtlId;
+	this.boeNo = boeNo;
+	this.inBondingDate = inBondingDate;
+	this.nocTransDate = nocTransDate;
+	this.nocDate = nocDate;
+	this.bondingNo = bondingNo;
+	this.bondingDate = bondingDate;
+	this.nocPackages = nocPackages;
+	this.cifValue = cifValue;
+	this.cargoDuty = cargoDuty;
+	this.insuranceValue = insuranceValue;
+	this.grossWeight = grossWeight;
+	this.typeOfPackage = typeOfPackage;
+	this.commodityDescription = commodityDescription;
+	this.exBondedPackages = exBondedPackages;
+	this.toBondedPackages = toBondedPackages;
+	this.comments = comments;
+	this.inBondedPackages = inBondedPackages;
+	this.inbondGrossWt = inbondGrossWt;
+	this.inbondInsuranceValue = inbondInsuranceValue;
+	this.inbondCifValue = inbondCifValue;
+	this.inbondCargoDuty = inbondCargoDuty;
+	this.status = status;
+	this.createdBy = createdBy;
+	this.createdDate = createdDate;
+	this.editedBy = editedBy;
+	this.editedDate = editedDate;
+	this.approvedBy = approvedBy;
+	this.approvedDate = approvedDate;
+	this.shortagePackages = shortagePackages;
+	this.damagedQty = damagedQty;
+	this.breakage = breakage;
+	this.yardLocationId = yardLocationId;
+	this.blockId = blockId;
+	this.cellNoRow = cellNoRow;
+	this.areaOccupied = areaOccupied;
+	this.yardPackages = yardPackages;
+	this.cellAreaAllocated = cellAreaAllocated;
+	this.cellArea = cellArea;
+	this.gateInPackages = gateInPackages;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

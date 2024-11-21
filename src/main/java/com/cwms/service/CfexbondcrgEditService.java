@@ -238,12 +238,39 @@ public class CfexbondcrgEditService {
 			cfinbondcrg.setCreatedBy(user);
 			cfinbondcrg.setCreatedDate(new Date());
 			cfinbondcrg.setApprovedDate(new Date());
-			cfinbondcrg.setStatus("N");
+			
+			if(cfinbondcrgDtlList == null || cfinbondcrgDtlList.isEmpty() )
+			{
+				cfinbondcrg.setStatus("A");
+			}else
+			{
+				cfinbondcrg.setStatus("N");
+			}
 
 			savedEdit = cfexbondcrgEditRepository.save(cfinbondcrg);
 			
 			if(savedEdit!=null)
 			{
+				String boeNo9 = getValidString(savedEdit.getBoeNo(), savedEdit.getBoeNoOld());
+	
+				String bondingNo9 = getValidString(savedEdit.getBondingNo(), savedEdit.getBondingNoOld());
+				
+				Date bondingDate9 = getValidDate(savedEdit.getBondingDate(), savedEdit.getBondingDateOld());
+				
+				int updateNocDtl = cfBondNocDtlRepository.updateNocDtlAfterAuditTrailHeaderChange(bondingNo9,
+						boeNo9,
+						companyId,branchId,savedEdit.getNocTransId(),savedEdit.getNocNo());
+				
+				System.out.println("updateNocDtl________________________________"+updateNocDtl);
+				
+				
+				int updateCfInBondCrgDtl = cfinbondcrgDtlRepo.updateCfinbondCrgDtlAfterInBondAuditTrailHeaderChange(boeNo9,bondingNo9,
+						bondingDate9,
+						companyId,branchId,savedEdit.getInBondingId(),savedEdit.getNocNo(),savedEdit.getNocTransId());
+				
+				System.out.println("updateCfInBondCrgDtl________________________________"+updateCfInBondCrgDtl);
+				
+				
 				CfinbondcrgHDR findCfBondCrgHDRData = null;
 				CfinbondcrgHDRDtl findCfBondCrgHDRDTLData = null;
 				CfinbondcrgDtl findCfBondCrgDTLData = null;
@@ -257,6 +284,8 @@ public class CfexbondcrgEditService {
 				BigDecimal totalInsurance = BigDecimal.ZERO;
 				BigDecimal totalWeight = BigDecimal.ZERO;
 				BigDecimal totalArea = BigDecimal.ZERO;
+				
+				
 				
 				if(cfinbondcrgDtlList!=null)
 				{
@@ -632,7 +661,8 @@ public class CfexbondcrgEditService {
 
 				Cfbondnoc findCfBondNocForUpdationg = cfbondnocRepository.findCfBondNocForUpdationg(companyId, branchId,
 						cfinbondcrg.getNocTransId(), cfinbondcrg.getNocNo());
-				if (findCfBondNocForUpdationg != null) {
+				if (findCfBondNocForUpdationg != null) 
+				{
 
 					Date bondingDate = getValidDate(savedEdit.getBondingDate(), savedEdit.getBondingDateOld());
 					Date bondValidityDate = getValidDate(savedEdit.getBondValidityDate(),
@@ -696,20 +726,39 @@ public class CfexbondcrgEditService {
 					findCfBondCrgData.setImporterAddress2(add2);
 					findCfBondCrgData.setImporterAddress3(add3);
 
-//					findCfBondCrgData.setInbondInsuranceValue(totalInsurance);
-//					findCfBondCrgData.setInbondGrossWt(totalWeight);
-//					findCfBondCrgData.setInBondedPackages(totalInbondedd);
-//					findCfBondCrgData.setAreaOccupied(totalArea);
-//					findCfBondCrgData.setCifValue(totalCif);
-//					findCfBondCrgData.setCargoDuty(totalCargo);
+					findCfBondCrgData.setInbondInsuranceValue(
+						    Optional.ofNullable(findCfBondCrgData.getInbondInsuranceValue()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getInBondedInsurance()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getInBondedInsuranceOld()).orElse(BigDecimal.ZERO))));
+
+						findCfBondCrgData.setInbondGrossWt(
+						    Optional.ofNullable(findCfBondCrgData.getInbondGrossWt()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getInBondedGw()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getInBondedGwOld()).orElse(BigDecimal.ZERO))));
+
+						findCfBondCrgData.setInBondedPackages(
+						    Optional.ofNullable(findCfBondCrgData.getInBondedPackages()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getInBondedPackages()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getInBondedPackagesOld()).orElse(BigDecimal.ZERO))));
+
+						findCfBondCrgData.setCifValue(
+						    Optional.ofNullable(findCfBondCrgData.getCifValue()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getInBondedCif()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getInBondedCifOld()).orElse(BigDecimal.ZERO))));
+
+						findCfBondCrgData.setCargoDuty(
+						    Optional.ofNullable(findCfBondCrgData.getCargoDuty()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getInBondedCargoDuty()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getInBondedCargoDutyOld()).orElse(BigDecimal.ZERO))));
+
 					
-					findCfBondCrgData.setInbondInsuranceValue(findCfBondCrgData.getInbondInsuranceValue().add(savedEdit.getInBondedInsurance().subtract(savedEdit.getInBondedInsuranceOld())));
-					findCfBondCrgData.setInbondGrossWt(findCfBondCrgData.getInbondGrossWt().add(savedEdit.getInBondedGw().subtract(savedEdit.getInBondedGwOld())));
-					findCfBondCrgData.setInBondedPackages(findCfBondCrgData.getInBondedPackages().add(savedEdit.getInBondedPackages().subtract(savedEdit.getInBondedPackagesOld())));
+//					findCfBondCrgData.setInbondInsuranceValue(findCfBondCrgData.getInbondInsuranceValue().add(savedEdit.getInBondedInsurance().subtract(savedEdit.getInBondedInsuranceOld())));
+//					findCfBondCrgData.setInbondGrossWt(findCfBondCrgData.getInbondGrossWt().add(savedEdit.getInBondedGw().subtract(savedEdit.getInBondedGwOld())));
+//					findCfBondCrgData.setInBondedPackages(findCfBondCrgData.getInBondedPackages().add(savedEdit.getInBondedPackages().subtract(savedEdit.getInBondedPackagesOld())));
+//					findCfBondCrgData.setCifValue(findCfBondCrgData.getCifValue().add(savedEdit.getInBondedCif().subtract(savedEdit.getInBondedCifOld())));
+//					findCfBondCrgData.setCargoDuty(findCfBondCrgData.getCargoDuty().add(savedEdit.getInBondedCargoDuty().subtract(savedEdit.getInBondedCargoDutyOld())));
+					
 					findCfBondCrgData.setAreaOccupied(totalArea);
-					findCfBondCrgData.setCifValue(findCfBondCrgData.getCifValue().add(savedEdit.getInBondedCif().subtract(savedEdit.getInBondedCifOld())));
-					findCfBondCrgData.setCargoDuty(findCfBondCrgData.getCargoDuty().add(savedEdit.getInBondedCargoDuty().subtract(savedEdit.getInBondedCargoDutyOld())));
-					
 					findCfBondCrgData.setEditedBy(user);
 					findCfBondCrgData.setStatus("A");
 					findCfBondCrgData.setEditedDate(new Date());
@@ -872,7 +921,15 @@ public class CfexbondcrgEditService {
 			cfinbondcrg.setCreatedBy(user);
 			cfinbondcrg.setCreatedDate(new Date());
 			cfinbondcrg.setApprovedDate(new Date());
-			cfinbondcrg.setStatus("N");
+			
+			if(cfinbondcrgDtlList == null || cfinbondcrgDtlList.isEmpty() )
+			{
+				cfinbondcrg.setStatus("A");
+			}else
+			{
+				cfinbondcrg.setStatus("N");
+			}
+			
 			
 			cfinbondcrg.setBoeNo(cfinbondcrg.getBoeNoOld());
 
@@ -898,6 +955,18 @@ public class CfexbondcrgEditService {
 
 			if (savedEdit != null) 
 			{
+				
+				String exBondBe = getValidString(savedEdit.getExBondBeNo(), savedEdit.getExBondBeNoOld());
+				
+					int editedRowInCfEcbondCrgDtlHeader = cfExBondCrgDtlRepository.updateExbondCrgDetailAfterExBondAuditTrailHeaderChange(user,
+							new Date(), 
+							exBondBe,'A',
+							companyId, branchId,savedEdit.getNocTransId(),
+							savedEdit.getInBondingId(), savedEdit.getExBondingId());
+
+					System.out.println(
+							"editedRowInCfEcbondCrgDtlHeader_____________________________________________________________"
+									+ editedRowInCfEcbondCrgDtlHeader);
 
 				CfExBondCrg existingExBond = cfExBondCrgRepository.getCfExBondCrgAfterExBondAuditTrail(companyId, branchId,
 						savedEdit.getNocTransId(), savedEdit.getInBondingId(), savedEdit.getNocNo(),savedEdit.getExBondingId());
@@ -930,30 +999,124 @@ public class CfexbondcrgEditService {
 				{
 					existingExBond.setSbDate(sbDate);
 					existingExBond.setSbNo(sbNo);
-					existingExBond.setSbValue(existingExBond.getSbValue()!=null ? existingExBond.getSbValue() : BigDecimal.ZERO.add(savedEdit.getSbValueNew().subtract(savedEdit.getSbValueOld())));
-					existingExBond.setSbValue(existingExBond.getSbDuty()!=null ? existingExBond.getSbDuty() : BigDecimal.ZERO.add(savedEdit.getSbDutyNew().subtract(savedEdit.getSbDutyOld())));
-					existingExBond.setSbQty(existingExBond.getSbQty()!=null ? existingExBond.getSbQty() : BigDecimal.ZERO.add(savedEdit.getSbQtyNew().subtract(savedEdit.getSbQtyOld())));
+					existingExBond.setSbValue(
+						    Optional.ofNullable(existingExBond.getSbValue()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getSbValueNew()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getSbValueOld()).orElse(BigDecimal.ZERO))));
+
+						existingExBond.setSbDuty(
+						    Optional.ofNullable(existingExBond.getSbDuty()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getSbDutyNew()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getSbDutyOld()).orElse(BigDecimal.ZERO))));
+
+						existingExBond.setSbQty(
+						    Optional.ofNullable(existingExBond.getSbQty()).orElse(BigDecimal.ZERO)
+						        .add(Optional.ofNullable(savedEdit.getSbQtyNew()).orElse(BigDecimal.ZERO)
+						             .subtract(Optional.ofNullable(savedEdit.getSbQtyOld()).orElse(BigDecimal.ZERO))));
+
+//					existingExBond.setSbValue(existingExBond.getSbValue()!=null ? existingExBond.getSbValue() : BigDecimal.ZERO.add(savedEdit.getSbValueNew().subtract(savedEdit.getSbValueOld())));
+//					existingExBond.setSbValue(existingExBond.getSbDuty()!=null ? existingExBond.getSbDuty() : BigDecimal.ZERO.add(savedEdit.getSbDutyNew().subtract(savedEdit.getSbDutyOld())));
+//					existingExBond.setSbQty(existingExBond.getSbQty()!=null ? existingExBond.getSbQty() : BigDecimal.ZERO.add(savedEdit.getSbQtyNew().subtract(savedEdit.getSbQtyOld())));
 				} 
 				
-					existingExBond.setRemainingCargoDuty(existingExBond.getRemainingCargoDuty().add(savedEdit.getRemainingCargoDuty().subtract(savedEdit.getRemainingCargoDutyOld())));
-					existingExBond.setRemainingCif(existingExBond.getRemainingCif().add(savedEdit.getRemainingCif().subtract(savedEdit.getRemainingCifOld())));
-					existingExBond.setRemainingInsurance(existingExBond.getRemainingInsurance().add(savedEdit.getRemainingInsurance().subtract(savedEdit.getRemainingInsuranceOld())));
-					existingExBond.setRemainingGw(existingExBond.getRemainingGw().add(savedEdit.getRemainingGw().subtract(savedEdit.getRemainingGwOld())));
-					existingExBond.setRemainingPackages(existingExBond.getRemainingPackages().add(savedEdit.getRemainingPackages().subtract(savedEdit.getRemainingPackagesOld())));
-					
-					existingExBond.setBalanceCargoDuty(existingExBond.getBalanceCargoDuty().add(savedEdit.getBalanceCargoDuty().subtract(savedEdit.getBalanceCargoDutyOld())));
-					existingExBond.setBalanceCif(existingExBond.getBalanceCif().add(savedEdit.getBalanceCif().subtract(savedEdit.getBalanceCifOld())));
-					existingExBond.setBalancedPackages(existingExBond.getBalancedPackages().add(savedEdit.getBalancedQtyNew().subtract(savedEdit.getBalancedQty())));
-					existingExBond.setBalancedQty(existingExBond.getBalancedPackages().add(savedEdit.getBalancedQtyNew().subtract(savedEdit.getBalancedQty())));
-					existingExBond.setBalanceGw(existingExBond.getBalanceGw().add(savedEdit.getBalanceGw().subtract(savedEdit.getBalanceGwOld())));
-					existingExBond.setBalanceInsurance(existingExBond.getBalanceInsurance().add(savedEdit.getBalanceInsurance().subtract(savedEdit.getBalanceInsuranceOld())));
-					
-					existingExBond.setExBondedPackages(existingExBond.getExBondedPackages().add(savedEdit.getExBondedPackages().subtract(savedEdit.getExBondedPackagesOld())));
-					existingExBond.setExBondedCif(existingExBond.getExBondedCif().add(savedEdit.getExBondedCif().subtract(savedEdit.getExBondedCifOld())));
-					existingExBond.setExBondedCargoDuty(existingExBond.getExBondedCargoDuty().add(savedEdit.getExBondedCargoDuty().subtract(savedEdit.getExBondedCargoDutyOld())));
-					existingExBond.setExBondedInsurance(existingExBond.getExBondedInsurance().add(savedEdit.getExBondedInsurance().subtract(savedEdit.getExBondedInsuranceOld())));
-					existingExBond.setExBondedGw(existingExBond.getExBondedGw().add(savedEdit.getExBondedGw().subtract(savedEdit.getExBondedGwOld())));
-					
+//					existingExBond.setRemainingCargoDuty(existingExBond.getRemainingCargoDuty().add(savedEdit.getRemainingCargoDuty().subtract(savedEdit.getRemainingCargoDutyOld())));
+//					existingExBond.setRemainingCif(existingExBond.getRemainingCif().add(savedEdit.getRemainingCif().subtract(savedEdit.getRemainingCifOld())));
+//					existingExBond.setRemainingInsurance(existingExBond.getRemainingInsurance().add(savedEdit.getRemainingInsurance().subtract(savedEdit.getRemainingInsuranceOld())));
+//					existingExBond.setRemainingGw(existingExBond.getRemainingGw().add(savedEdit.getRemainingGw().subtract(savedEdit.getRemainingGwOld())));
+//					existingExBond.setRemainingPackages(existingExBond.getRemainingPackages().add(savedEdit.getRemainingPackages().subtract(savedEdit.getRemainingPackagesOld())));
+//					
+//					existingExBond.setBalanceCargoDuty(existingExBond.getBalanceCargoDuty().add(savedEdit.getBalanceCargoDuty().subtract(savedEdit.getBalanceCargoDutyOld())));
+//					existingExBond.setBalanceCif(existingExBond.getBalanceCif().add(savedEdit.getBalanceCif().subtract(savedEdit.getBalanceCifOld())));
+//					existingExBond.setBalancedPackages(existingExBond.getBalancedPackages().add(savedEdit.getBalancedQtyNew().subtract(savedEdit.getBalancedQty())));
+//					existingExBond.setBalancedQty(existingExBond.getBalancedPackages().add(savedEdit.getBalancedQtyNew().subtract(savedEdit.getBalancedQty())));
+//					existingExBond.setBalanceGw(existingExBond.getBalanceGw().add(savedEdit.getBalanceGw().subtract(savedEdit.getBalanceGwOld())));
+//					existingExBond.setBalanceInsurance(existingExBond.getBalanceInsurance().add(savedEdit.getBalanceInsurance().subtract(savedEdit.getBalanceInsuranceOld())));
+//					
+//					existingExBond.setExBondedPackages(existingExBond.getExBondedPackages().add(savedEdit.getExBondedPackages().subtract(savedEdit.getExBondedPackagesOld())));
+//					existingExBond.setExBondedCif(existingExBond.getExBondedCif().add(savedEdit.getExBondedCif().subtract(savedEdit.getExBondedCifOld())));
+//					existingExBond.setExBondedCargoDuty(existingExBond.getExBondedCargoDuty().add(savedEdit.getExBondedCargoDuty().subtract(savedEdit.getExBondedCargoDutyOld())));
+//					existingExBond.setExBondedInsurance(existingExBond.getExBondedInsurance().add(savedEdit.getExBondedInsurance().subtract(savedEdit.getExBondedInsuranceOld())));
+//					existingExBond.setExBondedGw(existingExBond.getExBondedGw().add(savedEdit.getExBondedGw().subtract(savedEdit.getExBondedGwOld())));
+				existingExBond.setRemainingCargoDuty(
+					    Optional.ofNullable(existingExBond.getRemainingCargoDuty()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getRemainingCargoDuty()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getRemainingCargoDutyOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setRemainingCif(
+					    Optional.ofNullable(existingExBond.getRemainingCif()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getRemainingCif()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getRemainingCifOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setRemainingInsurance(
+					    Optional.ofNullable(existingExBond.getRemainingInsurance()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getRemainingInsurance()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getRemainingInsuranceOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setRemainingGw(
+					    Optional.ofNullable(existingExBond.getRemainingGw()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getRemainingGw()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getRemainingGwOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setRemainingPackages(
+					    Optional.ofNullable(existingExBond.getRemainingPackages()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getRemainingPackages()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getRemainingPackagesOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setBalanceCargoDuty(
+					    Optional.ofNullable(existingExBond.getBalanceCargoDuty()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getBalanceCargoDuty()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getBalanceCargoDutyOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setBalanceCif(
+					    Optional.ofNullable(existingExBond.getBalanceCif()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getBalanceCif()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getBalanceCifOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setBalancedPackages(
+					    Optional.ofNullable(existingExBond.getBalancedPackages()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getBalancedQtyNew()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getBalancedQty()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setBalancedQty(
+					    Optional.ofNullable(existingExBond.getBalancedQty()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getBalancedQtyNew()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getBalancedQty()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setBalanceGw(
+					    Optional.ofNullable(existingExBond.getBalanceGw()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getBalanceGw()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getBalanceGwOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setBalanceInsurance(
+					    Optional.ofNullable(existingExBond.getBalanceInsurance()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getBalanceInsurance()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getBalanceInsuranceOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setExBondedPackages(
+					    Optional.ofNullable(existingExBond.getExBondedPackages()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getExBondedPackages()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getExBondedPackagesOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setExBondedCif(
+					    Optional.ofNullable(existingExBond.getExBondedCif()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getExBondedCif()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getExBondedCifOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setExBondedCargoDuty(
+					    Optional.ofNullable(existingExBond.getExBondedCargoDuty()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getExBondedCargoDuty()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getExBondedCargoDutyOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setExBondedInsurance(
+					    Optional.ofNullable(existingExBond.getExBondedInsurance()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getExBondedInsurance()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getExBondedInsuranceOld()).orElse(BigDecimal.ZERO))));
+
+					existingExBond.setExBondedGw(
+					    Optional.ofNullable(existingExBond.getExBondedGw()).orElse(BigDecimal.ZERO)
+					        .add(Optional.ofNullable(savedEdit.getExBondedGw()).orElse(BigDecimal.ZERO)
+					             .subtract(Optional.ofNullable(savedEdit.getExBondedGwOld()).orElse(BigDecimal.ZERO))));
+
 					
 					existingExBond.setEditedBy(user);
 					existingExBond.setStatus("A");
@@ -1196,21 +1359,40 @@ public class CfexbondcrgEditService {
 									CfinbondcrgHDRDtl findExistingHdrdtl = cfinbondCrgHdrDtlRepo.findExistingHdrdtl(
 											companyId, branchId, savedDtl.getNocTransId(), savedDtl.getNocNo(),
 											savedEdit.getInBondingId(), savedDtl.getCommodityId());
-
+//
+//									if (findExistingHdrdtl != null) {
+//										int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
+//												findExistingHdrdtl.getExBondedPackages() != null
+//														? findExistingHdrdtl.getExBondedPackages()
+//														: BigDecimal.ZERO.add(savedDtl.getNewBondPackages().subtract(
+//																savedDtl.getOldBondPackages())),
+//														
+//												companyId, branchId, savedEdit.getInBondingId(), savedDtl.getNocNo(),
+//												savedDtl.getNocTransId(), savedDtl.getBoeNo(), savedDtl.getCommodityId());
+//
+//										System.out.println(
+//												"Update row count after exbond details is" + updateCfInbondCrgHdrDtl);
+//
+//									}
+									
 									if (findExistingHdrdtl != null) {
-										int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
-												findExistingHdrdtl.getExBondedPackages() != null
-														? findExistingHdrdtl.getExBondedPackages()
-														: BigDecimal.ZERO.add(savedDtl.getNewBondPackages().subtract(
-																savedDtl.getOldBondPackages())),
-														
-												companyId, branchId, savedEdit.getInBondingId(), savedDtl.getNocNo(),
-												savedDtl.getNocTransId(), savedDtl.getBoeNo(), savedDtl.getCommodityId());
+									    int updateCfInbondCrgHdrDtl = cfinbondCrgHdrDtlRepo.updateCfinbondCrgDtlAfterExbond(
+									        Optional.ofNullable(findExistingHdrdtl.getExBondedPackages())
+									            .orElse(BigDecimal.ZERO)
+									            .add(savedDtl.getNewBondPackages().subtract(savedDtl.getOldBondPackages())),
+									        
+									        companyId, 
+									        branchId, 
+									        savedEdit.getInBondingId(), 
+									        savedDtl.getNocNo(), 
+									        savedDtl.getNocTransId(), 
+									        savedDtl.getBoeNo(), 
+									        savedDtl.getCommodityId()
+									    );
 
-										System.out.println(
-												"Update row count after exbond details is" + updateCfInbondCrgHdrDtl);
-
+									    System.out.println("Update row count after exbond details is " + updateCfInbondCrgHdrDtl);
 									}
+
 
 								}
 
@@ -1289,4 +1471,35 @@ public class CfexbondcrgEditService {
 
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

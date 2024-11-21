@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cwms.entities.CfexBondCrgDtl;
+import com.cwms.entities.CfinbondCommdtlEdit;
 import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.CfinbondcrgHDR;
 
 import jakarta.transaction.Transactional;
-
+import java.util.Date;
 import java.math.BigDecimal;
 import java.util.List;
 public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String> {
@@ -37,6 +38,15 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 	    );
 	
 	
+	
+	
+	@Query("SELECT b FROM CfinbondcrgDtl b WHERE b.companyId = :cid AND b.branchId = :bid AND b.inBondingId = :inBondingId AND b.nocTransId = :nocTransId")
+	public List<CfinbondcrgDtl> findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(
+	    @Param("cid") String cid, 
+	    @Param("bid") String bid, 
+	    @Param("inBondingId") String inBondingId, 
+	    @Param("nocTransId") String nocTransId
+	);
 	
 //	@Query("SELECT Distinct NEW com.cwms.entities.CfinbondcrgDtl(c.companyId, c.branchId, c.finYear, c.inBondingDtlId, c.inBondingId, " +
 //		       "c.nocTransId, c.nocNo, c.cfBondDtlId, c.boeNo, c.inBondingDate, c.nocTransDate, " +
@@ -74,6 +84,7 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 		       "AND c.nocNo = :nocNo " +
 		       "AND c.inBondingId = :inBondingId " +
 		       "AND c.boeNo = :boeNo " +
+		       "AND (c.inBondedPackages - COALESCE(c.exBondedPackages, 0) > 0) " +
 		       "AND c.status  = 'A' " +
 		       "GROUP BY c.inBondingId,c.cfBondDtlId,c.nocTransId ,c.nocNo")
 		List<CfinbondcrgDtl> getCfBondInBondDTLData(@Param("companyId") String companyId, 
@@ -84,8 +95,52 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 		                                     @Param("boeNo") String boeNo);
 	
 	
+	@Query("SELECT Distinct NEW com.cwms.entities.CfinbondcrgDtl(c.companyId, c.branchId, c.finYear, c.inBondingDtlId, c.inBondingId, " +
+		       "c.nocTransId, c.nocNo, c.cfBondDtlId, c.boeNo, c.inBondingDate, c.nocTransDate, " +
+		       "c.nocDate, c.bondingNo, c.bondingDate, c.nocPackages, c.typeOfPackage, " +
+		       "c.commodityDescription, c.exBondedPackages, c.inBondedPackages, c.inbondGrossWt, " +
+		       "c.inbondInsuranceValue, c.inbondCifValue, c.inbondCargoDuty, c.status, c.createdBy, " +
+		       "c.editedBy, c.approvedBy, c.yardLocationId, c.blockId, c.cellNoRow, c.areaOccupied,c.exBondedCIF,c.exBondedCargoDuty,c.exBondedInsurance,c.exBondedGW,c.yardPackages,c.cellAreaAllocated,c.cellArea,cd.exBondyardPackages,cd.exBondGridArea) " +
+		       "FROM CfinbondcrgDtl c " +
+		       "LEFT OUTER JOIN CfexBondCrgDtl cd ON c.companyId = cd.companyId AND c.branchId = cd.branchId AND c.nocTransId = cd.nocTransId AND c.nocNo = cd.nocNo AND c.cfBondDtlId = cd.cfBondDtlId AND c.inBondingId =cd.inBondingId " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.nocTransId = :nocTransId " +
+		       "AND c.nocNo = :nocNo " +
+		       "AND c.inBondingId = :inBondingId " +
+		       "AND c.boeNo = :boeNo " +
+		       "AND (c.inBondedPackages - COALESCE(c.exBondedPackages, 0) > 0) " +
+		       "AND c.status  = 'A' " +
+		       "GROUP BY c.inBondingId,c.cfBondDtlId,c.nocTransId ,c.nocNo")
+		List<CfinbondcrgDtl> getCfBondInBondDTLDataToCheck(@Param("companyId") String companyId, 
+		                                     @Param("branchId") String branchId, 
+		                                     @Param("nocTransId") String nocTransId, 
+		                                     @Param("nocNo") String nocNo,
+		                                     @Param("inBondingId") String inBondingId, 
+		                                     @Param("boeNo") String boeNo);
 	
 	
+	@Query("SELECT Distinct NEW com.cwms.entities.CfinbondcrgDtl(c.companyId, c.branchId, c.finYear, c.inBondingDtlId, c.inBondingId, " +
+		       "c.nocTransId, c.nocNo, c.cfBondDtlId, c.boeNo, c.inBondingDate, c.nocTransDate, " +
+		       "c.nocDate, c.bondingNo, c.bondingDate, c.nocPackages, c.cifValue, c.cargoDuty, cd.insuranceValue, " +
+		       "c.grossWeight, c.typeOfPackage, c.commodityDescription, c.exBondedPackages, c.toBondedPackages, c.comments, " +
+		       "c.inBondedPackages, c.inbondGrossWt, c.inbondInsuranceValue, c.inbondCifValue, c.inbondCargoDuty, " +
+		       "c.status, c.createdBy, c.createdDate, c.editedBy, c.editedDate, c.approvedBy, c.approvedDate, " +
+		       "c.shortagePackages, c.damagedQty, c.breakage, c.yardLocationId, c.blockId, c.cellNoRow, c.areaOccupied, " +
+		       "c.yardPackages, c.cellAreaAllocated, c.cellArea, cd.gateInPackages) " +
+		       "FROM CfinbondcrgDtl c " +
+		       "LEFT OUTER JOIN CfBondNocDtl cd ON c.companyId = cd.companyId AND c.branchId = cd.branchId AND c.nocTransId = cd.nocTransId AND c.nocNo = cd.nocNo AND c.cfBondDtlId = cd.cfBondDtlId " +
+		       "WHERE c.companyId = :companyId " +
+		       "AND c.branchId = :branchId " +
+		       "AND c.inBondingId = :inBondingId " +
+		       "AND c.nocTransId = :nocTransId " +
+		       "AND c.status = 'A' " +
+		       "GROUP BY c.inBondingId, c.cfBondDtlId, c.nocTransId, c.nocNo")
+		List<CfinbondcrgDtl> getAfterSave( @Param("companyId") String companyId, 
+			    @Param("branchId") String branchId, 
+			    @Param("inBondingId") String inBondingId, 
+			    @Param("nocTransId") String nocTransId);
+
 	
 	
 	
@@ -173,4 +228,27 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 		                            @Param("cfBondDtlId") String cfBondDtlId,
 		                            @Param("nocTransId") String nocTransId);
 	
+	
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE CfinbondcrgDtl c SET c.boeNo = :boeNo, " +
+	       "c.bondingNo = :bondingNo, " +
+	       "c.bondingDate = :bondingDate " +
+	       "WHERE c.companyId = :companyId AND " +
+	       "c.branchId = :branchId AND " +
+	       "c.inBondingId = :inBondingId AND " +
+	       "c.nocNo = :nocNo AND " +
+	       "c.nocTransId = :nocTransId ")
+	int updateCfinbondCrgDtlAfterInBondAuditTrailHeaderChange(
+	    @Param("boeNo") String boeNo,
+	    @Param("bondingNo") String bondingNo,
+	    @Param("bondingDate") Date bondingDate,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("inBondingId") String inBondingId,
+	    @Param("nocNo") String nocNo,
+	    @Param("nocTransId") String nocTransId
+	);
 }

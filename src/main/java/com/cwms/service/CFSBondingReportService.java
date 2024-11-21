@@ -848,7 +848,7 @@ public class CFSBondingReportService {
 		        	    "Damage Remark", 
 		        	    "Short Pkgs", 
 		        	    "Damage Pkg",
-		        	    "Brakage Pkg"
+		        	    "Breakage Pkg"
 		        	};
 
 	
@@ -1148,7 +1148,7 @@ public class CFSBondingReportService {
 	                        cell.setCellValue(dmg != null ? dmg.doubleValue() : 0);
 	                        cell.setCellStyle(numberCellStyle);
 	                        break;
-	                    case   "Brakage Pkg" :
+	                    case   "Breakage Pkg" :
 	                        BigDecimal brakage = resultData1.getBreakage();
 	                        totalBrakageValue = totalBrakageValue.add(brakage != null ? brakage : BigDecimal.ZERO);
 	                        cell.setCellValue(brakage != null ? brakage.doubleValue() : 0);
@@ -1236,7 +1236,7 @@ public class CFSBondingReportService {
 		                case "Damage Pkg":
 		                    totalCell.setCellValue(totalDamagedWeight.doubleValue());
 		                    break;
-		                case   "Brakage Pkg" :
+		                case   "Breakage Pkg" :
 		                    totalCell.setCellValue(totalBrakageValue.doubleValue());
 		                    break;
 		             
@@ -2382,7 +2382,7 @@ public class CFSBondingReportService {
 		                case "Damage Pkg":
 		                    totalCell.setCellValue(totalDamagedWeight.doubleValue());
 		                    break;
-		                case   "Brakage Pkg" :
+		                case   "Breakage Pkg" :
 		                    totalCell.setCellValue(totalBrakageValue.doubleValue());
 		                    break;
 		             
@@ -2707,7 +2707,7 @@ public class CFSBondingReportService {
 //	                        cell.setCellValue(dmg != null ? dmg.doubleValue() : 0);
 //	                        cell.setCellStyle(numberCellStyle);
 //	                        break;
-//	                    case   "Brakage Pkg" :
+//	                    case   "Breakage Pkg" :
 //	                        BigDecimal brakage = resultData1.getBreakage();
 //	                        totalBrakageValue = totalBrakageValue.add(brakage != null ? brakage : BigDecimal.ZERO);
 //	                        cell.setCellValue(brakage != null ? brakage.doubleValue() : 0);
@@ -2789,7 +2789,7 @@ public class CFSBondingReportService {
 		                case "Damage Pkg":
 		                    totalCell.setCellValue(totalDamagedWeight1.doubleValue());
 		                    break;
-		                case   "Brakage Pkg" :
+		                case   "Breakage Pkg" :
 		                    totalCell.setCellValue(totalBrakageValue1.doubleValue());
 		                    break;
 		             
@@ -6228,4 +6228,38 @@ public class CFSBondingReportService {
 			cell.setCellStyle(cellStyle);
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
 }

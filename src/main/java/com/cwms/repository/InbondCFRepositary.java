@@ -30,6 +30,7 @@ public interface InbondCFRepositary extends JpaRepository<Cfinbondcrg, String> {
         @Param("branchId") String branchId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
+        
 @Query(value = "SELECT COUNT(*) AS count, " 
         + "COALESCE(SUM(CIF_Value), 0) AS cifValueSum, "
 		+ "COALESCE(SUM(Cargo_Duty), 0) AS cargoDutySum " 
@@ -439,4 +440,221 @@ List<Object[]> getLiveBreckUp1(@Param("cid") String cid,
 		@Param("end2y") Date end2y,
 		@Param("start3y") Date start3y
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Query(value = "SELECT n1.boe_no, DATE_FORMAT(n1.BOE_Date,'%d.%m.%Y'), n1.Source_Port, n1.bonding_no, "
+		+ "DATE_FORMAT(n1.bonding_date,'%d.%m.%Y'), n2.commodity_description, n2.In_Bonded_Packages, n2.type_of_package, DATE_FORMAT(n1.in_bonding_date,'%d.%m.%Y'), "
+		+ "n2.noc_packages, n2.inbond_gross_wt, n2.inbond_cif_value, n2.inbond_cargo_duty, 'NA', 'NA', n1.otl_no, "
+		+ "n2.In_Bonded_Packages, (n2.breakage + n2.damaged_qty), n2.shortage_packages, DATE_FORMAT(n1.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(n1.Extension_Date1,'%d.%m.%Y'), n1.section_64, 'NA', e.ex_bond_be_no, DATE_FORMAT(e.ex_bond_be_date,'%d.%m.%Y'), e1.ex_bonded_packages, "
+		+ "e1.ex_bonded_cif, e1.ex_bonded_cargo_duty, e.Balanced_Packages, e.Balance_CIF, e.Balance_Cargo_Duty, 'NA',e.ex_bond_type "
+		+ "FROM cfinbondcrg n1 "
+		+ "LEFT JOIN cfinbondcrg_dtl n2 ON n1.company_id=n2.company_id AND n1.branch_id=n2.branch_id AND n1.noc_no=n2.noc_no "
+		+ "AND n1.noc_trans_id=n2.noc_trans_id AND n1.boe_no=n2.boe_no AND n1.in_bonding_id=n2.in_bonding_id "
+		+ "LEFT JOIN cfexbondcrg e ON n2.company_id=e.company_id AND n2.branch_id=e.branch_id AND n2.noc_no=e.noc_no "
+		+ "AND n2.noc_trans_id=e.noc_trans_id AND n2.boe_no=e.boe_no AND n2.in_bonding_id=e.in_bonding_id "
+		+ "LEFT JOIN cfexbondcrgdtl e1 ON e.company_id=e1.company_id AND e.branch_id=e1.branch_id AND e.noc_no=e1.noc_no "
+		+ "AND e.noc_trans_id=e1.noc_trans_id AND e.boe_no=e1.boe_no AND e.ex_bonding_id=e1.ex_bonding_id "
+		+ "WHERE n1.company_id = :cid AND n1.branch_id = :bid AND (n1.ex_bonded_packages = 0 OR (n1.ex_bonded_packages != 0 && (n1.in_bonded_packages - n1.ex_bonded_packages) > 0)) "
+		+ "AND ( CASE WHEN Date(n1.Extension_Date3) >= :endDate THEN 1 WHEN Date(n1.Extension_Date2) >= :endDate THEN 1 "
+		+ "WHEN Date(n1.Extension_Date1) >= :endDate THEN 1 WHEN Date(n1.bond_validity_date)>= :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND Date(n1.in_bonding_date) <= :startDate AND n1.status != 'D' AND n2.status != 'D' "
+		+ "AND (n1.boe_no,n1.in_bonding_id) "
+		+ "NOT IN (select a.boe_no,a.in_bonding_id from cfinbondcrg a "
+		+ "LEFT JOIN cfexbondcrg b ON a.company_id = b.company_id "
+		+ "and a.branch_id = b.branch_id and a.noc_no=b.noc_no and a.noc_trans_id = b.noc_trans_id and a.boe_no = b.boe_no "
+		+ "and a.in_bonding_id = b.in_bonding_id where a.company_id= :cid and a.branch_id= :bid and Date(b.ex_bonding_date) "
+		+ "between :startDate and :endDate and b.Balanced_Packages = 0 and a.status != 'D' and b.status != 'D') "
+		+ "GROUP BY n1.boe_no, n1.BOE_Date, n1.Source_Port, n1.bonding_no, n1.bonding_date, n2.cfbond_detail_id,n1.in_bonding_id, "
+		
+		+ "n2.In_Bonded_Packages, n2.type_of_package, n1.in_bonding_date,n2.noc_packages, n2.inbond_gross_wt, n2.inbond_cif_value, n2.inbond_cargo_duty, "
+		+ "n1.otl_no, n2.In_Bonded_Packages, n2.breakage, n2.damaged_qty, n2.shortage_packages, n1.bond_validity_date, n1.Extension_Date1, "
+		+ "n1.section_64, e.ex_bond_be_no, e.ex_bond_be_date, e1.ex_bonded_packages, e1.ex_bonded_cif, e1.ex_bonded_cargo_duty, "
+		+ "e.Balanced_Packages, e.Balance_CIF, e.Balance_Cargo_Duty,e.ex_bond_type " 
+		+ "UNION "
+		+ "SELECT n1.boe_no, DATE_FORMAT(n1.BOE_Date,'%d.%m.%Y'), n1.Source_Port, n1.bonding_no, "
+		+ "DATE_FORMAT(n1.bonding_date,'%d.%m.%Y'), n2.commodity_description, n2.In_Bonded_Packages, n2.type_of_package, DATE_FORMAT(n1.in_bonding_date,'%d.%m.%Y'), "
+		+ "n2.noc_packages, n2.inbond_gross_wt, n2.inbond_cif_value, n2.inbond_cargo_duty, 'NA', 'NA', n1.otl_no, "
+		+ "n2.In_Bonded_Packages, (n2.breakage + n2.damaged_qty), n2.shortage_packages, DATE_FORMAT(n1.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(n1.Extension_Date1,'%d.%m.%Y'), n1.section_64, 'NA', e.ex_bond_be_no, DATE_FORMAT(e.ex_bond_be_date,'%d.%m.%Y'), e1.ex_bonded_packages, "
+		+ "e1.ex_bonded_cif, e1.ex_bonded_cargo_duty, e.Balanced_Packages, e.Balance_CIF, e.Balance_Cargo_Duty, 'NA',e.ex_bond_type "
+		+ "FROM cfinbondcrg n1 "
+		+ "LEFT JOIN cfinbondcrg_dtl n2 ON n1.company_id=n2.company_id AND n1.branch_id=n2.branch_id AND n1.noc_no=n2.noc_no "
+		+ "AND n1.noc_trans_id=n2.noc_trans_id AND n1.boe_no=n2.boe_no AND n1.in_bonding_id=n2.in_bonding_id "
+		+ "LEFT JOIN cfexbondcrg e ON n2.company_id=e.company_id AND n2.branch_id=e.branch_id AND n2.noc_no=e.noc_no "
+		+ "AND n2.noc_trans_id=e.noc_trans_id AND n2.boe_no=e.boe_no AND n2.in_bonding_id=e.in_bonding_id "
+		+ "LEFT JOIN cfexbondcrgdtl e1 ON e.company_id=e1.company_id AND e.branch_id=e1.branch_id AND e.noc_no=e1.noc_no "
+		+ "AND e.noc_trans_id=e1.noc_trans_id AND e.boe_no=e1.boe_no AND e.ex_bonding_id=e1.ex_bonding_id "
+		+ "WHERE n1.company_id = :cid AND n1.branch_id = :bid AND (e.Balanced_Packages > 0 AND Date(n1.in_bonding_date) <= :startDate AND Date(e.ex_bonding_date)<=:startDate) "
+		+ "AND ( CASE WHEN Date(n1.Extension_Date3) >= :endDate THEN 1 WHEN Date(n1.Extension_Date2) >= :endDate THEN 1 "
+		+ "WHEN Date(n1.Extension_Date1) >= :endDate THEN 1 WHEN Date(n1.bond_validity_date)>= :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND (n1.boe_no,n1.in_bonding_id) "
+		+ "NOT IN (select a.boe_no,a.in_bonding_id from cfinbondcrg a "
+		+ "LEFT JOIN cfexbondcrg b ON a.company_id = b.company_id "
+		+ "and a.branch_id = b.branch_id and a.noc_no=b.noc_no and a.noc_trans_id = b.noc_trans_id and a.boe_no = b.boe_no "
+		+ "and a.in_bonding_id = b.in_bonding_id where a.company_id= :cid and a.branch_id= :bid and Date(b.ex_bonding_date) "
+		+ "between :startDate and :endDate and b.Balanced_Packages = 0 and a.status != 'D' and b.status != 'D') "
+		+ "AND e.status != 'D' AND n2.status != 'D' " 
+		+ "UNION "
+		+ "SELECT n1.boe_no, DATE_FORMAT(n1.BOE_Date,'%d.%m.%Y'), n1.Source_Port, n1.bonding_no, "
+		+ "DATE_FORMAT(n1.bonding_date,'%d.%m.%Y'), n2.commodity_description, n2.In_Bonded_Packages, n2.type_of_package, DATE_FORMAT(n1.in_bonding_date,'%d.%m.%Y'), "
+		+ "n2.noc_packages, n2.inbond_gross_wt, n2.inbond_cif_value, n2.inbond_cargo_duty, 'NA', 'NA', n1.otl_no, "
+		+ "n2.In_Bonded_Packages, (n2.breakage + n2.damaged_qty), n2.shortage_packages, DATE_FORMAT(n1.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(n1.Extension_Date1,'%d.%m.%Y'), n1.section_64, 'NA', e.ex_bond_be_no, DATE_FORMAT(e.ex_bond_be_date,'%d.%m.%Y'), e1.ex_bonded_packages, "
+		+ "e1.ex_bonded_cif, e1.ex_bonded_cargo_duty, e.Balanced_Packages, e.Balance_CIF, e.Balance_Cargo_Duty, 'NA',e.ex_bond_type "
+		+ "FROM cfinbondcrg n1 "
+		+ "LEFT JOIN cfinbondcrg_dtl n2 ON n1.company_id = n2.company_id AND n1.branch_id = n2.branch_id AND n1.noc_no = n2.noc_no "
+		+ "AND n1.noc_trans_id = n2.noc_trans_id AND n1.boe_no = n2.boe_no AND n1.in_bonding_id = n2.in_bonding_id "
+		+ "LEFT JOIN cfexbondcrg e ON n2.company_id = e.company_id AND n2.branch_id = e.branch_id AND n2.noc_no = e.noc_no "
+		+ "AND n2.noc_trans_id = e.noc_trans_id AND n2.boe_no = e.boe_no AND n2.in_bonding_id = e.in_bonding_id "
+		+ "LEFT JOIN cfexbondcrgdtl e1 ON e.company_id = e1.company_id AND e.branch_id = e1.branch_id AND e.noc_no = e1.noc_no "
+		+ "AND e.noc_trans_id = e1.noc_trans_id AND e.boe_no = e1.boe_no AND e.ex_bonding_id = e1.ex_bonding_id "
+		+ "WHERE n1.company_id = :cid AND n1.branch_id = :bid "
+		+ "AND ((e.company_id IS NOT NULL AND Date(e.ex_bonding_date) BETWEEN :startDate AND :endDate AND e.status != 'D') "
+		+ "OR (Date(n1.in_bonding_date) BETWEEN :startDate AND :endDate)) "
+		+ "AND ( CASE WHEN Date(n1.Extension_Date3) >= :endDate THEN 1 WHEN Date(n1.Extension_Date2) >= :endDate THEN 1 "
+		+ "WHEN Date(n1.Extension_Date1) >= :endDate THEN 1 WHEN Date(n1.bond_validity_date)>= :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND n2.status != 'D' AND n1.status != 'D'", nativeQuery = true)
+List<Object[]> getCustomQueryResults(@Param("cid") String cid, @Param("bid") String bid,
+		@Param("startDate") Date start, @Param("endDate") Date end);
+
+
+
+@Query(value = "SELECT i.boe_no, DATE_FORMAT(i.boe_date,'%d.%m.%Y'), i.bonding_no, "
+		+ "DATE_FORMAT(i.bonding_date,'%d.%m.%Y'), i.importer_name, p.party_name, "
+		+ "i1.commodity_description, i1.In_Bonded_Packages, i1.inbond_cif_value, "
+		+ "i1.inbond_cargo_duty, DATE_FORMAT(i.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(i.Extension_Date1,'%d.%m.%Y') " 
+		+ "FROM cfinbondcrg i "
+		+ "LEFT JOIN cfinbondcrg_dtl i1 ON i.company_id = i1.company_id "
+		+ "AND i.branch_id = i1.branch_id AND i.noc_no = i1.noc_no "
+		+ "AND i.noc_trans_id = i1.noc_trans_id AND i.boe_no = i1.boe_no "
+		+ "AND i.in_bonding_id = i1.in_bonding_id "
+		+ "LEFT JOIN party p ON i.company_id = p.company_id and i.branch_id=p.branch_id and i.cha = p.party_id "
+		+ "WHERE i.company_id = :cid AND i.branch_id = :bid "
+		+ "AND (i.ex_bonded_packages = 0 OR (i.ex_bonded_packages != 0 "
+		+ "AND (i.in_bonded_packages - i.ex_bonded_packages) > 0)) "
+		+ "AND (CASE WHEN DATE(i.Extension_Date3) <= :endDate THEN 1 " 
+		+ "WHEN DATE(i.Extension_Date2) <= :endDate THEN 1 "
+		+ "WHEN DATE(i.Extension_Date1) <= :endDate THEN 1 "
+		+ "WHEN DATE(i.bond_validity_date) <= :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND DATE(i.in_bonding_date) <= :endDate AND i.status != 'D' AND i1.status != 'D' " + "UNION "
+		+ "SELECT i.boe_no, DATE_FORMAT(i.boe_date,'%d.%m.%Y'), i.bonding_no, "
+		+ "DATE_FORMAT(i.bonding_date,'%d.%m.%Y'), i.importer_name, p9.party_name, "
+		+ "i1.commodity_description, i1.In_Bonded_Packages, i1.inbond_cif_value, "
+		+ "i1.inbond_cargo_duty, DATE_FORMAT(i.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(i.Extension_Date1,'%d.%m.%Y') "
+		+ "FROM cfinbondcrg i "
+		+ "LEFT JOIN cfinbondcrg_dtl i1 ON i.company_id = i1.company_id "
+		+ "AND i.branch_id = i1.branch_id AND i.noc_no = i1.noc_no "
+		+ "AND i.noc_trans_id = i1.noc_trans_id AND i.boe_no = i1.boe_no "
+		+ "AND i.in_bonding_id = i1.in_bonding_id " 
+		+ "LEFT JOIN cfexbondcrg e ON i1.company_id = e.company_id "
+		+ "AND i1.branch_id = e.branch_id AND i1.noc_no = e.noc_no "
+		+ "AND i1.noc_trans_id = e.noc_trans_id AND i1.boe_no = e.boe_no "
+		+ "AND i1.in_bonding_id = e.in_bonding_id " 
+		+ "LEFT JOIN party p9 ON i.company_id = p9.company_id and i.branch_id=p9.branch_id and i.cha = p9.party_id "
+		+ "WHERE i.company_id = :cid AND i.branch_id = :bid "
+		+ "AND (CASE WHEN DATE(i.Extension_Date3) <= :endDate THEN 1 " 
+		+ "WHEN DATE(i.Extension_Date2) <= :endDate THEN 1 "
+		+ "WHEN DATE(i.Extension_Date1) <= :endDate THEN 1 "
+		+ "WHEN DATE(i.bond_validity_date) <= :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND e.Balanced_Packages > 0 AND DATE(i.in_bonding_date) <= :endDate "
+		+ "AND DATE(e.ex_bonding_date) <= :endDate AND i.status != 'D' "
+		+ "AND i1.status != 'D' AND e.status != 'D'", nativeQuery = true)
+List<Object[]> getCustomQueryResults1(@Param("cid") String cid, @Param("bid") String bid,
+		@Param("endDate") Date end);
+
+
+
+@Query(value = "SELECT i.boe_no, DATE_FORMAT(i.boe_date,'%d.%m.%Y'), i.bonding_no, "
+		+ "DATE_FORMAT(i.bonding_date,'%d.%m.%Y'), i.importer_name, p.party_name, "
+		+ "i1.commodity_description, i1.In_Bonded_Packages, i1.inbond_cif_value, "
+		+ "i1.inbond_cargo_duty, DATE_FORMAT(i.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(i.Extension_Date1,'%d.%m.%Y') " 
+		+ "FROM cfinbondcrg i "
+		+ "LEFT JOIN cfinbondcrg_dtl i1 ON i.company_id = i1.company_id "
+		+ "AND i.branch_id = i1.branch_id AND i.noc_no = i1.noc_no "
+		+ "AND i.noc_trans_id = i1.noc_trans_id AND i.boe_no = i1.boe_no "
+		+ "AND i.in_bonding_id = i1.in_bonding_id " 
+		+ "LEFT JOIN party p ON i.company_id = p.company_id and i.branch_id=p.branch_id and i.cha = p.party_id "
+		+ "WHERE i.company_id = :cid AND i.branch_id = :bid "
+		+ "AND (i.ex_bonded_packages = 0 OR (i.ex_bonded_packages != 0 "
+		+ "AND (i.in_bonded_packages - i.ex_bonded_packages) > 0)) "
+		+ "AND (CASE WHEN DATE(i.Extension_Date3) between :startDate and :endDate THEN 1 "
+		+ "WHEN DATE(i.Extension_Date2) between :startDate and :endDate THEN 1 "
+		+ "WHEN DATE(i.Extension_Date1) between :startDate and :endDate THEN 1 "
+		+ "WHEN DATE(i.bond_validity_date) between :startDate and :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND DATE(i.in_bonding_date) <= :endDate AND i.status != 'D' AND i1.status != 'D' " + "UNION "
+		+ "SELECT i.boe_no, DATE_FORMAT(i.boe_date,'%d.%m.%Y'), i.bonding_no, "
+		+ "DATE_FORMAT(i.bonding_date,'%d.%m.%Y'), i.importer_name, p1.party_name, "
+		+ "i1.commodity_description, i1.In_Bonded_Packages, i1.inbond_cif_value, "
+		+ "i1.inbond_cargo_duty, DATE_FORMAT(i.bond_validity_date,'%d.%m.%Y'), "
+		+ "DATE_FORMAT(i.Extension_Date1,'%d.%m.%Y') " 
+		+ "FROM cfinbondcrg i "
+		+ "LEFT JOIN cfinbondcrg_dtl i1 ON i.company_id = i1.company_id "
+		+ "AND i.branch_id = i1.branch_id AND i.noc_no = i1.noc_no "
+		+ "AND i.noc_trans_id = i1.noc_trans_id AND i.boe_no = i1.boe_no "
+		+ "AND i.in_bonding_id = i1.in_bonding_id " 
+		+ "LEFT JOIN cfexbondcrg e ON i1.company_id = e.company_id "
+		+ "AND i1.branch_id = e.branch_id AND i1.noc_no = e.noc_no "
+		+ "AND i1.noc_trans_id = e.noc_trans_id AND i1.boe_no = e.boe_no "
+		+ "AND i1.in_bonding_id = e.in_bonding_id " 
+		+ "LEFT JOIN party p1 ON i.company_id = p1.company_id and i.branch_id=p1.branch_id and i.cha = p1.party_id "
+		+ "WHERE i.company_id = :cid AND i.branch_id = :bid "
+		+ "AND (CASE WHEN DATE(i.Extension_Date3) between :startDate and :endDate THEN 1 "
+		+ "WHEN DATE(i.Extension_Date2) between :startDate and :endDate THEN 1 "
+		+ "WHEN DATE(i.Extension_Date1) between :startDate and :endDate THEN 1 "
+		+ "WHEN DATE(i.bond_validity_date) <= :endDate THEN 1 ELSE 0 END) = 1 "
+		+ "AND e.Balanced_Packages > 0 AND DATE(i.in_bonding_date) <= :endDate "
+		+ "AND DATE(e.ex_bonding_date) <= :endDate AND i.status != 'D' "
+		+ "AND i1.status != 'D' AND e.status != 'D'", nativeQuery = true)
+List<Object[]> getCustomQueryResults2(@Param("cid") String cid, @Param("bid") String bid,
+		@Param("startDate") Date start, @Param("endDate") Date end);
+
+
 }

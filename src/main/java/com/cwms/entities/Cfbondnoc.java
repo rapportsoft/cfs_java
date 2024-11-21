@@ -389,6 +389,18 @@ public class Cfbondnoc {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date bondValidityDate;
+	
+	@Column(name = "Vessel_Id", length = 25)
+	private String vesselId;
+
+
+	public String getVesselId() {
+		return vesselId;
+	}
+
+	public void setVesselId(String vesselId) {
+		this.vesselId = vesselId;
+	}
 
 	public String getBondingNo() {
 		return bondingNo;
@@ -1299,6 +1311,11 @@ public class Cfbondnoc {
 		this.storedCifValue = storedCifValue;
 	}
 
+
+
+	
+	
+	
 	public Cfbondnoc(String companyId, String branchId, String nocTransId, String profitcentreId, Date nocTransDate,
 			String nocNo, Date nocDate, String shift, String source, String gateInId, String igmTransId, String igmNo,
 			Date igmDate, String igmLineNo, String boeNo, Date boeDate, String shippingAgent, String shippingLine,
@@ -1321,7 +1338,7 @@ public class Cfbondnoc {
 			Date invoiceUptoDate, String lastInvoiceAssesed, BigDecimal lastBillAmt, BigDecimal lastInvoiceAmt,
 			String lastCreditType, String newCommodity, String ssrTransId, BigDecimal inbondGrossWt,
 			BigDecimal inbondInsuranceValue, BigDecimal inbondCifValue, BigDecimal inbondCargoDuty, String bondingNo,
-			Date bondingDate, Date bondValidityDate) {
+			Date bondingDate, Date bondValidityDate, String vesselId) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1436,6 +1453,7 @@ public class Cfbondnoc {
 		this.bondingNo = bondingNo;
 		this.bondingDate = bondingDate;
 		this.bondValidityDate = bondValidityDate;
+		this.vesselId = vesselId;
 	}
 
 	@Override
@@ -1476,9 +1494,11 @@ public class Cfbondnoc {
 				+ ", lastCreditType=" + lastCreditType + ", newCommodity=" + newCommodity + ", ssrTransId=" + ssrTransId
 				+ ", inbondGrossWt=" + inbondGrossWt + ", inbondInsuranceValue=" + inbondInsuranceValue
 				+ ", inbondCifValue=" + inbondCifValue + ", inbondCargoDuty=" + inbondCargoDuty + ", bondingNo="
-				+ bondingNo + ", bondingDate=" + bondingDate + ", bondValidityDate=" + bondValidityDate + "]";
+				+ bondingNo + ", bondingDate=" + bondingDate + ", bondValidityDate=" + bondValidityDate + ", vesselId="
+				+ vesselId + "]";
 	}
 
+	// Constructor for getting data on nocScreen using radio button 
 	public Cfbondnoc(String companyId, String branchId, String nocTransId, Date nocTransDate, String profitcentreId,
 			String nocNo, Date nocDate, String source, String gateInId, String igmTransId, String igmNo, Date igmDate,
 			String igmLineNo, String boeNo, Date boeDate, String importerId, String importerName,
@@ -1486,7 +1506,7 @@ public class Cfbondnoc {
 			Date nocValidityDate, Date nocFromDate, Date licenceValidDate, String uom, BigDecimal nocPackages,
 			BigDecimal area, BigDecimal cifValue, BigDecimal cargoDuty, BigDecimal insuranceValue,
 			BigDecimal insuranceAmt, String status, String createdBy,String editedBy, String approvedBy, String cha, String chaCode,
-			String nocWeek, BigDecimal gateInPackages,String noOf20ft, String noOf40ft,String numberOfMarks) {
+			String nocWeek, BigDecimal gateInPackages,String noOf20ft, String noOf40ft,String numberOfMarks,String sourcePort,String vesselId) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1530,6 +1550,8 @@ public class Cfbondnoc {
 		this.noOf20ft = noOf20ft;
 		this.noOf40ft = noOf40ft;
 		this.numberOfMarks = numberOfMarks;
+		this.sourcePort=sourcePort;
+		this.vesselId=vesselId;
 	}
 
 	// constructor for NOC Certificate

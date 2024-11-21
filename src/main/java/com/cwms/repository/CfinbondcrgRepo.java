@@ -49,7 +49,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.examinationId, c.comments, " +
 		       "c.cifValue, c.cargoDuty, c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, c.inBond40Ft, " +
 		       "c.exBond20Ft, c.exBond40Ft, c.otlNo, c.bondYard, c.status, c.createdBy, c.createdDate, c.editedBy, c.editedDate, " +
-		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage,c.extenstionDate1,c.extenstionDate2,c.extenstionDate3) " +
+		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage,c.extenstionDate1,c.extenstionDate2,c.extenstionDate3,c.sourcePort,c.section64,c.section60) " +
 		       "FROM Cfinbondcrg c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.inBondingId = :inBondingId AND c.nocNo = :nocNo AND c.status !='D' " +
@@ -72,7 +72,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.examinationId, c.comments, " +
 		       "c.cifValue, c.cargoDuty, c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, c.inBond40Ft, " +
 		       "c.exBond20Ft, c.exBond40Ft, c.otlNo, c.bondYard, c.status, c.createdBy, c.createdDate, c.editedBy, c.editedDate, " +
-		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage,c.extenstionDate1,c.extenstionDate2,c.extenstionDate3) " +
+		       "c.approvedBy, c.approvedDate, c.shortagePackages, c.damagedQty, c.breakage,c.extenstionDate1,c.extenstionDate2,c.extenstionDate3,c.sourcePort,c.section64,c.section60) " +
 		       "FROM Cfinbondcrg c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "WHERE c.companyId = :companyId " +

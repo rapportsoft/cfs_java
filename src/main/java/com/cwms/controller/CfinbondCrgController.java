@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.Cfbondnoc;
+import com.cwms.entities.CfinbondCommdtlEdit;
 import com.cwms.entities.Cfinbondcrg;
+import com.cwms.entities.CfinbondcrgDtl;
 import com.cwms.entities.CfinbondcrgHDR;
 import com.cwms.entities.Party;
 import com.cwms.service.CfinbondCrgService;
@@ -51,7 +53,16 @@ public class CfinbondCrgController {
 	    }
 	 
 	 
-	 
+		@GetMapping("/findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId")
+		public ResponseEntity<List<CfinbondcrgDtl>>  findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(
+				@RequestParam ("companyId") String companyId,
+				@RequestParam ("branchId") String branchId,
+				@RequestParam ("inBondingId") String inBondingId,
+				@RequestParam ("nocTransId") String nocTransId) {
+			
+			return cfinbondCrgService.findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(companyId, branchId, inBondingId,nocTransId);
+		}
+		
 	 
 	 
 	 @GetMapping("/searchHdr")

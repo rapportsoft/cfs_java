@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hibernate.query.NativeQuery.ReturnableResultNode;
@@ -222,16 +223,32 @@ public class CfbondGatePassService {
 						if(saved!=null) 
 						
 						{
+							CfexBondCrgDtl existing = cfExBondCrgDtlRepository.findExistingCfexbondCrgDtl(companyId, branchId, saved.getNocTransId(),saved.getNocNo(),
+									saved.getCommodity(),saved.getInBondingId(),saved.getExBondingId());
 							
-							int updateCfExbondcrgDtlAfterGatePass = cfExBondCrgDtlRepository.updateCfexbondDtlAfterGatePass(
-									saved.getQtyTakenOut(), companyId, branchId, saved.getExBondingId(),
-									saved.getExBondBeNo(), saved.getCommodity());
+							if(existing!=null)
+							{
+								 BigDecimal updatedQty = Optional.ofNullable(existing.getOutQty()).orElse(BigDecimal.ZERO)
+								            .add(Optional.ofNullable(saved.getQtyTakenOut()).orElse(BigDecimal.ZERO));
+								    
+								int updateCfExbondcrgDtlAfterGatePass = cfExBondCrgDtlRepository.updateCfexbondDtlAfterGatePass(
+										updatedQty,
+										companyId, branchId, saved.getExBondingId(),
+										saved.getExBondBeNo(), saved.getCommodity());
 
-							System.out.println(
-									"Update row count after exbond details is" + updateCfExbondcrgDtlAfterGatePass);
-							
-							
-							
+								System.out.println(
+										"Update row count after exbond details is" + updateCfExbondcrgDtlAfterGatePass);
+							}
+							else
+							{
+								int updateCfExbondcrgDtlAfterGatePass = cfExBondCrgDtlRepository.updateCfexbondDtlAfterGatePass(
+										saved.getQtyTakenOut(),
+										companyId, branchId, saved.getExBondingId(),
+										saved.getExBondBeNo(), saved.getCommodity());
+
+								System.out.println(
+										"Update row count after exbond details is" + updateCfExbondcrgDtlAfterGatePass);
+							}
 							
 				List<CfExBondGrid> existList =cfExBondGridRepository.getDataForBondGatePassAfterExbond(companyId, branchId, saved.getExBondingId(),saved.getCommodity());
 							
@@ -333,16 +350,24 @@ public class CfbondGatePassService {
 
 							totalOut=totalOut.add(savedObject.getQtyTakenOut());
 						}
+						
+						CfExBondCrg findExistingCfexbondCrg =cfExBondCrgRepository.findExistingCfexbondCrg(companyId, branchId, firstSavedObject.getNocTransId(), firstSavedObject.getNocNo(), firstSavedObject.getExBondingId());
 
-						int updateExbondCrg = cfExBondCrgRepository.updateCfexbondAfterGatePass(totalOut, companyId,
-								branchId, firstSavedObject.getExBondingId(), firstSavedObject.getExBondBeNo());
+						if(findExistingCfexbondCrg!=null)
+						{
+							 BigDecimal existingQtyTakenOut = Optional.ofNullable(findExistingCfexbondCrg.getQtyTakenOut()).orElse(BigDecimal.ZERO);
+							 
+							int updateExbondCrg = cfExBondCrgRepository.updateCfexbondAfterGatePass(
+									existingQtyTakenOut.add(totalOut),	
+									companyId,
+									branchId, firstSavedObject.getExBondingId(), firstSavedObject.getExBondBeNo());
+							
+							System.out.println("Update row count after gate pass in exbond is____________"+updateExbondCrg);
+						}
+						
 						
 						int updateDataAfterBondGatePass=vehicleTrackRepository.updateDataAfterBondGatePass(firstSavedObject.getGatePassId(), user,companyId,branchId,firstSavedObject.getVehGateInId());
-						
-						
-						System.out.println("Update row count after gate pass in exbond is____________"+updateExbondCrg);
-						
-						
+
 						System.out.println("Update row count after gate pass in updateDataAfterBondGatePass___________"+updateDataAfterBondGatePass);
 					}
 //					

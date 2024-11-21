@@ -292,4 +292,63 @@ int updateExbondCrgDetailAfterExBondAuditTrail(@Param("editedBy") String editedB
                           @Param("inBondingId") String inBondingId,
                           @Param("exBondingId") String exBondingId);
 
+
+@Modifying
+@Transactional
+@Query("UPDATE CfexBondCrgDtl c " +
+       "SET c.editedBy = :editedBy, " +
+       "    c.editedDate = :editedDate, " +
+       "    c.exBondBeNo = :exBondBeNo, " +
+       "    c.status = :status " +
+       "WHERE c.companyId = :companyId " +
+       "  AND c.branchId = :branchId " +
+       "  AND c.nocTransId = :nocTransId " +
+       "  AND c.inBondingId = :inBondingId " +
+       "  AND c.exBondingId = :exBondingId")
+int updateExbondCrgDetailAfterExBondAuditTrailHeaderChange(
+    @Param("editedBy") String editedBy,
+    @Param("editedDate") Date editedDate,
+    @Param("exBondBeNo") String exBondBeNo,
+    @Param("status") Character status,
+    @Param("companyId") String companyId,
+    @Param("branchId") String branchId,
+    @Param("nocTransId") String nocTransId,
+    @Param("inBondingId") String inBondingId,
+    @Param("exBondingId") String exBondingId);
+
+
+
+@Query("SELECT NEW com.cwms.entities.CfexBondCrgDtl(" +
+	       "c.companyId, c.branchId, c.finYear, c.cfBondDtlId, c.nocTransId, " +
+	       "c.exBondingId, c.inBondingId, c.nocNo, c.boeNo, c.bondingNo, " +
+	       "c.bondingDate, c.exBondBeNo, c.nocPackages, c.exBondedPackages, " +
+	       "c.exBondType, c.exBondedCIF, c.exBondedCargoDuty, c.exBondedInsurance, " +
+	       "c.sbNo, c.commodityDescription, c.cargoType, c.grossWeight, " +
+	       "c.exBondedGW, c.remainingGW, c.balanceGW, c.typeOfPackage, " +
+	       "c.status, c.outQty, c.inBondedPackages, c.inbondGrossWt, " +
+	       "c.inbondInsuranceValue, c.inbondCifValue, c.inbondCargoDuty, " +
+	       "c.yardLocationId, c.blockId, c.cellNoRow, c.exBondyardPackages, " +
+	       "c.exBondGridArea, c.igmNo, c.igmLineNo, cd.yardPackages, " +
+	       "cd.cellAreaAllocated, cd.cellArea) " +
+	       "FROM CfexBondCrgDtl c " +
+	       "LEFT OUTER JOIN CfinbondcrgDtl cd ON c.companyId = cd.companyId AND c.branchId = cd.branchId AND c.nocTransId = cd.nocTransId AND c.nocNo = cd.nocNo AND c.cfBondDtlId = cd.cfBondDtlId AND c.inBondingId =cd.inBondingId " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.nocTransId = :nocTransId " +
+	       "AND c.nocNo = :nocNo " +
+	       "AND c.inBondingId = :inBondingId " +
+	       "AND c.boeNo = :boeNo " +
+	       "AND c.exBondingId = :exBondingId " +
+	       "AND c.status != 'D'")
+	List<CfexBondCrgDtl> getExBondCrgDtlDataAfterSave(
+	    @Param("companyId") String companyId, 
+	    @Param("branchId") String branchId, 
+	    @Param("nocTransId") String nocTransId, 
+	    @Param("nocNo") String nocNo,
+	    @Param("inBondingId") String inBondingId, 
+	    @Param("boeNo") String boeNo,
+	    @Param("exBondingId") String exBondingId
+	);
+
+
 }
