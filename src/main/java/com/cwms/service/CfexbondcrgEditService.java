@@ -274,7 +274,7 @@ public class CfexbondcrgEditService {
 				CfinbondcrgHDR findCfBondCrgHDRData = null;
 				CfinbondcrgHDRDtl findCfBondCrgHDRDTLData = null;
 				CfinbondcrgDtl findCfBondCrgDTLData = null;
-				Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
+				Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfinbondCrg(companyId, branchId,
 						cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
 
 				System.out.println("in edit");

@@ -932,7 +932,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 				CfinbondcrgHDR findCfBondCrgHDRData = null;
 				CfinbondcrgHDRDtl findCfBondCrgHDRDTLData = null;
 				CfinbondcrgDtl findCfBondCrgDTLData = null;
-				Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
+				Cfinbondcrg findCfBondCrgData = cfinbondcrgRepo.findCfinbondCrg(companyId, branchId,
 						cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
 
 				if (findCfBondCrgData != null) 
@@ -1441,7 +1441,7 @@ System.out.println("item.getInbondCifValue()____________________________________
 					cfinbondCrgHdrRepo.save(findCfBondCrgHDRData);
 
 					
-					Cfinbondcrg findCfBondCrgData1 = cfinbondcrgRepo.findCfBondCrgData(companyId, branchId,
+					Cfinbondcrg findCfBondCrgData1 = cfinbondcrgRepo.findCfinbondCrg(companyId, branchId,
 					cfinbondcrg.getNocTransId(), cfinbondcrg.getInBondingId(), cfinbondcrg.getNocNo());
 			
 			
