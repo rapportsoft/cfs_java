@@ -612,4 +612,41 @@ int updateCfBondNocAfterAuditTrail(
     @Param("nocTransId") String nocTransId,
     @Param("nocNo") String nocNo
 );
+
+
+@Modifying
+@Transactional
+@Query("UPDATE Cfbondnoc c "
+       + "SET c.bondingNo = :bondingNo, "
+       + "c.bondingDate = :bondingDate, "
+       + "c.bondValidityDate = :bondValidityDate, "
+       + "c.boeNo = :boeNo, "
+       + "c.boeDate = :boeDate, "
+       + "c.cha = :cha, "
+       + "c.chaCode = :chaCode, "
+       + "c.importerId = :importerId, "
+       + "c.importerName = :importerName, "
+       + "c.importerAddress1 = :importerAddress1, "
+       + "c.importerAddress2 = :importerAddress2, "
+       + "c.importerAddress3 = :importerAddress3 "
+       + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo")
+int updateCfBondNocAfterAuditTrailForHeaderChange(
+    @Param("bondingNo") String bondingNo,
+    @Param("bondingDate") Date bondingDate,
+    @Param("bondValidityDate") Date bondValidityDate,
+    @Param("boeNo") String boeNo,
+    @Param("boeDate") Date boeDate,
+    @Param("cha") String cha,
+    @Param("chaCode") String chaCode,
+    @Param("importerId") String importerId,
+    @Param("importerName") String importerName,
+    @Param("importerAddress1") String importerAddress1,
+    @Param("importerAddress2") String importerAddress2,
+    @Param("importerAddress3") String importerAddress3,
+    @Param("companyId") String companyId,
+    @Param("branchId") String branchId,
+    @Param("nocTransId") String nocTransId,
+    @Param("nocNo") String nocNo
+);
+
 }

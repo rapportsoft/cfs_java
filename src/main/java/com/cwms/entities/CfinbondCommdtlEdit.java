@@ -15,6 +15,10 @@ public class CfinbondCommdtlEdit {
 	@Column(name = "SrNo")
 	private Long SrNo;
 	
+	@Id
+	@Column(name = "Audit_Id", length = 10)
+	private String auditId;
+	
     @Id
     @Column(name = "branch_id", length = 20, nullable = false)
     private String branchId;
@@ -176,6 +180,14 @@ public class CfinbondCommdtlEdit {
 	  
 	  
 	  
+	public String getAuditId() {
+			return auditId;
+		}
+
+		public void setAuditId(String auditId) {
+			this.auditId = auditId;
+		}
+
 	public BigDecimal getCellAreaAllocated() {
 		return cellAreaAllocated;
 	}
@@ -568,21 +580,22 @@ public class CfinbondCommdtlEdit {
 		SrNo = srNo;
 	}
 
-	public CfinbondCommdtlEdit(Long srNo, String branchId, String commodityId, String commonBondingId, String companyId,
-			String nocNo, String nocTransId, BigDecimal oldInsuranceValue, String oldTypeOfPackage, String approvedBy,
-			Date approvedDate, String boeNo, String bondingNo, String createdBy, Date createdDate, String editedBy,
-			Date editedDate, BigDecimal grossWeight, String inBondingHdrId, BigDecimal newBondCargoDuty,
-			BigDecimal newBondCifValue, BigDecimal newBondGrossWt, BigDecimal newBondPackages, BigDecimal newBreakage,
-			String newCommodityDescription, BigDecimal newDamagedQty, BigDecimal newInsuranceValue,
-			BigDecimal newShortagePackages, String newTypeOfPackage, BigDecimal nocPackages,
-			BigDecimal oldBondCargoDuty, BigDecimal oldBondCifValue, BigDecimal oldBondGrossWt,
-			BigDecimal oldBondPackages, BigDecimal oldBreakage, String oldCommodityDescription,
-			BigDecimal oldDamagedQty, BigDecimal oldShortagePackages, String status, String type,
-			BigDecimal oldYardPackages, BigDecimal newYardPackages, BigDecimal oldAreaOccupied,
+	public CfinbondCommdtlEdit(Long srNo, String auditId, String branchId, String commodityId, String commonBondingId,
+			String companyId, String nocNo, String nocTransId, BigDecimal oldInsuranceValue, String oldTypeOfPackage,
+			String approvedBy, Date approvedDate, String boeNo, String bondingNo, String createdBy, Date createdDate,
+			String editedBy, Date editedDate, BigDecimal grossWeight, String inBondingHdrId,
+			BigDecimal newBondCargoDuty, BigDecimal newBondCifValue, BigDecimal newBondGrossWt,
+			BigDecimal newBondPackages, BigDecimal newBreakage, String newCommodityDescription,
+			BigDecimal newDamagedQty, BigDecimal newInsuranceValue, BigDecimal newShortagePackages,
+			String newTypeOfPackage, BigDecimal nocPackages, BigDecimal oldBondCargoDuty, BigDecimal oldBondCifValue,
+			BigDecimal oldBondGrossWt, BigDecimal oldBondPackages, BigDecimal oldBreakage,
+			String oldCommodityDescription, BigDecimal oldDamagedQty, BigDecimal oldShortagePackages, String status,
+			String type, BigDecimal oldYardPackages, BigDecimal newYardPackages, BigDecimal oldAreaOccupied,
 			BigDecimal newAreaOccupied, String yardLocationId, String blockId, String cellNoRow,
 			BigDecimal cellAreaAllocated) {
 		super();
 		SrNo = srNo;
+		this.auditId = auditId;
 		this.branchId = branchId;
 		this.commodityId = commodityId;
 		this.commonBondingId = commonBondingId;
@@ -634,26 +647,28 @@ public class CfinbondCommdtlEdit {
 
 	@Override
 	public String toString() {
-		return "CfinbondCommdtlEdit [SrNo=" + SrNo + ", branchId=" + branchId + ", commodityId=" + commodityId
-				+ ", commonBondingId=" + commonBondingId + ", companyId=" + companyId + ", nocNo=" + nocNo
-				+ ", nocTransId=" + nocTransId + ", oldInsuranceValue=" + oldInsuranceValue + ", oldTypeOfPackage="
-				+ oldTypeOfPackage + ", approvedBy=" + approvedBy + ", approvedDate=" + approvedDate + ", boeNo="
-				+ boeNo + ", bondingNo=" + bondingNo + ", createdBy=" + createdBy + ", createdDate=" + createdDate
-				+ ", editedBy=" + editedBy + ", editedDate=" + editedDate + ", grossWeight=" + grossWeight
-				+ ", inBondingHdrId=" + inBondingHdrId + ", newBondCargoDuty=" + newBondCargoDuty + ", newBondCifValue="
-				+ newBondCifValue + ", newBondGrossWt=" + newBondGrossWt + ", newBondPackages=" + newBondPackages
-				+ ", newBreakage=" + newBreakage + ", newCommodityDescription=" + newCommodityDescription
-				+ ", newDamagedQty=" + newDamagedQty + ", newInsuranceValue=" + newInsuranceValue
-				+ ", newShortagePackages=" + newShortagePackages + ", newTypeOfPackage=" + newTypeOfPackage
-				+ ", nocPackages=" + nocPackages + ", oldBondCargoDuty=" + oldBondCargoDuty + ", oldBondCifValue="
-				+ oldBondCifValue + ", oldBondGrossWt=" + oldBondGrossWt + ", oldBondPackages=" + oldBondPackages
-				+ ", oldBreakage=" + oldBreakage + ", oldCommodityDescription=" + oldCommodityDescription
-				+ ", oldDamagedQty=" + oldDamagedQty + ", oldShortagePackages=" + oldShortagePackages + ", status="
-				+ status + ", type=" + type + ", oldYardPackages=" + oldYardPackages + ", newYardPackages="
-				+ newYardPackages + ", oldAreaOccupied=" + oldAreaOccupied + ", newAreaOccupied=" + newAreaOccupied
-				+ ", yardLocationId=" + yardLocationId + ", blockId=" + blockId + ", cellNoRow=" + cellNoRow
-				+ ", cellAreaAllocated=" + cellAreaAllocated + "]";
+		return "CfinbondCommdtlEdit [SrNo=" + SrNo + ", auditId=" + auditId + ", branchId=" + branchId
+				+ ", commodityId=" + commodityId + ", commonBondingId=" + commonBondingId + ", companyId=" + companyId
+				+ ", nocNo=" + nocNo + ", nocTransId=" + nocTransId + ", oldInsuranceValue=" + oldInsuranceValue
+				+ ", oldTypeOfPackage=" + oldTypeOfPackage + ", approvedBy=" + approvedBy + ", approvedDate="
+				+ approvedDate + ", boeNo=" + boeNo + ", bondingNo=" + bondingNo + ", createdBy=" + createdBy
+				+ ", createdDate=" + createdDate + ", editedBy=" + editedBy + ", editedDate=" + editedDate
+				+ ", grossWeight=" + grossWeight + ", inBondingHdrId=" + inBondingHdrId + ", newBondCargoDuty="
+				+ newBondCargoDuty + ", newBondCifValue=" + newBondCifValue + ", newBondGrossWt=" + newBondGrossWt
+				+ ", newBondPackages=" + newBondPackages + ", newBreakage=" + newBreakage + ", newCommodityDescription="
+				+ newCommodityDescription + ", newDamagedQty=" + newDamagedQty + ", newInsuranceValue="
+				+ newInsuranceValue + ", newShortagePackages=" + newShortagePackages + ", newTypeOfPackage="
+				+ newTypeOfPackage + ", nocPackages=" + nocPackages + ", oldBondCargoDuty=" + oldBondCargoDuty
+				+ ", oldBondCifValue=" + oldBondCifValue + ", oldBondGrossWt=" + oldBondGrossWt + ", oldBondPackages="
+				+ oldBondPackages + ", oldBreakage=" + oldBreakage + ", oldCommodityDescription="
+				+ oldCommodityDescription + ", oldDamagedQty=" + oldDamagedQty + ", oldShortagePackages="
+				+ oldShortagePackages + ", status=" + status + ", type=" + type + ", oldYardPackages=" + oldYardPackages
+				+ ", newYardPackages=" + newYardPackages + ", oldAreaOccupied=" + oldAreaOccupied + ", newAreaOccupied="
+				+ newAreaOccupied + ", yardLocationId=" + yardLocationId + ", blockId=" + blockId + ", cellNoRow="
+				+ cellNoRow + ", cellAreaAllocated=" + cellAreaAllocated + "]";
 	}
+
+
 
 //	public String getCommonCommodityId() {
 //		return commonCommodityId;

@@ -67,48 +67,59 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 
 
 	
-	@Query("SELECT b FROM CfinbondCommdtlEdit b WHERE b.companyId = :cid AND b.branchId = :bid AND b.commonBondingId = :inbondingId AND b.nocTransId = :nocTransId")
+	@Query("SELECT b FROM CfinbondCommdtlEdit b WHERE b.companyId = :cid AND b.branchId = :bid AND b.commonBondingId = :inbondingId AND b.nocTransId = :nocTransId and b.auditId=:auditId ")
 	public List<CfinbondCommdtlEdit> findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(
 	    @Param("cid") String cid, 
 	    @Param("bid") String bid, 
 	    @Param("inbondingId") String inbondingId, 
-	    @Param("nocTransId") String nocTransId
+	    @Param("nocTransId") String nocTransId,
+	    @Param("auditId") String auditId
 	);
 	
 	
 	
-	@Query("SELECT b FROM CfinbondCommdtlEdit b WHERE b.companyId = :cid AND b.branchId = :bid AND b.commonBondingId = :exBondingId AND b.nocTransId = :nocTransId")
+	@Query("SELECT b FROM CfinbondCommdtlEdit b WHERE b.companyId = :cid AND b.branchId = :bid AND b.commonBondingId = :exBondingId AND b.nocTransId = :nocTransId and b.auditId=:auditId ")
 	public List<CfinbondCommdtlEdit> getForExBondDtl(
 	    @Param("cid") String cid, 
 	    @Param("bid") String bid, 
 	    @Param("exBondingId") String exBondingId, 
-	    @Param("nocTransId") String nocTransId
+	    @Param("nocTransId") String nocTransId,
+	    @Param("auditId") String auditId
 	);
 
 
-	@Query("SELECT COALESCE(SUM(c.newBondPackages), 0) FROM CfinbondCommdtlEdit c " +
+	@Query("SELECT COALESCE(SUM(c.newBondPackages), 0) " +
+		       "FROM CfinbondCommdtlEdit c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
 		       "AND c.status != 'D' " +
 		       "AND c.commonBondingId = :commonBondingId " +
 		       "AND c.commodityId = :commodityId " +
-		       "AND c.nocTransId = :nocTransId")
-	BigDecimal getSumOfInBondPackagesForCommodity(@Param("companyId") String companyId,
-		                            @Param("branchId") String branchId,
-		                            @Param("commonBondingId") String commonBondingId,
-		                            @Param("commodityId") String commodityId,
-		                            @Param("nocTransId") String nocTransId);
-	
-	@Query("SELECT COALESCE(SUM(c.newBondPackages), 0) FROM CfinbondCommdtlEdit c " +
+		       "AND c.nocTransId = :nocTransId " +
+		       "AND c.auditId = :auditId")
+		BigDecimal getSumOfInBondPackagesForCommodity(
+		        @Param("companyId") String companyId,
+		        @Param("branchId") String branchId,
+		        @Param("commonBondingId") String commonBondingId,
+		        @Param("commodityId") String commodityId,
+		        @Param("nocTransId") String nocTransId,
+		        @Param("auditId") String auditId);
+
+		@Query("SELECT COALESCE(SUM(c.newBondPackages), 0) " +
+		       "FROM CfinbondCommdtlEdit c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
 		       "AND c.status != 'D' " +
 		       "AND c.commonBondingId = :commonBondingId " +
-		       "AND c.nocTransId = :nocTransId")
-	BigDecimal getSumOfInBondPackages(@Param("companyId") String companyId,
-		                            @Param("branchId") String branchId,
-		                            @Param("commonBondingId") String commonBondingId,
-		                            @Param("nocTransId") String nocTransId);
+		       "AND c.nocTransId = :nocTransId " +
+		       "AND c.auditId = :auditId")
+		BigDecimal getSumOfInBondPackages(
+		        @Param("companyId") String companyId,
+		        @Param("branchId") String branchId,
+		        @Param("commonBondingId") String commonBondingId,
+		        @Param("nocTransId") String nocTransId,
+		        @Param("auditId") String auditId);
+
 	
 	
 	@Transactional
@@ -133,7 +144,7 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		       "c.inBondedPackages, c.inBondedPackagesOld, c.inBondingDate, c.inBondingDateOld, c.nocNo, " +
 		       "c.nocValidityDate, c.nocValidityDateOld, c.section49, c.section49Old, c.section60, " +
 		       "c.section60Old, c.status, c.tranType, c.nocTransDate, c.nocDate, " +
-		       "c.importerAddress1, c.importerAddress2, c.importerAddress3, c.newChaCode,p.partyName) " +
+		       "c.importerAddress1, c.importerAddress2, c.importerAddress3, c.newChaCode,p.partyName,c.auditId) " +
 		       "FROM CfexbondcrgEdit c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.chaOld = p.partyId " +
 		       "WHERE c.companyId = :companyId " +
@@ -145,7 +156,7 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		           "OR (:partyName IS NULL OR :partyName = '' OR c.nocNo LIKE concat(:partyName, '%')) " +
 		           "OR (:partyName IS NULL OR :partyName = '' OR c.nocTransId LIKE concat(:partyName, '%')) " +
 		           "OR (:partyName IS NULL OR :partyName = '' OR c.boeNo LIKE concat(:partyName, '%'))) " +
-		       "ORDER BY c.inBondingId DESC")
+		       "ORDER BY c.auditId DESC")
 		List<CfexbondcrgEdit> findCfinbondcrgByCompanyIdAndBranchIdForInbondScreen(@Param("companyId") String companyId, 
 		                                                                           @Param("branchId") String branchId,
 		                                                                           @Param("partyName") String partyName);
@@ -163,7 +174,7 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		       "c.inBondedPackages, c.inBondedPackagesOld, c.inBondingDate, c.inBondingDateOld, c.nocNo, " +
 		       "c.nocValidityDate, c.nocValidityDateOld, c.section49, c.section49Old, c.section60, " +
 		       "c.section60Old, c.status, c.tranType, c.nocTransDate, c.nocDate, " +
-		       "c.importerAddress1, c.importerAddress2, c.importerAddress3, c.newChaCode,p.partyName) " +
+		       "c.importerAddress1, c.importerAddress2, c.importerAddress3, c.newChaCode,p.partyName,c.auditId) " +
 		       "FROM CfexbondcrgEdit c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.chaOld = p.partyId " +
 		       "WHERE c.companyId = :companyId " +
@@ -175,13 +186,15 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 "AND c.nocTransId = :nocTransId " +
 "AND c.inBondingId = :inBondingId " +
 "AND c.nocNo = :nocNo " +
-		       "ORDER BY c.inBondingId DESC")
+"AND c.auditId = :auditId " +
+		       "ORDER BY c.auditId DESC")
 		CfexbondcrgEdit getSavedData(@Param("companyId") String companyId, 
 		                                                                           @Param("branchId") String branchId,
 		                                                                           @Param("SrNo") Long SrNo,
 		                                                                           @Param("nocTransId") String nocTransId,
 		                                                                           @Param("inBondingId") String inBondingId,
-		                                                                           @Param("nocNo") String nocNo);
+		                                                                           @Param("nocNo") String nocNo,
+		                                                                           @Param("auditId") String auditId);
 	
 	
 	
@@ -307,7 +320,7 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		       "c.sbDutyOld, c.sbNo, c.sbNoOld, c.sbQtyNew, c.sbQtyOld, c.sbUomNew, c.sbUomOld, " +
 		       "c.sbValueNew, c.sbValueOld, c.section49, c.section49Old, c.section60, c.section60Old, " +
 		       "c.status, c.tranType, c.nocTransDate, c.nocDate, c.exBondBeDateOld, c.transferBondDate, " +
-		       "c.transferBondDateOld, c.transferBondNo, c.transferBondNoOld, c.exBondType) " +
+		       "c.transferBondDateOld, c.transferBondNo, c.transferBondNoOld, c.exBondType,c.auditId) " +
 		       "FROM CfexbondcrgEdit c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.chaOld = p.partyId " +
 		       "WHERE c.companyId = :companyId " +
@@ -320,7 +333,7 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		           "OR (:partyName IS NULL OR :partyName = '' OR c.nocNo LIKE concat(:partyName, '%')) " +
 		           "OR (:partyName IS NULL OR :partyName = '' OR c.nocTransId LIKE concat(:partyName, '%')) " +
 		           "OR (:partyName IS NULL OR :partyName = '' OR c.boeNo LIKE concat(:partyName, '%'))) " +
-		       "ORDER BY c.exBondingId DESC")
+		       "ORDER BY c.auditId DESC")
 		List<CfexbondcrgEdit> getDataAfterSaveForExBondAuditTrailScreen(@Param("companyId") String companyId, 
 		                                                                           @Param("branchId") String branchId,
 		                                                                           @Param("partyName") String partyName);
@@ -348,7 +361,7 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		       "c.sbDutyOld, c.sbNo, c.sbNoOld, c.sbQtyNew, c.sbQtyOld, c.sbUomNew, c.sbUomOld, " +
 		       "c.sbValueNew, c.sbValueOld, c.section49, c.section49Old, c.section60, c.section60Old, " +
 		       "c.status, c.tranType, c.nocTransDate, c.nocDate, c.exBondBeDateOld, c.transferBondDate, " +
-		       "c.transferBondDateOld, c.transferBondNo, c.transferBondNoOld, c.exBondType) " +
+		       "c.transferBondDateOld, c.transferBondNo, c.transferBondNoOld, c.exBondType,c.auditId) " +
 		       "FROM CfexbondcrgEdit c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.chaOld = p.partyId " +
 		       "WHERE c.companyId = :companyId " +
@@ -360,13 +373,15 @@ public interface CfexbondcrgEditRepository extends JpaRepository<CfexbondcrgEdit
 		"AND c.nocTransId = :nocTransId " +
 		"AND c.exBondingId = :exBondingId " +
 		"AND c.nocNo = :nocNo " +
-				       "ORDER BY c.exBondingId DESC")
+		"AND c.auditId = :auditId " +
+				       "ORDER BY c.auditId DESC")
 		CfexbondcrgEdit getBySelectingRadioButton(@Param("companyId") String companyId, 
                 @Param("branchId") String branchId,
                 @Param("SrNo") Long SrNo,
                 @Param("nocTransId") String nocTransId,
                 @Param("exBondingId") String exBondingId,
-                @Param("nocNo") String nocNo);
+                @Param("nocNo") String nocNo,
+                @Param("auditId") String auditId);
 
 		@Transactional
 		 @Modifying

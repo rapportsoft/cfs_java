@@ -17,6 +17,16 @@ public class CfexbondcrgEditKey implements Serializable {
     private String exBondingId;
 
     private String nocTransId;
+    
+    private String auditId;
+
+	public String getAuditId() {
+		return auditId;
+	}
+
+	public void setAuditId(String auditId) {
+		this.auditId = auditId;
+	}
 
 	public Long getSrNo() {
 		return SrNo;
@@ -70,15 +80,18 @@ public class CfexbondcrgEditKey implements Serializable {
 
 	
 
-	public CfexbondcrgEditKey(Long SrNo, String inBondingId, String branchId, String companyId, String exBondingId,
-			String nocTransId) {
+
+
+	public CfexbondcrgEditKey(Long srNo, String inBondingId, String branchId, String companyId, String exBondingId,
+			String nocTransId, String auditId) {
 		super();
-		this.SrNo = SrNo;
+		SrNo = srNo;
 		this.inBondingId = inBondingId;
 		this.branchId = branchId;
 		this.companyId = companyId;
 		this.exBondingId = exBondingId;
 		this.nocTransId = nocTransId;
+		this.auditId = auditId;
 	}
 
 	public CfexbondcrgEditKey() {

@@ -98,8 +98,8 @@ public class CfexbondcrgEditController {
 	 @GetMapping("/getBySelectingRadioButton")
 		public CfexbondcrgEdit getBySelectingRadioButtonExBondAuditTrail(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,
 				@RequestParam(value = "SrNo", required = false) Long SrNo,
-				@RequestParam("nocTransID") String nocTransID,@RequestParam("exBondingId") String exBondingId,@RequestParam("nocNo") String nocNo){
-			return cfexbondcrgEditService.getBySelectingRadioButton(companyId, branchId, SrNo,nocTransID,exBondingId,nocNo);
+				@RequestParam("nocTransID") String nocTransID,@RequestParam("exBondingId") String exBondingId,@RequestParam("nocNo") String nocNo,@RequestParam("auditId") String auditId){
+			return cfexbondcrgEditService.getBySelectingRadioButton(companyId, branchId, SrNo,nocTransID,exBondingId,nocNo,auditId);
 		}
 	 
 	 
@@ -108,8 +108,8 @@ public class CfexbondcrgEditController {
 	 @GetMapping("/getDataByTransIdANDNocIDAndInBondingId")
 		public CfexbondcrgEdit getDataByTransIdANDNocID(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,
 				@RequestParam(value = "SrNo", required = false) Long SrNo,
-				@RequestParam("nocTransID") String nocTransID,@RequestParam("inBondingId") String inBondingId,@RequestParam("nocNo") String nocNo){
-			return cfexbondcrgEditService.getCfInbondCrgDataByidOrSearch(companyId, branchId, SrNo,nocTransID,inBondingId,nocNo);
+				@RequestParam("nocTransID") String nocTransID,@RequestParam("inBondingId") String inBondingId,@RequestParam("nocNo") String nocNo,@RequestParam("auditId") String auditId){
+			return cfexbondcrgEditService.getCfInbondCrgDataByidOrSearch(companyId, branchId, SrNo,nocTransID,inBondingId,nocNo,auditId);
 		}
 	 
 	@GetMapping("/findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId")
@@ -117,9 +117,10 @@ public class CfexbondcrgEditController {
 			@RequestParam ("companyId") String companyId,
 			@RequestParam ("branchId") String branchId,
 			@RequestParam ("inBondingId") String inBondingId,
-			@RequestParam ("nocTransId") String nocTransId) {
+			@RequestParam ("nocTransId") String nocTransId,
+			@RequestParam ("auditId") String auditId) {
 		
-		return cfexbondcrgEditService.findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(companyId, branchId, inBondingId,nocTransId);
+		return cfexbondcrgEditService.findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(companyId,branchId,inBondingId,nocTransId,auditId);
 	}
 	
 	
@@ -133,9 +134,10 @@ public class CfexbondcrgEditController {
 			@RequestParam ("companyId") String companyId,
 			@RequestParam ("branchId") String branchId,
 			@RequestParam ("exBondingId") String exBondingId,
-			@RequestParam ("nocTransId") String nocTransId) {
+			@RequestParam ("nocTransId") String nocTransId,
+			@RequestParam ("auditId") String auditId) {
 		
-		return cfexbondcrgEditService.getForExBondDtl(companyId, branchId, exBondingId,nocTransId);
+		return cfexbondcrgEditService.getForExBondDtl(companyId, branchId, exBondingId,nocTransId,auditId);
 	}
 	
 	
@@ -200,9 +202,10 @@ public class CfexbondcrgEditController {
 	            @RequestParam String branchId,
 	            @RequestParam String inBondingId,
 	            @RequestParam String cfBondDtlId,
-	            @RequestParam String nocTransId) {
+	            @RequestParam String nocTransId,
+	            @RequestParam String auditId) {
 	        
-	        BigDecimal sumOfInBondPackages = cfexbondcrgEditService.getSumOfInBondPackagesForCommodity(companyId, branchId, inBondingId, cfBondDtlId, nocTransId);
+	        BigDecimal sumOfInBondPackages = cfexbondcrgEditService.getSumOfInBondPackagesForCommodity(companyId, branchId, inBondingId, cfBondDtlId, nocTransId,auditId);
 	        return ResponseEntity.ok(sumOfInBondPackages);
 	 }
 	 

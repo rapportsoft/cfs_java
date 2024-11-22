@@ -20,6 +20,10 @@ public class CfexbondcrgEdit {
 	private String inBondingId;
 
 	@Id
+	@Column(name = "Audit_Id", length = 10)
+	private String auditId;
+	
+	@Id
 	@Column(name = "ex_bonding_id", length = 10, nullable = false)
 	private String exBondingId;
 
@@ -499,6 +503,14 @@ public class CfexbondcrgEdit {
 
 	
 	
+	public String getAuditId() {
+		return auditId;
+	}
+
+	public void setAuditId(String auditId) {
+		this.auditId = auditId;
+	}
+
 	public BigDecimal getOldInsuranceValue() {
 		return oldInsuranceValue;
 	}
@@ -1685,7 +1697,7 @@ public class CfexbondcrgEdit {
 			String importerAddress3, String changeOfOwnerName, String changeOfOwnerNameOld, char changeOfOwnership,
 			char changeOfOwnershipOld, Date exBondBeDateOld, char ownershipChanges, char ownershipChangesOld,
 			Date transferBondDate, Date transferBondDateOld, String transferBondNo, String transferBondNoOld,
-			String exBondType, String commonJobId, String newChaCode) {
+			String exBondType, String commonJobId, String newChaCode,String auditId) {
 		super();
 		SrNo = srNo;
 		this.inBondingId = inBondingId;
@@ -1809,6 +1821,7 @@ public class CfexbondcrgEdit {
 		this.exBondType = exBondType;
 		this.commonJobId = commonJobId;
 		this.newChaCode = newChaCode;
+		this.auditId=auditId;
 	}
 
 	@Override
@@ -1878,7 +1891,7 @@ public class CfexbondcrgEdit {
 			Date nocValidityDate, Date nocValidityDateOld, String section49, String section49Old, String section60,
 			String section60Old, String status, String tranType, Date nocTransDate, Date nocDate,
 			String importerAddress1, String importerAddress2, String importerAddress3, String newChaCode,
-			String newChaName) {
+			String newChaName,String auditId) {
 		super();
 		SrNo = srNo;
 		this.inBondingId = inBondingId;
@@ -1941,6 +1954,7 @@ public class CfexbondcrgEdit {
 		this.importerAddress3 = importerAddress3;
 		this.newChaCode = newChaCode;
 		this.newChaName = newChaName;
+		this.auditId=auditId;
 	}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1972,7 +1986,7 @@ public class CfexbondcrgEdit {
 			BigDecimal sbQtyOld, String sbUomNew, String sbUomOld, BigDecimal sbValueNew, BigDecimal sbValueOld,
 			String section49, String section49Old, String section60, String section60Old, String status,
 			String tranType, Date nocTransDate, Date nocDate, Date exBondBeDateOld, Date transferBondDate,
-			Date transferBondDateOld, String transferBondNo, String transferBondNoOld, String exBondType) {
+			Date transferBondDateOld, String transferBondNo, String transferBondNoOld, String exBondType,String auditId) {
 		super();
 		SrNo = srNo;
 		this.inBondingId = inBondingId;
@@ -2085,6 +2099,7 @@ public class CfexbondcrgEdit {
 		this.transferBondNo = transferBondNo;
 		this.transferBondNoOld = transferBondNoOld;
 		this.exBondType = exBondType;
+		this.auditId=auditId;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

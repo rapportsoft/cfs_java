@@ -38,7 +38,14 @@ public interface CfinbondcrgDtlRepo extends JpaRepository<CfinbondcrgDtl, String
 	    );
 	
 	
-	
+	@Query("SELECT c FROM CfinbondcrgDtl c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.inBondingId=:inBondingId and c.nocTransId = :nocTransId AND c.nocNo = :nocNo")
+	List<CfinbondcrgDtl> forAuditTrailCode(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("inBondingId") String inBondingId, 
+	        @Param("nocTransId") String nocTransId,
+	        @Param("nocNo") String nocNo
+	    );
 	
 	@Query("SELECT b FROM CfinbondcrgDtl b WHERE b.companyId = :cid AND b.branchId = :bid AND b.inBondingId = :inBondingId AND b.nocTransId = :nocTransId")
 	public List<CfinbondcrgDtl> findByCompanyIdAndBranchIdAndCommonBondingIdAndNocTransId(

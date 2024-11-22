@@ -27,6 +27,8 @@ public class CfinbondCommdtlEditId implements Serializable {
 
 
     private String nocTransId;
+    
+    private String auditId;
 
     // Constructors
     public CfinbondCommdtlEditId() {
@@ -34,8 +36,8 @@ public class CfinbondCommdtlEditId implements Serializable {
 
 
 
-    public CfinbondCommdtlEditId(Long srNo, String branchId, String commodityId, String commonBondingId,
-			String companyId, String nocNo, String nocTransId) {
+	public CfinbondCommdtlEditId(Long srNo, String branchId, String commodityId, String commonBondingId,
+			String companyId, String nocNo, String nocTransId, String auditId) {
 		super();
 		SrNo = srNo;
 		this.branchId = branchId;
@@ -44,6 +46,19 @@ public class CfinbondCommdtlEditId implements Serializable {
 		this.companyId = companyId;
 		this.nocNo = nocNo;
 		this.nocTransId = nocTransId;
+		this.auditId = auditId;
+	}
+
+
+
+	public String getAuditId() {
+		return auditId;
+	}
+
+
+
+	public void setAuditId(String auditId) {
+		this.auditId = auditId;
 	}
 
 
