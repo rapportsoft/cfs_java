@@ -25,7 +25,7 @@ public class CfinbondcrgHDRDtlId implements Serializable{
     
 	private String cfBondDtlId;
     
-	private String boeNo;
+//	private String boeNo;
 	
 	
 	
@@ -41,7 +41,7 @@ public class CfinbondcrgHDRDtlId implements Serializable{
 
 	public CfinbondcrgHDRDtlId(String companyId, String branchId, String finYear, String inBondingId,
 			String inBondingDtlId, Date inBondingDate, String nocTransId, Date nocTransDate, String nocNo,
-			String cfBondDtlId, String boeNo) {
+			String cfBondDtlId) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -53,7 +53,7 @@ public class CfinbondcrgHDRDtlId implements Serializable{
 		this.nocTransDate = nocTransDate;
 		this.nocNo = nocNo;
 		this.cfBondDtlId = cfBondDtlId;
-		this.boeNo = boeNo;
+//		this.boeNo = boeNo;
 	}
 
 	public String getCompanyId() {
@@ -136,13 +136,13 @@ public class CfinbondcrgHDRDtlId implements Serializable{
 		this.cfBondDtlId = cfBondDtlId;
 	}
 
-	public String getBoeNo() {
-		return boeNo;
-	}
-
-	public void setBoeNo(String boeNo) {
-		this.boeNo = boeNo;
-	}
+//	public String getBoeNo() {
+//		return boeNo;
+//	}
+//
+//	public void setBoeNo(String boeNo) {
+//		this.boeNo = boeNo;
+//	}
 
 
     

@@ -53,7 +53,7 @@ public class CfinbondcrgHDRDtl {
 	@Column(name = "Cfbond_Detail_Id", length = 6, nullable = true)
 	private String cfBondDtlId;
     
-    @Id
+
 	@Column(name = "BOE_No", length = 15, nullable = true)
 	private String boeNo;
     
