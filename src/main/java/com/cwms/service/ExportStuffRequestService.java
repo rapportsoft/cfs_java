@@ -383,12 +383,12 @@ public class ExportStuffRequestService {
 			for (ExportStuffRequest exportStuffLoop : exportStuffRequest) {
 				
 				
-				boolean existsBySbNoForstuffing = stuffingRepo.existsBySbNoForstuffing(companyId, branchId, exportStuffLoop.getSbNo(), exportStuffLoop.getSbTransId(), exportStuffLoop.getProfitcentreId(), autoStuffingId, exportStuffLoop.getStuffReqLineId());
-				
-				 if (existsBySbNoForstuffing) {
-			            String errorMessage = "Duplicate SB No found for SrNo: " + exportStuffLoop.getStuffReqLineId() + " and SB No: " + exportStuffLoop.getSbNo();
-			            return ResponseEntity.badRequest().body(errorMessage);
-			        }
+//				boolean existsBySbNoForstuffing = stuffingRepo.existsBySbNoForstuffing(companyId, branchId, exportStuffLoop.getSbNo(), exportStuffLoop.getSbTransId(), exportStuffLoop.getProfitcentreId(), autoStuffingId, exportStuffLoop.getStuffReqLineId());
+//				
+//				 if (existsBySbNoForstuffing) {
+//			            String errorMessage = "Duplicate SB No found for SrNo: " + exportStuffLoop.getStuffReqLineId() + " and SB No: " + exportStuffLoop.getSbNo();
+//			            return ResponseEntity.badRequest().body(errorMessage);
+//			        }
 				
 				if (exportStuffLoop.getStuffReqId() == null || exportStuffLoop.getStuffReqId().isEmpty()) {
 					System.out.println("Save");

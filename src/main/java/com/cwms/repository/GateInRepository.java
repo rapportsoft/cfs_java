@@ -462,4 +462,22 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 			+ "g.gateInId=:gateId")
     int updatePortReturnId(@Param("cid") String cid, @Param("bid") String bid, @Param("gateId") String gateId,
 			@Param("id") String id);
+	
+	
+	@Query(value="select DISTINCT g.containerNo from GateIn g where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "g.gateInType='PortRn' and (g.movementRequestId is null OR g.movementRequestId = '') and (g.reworkId is null OR g.reworkId = '') "
+			+ "and (:val is null OR :val = '' OR g.containerNo LIKE CONCAT('%',:val,'%'))")
+	List<String> getPortReturnConForReworking(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+	
+	@Query(value="select g.gateInId,g.inGateInDate,g.containerNo,g.containerSize,g.containerType,g.containerStatus, "
+			+ "g.customsSealNo,g.sa,psl.partyName,g.vehicleNo,g.onAccountOf,psa.partyName,g.erpDocRefNo,g.docRefNo,g.commodityDescription,"
+			+ "g.actualNoOfPackages,g.cargoWeight,ex.fob "
+			+ "from GateIn g "
+			+ "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.onAccountOf = psa.partyId AND psa.status <> 'D' "
+			+ "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
+			+ "LEFT JOIN ExportSbCargoEntry ex ON g.companyId = ex.companyId AND g.branchId = ex.branchId AND g.erpDocRefNo = ex.sbTransId AND g.docRefNo=ex.sbNo AND ex.status <> 'D' "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and "
+			+ "g.gateInType='PortRn' and (g.movementRequestId is null OR g.movementRequestId = '') and (g.reworkId is null OR g.reworkId = '') "
+			+ "and g.containerNo =:val")
+	List<Object[]> getPortReturnConForReworkingData(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 }

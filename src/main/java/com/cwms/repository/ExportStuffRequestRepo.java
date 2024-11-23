@@ -339,7 +339,7 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 			+ "e.containerHealth, e.cargoWeight, e.deliveryOrderNo, e.rotationNo,"
 			+ "e.rotationDate, v.vesselName, sb.consigneeName, c.fob, e.noOfPackagesStuffed) "
 			+ "from ExportStuffRequest e LEFT OUTER JOIN ExportSbCargoEntry c ON e.companyId=c.companyId "
-			+ "and e.branchId=c.branchId and e.sbNo=c.sbNo and e.sbTransId=c.sbTransId and e.sbLineNo=c.sbLineNo "
+			+ "and e.branchId=c.branchId and e.sbNo=c.sbNo and e.sbTransId=c.sbTransId "
 			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo "
 			+ "and e.sbTransId=sb.sbTransId "
 			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent = p1.partyId "

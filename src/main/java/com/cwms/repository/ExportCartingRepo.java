@@ -175,5 +175,35 @@ public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 	List<ExportCarting> getDataBySbNoSbTrans2(@Param("companyId") String companyId, @Param("branchId") String branchId,
 			@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo);
 	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.cartingTransId = :id "
+			+ "AND E.sbTransId = :sbTransId "
+			+ "AND E.sbNo = :sbNo "
+			+ "AND E.status <> 'D'")
+	ExportCarting getDataByCartingTransIdSBTransAndSb(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("id") String id,@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo);
 	
+	
+	@Query("SELECT E.cartingTransId, E.cartingLineId, E.sbTransId, E.sbNo, E.commodity,"
+			+ "E.gateInPackages, E.gateInWeight, E.actualNoOfPackages,"
+			+ "E.actualNoOfWeight, E.fob, E.gridLocation, E.gridBlock, E.gridCellNo,"
+			+ "E.areaOccupied, E.yardPackages, i.cellAreaAllocated, i.yardPackages "
+			+ "FROM ExportCarting E "
+			+ "LEFT OUTER JOIN Impexpgrid i ON E.companyId=i.companyId and E.branchId=i.branchId and E.cartingTransId=i.processTransId "
+			+ "and E.cartingLineId=CAST(i.lineNo AS String) and E.gridLocation=i.yardLocation and E.gridBlock=i.yardBlock and E.gridCellNo=i.blockCellNo " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.cartingTransId = :id "
+			+ "AND E.status <> 'D'")
+	List<Object[]> getDataByCartingTransId1(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("id") String id);
+	
+	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.cartingTransId = :cartrans "
+			+ "AND E.cartingLineId = :cartline "
+			+ "AND E.status <> 'D'")
+	ExportCarting getDataByLineNoAndCartingTransId(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("cartrans") String cartrans, @Param("cartline") String cartline);
 }

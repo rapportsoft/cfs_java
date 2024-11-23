@@ -83,4 +83,13 @@ List<Impexpgrid> getDataForTally(@Param("cid") String cid, @Param("bid") String 
             "order by (COALESCE(i.yardPackages, 0) - COALESCE(i.qtyTakenOut, 0)) asc")
 List<Impexpgrid> getDataForTally1(@Param("cid") String cid, @Param("bid") String bid, 
                               @Param("id") String id, @Param("line") String line);
+	
+	
+	
+	
+	@Query("SELECT E FROM Impexpgrid E " + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.processTransId = :processTransId " + "AND E.lineNo = :lineNo "
+			+ "AND E.subSrNo = :subSrNo " + "AND E.status <> 'D'")
+	Impexpgrid getImpexpgridSubLineNo1(@Param("companyId") String companyId, @Param("branchId") String branchId,
+		 @Param("processTransId") String processTransId,@Param("lineNo") int lineNo, @Param("subSrNo") int subSrNo);
 }

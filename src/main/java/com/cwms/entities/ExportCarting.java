@@ -194,7 +194,20 @@ public class ExportCarting {
     
     transient private BigDecimal cartedPackages;
     
+    @Transient
+    private String yardLocation;
+
+    @Transient
+    private String yardBlock;
+
+    @Transient
+    private String blockCellNo;
     
+    @Transient
+    private BigDecimal yardArea;
+    
+    @Transient
+    private BigDecimal yardPack;
 
    	public BigDecimal getCartedPackages() {
    		return cartedPackages;
@@ -205,7 +218,97 @@ public class ExportCarting {
 
 
 
-   	public void setCartedPackages(BigDecimal cartedPackages) {
+   	public String getYardLocation() {
+		return yardLocation;
+	}
+
+
+
+
+
+
+	public void setYardLocation(String yardLocation) {
+		this.yardLocation = yardLocation;
+	}
+
+
+
+
+
+
+	public String getYardBlock() {
+		return yardBlock;
+	}
+
+
+
+
+
+
+	public void setYardBlock(String yardBlock) {
+		this.yardBlock = yardBlock;
+	}
+
+
+
+
+
+
+	public String getBlockCellNo() {
+		return blockCellNo;
+	}
+
+
+
+
+
+
+	public void setBlockCellNo(String blockCellNo) {
+		this.blockCellNo = blockCellNo;
+	}
+
+
+
+
+
+
+	public BigDecimal getYardArea() {
+		return yardArea;
+	}
+
+
+
+
+
+
+	public void setYardArea(BigDecimal yardArea) {
+		this.yardArea = yardArea;
+	}
+
+
+
+
+
+
+	public BigDecimal getYardPack() {
+		return yardPack;
+	}
+
+
+
+
+
+
+	public void setYardPack(BigDecimal yardPack) {
+		this.yardPack = yardPack;
+	}
+
+
+
+
+
+
+	public void setCartedPackages(BigDecimal cartedPackages) {
    		this.cartedPackages = cartedPackages;
    	}
 
@@ -220,6 +323,84 @@ public class ExportCarting {
 
 
 	
+	public ExportCarting(String companyId, String branchId, String cartingTransId, String cartingLineId, String finYear,
+			String profitcentreId, String sbTransId, String sbNo, String sbLineNo, Date sbDate, Date cartingTransDate,
+			String gateInId, Date gateInDate, String crgExamId, String shift, String vehicleNo, String onAccountOf,
+			String commodity, BigDecimal gateInPackages, BigDecimal gateInWeight, BigDecimal actualNoOfPackages,
+			BigDecimal actualNoOfWeight, BigDecimal fob, String gateInType, String invoiceType, String gridLocation,
+			String gridBlock, String gridCellNo, String stuffReqId, BigDecimal stuffedNoOfPackages,
+			BigDecimal areaOccupied, BigDecimal yardPackages, String damageComments, String status, String createdBy,
+			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
+			String fromSbTransId, String fromSbNo, String fromSbLineNo, Date lastStorageInvoiceDate,
+			String lastStorageFlag, BigDecimal storageWeeks, BigDecimal storageDays, BigDecimal storageMonths,
+			BigDecimal handlingCharges, BigDecimal excessPackages, BigDecimal shortagePackages,
+			BigDecimal damagePackages, BigDecimal cartedPackages, String yardLocation, String yardBlock,
+			String blockCellNo, BigDecimal yardArea, BigDecimal yardPack) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.cartingTransId = cartingTransId;
+		this.cartingLineId = cartingLineId;
+		this.finYear = finYear;
+		this.profitcentreId = profitcentreId;
+		this.sbTransId = sbTransId;
+		this.sbNo = sbNo;
+		this.sbLineNo = sbLineNo;
+		this.sbDate = sbDate;
+		this.cartingTransDate = cartingTransDate;
+		this.gateInId = gateInId;
+		this.gateInDate = gateInDate;
+		this.crgExamId = crgExamId;
+		this.shift = shift;
+		this.vehicleNo = vehicleNo;
+		this.onAccountOf = onAccountOf;
+		this.commodity = commodity;
+		this.gateInPackages = gateInPackages;
+		this.gateInWeight = gateInWeight;
+		this.actualNoOfPackages = actualNoOfPackages;
+		this.actualNoOfWeight = actualNoOfWeight;
+		this.fob = fob;
+		this.gateInType = gateInType;
+		this.invoiceType = invoiceType;
+		this.gridLocation = gridLocation;
+		this.gridBlock = gridBlock;
+		this.gridCellNo = gridCellNo;
+		this.stuffReqId = stuffReqId;
+		this.stuffedNoOfPackages = stuffedNoOfPackages;
+		this.areaOccupied = areaOccupied;
+		this.yardPackages = yardPackages;
+		this.damageComments = damageComments;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.fromSbTransId = fromSbTransId;
+		this.fromSbNo = fromSbNo;
+		this.fromSbLineNo = fromSbLineNo;
+		this.lastStorageInvoiceDate = lastStorageInvoiceDate;
+		this.lastStorageFlag = lastStorageFlag;
+		this.storageWeeks = storageWeeks;
+		this.storageDays = storageDays;
+		this.storageMonths = storageMonths;
+		this.handlingCharges = handlingCharges;
+		this.excessPackages = excessPackages;
+		this.shortagePackages = shortagePackages;
+		this.damagePackages = damagePackages;
+		this.cartedPackages = cartedPackages;
+		this.yardLocation = yardLocation;
+		this.yardBlock = yardBlock;
+		this.blockCellNo = blockCellNo;
+		this.yardArea = yardArea;
+		this.yardPack = yardPack;
+	}
+
+
+
+
+
+
 	public BigDecimal getDamagePackages() {
 		return damagePackages;
 	}
@@ -825,6 +1006,28 @@ public class ExportCarting {
 		
 	}
 	
-	
+	public ExportCarting(String cartingTransId, String cartingLineId, String sbTransId, String sbNo, String commodity,
+			BigDecimal gateInPackages, BigDecimal gateInWeight, BigDecimal actualNoOfPackages,
+			BigDecimal actualNoOfWeight, BigDecimal fob, String gridLocation, String gridBlock, String gridCellNo,
+			BigDecimal areaOccupied, BigDecimal yardPackages, BigDecimal yardArea, BigDecimal yardPack) {
+		this.cartingTransId = cartingTransId;
+		this.cartingLineId = cartingLineId;
+		this.sbTransId = sbTransId;
+		this.sbNo = sbNo;
+		this.commodity = commodity;
+		this.gateInPackages = gateInPackages;
+		this.gateInWeight = gateInWeight;
+		this.actualNoOfPackages = actualNoOfPackages;
+		this.actualNoOfWeight = actualNoOfWeight;
+		this.fob = fob;
+		this.gridLocation = gridLocation;
+		this.gridBlock = gridBlock;
+		this.gridCellNo = gridCellNo;
+		this.areaOccupied = areaOccupied;
+		this.yardPackages = yardPackages;
+		this.yardArea = yardArea;
+		this.yardPack = yardPack;
+	}
+
 	
 }

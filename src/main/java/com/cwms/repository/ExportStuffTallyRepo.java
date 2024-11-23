@@ -391,4 +391,39 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			@Param("outId") String outId,@Param("con") String con);
 	
 	
+	@Query(value = "select DISTINCT e.containerNo from ExportStuffTally e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' "
+			+ "and (e.reworkId is null OR e.reworkId = '') and (e.gatePassNo is null OR e.gatePassNo = '') and (e.movementReqId is null OR e.movementReqId = '') "
+			+ "and (e.gateOutId is null OR e.gateOutId = '') and (:val is null OR :val = '' OR e.containerNo LIKE CONCAT('%',:val,'%')) and e.movementType=:type")
+	List<String> getRecordsForExportReworking(@Param("cid") String cid, @Param("bid") String bid,
+			@Param("val") String val,@Param("type") String type);
+
+	@Query(value = "select e.gateInId,g.inGateInDate,e.containerNo,e.containerSize,e.containerType,e.containerStatus,"
+			+ "e.customsSealNo,p1.partyName,g.vehicleNo,COALESCE(SUM(e.areaReleased),0),COALESCE(SUM(e.stuffedQty),0),"
+			+ "e.onAccountOf,p2.partyName,e.sbTransId,e.sbNo,e.commodity,e.cargoWeight,e.fob,e.shippingAgent "
+			+ "from ExportStuffTally e LEFT OUTER JOIN GateIn g ON e.companyId=g.companyId and e.branchId=g.branchId and e.gateInId=g.gateInId "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.onAccountOf=p2.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' "
+			+ "and (e.reworkId is null OR e.reworkId = '') and (e.gatePassNo is null OR e.gatePassNo = '') and (e.movementReqId is null OR e.movementReqId = '') "
+			+ "and (e.gateOutId is null OR e.gateOutId = '') and e.containerNo=:val group by e.sbNo,e.sbTransId")
+	List<Object[]> getRecordsForExportReworkingByContainerNo(@Param("cid") String cid, @Param("bid") String bid,
+			@Param("val") String val);
+
+	@Transactional
+	@Modifying
+	@Query(value="Update ExportStuffTally e SET e.reworkFlag='Y',e.reworkId=:id,e.reworkDate=CURRENT_DATE where e.companyId=:cid and "
+			+ "e.branchId=:bid and e.status != 'D' "
+			+ "and (e.reworkId is null OR e.reworkId = '') and (e.gatePassNo is null OR e.gatePassNo = '') "
+			+ "and (e.gateOutId is null OR e.gateOutId = '') and e.containerNo=:val")
+	int updateReworkId(@Param("cid") String cid, @Param("bid") String bid,@Param("id") String id,
+			@Param("val") String val);
+	
+	
+	@Query(value = "select e "
+			+ "from ExportStuffTally e "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' "
+			+ "and (e.reworkId is null OR e.reworkId = '') and (e.gatePassNo is null OR e.gatePassNo = '') and (e.movementReqId is null OR e.movementReqId = '') "
+			+ "and (e.gateOutId is null OR e.gateOutId = '') and e.containerNo=:val and e.sbNo=:sb and e.sbTransId=:trans")
+	List<ExportStuffTally> getRecordsForExportReworkingByContainerNo1(@Param("cid") String cid, @Param("bid") String bid,
+			@Param("val") String val,@Param("sb") String sb,@Param("trans") String trans);
 }

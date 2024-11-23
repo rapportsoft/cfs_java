@@ -111,4 +111,10 @@ public interface ExportInventoryRepository extends JpaRepository<ExportInventory
 			+ "and i.containerNo=:con and i.sbNo=:sb "
 			+ "and (i.gateOutId is null OR i.gateOutId = '')")
 	ExportInventory getDataByContainerNoAndSb(@Param("cid") String cid,@Param("bid") String bId,@Param("con") String con,@Param("sb") String sb);
+	
+	
+	@Query(value="select i from ExportInventory i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' "
+			+ "and i.containerNo=:con and i.gateInId=:gate "
+			+ "and (i.gateOutId is null OR i.gateOutId = '')")
+	ExportInventory getDataByContainerNoAndGateIn(@Param("cid") String cid,@Param("bid") String bId,@Param("con") String con,@Param("gate") String gate);
 }
