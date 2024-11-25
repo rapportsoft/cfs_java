@@ -12,81 +12,81 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class ExportCarting {
 
     @Id
-    @Column(name = "Company_Id", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
+    @Column(name = "Company_Id", length = 6, columnDefinition = "varchar(6) default ''")
     private String companyId;
 
     @Id
-    @Column(name = "Branch_Id", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
+    @Column(name = "Branch_Id", length = 6, columnDefinition = "varchar(6) default ''")
     private String branchId;
 
     @Id
-    @Column(name = "Carting_Trans_Id", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "Carting_Trans_Id", length = 10, columnDefinition = "varchar(10) default ''")
     private String cartingTransId;
 
     @Id
-    @Column(name = "Carting_Line_Id", length = 4, nullable = false, columnDefinition = "varchar(4) default ''")
+    @Column(name = "Carting_Line_Id", length = 4, columnDefinition = "varchar(4) default ''")
     private String cartingLineId;
 
     @Id
-    @Column(name = "Fin_Year", length = 4, nullable = false, columnDefinition = "varchar(4) default ''")
+    @Column(name = "Fin_Year", length = 4, columnDefinition = "varchar(4) default ''")
     private String finYear;
 
     @Id
-    @Column(name = "Profitcentre_Id", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
+    @Column(name = "Profitcentre_Id", length = 6, columnDefinition = "varchar(6) default ''")
     private String profitcentreId;
 
     @Id
-    @Column(name = "SB_Trans_Id", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "SB_Trans_Id", length = 10, columnDefinition = "varchar(10) default ''")
     private String sbTransId;
 
     @Id
-    @Column(name = "SB_No", length = 15, nullable = false, columnDefinition = "varchar(15) default ''")
+    @Column(name = "SB_No", length = 15, columnDefinition = "varchar(15) default ''")
     private String sbNo;
 
     @Id
-    @Column(name = "SB_Line_No", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
+    @Column(name = "SB_Line_No", length = 6, columnDefinition = "varchar(6) default ''")
     private String sbLineNo;
     
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Column(name = "Sb_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
+    @Column(name = "Sb_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date sbDate;    
     
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Column(name = "Carting_Trans_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
+    @Column(name = "Carting_Trans_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date cartingTransDate;
 
-    @Column(name = "Gate_In_Id", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "Gate_In_Id", length = 10, columnDefinition = "varchar(10) default ''")
     private String gateInId;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Column(name = "Gate_In_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
+    @Column(name = "Gate_In_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date gateInDate;
 
-    @Column(name = "Crg_Exam_Id", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "Crg_Exam_Id", length = 10, columnDefinition = "varchar(10) default ''")
     private String crgExamId;
 
     @Column(name = "Shift", length = 6, columnDefinition = "varchar(6) default null")
     private String shift;
 
-    @Column(name = "Vehicle_No", length = 15, nullable = false, columnDefinition = "varchar(15) default ''")
+    @Column(name = "Vehicle_No", length = 15, columnDefinition = "varchar(15) default ''")
     private String vehicleNo;
 
-    @Column(name = "On_Account_Of", length = 6, nullable = false, columnDefinition = "varchar(6) default ''")
+    @Column(name = "On_Account_Of", length = 6, columnDefinition = "varchar(6) default ''")
     private String onAccountOf;
 
     @Column(name = "Commodity", length = 250, columnDefinition = "varchar(250) default null")
     private String commodity;
 
-    @Column(name = "Gate_In_Packages", nullable = false, precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
+    @Column(name = "Gate_In_Packages", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal gateInPackages;
 
     @Column(name = "Gate_in_Weight", precision = 15, scale = 3, columnDefinition = "decimal(15,3) default '0.000'")
     private BigDecimal gateInWeight;
 
-    @Column(name = "Actual_No_Of_Packages", nullable = false, precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
+    @Column(name = "Actual_No_Of_Packages", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal actualNoOfPackages;
 
     @Column(name = "Actual_No_Of_Weight", precision = 16, scale = 4, columnDefinition = "decimal(16,4) default '0.0000'")
@@ -101,10 +101,10 @@ public class ExportCarting {
     @Column(name = "Invoice_Type", length = 5, columnDefinition = "varchar(5) default null")
     private String invoiceType;
 
-    @Column(name = "Grid_Location", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "Grid_Location", length = 10, columnDefinition = "varchar(10) default ''")
     private String gridLocation;
 
-    @Column(name = "Grid_Block", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "Grid_Block", length = 10, columnDefinition = "varchar(10) default ''")
     private String gridBlock;
 
     @Column(name = "Grid_Cell_No", length = 10, columnDefinition = "varchar(10) default null")
@@ -113,26 +113,26 @@ public class ExportCarting {
     @Column(name = "Stuff_Req_Id", length = 10, columnDefinition = "varchar(10) default ''")
     private String stuffReqId;
 
-    @Column(name = "Stuffed_No_Of_Packages", nullable = false, precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
+    @Column(name = "Stuffed_No_Of_Packages", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal stuffedNoOfPackages;
 
-    @Column(name = "Area_Occupied", nullable = false, precision = 8, scale = 3, columnDefinition = "decimal(8,3) default '0.000'")
+    @Column(name = "Area_Occupied", precision = 8, scale = 3, columnDefinition = "decimal(8,3) default '0.000'")
     private BigDecimal areaOccupied;
 
-    @Column(name = "Yard_Packages", nullable = false, precision = 8, scale = 3, columnDefinition = "decimal(8,3) default '0.000'")
+    @Column(name = "Yard_Packages", precision = 8, scale = 3, columnDefinition = "decimal(8,3) default '0.000'")
     private BigDecimal yardPackages;
 
-    @Column(name = "Damage_Comments", length = 150, nullable = false, columnDefinition = "varchar(150) default ''")
+    @Column(name = "Damage_Comments", length = 150, columnDefinition = "varchar(150) default ''")
     private String damageComments;
 
-    @Column(name = "Status", length = 1, nullable = false, columnDefinition = "char(1) default ''")
+    @Column(name = "Status", length = 1, columnDefinition = "char(1) default ''")
     private String status;
 
-    @Column(name = "Created_By", length = 10, nullable = false, columnDefinition = "varchar(10) default ''")
+    @Column(name = "Created_By", length = 10, columnDefinition = "varchar(10) default ''")
     private String createdBy;
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Column(name = "Created_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
+    @Column(name = "Created_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
@@ -161,20 +161,20 @@ public class ExportCarting {
     @Column(name = "From_SB_Line_No", length = 10, columnDefinition = "varchar(10) default ''")
     private String fromSbLineNo;
 
-    @Column(name = "Last_Storage_Invoice_Date", nullable = false, columnDefinition = "datetime default '0000-00-00 00:00:00'")
+    @Column(name = "Last_Storage_Invoice_Date", columnDefinition = "datetime default '0000-00-00 00:00:00'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastStorageInvoiceDate;
 
-    @Column(name = "Last_Storage_Flag", length = 1, nullable = false, columnDefinition = "char(1) default 'N'")
+    @Column(name = "Last_Storage_Flag", length = 1, columnDefinition = "char(1) default 'N'")
     private String lastStorageFlag;
 
-    @Column(name = "Storage_Weeks", precision = 8, scale = 0, nullable = false, columnDefinition = "decimal(8,0) default '0'")
+    @Column(name = "Storage_Weeks", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal storageWeeks;
 
-    @Column(name = "Storage_Days", precision = 8, scale = 0, nullable = false, columnDefinition = "decimal(8,0) default '0'")
+    @Column(name = "Storage_Days", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal storageDays;
 
-    @Column(name = "Storage_Months", precision = 8, scale = 0, nullable = false, columnDefinition = "decimal(8,0) default '0'")
+    @Column(name = "Storage_Months", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
     private BigDecimal storageMonths;
 
     @Column(name = "Handling_Charges", precision = 16, scale = 4, columnDefinition = "decimal(16,4) default null")
