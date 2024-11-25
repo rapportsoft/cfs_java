@@ -103,19 +103,19 @@ public class CfExBondCrg {
     @Column(name = "Commodity_Description", length = 250, nullable = true)
     private String commodityDescription;
 
-    @Column(name = "Gross_Weight", nullable = true, precision = 12, scale = 3)
+    @Column(name = "Gross_Weight", nullable = true, precision = 16, scale = 3)
     private BigDecimal grossWeight;
 
-    @Column(name = "In_Bonded_GW", precision = 10, scale = 3)
+    @Column(name = "In_Bonded_GW", precision = 16, scale = 3)
     private BigDecimal inBondedGw;
 
-    @Column(name = "Ex_Bonded_GW", precision = 10, scale = 3)
+    @Column(name = "Ex_Bonded_GW", precision = 16, scale = 3)
     private BigDecimal exBondedGw;
 
-    @Column(name = "Remaining_GW", precision = 10, scale = 3)
+    @Column(name = "Remaining_GW", precision = 16, scale = 3)
     private BigDecimal remainingGw;
 
-    @Column(name = "Balance_GW", precision = 10, scale = 3)
+    @Column(name = "Balance_GW", precision = 16, scale = 3)
     private BigDecimal balanceGw;
 
     @Column(name = "Number_Of_Marks", columnDefinition = "TEXT")
@@ -130,16 +130,16 @@ public class CfExBondCrg {
     @Column(name = "NOC_Packages", length = 6, nullable = true)
     private String nocPackages;
 
-    @Column(name = "Area_Occupied", nullable = true, precision = 10, scale = 3)
+    @Column(name = "Area_Occupied", nullable = true, precision = 16, scale = 3)
     private BigDecimal areaOccupied;
 
-    @Column(name = "Area_Released", nullable = true, precision = 10, scale = 3)
+    @Column(name = "Area_Released", nullable = true, precision = 16, scale = 3)
     private BigDecimal areaReleased;
 
-    @Column(name = "Area_Balanced", nullable = true, precision = 10, scale = 3)
+    @Column(name = "Area_Balanced", nullable = true, precision = 16, scale = 3)
     private BigDecimal areaBalanced;
 
-    @Column(name = "Area_Remaining", precision = 10, scale = 3)
+    @Column(name = "Area_Remaining", precision = 16, scale = 3)
     private BigDecimal areaRemaining;
 
     @Column(name = "In_Bonded_Packages", nullable = true, precision = 6, scale = 0)
@@ -163,46 +163,46 @@ public class CfExBondCrg {
     @Column(name = "Space_Allocated", length = 10, nullable = true)
     private String spaceAllocated;
 
-    @Column(name = "CIF_Value", nullable = true, precision = 15, scale = 3)
+    @Column(name = "CIF_Value", nullable = true, precision = 16, scale = 3)
     private BigDecimal cifValue;
 
-    @Column(name = "In_Bonded_CIF", precision = 15, scale = 3)
+    @Column(name = "In_Bonded_CIF", precision = 16, scale = 3)
     private BigDecimal inBondedCif;
 
-    @Column(name = "Ex_Bonded_CIF", precision = 15, scale = 3)
+    @Column(name = "Ex_Bonded_CIF", precision = 16, scale = 3)
     private BigDecimal exBondedCif;
 
-    @Column(name = "Remaining_CIF", precision = 15, scale = 3)
+    @Column(name = "Remaining_CIF", precision = 16, scale = 3)
     private BigDecimal remainingCif;
 
-    @Column(name = "Balance_CIF", precision = 15, scale = 3)
+    @Column(name = "Balance_CIF", precision = 16, scale = 3)
     private BigDecimal balanceCif;
 
-    @Column(name = "In_Bonded_Cargo_Duty", precision = 15, scale = 3)
+    @Column(name = "In_Bonded_Cargo_Duty", precision = 16, scale = 3)
     private BigDecimal inBondedCargoDuty;
 
-    @Column(name = "Ex_Bonded_Cargo_Duty", precision = 15, scale = 3)
+    @Column(name = "Ex_Bonded_Cargo_Duty", precision = 16, scale = 3)
     private BigDecimal exBondedCargoDuty;
 
-    @Column(name = "Remaining_Cargo_Duty", precision = 15, scale = 3)
+    @Column(name = "Remaining_Cargo_Duty", precision = 16, scale = 3)
     private BigDecimal remainingCargoDuty;
 
-    @Column(name = "Balance_Cargo_Duty", precision = 15, scale = 3)
+    @Column(name = "Balance_Cargo_Duty", precision = 16, scale = 3)
     private BigDecimal balanceCargoDuty;
 
-    @Column(name = "In_Bonded_Insurance", precision = 15, scale = 3)
+    @Column(name = "In_Bonded_Insurance", precision = 16, scale = 3)
     private BigDecimal inBondedInsurance;
 
-    @Column(name = "Ex_Bonded_Insurance", precision = 15, scale = 3)
+    @Column(name = "Ex_Bonded_Insurance", precision = 16, scale = 3)
     private BigDecimal exBondedInsurance;
 
-    @Column(name = "Remaining_Insurance", precision = 15, scale = 3)
+    @Column(name = "Remaining_Insurance", precision = 16, scale = 3)
     private BigDecimal remainingInsurance;
 
-    @Column(name = "Balance_Insurance", precision = 15, scale = 3)
+    @Column(name = "Balance_Insurance", precision = 16, scale = 3)
     private BigDecimal balanceInsurance;
 
-    @Column(name = "CIF_Qty", nullable = true, precision = 12, scale = 3)
+    @Column(name = "CIF_Qty", nullable = true, precision = 16, scale = 3)
     private BigDecimal cifQty;
 
     @Column(name = "ExBond_No", length = 10)

@@ -42,6 +42,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.lowagie.text.DocumentException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -155,6 +156,8 @@ public class CfExBondCrgService {
 		}
 
 		System.out.println("flag________________" + flag);
+		
+		System.out.println("cfexbondcrgDtlList" + cfexbondcrgDtlList);
 
 		if (cfexbondcrg != null) {
 			if ("add".equals(flag)) {
@@ -171,15 +174,51 @@ public class CfExBondCrgService {
 				BigDecimal[] totalInsurance = { BigDecimal.ZERO };
 				BigDecimal[] totalInGrossWeight = { BigDecimal.ZERO };
 				BigDecimal[] totalInBondPackages = { BigDecimal.ZERO };
+				BigDecimal[] totalAreaReleased = { BigDecimal.ZERO };
 
 				cfexbondcrgDtlList.forEach(item -> {
 					System.out.println("item.getInbondCifValue()______________________________________________"
 							+ item.getExBondedCIF());
+					
 					BigDecimal cifValue = item.getExBondedCIF();
 					BigDecimal cargoValue = item.getExBondedCargoDuty();
 					BigDecimal insuranceValue = item.getExBondedInsurance();
 					BigDecimal inGrossWeight = item.getExBondedGW();
 					BigDecimal inBondPack = item.getExBondedPackages();
+					
+					 BigDecimal areaRelea = item.getAreaOccupied();
+					 
+					BigDecimal exBondedPackages = item.getExBondedPackages() != null ? item.getExBondedPackages() : BigDecimal.ZERO;
+				    BigDecimal inBondedPackages = item.getInBondedPackages() != null ? item.getInBondedPackages() : BigDecimal.ZERO;
+				    BigDecimal areaOccupied = item.getAreaOccupied() != null ? item.getAreaOccupied() : BigDecimal.ZERO;
+
+				    // Debugging intermediate values
+				    System.out.println("ExBondedPackages: " + exBondedPackages);
+				    System.out.println("InBondedPackages: " + inBondedPackages);
+				    System.out.println("AreaOccupied: " + areaOccupied);
+
+//				    areaRelea=item.getAreaOccupied().divide(cfexbondcrg.getInBondedPackages()).multiply(item.getExBondedPackages());
+				    
+				    
+				    // Perform calculation only if inBondedPackages and exBondedPackages are non-zero
+//				    if (inBondedPackages.compareTo(BigDecimal.ZERO) > 0 && exBondedPackages.compareTo(BigDecimal.ZERO) > 0) {
+//				        BigDecimal denominator = inBondedPackages.multiply(exBondedPackages);
+//				        System.out.println("Denominator (InBondedPackages * ExBondedPackages): " + denominator);
+//
+//				        if (denominator.compareTo(BigDecimal.ZERO) > 0) {
+//				            areaRelea = areaOccupied.divide(denominator, 10, RoundingMode.HALF_UP); // Use high precision
+//				        }
+//				    }
+
+//				    System.out.println("Calculated Area Released: " + areaRelea);
+				    
+				    
+				    
+				    if (areaRelea != null) {
+				    	   totalAreaReleased[0] = totalAreaReleased[0].add(areaRelea);
+					}
+				    // Accumulate the area released
+				 
 
 					if (cifValue != null) {
 						totalCif[0] = totalCif[0].add(cifValue);
@@ -200,6 +239,9 @@ public class CfExBondCrgService {
 					}
 				});
 
+				System.out.println("totalAreaReleased______________________________"+totalAreaReleased[0]);
+//
+				cfexbondcrg.setAreaReleased(totalAreaReleased[0]);
 				cfexbondcrg.setExBondedCif(totalCif[0]);
 				cfexbondcrg.setExBondedCargoDuty(totalCargo[0]);
 				cfexbondcrg.setExBondedPackages(totalInBondPackages[0]);
@@ -235,7 +277,10 @@ public class CfExBondCrgService {
 				cfexbondcrg.setBalanceGw(cfexbondcrg.getRemainingGw()
 						.subtract(Optional.ofNullable(totalInGrossWeight[0]).orElse(BigDecimal.ZERO)));
 
-				cfexbondcrg.setAreaBalanced(cfexbondcrg.getAreaRemaining()
+//				cfexbondcrg.setAreaBalanced(cfexbondcrg.getAreaRemaining()
+//						.subtract(Optional.ofNullable(cfexbondcrg.getAreaReleased()).orElse(BigDecimal.ZERO)));
+				
+				cfexbondcrg.setAreaBalanced(cfexbondcrg.getAreaOccupied()
 						.subtract(Optional.ofNullable(cfexbondcrg.getAreaReleased()).orElse(BigDecimal.ZERO)));
 
 				cfexbondcrg.setBalancedQty(cfexbondcrg.getRemainingPackages()
@@ -272,11 +317,11 @@ public class CfExBondCrgService {
 								Optional.ofNullable(findCfinbondCrg.getExBondedPackages()).orElse(BigDecimal.ZERO).add(
 										Optional.ofNullable(savedExBond.getExBondedPackages()).orElse(BigDecimal.ZERO)),
 
-								Optional.ofNullable(findCfinbondCrg.getExbondCargoDuty()).orElse(BigDecimal.ZERO)
+								Optional.ofNullable(findCfinbondCrg.getExBondedCargoDuty()).orElse(BigDecimal.ZERO)
 										.add(Optional.ofNullable(savedExBond.getExBondedCargoDuty())
 												.orElse(BigDecimal.ZERO)),
 
-								Optional.ofNullable(findCfinbondCrg.getExbondCifValue()).orElse(BigDecimal.ZERO)
+								Optional.ofNullable(findCfinbondCrg.getExBondedCif()).orElse(BigDecimal.ZERO)
 										.add(Optional.ofNullable(savedExBond.getExBondedCif()).orElse(BigDecimal.ZERO)),
 
 								Optional.ofNullable(findCfinbondCrg.getExBondedInsurance()).orElse(BigDecimal.ZERO)
@@ -288,7 +333,10 @@ public class CfExBondCrgService {
 
 								savedExBond.getNoOf20Ft(), // Assuming Integer for `NoOf20Ft`
 								savedExBond.getNoOf40Ft(), // Assuming Integer for `NoOf40Ft`
-
+								
+								Optional.ofNullable(findCfinbondCrg.getAreaReleased()).orElse(BigDecimal.ZERO)
+								.add(Optional.ofNullable(savedExBond.getAreaReleased()).orElse(BigDecimal.ZERO)),
+								
 								companyId, branchId, savedExBond.getInBondingId(), // Assuming these cannot be null
 								savedExBond.getNocNo(), savedExBond.getNocTransId(), savedExBond.getBoeNo());
 
@@ -298,7 +346,7 @@ public class CfExBondCrgService {
 						int updateCfinbondcrgAfterExbond = cfinbondcrgRepo.updateCfinbondCrgAfterExbond(
 								savedExBond.getExBondedPackages(), savedExBond.getExBondedCargoDuty(),
 								savedExBond.getExBondedCif(), savedExBond.getExBondedInsurance(),
-								savedExBond.getExBondedGw(), savedExBond.getNoOf20Ft(), savedExBond.getNoOf40Ft(),
+								savedExBond.getExBondedGw(), savedExBond.getNoOf20Ft(), savedExBond.getNoOf40Ft(),savedExBond.getAreaReleased(),
 								companyId, branchId, savedExBond.getInBondingId(), savedExBond.getNocNo(),
 								savedExBond.getNocTransId(), savedExBond.getBoeNo());
 
@@ -699,6 +747,8 @@ public class CfExBondCrgService {
 										.subtract(existingExBond.getExBondedGw()),
 								String.valueOf(exBond20FtSum), // Convert the sum back to String
 								String.valueOf(exBond40FtSum), // Convert the sum back to String
+								Optional.ofNullable(findCfinbondCrg.getAreaReleased()).orElse(BigDecimal.ZERO)
+								.add(Optional.ofNullable(cfexbondcrg.getAreaReleased()).orElse(BigDecimal.ZERO).subtract(existingExBond.getAreaReleased())),
 								companyId, branchId, cfexbondcrg.getInBondingId(), cfexbondcrg.getNocNo(),
 								cfexbondcrg.getNocTransId(), cfexbondcrg.getBoeNo());
 

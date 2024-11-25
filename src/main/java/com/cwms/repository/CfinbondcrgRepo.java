@@ -103,7 +103,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 	 
 	 @Modifying
 	 @Transactional
-	 @Query("UPDATE Cfinbondcrg c SET c.exBondedPackages = :exBondedPackages, c.exBondedCargoDuty = :exBondedCargoDuty, c.exBondedCif = :exBondedCif, c.exBondedInsurance = :exBondedInsurance, c.exBondedGw = :exBondedGw,c.exBond20Ft=:exBond20Ft,c.exBond40Ft=:exBond40Ft " +
+	 @Query("UPDATE Cfinbondcrg c SET c.exBondedPackages = :exBondedPackages, c.exBondedCargoDuty = :exBondedCargoDuty, c.exBondedCif = :exBondedCif, c.exBondedInsurance = :exBondedInsurance, c.exBondedGw = :exBondedGw,c.exBond20Ft=:exBond20Ft,c.exBond40Ft=:exBond40Ft,c.areaReleased=:areaReleased " +
 	        "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.inBondingId = :inBondingId AND c.nocNo = :nocNo AND c.nocTransId = :nocTransId AND c.boeNo = :boeNo")
 	 int updateCfinbondCrgAfterExbond(
 	         @Param("exBondedPackages") BigDecimal exBondedPackages,
@@ -113,6 +113,7 @@ public interface CfinbondcrgRepo extends JpaRepository<Cfinbondcrg, String> {
 	         @Param("exBondedGw") BigDecimal exBondedGw,
 	         @Param("exBond20Ft") String exBond20Ft,
 	         @Param("exBond40Ft") String exBond40Ft,
+	         @Param("areaReleased") BigDecimal areaReleased,
 	         @Param("companyId") String companyId,
 	         @Param("branchId") String branchId,
 	         @Param("inBondingId") String inBondingId,

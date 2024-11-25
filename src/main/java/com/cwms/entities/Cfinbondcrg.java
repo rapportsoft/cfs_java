@@ -223,19 +223,19 @@ public class Cfinbondcrg implements Serializable {
 	@Column(name = "Comments", length = 150, nullable = true)
 	private String comments;
 
-	@Column(name = "CIF_Value", precision = 15, scale = 3, nullable = true)
+	@Column(name = "CIF_Value", precision = 16, scale = 3, nullable = true)
 	private BigDecimal cifValue=BigDecimal.ZERO;
 
-	@Column(name = "Cargo_Duty", precision = 15, scale = 3, nullable = true)
+	@Column(name = "Cargo_Duty", precision = 16, scale = 3, nullable = true)
 	private BigDecimal cargoDuty=BigDecimal.ZERO;
 
-	@Column(name = "Insurance_Value", precision = 15, scale = 3, nullable = true)
+	@Column(name = "Insurance_Value", precision = 16, scale = 3, nullable = true)
 	private BigDecimal insuranceValue=BigDecimal.ZERO;
 
-	@Column(name = "inbond_gross_wt", precision = 10, scale = 2)
+	@Column(name = "inbond_gross_wt", precision = 16, scale = 3)
 	private BigDecimal inbondGrossWt=BigDecimal.ZERO;
 
-	@Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+	@Column(name = "Inbond_Insurance_Value", precision = 16, scale = 3)
 	private BigDecimal inbondInsuranceValue=BigDecimal.ZERO;
 
 	@Column(name = "In_Bond_20FT", length = 5, nullable = true)
@@ -304,16 +304,16 @@ public class Cfinbondcrg implements Serializable {
 	@Column(name = "Breakage")
 	private BigDecimal breakage;
 
-	@Column(name = "Ex_Bonded_Cargo_Duty", precision = 15, scale = 3)
+	@Column(name = "Ex_Bonded_Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal exBondedCargoDuty = BigDecimal.ZERO;
 
-	@Column(name = "Ex_Bonded_Insurance", precision = 15, scale = 3)
+	@Column(name = "Ex_Bonded_Insurance", precision = 16, scale = 3)
 	private BigDecimal exBondedInsurance = BigDecimal.ZERO;
 
-	@Column(name = "Ex_Bonded_CIF", precision = 15, scale = 3)
+	@Column(name = "Ex_Bonded_CIF", precision = 16, scale = 3)
 	private BigDecimal exBondedCif = BigDecimal.ZERO;
 
-	@Column(name = "Ex_Bonded_GW", precision = 10, scale = 3)
+	@Column(name = "Ex_Bonded_GW", precision = 16, scale = 3)
 	private BigDecimal exBondedGw = BigDecimal.ZERO;
 
 	
@@ -341,6 +341,9 @@ public class Cfinbondcrg implements Serializable {
 	@Column(name = "Section_60", length = 1, nullable = true)
 	private String section60;
 
+	 @Column(name = "Area_Released", nullable = true, precision = 10, scale = 3)
+	 private BigDecimal areaReleased;
+	 
 	@Transient
 	private String cfBondDtlId;
 
@@ -399,6 +402,14 @@ public class Cfinbondcrg implements Serializable {
 	
 	
 	
+
+	public BigDecimal getAreaReleased() {
+		return areaReleased;
+	}
+
+	public void setAreaReleased(BigDecimal areaReleased) {
+		this.areaReleased = areaReleased;
+	}
 
 	public String getSection60() {
 		return section60;
@@ -1493,7 +1504,7 @@ public class Cfinbondcrg implements Serializable {
 			String documentStatus, BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage,
 			BigDecimal exBondedCargoDuty, BigDecimal exBondedInsurance, BigDecimal exBondedCif, BigDecimal exBondedGw,
 			Date extenstionDate1, Date extenstionDate2, Date extenstionDate3, String sourcePort, String section64,
-			String section60) {
+			String section60,BigDecimal areaReleased) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1591,6 +1602,7 @@ public class Cfinbondcrg implements Serializable {
 		this.sourcePort = sourcePort;
 		this.section64 = section64;
 		this.section60 = section60;
+		this.areaReleased=areaReleased;
 	}
 
 	// for search data
@@ -1691,6 +1703,8 @@ public class Cfinbondcrg implements Serializable {
 		this.section60=section60;
 	}
 
+	
+	// for boe no search in exbond screen please check for any correction 
 	public Cfinbondcrg(String companyId, String branchId, String finYear, String inBondingId, Date inBondingDate,
 			String profitcentreId, String nocTransId, String nocNo, Date nocTransDate, String igmNo, Date igmDate,
 			String igmLineNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String shift, String gateInId,
@@ -1704,7 +1718,7 @@ public class Cfinbondcrg implements Serializable {
 			BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue, String inBond20Ft,
 			String inBond40Ft, String exBond20Ft, String exBond40Ft, String otlNo, String bondYard, String status,
 			BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage, BigDecimal exBondedCargoDuty,
-			BigDecimal exBondedInsurance, BigDecimal exBondedCif, BigDecimal exBondedGw) {
+			BigDecimal exBondedInsurance, BigDecimal exBondedCif, BigDecimal exBondedGw,BigDecimal areaReleased) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1772,6 +1786,7 @@ public class Cfinbondcrg implements Serializable {
 		this.exBondedInsurance = exBondedInsurance;
 		this.exBondedCif = exBondedCif;
 		this.exBondedGw = exBondedGw;
+		this.areaReleased=areaReleased;
 	}
 
 	public Cfinbondcrg(String inBondingHdrId) {

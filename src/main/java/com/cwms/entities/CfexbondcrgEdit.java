@@ -47,16 +47,16 @@ public class CfexbondcrgEdit {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	private Date approvedDate;
 
-	@Column(name = "balance_cif", precision = 12, scale = 3)
+	@Column(name = "balance_cif", precision = 16, scale = 3)
 	private BigDecimal balanceCif;
 
-	@Column(name = "balance_cif_old", precision = 12, scale = 3)
+	@Column(name = "balance_cif_old", precision = 16, scale = 3)
 	private BigDecimal balanceCifOld;
 
-	@Column(name = "balance_cargo_duty", precision = 12, scale = 3)
+	@Column(name = "balance_cargo_duty", precision = 16, scale = 3)
 	private BigDecimal balanceCargoDuty;
 
-	@Column(name = "balance_cargo_duty_old", precision = 12, scale = 3)
+	@Column(name = "balance_cargo_duty_old", precision = 16, scale = 3)
 	private BigDecimal balanceCargoDutyOld;
 
 	@Column(name = "balance_gw", precision = 16, scale = 3)
@@ -65,10 +65,10 @@ public class CfexbondcrgEdit {
 	@Column(name = "balance_gw_old", precision = 16, scale = 3)
 	private BigDecimal balanceGwOld;
 
-	@Column(name = "balance_insurance", precision = 12, scale = 3)
+	@Column(name = "balance_insurance", precision = 16, scale = 3)
 	private BigDecimal balanceInsurance;
 
-	@Column(name = "balance_insurance_old", precision = 12, scale = 3)
+	@Column(name = "balance_insurance_old", precision = 16, scale = 3)
 	private BigDecimal balanceInsuranceOld;
 
 	@Column(name = "balanced_packages_new", precision = 16, scale = 3)
@@ -164,16 +164,16 @@ public class CfexbondcrgEdit {
 	@Column(name = "ex_bond_be_no_old", length = 20)
 	private String exBondBeNoOld;
 
-	@Column(name = "ex_bonded_cif", precision = 12, scale = 3)
+	@Column(name = "ex_bonded_cif", precision = 16, scale = 3)
 	private BigDecimal exBondedCif;
 
-	@Column(name = "ex_bonded_cif_old", precision = 12, scale = 3)
+	@Column(name = "ex_bonded_cif_old", precision = 16, scale = 3)
 	private BigDecimal exBondedCifOld;
 
-	@Column(name = "ex_bonded_cargo_duty", precision = 12, scale = 3)
+	@Column(name = "ex_bonded_cargo_duty", precision = 16, scale = 3)
 	private BigDecimal exBondedCargoDuty;
 
-	@Column(name = "ex_bonded_cargo_duty_old", precision = 12, scale = 3)
+	@Column(name = "ex_bonded_cargo_duty_old", precision = 16, scale = 3)
 	private BigDecimal exBondedCargoDutyOld;
 
 	@Column(name = "ex_bonded_gw", precision = 16, scale = 3)
@@ -182,10 +182,10 @@ public class CfexbondcrgEdit {
 	@Column(name = "ex_bonded_gw_old", precision = 16, scale = 3)
 	private BigDecimal exBondedGwOld;
 
-	@Column(name = "ex_bonded_insurance", precision = 12, scale = 3)
+	@Column(name = "ex_bonded_insurance", precision = 16, scale = 3)
 	private BigDecimal exBondedInsurance;
 
-	@Column(name = "ex_bonded_insurance_old", precision = 12, scale = 3)
+	@Column(name = "ex_bonded_insurance_old", precision = 16, scale = 3)
 	private BigDecimal exBondedInsuranceOld;
 
 	@Column(name = "ex_bonded_packages", precision = 16, scale = 3)
@@ -227,16 +227,16 @@ public class CfexbondcrgEdit {
 	@Column(name = "importer_name_old", length = 60)
 	private String importerNameOld;
 
-	@Column(name = "in_bonded_cif", precision = 12, scale = 3)
+	@Column(name = "in_bonded_cif", precision = 16, scale = 3)
 	private BigDecimal inBondedCif;
 
-	@Column(name = "in_bonded_cif_old", precision = 12, scale = 3)
+	@Column(name = "in_bonded_cif_old", precision = 16, scale = 3)
 	private BigDecimal inBondedCifOld;
 
-	@Column(name = "in_bonded_cargo_duty", precision = 12, scale = 3)
+	@Column(name = "in_bonded_cargo_duty", precision = 16, scale = 3)
 	private BigDecimal inBondedCargoDuty;
 
-	@Column(name = "in_bonded_cargo_duty_old", precision = 12, scale = 3)
+	@Column(name = "in_bonded_cargo_duty_old", precision = 16, scale = 3)
 	private BigDecimal inBondedCargoDutyOld;
 
 	@Column(name = "in_bonded_gw", precision = 16, scale = 3)
@@ -245,10 +245,10 @@ public class CfexbondcrgEdit {
 	@Column(name = "in_bonded_gw_old", precision = 16, scale = 3)
 	private BigDecimal inBondedGwOld;
 
-	@Column(name = "in_bonded_insurance", precision = 12, scale = 3)
+	@Column(name = "in_bonded_insurance", precision = 16, scale = 3)
 	private BigDecimal inBondedInsurance;
 
-	@Column(name = "in_bonded_insurance_old", precision = 12, scale = 3)
+	@Column(name = "in_bonded_insurance_old", precision = 16, scale = 3)
 	private BigDecimal inBondedInsuranceOld;
 
 	@Column(name = "in_bonded_packages", precision = 16, scale = 3)
@@ -280,10 +280,10 @@ public class CfexbondcrgEdit {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	private Date nocValidityDateOld;
 
-	@Column(name = "remaining_cif", precision = 12, scale = 3)
+	@Column(name = "remaining_cif", precision = 16, scale = 3)
 	private BigDecimal remainingCif;
 
-	@Column(name = "remaining_cif_old", precision = 12, scale = 3)
+	@Column(name = "remaining_cif_old", precision = 16, scale = 3)
 	private BigDecimal remainingCifOld;
 
 	@Column(name = "remaining_cargo_duty", precision = 16, scale = 3)
@@ -298,10 +298,10 @@ public class CfexbondcrgEdit {
 	@Column(name = "remaining_gw_old", precision = 16, scale = 3)
 	private BigDecimal remainingGwOld;
 
-	@Column(name = "remaining_insurance", precision = 12, scale = 3)
+	@Column(name = "remaining_insurance", precision = 16, scale = 3)
 	private BigDecimal remainingInsurance;
 
-	@Column(name = "remaining_insurance_old", precision = 12, scale = 3)
+	@Column(name = "remaining_insurance_old", precision = 16, scale = 3)
 	private BigDecimal remainingInsuranceOld;
 
 	@Column(name = "remaining_packages", precision = 16, scale = 3)

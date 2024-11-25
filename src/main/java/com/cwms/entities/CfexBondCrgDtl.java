@@ -74,13 +74,13 @@ public class CfexBondCrgDtl {
 	@Column(name = "ExBond_Type", length = 5)
 	private String exBondType;
 
-	@Column(name = "Ex_Bonded_CIF", precision = 12, scale = 3)
+	@Column(name = "Ex_Bonded_CIF", precision = 16, scale = 3)
 	private BigDecimal exBondedCIF;
 
-	@Column(name = "Ex_Bonded_Cargo_Duty", precision = 12, scale = 3)
+	@Column(name = "Ex_Bonded_Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal exBondedCargoDuty;
 
-	@Column(name = "Ex_Bonded_Insurance", precision = 12, scale = 3)
+	@Column(name = "Ex_Bonded_Insurance", precision = 16, scale = 3)
 	private BigDecimal exBondedInsurance;
 
 	@Column(name = "SB_No", length = 20)
@@ -92,7 +92,7 @@ public class CfexBondCrgDtl {
 	@Column(name = "Cargo_Type", length = 20)
 	private String cargoType;
 
-	@Column(name = "Gross_Weight", precision = 12, scale = 3)
+	@Column(name = "Gross_Weight", precision = 16, scale = 3)
 	private BigDecimal grossWeight;
 
 	@Column(name = "Ex_Bonded_GW", precision = 16, scale = 3)
@@ -137,16 +137,16 @@ public class CfexBondCrgDtl {
 	@Column(name = "In_Bonded_Packages", precision = 8, scale = 0, nullable = true)
 	private BigDecimal inBondedPackages;
 
-	@Column(name = "Inbond_Gross_Wt", precision = 12, scale = 3)
+	@Column(name = "Inbond_Gross_Wt", precision = 16, scale = 3)
 	private BigDecimal inbondGrossWt;
 
-	@Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+	@Column(name = "Inbond_Insurance_Value", precision = 16, scale = 3)
 	private BigDecimal inbondInsuranceValue;
 
-	@Column(name = "Inbond_CIF_Value", precision = 15, scale = 2)
+	@Column(name = "Inbond_CIF_Value", precision = 16, scale = 3)
 	private BigDecimal inbondCifValue;
 
-	@Column(name = "Inbond_Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Inbond_Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal inbondCargoDuty;
 	
 	 @Column(name = "yard_location_id", length = 20, nullable = false)
@@ -166,8 +166,6 @@ public class CfexBondCrgDtl {
 	    
 	    @Column(name = "ExBond_Grid_Area", precision = 16, scale = 3)
 		private BigDecimal exBondGridArea;
-
-	    
 	    
 	    @Column(name = "IGM_No", length = 10, nullable = true)
 	    private String igmNo;

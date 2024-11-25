@@ -43,7 +43,7 @@ public class CfinbondCommdtlEdit {
     @Column(name = "noc_trans_id", length = 10, nullable = false)
     private String nocTransId;
 
-    @Column(name = "old_insurance_value", precision = 38, scale = 2)
+    @Column(name = "old_insurance_value", precision = 38, scale = 3)
     private BigDecimal oldInsuranceValue;
 
     @Column(name = "old_type_of_package", length = 255)
@@ -79,67 +79,67 @@ public class CfinbondCommdtlEdit {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date editedDate;
 
-    @Column(name = "gross_weight", precision = 38, scale = 2)
+    @Column(name = "gross_weight", precision = 38, scale = 3)
     private BigDecimal grossWeight;
 
     @Column(name = "in_bonding_hdr_id", length = 10)
     private String inBondingHdrId;
 
-    @Column(name = "new_bond_cargo_duty", precision = 38, scale = 2)
+    @Column(name = "new_bond_cargo_duty", precision = 38, scale = 3)
     private BigDecimal newBondCargoDuty;
 
-    @Column(name = "new_bond_cif_value", precision = 38, scale = 2)
+    @Column(name = "new_bond_cif_value", precision = 38, scale = 3)
     private BigDecimal newBondCifValue;
 
-    @Column(name = "new_bond_gross_wt", precision = 38, scale = 2)
+    @Column(name = "new_bond_gross_wt", precision = 38, scale = 3)
     private BigDecimal newBondGrossWt;
 
-    @Column(name = "new_bond_packages", precision = 38, scale = 2)
+    @Column(name = "new_bond_packages", precision = 38, scale = 3)
     private BigDecimal newBondPackages;
 
-    @Column(name = "new_breakage", precision = 38, scale = 2)
+    @Column(name = "new_breakage", precision = 38, scale = 3)
     private BigDecimal newBreakage= BigDecimal.ZERO;
 
     @Column(name = "new_commodity_description", length = 255)
     private String newCommodityDescription;
 
-    @Column(name = "new_damaged_qty", precision = 38, scale = 2)
+    @Column(name = "new_damaged_qty", precision = 38, scale = 3)
     private BigDecimal newDamagedQty = BigDecimal.ZERO;
 
-    @Column(name = "new_insurance_value", precision = 38, scale = 2)
+    @Column(name = "new_insurance_value", precision = 38, scale = 3)
     private BigDecimal newInsuranceValue;
 
-    @Column(name = "new_shortage_packages", precision = 38, scale = 2)
+    @Column(name = "new_shortage_packages", precision = 38, scale = 3)
     private BigDecimal newShortagePackages= BigDecimal.ZERO;
 
     @Column(name = "new_type_of_package", length = 255)
     private String newTypeOfPackage;
 
-    @Column(name = "noc_packages", precision = 38, scale = 2)
+    @Column(name = "noc_packages", precision = 38, scale = 3)
     private BigDecimal nocPackages;
 
-    @Column(name = "old_bond_cargo_duty", precision = 38, scale = 2)
+    @Column(name = "old_bond_cargo_duty", precision = 38, scale = 3)
     private BigDecimal oldBondCargoDuty;
 
-    @Column(name = "old_bond_cif_value", precision = 38, scale = 2)
+    @Column(name = "old_bond_cif_value", precision = 38, scale = 3)
     private BigDecimal oldBondCifValue;
 
-    @Column(name = "old_bond_gross_wt", precision = 38, scale = 2)
+    @Column(name = "old_bond_gross_wt", precision = 38, scale = 3)
     private BigDecimal oldBondGrossWt;
 
-    @Column(name = "old_bond_packages", precision = 38, scale = 2)
+    @Column(name = "old_bond_packages", precision = 38, scale = 3)
     private BigDecimal oldBondPackages;
 
-    @Column(name = "old_breakage", precision = 38, scale = 2)
+    @Column(name = "old_breakage", precision = 38, scale = 3)
     private BigDecimal oldBreakage;
 
     @Column(name = "old_commodity_description", length = 255)
     private String oldCommodityDescription;
 
-    @Column(name = "old_damaged_qty", precision = 38, scale = 2)
+    @Column(name = "old_damaged_qty", precision = 38, scale = 3)
     private BigDecimal oldDamagedQty;
 
-    @Column(name = "old_shortage_packages", precision = 38, scale = 2)
+    @Column(name = "old_shortage_packages", precision = 38, scale = 3)
     private BigDecimal oldShortagePackages;
 
     @Column(name = "status", length = 1)

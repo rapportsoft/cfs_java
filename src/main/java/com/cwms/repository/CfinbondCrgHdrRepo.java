@@ -148,12 +148,12 @@ public interface CfinbondCrgHdrRepo extends JpaRepository<CfinbondcrgHDR, String
 		       "c.profitcentreId, c.nocTransId, c.nocNo, c.nocTransDate, c.igmNo, c.igmDate, c.igmLineNo, c.nocDate, " +
 		       "c.nocValidityDate, c.nocFromDate, c.shift, c.gateInId, c.boeNo, c.boeDate, c.accSrNo, c.onAccountOf, " +
 		       "c.bondingNo, c.bondingDate, c.bondValidityDate, c.chaSrNo, c.cha, c.chaCode, c.importerId, c.importerName, " +
-		       "c.importerAddress1, c.importerAddress2, c.importerAddress3, c.numberOfMarks, c.commodityDescription, " +
+		       "p.partyName, c.importerAddress2, c.importerAddress3, c.numberOfMarks, c.commodityDescription, " +
 		       "c.grossWeight, c.uom, c.nocPackages, c.areaAllocated, c.areaOccupied, c.cargoCondition, c.gateInPackages, " +
 		       "c.inBondedPackages, c.exBondedPackages, c.toBondedPackages, c.spaceAllocated, c.section49, c.comments, " +
 		       "c.cifValue, c.cargoDuty, c.insuranceValue, c.inbondGrossWt, c.inbondInsuranceValue, c.inBond20Ft, " +
 		       "c.inBond40Ft, c.exBond20Ft, c.exBond40Ft, c.otlNo, c.bondYard, c.status, c.shortagePackages, " +
-		       "c.damagedQty, c.breakage, c.exBondedCargoDuty, c.exBondedInsurance, c.exBondedCif, c.exBondedGw) " +
+		       "c.damagedQty, c.breakage, c.exBondedCargoDuty, c.exBondedInsurance, c.exBondedCif, c.exBondedGw,c.areaReleased) " +
 		       "FROM Cfinbondcrg c " +
 		       "LEFT OUTER JOIN Party p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.cha = p.partyId " +
 		       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +

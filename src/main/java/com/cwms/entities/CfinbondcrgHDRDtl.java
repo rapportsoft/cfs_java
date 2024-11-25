@@ -71,13 +71,13 @@ public class CfinbondcrgHDRDtl {
     @Column(name = "NOC_Packages", precision = 8, scale = 0, nullable = true)
 	private BigDecimal nocPackages;
 
-	@Column(name = "CIF_Value", precision = 15, scale = 2)
+	@Column(name = "CIF_Value", precision = 16, scale = 3)
 	private BigDecimal cifValue;
 
-	@Column(name = "Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal cargoDuty;
 
-	@Column(name = "Insurance_Value", precision = 15, scale = 2)
+	@Column(name = "Insurance_Value", precision = 16, scale = 3)
 	private BigDecimal insuranceValue;
 
 	@Column(name = "TYPE_OF_PACKAGE", length = 15)
@@ -108,16 +108,16 @@ public class CfinbondcrgHDRDtl {
 
  
 
-    @Column(name = "Inbond_Gross_Wt", precision = 12, scale = 3)
+    @Column(name = "Inbond_Gross_Wt", precision = 16, scale = 3)
     private BigDecimal inbondGrossWt;
 
-    @Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+    @Column(name = "Inbond_Insurance_Value", precision = 16, scale = 3)
     private BigDecimal inbondInsuranceValue;
 
-    @Column(name = "Inbond_CIF_Value", precision = 15, scale = 2)
+    @Column(name = "Inbond_CIF_Value", precision = 16, scale = 3)
 	private BigDecimal inbondCifValue;
 
-	@Column(name = "Inbond_Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Inbond_Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal inbondCargoDuty;
    
     @Column(name = "Status", length = 1, nullable = true)
@@ -151,7 +151,7 @@ public class CfinbondcrgHDRDtl {
 	@Column(name = "Breakage")
 	private BigDecimal breakage;
 	
-	 @Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
+	 @Column(name = "Area_Occupied", precision = 16, scale = 3, nullable = true)
 	    private BigDecimal areaOccupied;
 
 	public CfinbondcrgHDRDtl() {

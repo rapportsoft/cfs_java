@@ -183,10 +183,10 @@ public class CfinbondcrgHDR implements Serializable {
     @Column(name = "Sample_Qty")
     private int sampleQty;
 
-    @Column(name = "Area_Allocated", precision = 5, scale = 0, nullable = true)
+    @Column(name = "Area_Allocated", precision = 16, scale = 3, nullable = true)
     private BigDecimal areaAllocated;
 
-    @Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
+    @Column(name = "Area_Occupied", precision = 16, scale = 3, nullable = true)
     private BigDecimal areaOccupied;
 
     @Column(name = "Cargo_Condition", length = 6)
@@ -222,19 +222,19 @@ public class CfinbondcrgHDR implements Serializable {
     @Column(name = "Comments", length = 150, nullable = true)
     private String comments;
 
-    @Column(name = "CIF_Value", precision = 15, scale = 3, nullable = true)
+    @Column(name = "CIF_Value", precision = 16, scale = 3, nullable = true)
     private BigDecimal cifValue;
 
-    @Column(name = "Cargo_Duty", precision = 15, scale = 3, nullable = true)
+    @Column(name = "Cargo_Duty", precision = 16, scale = 3, nullable = true)
     private BigDecimal cargoDuty;
 
-    @Column(name = "Insurance_Value", precision = 15, scale = 3, nullable = true)
+    @Column(name = "Insurance_Value", precision = 16, scale = 3, nullable = true)
     private BigDecimal insuranceValue;
 
-    @Column(name = "Inbond_Gross_Wt", precision = 12, scale = 3)
+    @Column(name = "Inbond_Gross_Wt", precision = 16, scale = 3)
     private BigDecimal inbondGrossWt;
 
-    @Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+    @Column(name = "Inbond_Insurance_Value", precision = 16, scale = 3)
     private BigDecimal inbondInsuranceValue;
 
     @Column(name = "In_Bond_20FT", length = 5, nullable = true)
@@ -304,17 +304,17 @@ public class CfinbondcrgHDR implements Serializable {
 	private BigDecimal breakage;
 	
 	
-	 @Column(name = "Ex_Bonded_Cargo_Duty", precision = 15, scale = 3)
+	 @Column(name = "Ex_Bonded_Cargo_Duty", precision = 16, scale = 3)
 	    private BigDecimal exBondedCargoDuty=BigDecimal.ZERO;
 	 
-	  @Column(name = "Ex_Bonded_Insurance", precision = 15, scale = 3)
+	  @Column(name = "Ex_Bonded_Insurance", precision = 16, scale = 3)
 	    private BigDecimal exBondedInsurance=BigDecimal.ZERO;
 	  
-	  @Column(name = "Ex_Bonded_CIF", precision = 15, scale = 3)
+	  @Column(name = "Ex_Bonded_CIF", precision = 16, scale = 3)
 	    private BigDecimal exBondedCif=BigDecimal.ZERO;
 	  
 	  
-	  @Column(name = "Ex_Bonded_GW", precision = 10, scale = 3)
+	  @Column(name = "Ex_Bonded_GW", precision = 16, scale = 3)
 	    private BigDecimal exBondedGw=BigDecimal.ZERO;
 
 	  

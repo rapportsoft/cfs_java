@@ -179,25 +179,25 @@ public class Cfbondnoc {
 	@Column(name = "New_Area", precision = 5, scale = 0, nullable = true)
 	private BigDecimal newArea;
 
-	@Column(name = "CIF_Value", precision = 16, scale = 2)
+	@Column(name = "CIF_Value", precision = 16, scale = 3)
 	private BigDecimal cifValue;
 
 	@Column(name = "IMO_CODE", length = 10, nullable = true)
 	private String imoCode;
 
-	@Column(name = "Cargo_Duty", precision = 16, scale = 2)
+	@Column(name = "Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal cargoDuty;
 
-	@Column(name = "Insurance_Value", precision = 16, scale = 2)
+	@Column(name = "Insurance_Value", precision = 16, scale = 3)
 	private BigDecimal insuranceValue;
 
-	@Column(name = "Insurance_Amt", precision = 16, scale = 2)
+	@Column(name = "Insurance_Amt", precision = 16, scale = 3)
 	private BigDecimal insuranceAmt;
 
-	@Column(name = "Stored_Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Stored_Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal storedCragoDuty;
 
-	@Column(name = "Stored_Cif_Duty", precision = 15, scale = 2)
+	@Column(name = "Stored_Cif_Duty", precision = 16, scale = 3)
 	private BigDecimal storedCifValue;
 
 	@Column(name = "Notice_Id", length = 10)
@@ -274,10 +274,10 @@ public class Cfbondnoc {
 	@Column(name = "Cargo_Source", length = 10, nullable = true)
 	private String cargoSource;
 
-	@Column(name = "Bal_CIF_Value", precision = 15, scale = 3, nullable = true)
+	@Column(name = "Bal_CIF_Value", precision = 16, scale = 3, nullable = true)
 	private BigDecimal balCifValue;
 
-	@Column(name = "Bal_Cargo_Duty", precision = 15, scale = 3, nullable = true)
+	@Column(name = "Bal_Cargo_Duty", precision = 16, scale = 3, nullable = true)
 	private BigDecimal balCargoDuty;
 
 	@Column(name = "Block_Move_Allow", length = 1, nullable = true)
@@ -365,16 +365,16 @@ public class Cfbondnoc {
 	@Column(name = "SSR_TRANS_ID", length = 20, nullable = true)
 	private String ssrTransId;
 
-	@Column(name = "Inbond_Gross_Wt", precision = 12, scale = 3)
+	@Column(name = "Inbond_Gross_Wt", precision = 16, scale = 3)
 	private BigDecimal inbondGrossWt = BigDecimal.ZERO;
 
-	@Column(name = "Inbond_Insurance_Value", precision = 15, scale = 3)
+	@Column(name = "Inbond_Insurance_Value", precision = 16, scale = 3)
 	private BigDecimal inbondInsuranceValue = BigDecimal.ZERO;
 
-	@Column(name = "Inbond_CIF_Value", precision = 15, scale = 2)
+	@Column(name = "Inbond_CIF_Value", precision = 16, scale = 3)
 	private BigDecimal inbondCifValue = BigDecimal.ZERO;
 
-	@Column(name = "Inbond_Cargo_Duty", precision = 15, scale = 2)
+	@Column(name = "Inbond_Cargo_Duty", precision = 16, scale = 3)
 	private BigDecimal inbondCargoDuty = BigDecimal.ZERO;
 
 	@Column(name = "Bonding_no", length = 25)

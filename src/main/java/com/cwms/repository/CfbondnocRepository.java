@@ -472,10 +472,11 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 		
 		
 		
-		 @Query(value = "select DISTINCT c.boeNo, c.nocNo, c.nocTransId, c.nocTransDate, c.cha, p.partyName,c.igmNo,c.igmLineNo,c.importerId,c.boeDate,c.igmNo,c.nocDate " +
+		 @Query(value = "select DISTINCT c.boeNo, c.nocNo, c.nocTransId, c.nocTransDate, c.cha, p.partyName,c.igmNo,c.igmLineNo,c.importerId,c.boeDate,c.igmNo,c.nocDate,c.nocPackages,c.gateInPackages " +
                  "from Cfbondnoc c " +
                  "LEFT OUTER JOIN Party p ON c.companyId = p.companyId and c.branchId = p.branchId and c.cha = p.partyId " +
                  "where c.companyId = :cid and c.branchId = :bid " +
+                 "AND (c.nocPackages - COALESCE(c.gateInPackages, 0)) > 0 " +
                  "and c.status != 'D' " +
                  "and (:val is null OR :val = '' OR c.boeNo LIKE CONCAT(:val, '%'))")
   List<Object[]> getAllBoeNoFromNoc(@Param("cid") String cid, 
