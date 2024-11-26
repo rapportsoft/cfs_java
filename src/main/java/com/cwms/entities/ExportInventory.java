@@ -47,7 +47,7 @@ public class ExportInventory {
     @Column(name = "Vessel_Id", length = 7)
     private String vesselId;
 
-    @Column(name = "VIA_No", length = 7)
+    @Column(name = "VIA_No", length = 10)
     private String viaNo;
 
     @Column(name = "Container_Size", length = 6)

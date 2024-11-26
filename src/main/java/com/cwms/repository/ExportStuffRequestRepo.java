@@ -38,7 +38,7 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
 		       "AND E.noOfPackages = E.cartedPackages AND (E.noOfPackages - E.stuffReqQty) > 0 " +
 		       "AND E.profitcentreId = :profitcentreId " +
 		       "AND st.stuffReqId IS NULL " +  // Exclude entries with the specified stuffReqId
-		       "AND E.status <> 'D'")
+		       "AND E.status <> 'D' AND g.outOfCharge = 'Y'")
 		List<Object[]> searchSbNoForStuffing(
 		    @Param("companyId") String companyId, 
 		    @Param("branchId") String branchId, 
@@ -46,7 +46,6 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
 		    @Param("profitcentreId") String profitcentreId,
 		    @Param("stuffReqId") String stuffReqId
 		);
-
 	
 	
 	

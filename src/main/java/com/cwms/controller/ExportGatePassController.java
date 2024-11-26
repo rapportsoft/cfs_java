@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -1676,7 +1677,108 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 	}
 
 	
-	
+	// Export History
+
+		@GetMapping("/getHistory")
+		public ResponseEntity<?> getHistory(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+				@RequestParam(name="sb",required = false) String sb,@RequestParam(name="con",required = false) String con) {
+
+			Map<String, Object> result = new HashMap<>();
+
+			// SB data
+			if(!sb.isEmpty()) {
+				List<Object[]> data = exportsbcargoentryrepo.getHistoryDataForSB(cid, bid, sb);
+
+				if (data.isEmpty()) {
+					return new ResponseEntity<>("Shipping bill data not found", HttpStatus.CONFLICT);
+				} else {
+
+					result.put("sbData", data);
+
+					// Gate In data
+					List<Object[]> gateInData = exportsbcargoentryrepo.getHistoryDataForGateIn(cid, bid, sb);
+
+					if (gateInData.isEmpty()) {
+						result.put("gateInData", null);
+					} else {
+						result.put("gateInData", gateInData);
+					}
+
+					// Carting data
+					List<Object[]> cartingData = exportsbcargoentryrepo.getHistoryDataForCartingData(cid, bid, sb);
+
+					if (cartingData.isEmpty()) {
+						result.put("cartingData", null);
+					} else {
+						result.put("cartingData", cartingData);
+					}
+
+					// StuffReq data
+					List<Object[]> stuffReqData = exportsbcargoentryrepo.getHistoryDataForStuffReqData(cid, bid, sb,
+							String.valueOf(data.get(0)[0]));
+
+					if (stuffReqData.isEmpty()) {
+						result.put("stuffReqData", null);
+					} else {
+						result.put("stuffReqData", stuffReqData);
+					}
+
+					// StuffTally data
+
+					List<Object[]> stuffTallyData = exportsbcargoentryrepo.getHistoryDataForStuffTallyData(cid, bid, sb,
+							String.valueOf(data.get(0)[0]));
+
+					if (stuffTallyData.isEmpty()) {
+						result.put("stuffTallyData", null);
+						
+						return new ResponseEntity<>(result, HttpStatus.OK);
+					} else {
+						result.put("stuffTallyData", stuffTallyData);
+						
+						List<String> getFilteredData = stuffTallyData.stream()
+						        // Ensure the array has at least 16 indexes
+						        .map(array -> (array[16] != null || !String.valueOf(array[16]).isEmpty()) ? array[16].toString().trim() : null)
+						        // Filter out null or empty values
+						        .filter(value -> value != null && !value.isEmpty())
+						        // Remove duplicate values
+						        .distinct()
+						        // Collect into a List of Strings
+						        .collect(Collectors.toList());
+						
+						
+					
+						
+						// Movement Data
+
+						List<Object[]> movementData = exportsbcargoentryrepo.getHistoryDataForExportMovementData(cid, bid, getFilteredData);
+
+						if (movementData.isEmpty()) {
+							result.put("movementData", null);
+						} else {
+							result.put("movementData", movementData);
+						}
+
+						return new ResponseEntity<>(result, HttpStatus.OK);
+					}
+
+					
+				}
+			}
+			else {
+				
+				List<Object[]> containerData = exportsbcargoentryrepo.getHistoryDataWithContainerNo(cid, bid, con);
+
+				if (containerData.isEmpty()) {
+					result.put("containerData", null);
+				} else {
+					result.put("containerData", containerData);
+				}
+
+				return new ResponseEntity<>(result, HttpStatus.OK);
+				
+				
+			}
+		}
 	
 
 }

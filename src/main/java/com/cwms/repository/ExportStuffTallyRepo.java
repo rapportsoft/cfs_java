@@ -312,19 +312,19 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			+ "e.tareWeight, p1.partyName, p2.partyName, e.commodity,"
 			+ "e.customsSealNo, e.viaNo, e.exporterName, e.consignee, e.fob,"
 			+ "e.status, e.stuffTallyWoTransId, e.stuffTallyCutWoTransDate, e.deliveryOrderNo,"
-			+ "e.stuffMode, v.vesselName, c.noOfPackages, c.stuffedQty, c.grossWeight,g.inGateInDate, c.cargoType,e.berthingDate) "
-	        + "FROM ExportStuffTally e LEFT OUTER JOIN ExportSbCargoEntry c ON e.companyId=c.companyId "
-	        + "and e.branchId=c.branchId and e.sbNo=c.sbNo and e.sbTransId=c.sbTransId "
-	        + "LEFT OUTER JOIN Party p1 ON e.companyId = p1.companyId AND e.branchId = p1.branchId AND e.shippingAgent = p1.partyId "
-	        + "LEFT OUTER JOIN Party p2 ON e.companyId = p2.companyId AND e.branchId = p2.branchId AND e.shippingLine = p2.partyId "
-	        + "LEFT OUTER JOIN Party p3 ON e.companyId = p3.companyId AND e.branchId = p3.branchId AND e.cha = p3.partyId "
-	        + "LEFT OUTER JOIN Party p4 ON e.companyId = p4.companyId AND e.branchId = p4.branchId AND e.onAccountOf = p4.partyId "
-	        + "LEFT OUTER JOIN Vessel v ON e.companyId = v.companyId AND e.branchId = v.branchId AND e.vesselId = v.vesselId "
-	        + "LEFT OUTER JOIN GateIn g ON e.companyId=g.companyId and e.branchId=g.branchId and e.gateInId = g.gateInId "
-	        + "WHERE e.companyId = :cid AND e.branchId = :bid AND e.status != 'D' AND e.sbTransId=:trans and e.sbNo=:sb "
-	        + "group by e.stuffTallyId, e.sbTransId, e.sbNo, e.containerNo")
-	List<ExportStuffTally> getDataBySbNo(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
-			@Param("sb") String sb);
+			+ "e.stuffMode, v.vesselName, c.noOfPackages, c.stuffedQty, c.grossWeight,g.inGateInDate, c.cargoType,e.berthingDate,e.reworkFlag) "
+			+ "FROM ExportStuffTally e LEFT OUTER JOIN ExportSbCargoEntry c ON e.companyId=c.companyId "
+			+ "and e.branchId=c.branchId and e.sbNo=c.sbNo and e.sbTransId=c.sbTransId "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId = p1.companyId AND e.branchId = p1.branchId AND e.shippingAgent = p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId = p2.companyId AND e.branchId = p2.branchId AND e.shippingLine = p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON e.companyId = p3.companyId AND e.branchId = p3.branchId AND e.cha = p3.partyId "
+			+ "LEFT OUTER JOIN Party p4 ON e.companyId = p4.companyId AND e.branchId = p4.branchId AND e.onAccountOf = p4.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId = v.companyId AND e.branchId = v.branchId AND e.vesselId = v.vesselId "
+			+ "LEFT OUTER JOIN GateIn g ON e.companyId=g.companyId and e.branchId=g.branchId and e.gateInId = g.gateInId "
+			+ "WHERE e.companyId = :cid AND e.branchId = :bid AND e.status != 'D' AND e.sbTransId=:trans and e.sbNo=:sb "
+			+ "group by e.stuffTallyId, e.sbTransId, e.sbNo, e.containerNo")
+	List<ExportStuffTally> getDataBySbNo(@Param("cid") String cid, @Param("bid") String bid,
+			@Param("trans") String trans, @Param("sb") String sb);
 	
 	
 	@Query(value="select e from ExportStuffTally e where e.companyId=:cid and e.branchId=:bid and e.stuffTallyId = :id and "

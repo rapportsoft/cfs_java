@@ -5949,7 +5949,7 @@ public class ExportStuffTally implements Cloneable {
 				String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
 				String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
 				String stuffMode, String vesselName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
-				Date gateInDate, String cargoType, Date berthingDate) {
+				Date gateInDate, String cargoType, Date berthingDate, String reworkFlag) {
 			this.stuffTallyId = stuffTallyId;
 			this.sbTransId = sbTransId;
 			this.sbNo = sbNo;
@@ -5997,6 +5997,7 @@ public class ExportStuffTally implements Cloneable {
 			this.gateInDate = gateInDate;
 			this.cargoType = cargoType;
 			this.berthingDate = berthingDate;
+			this.reworkFlag = reworkFlag;
 		}
 
 

@@ -286,4 +286,84 @@ public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry
 	Object[] getSelectedBackToTownData(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb,
 			@Param("trans") String trans);
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query(value="select e.sbTransId,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),sb.exporterName,sb.consigneeName,p1.partyName,sb.pod,sb.destinationCountry,e.commodity,"
+			+ "e.noOfPackages,e.typeOfPackage,sb.outOfCharge,DATE_FORMAT(sb.outOfChargeDate,'%d/%m/%Y'),e.grossWeight,e.fob,e.drawBackValue "
+			+ "from ExportSbCargoEntry e "
+			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and "
+			+ "e.sbNo=sb.sbNo and e.sbTransId=sb.sbTransId and sb.status != 'D' "
+			+ "LEFT OUTER JOIN Party p1 ON sb.companyId=p1.companyId and sb.branchId=p1.branchId and sb.cha=p1.partyId and p1.status != 'D' "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.sbNo=:sb and e.status != 'D' ")
+	List<Object[]> getHistoryDataForSB(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb);
+	
+	
+	@Query(value="select g.docRefNo,g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y'),g.vehicleNo,g.actualNoOfPackages,"
+			+ "g.qtyTakenIn,g.cargoWeight "
+			+ "from GateIn g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.docRefNo=:sb and g.status != 'D' order by g.inGateInDate asc")
+	List<Object[]> getHistoryDataForGateIn(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb);
+	
+	@Query(value="select c.sbNo,c.cartingTransId,DATE_FORMAT(c.cartingTransDate,'%d/%m/%Y'),c.gateInPackages,c.actualNoOfPackages,"
+			+ "c.areaOccupied,c.yardPackages "
+			+ "from ExportCarting c "
+			+ "where c.companyId=:cid and c.branchId=:bid and c.sbNo=:sb and c.status != 'D' order by c.cartingTransDate asc")
+	List<Object[]> getHistoryDataForCartingData(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb);
+	
+	@Query(value="select e.sbNo,p2.partyName,p1.partyName,p3.partyName,e.stuffReqId,DATE_FORMAT(e.stuffReqDate,'%d/%m/%Y'),"
+			+ "e.noOfPackages,e.noOfPackagesStuffed,e.containerNo,e.containerSize,e.containerType,v.vesselName "
+			+ "from ExportStuffRequest e "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.shippingLine=p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON e.companyId=p3.companyId and e.branchId=p3.branchId and e.onAccountOf=p3.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId=v.vesselId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
+			+ "e.sbNo=:sb and e.sbTransId=:sbtrans order by e.stuffReqDate asc")
+	List<Object[]> getHistoryDataForStuffReqData(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb,
+			@Param("sbtrans") String sbtrans);
+	
+	
+	@Query(value="select e.stuffTallyId,DATE_FORMAT(e.stuffTallyDate,'%d/%m/%Y'),e.cartingTransId,e.pol,e.pod,e.stuffRequestQty,"
+			+ "e.stuffedQty,e.balanceQty,e.areaReleased,e.haz,e.clpStatus,e.containerNo,e.containerSize,e.containerType,"
+			+ "e.agentSealNo,e.customsSealNo,e.movementReqId "
+			+ "from ExportStuffTally e "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.sbNo=:sb and e.sbTransId=:sbtrans and e.status != 'D' order by e.stuffTallyDate asc")
+	List<Object[]> getHistoryDataForStuffTallyData(@Param("cid") String cid, @Param("bid") String bid,@Param("sb") String sb,
+			@Param("sbtrans") String sbtrans);
+	
+	@Query(value="select e.movementReqId,DATE_FORMAT(e.movementReqDate,'%d/%m/%Y'),e.containerNo,e.containerSize,e.containerType,"
+			+ "e.invoiceNo,e.gatePassNo,e.gateOutId,DATE_FORMAT(e.gateOutDate,'%d/%m/%Y') "
+			+ "from ExportMovement e "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.movementReqId IN :val and e.status != 'D' order by e.movementReqDate asc")
+	List<Object[]> getHistoryDataForExportMovementData(@Param("cid") String cid, @Param("bid") String bid,@Param("val") List<String> val);
+	
+	
+	
+	@Query(value="select e.containerNo,e.containerSize,e.containerType,s.exporterName,p3.partyName,p1.partyName,p2.partyName,e.containerStatus,"
+			+ "mov.movReqType,e.containerSealNo,e.stuffReqId,DATE_FORMAT(e.stuffReqDate,'%d/%m/%Y'),e.stuffTallyId,DATE_FORMAT(e.stuffTallyDate,'%d/%m/%Y'),"
+			+ "e.movementReqId,DATE_FORMAT(e.movementReqDate,'%d/%m/%Y'),mov.pol,mov.pod,COALESCE(SUM(s.stuffedQty),0),mov.grossWeight,e.gateInId,e.createdDate "
+			+ "from ExportInventory e "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.sa=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.sl=p2.partyId "
+			+ "LEFT OUTER JOIN ExportMovement mov ON e.companyId=mov.companyId and e.branchId=mov.branchId and e.movementReqId=mov.movementReqId "
+			+ "LEFT OUTER JOIN ExportStuffTally s ON e.companyId=s.companyId and e.branchId=s.branchId and e.stuffTallyId=s.stuffTallyId and e.gateInId=s.gateInId "
+			+ "LEFT OUTER JOIN Party p3 ON s.companyId=p3.companyId and s.branchId=p3.branchId and s.cha=p3.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and e.containerNo=:con "
+			+ "group by e.gateInId order by e.createdDate desc")
+	List<Object[]> getHistoryDataWithContainerNo(@Param("cid") String cid, @Param("bid") String bid,@Param("con") String con);
+	
 }
