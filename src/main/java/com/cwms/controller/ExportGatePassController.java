@@ -1736,29 +1736,34 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 						result.put("stuffTallyData", stuffTallyData);
 						
 						List<String> getFilteredData = stuffTallyData.stream()
-						        // Ensure the array has at least 16 indexes
-						        .map(array -> (array[16] != null || !String.valueOf(array[16]).isEmpty()) ? array[16].toString().trim() : null)
-						        // Filter out null or empty values
-						        .filter(value -> value != null && !value.isEmpty())
-						        // Remove duplicate values
-						        .distinct()
-						        // Collect into a List of Strings
-						        .collect(Collectors.toList());
-						
-						
-					
-						
-						// Movement Data
+							    // Map each array element at index 16 after null check
+							    .map(array -> array[16] != null ? array[16].toString().trim() : null)
+							    // Filter out null or empty values
+							    .filter(value -> value != null && !value.isEmpty())
+							    // Remove duplicate values
+							    .distinct()
+							    // Collect into a List of Strings
+							    .collect(Collectors.toList());
 
-						List<Object[]> movementData = exportsbcargoentryrepo.getHistoryDataForExportMovementData(cid, bid, getFilteredData);
+						
+						if(getFilteredData.size() > 0) {
+							// Movement Data
 
-						if (movementData.isEmpty()) {
-							result.put("movementData", null);
-						} else {
-							result.put("movementData", movementData);
+							List<Object[]> movementData = exportsbcargoentryrepo.getHistoryDataForExportMovementData(cid, bid, getFilteredData);
+
+							if (movementData.isEmpty()) {
+								result.put("movementData", null);
+							} else {
+								result.put("movementData", movementData);
+							}
+
+							return new ResponseEntity<>(result, HttpStatus.OK);
+						}
+						else {
+							return new ResponseEntity<>(result, HttpStatus.OK);
 						}
 
-						return new ResponseEntity<>(result, HttpStatus.OK);
+						
 					}
 
 					
