@@ -16,6 +16,43 @@ import jakarta.transaction.Transactional;
 
 public interface ExportEntryRepo extends JpaRepository<ExportSbEntry, String> {
 	
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbEntry e " +
+	       "SET e.gateInPackages = COALESCE(e.gateInPackages, 0) - :gateInPackages " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.status <> 'D'")
+	int updateFromSbNoTransfer(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("gateInPackages") BigDecimal gateInPackages);
+
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbEntry e " +
+	       "SET e.gateInPackages = COALESCE(e.gateInPackages, 0) + :gateInPackages " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.status <> 'D'")
+	int updateToSbNoTransfer(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("gateInPackages") BigDecimal gateInPackages);
+
+	
+	
 	@Query("SELECT NEW com.cwms.entities.ExportSbEntry(e.pod, e.pol)"
 	        + "FROM ExportSbEntry e "
 			+ "WHERE e.companyId = :companyId AND e.branchId = :branchId "

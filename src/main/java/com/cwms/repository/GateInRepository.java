@@ -15,6 +15,26 @@ import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
+	@Query("SELECT COALESCE(MAX(E.srNo), 0) "
+		       + "FROM GateIn E "
+		       + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+		       + "AND E.profitcentreId = :profitcentreId "
+		       + "AND E.erpDocRefNo = :erpDocRefNo "
+		       + "AND E.docRefNo = :docRefNo "
+		       + "AND E.gateInId = :gateInId "
+		       + "AND E.gateInType = :type "
+		       + "AND E.status <> 'D'")
+		int getMaxLineId(@Param("companyId") String companyId, 
+		                 @Param("branchId") String branchId,
+		                 @Param("profitcentreId") String profitcentreId, 
+		                 @Param("gateInId") String gateInId,
+		                 @Param("erpDocRefNo") String erpDocRefNo, 
+		                 @Param("docRefNo") String docRefNo, 
+		                 @Param("type") String type);
+
+	
+	
+	
 	@Query("SELECT DISTINCT s.vehicleNo " +
 		       "FROM GateIn s " +
 		       "LEFT JOIN VehicleTrack v ON s.companyId = v.companyId AND s.branchId = v.branchId AND s.profitcentreId = v.profitcentreId AND v.vehicleStatus = 'G' " +

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @IdClass(ExportCartingId.class)
 @Table(name = "cfcrtg")
-public class ExportCarting {
+public class ExportCarting implements Cloneable{
 
     @Id
     @Column(name = "Company_Id", length = 6, columnDefinition = "varchar(6) default ''")
@@ -1029,5 +1029,9 @@ public class ExportCarting {
 		this.yardPack = yardPack;
 	}
 
-	
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
+	}
 }

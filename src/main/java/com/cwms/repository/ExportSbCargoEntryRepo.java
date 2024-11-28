@@ -15,6 +15,48 @@ import jakarta.transaction.Transactional;
 public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry, String>
 {
 	
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbCargoEntry e " +
+	       "SET e.cartedPackages = COALESCE(e.cartedPackages, 0) - :cartedPackes, " +
+	       "    e.gateInPackages = COALESCE(e.gateInPackages, 0) - :gateInPackages " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.status <> 'D'")
+	int updateFromSbNoTransfer(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("cartedPackes") BigDecimal cartedPackes,
+	        @Param("gateInPackages") BigDecimal gateInPackages);
+
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbCargoEntry e " +
+	       "SET e.cartedPackages = COALESCE(e.cartedPackages, 0) + :cartedPackes, " +
+	       "    e.gateInPackages = COALESCE(e.gateInPackages, 0) + :gateInPackages " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.status <> 'D'")
+	int updateToSbNoTransfer(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("cartedPackes") BigDecimal cartedPackes,
+	        @Param("gateInPackages") BigDecimal gateInPackages);
+
+	
+	
+	
 	@Modifying
 	@Transactional
 	@Query("UPDATE ExportSbCargoEntry e " +

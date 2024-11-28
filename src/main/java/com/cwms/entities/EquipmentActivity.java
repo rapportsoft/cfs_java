@@ -13,7 +13,7 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name="cfequipmentactivity")
 @IdClass(EquipmentActivityId.class)
-public class EquipmentActivity {
+public class EquipmentActivity implements Cloneable{
 
 	@Id
 	@Column(name="Company_Id",length = 6)
@@ -339,6 +339,9 @@ public class EquipmentActivity {
 		this.approvedDate = approvedDate;
 	}
 	
-	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
+	}
 	
 }

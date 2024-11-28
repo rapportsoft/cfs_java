@@ -14,6 +14,17 @@ import jakarta.transaction.Transactional;
 
 public interface EquipmentActivityRepository extends JpaRepository<EquipmentActivity, String> {
 
+	@Query("SELECT E FROM EquipmentActivity E "
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.profitCenterId = :profitcentreId " 
+	        + "AND E.erpDocRefNo = :erpDocRefNo "
+	        + "AND E.docRefNo = :docRefNo "
+	        + "AND E.deStuffId = :deStuffId "	
+	        + "AND E.status <> 'D'")
+	List<EquipmentActivity> getAllEquipmentTransfer(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("profitcentreId") String profitcentreId,
+	                              @Param("erpDocRefNo") String erpDocRefNo, @Param("docRefNo") String docRefNo, @Param("deStuffId") String deStuffId);
+
 	
 	@Query("SELECT E FROM EquipmentActivity E "
 			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "

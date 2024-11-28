@@ -17,7 +17,7 @@ import jakarta.persistence.Transient;
 @Entity
 @Table(name = "cfgatein")
 @IdClass(GateInId.class)
-public class GateIn {
+public class GateIn implements Cloneable{
 
 	@Id
 	@Column(name = "Company_Id", length = 6)
@@ -390,11 +390,11 @@ public class GateIn {
 	@Column(name = "From_SB_Trans_Id", length = 10, columnDefinition = "varchar(10) default ''")
 	private String fromSbTransId = "";
 
-	@Column(name = "From_SB_Line_No", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
-	private BigDecimal fromSbLineNo = BigDecimal.ZERO;
+	@Column(name = "From_SB_Line_No", length =30 )
+	private String fromSbLineNo = " ";
 
-	@Column(name = "From_SB_No", precision = 8, scale = 0, columnDefinition = "decimal(8,0) default '0'")
-	private BigDecimal fromSbNo = BigDecimal.ZERO;
+	@Column(name = "From_SB_No", length =30)
+	private String fromSbNo = " ";
 
 	@Column(name = "upload_user", length = 30, columnDefinition = "varchar(30) default ''")
 	private String uploadUser = "";
@@ -709,7 +709,7 @@ public class GateIn {
 			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
 			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
-			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			String crane, String fromSbTransId, String fromSbLineNo, String fromSbNo, String uploadUser,
 			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
 			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
 			String stuffRequestId, String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate,
@@ -1080,7 +1080,7 @@ public class GateIn {
 			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
 			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
-			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			String crane, String fromSbTransId, String fromSbLineNo, String fromSbNo, String uploadUser,
 			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
 			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
 			String stuffRequestId, String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate,
@@ -1312,7 +1312,7 @@ public class GateIn {
 			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
 			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
-			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			String crane, String fromSbTransId, String fromSbLineNo, String fromSbNo, String uploadUser,
 			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
 			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
 			String stuffRequestId, String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate,
@@ -1543,7 +1543,7 @@ public class GateIn {
 			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
 			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
-			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			String crane, String fromSbTransId, String fromSbLineNo, String fromSbNo, String uploadUser,
 			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
 			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
 			String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate, Date stuffTallyDate,
@@ -1763,7 +1763,7 @@ public class GateIn {
 			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
 			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
-			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			String crane, String fromSbTransId, String fromSbLineNo, String fromSbNo, String uploadUser,
 			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
 			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
 			String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate, Date stuffTallyDate,
@@ -1982,7 +1982,7 @@ public class GateIn {
 			String eqIdOut, Date eqDateOut, String status, String createdBy, Date createdDate, String editedBy,
 			Date editedDate, String approvedBy, Date approvedDate, String tripType, String drt, String scannerType,
 			String cartingStatus, String labour, String fk3mt, String fk5mt, String fk10mt, String hydra12mt,
-			String crane, String fromSbTransId, BigDecimal fromSbLineNo, BigDecimal fromSbNo, String uploadUser,
+			String crane, String fromSbTransId, String fromSbLineNo, String fromSbNo, String uploadUser,
 			Date uploadDate, String removeUser, Date removeDate, String imagePath, String backImage, String blNo,
 			Date blDate, String holdStatus, String holdType, String holdUser, Date holdDate, String holdRemarks,
 			String stuffTallyId, String prGatePassNo, String prGateOutId, Date prGateOutDate, Date stuffTallyDate,
@@ -3065,19 +3065,19 @@ public class GateIn {
 		this.fromSbTransId = fromSbTransId;
 	}
 
-	public BigDecimal getFromSbLineNo() {
+	public String getFromSbLineNo() {
 		return fromSbLineNo;
 	}
 
-	public void setFromSbLineNo(BigDecimal fromSbLineNo) {
+	public void setFromSbLineNo(String fromSbLineNo) {
 		this.fromSbLineNo = fromSbLineNo;
 	}
 
-	public BigDecimal getFromSbNo() {
+	public String getFromSbNo() {
 		return fromSbNo;
 	}
 
-	public void setFromSbNo(BigDecimal fromSbNo) {
+	public void setFromSbNo(String fromSbNo) {
 		this.fromSbNo = fromSbNo;
 	}
 
@@ -4214,7 +4214,10 @@ public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, Da
 	this.slName = slName;
 }
 
-
+@Override
+public Object clone() throws CloneNotSupportedException {
+    return super.clone();
+}
 
 
 }

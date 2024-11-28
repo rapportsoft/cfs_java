@@ -11,6 +11,18 @@ import com.cwms.entities.GateIn;
 public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 {
 	
+	@Query("SELECT E FROM ExportCarting E " 
+			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+			+ "AND E.profitcentreId = :profitcentreId " 
+			+ "AND E.sbTransId = :sbTransId "
+			+ "AND E.sbNo = :sbNo "
+			+ "AND E.gateInId = :gateInId "
+			+ "AND E.status <> 'D'")
+	List<ExportCarting> getCartingForSbTransfer(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("profitcentreId") String profitcentreId, @Param("gateInId") String gateInId,	@Param("sbTransId") String sbTransId, @Param("sbNo") String sbNo);
+	
+	
+	
 	@Query("SELECT NEW com.cwms.entities.ExportCarting( "
 	        + "E.companyId, E.branchId, E.cartingTransId, E.cartingLineId, E.finYear, "
 	        + "E.profitcentreId, E.sbTransId, E.sbNo, E.sbLineNo, E.sbDate, "

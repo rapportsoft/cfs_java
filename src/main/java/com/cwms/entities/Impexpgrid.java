@@ -14,7 +14,7 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name="cfimpexpgrid")
 @IdClass(ImpexpgridId.class)
-public class Impexpgrid {
+public class Impexpgrid implements Cloneable{
 
 	    @Id
 	    @Column(name = "Company_Id",  length = 6)
@@ -356,6 +356,11 @@ public class Impexpgrid {
 
 		public void setStatus(String status) {
 			this.status = status;
+		}
+		
+		@Override
+		public Object clone() throws CloneNotSupportedException {
+		    return super.clone();
 		}
 	    
 }
