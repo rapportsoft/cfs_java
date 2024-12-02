@@ -1125,7 +1125,8 @@ public class ImportGatePassController {
 						i.setDestuffLineId(d.getDeStuffLineId());
 					}
 				}
-
+				i.setBeDate(cr.getBeDate());
+				i.setBoe(cr.getBeNo());
 				importgatepassrepo.save(i);
 
 				if (cn != null) {
