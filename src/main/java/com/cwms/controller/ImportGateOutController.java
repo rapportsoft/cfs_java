@@ -256,7 +256,7 @@ public class ImportGateOutController {
 				g.setDeliveryOrderNo(out.getDeliveryOrderNo());
 				g.setDeliveryOrderDate(out.getDeliveryOrderDate());
 				g.setDoValidityDate(out.getDoValidityDate());
-
+				  g.setTransType(out.getTransType());
 				
 				gateOutRepo.save(g);
 
