@@ -248,4 +248,23 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		Cfigmcrg getDataforSSR1(@Param("cid") String cid, @Param("bid") String bid, @Param("igmtrans") String igmtrans,
 				@Param("igm") String igm, @Param("igmCrgTransId") String igmLineNo);
 		
+		
+		
+		
+		@Query("select c.igmNo,DATE_FORMAT(igm.igmDate,'%d/%m/%Y %h:%i'),c.igmLineNo,v.vesselName,c.typeOfPackage,c.chaName," +
+		           "c.importerName,p1.partyName,c.mobileNo " +
+			       "from Cfigmcrg c " +
+				   "LEFT OUTER JOIN CFIgm igm ON c.companyId=igm.companyId and c.branchId=igm.branchId and c.igmNo=igm.igmNo and c.igmTransId=igm.igmTransId " +
+			       "LEFT OUTER JOIN Vessel v ON igm.companyId=v.companyId and igm.branchId=v.branchId and igm.vesselId=v.vesselId " +
+				   "LEFT OUTER JOIN Party p1 ON igm.companyId=p1.companyId and igm.branchId=p1.branchId and igm.shippingAgent=p1.partyId " +
+				   "where c.companyId = :cid " +
+			       "and c.branchId = :bid " +
+			       "and c.igmNo = :igm " +
+			       "and c.igmLineNo = :line " +
+			       "and c.status != 'D'")
+			Object getDataForSealCuttingItemwiseReport(@Param("cid") String cid,
+			                  @Param("bid") String bid,
+			                  @Param("igm") String igm,
+			                  @Param("line") String igmLineNo);
+		
 }

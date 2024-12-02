@@ -134,4 +134,42 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 			+ "i.igmNo=:igm and i.igmTransId=:trans and i.containerNo=:con and (i.gateOutId is null OR i.gateOutId = '')")
 	String getGatePassIdFromContainerNo(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
 			@Param("con") String con);
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query(value="select DISTINCT i.gatePassId,DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %h:%i'),i.igmNo,i.igmLineNo,i.blNo,"
+			+ "DATE_FORMAT(i.blDate,'%d/%m/%Y'),i.boe,DATE_FORMAT(i.beDate,'%d/%m/%Y'),i.doNo,DATE_FORMAT(i.doValidityDate,'%d/%m/%Y'),"
+			+ "p1.partyName,i.importerName,p2.partyName,v.vesselName,c.viaNo,i.commodity,i.comments,i.containerNo,i.containerSize,"
+			+ "i.containerType,i.vehicleNo,DATE_FORMAT(cn.gateInDate,'%d/%m/%Y'),i.yardLocation "
+			+ "From ImportGatePass i "
+			+ "LEFT OUTER JOIN Cfigmcn cn ON i.companyId = cn.companyId and i.profitcentreId = cn.profitcentreId and i.branchId = cn.branchId "
+		    + "and i.igmNo = cn.igmNo and i.igmTransId = cn.igmTransId and i.igmLineNo = cn.igmLineNo and i.containerNo = cn.containerNo "
+			+ "LEFT OUTER JOIN CFIgm c ON i.companyId=c.companyId and i.branchId=c.branchId and i.igmNo=c.igmNo and i.igmTransId=c.igmTransId "
+			+ "LEFT OUTER JOIN Party p1 ON i.companyId=p1.companyId and i.branchId=p1.branchId and i.cha=p1.customerCode "
+			+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.sl=p2.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON c.companyId=v.companyId and c.branchId=v.branchId and c.vesselId=v.vesselId "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and i.gatePassId=:gate")
+	List<Object[]> getDataForImportGatePassItemWiseReport(@Param("cid") String cid, @Param("bid") String bid,@Param("gate") String gate);
+	
+	
+	@Query(value="select DISTINCT i.igmNo,i.igmLineNo,i.gatePassId,DATE_FORMAT(c.igmDate,'%d/%m/%Y'),DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %h:%i'),"
+			+ "i.boe,DATE_FORMAT(i.beDate,'%d/%m/%Y'),i.blNo,v.vesselName,c.voyageNo,d.containerNo,p1.partyName,d.containerSize,"
+			+ "i.importerName,p2.partyName,i.qtyTakenOut,DATE_FORMAT(i.invoiceDate,'%d/%m/%Y'),i.gwTakenOut,i.comments,"
+			+ "veh.vehicleNo,veh.qtyTakenOut,i.commodity "
+			+ "From ImportGatePass i "
+			+ "LEFT OUTER JOIN Destuff d ON i.companyId=d.companyId and i.branchId=d.branchId and i.destuffId=d.deStuffId and "
+			+ "i.igmTransId=d.igmTransId and i.igmNo=d.igmNo "
+			+ "LEFT OUTER JOIN CFIgm c ON i.companyId=c.companyId and i.branchId=c.branchId and i.igmNo=c.igmNo and i.igmTransId=c.igmTransId "
+			+ "LEFT OUTER JOIN Party p1 ON i.companyId=p1.companyId and i.branchId=p1.branchId and i.cha=p1.customerCode "
+			+ "LEFT OUTER JOIN Party p2 ON c.companyId=p2.companyId and c.branchId=p2.branchId and c.shippingAgent=p2.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON c.companyId=v.companyId and c.branchId=v.branchId and c.vesselId=v.vesselId "
+			+ "LEFT OUTER JOIN CfImportGatePassVehDtl veh ON i.companyId=veh.companyId and i.branchId=veh.branchId and "
+			+ "i.igmNo=veh.igmNo and i.igmTransId=veh.igmTransId and i.gatePassId=veh.gatePassId "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and i.gatePassId=:gate")
+	List<Object[]> getDataForImportGatePassItemWiseLCLReport(@Param("cid") String cid, @Param("bid") String bid,@Param("gate") String gate);
 }

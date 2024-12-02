@@ -109,7 +109,7 @@ public class GateInController {
 
 				gatein.setGateInId(HoldNextIdD1);
 				gatein.setCompanyId(cid);
-				gatein.setLineNo("");
+				gatein.setLineNo(cn.get(0).getIgmLineNo());
 				gatein.setSrNo(1);
 				gatein.setInGateInDate(new Date());
 				gatein.setBranchId(bid);
@@ -120,7 +120,7 @@ public class GateInController {
 				gatein.setApprovedDate(new Date());
 				gatein.setStatus("A");
 				gatein.setGateInType("IMP");
-
+				gatein.setProcessId("P00203");
 				cn.stream().forEach(c -> {
 					c.setGateInDate(new Date());
 					c.setGateInId(HoldNextIdD1);

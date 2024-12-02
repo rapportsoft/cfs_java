@@ -500,4 +500,33 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 			+ "g.gateInType='PortRn' and (g.movementRequestId is null OR g.movementRequestId = '') and (g.reworkId is null OR g.reworkId = '') "
 			+ "and g.containerNo =:val")
 	List<Object[]> getPortReturnConForReworkingData(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query(value = "select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %h:%i'),p.portName,DATE_FORMAT(g.portExitDate,'%d/%m/%Y %h:%i'),"
+			+ "g.containerNo,g.containerSize,g.containerType,g.isoCode,g.vehicleNo,g.transporterName,v.vesselName,g.viaNo,crg.blNo,"
+			+ "g.containerSealNo,DATE_FORMAT(crg.blDate,'%d/%m/%Y'),g.actualSealNo,g.docRefNo,g.lineNo,g.scanningStatus,p1.partyName,"
+			+ "crg.importerName,g.comments,g.containerHealth "
+			+ "from GateIn g "
+			+ "LEFT OUTER JOIN CFIgm i ON g.companyId=i.companyId and g.branchId=i.branchId and i.igmTransId=g.erpDocRefNo and i.igmNo=g.docRefNo and i.status != 'D' "
+			+ "LEFT OUTER JOIN Port p ON i.companyId=p.companyId and i.branchId=p.branchId and i.port=p.portCode and p.status != 'D' "
+			+ "LEFT OUTER JOIN Vessel v ON g.companyId=v.companyId and g.branchId=v.branchId and g.vessel=v.vesselId and v.status != 'D' "
+			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sl=p1.partyId and p1.status != 'D' "
+			+ "LEFT OUTER JOIN Cfigmcrg crg ON g.companyId=crg.companyId and g.branchId=crg.branchId and g.erpDocRefNo=crg.igmTransId and g.docRefNo=crg.igmNo and g.lineNo=crg.igmLineNo and crg.status != 'D' "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.erpDocRefNo=:igmtrans and "
+			+ "g.docRefNo=:igm and g.gateInId=:gate and g.status !='D'")
+	Object getExistingDataForReports(@Param("cid") String cid, @Param("bid") String bid, @Param("igmtrans") String igmtrans,
+			@Param("igm") String igm,@Param("gate") String gate);
 }

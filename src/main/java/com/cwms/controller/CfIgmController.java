@@ -983,6 +983,14 @@ public class CfIgmController {
 		containerData.stream().forEach(con1 -> {
 			if (con1.getSealCutWoTransId() == null || con1.getSealCutWoTransId().isEmpty()) {
 
+				Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, con.getIgmTransId(), con.getIgmNo(), con.getIgmLineNo());
+				
+				Party p = new Party();
+				
+				if(crg != null) {
+					p = partyrepo.getDataByCustomerCode(cid, bid, crg.getChaCode());
+				}
+				
 				con1.setSealCutReqDate(con.getSealCutWoTransDate());
 				con1.setGateOutType(con.getGateOutType());
 				con1.setSealCutRemarks(con.getSealCutRemarks());
@@ -999,7 +1007,10 @@ public class CfIgmController {
 				con1.setSealCutWoTransId(newId);
 				con1.setSealCuttingStatus("Y");
 				con1.setVehicleType(con.getVehicleType());
-
+				
+				if(p != null) {
+					con1.setCha(p.getPartyId());
+				}
 				if ("Y".equals(con.getOdcStatus())) {
 					con1.setOdcStatus('Y');
 				} else {
@@ -1077,7 +1088,6 @@ public class CfIgmController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
-
 	@GetMapping("/getDataForExamination")
 	public ResponseEntity<?> getDataForExamination(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("igm") String igm, @RequestParam("line") String line) {

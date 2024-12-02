@@ -2355,7 +2355,7 @@ public class ExcelUploadController {
 				// Save the file
 				Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				int sr = igmdocumentuploadrepo.srNo(cid, bid, igmtrans, igm, igmLine);
+				int sr = igmdocumentuploadrepo.srNo(cid, bid, igmtrans, igm, igmLine)+1;
 
 				IgmDocumentUpload upload = new IgmDocumentUpload();
 				upload.setCompanyId(cid);
