@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -173,22 +175,21 @@ public class ImportReportsService {
 	            importDetails = importReportsRepository.getDataForSealCuttingReport(
 	                    companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
 	            break;
-//
-//	        case "Import Long Standing Report":
-//	            importDetails = importReportsRepository.getDataForImportLongStandingReport(
-//	                    companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
-//	            break;
-//
-//	        // Add more cases for other reports as needed
-//	        case "Import LCL Cargo Delivery Report":
-//	            importDetails = importReportsRepository.getDataForImportLclCargoDeliveryReport(
-//	                    companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
-//	            break;
-//
-//	        case "Import FCL Destuff Balance Report":
-//	            importDetails = importReportsRepository.getDataForImportFclDestuffBalanceReport(
-//	                    companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
-//	            break;
+
+	        case "Import Long Standing Report":
+	            importDetails = importReportsRepository.findDataForLongStandingReport(
+	                    companyId, branchId, endDate);
+	            break;
+		        
+	        // Add more cases for other reports as needed
+	        case "Hold Release Report":
+	            importDetails = importReportsRepository.findHoldDetails(
+	                    companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
+	            break;
+
+	        case "LCL Cargo Balance Inventory Report":
+	            importDetails = importReportsRepository.findContainerDetails(companyId, branchId, endDate,igmNo,itemNo,sl,acc,cha);
+		        
 
 	        // Handle unsupported report types
 	        default:
@@ -1564,8 +1565,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.getDataForImportGateInContainerDetailedReport(companyId, branchId, startDate, endDate,
-		        		igmNo, itemNo, sl,acc,cha);
+		        List<Object[]> importDetails = importReportsRepository.findHoldDetails(companyId, branchId, startDate, endDate,igmNo,itemNo,sl,acc,cha);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);
@@ -1628,7 +1628,7 @@ public class ImportReportsService {
 		        	    "Sr No", "IGM No", "Item No", "Cont No", "Cont Size", "Cont Type", "BOE no", 
 		        	    "BOE Date", "Gate In Date", "Hold Remarks", "Importer", "Agent", "FCL/LCL", 
 		        	    "Hold BY", "Hold Type", "Hold Date", "Relese Date", "Relese Remark", 
-		        	    "Cargo Description", "Gate Out/Destuff Date"
+		        	    "Cargo Description", "Gate Out","Destuff Date"
 		        	};
 
 	
@@ -1741,7 +1741,8 @@ public class ImportReportsService {
 		        boldFont.setBold(true);
 		        boldFont.setFontHeightInPoints((short) 16);
 
-		        for (int i = 0; i < columnsHeader.length; i++) {
+		        for (int i = 0; i < columnsHeader.length; i++) 
+		        {
 		            Cell cell = headerRow.createCell(i);
 		            cell.setCellValue(columnsHeader[i]);
 
@@ -1812,30 +1813,40 @@ public class ImportReportsService {
 		                    break;
 
 		                case "IGM No":
-		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
+		                    cell.setCellValue(resultData1[0] != null ? resultData1[0].toString() : "");
 		                    break;
 
 		                case "Item No":
-		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
+		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
 		                    break;
 
 		                case "Cont No":
-		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
+		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
 		                    break;
 
 		                case "Cont Size":
-		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
+		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
 		                    break;
 
 		                case "Cont Type":
-		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
 		                    break;
 
 		                case "BOE no":
-		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
 		                    break;
 
 		                case "BOE Date":
+		                    if (resultData1[6] != null) {
+		                        cell.setCellValue(resultData1[6].toString());
+		                        cell.setCellStyle(dateCellStyle);
+		                    } else {
+		                        cell.setBlank();
+		                        cell.setCellStyle(dateCellStyle);
+		                    }
+		                    break;
+
+		                case "Gate In Date":
 		                    if (resultData1[7] != null) {
 		                        cell.setCellValue(resultData1[7].toString());
 		                        cell.setCellStyle(dateCellStyle);
@@ -1845,9 +1856,33 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Gate In Date":
-		                    if (resultData1[8] != null) {
-		                        cell.setCellValue(resultData1[8].toString());
+		                case "Hold Remarks":
+		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
+		                    break;
+
+		                case "Importer":
+		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
+		                    break;
+
+		                case "Agent":
+		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
+		                    break;
+
+		                case "FCL/LCL":
+		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+		                    break;
+
+		                case "Hold BY":
+		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
+		                    break;
+
+		                case "Hold Type":
+		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+		                    break;
+
+		                case "Hold Date":
+		                    if (resultData1[14] != null) {
+		                        cell.setCellValue(resultData1[14].toString());
 		                        cell.setCellStyle(dateCellStyle);
 		                    } else {
 		                        cell.setBlank();
@@ -1855,31 +1890,7 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Hold Remarks":
-		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
-		                    break;
-
-		                case "Importer":
-		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
-		                    break;
-
-		                case "Agent":
-		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
-		                    break;
-
-		                case "FCL/LCL":
-		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
-		                    break;
-
-		                case "Hold BY":
-		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
-		                    break;
-
-		                case "Hold Type":
-		                    cell.setCellValue(resultData1[14] != null ? resultData1[14].toString() : "");
-		                    break;
-
-		                case "Hold Date":
+		                case "Relese Date":
 		                    if (resultData1[15] != null) {
 		                        cell.setCellValue(resultData1[15].toString());
 		                        cell.setCellStyle(dateCellStyle);
@@ -1889,9 +1900,17 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Relese Date":
-		                    if (resultData1[16] != null) {
-		                        cell.setCellValue(resultData1[16].toString());
+		                case "Relese Remark":
+		                    cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "");
+		                    break;
+
+		                case "Cargo Description":
+		                    cell.setCellValue(resultData1[17] != null ? resultData1[17].toString() : "");
+		                    break;
+
+		                case "Gate Out":
+		                    if (resultData1[18] != null) {
+		                        cell.setCellValue(resultData1[18].toString());
 		                        cell.setCellStyle(dateCellStyle);
 		                    } else {
 		                        cell.setBlank();
@@ -1899,15 +1918,7 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Relese Remark":
-		                    cell.setCellValue(resultData1[17] != null ? resultData1[17].toString() : "");
-		                    break;
-
-		                case "Cargo Description":
-		                    cell.setCellValue(resultData1[18] != null ? resultData1[18].toString() : "");
-		                    break;
-
-		                case "Gate Out/Destuff Date":
+		                case "Destuff Date":
 		                    if (resultData1[19] != null) {
 		                        cell.setCellValue(resultData1[19].toString());
 		                        cell.setCellStyle(dateCellStyle);
@@ -1923,20 +1934,137 @@ public class ImportReportsService {
 		            }
 
 
+
 		            }
 		        }
 		       
 		        // Create a font for bold text
 		       
+		        
+		      
 
-		        // Create a row for spacing before totals
+		        
+		     /// Create a row for spacing before totals
+		     // Create a row for spacing before totals
 		        Row emptyRow = sheet.createRow(rowNum++);
 		        emptyRow.createCell(0).setCellValue(""); // You can set a value or keep it blank
+		        
 
-		     // Create a row for totals
-		        Row totalRow = sheet.createRow(rowNum++);
+		        Row empty = sheet.createRow(rowNum++);
+		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        
+		        		
+		        		
+		        Row emptyRow1 = sheet.createRow(rowNum++);
+		        
+		        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
 
-		     // Create a CellStyle for the background color
+		        // Create a row for totals
+//		        Row totalRow = sheet.createRow(rowNum+ 2);
+
+		        // Header row for summary
+		        String[] columnsHeaderSummery = {
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		        };
+
+		        // Create a map to store container count for each agent
+		        Map<String, int[]> agentContainerCount = new HashMap<>();
+
+		        // Iterate over importDetails and count the container sizes for each shipping agent
+		        importDetails.forEach(i -> {
+		            String agent = i[10] != null ? i[10].toString() : "Unknown"; // Shipping Agent at index 10
+		            String containerSize = i[3] != null ? i[3].toString() : ""; // Container Size at index 3
+
+		            // Initialize counts for this agent if not already present
+		            if (!agentContainerCount.containsKey(agent)) {
+		                agentContainerCount.put(agent, new int[4]); // Index 0 - Size 20, 1 - Size 22, 2 - Size 40, 3 - Size 45
+		            }
+
+		            // Increment the count based on container size
+		            switch (containerSize) {
+		                case "20":
+		                    agentContainerCount.get(agent)[0]++;
+		                    break;
+		                case "22":
+		                    agentContainerCount.get(agent)[1]++;
+		                    break;
+		                case "40":
+		                    agentContainerCount.get(agent)[2]++;
+		                    break;
+		                case "45":
+		                    agentContainerCount.get(agent)[3]++;
+		                    break;
+		                default:
+		                    break;
+		            }
+		        });
+
+		        // Apply header row styling and set values
+		        Row headerRow1 = sheet.createRow(rowNum++);
+		        for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		            Cell cell = headerRow1.createCell(i);
+		            cell.setCellValue(columnsHeaderSummery[i]);
+
+		            // Set cell style for header
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+		            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+		            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeaderSummery[i].length() * 360); // Adjust width based on column header length
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+
+		        // Iterate over the map to create rows for each shipping agent and their container count
+		        int srNo = 1;
+		        
+		        String shippingAgent =null;
+		        for (Map.Entry<String, int[]> entry : agentContainerCount.entrySet()) {
+		             shippingAgent = entry.getKey();
+		            int[] sizes = entry.getValue(); // Sizes[0] = Size 20, Sizes[1] = Size 22, Sizes[2] = Size 40, Sizes[3] = Size 45
+
+		            // Create a new row for this shipping agent
+		            Row row = sheet.createRow(rowNum++);
+		            row.createCell(0).setCellValue(srNo++); // Sr No (1, 2, 3,...)
+		            row.createCell(1).setCellValue(shippingAgent); // Shipping Agent
+		            row.createCell(2).setCellValue(sizes[0]); // Size 20 count
+		            row.createCell(3).setCellValue(sizes[1]); // Size 22 count
+		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
+		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
+		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
+//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+		            
+		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
+		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		        }
+
+
+		        int totalSize20 = 0, totalSize22 = 0, totalSize40 = 0, totalSize45 = 0;
+		        for (int[] sizes : agentContainerCount.values()) {
+		            totalSize20 += sizes[0];
+		            totalSize22 += sizes[1];
+		            totalSize40 += sizes[2];
+		            totalSize45 += sizes[3];
+		        }
+
+		        // Create a CellStyle for the background color
 		        CellStyle totalRowStyle = sheet.getWorkbook().createCellStyle();
 		        totalRowStyle.cloneStyleFrom(numberCellStyle); // Copy base style
 		        totalRowStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
@@ -1947,113 +2075,84 @@ public class ImportReportsService {
 		        boldFont1.setBold(true);
 		        totalRowStyle.setFont(boldFont1);
 
-		        // Add "Total" label to the first cell and apply the style
-		        Cell totalLabelCell = totalRow.createCell(0);
-		        totalLabelCell.setCellValue("Total");
-		        totalLabelCell.setCellStyle(totalRowStyle); // Apply the background color and bold style
+		        // Add "Summary" label to the first cell and apply the style
+//		        Cell totalLabelCell = totalRow.createCell(0);
+//		        totalLabelCell.setCellValue("Summary");
+//		        totalLabelCell.setCellStyle(totalRowStyle); // Apply the background color and bold style
 
 		        CellStyle centerStyle = workbook.createCellStyle();
 		        centerStyle.cloneStyleFrom(totalRowStyle); // Use totalRowStyle as base (light green background)
 		        centerStyle.setAlignment(HorizontalAlignment.CENTER); // Center the text
 		        centerStyle.setVerticalAlignment(VerticalAlignment.CENTER); // Center the text vertically if necessary
 
-		     
-		        for (int i = 0; i < columnsHeader.length; i++) {
-		            Cell totalCell = totalRow.createCell(i);
-		            totalCell.setCellStyle(numberCellStyle);
-		            totalCell.setCellStyle(totalRowStyle); // Set the total row style
-		            
-		            switch (columnsHeader[i]) {
-		            
-		            case "Section 60(1)":
-		            	 totalCell.setCellValue("Total");
-		                 totalCell.setCellStyle(centerStyle); // Apply centered style
-		            
-                    break;
-		                case "Inbond Pkgs":
-		                    totalCell.setCellValue(totalInbondPkgs.doubleValue());
-		                    break;
-		                case "Inbond Weight":
-		                    totalCell.setCellValue(totalInbondWeight.doubleValue());
-		                    break;
-		                case "Inbond Asset Value":
-		                    totalCell.setCellValue(totalInbondAssetValue.doubleValue());
-		                    break;
-		                case "Inbond Duty Value":
-		                    totalCell.setCellValue(totalInbondDutyValue.doubleValue());
-		                    break;
-		                case "Bal Pkgs":
-		                    totalCell.setCellValue(totalBalPkgs.doubleValue());
-		                    break;
-		                case "Bal Wt":
-		                    totalCell.setCellValue(totalBalWeight.doubleValue());
-		                    break;
-		                case "Bal Asset Value":
-		                    totalCell.setCellValue(totalBalAssetValue.doubleValue());
-		                    break;
-		                case "Bal Duty Value":
-		                    totalCell.setCellValue(totalBalDutyValue.doubleValue());
-		                    break;
-		                case "Area Balance Area":
-		                    totalCell.setCellValue(totalAreaBalance.doubleValue());
-		                    break;
-		                default:
-		                    totalCell.setCellValue(""); // Leave cells blank for non-numeric columns
-		                    break;
-		            }
-		        }
+		        // Create total row cells
+//		        for (int i = 0; i < columnsHeaderSummery.length; i++) {
+//		            Cell totalCell = totalRow.createCell(i);
+//		            totalCell.setCellStyle(totalRowStyle); // Set the total row style
+//		            switch (columnsHeaderSummery[i]) {
+//		                case "Sr No":
+//		                    totalCell.setCellValue(""); // Empty for Sr No in total row
+//		                    break;
+//		                case "Shipping Agent":
+//		                    totalCell.setCellValue(shippingAgent); // Empty for Shipping Agent in total row
+//		                    totalCell.setCellStyle(centerStyle); // Apply centered style
+//		                    break;
+//		                case "Size 20":
+//		                    totalCell.setCellValue(totalSize20);
+//		                    break;
+//		                case "Size 22":
+//		                    totalCell.setCellValue(totalSize22);
+//		                    break;
+//		                case "Size 40":
+//		                    totalCell.setCellValue(totalSize40);
+//		                    break;
+//		                case "Size 45":
+//		                    totalCell.setCellValue(totalSize45);
+//		                    break;
+//		                case "Total":
+//		                    totalCell.setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45);
+//		                    break;
+//		                case "TUE'S":
+//		                    totalCell.setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		                    break;
+//		                default:
+//		                    totalCell.setCellValue(""); // Default blank
+//		                    break;
+//		            }
+//		        }
+
+
 
 		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
-		        sheet.setColumnWidth(2, 18 * 306); 
-		        sheet.setColumnWidth(3, 18 * 306); 
+		        sheet.setColumnWidth(2, 9 * 306); 
+		        sheet.setColumnWidth(3, 14 * 306); 
 		        
 		        sheet.setColumnWidth(4, 14 * 306); 
-		        sheet.setColumnWidth(5, 36 * 306); 
+		        sheet.setColumnWidth(5, 14 * 306); 
 		        
-		        sheet.setColumnWidth(6, 36 * 306); 
+		        sheet.setColumnWidth(6, 14 * 306); 
 		        sheet.setColumnWidth(7, 14 * 306); 
 		        
 		        sheet.setColumnWidth(8, 18 * 306); 
 		        sheet.setColumnWidth(9, 14 * 306); 
-		        sheet.setColumnWidth(10, 9 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(10, 36 * 306); // Set width for "Importer" (40 characters wide)
 		        
-		        sheet.setColumnWidth(11, 9 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(11, 36 * 306); // Set width for "CHA" (30 characters wide)
 		        sheet.setColumnWidth(12, 14 * 306); // Set width for "Importer" (40 characters wide)
 		        
-		        sheet.setColumnWidth(13,  45 * 306); 
+		        sheet.setColumnWidth(13,  18 * 306); 
 		        sheet.setColumnWidth(14, 18 * 306); 
 		        sheet.setColumnWidth(15, 18 * 306); 
 		        sheet.setColumnWidth(16, 18 * 306); 
 
 		        
-		        sheet.setColumnWidth(17, 14 * 306); 
-		        sheet.setColumnWidth(18, 14 * 306); 
-		        sheet.setColumnWidth(19, 14 * 306); 
-		        sheet.setColumnWidth(20,14 * 306); 
-		        sheet.setColumnWidth(21, 36 * 306);
-		        sheet.setColumnWidth(22, 45 * 306); 
-		        sheet.setColumnWidth(23, 18 * 306); 
-		        sheet.setColumnWidth(24, 18 * 306); 
-		        sheet.setColumnWidth(25, 18 * 306);
-		        sheet.setColumnWidth(26, 18 * 306);
-		        sheet.setColumnWidth(27, 18 * 306); 
-		        sheet.setColumnWidth(28, 18 * 306);
-		        sheet.setColumnWidth(29, 18 * 306); 
-		        sheet.setColumnWidth(30, 27 * 306); 
-		        
-		        sheet.setColumnWidth(31, 18 * 306); 
-		        sheet.setColumnWidth(32, 18 * 306); 
-		        sheet.setColumnWidth(33, 18 * 306); 
-		        sheet.setColumnWidth(34, 27 * 306); 
-//		        sheet.setColumnWidth(35, 27 * 306); 
-		        sheet.setColumnWidth(36, 27 * 306); 
-		        sheet.setColumnWidth(37, 27 * 306); 
-		        sheet.setColumnWidth(38, 18 * 306); 
-		        sheet.setColumnWidth(39, 18 * 306); 
-		        sheet.setColumnWidth(40, 27 * 306); 
-		        sheet.setColumnWidth(41, 18 * 306); 
+		        sheet.setColumnWidth(17, 27 * 306); 
+		        sheet.setColumnWidth(18, 45 * 306); 
+		        sheet.setColumnWidth(19, 18 * 306); 
+		        sheet.setColumnWidth(20,18 * 306); 
+		       
 		        
 		        sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, headerRowIndex, 0, columnsHeader.length - 1));
 		        sheet.createFreezePane(0, headerRowIndex + 1); // Freeze rows above the 6th row
@@ -2736,20 +2835,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.getDataForImportGateInContainerDetailedReport(companyId, branchId, startDate, endDate,
-		        		igmNo, itemNo, sl,acc,cha);
-		        
-		        
-		        System.out.println("importDetails___________________________________________"+importDetails);
-		        
-		        List<Object[]> newlist = new ArrayList<>();
-		        importDetails.forEach(i -> {
-		            System.out.println(Arrays.toString(i)); // Print the element
-		            newlist.add(i);                         // Add to the new list
-		        });
-		        
-		        
-		        System.out.println("newlist__________________________________________"+newlist);
+		        List<Object[]> importDetails = importReportsRepository.findDataForLongStandingReport(companyId, branchId, endDate);
 		        
 		        Sheet sheet = workbook.createSheet("Import Long Standing Report");
 
@@ -2795,8 +2881,8 @@ public class ImportReportsService {
 
 		        String[] columnsHeader = {
 		        	    "Sr No.", "Container No", "Size", "Description Of Goods", "Weight(Kgs)", 
-		        	    "In Date", "IGM No", "Item No", "Agent Code", "Line", 
-		        	    "Consignee's Name", "Current Stage", "Days", "CHA"
+		        	    "In Date", "IGM No", "Item No", "Line", 
+		        	    "Consignee's Name", "Days","CHA",  "Agent Code","Current Stage"
 		        	};
 
 		        // Add Company Name (Centered)
@@ -2965,71 +3051,73 @@ public class ImportReportsService {
 		                    break;
 
 		                case "Container No":
-		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
+		                    cell.setCellValue(resultData1[0] != null ? resultData1[0].toString() : "");
 		                    break;
 
 		                case "Size":
-		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
+		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
 		                    break;
 
 		                case "Description Of Goods":
-		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
+		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
 		                    break;
 
-//		                case "Weight(Kgs)":
-//		                    if (resultData1[4] != null) {
-//		                        cell.setCellValue(Double.parseDouble(resultData1[4].toString()));
-//		                    } else {
-//		                        cell.setCellValue("");
-//		                    }
-//		                    break;
+		                case "Weight(Kgs)":
+		                    if (resultData1[3] != null) {
+		                        cell.setCellValue(Double.parseDouble(resultData1[3].toString()));
+		                    } else {
+		                        cell.setCellValue("");
+		                    }
+		                    break;
 
-//		                case "In Date":
-//		                    if (resultData1[5] != null) {
-//		                        cell.setCellValue(resultData1[5].toString());
-//		                        cell.setCellStyle(dateCellStyle); // Apply date formatting
-//		                    } else {
-//		                        cell.setBlank();
+		                case "In Date":
+		                    if (resultData1[4] != null) {
+		                        cell.setCellValue(resultData1[4].toString());
+		                        cell.setCellStyle(dateCellStyle); // Apply date formatting
+		                    } else {
+		                        cell.setBlank();
 //		                        cell.setCellStyle(dateCellStyle);
-//		                    }
-//		                    break;
+		                    }
+		                    break;
 
-//		                case "IGM No":
-//		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
-//		                    break;
-//
-//		                case "Item No":
-//		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
-//		                    break;
-//
-//		                case "Agent Code":
-//		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
-//		                    break;
-//
-//		                case "Line":
-//		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
-//		                    break;
-//
-//		                case "Consignee's Name":
+		                case "IGM No":
+		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+		                    break;
+
+		                case "Item No":
+		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                    break;
+
+		         
+
+		                case "Line":
+		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
+		                    break;
+
+		                case "Consignee's Name":
+		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
+		                    break;
+
+		                case "Days":
+		                    if (resultData1[9] != null) {
+		                        cell.setCellValue(Integer.parseInt(resultData1[9].toString()));
+		                    } else {
+		                        cell.setCellValue("");
+		                    }
+		                    break;
+		                    
+		                case "CHA":
+		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+		                    break;
+
+		                case "Agent Code":
+		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
+		                    break;
+		                case "Current Stage":
 //		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
-//		                    break;
-//
-//		                case "Current Stage":
-//		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
-//		                    break;
-//
-//		                case "Days":
-//		                    if (resultData1[12] != null) {
-//		                        cell.setCellValue(Integer.parseInt(resultData1[12].toString()));
-//		                    } else {
-//		                        cell.setCellValue("");
-//		                    }
-//		                    break;
-//
-//		                case "CHA":
-//		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
-//		                    break;
-
+		                    break;
+		                    
+		       
 		                default:
 		                    cell.setCellValue(""); // Handle undefined or extra columns
 		                    break;
@@ -3114,54 +3202,25 @@ public class ImportReportsService {
 		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
-		        sheet.setColumnWidth(2, 18 * 306); 
-		        sheet.setColumnWidth(3, 18 * 306); 
+		        sheet.setColumnWidth(2, 9 * 306); 
+		        sheet.setColumnWidth(3, 36 * 306); 
 		        
 		        sheet.setColumnWidth(4, 14 * 306); 
-		        sheet.setColumnWidth(5, 36 * 306); 
+		        sheet.setColumnWidth(5, 18 * 306); 
 		        
-		        sheet.setColumnWidth(6, 36 * 306); 
-		        sheet.setColumnWidth(7, 14 * 306); 
+		        sheet.setColumnWidth(6, 14 * 306); 
+		        sheet.setColumnWidth(7, 9 * 306); 
 		        
-		        sheet.setColumnWidth(8, 18 * 306); 
-		        sheet.setColumnWidth(9, 14 * 306); 
+		        sheet.setColumnWidth(8, 36 * 306); 
+		        sheet.setColumnWidth(9, 36 * 306); 
 		        sheet.setColumnWidth(10, 9 * 306); // Set width for "Importer" (40 characters wide)
 		        
-		        sheet.setColumnWidth(11, 9 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(11, 36 * 306); // Set width for "CHA" (30 characters wide)
 		        sheet.setColumnWidth(12, 14 * 306); // Set width for "Importer" (40 characters wide)
 		        
 		        sheet.setColumnWidth(13,  45 * 306); 
 		        sheet.setColumnWidth(14, 18 * 306); 
-		        sheet.setColumnWidth(15, 18 * 306); 
-		        sheet.setColumnWidth(16, 18 * 306); 
-
 		        
-		        sheet.setColumnWidth(17, 14 * 306); 
-		        sheet.setColumnWidth(18, 14 * 306); 
-		        sheet.setColumnWidth(19, 14 * 306); 
-		        sheet.setColumnWidth(20,14 * 306); 
-		        sheet.setColumnWidth(21, 36 * 306);
-		        sheet.setColumnWidth(22, 45 * 306); 
-		        sheet.setColumnWidth(23, 18 * 306); 
-		        sheet.setColumnWidth(24, 18 * 306); 
-		        sheet.setColumnWidth(25, 18 * 306);
-		        sheet.setColumnWidth(26, 18 * 306);
-		        sheet.setColumnWidth(27, 18 * 306); 
-		        sheet.setColumnWidth(28, 18 * 306);
-		        sheet.setColumnWidth(29, 18 * 306); 
-		        sheet.setColumnWidth(30, 27 * 306); 
-		        
-		        sheet.setColumnWidth(31, 18 * 306); 
-		        sheet.setColumnWidth(32, 18 * 306); 
-		        sheet.setColumnWidth(33, 18 * 306); 
-		        sheet.setColumnWidth(34, 27 * 306); 
-//		        sheet.setColumnWidth(35, 27 * 306); 
-		        sheet.setColumnWidth(36, 27 * 306); 
-		        sheet.setColumnWidth(37, 27 * 306); 
-		        sheet.setColumnWidth(38, 18 * 306); 
-		        sheet.setColumnWidth(39, 18 * 306); 
-		        sheet.setColumnWidth(40, 27 * 306); 
-		        sheet.setColumnWidth(41, 18 * 306); 
 		        
 		        sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, headerRowIndex, 0, columnsHeader.length - 1));
 		        sheet.createFreezePane(0, headerRowIndex + 1); // Freeze rows above the 6th row
@@ -4394,11 +4453,6 @@ public class ImportReportsService {
 			) throws DocumentException {
 		    try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
 		    {
-		    	System.out.println("startDate_______________________"+startDate);
-		    	
-		    	
-		    	System.out.println("endDate_______________________"+endDate);
-		    	
 		    	
 		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -4444,8 +4498,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.getDataForImportGateInContainerDetailedReport(companyId, branchId, startDate, endDate,
-		        		igmNo, itemNo, sl,acc,cha);
+		        List<Object[]> importDetails = importReportsRepository.findContainerDetails(companyId, branchId, endDate,igmNo,itemNo,sl,acc,cha);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);
@@ -4505,7 +4558,7 @@ public class ImportReportsService {
 		        
 
 		        String[] columnsHeader = {
-		        	    "Sr_No", "Cont No", "Cont Size", "IGM", "Sub/Item", "IGM Date", "BL No", 
+		        	    "Sr_No", "Cont No", "Cont Size","Cont Type", "IGM", "Sub/Item", "IGM Date", "BL No", 
 		        	    "BL Date", "Voy No", "Gate In Date", "Destuff Date", "Declared Pkg", 
 		        	    "Destuffed Pkg", "Importer Name", "No of Days", "Ware House Location", 
 		        	    "Area", "Movement Type", "Consoler Name", "Agent Name", "Remarks", 
@@ -4691,263 +4744,290 @@ public class ImportReportsService {
 
 		                // Switch case to handle each column header
 
-//		                switch (columnsHeader[i]) {
-//		                case "Sr_No":
-//		                    cell.setCellValue(serialNo++); // Increment serial number
-//		                    break;
+		                switch (columnsHeader[i]) {
+		                case "Sr_No":
+		                    cell.setCellValue(serialNo++); // Increment serial number
+		                    break;
+
+		                case "Cont No":
+		                    cell.setCellValue(resultData1[0] != null ? resultData1[0].toString() : "");
+		                    break;
+
+		                case "Cont Size":
+		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
+		                    break;
+		                    
+		                case "Cont Type":
+		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
+		                    break;
+
+
+		                    case "IGM": // Index 3
+		                        cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
+		                        break;
+
+		                    case "Sub/Item": // Index 4
+		                        cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
+		                        break;
+
+		                    case "IGM Date": // Index 5
+		                        if (resultData1[5] != null) {
+		                            cell.setCellValue(resultData1[5].toString());
+		                            cell.setCellStyle(dateCellStyle); // Apply date formatting
+		                        } else {
+		                            cell.setBlank();
+		                            cell.setCellStyle(dateCellStyle);
+		                        }
+		                        break;
+
+		                    case "BL No": // Index 6
+		                        cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                        break;
+
+		                    case "BL Date": // Index 7
+		                        if (resultData1[7] != null) {
+		                            cell.setCellValue(resultData1[7].toString());
+		                            cell.setCellStyle(dateCellStyle); // Apply date formatting
+		                        } else {
+		                            cell.setBlank();
+		                            cell.setCellStyle(dateCellStyle);
+		                        }
+		                        break;
+
+		                    case "Voy No": // Index 8
+		                        cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
+		                        break;
+
+		                    case "Gate In Date": // Index 9
+		                        if (resultData1[9] != null) {
+		                            cell.setCellValue(resultData1[9].toString());
+		                            cell.setCellStyle(dateCellStyle); // Apply date formatting
+		                        } else {
+		                            cell.setBlank();
+		                            cell.setCellStyle(dateCellStyle);
+		                        }
+		                        break;
+
+		                    case "Destuff Date": // Index 10
+		                        if (resultData1[10] != null) {
+		                            cell.setCellValue(resultData1[10].toString());
+		                            cell.setCellStyle(dateCellStyle); // Apply date formatting
+		                        } else {
+		                            cell.setBlank();
+		                            cell.setCellStyle(dateCellStyle);
+		                        }
+		                        break;
+
+		                    case "Declared Pkg": // Index 11
+		                        cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+		                        break;
+
+		                    case "Destuffed Pkg": // Index 12
+		                        cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
+		                        break;
+
+		                    case "Importer Name": // Index 13
+		                        cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+		                        break;
+
+		                    case "No of Days": // Index 14
+		                        if (resultData1[14] != null) {
+		                            cell.setCellValue(Integer.parseInt(resultData1[14].toString()));
+		                        } else {
+		                            cell.setCellValue("");
+		                        }
+		                        break;
+
+		                    case "Ware House Location": // Index 15
+		                        cell.setCellValue(resultData1[15] != null ? resultData1[15].toString() : "");
+		                        break;
+
+		                    case "Area": // Index 16
+		                        cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "");
+		                        break;
+
+		                    case "Movement Type": // Index 17
+		                        cell.setCellValue(resultData1[17] != null ? resultData1[17].toString() : "");
+		                        break;
+
+		                    case "Consoler Name": // Index 18
+		                        cell.setCellValue(resultData1[18] != null ? resultData1[18].toString() : "");
+		                        break;
+
+		                    case "Agent Name": // Index 19
+		                        cell.setCellValue(resultData1[19] != null ? resultData1[19].toString() : "");
+		                        break;
+
+		                    case "Remarks": // Index 20
+		                        cell.setCellValue(resultData1[20] != null ? resultData1[20].toString() : "");
+		                        break;
+
+		                    case "Location": // Index 21
+		                        cell.setCellValue(resultData1[21] != null ? resultData1[21].toString() : "");
+		                        break;
+
+		                    case "Hold Remarks": // Index 22
+		                        cell.setCellValue(resultData1[22] != null ? resultData1[22].toString() : "");
+		                        break;
+
+		                    case "Cargo Type": // Index 23
+		                        cell.setCellValue(resultData1[23] != null ? resultData1[23].toString() : "");
+		                        break;
+
+		                    case "Assessable Value": // Index 24
+		                        if (resultData1[24] != null) {
+		                            try {
+		                                cell.setCellValue(Double.parseDouble(resultData1[24].toString()));
+		                            } catch (NumberFormatException e) {
+		                                cell.setCellValue(""); // Handle non-numeric values gracefully
+		                            }
+		                        } else {
+		                            cell.setCellValue("");
+		                        }
+		                        break;
+
+		                    case "Duty Value": // Index 25
+		                        if (resultData1[25] != null) {
+		                            try {
+		                                cell.setCellValue(Double.parseDouble(resultData1[25].toString()));
+		                            } catch (NumberFormatException e) {
+		                                cell.setCellValue(""); // Handle non-numeric values gracefully
+		                            }
+		                        } else {
+		                            cell.setCellValue("");
+		                        }
+		                        break;
+
+		                    case "IMO": // Index 26
+		                        cell.setCellValue(resultData1[26] != null ? resultData1[26].toString() : "");
+		                        break;
+
+		                    case "UN No": // Index 27
+		                        cell.setCellValue(resultData1[27] != null ? resultData1[27].toString() : "");
+		                        break;
+
+		                    default:
+		                        cell.setCellValue(""); // Handle undefined columns
+		                        break;
+		                }
+
+
+
+		            }
+		        }
+		       
+
+//		        // Create a row for spacing before totals
+//		        Row emptyRow = sheet.createRow(rowNum++);
+//		        emptyRow.createCell(0).setCellValue(""); // You can set a value or keep it blank
 //
-//		                case "Cont No":
-//		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
-//		                    break;
+//		     // Create a row for totals
+//		        Row totalRow = sheet.createRow(rowNum++);
 //
-//		                case "Cont Size":
-//		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
-//		                    break;
+//		     // Create a CellStyle for the background color
+//		        CellStyle totalRowStyle = sheet.getWorkbook().createCellStyle();
+//		        totalRowStyle.cloneStyleFrom(numberCellStyle); // Copy base style
+//		        totalRowStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
+//		        totalRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 //
-//		                case "IGM":
-//		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
-//		                    break;
+//		        // Create a font for bold text
+//		        Font boldFont1 = workbook.createFont();
+//		        boldFont1.setBold(true);
+//		        totalRowStyle.setFont(boldFont1);
 //
-//		                case "Sub/Item":
-//		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
-//		                    break;
+//		        // Add "Total" label to the first cell and apply the style
+//		        Cell totalLabelCell = totalRow.createCell(0);
+//		        totalLabelCell.setCellValue("Total");
+//		        totalLabelCell.setCellStyle(totalRowStyle); // Apply the background color and bold style
 //
-//		                case "IGM Date":
-//		                    if (resultData1[5] != null) {
-//		                        cell.setCellValue(resultData1[5].toString());
-//		                        cell.setCellStyle(dateCellStyle); // Apply date formatting
-//		                    } else {
-//		                        cell.setBlank();
-//		                        cell.setCellStyle(dateCellStyle);
-//		                    }
-//		                    break;
+//		        CellStyle centerStyle = workbook.createCellStyle();
+//		        centerStyle.cloneStyleFrom(totalRowStyle); // Use totalRowStyle as base (light green background)
+//		        centerStyle.setAlignment(HorizontalAlignment.CENTER); // Center the text
+//		        centerStyle.setVerticalAlignment(VerticalAlignment.CENTER); // Center the text vertically if necessary
 //
-//		                case "BL No":
-//		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+//		     
+//		        for (int i = 0; i < columnsHeader.length; i++) {
+//		            Cell totalCell = totalRow.createCell(i);
+//		            totalCell.setCellStyle(numberCellStyle);
+//		            totalCell.setCellStyle(totalRowStyle); // Set the total row style
+//		            
+//		            switch (columnsHeader[i]) {
+//		            
+//		            case "Section 60(1)":
+//		            	 totalCell.setCellValue("Total");
+//		                 totalCell.setCellStyle(centerStyle); // Apply centered style
+//		            
+//                    break;
+//		                case "Inbond Pkgs":
+//		                    totalCell.setCellValue(totalInbondPkgs.doubleValue());
 //		                    break;
-//
-//		                case "BL Date":
-//		                    if (resultData1[7] != null) {
-//		                        cell.setCellValue(resultData1[7].toString());
-//		                        cell.setCellStyle(dateCellStyle); // Apply date formatting
-//		                    } else {
-//		                        cell.setBlank();
-//		                        cell.setCellStyle(dateCellStyle);
-//		                    }
+//		                case "Inbond Weight":
+//		                    totalCell.setCellValue(totalInbondWeight.doubleValue());
 //		                    break;
-//
-//		                case "Voy No":
-//		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
+//		                case "Inbond Asset Value":
+//		                    totalCell.setCellValue(totalInbondAssetValue.doubleValue());
 //		                    break;
-//
-//		                case "Gate In Date":
-//		                case "Destuff Date":
-//		                    if (resultData1[9] != null) {
-//		                        cell.setCellValue(resultData1[9].toString());
-//		                        cell.setCellStyle(dateCellStyle); // Apply date formatting
-//		                    } else {
-//		                        cell.setBlank();
-//		                        cell.setCellStyle(dateCellStyle);
-//		                    }
+//		                case "Inbond Duty Value":
+//		                    totalCell.setCellValue(totalInbondDutyValue.doubleValue());
 //		                    break;
-//
-//		                case "Declared Pkg":
-//		                case "Destuffed Pkg":
-//		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
+//		                case "Bal Pkgs":
+//		                    totalCell.setCellValue(totalBalPkgs.doubleValue());
 //		                    break;
-//
-//		                case "Importer Name":
-//		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+//		                case "Bal Wt":
+//		                    totalCell.setCellValue(totalBalWeight.doubleValue());
 //		                    break;
-//
-//		                case "No of Days":
-//		                    if (resultData1[12] != null) {
-//		                        cell.setCellValue(Integer.parseInt(resultData1[12].toString()));
-//		                    } else {
-//		                        cell.setCellValue("");
-//		                    }
+//		                case "Bal Asset Value":
+//		                    totalCell.setCellValue(totalBalAssetValue.doubleValue());
 //		                    break;
-//
-//		                case "Ware House Location":
-//		                case "Area":
-//		                case "Location":
-//		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+//		                case "Bal Duty Value":
+//		                    totalCell.setCellValue(totalBalDutyValue.doubleValue());
 //		                    break;
-//
-//		                case "Movement Type":
-//		                    cell.setCellValue(resultData1[14] != null ? resultData1[14].toString() : "");
+//		                case "Area Balance Area":
+//		                    totalCell.setCellValue(totalAreaBalance.doubleValue());
 //		                    break;
-//
-//		                case "Consoler Name":
-//		                    cell.setCellValue(resultData1[15] != null ? resultData1[15].toString() : "");
-//		                    break;
-//
-//		                case "Agent Name":
-//		                    cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "");
-//		                    break;
-//
-//		                case "Remarks":
-//		                case "Hold Remarks":
-//		                    cell.setCellValue(resultData1[17] != null ? resultData1[17].toString() : "");
-//		                    break;
-//
-//		                case "Cargo Type":
-//		                    cell.setCellValue(resultData1[18] != null ? resultData1[18].toString() : "");
-//		                    break;
-//
-//		                case "Assessable Value":
-//		                case "Duty Value":
-//		                    if (resultData1[19] != null) {
-//		                        cell.setCellValue(Double.parseDouble(resultData1[19].toString()));
-//		                    } else {
-//		                        cell.setCellValue("");
-//		                    }
-//		                    break;
-//
-//		                case "IMO":
-//		                case "UN No":
-//		                    cell.setCellValue(resultData1[20] != null ? resultData1[20].toString() : "");
-//		                    break;
-//
 //		                default:
-//		                    cell.setCellValue(""); // Handle undefined columns
+//		                    totalCell.setCellValue(""); // Leave cells blank for non-numeric columns
 //		                    break;
 //		            }
+//		        }
 
-
-
-
-		            }
-		        }
-		       
-		        // Create a font for bold text
-		       
-
-		        // Create a row for spacing before totals
-		        Row emptyRow = sheet.createRow(rowNum++);
-		        emptyRow.createCell(0).setCellValue(""); // You can set a value or keep it blank
-
-		     // Create a row for totals
-		        Row totalRow = sheet.createRow(rowNum++);
-
-		     // Create a CellStyle for the background color
-		        CellStyle totalRowStyle = sheet.getWorkbook().createCellStyle();
-		        totalRowStyle.cloneStyleFrom(numberCellStyle); // Copy base style
-		        totalRowStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
-		        totalRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-		        // Create a font for bold text
-		        Font boldFont1 = workbook.createFont();
-		        boldFont1.setBold(true);
-		        totalRowStyle.setFont(boldFont1);
-
-		        // Add "Total" label to the first cell and apply the style
-		        Cell totalLabelCell = totalRow.createCell(0);
-		        totalLabelCell.setCellValue("Total");
-		        totalLabelCell.setCellStyle(totalRowStyle); // Apply the background color and bold style
-
-		        CellStyle centerStyle = workbook.createCellStyle();
-		        centerStyle.cloneStyleFrom(totalRowStyle); // Use totalRowStyle as base (light green background)
-		        centerStyle.setAlignment(HorizontalAlignment.CENTER); // Center the text
-		        centerStyle.setVerticalAlignment(VerticalAlignment.CENTER); // Center the text vertically if necessary
-
-		     
-		        for (int i = 0; i < columnsHeader.length; i++) {
-		            Cell totalCell = totalRow.createCell(i);
-		            totalCell.setCellStyle(numberCellStyle);
-		            totalCell.setCellStyle(totalRowStyle); // Set the total row style
-		            
-		            switch (columnsHeader[i]) {
-		            
-		            case "Section 60(1)":
-		            	 totalCell.setCellValue("Total");
-		                 totalCell.setCellStyle(centerStyle); // Apply centered style
-		            
-                    break;
-		                case "Inbond Pkgs":
-		                    totalCell.setCellValue(totalInbondPkgs.doubleValue());
-		                    break;
-		                case "Inbond Weight":
-		                    totalCell.setCellValue(totalInbondWeight.doubleValue());
-		                    break;
-		                case "Inbond Asset Value":
-		                    totalCell.setCellValue(totalInbondAssetValue.doubleValue());
-		                    break;
-		                case "Inbond Duty Value":
-		                    totalCell.setCellValue(totalInbondDutyValue.doubleValue());
-		                    break;
-		                case "Bal Pkgs":
-		                    totalCell.setCellValue(totalBalPkgs.doubleValue());
-		                    break;
-		                case "Bal Wt":
-		                    totalCell.setCellValue(totalBalWeight.doubleValue());
-		                    break;
-		                case "Bal Asset Value":
-		                    totalCell.setCellValue(totalBalAssetValue.doubleValue());
-		                    break;
-		                case "Bal Duty Value":
-		                    totalCell.setCellValue(totalBalDutyValue.doubleValue());
-		                    break;
-		                case "Area Balance Area":
-		                    totalCell.setCellValue(totalAreaBalance.doubleValue());
-		                    break;
-		                default:
-		                    totalCell.setCellValue(""); // Leave cells blank for non-numeric columns
-		                    break;
-		            }
-		        }
-
-		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
 		        sheet.setColumnWidth(2, 18 * 306); 
 		        sheet.setColumnWidth(3, 18 * 306); 
 		        
 		        sheet.setColumnWidth(4, 14 * 306); 
-		        sheet.setColumnWidth(5, 36 * 306); 
+		        sheet.setColumnWidth(5, 18 * 306); 
 		        
-		        sheet.setColumnWidth(6, 36 * 306); 
-		        sheet.setColumnWidth(7, 14 * 306); 
+		        sheet.setColumnWidth(6, 14 * 306); 
+		        sheet.setColumnWidth(7, 9 * 306); 
 		        
 		        sheet.setColumnWidth(8, 18 * 306); 
-		        sheet.setColumnWidth(9, 14 * 306); 
-		        sheet.setColumnWidth(10, 9 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(9, 18 * 306); 
+		        sheet.setColumnWidth(10, 27 * 306); 
 		        
-		        sheet.setColumnWidth(11, 9 * 306); // Set width for "CHA" (30 characters wide)
-		        sheet.setColumnWidth(12, 14 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(11, 18 * 306); 
+		        sheet.setColumnWidth(12, 18 * 306); 
 		        
-		        sheet.setColumnWidth(13,  45 * 306); 
-		        sheet.setColumnWidth(14, 18 * 306); 
+		        sheet.setColumnWidth(13,  9 * 306); 
+		        sheet.setColumnWidth(14, 45 * 306); 
 		        sheet.setColumnWidth(15, 18 * 306); 
 		        sheet.setColumnWidth(16, 18 * 306); 
 
 		        
-		        sheet.setColumnWidth(17, 14 * 306); 
-		        sheet.setColumnWidth(18, 14 * 306); 
-		        sheet.setColumnWidth(19, 14 * 306); 
-		        sheet.setColumnWidth(20,14 * 306); 
-		        sheet.setColumnWidth(21, 36 * 306);
-		        sheet.setColumnWidth(22, 45 * 306); 
+		        sheet.setColumnWidth(17, 18 * 306); 
+		        sheet.setColumnWidth(18, 18 * 306); 
+		        sheet.setColumnWidth(19, 18 * 306); 
+		        sheet.setColumnWidth(20,36 * 306); 
+		        sheet.setColumnWidth(21, 14 * 306);
+		        sheet.setColumnWidth(22, 14 * 306); 
 		        sheet.setColumnWidth(23, 18 * 306); 
 		        sheet.setColumnWidth(24, 18 * 306); 
 		        sheet.setColumnWidth(25, 18 * 306);
 		        sheet.setColumnWidth(26, 18 * 306);
 		        sheet.setColumnWidth(27, 18 * 306); 
-		        sheet.setColumnWidth(28, 18 * 306);
-		        sheet.setColumnWidth(29, 18 * 306); 
-		        sheet.setColumnWidth(30, 27 * 306); 
-		        
-		        sheet.setColumnWidth(31, 18 * 306); 
-		        sheet.setColumnWidth(32, 18 * 306); 
-		        sheet.setColumnWidth(33, 18 * 306); 
-		        sheet.setColumnWidth(34, 27 * 306); 
-//		        sheet.setColumnWidth(35, 27 * 306); 
-		        sheet.setColumnWidth(36, 27 * 306); 
-		        sheet.setColumnWidth(37, 27 * 306); 
-		        sheet.setColumnWidth(38, 18 * 306); 
-		        sheet.setColumnWidth(39, 18 * 306); 
-		        sheet.setColumnWidth(40, 27 * 306); 
-		        sheet.setColumnWidth(41, 18 * 306); 
+		        sheet.setColumnWidth(28, 18 * 306); 
+	
 		        
 		        sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, headerRowIndex, 0, columnsHeader.length - 1));
 		        sheet.createFreezePane(0, headerRowIndex + 1); // Freeze rows above the 6th row

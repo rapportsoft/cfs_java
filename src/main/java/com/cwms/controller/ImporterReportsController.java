@@ -69,7 +69,7 @@ public class ImporterReportsController {
 	        @RequestParam(name = "type") String type,
 	        @RequestParam(name = "cname") String companyname,
 	        @RequestParam(name = "bname") String branchname,
-	        @RequestParam(name = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+	        @RequestParam(name = "startDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
 	        @RequestParam(name = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
 	        @RequestParam(name = "igmNo", required = false) String igmNo,
 	        @RequestParam(name = "itemNo", required = false) String itemNo,
@@ -84,6 +84,7 @@ public class ImporterReportsController {
 
 	    // Determine which report to generate
 	    switch (selectedReport) {
+	    
 	        case "Import GateIn Container detailed Report":
 	            excelBytes = importReporsService.createExcelReportOfImportGateInContainerDetailedReport(
 	                    companyId, branchId, username, type, companyname, branchname,
@@ -251,7 +252,7 @@ public class ImporterReportsController {
 			       @RequestParam(name = "type") String type, 
 			       @RequestParam(name = "cname") String companyname,
 			       @RequestParam(name = "bname") String branchname, 
-			       @RequestParam(name = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+			       @RequestParam(name = "startDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
 			       @RequestParam(name = "endDate" ) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
 			       @RequestParam(name="igmNo",required = false) String igmNo,
 			       @RequestParam(name="itemNo",required = false) String itemNo,
