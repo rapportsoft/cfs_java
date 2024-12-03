@@ -10,7 +10,24 @@ import com.cwms.entities.ExportInventory;
 
 public interface ExportInventoryRepository extends JpaRepository<ExportInventory, String> {
 
-	
+
+	@Query("SELECT new com.cwms.entities.ExportInventory(E.containerNo, E.gateInId, E.eBookingNo, E.stuffReqId, "
+		       + "E.stuffTallyId, E.movementReqId, E.backToTownId, E.gateOutId, E.gatePassNo, "
+		       + "E.emptyPassId, E.emptyGateoutId) "
+		       + "FROM ExportInventory E "
+		       + "WHERE E.companyId = :companyId "
+		       + "AND E.branchId = :branchId "
+		       + "AND E.containerNo = :containerNo "
+		       + "AND E.gateInId = :gateInId "
+		       + "AND E.profitcentreId = :profitCenterId")
+		ExportInventory getDataForExportMainSearchInventory(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("containerNo") String containerNo,
+		    @Param("gateInId") String gateInId,
+		    @Param("profitCenterId") String profitCenterId
+		);
+
 	
 	@Transactional
 	@Modifying

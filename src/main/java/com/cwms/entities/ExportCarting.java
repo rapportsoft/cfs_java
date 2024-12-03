@@ -1034,4 +1034,11 @@ public class ExportCarting implements Cloneable{
 	public Object clone() throws CloneNotSupportedException {
 	    return super.clone();
 	}
+	
+
+	public ExportCarting(String cartingTransId, String cartingLineId) {
+		super();
+		this.cartingTransId = cartingTransId;
+		this.cartingLineId = cartingLineId;		
+	}
 }

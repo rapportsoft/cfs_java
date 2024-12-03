@@ -4220,4 +4220,20 @@ public Object clone() throws CloneNotSupportedException {
 }
 
 
+//Export Main Search
+public GateIn(String gateInId, String gateInType, String profitcentreId, BigDecimal actualNoOfPackages, String containerNo,
+		String docRefNo, String erpDocRefNo, String lineNo) {
+	super();
+	this.gateInId = gateInId;
+	this.gateInType = gateInType;
+	this.profitcentreId = profitcentreId;
+	this.containerNo = containerNo;
+	this.actualNoOfPackages = actualNoOfPackages;
+	this.docRefNo = docRefNo;
+	this.erpDocRefNo = erpDocRefNo;
+	this.lineNo = lineNo;
+}
+
+
+
 }

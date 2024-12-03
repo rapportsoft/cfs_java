@@ -6185,7 +6185,37 @@ public class ExportStuffTally implements Cloneable {
 		
 		
 
-	
+
+		// Export Main Search
+
+				public ExportStuffTally(String stuffTallyId, String containerNo, String gateInId, String reworkId) {
+					super();
+					this.stuffTallyId = stuffTallyId;
+					this.containerNo = containerNo;
+					this.gateInId = gateInId;
+					this.reworkId = reworkId;
+					}
+
+
+
+
+
+
+
+				public ExportStuffTally(String stuffTallyId, String sbTransId, int stuffTallyLineId, String sbLineId,
+						String sbNo, String containerNo, String gateInId, String reworkId) {
+					super();
+					this.stuffTallyId = stuffTallyId;
+					this.sbTransId = sbTransId;
+					this.stuffTallyLineId = stuffTallyLineId;
+					this.sbLineId = sbLineId;
+					this.sbNo = sbNo;
+					this.containerNo = containerNo;
+					this.gateInId = gateInId;
+					this.reworkId = reworkId;
+				}
+
+				
 		
 		
 		

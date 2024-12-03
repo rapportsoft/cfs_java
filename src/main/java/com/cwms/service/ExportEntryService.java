@@ -1,5 +1,6 @@
 package com.cwms.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,13 +19,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cwms.entities.ExportCarting;
+import com.cwms.entities.ExportInventory;
 import com.cwms.entities.ExportSbCargoEntry;
 import com.cwms.entities.ExportSbEntry;
+import com.cwms.entities.ExportStuffRequest;
+import com.cwms.entities.ExportStuffTally;
+import com.cwms.entities.ExportTransfer;
 import com.cwms.entities.GateIn;
 import com.cwms.helper.HelperMethods;
+import com.cwms.repository.ExportBackToTownRepo;
 import com.cwms.repository.ExportCartingRepo;
 import com.cwms.repository.ExportEntryRepo;
+import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.ExportSbCargoEntryRepo;
+import com.cwms.repository.ExportStuffRequestRepo;
+import com.cwms.repository.ExportStuffTallyRepo;
+import com.cwms.repository.ExportTransferRepositary;
 import com.cwms.repository.GateInRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,6 +62,858 @@ public class ExportEntryService {
 	
 	@Autowired
 	private ExportCartingRepo cartingRepo;
+	
+	
+	@Autowired
+	private ExportStuffRequestRepo stuffRequestRepo;
+	
+	@Autowired
+	private ExportStuffTallyRepo stuffTallyRepo;
+	
+	@Autowired
+	private ExportInventoryRepository inventoryRepo;
+	
+	@Autowired
+	private ExportTransferRepositary transferRepo;	
+	
+	@Autowired
+	private ExportBackToTownRepo backToTownRepo;
+	
+	
+	public ResponseEntity<?> searchExportMain(String companyId, String branchId, String sbNo, String containerNo)
+	{		
+		
+		try {
+		
+		System.out.println(companyId +" companyId "+ branchId + " branchId "+ sbNo + " sbNo "+ containerNo + " containerNo ");
+		
+		List<String> allowedList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		Map<String,Object> mainData = new HashMap<>();
+		String reWorrkingContainerNo = null;
+		
+		Pageable pageable = PageRequest.of(0, 1);
+		
+		if (sbNo != null && !sbNo.trim().isEmpty() 
+		        && (containerNo == null || containerNo.trim().isEmpty())) {		
+			
+			System.out.println("In sbSearch Null 1 ");
+			Page<ExportSbCargoEntry> result = entryCargoRepo.getDataForExportMainSearchSbCargo(companyId, branchId, sbNo, pageable);
+
+//			ExportSbCargoEntry existinSbCargoEntry = entryCargoRepo.findFirstByCompanyIdAndBranchIdAndSbNoOrderByCreatedDateDesc(companyId, branchId, sbNo);
+			
+			ExportSbCargoEntry existinSbCargoEntry = null;
+			System.out.println("sbSearched Null 1/2 ");
+			if(!result.hasContent())
+			{
+				System.out.println("sbSearch Null 2 ");
+				return ResponseEntity.badRequest().body("No Data Found");
+			}
+			existinSbCargoEntry = result.getContent().get(0);
+			
+			String sbType = existinSbCargoEntry.getSbType();
+			String mainSbNo = existinSbCargoEntry.getSbNo();
+			String mainSbTransId = existinSbCargoEntry.getSbTransId();
+			String profitCenter = existinSbCargoEntry.getProfitcentreId();
+			
+			dataMap.put("sbNo", existinSbCargoEntry.getSbNo());
+			dataMap.put("sbLineNo", existinSbCargoEntry.getSrno());
+	        dataMap.put("sbTransId", existinSbCargoEntry.getSbTransId());
+	        dataMap.put("hsbSbTransId", existinSbCargoEntry.gethSbTransId());
+	        dataMap.put("profitCenterId", profitCenter);
+	        
+	        allowedList.add("P00216");       
+			
+	        
+			
+			
+			System.out.println(" sbType " + sbType + " mainSbNo "+ mainSbNo + " mainSbTransId " + mainSbTransId);
+			if("Normal".equals(sbType))
+			{
+				
+				System.out.println( " checking stuffing quantity 1 : "+ existinSbCargoEntry.getStuffReqQty());
+				if(existinSbCargoEntry.getStuffReqQty() > 0)
+				{	
+					System.out.println( " In stuffing Search : 2 ");
+
+					
+					
+					
+					Page<ExportStuffRequest> stuffingResult = stuffRequestRepo.getDataForExportMainSearchStuff(companyId, branchId, mainSbNo, mainSbTransId, pageable);
+//					ExportStuffRequest existinStuffingEntry = stuffRequestRepo.findFirstByCompanyIdAndBranchIdAndSbNoAndSbTransIdOrderByCreatedDateDesc(companyId, branchId, mainSbNo, mainSbTransId);
+					
+					ExportStuffRequest existinStuffingEntry = null;
+					if (stuffingResult.hasContent()) {
+						existinStuffingEntry = stuffingResult.getContent().get(0);
+					}
+					
+					
+					List<String> resultGateIn = gateInRepo.getDataForExportMainSearchGateInNormal(companyId, branchId, profitCenter, mainSbTransId, mainSbNo, "EXP",pageable);
+					String sbGateInId = resultGateIn.isEmpty() ? null : resultGateIn.get(0);
+					
+					dataMap.put("gateInId", sbGateInId);				        
+				        allowedList.add("P00217"); //sbGateIn
+					
+					
+					
+					Page<ExportCarting> cartingResult = cartingRepo.getDataForExportMainSearchCarting(companyId, branchId, profitCenter, mainSbNo, mainSbTransId, pageable);
+					ExportCarting cartingEntity = cartingResult.getContent().get(0);
+					
+					
+					allowedList.add("P00218"); //carting
+					dataMap.put("cartingTransId", cartingEntity.getCartingTransId());	
+					dataMap.put("cartingLineId", cartingEntity.getCartingLineId());	
+					
+					
+					
+					
+					 dataMap.put("stuffingReqId", existinStuffingEntry.getStuffReqId());
+					 dataMap.put("containerNo", existinStuffingEntry.getContainerNo());
+					 dataMap.put("containerGateInId", existinStuffingEntry.getGateInId());					 
+				        
+					 allowedList.add("P00219"); //emptyConatiner GateIn
+				     allowedList.add("P00220");  // stuffing req
+					
+				     
+				    String mainContainerNo = existinStuffingEntry.getContainerNo();
+				    String containerGateInId = existinStuffingEntry.getGateInId();
+				    reWorrkingContainerNo = mainContainerNo;
+				    
+				     
+				     ExportInventory inventory = inventoryRepo.getDataForExportMainSearchInventory(companyId, branchId, mainContainerNo, containerGateInId, profitCenter);
+					
+				     String stuffTallyId = inventory.getStuffTallyId();
+				     if(stuffTallyId != null && !stuffTallyId.trim().isEmpty())
+				     {				    	 
+				    	 dataMap.put("stuffTallyId", stuffTallyId);       
+						 
+						 						 
+						 String movementReqId = inventory.getMovementReqId();						 
+						 
+						 if(movementReqId != null && !movementReqId.trim().isEmpty())
+					     {					     
+							 dataMap.put("movementReqId", movementReqId);       
+							 
+							 
+							 String gatePassNo = inventory.getGatePassNo();							 
+							 
+							 if(gatePassNo != null && !gatePassNo.trim().isEmpty())
+						     {						     
+								 dataMap.put("gatePassNo", gatePassNo); 
+								 dataMap.put("containerType", "CLP"); 
+								 
+												 
+								 
+								 String gateOutId = inventory.getGateOutId(); 
+								 
+									 if(gateOutId != null && !gateOutId.trim().isEmpty())
+								     {								     
+										 dataMap.put("gateOutId", gateOutId); 
+										
+								     }//GateOut End				 
+									 allowedList.add("P00223"); //gateOutId	 				 
+						     } //GatePass End
+							 allowedList.add("P00231"); //gatePassNo	
+							 
+					     } //Movement  End
+				    	 
+						 allowedList.add("P00238"); //movementReqId
+						 
+				     } // Tally End
+				     
+				     allowedList.add("P00221"); //stuffTally				    	 
+					 allowedList.add("P00222"); //stuffTally
+				     
+				     
+				     
+				     
+				     
+					
+					
+				}else
+				{
+					System.out.println( " In No Stuffing packages : 0 step 1 " + " existinSbCargoEntry.getGateInPackages() : " + existinSbCargoEntry.getGateInPackages());
+					
+					
+					if (existinSbCargoEntry.getGateInPackages() != null && existinSbCargoEntry.getGateInPackages().compareTo(BigDecimal.ZERO) > 0) {
+						
+						List<String> resultSbGateInId = gateInRepo.getDataForExportMainSearchGateInNormal(companyId, branchId, profitCenter, mainSbTransId, mainSbNo, "EXP",pageable);
+						
+						
+						String sbGateInId = resultSbGateInId.isEmpty() ? null : resultSbGateInId.get(0);
+						
+						dataMap.put("gateInId", sbGateInId);				        
+				      
+				        
+				        if (existinSbCargoEntry.getCartedPackages() != null && existinSbCargoEntry.getCartedPackages().compareTo(BigDecimal.ZERO) > 0) {
+
+							Page<ExportCarting> cartingResult = cartingRepo.getDataForExportMainSearchCarting(companyId, branchId, profitCenter, mainSbNo, mainSbTransId, pageable);
+							ExportCarting cartingEntity = cartingResult.getContent().get(0);							
+							
+//							allowedList.add("P00218"); //carting
+							dataMap.put("cartingTransId", cartingEntity.getCartingTransId());	
+							dataMap.put("cartingLineId", cartingEntity.getCartingLineId());							
+							
+							
+							System.out.println(" existinSbCargoEntry.getCartedPackages() "+ existinSbCargoEntry.getCartedPackages() + " existinSbCargoEntry.getNoOfPackages(): "+existinSbCargoEntry.getNoOfPackages());
+							if (existinSbCargoEntry.getCartedPackages().compareTo(existinSbCargoEntry.getNoOfPackages()) == 0)
+							{
+								 allowedList.add("P00219"); //emptyConatiner GateIn
+							     allowedList.add("P00220");  // stuffing req
+								
+							}		
+				        }
+				        allowedList.add("P00218"); //Carting
+						
+					}
+					  allowedList.add("P00217"); //sbGateIn
+					
+					
+				}
+				
+				
+				
+				
+			}
+//			Buffer and On Wheel
+			else
+			{	
+				 allowedList.add("P00234");
+				
+//				If Buffer Tally
+		    if (existinSbCargoEntry.getStuffedQty() != null && existinSbCargoEntry.getStuffedQty().compareTo(BigDecimal.ZERO) > 0) {
+				
+				Page<ExportStuffTally> stuffTallyEntity = stuffTallyRepo.getDataForExportMainSsearchStuffTally(companyId, branchId, mainSbNo, mainSbTransId, profitCenter, pageable);
+				
+//				ExportStuffTally stuffEntity = stuffTallyRepo.findFirstByCompanyIdAndBranchIdAndSbNoAndSbTransIdAndProfitcentreIdOrderByCreatedDateDesc(companyId, branchId, mainSbNo, mainSbTransId, profitCenter);
+				ExportStuffTally stuffEntity = stuffTallyEntity.getContent().get(0);
+				
+				String bufferStuffTallyId = stuffEntity.getStuffTallyId();
+				String	mainContainerNoBuffer = stuffEntity.getContainerNo();
+				String	containerGateInIdBuffer = stuffEntity.getGateInId();				
+				
+				ExportInventory inventory = inventoryRepo.getDataForExportMainSearchInventory(companyId, branchId, mainContainerNoBuffer, containerGateInIdBuffer, profitCenter);
+				
+				 dataMap.put("bufferStuffTallyId", bufferStuffTallyId);       
+				 allowedList.add("P00236");
+				 
+				 dataMap.put("containerNo", mainContainerNoBuffer);
+				 dataMap.put("containerGateInId", containerGateInIdBuffer);	
+				 reWorrkingContainerNo = mainContainerNoBuffer;
+				 
+//				 allowedList.add("P00234");
+//				 allowedList.add("P00235");
+				
+				 String movementReqId = inventory.getMovementReqId();						 
+				 
+				 if(movementReqId != null && !movementReqId.trim().isEmpty())
+			     {					     
+					 dataMap.put("movementReqId", movementReqId);       
+					 
+					 
+					 String gatePassNo = inventory.getGatePassNo();							 
+					 
+					 if(gatePassNo != null && !gatePassNo.trim().isEmpty())
+				     {						     
+						 dataMap.put("gatePassNo", gatePassNo);  
+						 dataMap.put("containerType", "Buffer");
+										 
+						 
+						 String gateOutId = inventory.getGateOutId(); 
+						 
+							 if(gateOutId != null && !gateOutId.trim().isEmpty())
+						     {								     
+								 dataMap.put("gateOutId", gateOutId);							
+						     } //GateOut End				 
+							 allowedList.add("P00223"); //gateOutId		 				 
+				     } //GatePass End					 
+					 allowedList.add("P00231"); //gatePassNo					 
+			     } //Movement End
+				 allowedList.add("P00238"); //movementReqId			
+		     }
+		    allowedList.add("P00235");
+		    allowedList.add("P00236");
+		    
+		    	
+		}
+			
+		
+			
+			
+				
+				Page<ExportTransfer> sbTransfer = transferRepo.getDataForExportMainSearchSbTransfer(companyId, branchId, profitCenter, mainSbNo, mainSbTransId, pageable);
+				
+				if(sbTransfer.hasContent())
+				{
+					ExportTransfer sbTransferEntity = sbTransfer.getContent().get(0);					
+					dataMap.put("sbChangeTransId", sbTransferEntity.getSbChangeTransId());  
+					 dataMap.put("sbChangeSrNo", sbTransferEntity.getSrNo());
+					 allowedList.add("P00228");					
+				}
+				
+				int backToTownPack = existinSbCargoEntry.getBackToTownPack();
+				if(backToTownPack > 0) 
+				{					
+					List<String> backToTownRecord = backToTownRepo.getDataForExportMainSearchBackToTown(companyId, branchId, profitCenter, mainSbTransId, mainSbNo, pageable);
+					String backToTownTransId = backToTownRecord.isEmpty() ? null : backToTownRecord.get(0);
+					
+					 dataMap.put("backToTownTransId", backToTownTransId);
+					 allowedList.add("P00225");					
+				}
+			
+			
+				 List<String> tallyData = stuffTallyRepo.getDataForExportMainSearchStuffTallyReworking(companyId, branchId, reWorrkingContainerNo, profitCenter);
+				 
+				 String reworkingId = tallyData.isEmpty() ? null : tallyData.get(0);
+				
+				 if(reworkingId != null)
+				 {
+					 dataMap.put("reworkingId", reworkingId);
+					 allowedList.add("P00227");		
+					 
+				 }
+				 
+			
+			
+				mainData.put("allowedList", allowedList);
+				mainData.put("data", dataMap);
+				return ResponseEntity.ok(mainData);
+			
+		}		
+//		Only container or both container and SbNo Present
+		else
+		{
+	
+			Page<GateIn> resultGateIn = gateInRepo.getDataForExportMainSearchGateIn(companyId, branchId, containerNo, pageable);
+
+			
+//			GateIn gateInEntity = gateInRepo.findFirstByCompanyIdAndBranchIdAndContainerNoOrderByCreatedDateDesc(companyId, branchId, containerNo);
+
+			GateIn gateInEntity = null;
+			if (!resultGateIn.hasContent()) {
+				System.out.println("No Data found for container");
+				return ResponseEntity.badRequest().body("No Data Found");				
+			}			
+			gateInEntity = resultGateIn.getContent().get(0);
+			
+			 
+			
+			
+			String profitCenterContainer = gateInEntity.getProfitcentreId();
+			String containerNoSearchCont = gateInEntity.getContainerNo();
+			String gateInIdContainer = gateInEntity.getGateInId();
+			String portSbNo = gateInEntity.getDocRefNo();
+			String portSbTransId = gateInEntity.getErpDocRefNo();
+//			String portSbLineNo = gateInEntity.getLineNo();
+			
+			
+			
+			reWorrkingContainerNo = containerNoSearchCont;
+			
+			dataMap.put("containerNo", containerNoSearchCont);
+			dataMap.put("containerGateInId", gateInIdContainer);	
+			 
+			ExportSbCargoEntry mainSbCargoEntry = null;
+			
+			if("EXP".equals(gateInEntity.getGateInType()))// For Normal Container GateIn
+			{
+				    
+				 allowedList.add("P00219"); //emptyConatiner GateIn
+
+				
+				
+				System.out.println( " In stuffing ContainerNo Search : 1 ");
+				Page<ExportStuffRequest> stuffingResult = stuffRequestRepo.getDataForExportMainSearchStuffContainerSearch(companyId, branchId, containerNoSearchCont, gateInIdContainer, profitCenterContainer, sbNo, pageable);
+				
+//				ExportStuffRequest existinStuffingEntry = stuffRequestRepo.findFirstByCompanyIdAndBranchIdAndContainerNoOrderByCreatedDateDesc(companyId, branchId, containerNoSearchCont, gateInIdContainer, profitCenterContainer, sbNo);
+				
+				ExportStuffRequest existinStuffingEntry = null;
+				if (!stuffingResult.hasContent()) {				
+					
+					if (sbNo != null && !sbNo.trim().isEmpty())
+					{
+						System.out.println("No Data found for container");
+						return ResponseEntity.badRequest().body("No Data Found");						
+					}	
+					
+					mainData.put("allowedList", allowedList);
+					mainData.put("data", dataMap);
+					return ResponseEntity.ok(mainData);					
+				}
+				
+				
+				existinStuffingEntry = stuffingResult.getContent().get(0);
+
+				String sbNoContainer = existinStuffingEntry.getSbNo();
+				String sbTransIdSearchCont = existinStuffingEntry.getSbTransId();
+				String sbLineNoContainer = existinStuffingEntry.getSbLineNo();								
+				
+				Page<ExportSbCargoEntry> result = entryCargoRepo.getDataForExportMainSearchSbCargoContainer(companyId, branchId, sbNoContainer, sbTransIdSearchCont, sbLineNoContainer,pageable);
+
+//				ExportSbCargoEntry existinSbCargoEntry = entryCargoRepo.findFirstByCompanyIdAndBranchIdAndSbNoAndSbTransIdAndSrnoOrderByCreatedDateDesc(companyId, branchId, sbNoContainer, sbTransIdSearchCont, sbLineNoContainer);
+				
+				ExportSbCargoEntry existinSbCargoEntry = result.getContent().get(0);
+				mainSbCargoEntry = existinSbCargoEntry;
+				mainSbCargoEntry.setProfitcentreId(profitCenterContainer);
+				
+				dataMap.put("sbNo", existinSbCargoEntry.getSbNo());
+				dataMap.put("sbLineNo", existinSbCargoEntry.getSrno());
+		        dataMap.put("sbTransId", existinSbCargoEntry.getSbTransId());
+		        dataMap.put("hsbSbTransId", existinSbCargoEntry.gethSbTransId());
+		        dataMap.put("profitCenterId", profitCenterContainer);
+		        
+		        allowedList.add("P00216"); 
+				
+				
+		        List<String> resultSbGateInId = gateInRepo.getDataForExportMainSearchGateInNormal(companyId, branchId, profitCenterContainer, sbTransIdSearchCont, sbNoContainer, "EXP",pageable);
+					
+				String sbGateInId = resultSbGateInId.isEmpty() ? null : resultSbGateInId.get(0);
+
+					dataMap.put("gateInId", sbGateInId);    				        
+			        allowedList.add("P00217"); //sbGateIn			
+				
+				
+				
+				Page<ExportCarting> cartingResult = cartingRepo.getDataForExportMainSearchCarting(companyId, branchId, profitCenterContainer, sbNoContainer, sbTransIdSearchCont, pageable);
+				ExportCarting cartingEntity = cartingResult.getContent().get(0);
+				
+				
+				allowedList.add("P00218"); //carting
+				dataMap.put("cartingTransId", cartingEntity.getCartingTransId());	
+				dataMap.put("cartingLineId", cartingEntity.getCartingLineId());	
+				
+				
+				
+				
+				 dataMap.put("stuffingReqId", existinStuffingEntry.getStuffReqId());
+				 dataMap.put("containerNo", existinStuffingEntry.getContainerNo());
+				 dataMap.put("containerGateInId", existinStuffingEntry.getGateInId());					 
+			        
+				 
+			     allowedList.add("P00220");  // stuffing req
+				
+			     
+			    String mainContainerNo = existinStuffingEntry.getContainerNo();
+			    String containerGateInId = existinStuffingEntry.getGateInId();
+			    
+			    
+			     ExportInventory inventory = inventoryRepo.getDataForExportMainSearchInventory(companyId, branchId, mainContainerNo, containerGateInId, profitCenterContainer);
+				
+			     String stuffTallyId = inventory.getStuffTallyId();
+			     if(stuffTallyId != null && !stuffTallyId.trim().isEmpty())
+			     {				    	 
+			    	 dataMap.put("stuffTallyId", stuffTallyId);       
+					 
+					 
+					 String movementReqId = inventory.getMovementReqId();						 
+					 
+					 if(movementReqId != null && !movementReqId.trim().isEmpty())
+				     {					     
+						 dataMap.put("movementReqId", movementReqId);       
+						
+						 
+						 String gatePassNo = inventory.getGatePassNo();							 
+						 
+						 if(gatePassNo != null && !gatePassNo.trim().isEmpty())
+					     {						     
+							 dataMap.put("gatePassNo", gatePassNo); 
+							 dataMap.put("containerType", "CLP");
+											 
+							 
+							 String gateOutId = inventory.getGateOutId(); 
+							 
+								 if(gateOutId != null && !gateOutId.trim().isEmpty())
+							     {								     
+									 dataMap.put("gateOutId", gateOutId);       
+									
+							     }//GateOut End				 
+								 allowedList.add("P00223"); //gateOutId		 				 
+					     } //GatePass End
+						 allowedList.add("P00231"); //gatePassNo	
+				     } //Movement  End
+					 allowedList.add("P00238"); //movementReqId
+			     } // Tally End
+			     allowedList.add("P00221"); //stuffTally				    	 
+				 allowedList.add("P00222");
+			     
+			     
+			     
+			    
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			else if("Buffer".equals(gateInEntity.getGateInType()) || "ONWH".equals(gateInEntity.getGateInType()))// For Buffer/OnWheel Container GateIn
+			{
+				allowedList.add("P00234"); //Buffer GateIn
+				
+				Page<ExportStuffTally> stuffTallyEntity = stuffTallyRepo.getDataForExportMainSearchStuffTallyContainerSearch(companyId, branchId, containerNoSearchCont, gateInIdContainer, profitCenterContainer, sbNo, pageable);
+				
+				
+//				ExportStuffTally existinStuffingEntry = stuffTallyRepo.findFirstByCompanyIdAndBranchIdAndContainerNoAndGateInIdAndProfitcentreIdOrderByCreatedDateDesc(companyId, branchId, containerNoSearchCont, gateInIdContainer, profitCenterContainer, sbNo);
+				
+				ExportStuffTally existinStuffingEntry = null;
+				if (!stuffTallyEntity.hasContent()) {				
+					
+					if (sbNo != null && !sbNo.trim().isEmpty())
+					{
+						System.out.println("No Data found for container");
+						return ResponseEntity.badRequest().body("No Data Found");						
+					}	
+						allowedList.add("P00236");
+						mainData.put("allowedList", allowedList);
+						mainData.put("data", dataMap);
+						return ResponseEntity.ok(mainData);					
+				}
+				existinStuffingEntry = stuffTallyEntity.getContent().get(0);				
+				
+				Page<ExportSbCargoEntry> result = entryCargoRepo.getDataForExportMainSearchSbCargoContainer(companyId, branchId, existinStuffingEntry.getSbNo(), existinStuffingEntry.getSbTransId(), existinStuffingEntry.getSbLineId(),pageable);
+
+//				ExportSbCargoEntry existinSbCargoEntry = entryCargoRepo.findFirstByCompanyIdAndBranchIdAndSbNoAndSbTransIdAndSrnoOrderByCreatedDateDesc(companyId, branchId, existinStuffingEntry.getSbNo(), existinStuffingEntry.getSbTransId(), existinStuffingEntry.getSbLineId());
+				
+				ExportSbCargoEntry existinSbCargoEntry = result.getContent().get(0);
+				
+				mainSbCargoEntry = existinSbCargoEntry;
+				mainSbCargoEntry.setProfitcentreId(profitCenterContainer);
+				
+				dataMap.put("sbNo", existinSbCargoEntry.getSbNo());
+				dataMap.put("sbLineNo", existinSbCargoEntry.getSrno());
+		        dataMap.put("sbTransId", existinSbCargoEntry.getSbTransId());
+		        dataMap.put("hsbSbTransId", existinSbCargoEntry.gethSbTransId());
+		        dataMap.put("profitCenterId", profitCenterContainer);
+		        
+		        allowedList.add("P00216"); 
+				
+				
+				String bufferStuffTallyId = existinStuffingEntry.getStuffTallyId();
+				String	mainContainerNoBuffer = existinStuffingEntry.getContainerNo();
+				String	containerGateInIdBuffer = existinStuffingEntry.getGateInId();	
+				
+				
+				
+				ExportInventory inventory = inventoryRepo.getDataForExportMainSearchInventory(companyId, branchId, mainContainerNoBuffer, containerGateInIdBuffer, profitCenterContainer);
+				
+				 dataMap.put("bufferStuffTallyId", bufferStuffTallyId);       
+				 allowedList.add("P00236");
+				
+				 String movementReqId = inventory.getMovementReqId();						 
+				 
+				 if(movementReqId != null && !movementReqId.trim().isEmpty())
+			     {					     
+					 dataMap.put("movementReqId", movementReqId);       
+					
+					 
+					 String gatePassNo = inventory.getGatePassNo();							 
+					 
+					 if(gatePassNo != null && !gatePassNo.trim().isEmpty())
+				     {						     
+						 dataMap.put("gatePassNo", gatePassNo);
+						 dataMap.put("containerType", "Buffer");
+						 				 
+						 
+						 String gateOutId = inventory.getGateOutId(); 
+						 
+							 if(gateOutId != null && !gateOutId.trim().isEmpty())
+						     {								     
+								 dataMap.put("gateOutId", gateOutId);       
+								 
+						     } //GateOut End				 
+							 allowedList.add("P00223"); //gateOutId	 				 
+				     } //GatePass End
+					 allowedList.add("P00231"); //gatePassNo	
+			     } //Movement End
+				 allowedList.add("P00238"); //movementReqId
+				
+				
+				
+				
+				
+				
+				
+			}
+//			Port Return
+			else
+			{			
+
+				allowedList.add("P00226");
+				dataMap.put("portReturnId",  gateInIdContainer);
+				
+				
+				ExportInventory inventory = inventoryRepo.getDataForExportMainSearchInventory(companyId, branchId, containerNoSearchCont, gateInIdContainer, profitCenterContainer);
+				
+						
+				String movementReqId = inventory.getMovementReqId();	
+				 
+				
+				 
+				 if (movementReqId == null) {				
+						
+						if (sbNo != null && !sbNo.trim().isEmpty())
+						{
+							System.out.println("No Data found for container");
+							return ResponseEntity.badRequest().body("No Data Found");						
+						}	
+						
+						
+						
+						
+							mainData.put("allowedList", allowedList);
+							mainData.put("data", dataMap);
+							return ResponseEntity.ok(mainData);					
+					}
+				 
+				 
+				 if (sbNo != null && !sbNo.trim().isEmpty())
+					{
+				 boolean existInTally = stuffTallyRepo.existsByContainerNoMovementAndSb(companyId, branchId, profitCenterContainer, containerNoSearchCont, sbNo);
+
+					System.out.println("existInTally : "+existInTally);
+					
+					if(!existInTally)
+					{
+						System.out.println("No Data found for container");
+						return ResponseEntity.badRequest().body("No Data Found");							
+					}
+					}
+				 
+				 Page<ExportSbCargoEntry> result = entryCargoRepo.getDataForExportMainSearchSbCargoContainerPortReturn(companyId, branchId, portSbNo, portSbTransId, pageable);
+
+				 ExportSbCargoEntry existinSbCargoEntry = result.getContent().get(0);
+					
+					mainSbCargoEntry = existinSbCargoEntry;
+					mainSbCargoEntry.setProfitcentreId(profitCenterContainer);
+					
+					dataMap.put("sbNo", existinSbCargoEntry.getSbNo());
+					dataMap.put("sbLineNo", existinSbCargoEntry.getSrno());
+			        dataMap.put("sbTransId", existinSbCargoEntry.getSbTransId());
+			        dataMap.put("hsbSbTransId", existinSbCargoEntry.gethSbTransId());
+			        dataMap.put("profitCenterId", profitCenterContainer);
+			        
+			        allowedList.add("P00216");
+				 
+				 
+			        dataMap.put("movementReqId", movementReqId);       
+					 allowedList.add("P00238"); //movementReqId
+					 
+					 String gatePassNo = inventory.getGatePassNo();							 
+					 
+					 if(gatePassNo != null && !gatePassNo.trim().isEmpty())
+				     {						     
+						 dataMap.put("gatePassNo", gatePassNo);
+						 dataMap.put("containerType", "Buffer");
+						 allowedList.add("P00231"); //gatePassNo					 
+						 
+						 String gateOutId = inventory.getGateOutId(); 
+						 
+							 if(gateOutId != null && !gateOutId.trim().isEmpty())
+						     {								     
+								 dataMap.put("gateOutId", gateOutId);       
+								 allowedList.add("P00223"); //gateOutId
+						     } //GateOut End				 
+							 			 				 
+				     } //GatePass End
+					 
+			    
+								
+			}
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			String profitCenterIdNew = null;
+			if(mainSbCargoEntry != null)
+			{
+				
+				String mainSbNo = mainSbCargoEntry.getSbNo();
+				String mainSbTransId = mainSbCargoEntry.getSbTransId();
+				String profitCenterId = mainSbCargoEntry.getProfitcentreId();
+				profitCenterIdNew = profitCenterId;
+				
+			Page<ExportTransfer> sbTransfer = transferRepo.getDataForExportMainSearchSbTransfer(companyId, branchId, profitCenterId, mainSbNo, mainSbTransId, pageable);
+			
+			if(sbTransfer.hasContent())
+			{
+				ExportTransfer sbTransferEntity = sbTransfer.getContent().get(0);					
+				dataMap.put("sbChangeTransId", sbTransferEntity.getSbChangeTransId());  
+				 dataMap.put("sbChangeSrNo", sbTransferEntity.getSrNo());
+				 allowedList.add("P00228");					
+			}
+			
+			int backToTownPack = mainSbCargoEntry.getBackToTownPack();
+			
+			if(backToTownPack > 0) 
+			{					
+				List<String> backToTownRecord = backToTownRepo.getDataForExportMainSearchBackToTown(companyId, branchId, profitCenterId, mainSbTransId, mainSbNo, pageable);
+				String backToTownTransId = backToTownRecord.isEmpty() ? null : backToTownRecord.get(0);
+				
+				 dataMap.put("backToTownTransId", backToTownTransId);
+				 allowedList.add("P00225");					
+			}
+			
+			}
+			
+
+			 List<String> tallyData = stuffTallyRepo.getDataForExportMainSearchStuffTallyReworking(companyId, branchId, reWorrkingContainerNo, profitCenterIdNew);
+			 
+			 String reworkingId = tallyData.isEmpty() ? null : tallyData.get(0);
+			
+			 if(reworkingId != null)
+			 {
+				 dataMap.put("reworkingId", reworkingId);
+				 allowedList.add("P00227");		
+				 
+			 }
+			
+        
+        mainData.put("allowedList", allowedList);
+		mainData.put("data", dataMap);
+		return ResponseEntity.ok(mainData);
+	}
+	
+}
+		
+		catch(Exception e)
+		{
+			System.out.println(" error in a export search : "+ e);
+			return ResponseEntity.badRequest().body("Oops something went wrong!!!");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	private List<Map<String, String>> convertToValueLabelList(List<String> data) {

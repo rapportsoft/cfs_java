@@ -1582,6 +1582,32 @@ public class ExportStuffRequest implements Cloneable {
 		    return super.clone();
 		}
 
-		
+//		Export Main Search
+		public ExportStuffRequest(String stuffReqId, int stuffReqLineId, char stuffTally, String stuffTallyId,
+				String gateInId, String containerNo) {
+			super();
+			this.stuffReqId = stuffReqId;
+			this.stuffReqLineId = stuffReqLineId;
+			this.stuffTally = stuffTally;
+			this.stuffTallyId = stuffTallyId;
+			this.gateInId = gateInId;
+			this.containerNo = containerNo;					
+		}	
+
+
+
+		public ExportStuffRequest(String stuffReqId, int stuffReqLineId, char stuffTally, String stuffTallyId,
+				String gateInId, String containerNo, String sbNo, String sbTransId, String sbLineNo) {
+			super();
+			this.stuffReqId = stuffReqId;
+			this.stuffReqLineId = stuffReqLineId;
+			this.stuffTally = stuffTally;
+			this.stuffTallyId = stuffTallyId;
+			this.gateInId = gateInId;
+			this.containerNo = containerNo;
+			this.sbTransId = sbTransId;
+			this.sbNo = sbNo;
+			this.sbLineNo = sbLineNo;			
+		}	
 	
 }

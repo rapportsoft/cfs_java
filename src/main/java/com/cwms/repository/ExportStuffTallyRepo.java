@@ -1,5 +1,7 @@
 package com.cwms.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,109 @@ import java.util.*;
 
 public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, String> {
 
+	
+	
+	@Query("SELECT COUNT(e) > 0 " +
+		       "FROM ExportStuffTally e " +
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.containerNo = :containerNo " +
+		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND e.status <> 'D' " +
+		       "AND e.sbNo LIKE CONCAT('%', :sbNo, '%')")
+		boolean existsByContainerNoMovementAndSb(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,		    
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("containerNo") String containerNo,
+		    @Param("sbNo") String sbNo
+		);
+
+	
+	@Query("SELECT E.reworkId "
+		     + "FROM ExportStuffTally E "
+		     + "WHERE E.companyId = :companyId "
+		     + "AND E.branchId = :branchId "
+		     + "AND E.containerNo = :containerNo "
+		     + "AND E.profitcentreId = :profitcentreId "
+		     + "AND (E.reworkId IS NOT NULL AND E.reworkId <> '') "
+		     + "AND E.status <> 'D' "
+		     + "ORDER BY E.createdDate DESC")
+		List<String> getDataForExportMainSearchStuffTallyReworking(
+		        @Param("companyId") String companyId, 
+		        @Param("branchId") String branchId,
+		        @Param("containerNo") String containerNo,
+		        @Param("profitcentreId") String profitcentreId);
+
+	
+	
+	
+
+	@Query("SELECT new com.cwms.entities.ExportStuffTally(E.stuffTallyId, E.sbTransId, E.stuffTallyLineId, E.sbLineId, "
+	           + "E.sbNo, E.containerNo, E.gateInId, E.reworkId) "
+	           + "FROM ExportStuffTally E "	           
+	           + "WHERE E.companyId = :companyId "
+	           + "AND E.branchId = :branchId "
+	           + "AND E.containerNo = :containerNo "
+	           + "AND E.gateInId = :gateInId "
+	           + "AND E.profitcentreId = :profitcentreId "
+	           + "AND (:sbNo IS NULL OR :sbNo = '' OR E.sbNo LIKE CONCAT(:sbNo, '%')) "
+	           + "AND E.status <> 'D' "
+	           + "ORDER BY E.createdDate DESC")
+	   Page<ExportStuffTally> getDataForExportMainSearchStuffTallyContainerSearch(
+	        @Param("companyId") String companyId, @Param("branchId") String branchId, @Param("containerNo") String containerNo,	       
+	        @Param("gateInId") String gateInId, @Param("profitcentreId") String profitcentreId, @Param("sbNo") String sbNo, Pageable pageable
+	    );
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query("SELECT new com.cwms.entities.ExportStuffTally(E.stuffTallyId, E.containerNo, E.gateInId, E.reworkId)"
+	           + "FROM ExportStuffTally E "	           
+	           + "WHERE E.companyId = :companyId "
+	           + "AND E.branchId = :branchId "
+	           + "AND E.sbNo = :sbNo "
+	           + "AND E.sbTransId = :sbTransId "
+	           + "AND E.profitcentreId = :profitcentreId "	           
+	           + "AND E.status <> 'D' "
+	           + "ORDER BY E.createdDate DESC")
+	   Page<ExportStuffTally> getDataForExportMainSsearchStuffTally(
+	        @Param("companyId") String companyId, @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,@Param("sbTransId") String sbTransId,
+	        @Param("profitcentreId") String profitcentreId, Pageable pageable
+	    );
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 //	Export Buffer
 	

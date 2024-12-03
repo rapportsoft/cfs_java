@@ -32,7 +32,21 @@ public class ExportSbEntryController
 	private ExportEntryService exportEntryService;	
 	
 	
-	
+	@GetMapping("/searchExportMain")
+	public ResponseEntity<?> searchExportMain(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam(value="sbNo", required = false) String sbNo,
+	        @RequestParam(value="containerNo", required = false) String containerNo	       
+	       ) {	    
+	    try {	    	
+	    	ResponseEntity<?> sbCargoGateIn = exportEntryService.searchExportMain(companyId, branchId, sbNo, containerNo);
+	        return sbCargoGateIn;
+	    } catch (Exception e) {	  	
+	    	System.out.println(e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching export");
+	    }
+	}
 	
 
 	@GetMapping("/getDataForOutOfCharge")
@@ -78,25 +92,25 @@ public class ExportSbEntryController
 	
 	
 		
-	@GetMapping("/searchExportMain")
-	public ResponseEntity<?> searchExportMain(
-	        @RequestParam("companyId") String companyId, 
-	        @RequestParam("branchId") String branchId,	        
-	        @RequestParam(value="sbNo", required = false) String sbNo,
-	        @RequestParam(value="vehicleNo", required = false) String vehicleNo,
-	        @RequestParam(value="containerNo", required = false) String containerNo,
-	        @RequestParam(value="bookingNo", required = false) String bookingNo,
-	        @RequestParam(value="pod", required = false) String pod
-	       ) {	    
-	    try {	    	
-	    	ResponseEntity<?> sbCargoGateIn = exportEntryService.searchExportMain(companyId, branchId, sbNo, vehicleNo, containerNo, bookingNo, pod);
-	        return sbCargoGateIn;
-	    } catch (Exception e) {	  	
-	    	System.out.println(e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching export");
-	    }
-	}
-	
+//	@GetMapping("/searchExportMain")
+//	public ResponseEntity<?> searchExportMain(
+//	        @RequestParam("companyId") String companyId, 
+//	        @RequestParam("branchId") String branchId,	        
+//	        @RequestParam(value="sbNo", required = false) String sbNo,
+//	        @RequestParam(value="vehicleNo", required = false) String vehicleNo,
+//	        @RequestParam(value="containerNo", required = false) String containerNo,
+//	        @RequestParam(value="bookingNo", required = false) String bookingNo,
+//	        @RequestParam(value="pod", required = false) String pod
+//	       ) {	    
+//	    try {	    	
+//	    	ResponseEntity<?> sbCargoGateIn = exportEntryService.searchExportMain(companyId, branchId, sbNo, vehicleNo, containerNo, bookingNo, pod);
+//	        return sbCargoGateIn;
+//	    } catch (Exception e) {	  	
+//	    	System.out.println(e);
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching export");
+//	    }
+//	}
+//	
 	
 	@GetMapping("/searchSbNosToGateIn")
 	public ResponseEntity<?> searchSbNosToGateIn(

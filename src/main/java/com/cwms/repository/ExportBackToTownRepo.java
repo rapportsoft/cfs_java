@@ -1,9 +1,7 @@
 package com.cwms.repository;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +10,24 @@ import com.cwms.entities.ExportBackToTown;
 
 public interface ExportBackToTownRepo extends JpaRepository<ExportBackToTown, String> {
 
+	
+	@Query("SELECT E.backToTownTransId " +
+		       "FROM ExportBackToTown E " +
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.sbTransId = :sbTransId " +
+		       "AND E.sbNo = :sbNo " +
+		       "AND E.status <> 'D' " +
+		       "ORDER BY E.createdDate DESC")
+	List<String> getDataForExportMainSearchBackToTown(
+		        @Param("companyId") String companyId,
+		        @Param("branchId") String branchId,
+		        @Param("profitcentreId") String profitcentreId,
+		        @Param("sbTransId") String sbTransId,
+		        @Param("sbNo") String sbNo,
+		        Pageable pageable);
+	
+	
 	@Query(value="select e from ExportBackToTown e where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and "
 			+ "e.backToTownTransId=:id and e.sbNo=:sb and e.sbTransId=:trans")
 	ExportBackToTown getDataByIdAndSbNoAndSbTrans(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,

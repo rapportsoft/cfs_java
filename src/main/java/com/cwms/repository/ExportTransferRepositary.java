@@ -1,14 +1,40 @@
 package com.cwms.repository;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.cwms.entities.ExportTransfer;
-import com.cwms.entities.GateIn;
 
 public interface ExportTransferRepositary extends JpaRepository<ExportTransfer, String> {
 
+
+	@Query("SELECT NEW com.cwms.entities.ExportTransfer(" +
+		       "E.sbChangeTransId, E.srNo) " +
+		       "FROM ExportTransfer E " +
+		       "WHERE E.companyId = :companyId " +
+		       "AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.status <> 'D' " +
+		       "AND (" +
+		       "  (E.sbNo = :sbNo AND E.sbTransId = :sbTransId) " +  // Condition for sbNo and sbTransId
+		       "  OR " +
+		       "  (E.trfSbNo = :sbNo AND E.trfSbTransId = :sbTransId) " +  // Condition for trfSbNo and trfSbTransId
+		       ") " +
+		       "ORDER BY E.sbChangeTransDate DESC")
+		Page<ExportTransfer> getDataForExportMainSearchSbTransfer(
+		        @Param("companyId") String companyId, 
+		        @Param("branchId") String branchId,
+		        @Param("profitcentreId") String profitcentreId,
+		        @Param("sbNo") String sbNo, 
+		        @Param("sbTransId") String sbTransId, 
+		        Pageable pageable
+		);
+
+	
+	
 	
 	
 	@Query("SELECT NEW com.cwms.entities.ExportTransfer(" +

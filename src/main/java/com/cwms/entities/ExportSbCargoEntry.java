@@ -809,7 +809,31 @@ public class ExportSbCargoEntry {
 		}
 
 
+//		Export Main Search
 		
+		
+		
+		public ExportSbCargoEntry(String profitcentreId, String sbTransId, long srno, String sbNo,
+				BigDecimal noOfPackages, BigDecimal gateInPackages, BigDecimal cartedPackages, Integer stuffReqQty,
+				BigDecimal stuffedQty, BigDecimal bttOutQty, BigDecimal transferPackages, String hSbTransId,
+				String sbType, Integer backToTownPack) {
+			super();
+			this.profitcentreId = profitcentreId;
+			this.sbTransId = sbTransId;
+			this.srno = srno;
+			this.sbNo = sbNo;
+			this.noOfPackages = noOfPackages;
+			this.gateInPackages = gateInPackages;
+			this.cartedPackages = cartedPackages;
+			this.stuffReqQty = stuffReqQty;
+			this.stuffedQty = stuffedQty;
+			this.bttOutQty = bttOutQty;
+			this.transferPackages = transferPackages;
+			this.hSbTransId = hSbTransId;
+			this.sbType = sbType;
+			this.backToTownPack = backToTownPack;
+			
+		}
 
 
 		

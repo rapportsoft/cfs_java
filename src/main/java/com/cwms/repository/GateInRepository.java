@@ -3,6 +3,7 @@ package com.cwms.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,59 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
+	
+	
+
+	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.gateInType, "
+	        + "E.profitcentreId, E.actualNoOfPackages, E.containerNo,E.docRefNo, E.erpDocRefNo, E.lineNo)"
+	        + "FROM GateIn E "
+	        + "WHERE E.companyId = :companyId "
+	        + "AND E.branchId = :branchId "
+	        + "AND (:containerNo IS NULL OR :containerNo = '' OR E.containerNo LIKE CONCAT(:containerNo, '%')) "
+	        + "AND E.status <> 'D' "
+	        + "ORDER BY E.createdDate DESC")
+	Page<GateIn> getDataForExportMainSearchGateIn(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                                    		  @Param("containerNo") String containerNo, Pageable pageable);
+	
+	
+	
+	@Query("SELECT E.gateInId " +
+		       "FROM GateIn E " +
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.erpDocRefNo = :erpDocRefNo " +
+		       "AND E.docRefNo = :docRefNo " +
+		       "AND E.gateInType = :type " +
+		       "AND E.status <> 'D' " +
+		       "ORDER BY E.gateInId ASC")
+	List<String> getDataForExportMainSearchGateInNormal(
+		        @Param("companyId") String companyId,
+		        @Param("branchId") String branchId,
+		        @Param("profitcentreId") String profitcentreId,
+		        @Param("erpDocRefNo") String erpDocRefNo,
+		        @Param("docRefNo") String docRefNo,
+		        @Param("type") String type,
+		        Pageable pageable);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Query("SELECT COALESCE(MAX(E.srNo), 0) "
 		       + "FROM GateIn E "

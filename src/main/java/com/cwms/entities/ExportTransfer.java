@@ -834,7 +834,14 @@ public class ExportTransfer {
 		}
 
 		
-	    
+		
+//		Export Main Search
+		public ExportTransfer(String sbChangeTransId, String srNo) {
+			super();
+			this.sbChangeTransId = sbChangeTransId;
+			this.srNo = srNo;
+		}
+
 	    
 	    
 	    

@@ -3,6 +3,9 @@ package com.cwms.repository;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +17,51 @@ import jakarta.transaction.Transactional;
 
 public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry, String>
 {
+	
+
+	@Query("SELECT NEW com.cwms.entities.ExportSbCargoEntry(e.profitcentreId, e.sbTransId, e.srno, e.sbNo, "
+		     + "e.noOfPackages, e.gateInPackages, e.cartedPackages, e.stuffReqQty, e.stuffedQty, e.bttOutQty, "
+		     + "e.transferPackages, e.hSbTransId, e.sbType, e.backToTownPack) "
+		     + "FROM ExportSbCargoEntry e "
+		     + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+		     + "AND e.sbNo = :sbNo " 
+		     + "AND e.sbTransId = :sbTransId "  + "AND e.srno = :sbLineNo " 
+		     + "AND e.status <> 'D'")
+	Page<ExportSbCargoEntry> getDataForExportMainSearchSbCargoContainer(@Param("companyId") String companyId, 
+		                                         @Param("branchId") String branchId,@Param("sbNo") String sbNo,
+		                                         @Param("sbTransId") String sbTransId, @Param("sbLineNo") String sbLineNo, Pageable pageable);
+
+	
+	
+	@Query("SELECT NEW com.cwms.entities.ExportSbCargoEntry(e.profitcentreId, e.sbTransId, e.srno, e.sbNo, "
+		     + "e.noOfPackages, e.gateInPackages, e.cartedPackages, e.stuffReqQty, e.stuffedQty, e.bttOutQty, "
+		     + "e.transferPackages, e.hSbTransId, e.sbType, e.backToTownPack) "
+		     + "FROM ExportSbCargoEntry e "
+		     + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+		     + "AND e.sbNo = :sbNo " 
+		     + "AND e.sbTransId = :sbTransId "
+		     + "AND e.status <> 'D'")
+	Page<ExportSbCargoEntry> getDataForExportMainSearchSbCargoContainerPortReturn(@Param("companyId") String companyId, 
+		                                         @Param("branchId") String branchId,@Param("sbNo") String sbNo,
+		                                         @Param("sbTransId") String sbTransId, Pageable pageable);
+
+	
+	
+	
+	
+	
+	@Query("SELECT NEW com.cwms.entities.ExportSbCargoEntry(e.profitcentreId, e.sbTransId, e.srno, e.sbNo, "
+		     + "e.noOfPackages, e.gateInPackages, e.cartedPackages, e.stuffReqQty, e.stuffedQty, e.bttOutQty, "
+		     + "e.transferPackages, e.hSbTransId, e.sbType, e.backToTownPack) "
+		     + "FROM ExportSbCargoEntry e "
+		     + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+//		     + "AND e.sbNo = :sbNo " 
+		     + "AND e.sbNo LIKE CONCAT(:sbNo, '%')"
+		     + "AND e.status <> 'D' "
+		     + "ORDER BY e.createdDate DESC")
+	Page<ExportSbCargoEntry> getDataForExportMainSearchSbCargo(@Param("companyId") String companyId, 
+		                                         @Param("branchId") String branchId, @Param("sbNo") String sbNo, Pageable pageable);
+		                 
 	
 
 	@Modifying

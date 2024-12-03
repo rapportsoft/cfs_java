@@ -1098,6 +1098,22 @@ public class ExportInventory {
 		this.stuffTallyEditedDate = stuffTallyEditedDate;
 	}
     
+	public ExportInventory(String containerNo, String gateInId, String eBookingNo, String stuffReqId,
+			String stuffTallyId, String movementReqId, String backToTownId, String gateOutId, String gatePassNo,
+			String emptyPassId, String emptyGateoutId) {
+		super();
+		this.containerNo = containerNo;
+		this.gateInId = gateInId;
+		this.eBookingNo = eBookingNo;
+		this.stuffReqId = stuffReqId;
+		this.stuffTallyId = stuffTallyId;
+		this.movementReqId = movementReqId;
+		this.backToTownId = backToTownId;
+		this.gateOutId = gateOutId;
+		this.gatePassNo = gatePassNo;
+		this.emptyPassId = emptyPassId;
+		this.emptyGateoutId = emptyGateoutId;
+	}
     
     
 }

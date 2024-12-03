@@ -1,6 +1,9 @@
 package com.cwms.repository;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +11,39 @@ import com.cwms.entities.ExportStuffRequest;
 
 public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest, String>
 {	
+	
+	@Query("SELECT new com.cwms.entities.ExportStuffRequest(E.stuffReqId, E.stuffReqLineId, E.stuffTally, E.stuffTallyId, "
+	           + "E.gateInId, E.containerNo, E.sbNo, E.sbTransId, E.sbLineNo) "
+	           + "FROM ExportStuffRequest E "	           
+	           + "WHERE E.companyId = :companyId "
+	           + "AND E.branchId = :branchId "
+	           + "AND E.containerNo = :containerNo "
+	           + "AND E.profitcentreId = :profitcentreId "
+	           + "AND E.gateInId = :gateInId "
+	           + "AND (:sbNo IS NULL OR :sbNo = '' OR E.sbNo LIKE CONCAT(:sbNo, '%')) "
+	           + "AND E.status <> 'D' "
+	           + "ORDER BY E.createdDate DESC")
+	   Page<ExportStuffRequest> getDataForExportMainSearchStuffContainerSearch(
+	        @Param("companyId") String companyId, @Param("branchId") String branchId, @Param("containerNo") String containerNo,	       
+	        @Param("gateInId") String gateInId, @Param("profitcentreId") String profitcentreId, @Param("sbNo") String sbNo, Pageable pageable
+	    );
+	
+	
+	@Query("SELECT new com.cwms.entities.ExportStuffRequest(E.stuffReqId, E.stuffReqLineId, E.stuffTally, E.stuffTallyId, "
+	           + "E.gateInId, E.containerNo) "
+	           + "FROM ExportStuffRequest E "	           
+	           + "WHERE E.companyId = :companyId "
+	           + "AND E.branchId = :branchId "
+	           + "AND E.sbNo = :sbNo "
+	           + "AND E.sbTransId = :sbTransId "
+	           + "AND E.status <> 'D' "
+	           + "ORDER BY E.createdDate DESC")
+	   Page<ExportStuffRequest> getDataForExportMainSearchStuff(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,@Param("sbTransId") String sbTransId, Pageable pageable
+	    );
+	
 	
 	
 	@Query("SELECT new com.cwms.entities.ExportStuffRequest(E.stuffReqId, E.sbTransId, E.stuffReqLineId, E.sbLineNo, "
