@@ -198,20 +198,20 @@ public class ImporterReportsController {
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
 	            fileName = "TRANSPORTER WISE TUES REPORT.xlsx";
 	            break;
-//
-//	        case "LCL Zero Payment":
-//	            excelBytes = importReporsService.createExcelReportOfLclZeroPaymentReport(
-//	                    companyId, branchId, username, type, companyname, branchname,
-//	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
-//	            fileName = "LCL Zero Payment.xlsx";
-//	            break;
-//
-//	        case "Import LCL Cargo Destuff Report":
-//	            excelBytes = importReporsService.createExcelReportOfImportLclCargoDestuffReport(
-//	                    companyId, branchId, username, type, companyname, branchname,
-//	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
-//	            fileName = "Import LCL Cargo Destuff Report.xlsx";
-//	            break;
+
+	        case "LCL Zero Payment":
+	            excelBytes = importReporsService.createExcelReportOfLclZeroPaymentReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "LCL Zero Payment.xlsx";
+	            break;
+
+	        case "Import LCL Cargo Destuff Report":
+	            excelBytes = importReporsService.createExcelReportOfImportLclCargoDestuffReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Import LCL Cargo Destuff Report.xlsx";
+	            break;
 //
 //	        case "Yard Balance Report Details":
 //	            excelBytes = importReporsService.createExcelReportOfYardBalanceReportDetails(

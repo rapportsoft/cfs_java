@@ -303,6 +303,327 @@ public interface ImportReportsRepository extends JpaRepository<GateIn, String> {
 					    @Param("accountHolderId") String accountHolderId,
 					    @Param("cha") String cha
 		    		);
+		    		
+		    		
+		    		
+		    		
+		    		
+		    		
+		    		
+		    		
+		    		
+		    		@Query(value = "SELECT DISTINCT z.Container_No AS containerNo, " +
+		                    "z.Container_Size AS containerSize, " +
+		                    "z.Container_Type AS containerType, " +
+		                    "z.ISO_Code AS isoCode, " +
+		                    "a.Gate_In_Id AS gateInId, " +
+		                    "DATE_FORMAT(z.In_Gate_In_Date,'%d/%m/%y %H:%i') AS gateInDate, " +
+		                    "a.Container_Seal_No AS containerSealNo, " +
+		                    "z.Customs_Seal_No AS customsSealNo, " +
+		                    "z.Vehicle_No AS vehicleNo, " +
+		                    "z.Port_Exit_No AS portExitNo, " +
+		                    "v.Vessel_Name AS vesselName, " +
+		                    "m.Party_Name AS shippingLine, " +
+		                    "p.Party_Name AS shippingAgent, " +
+		                    "pt.Port_Name AS portName ," +
+		                    "pt.Port_Name AS scanLoc, " +
+		                    "z.Scanning_Done_Status AS scanningDoneStatus " +
+		                    "FROM cfgatein z " +
+		                    "LEFT OUTER JOIN cfigmcn a ON a.Company_Id = z.Company_Id " +
+		                    "AND a.Branch_Id = z.Branch_Id " +
+		                    "AND a.Profitcentre_Id = z.Profitcentre_Id " +
+		                    "AND a.Gate_In_Id = z.Gate_In_Id " +
+		                    "AND a.Container_No = z.Container_No " +
+		                    "AND z.ERP_Doc_Ref_No = a.IGM_Trans_Id " +
+		                    "LEFT OUTER JOIN cfigm b ON z.Company_Id = b.Company_Id " +
+		                    "AND z.Branch_Id = b.Branch_Id " +
+		                    "AND z.Profitcentre_Id = b.Profitcentre_Id " +
+		                    "AND z.ERP_Doc_Ref_No = b.IGM_Trans_Id " +
+		                    "AND z.doc_ref_No = b.Igm_no " +
+		                    "LEFT OUTER JOIN party m ON b.Company_Id = m.Company_Id " +
+		                    "AND z.SL = m.Party_Id " +
+		                    "LEFT OUTER JOIN party p ON a.Company_Id = p.Company_Id " +
+		                    "AND z.SA = p.Party_Id " +
+		                    "LEFT OUTER JOIN vessel v ON b.Company_Id = v.Company_Id " +
+		                    "AND b.Vessel_Id = v.Vessel_Id " +
+		                    "LEFT OUTER JOIN port pt ON b.Company_Id = pt.Company_Id " +
+		                    "AND pt.Port_Code = b.Port " +
+		                    "WHERE a.company_id = :companyId " +
+		                    "AND a.branch_id = :branchId " +
+		                    "AND a.Gate_In_Date BETWEEN :startDate AND :endDate " 
+		                    + "AND (:igmNo IS NULL OR :igmNo = '' OR z.Doc_Ref_No = :igmNo) "
+						     + "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR z.Erp_Doc_ref_no = :igmLineNo) "
+						     + "AND (:sl IS NULL OR :sl = '' OR z.sl = :sl) "
+						     + "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR z.cha = :accountHolderId) "
+						     + "AND (:cha IS NULL OR :cha = '' OR z.cha = :cha) "
+		                    + "ORDER BY z.In_Gate_In_Date", nativeQuery = true)
+		     List<Object[]> importManualGateInReportQuery(
+		             @Param("companyId") String companyId,
+		             @Param("branchId") String branchId,
+		             @Param("startDate") Date startDate,
+		             @Param("endDate") Date endDate,
+		             @Param("igmNo") String igmNo,
+					    @Param("igmLineNo") String igmLineNo,
+					    @Param("sl") String sl,
+					    @Param("accountHolderId") String accountHolderId,
+					    @Param("cha") String cha);
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     @Query(value = "SELECT DISTINCT b.Container_No AS containerNo, " +
+		    	        "b.Container_Size AS containerSize, " +
+		    	        "b.Container_Type AS containerType, " +
+		    	        "b.ISO AS isoCode, " +
+		    	        "c.party_name AS shippingLine, " +
+		    	        "d.party_name AS shippingAgent, " +
+		    	        "DATE_FORMAT(a.Gate_Pass_Date, '%d-%m-%Y %T') AS gatePassDate, " +
+
+
+//    "a.Gate_Pass_Date AS gatePassDate, " +
+		    	        
+		    	        "DATEDIFF(CURDATE(), a.Gate_Pass_Date + 1) AS days " +
+		    	        "FROM cfimportgatepass a " +
+		    	        "LEFT OUTER JOIN cfigmcn b ON b.Company_Id = a.Company_Id " +
+		    	        "AND b.Branch_Id = a.Branch_Id " +
+		    	        "AND b.Container_No = a.Container_No " +
+		    	        "AND b.IGM_No = a.IGM_No " +
+		    	        "AND b.IGM_Trans_Id = a.IGM_Trans_Id " +
+		    	        "AND b.Profitcentre_Id = a.Profitcentre_Id " +
+		    	        "LEFT OUTER JOIN party c ON a.Company_Id = c.Company_Id " +
+		    	        "AND a.cha = c.customer_code " +
+		    	        "LEFT OUTER JOIN party d ON a.Company_Id = d.Company_Id " +
+		    	        "AND a.SL = d.Party_Id " +
+		    	        "WHERE a.company_id = :companyId " +
+		    	        "AND a.branch_id = :branchId " +
+		    	        "AND a.status = 'A' " +
+		    	        "AND a.Gate_Pass_Date BETWEEN :startDate AND :endDate " +
+		    	        "AND a.SPLGate_Out_Flag = 'N' " +
+		    	        "AND a.Gate_Out_Id != '' " +
+//		    	        "AND b.Special_Delivery = 'SCON' " +
+		    	        "GROUP BY a.Container_No", 
+		    	        nativeQuery = true)
+		    	List<Object[]> getLoadedToDistuffEmptyContainerDetails(
+		    	        @Param("companyId") String companyId,
+		    	        @Param("branchId") String branchId,
+		    	        @Param("startDate") Date startDate,
+		    	        @Param("endDate") Date endDate);
+
+
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	@Query(value = "SELECT DISTINCT " +
+		    	        "a.Container_Status AS containerStatus, " +
+		    	        "a.Container_No AS containerNo, " +
+		    	        "a.Container_Size AS containerSize, " +
+		    	        "DATE_FORMAT(a.In_Gate_In_Date, '%d %b %Y %T') AS gateInDate, " +
+		    	        "DATE_FORMAT(b.Gate_Out_Date,'%d %b %Y ') AS gateOutDate, " +
+		    	        "DATE_FORMAT(m.IGM_Date, '%d %b %Y ') AS igmDate ," +
+		    	        "b.Igm_no AS igmNo, " +
+		    	        "b.IGM_Line_No AS igmLineNo, " +
+		    	        "b.Cargo_Wt AS cargoWeight, " +
+		    	        "a.Weighment_weight AS weighmentWeight, " +
+		    	        "IFNULL((b.Cargo_Wt - a.Weighment_weight), '0.00') AS diffInWeight, " +
+		    	        "g.Importer_Name AS importerName, " +
+		    	        "g.Commodity_Description AS commodityDescription, " +
+		    	        "a.Container_Type AS containerType, " +
+		    	        "b.Gate_Pass_No AS gatePassNo, " +
+		    	        "a.EIR_Gross_Weight AS eirGrossWeight, " +
+		    	        "b.Cargo_Wt AS cargoWeight, " +
+		    	        "a.Tare_Weight AS tareWeight, " +
+		    	        "DATE_FORMAT(b.Weighment_Date, '%d %b %Y %T') AS weighmentDate, " +
+		    	        "a.Container_Seal_No AS containerSealNo, " +
+		    	        "a.Weighment_Pass_No AS weighmentPassNo, " +
+		    	        "DATE_FORMAT(b.Extra_Transport_Date, '%d %b %Y %T') AS extraTransportDate " +
+		    	        "FROM cfgatein a " +
+		    	        "LEFT OUTER JOIN cfigmcn b ON a.Company_Id = b.Company_Id " +
+		    	        "AND a.Branch_Id = b.Branch_Id " +
+		    	        "AND a.Profitcentre_Id = b.Profitcentre_Id " +
+		    	        "AND a.Container_No = b.Container_No " +
+		    	        "AND a.doc_ref_No = b.Igm_no " +
+		    	        "AND a.ERP_Doc_Ref_No = b.IGM_Trans_Id " +
+		    	        "LEFT OUTER JOIN cfigmcrg g ON b.Company_Id = g.Company_Id " +
+		    	        "AND b.Branch_Id = g.Branch_Id " +
+		    	        "AND b.Profitcentre_Id = g.Profitcentre_Id " +
+		    	        "AND b.IGM_Trans_Id = g.IGM_Trans_Id " +
+		    	        "AND b.Igm_no = g.Igm_no " +
+		    	        "AND b.IGM_Line_No = g.IGM_Line_No " +
+		    	        "LEFT OUTER JOIN cfigm m ON m.Company_Id = g.Company_Id " +
+		    	        "AND m.Branch_Id = g.Branch_Id " +
+		    	        "AND m.Profitcentre_Id = g.Profitcentre_Id " +
+		    	        "AND m.IGM_Trans_Id = g.IGM_Trans_Id " +
+		    	        "AND m.Igm_no = g.Igm_no " +
+		    	        "WHERE a.Company_Id = :companyId " +
+		    	        "AND a.Branch_Id = :branchId " +
+		    	        "AND a.Status = 'A' " +
+		    	        "AND a.Profitcentre_Id = 'N00002' " +
+		    	        "AND a.Gate_In_Type = 'IMP' " +
+		    	        "AND a.Weighment_Done = 'Y' " +
+		    	        "AND a.Weighment_Pass_No != '' " +
+		    	        "AND g.Primary_Item = 'Y' " +
+		    	        "AND b.Weighment_Date BETWEEN :startDate AND :endDate " +
+		    	        "AND (:igmNo IS NULL OR :igmNo = '' OR a.Doc_Ref_No = :igmNo) " +
+		    	        "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR a.Erp_Doc_ref_no = :igmLineNo) " +
+		    	        "AND (:sl IS NULL OR :sl = '' OR a.sl = :sl) " +
+		    	        "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR g.Account_holder_id = :accountHolderId) " +
+		    	        "AND (:cha IS NULL OR :cha = '' OR a.cha = :cha)", 
+		    	        nativeQuery = true)
+		    	List<Object[]> getWeighmentReport(
+		    	        @Param("companyId") String companyId,
+		    	        @Param("branchId") String branchId,
+		    	        @Param("startDate") Date startDate,
+		    	        @Param("endDate") Date endDate,
+		    	        @Param("igmNo") String igmNo,
+		    	        @Param("igmLineNo") String igmLineNo,
+		    	        @Param("sl") String sl,
+		    	        @Param("accountHolderId") String accountHolderId,
+		    	        @Param("cha") String cha);
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	@Query(value = 
+		    	        "SELECT DISTINCT tp.party_name, " +
+		    	" a.transporter_name , "+
+		    	        "       COUNT(CASE WHEN a.container_size IN ('20', '22') THEN 1 END) AS count_20, " +
+		    	        "       COUNT(CASE WHEN a.container_size IN ('40', '45') THEN 1 END) AS count_40, " +
+		    	        "       COUNT(a.container_no) AS containerCount, " +
+		    	        "       a.container_size, " +
+		    	        "       a.gate_in_id " +
+		    	        "FROM cfgatein a " +
+		    	        "LEFT OUTER JOIN cfigm b " +
+		    	        "    ON a.Company_Id = b.Company_Id " +
+		    	        "    AND a.Branch_Id = b.Branch_Id " +
+		    	        "    AND b.igm_Trans_Id = a.ERP_DOC_Ref_No " +
+		    	        "    AND b.igm_no = a.doc_ref_no " +
+		    	        "    AND a.profitcentre_id = b.profitcentre_id " +
+		    	        "LEFT OUTER JOIN party tp " +
+		    	        "    ON tp.company_id = a.company_id " +
+		    	        "    AND a.Transporter = tp.party_id " +
+		    	        "WHERE a.company_id = :companyId " +
+		    	        "  AND a.branch_id = :branchId " +
+		    	        "  AND a.status = 'A' " +
+		    	        "  AND b.status = 'A' " +
+		    	        "  AND a.Container_No <> '' " +
+		    	        "AND a.Gate_In_Type = 'IMP' " +
+		    	        "  AND b.profitcentre_id ='N00002' " +
+		    	        "  AND a.In_gate_in_date BETWEEN :startDate AND :endDate " +
+		    	        "GROUP BY a.transporter, a.container_size " +
+		    	        "ORDER BY tp.party_name, a.container_size", 
+		    	        nativeQuery = true)
+		    	    List<Object[]> getTransporterWiseTuesReport(
+		    	    		  @Param("companyId") String companyId,
+				    	        @Param("branchId") String branchId,
+				    	        @Param("startDate") Date startDate,
+				    	        @Param("endDate") Date endDate
+		    	    );
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    
+		    	    @Query(value = 
+		    	            "SELECT a.IGM_No, " +
+		    	            "       a.IGM_Line_No, " +
+		    	            "       m.Container_No, " +
+		    	            "       m.Container_Size, " +
+		    	            "       DATE_FORMAT(m.De_Stuff_Date, '%d-%b-%Y'), " +
+		    	            "       d.bl_no, " +
+		    	            "       a.Importer_Name, " +
+		    	            "       a.LCL_Zero_Entry_Flag, " +
+		    	            "       e.party_name," +
+		    	            "       DATE_FORMAT(m.Gate_Out_Date, '%d-%b-%Y'), " +
+		    	            "       b.Party_Name " +
+		    	            "FROM cfdestuffcrg a " +
+		    	            "LEFT OUTER JOIN party b " +
+		    	            "   ON b.Company_Id = a.Company_Id " +
+		    	            "   AND b.Party_Id = a.on_account_of " +
+		    	            "LEFT OUTER JOIN cfigmcn m " +
+		    	            "   ON m.Company_Id = a.Company_Id " +
+		    	            "   AND m.branch_id = a.branch_id " +
+		    	            "   AND a.IGM_Trans_Id = m.IGM_Trans_Id " +
+		    	            "   AND a.IGM_No = m.Igm_no " +
+		    	            "   AND a.IGM_Line_No = m.IGM_Line_No " +
+		    	            "   AND m.de_stuff_id = a.de_stuff_id " +
+		    	            "LEFT OUTER JOIN cfigmcrg d " +
+		    	            "   ON d.Company_Id = a.Company_Id " +
+		    	            "   AND d.branch_id = a.branch_id " +
+		    	            "   AND d.IGM_Trans_Id = a.IGM_Trans_Id " +
+		    	            "   AND d.IGM_No = a.Igm_no " +
+		    	            "   AND d.IGM_Line_No = a.IGM_Line_No " +
+		    	            "LEFT OUTER JOIN cfigm f " +
+		    	            "   ON d.Company_Id = f.Company_Id " +
+		    	            "   AND d.branch_id = f.branch_id " +
+		    	            "   AND d.IGM_Trans_Id = f.IGM_Trans_Id " +
+		    	            "   AND d.IGM_No = f.Igm_no " +
+		    	            "   AND d.profitcentre_id = f.profitcentre_id " +
+		    	            "LEFT OUTER JOIN party e " +
+		    	            "   ON e.Company_Id = f.Company_Id " +
+		    	            "   AND e.Party_Id = f.Shipping_Agent " +
+		    	            "WHERE a.company_id = :companyId " +
+		    	            "  AND a.branch_id = :branchId " +
+		    	            "  AND a.Status = 'A' " +
+		    	            "  AND a.LCL_ZERO_ENTRY_FLAG = 'N' " +
+		    	            "  AND a.LCL_ZERO_ENTRY_DATE BETWEEN :startDate AND :endDate " +
+		    	            "AND (:igmNo IS NULL OR :igmNo = '' OR a.IGM_No = :igmNo) " +
+		    		    	        "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR a.IGM_Line_No = :igmLineNo) " +
+		    		    	        "AND (:sl IS NULL OR :sl = '' OR f.Shipping_line = :sl) " +
+		    		    	        "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR d.Account_holder_id = :accountHolderId) " +
+		    		    	        "AND (:cha IS NULL OR :cha = '' OR m.cha = :cha)", 
+		    	            nativeQuery = true)
+		    	    List<Object[]> toGetLCLZeroPaymetReport(
+		    	        @Param("companyId") String companyId,
+		    	        @Param("branchId") String branchId,
+		    	        @Param("startDate") Date startDate,
+		    	        @Param("endDate") Date endDate,
+		    	        @Param("igmNo") String igmNo,
+		    	        @Param("igmLineNo") String igmLineNo,
+		    	        @Param("sl") String sl,
+		    	        @Param("accountHolderId") String accountHolderId,
+		    	        @Param("cha") String cha);
+
 
 
 }
