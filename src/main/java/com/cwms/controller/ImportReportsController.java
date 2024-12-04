@@ -34,6 +34,7 @@ import com.cwms.repository.ChildMenuRepository;
 import com.cwms.repository.CompanyRepo;
 import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.GateInRepository;
+import com.cwms.repository.ImportGateOutRepository;
 import com.cwms.repository.ImportGatePassRepo;
 import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.ManualContainerGateInRepo;
@@ -86,6 +87,9 @@ public class ImportReportsController {
 
 	@Autowired
 	private TemplateEngine templateEngine;
+	
+	@Autowired
+	private ImportGateOutRepository gateOutRepo;
 
 	@PostMapping("/importGateInReport")
 	public ResponseEntity<?> importGateInReport(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -742,6 +746,156 @@ public class ImportReportsController {
     		context.setVariable("remark", crgData[18] != null ? String.valueOf(crgData[18]) : "");
     		context.setVariable("conData", conData);
     		String htmlContent = templateEngine.process("CFSImportItemwiseLCLGatePass", context);
+
+    		ITextRenderer renderer = new ITextRenderer();
+
+    		renderer.setDocumentFromString(htmlContent);
+    		renderer.layout();
+
+    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    		renderer.createPDF(outputStream);
+
+    		byte[] pdfBytes = outputStream.toByteArray();
+
+    		String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+    		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
+        }
+       
+	
+	
+	
+	@PostMapping("/importGateOutReport")
+	public ResponseEntity<?> importGateOutReport(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid, @RequestParam("gate") String gate)
+			throws DocumentException {
+
+
+    		List<Object[]> conData = gateOutRepo.getImportGateOutData(cid, bid, gate);
+
+    		if (conData.isEmpty()) {
+    			return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
+    		}
+    		
+    		
+    		Object[] crgData = conData.get(0);
+
+    		Company comp = companyRepo.findByCompany_Id(cid);
+
+    		if (comp == null) {
+    			return new ResponseEntity<>("Company data not found", HttpStatus.CONFLICT);
+    		}
+
+    		Branch branchAddress = branchRepo.findByBranchIdWithCompanyId(cid, bid);
+
+    		if (branchAddress == null) {
+    			return new ResponseEntity<>("Branch data not found", HttpStatus.CONFLICT);
+    		}
+
+    		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+
+    		Context context = new Context();
+    		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("address", branchAdd);
+    		context.setVariable("gateOutId", crgData[0] != null ? String.valueOf(crgData[0]) : "");
+    		context.setVariable("gateOutDate", crgData[1] != null ? String.valueOf(crgData[1]) : "");
+    		context.setVariable("containerNo", crgData[2] != null ? String.valueOf(crgData[2]) : "");
+    		context.setVariable("containerSize", crgData[3] != null ? String.valueOf(crgData[3]) : "");
+    		context.setVariable("containerType", crgData[4] != null ? String.valueOf(crgData[4]) : "");
+    		context.setVariable("iso", crgData[5] != null ? String.valueOf(crgData[5]) : "");
+    		context.setVariable("vehicleNo", crgData[6] != null ? String.valueOf(crgData[6]) : "");
+    		context.setVariable("transporterName", crgData[7] != null ? String.valueOf(crgData[7]) : "");
+    		context.setVariable("vessel", crgData[8] != null ? String.valueOf(crgData[8]) : "");
+    		context.setVariable("via", crgData[9] != null ? String.valueOf(crgData[9]) : "");
+    		context.setVariable("sealNo", crgData[10] != null ? String.valueOf(crgData[10]): "");
+    		context.setVariable("blNo", crgData[11] != null ? String.valueOf(crgData[11]) : "");
+    		context.setVariable("blDate", crgData[12] != null ? String.valueOf(crgData[12]) : "");
+    		context.setVariable("doNo", crgData[13] != null ? String.valueOf(crgData[13]) : "");
+    		context.setVariable("beNo", crgData[14] != null ? String.valueOf(crgData[14]) : "");
+    		context.setVariable("beDate", crgData[15] != null ? String.valueOf(crgData[15]) : "");
+    		context.setVariable("validity", crgData[16] != null ? String.valueOf(crgData[16]) : "");
+    		context.setVariable("igmNo", crgData[17] != null ? String.valueOf(crgData[17]) : "");
+    		context.setVariable("itemNo", crgData[18] != null ? String.valueOf(crgData[18]) : "");
+    		context.setVariable("scanStatus", (crgData[19] != null && !String.valueOf(crgData[19]).isEmpty()) ? "Yes" : "No");
+    		context.setVariable("sl", crgData[20] != null ? String.valueOf(crgData[20]) : "");
+    		context.setVariable("imp", crgData[21] != null ? String.valueOf(crgData[21]) : "");
+    		context.setVariable("cha", crgData[22] != null ? String.valueOf(crgData[22]) : "");
+    		context.setVariable("condition", crgData[23] != null ? String.valueOf(crgData[23]) : "");
+    		context.setVariable("remark", crgData[24] != null ? String.valueOf(crgData[24]) : "");
+    		String htmlContent = templateEngine.process("CFSImportGateOut", context);
+
+    		ITextRenderer renderer = new ITextRenderer();
+
+    		renderer.setDocumentFromString(htmlContent);
+    		renderer.layout();
+
+    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    		renderer.createPDF(outputStream);
+
+    		byte[] pdfBytes = outputStream.toByteArray();
+
+    		String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+    		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
+        }
+	
+	
+	
+	@PostMapping("/importManualGateInReport")
+	public ResponseEntity<?> importManualGateInReport(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid, @RequestParam("gate") String gate)
+			throws DocumentException {
+
+
+    		Object conData = manualcontainergateinrepo.getDataForImportReport(cid, bid, gate);
+
+    		if (conData == null) {
+    			return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
+    		}
+    		
+    		
+    		Object[] crgData = (Object[])conData;
+
+    		Company comp = companyRepo.findByCompany_Id(cid);
+
+    		if (comp == null) {
+    			return new ResponseEntity<>("Company data not found", HttpStatus.CONFLICT);
+    		}
+
+    		Branch branchAddress = branchRepo.findByBranchIdWithCompanyId(cid, bid);
+
+    		if (branchAddress == null) {
+    			return new ResponseEntity<>("Branch data not found", HttpStatus.CONFLICT);
+    		}
+
+    		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+    		
+    		Context context = new Context();
+    		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("address", branchAdd);
+    		context.setVariable("gateInId", crgData[0] != null ? String.valueOf(crgData[0]) : "");
+    		context.setVariable("gateInDate", crgData[1] != null ? String.valueOf(crgData[1]) : "");
+    		context.setVariable("portExitNo", crgData[2] != null ? String.valueOf(crgData[2]) : "");
+    		context.setVariable("portExitDate", crgData[3] != null ? String.valueOf(crgData[3]) : "");
+    		context.setVariable("containerNo", crgData[4] != null ? String.valueOf(crgData[4]) : "");
+    		context.setVariable("iso", crgData[5] != null ? String.valueOf(crgData[5]) : "");
+    		context.setVariable("containerSize", crgData[6] != null ? String.valueOf(crgData[6]) : "");
+    		context.setVariable("containerType", crgData[7] != null ? String.valueOf(crgData[7]) : "");
+    		context.setVariable("vehicleNo", crgData[8] != null ? String.valueOf(crgData[8]) : "");
+    		context.setVariable("transporter", crgData[9] != null ? String.valueOf(crgData[9]) : "");
+    		context.setVariable("scanStatus", (crgData[10] != null && !String.valueOf(crgData[10]).isEmpty()) ? "Yes" : "No");
+    		context.setVariable("viaNo", crgData[11] != null ? String.valueOf(crgData[11]) : "");
+    		context.setVariable("sealNo", crgData[12] != null ? String.valueOf(crgData[12]) : "");
+    		context.setVariable("sl", crgData[13] != null ? String.valueOf(crgData[13]) : "");
+    		context.setVariable("imp", crgData[14] != null ? String.valueOf(crgData[14]) : "");
+    		context.setVariable("condition", crgData[15] != null ? String.valueOf(crgData[15]) : "");
+    		context.setVariable("remark", crgData[16] != null ? String.valueOf(crgData[16]) : "");
+    		
+    		String htmlContent = templateEngine.process("CFSImportManualGateIn", context);
 
     		ITextRenderer renderer = new ITextRenderer();
 

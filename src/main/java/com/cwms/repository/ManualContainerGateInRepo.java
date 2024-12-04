@@ -61,4 +61,13 @@ public interface ManualContainerGateInRepo extends JpaRepository<ManualGateIn, S
 	    @Param("docRefDate") Date docRefDate
 	);
 
+	
+	@Query(value="select m.gateInId,DATE_FORMAT(m.gateInDate,'%d/%m/%Y %h:%i'),m.portExitNo,DATE_FORMAT(m.portExitDate,'%d/%m/%Y %h:%i'),"
+			+ "m.containerNo,m.isoCode,m.containerSize,m.containerType,m.vehicleNo,m.transporterName,m.scannerType,m.viaNo,"
+			+ "m.containerSealNo,p1.partyName,m.importerName,m.containerHealth,m.comments "
+			+ "from ManualGateIn m "
+			+ "LEFT OUTER JOIN Party p1 ON m.companyId=p1.companyId and m.branchId=p1.branchId and m.sl=p1.partyId "
+			+ "where m.companyId=:cid and m.branchId=:bid and m.status != 'D' and m.gateInId=:id")
+	Object getDataForImportReport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+
 }

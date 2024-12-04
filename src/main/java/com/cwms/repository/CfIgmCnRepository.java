@@ -452,6 +452,20 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 //			                         @Param("igmline") String igmline);
 	    
 	    
+//	    @Query("SELECT c " +
+//			       "FROM Cfigmcn c LEFT OUTER JOIN DestuffCrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId " +
+//	    		   "and c.deStuffId=crg.deStuffId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo " +
+//			       "WHERE c.companyId = :cid AND c.branchId = :bid AND c.igmNo = :igm " +
+//			       "AND c.igmLineNo = :igmline AND c.status != 'D' " +
+//			       "AND ((c.containerExamStatus = 'Y' AND c.gateOutType='CRG' AND c.containerStatus='FCL' AND c.destuffStatus='Y' AND (crg.actualNoOfPackages - crg.qtyTakenOut)>0) OR " +
+//			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON' AND (c.gatePassNo is null OR c.gatePassNo = '')) OR (c.destuffStatus='Y' and c.containerStatus='LCL' AND (crg.actualNoOfPackages - crg.qtyTakenOut)>0)) " +
+//			       "AND ((c.noOfItem = 1 and c.containerStatus='FCL') OR (c.noOfItem > 1 and c.containerStatus='LCL' ))")
+//			List<Cfigmcn> getDataForGatePass(@Param("cid") String cid,
+//			                         @Param("bid") String bid,
+//			                         @Param("igm") String igm,
+//			                         @Param("igmline") String igmline);
+	    
+	    
 	    @Query("SELECT c " +
 			       "FROM Cfigmcn c LEFT OUTER JOIN DestuffCrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId " +
 	    		   "and c.deStuffId=crg.deStuffId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo " +
@@ -459,11 +473,11 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 			       "AND c.igmLineNo = :igmline AND c.status != 'D' " +
 			       "AND ((c.containerExamStatus = 'Y' AND c.gateOutType='CRG' AND c.containerStatus='FCL' AND c.destuffStatus='Y' AND (crg.actualNoOfPackages - crg.qtyTakenOut)>0) OR " +
 			       "(c.containerExamStatus = 'Y' AND c.gateOutType='CON' AND (c.gatePassNo is null OR c.gatePassNo = '')) OR (c.destuffStatus='Y' and c.containerStatus='LCL' AND (crg.actualNoOfPackages - crg.qtyTakenOut)>0)) " +
-			       "AND ((c.noOfItem = 1 and c.containerStatus='FCL') OR (c.noOfItem > 1 and c.containerStatus='LCL' ))")
+			       "AND ((c.noOfItem = 1 and c.containerStatus='FCL') OR (c.noOfItem > 1 and c.containerStatus='LCL' )) and c.gateOutType=:type")
 			List<Cfigmcn> getDataForGatePass(@Param("cid") String cid,
 			                         @Param("bid") String bid,
 			                         @Param("igm") String igm,
-			                         @Param("igmline") String igmline);
+			                         @Param("igmline") String igmline,@Param("type") String type);
 	    
 	    @Query("SELECT c " +
 			       "FROM Cfigmcn c " +

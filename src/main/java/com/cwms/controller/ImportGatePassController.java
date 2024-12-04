@@ -100,9 +100,9 @@ public class ImportGatePassController {
 
 	@GetMapping("/getItemWiseData")
 	public ResponseEntity<?> getItemData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam("igm") String igm, @RequestParam("item") String item) {
+			@RequestParam("igm") String igm, @RequestParam("item") String item,@RequestParam("type") String type) {
 
-		List<Cfigmcn> data = cfigmcnrepo.getDataForGatePass(cid, bid, igm, item);
+		List<Cfigmcn> data = cfigmcnrepo.getDataForGatePass(cid, bid, igm, item, type);
 
 		if (data.isEmpty()) {
 			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
@@ -240,6 +240,7 @@ public class ImportGatePassController {
 					i.setDoValidityDate(crg.getDoValidityDate());
 					i.setMtyYardLocation(crg.getMtyYardLocation());
 					i.setCha(cr.getChaCode());
+					i.setBeDate(cr.getBeDate());
 
 					if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
 
@@ -283,6 +284,35 @@ public class ImportGatePassController {
 
 							vehicleTrackRepo.save(track);
 						}
+						
+						
+						int srNo = importgatepassvehrepo.getcount(cid, bid, crg.getGatePassId());
+
+						
+
+						CfImportGatePassVehDtl dtl = new CfImportGatePassVehDtl();
+						dtl.setCompanyId(cid);
+						dtl.setBranchId(bid);
+						dtl.setFinYear("2024");
+						dtl.setProfitcentreId(cr.getProfitcentreId());
+						dtl.setGatePassId(HoldNextIdD1);
+						dtl.setSrNo(srNo + 1);
+						dtl.setContainerNo("");
+						dtl.setIgmNo(crg.getIgmNo());
+						dtl.setIgmLineNo(crg.getIgmTransId());
+						dtl.setIgmTransId(crg.getIgmTransId());
+						dtl.setTransType("FCL");
+						dtl.setGrossWt(crg.getGrossWt());
+						dtl.setNoOfPackage(crg.getYardPackages());
+						dtl.setVehicleNo(i.getVehicleNo());
+						dtl.setVehicleGatePassId(i.getVehicleGatePassId());
+						dtl.setQtyTakenOut(i.getQtyTakenOut());
+						dtl.setGwTakenOut(i.getGwTakenOut());
+						dtl.setCreatedBy(user);
+						dtl.setCreatedDate(new Date());
+						dtl.setStatus('A');
+
+						importgatepassvehrepo.save(dtl);
 					}
 
 					ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
@@ -341,7 +371,7 @@ public class ImportGatePassController {
             				i.setDoValidityDate(crg.getDoValidityDate());
             				i.setMtyYardLocation(crg.getMtyYardLocation());
             				i.setCha(cr.getChaCode());
-
+            				i.setBeDate(cr.getBeDate());
             				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
 
             					if (d != null) {
@@ -384,6 +414,31 @@ public class ImportGatePassController {
 
             						vehicleTrackRepo.save(track);
             					}
+            					
+            					int srNo = importgatepassvehrepo.getcount(cid, bid, crg.getGatePassId());
+            					CfImportGatePassVehDtl dtl = new CfImportGatePassVehDtl();
+        						dtl.setCompanyId(cid);
+        						dtl.setBranchId(bid);
+        						dtl.setFinYear("2024");
+        						dtl.setProfitcentreId(cr.getProfitcentreId());
+        						dtl.setGatePassId(HoldNextIdD1);
+        						dtl.setSrNo(srNo + 1);
+        						dtl.setContainerNo("");
+        						dtl.setIgmNo(crg.getIgmNo());
+        						dtl.setIgmLineNo(crg.getIgmTransId());
+        						dtl.setIgmTransId(crg.getIgmTransId());
+        						dtl.setTransType("FCL");
+        						dtl.setGrossWt(crg.getGrossWt());
+        						dtl.setNoOfPackage(crg.getYardPackages());
+        						dtl.setVehicleNo(i.getVehicleNo());
+        						dtl.setVehicleGatePassId(i.getVehicleGatePassId());
+        						dtl.setQtyTakenOut(i.getQtyTakenOut());
+        						dtl.setGwTakenOut(i.getGwTakenOut());
+        						dtl.setCreatedBy(user);
+        						dtl.setCreatedDate(new Date());
+        						dtl.setStatus('A');
+
+        						importgatepassvehrepo.save(dtl);
             				}
 
             				ImportInventory existingInv = importinventoryrepo.getById(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
@@ -581,7 +636,7 @@ public class ImportGatePassController {
 					i.setDoValidityDate(crg.getDoValidityDate());
 					i.setMtyYardLocation(crg.getMtyYardLocation());
 					i.setCha(cr.getChaCode());
-
+					i.setBeDate(cr.getBeDate());
 					if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
 
 						if (d != null) {
@@ -664,7 +719,7 @@ public class ImportGatePassController {
 					existing.setVehStatus(vehicleStatus);
 					if ("N".equals(vehicleStatus)) {
 
-						VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo(cid, bid, existing.getVehicleNo(),
+						VehicleTrack track = vehicleTrackRepo.getDataByVehicleNo1(cid, bid, existing.getVehicleNo(),
 								existing.getVehicleGatePassId());
 
 						if (track != null) {
@@ -1117,6 +1172,7 @@ public class ImportGatePassController {
 				i.setDoValidityDate(crg.getDoValidityDate());
 				i.setMtyYardLocation(crg.getMtyYardLocation());
 				i.setCha(cr.getChaCode());
+				
 
 				if (cn.getDeStuffId() != null && !cn.getDeStuffId().isEmpty()) {
 
@@ -1217,7 +1273,33 @@ public class ImportGatePassController {
 				track.setIgmTransId(crg.getIgmTransId());
 
 				vehicleTrackRepo.save(track);
+				
+				int srNo = importgatepassvehrepo.getcount(cid, bid, crg.getGatePassId());
+				CfImportGatePassVehDtl dtl = new CfImportGatePassVehDtl();
+				dtl.setCompanyId(cid);
+				dtl.setBranchId(bid);
+				dtl.setFinYear("2024");
+				dtl.setProfitcentreId(igm.getProfitcentreId());
+				dtl.setGatePassId(HoldNextIdD1);
+				dtl.setSrNo(srNo + 1);
+				dtl.setContainerNo("");
+				dtl.setIgmNo(crg.getIgmNo());
+				dtl.setIgmLineNo(crg.getIgmTransId());
+				dtl.setIgmTransId(crg.getIgmTransId());
+				dtl.setTransType("FCL");
+				dtl.setGrossWt(crg.getGrossWt());
+				dtl.setNoOfPackage(crg.getYardPackages());
+				dtl.setVehicleNo(track.getVehicleNo());
+				dtl.setVehicleGatePassId(track.getGateInId());
+				dtl.setQtyTakenOut(BigDecimal.ZERO);
+				dtl.setGwTakenOut(BigDecimal.ZERO);
+				dtl.setCreatedBy(user);
+				dtl.setCreatedDate(new Date());
+				dtl.setStatus('A');
+
+				importgatepassvehrepo.save(dtl);
 			}
+	
 		}
 
 		if ("Y".equals(crg.getVehStatus()) && !crg.getGatePassId().isEmpty()) {
@@ -1230,6 +1312,32 @@ public class ImportGatePassController {
 				track.setIgmTransId(crg.getIgmTransId());
 
 				vehicleTrackRepo.save(track);
+				
+				
+				int srNo = importgatepassvehrepo.getcount(cid, bid, crg.getGatePassId());
+				CfImportGatePassVehDtl dtl = new CfImportGatePassVehDtl();
+				dtl.setCompanyId(cid);
+				dtl.setBranchId(bid);
+				dtl.setFinYear("2024");
+				dtl.setProfitcentreId(igm.getProfitcentreId());
+				dtl.setGatePassId(HoldNextIdD1);
+				dtl.setSrNo(srNo + 1);
+				dtl.setContainerNo("");
+				dtl.setIgmNo(crg.getIgmNo());
+				dtl.setIgmLineNo(crg.getIgmTransId());
+				dtl.setIgmTransId(crg.getIgmTransId());
+				dtl.setTransType("FCL");
+				dtl.setGrossWt(crg.getGrossWt());
+				dtl.setNoOfPackage(crg.getYardPackages());
+				dtl.setVehicleNo(track.getVehicleNo());
+				dtl.setVehicleGatePassId(track.getGateInId());
+				dtl.setQtyTakenOut(BigDecimal.ZERO);
+				dtl.setGwTakenOut(BigDecimal.ZERO);
+				dtl.setCreatedBy(user);
+				dtl.setCreatedDate(new Date());
+				dtl.setStatus('A');
+
+				importgatepassvehrepo.save(dtl);
 			}
 		}
 

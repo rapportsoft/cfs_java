@@ -193,4 +193,8 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) and v.profitcentreId=:profit")
 	List<Object[]> getEmptyVehGateIn2(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("profit") String profit);
 
+	
+	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.vehicleNo=:veh and v.status != 'D' and v.gateInId=:inId")
+	VehicleTrack getDataByVehicleNo1(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("inId") String inId);
+
 }

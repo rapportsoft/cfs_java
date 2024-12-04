@@ -110,8 +110,17 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 	List<ImportGatePass> searchDataForGateOut(@Param("cid") String cid, @Param("bid") String bid,@Param("igm") String igm,@Param("line") String line);
 	
 	
-	@Query(value="select distinct i.gatePassId,i.vehicleNo from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
-			+ "(:val is null OR :val = '' OR i.gatePassId LIKE CONCAT ('%',:val,'%') OR i.vehicleNo LIKE CONCAT ('%',:val,'%')) "
+//	@Query(value="select distinct i.gatePassId,i.vehicleNo from ImportGatePass i where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
+//			+ "(:val is null OR :val = '' OR i.gatePassId LIKE CONCAT ('%',:val,'%') OR i.vehicleNo LIKE CONCAT ('%',:val,'%')) "
+//			+ "and (i.gateOutId is null OR i.gateOutId = '')")
+//	List<Object[]> getGatePassDataByGatePassIdAndVehicleNo(@Param("cid") String cid, @Param("bid") String bid,@Param("val") String val);
+//	
+	
+	@Query(value="select distinct i.gatePassId,c.vehicleNo "
+			+ "from ImportGatePass i "
+			+ "LEFT OUTER JOIN CfImportGatePassVehDtl c ON i.companyId=c.companyId and i.branchId=c.branchId and i.gatePassId=c.gatePassId "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
+			+ "(:val is null OR :val = '' OR i.gatePassId LIKE CONCAT ('%',:val,'%') OR c.vehicleNo LIKE CONCAT ('%',:val,'%')) "
 			+ "and (i.gateOutId is null OR i.gateOutId = '')")
 	List<Object[]> getGatePassDataByGatePassIdAndVehicleNo(@Param("cid") String cid, @Param("bid") String bid,@Param("val") String val);
 	

@@ -73,4 +73,25 @@ public interface ImportGateOutRepository extends JpaRepository<GateOut, String> 
 			+ "OR e.docRefNo LIKE CONCAT ('%',:val,'%') OR e.deliveryOrderNo LIKE CONCAT ('%',:val,'%') "
 			+ "OR p1.partyName LIKE CONCAT ('%',:val,'%') OR e.containerNo LIKE CONCAT ('%',:val,'%') OR e.chaName LIKE CONCAT ('%',:val,'%')) order by e.gateOutId desc")
 	List<Object[]> searchGateOut(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	
+	
+
+	@Query(value="select DISTINCT g.gateOutId,DATE_FORMAT(g.gateOutDate,'%d/%m/%Y %h:%i'),g.containerNo,g.containerSize,"
+			+ "g.containerType,cn.iso,GROUP_CONCAT(veh.vehicleNo),gp.transporterName,v.vesselName,i.viaNo,gp.actualSealNo,gp.blNo,"
+			+ "DATE_FORMAT(gp.blDate,'%d/%m/%Y'),gp.doNo,gp.boe,DATE_FORMAT(gp.beDate,'%d/%m/%Y'),DATE_FORMAT(gp.doValidityDate,'%d/%m/%Y'),"
+			+ "gp.igmNo,gp.igmLineNo,cn.scannerType,p1.partyName,gp.importerName,p2.partyName,g.containerHealth,g.comments "
+			+ "from GateOut g "
+			+ "LEFT OUTER JOIN ImportGatePass gp ON g.companyId=gp.companyId and g.branchId=gp.branchId and g.gatePassNo=gp.gatePassId "
+			+ "LEFT OUTER JOIN Cfigmcn cn ON gp.companyId=cn.companyId and gp.branchId=cn.branchId and gp.igmNo=cn.igmNo and "
+			+ "gp.igmTransId=cn.igmTransId and gp.containerNo=cn.containerNo and gp.igmLineNo=cn.igmLineNo "
+			+ "LEFT OUTER JOIN CFIgm i ON g.companyId=i.companyId and g.branchId=i.branchId and g.docRefNo=i.igmNo and "
+			+ "g.erpDocRefNo=i.igmTransId "
+			+ "LEFT OUTER JOIN Vessel v ON i.companyId=v.companyId and i.branchId=v.branchId and i.vesselId=v.vesselId "
+			+ "LEFT OUTER JOIN Party p1 ON gp.companyId=p1.companyId and gp.branchId=p1.branchId and gp.sl=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON gp.companyId=p2.companyId and gp.branchId=p2.branchId and gp.cha=p2.customerCode "
+			+ "LEFT OUTER JOIN CfImportGatePassVehDtl veh ON gp.companyId=veh.companyId and gp.branchId=veh.branchId and gp.gatePassId=veh.gatePassId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status != 'D' and g.gateOutId=:id")
+	List<Object[]> getImportGateOutData(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 }
