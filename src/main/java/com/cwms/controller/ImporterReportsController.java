@@ -170,14 +170,14 @@ public class ImporterReportsController {
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
 	            fileName = "Loaded To Distuff Empty Inventory.xlsx";
 	            break;
-//
-//	        case "Scan Container Report":
-//	            excelBytes = importReporsService.createExcelReportOfScanContainerReport(
-//	                    companyId, branchId, username, type, companyname, branchname,
-//	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
-//	            fileName = "Scan Container Report.xlsx";
-//	            break;
-//
+
+	        case "Scan Container Report":
+	            excelBytes = importReporsService.createExcelReportOfScanContainerReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Scan Container Report.xlsx";
+	            break;
+
 	        case "SealCutting Report":
 	            excelBytes = importReporsService.createExcelReportOfSealCuttingReport(
 	                    companyId, branchId, username, type, companyname, branchname,
@@ -212,20 +212,20 @@ public class ImporterReportsController {
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
 	            fileName = "Import LCL Cargo Destuff Report.xlsx";
 	            break;
-//
-//	        case "Yard Balance Report Details":
-//	            excelBytes = importReporsService.createExcelReportOfYardBalanceReportDetails(
-//	                    companyId, branchId, username, type, companyname, branchname,
-//	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
-//	            fileName = "Yard Balance Report Details.xlsx";
-//	            break;
-//
-//	        case "Loaded To Destuff Empty Out Report Details":
-//	            excelBytes = importReporsService.createExcelReportOfLoadedToDestuffEmptyOutReportDetails(
-//	                    companyId, branchId, username, type, companyname, branchname,
-//	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
-//	            fileName = "Loaded To Destuff Empty Out Report Details.xlsx";
-//	            break;
+
+	        case "Yard Balance Report Details":
+	            excelBytes = importReporsService.createExcelReportOfYardBalanceReportDetails(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Yard Balance Report Details.xlsx";
+	            break;
+
+	        case "Loaded To Destuff Empty Out Report Details":
+	            excelBytes = importReporsService.createExcelReportOfLoadedToDestuffEmptyOutReportDetails(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Loaded To Destuff Empty Out Report Details.xlsx";
+	            break;
 
 	        default:
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
