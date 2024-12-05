@@ -97,6 +97,45 @@ public interface CfbondnocRepository extends JpaRepository<Cfbondnoc, String> {
 	        + "p.partyId LIKE concat(:partyName, '%'))")
 	List<Party> findImporterDataByPartyId(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("partyName") String partyName);
 
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query("SELECT DISTINCT NEW com.cwms.entities.Party(p.companyId, p.branchId, p.partyId, p.iecCode, p.partyName, pa.address1, "
+	        + "pa.address2, pa.address3, pa.state, pa.gstNo, pa.srNo) "
+	        + "FROM Party p LEFT OUTER JOIN PartyAddress pa ON p.companyId = pa.companyId AND p.branchId = pa.branchId AND p.partyId = pa.partyId "
+	        + "WHERE p.companyId = :companyId AND p.branchId = :branchId AND p.status != 'D' AND p.lin = 'Y' AND pa.status != 'D' AND "
+	        + "(:partyName IS NULL OR :partyName = '' OR "
+	        + "p.partyName LIKE concat(:partyName, '%') OR "
+	        + "pa.gstNo LIKE concat(:partyName, '%') OR "
+	        + "p.iecCode LIKE concat(:partyName, '%') OR "
+	        + "pa.state LIKE concat(:partyName, '%') OR "
+	        + "p.partyId LIKE concat(:partyName, '%'))")
+	List<Party> getAllShippingLine(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("partyName") String partyName);
+
+	
+	
+	
+	
+	
+	
+	@Query("SELECT DISTINCT NEW com.cwms.entities.Party(p.companyId, p.branchId, p.partyId, p.iecCode, p.partyName, pa.address1, "
+	        + "pa.address2, pa.address3, pa.state, pa.gstNo, pa.srNo) "
+	        + "FROM Party p LEFT OUTER JOIN PartyAddress pa ON p.companyId = pa.companyId AND p.branchId = pa.branchId AND p.partyId = pa.partyId "
+	        + "WHERE p.companyId = :companyId AND p.branchId = :branchId AND p.status != 'D' AND pa.status != 'D' AND "
+	        + "(:partyName IS NULL OR :partyName = '' OR "
+	        + "p.partyName LIKE concat(:partyName, '%') OR "
+	        + "pa.gstNo LIKE concat(:partyName, '%') OR "
+	        + "p.iecCode LIKE concat(:partyName, '%') OR "
+	        + "pa.state LIKE concat(:partyName, '%') OR "
+	        + "p.partyId LIKE concat(:partyName, '%'))")
+	List<Party> getAllAccountHolder(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("partyName") String partyName);
+
+	
 	@Query("SELECT NEW com.cwms.entities.PartyAddress(pa.companyId, pa.branchId, pa.partyId, pa.srNo, pa.address1, "
 	        + "pa.address2, pa.address3, pa.city, pa.gstNo) "
 	        + "FROM PartyAddress pa "

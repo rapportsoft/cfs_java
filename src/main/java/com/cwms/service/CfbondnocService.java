@@ -87,6 +87,15 @@ public class CfbondnocService {
 		return cfbondnocRepository.findImporterDataByPartyId(companyId, branchId, partyName);
 	}
 
+	public List<Party> findAllShippingLine(String companyId, String branchId, String partyName) {
+		return cfbondnocRepository.getAllShippingLine(companyId, branchId, partyName);
+	}
+	
+	public List<Party> getAllAccountHolder(String companyId, String branchId, String partyName) {
+		return cfbondnocRepository.getAllAccountHolder(companyId, branchId, partyName);
+	}
+	
+	
 	public List<PartyAddress> findAllImporterAddress(String companyId, String branchId, String partyId) {
 		return cfbondnocRepository.findPartyAddress(companyId, branchId, partyId);
 	}

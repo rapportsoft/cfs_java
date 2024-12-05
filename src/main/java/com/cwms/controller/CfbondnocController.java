@@ -98,6 +98,28 @@ public class CfbondnocController {
 		return cfbondnocService.findAllImporter(companyId, branchId, partyName);
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping("/searchShippingLine")
+	public List<Party> searchShippingLine(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId,
+			@RequestParam(name = "partyName", required = false) String partyName) {
+		return cfbondnocService.findAllShippingLine(companyId, branchId, partyName);
+	}
+	
+	
+	
+	@GetMapping("/searchAccountHolder")
+	public List<Party> getAllAccountHolder(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId,
+			@RequestParam(name = "partyName", required = false) String partyName) {
+		return cfbondnocService.getAllAccountHolder(companyId, branchId, partyName);
+	}
 	@GetMapping("/searchImportersAddress")
 	public List<PartyAddress> getImporetresAddress(@RequestParam("companyId") String companyId,
 			@RequestParam("branchId") String branchId,
