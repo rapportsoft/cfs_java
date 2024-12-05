@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Export Stuff Tally Report</title>
+
+<style>
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+	size: landscape;
+}
+
+@media print {
+	tbody {
+		
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0;
+	/* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: after;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.main {
+	width: 100%;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.table123 {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table123 th, .table123 td {
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+	margin: 10px;
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden;
+	/* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " ";
+	/* Add a space character */
+	margin-top: 0.1px;
+	/* Adjust the margin-top value as needed */
+	display: block;
+	/* Ensure the space is displayed */
+}
+
+hr.red {
+	border: 0;
+	height: 2px;
+	background-color: #ff8080;
+	/*  background-color: #990000; */
+}
+
+table.table th, table.table td {
+	font-weight: normal;
+	/* Set the font weight to normal */
+}
+
+.horizontal {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	width: 35%;
+	align-items: center;
+}
+
+.part-2 {
+	width: 30%;
+	align-items: center;
+}
+
+.part-3 {
+	width: 35%;
+	align-items: center;
+}
+</style>
+
+</head>
+
+<body>
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+
+
+	<!-- Centered heading with bold and font size 18 -->
+	<div style="margin-bottom: 18px; text-align: center;">
+		<span th:text="${companyname}"
+			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
+		<br /> <span th:text="${address}"
+			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+	</div>
+
+	<hr />
+
+	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
+		<span
+			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">EXPORT CONTAINER LOAD PLAN - CLP</span><br /> 
+	</div>
+
+
+
+	<table
+		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
+		<tr>
+			<td style="width: 10%; text-align: left; font-weight: bold;">Stuff Req No</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${stuffReqId}"></td>
+
+			<td style="width: 10%; text-align: left; font-weight: bold;"></td>
+			<td style="width: 3%; text-align: center;"></td>
+			<td style="width: 21%; text-align: left;"></td>
+			
+			<td style="width: 10%; text-align: left; font-weight: bold;">CLP Date</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${tallyDate}"></td>
+		</tr>
+		<tr>
+			<td style="width: 10%; text-align: left; font-weight: bold;">Container No</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${containerNo}"></td>
+
+			<td style="width: 10%; text-align: left; font-weight: bold;">Size / Type</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 21%; text-align: left;" th:text="${containerSize}+${containerType}"></td>
+			
+			<td style="width: 10%; text-align: left; font-weight: bold;">Terminal Name</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${terminal}"></td>
+		</tr>
+		<tr>
+			<td style="width: 10%; text-align: left; font-weight: bold;">Port Of Discharge</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${pod}"></td>
+
+			<td style="width: 10%; text-align: left; font-weight: bold;">Final POD</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 21%; text-align: left;" th:text="${finalPod}"></td>
+			
+			<td style="width: 10%; text-align: left; font-weight: bold;">VCN / Voyage No</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${viaNo}+' / '+${voyageNo}"></td>
+		</tr>
+		
+		<tr>
+			<td style="width: 10%; text-align: left; font-weight: bold;">Vessel</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${vessel}"></td>
+
+			<td style="width: 10%; text-align: left; font-weight: bold;">Rotation No / Date</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 21%; text-align: left;" th:text="${rotationNo}+' / '+${rotationDate}"></td>
+			
+			<td style="width: 10%; text-align: left; font-weight: bold;">CHA</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${cha}"></td>
+		</tr>
+		<tr>
+			<td style="width: 10%; text-align: left; font-weight: bold;">Agent</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${sa}"></td>
+
+			<td style="width: 10%; text-align: left; font-weight: bold;">Shipping Line</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 21%; text-align: left;" th:text="${sl}"></td>
+			
+			<td style="width: 10%; text-align: left; font-weight: bold;">Agent Seal No</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${agentSeal}"></td>
+		</tr>
+		<tr>
+			<td style="width: 10%; text-align: left; font-weight: bold;">Customs Seal No</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${customSeal}"></td>
+
+			<td style="width: 10%; text-align: left; font-weight: bold;">CLP Work Order No</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 21%; text-align: left;" th:text="${workOrder}"></td>
+			
+			<td style="width: 10%; text-align: left; font-weight: bold;">CLP Work Order Date</td>
+			<td style="width: 3%; text-align: center;">:</td>
+			<td style="width: 20%; text-align: left;" th:text="${workOrderDate}"></td>
+		</tr>
+		
+	</table>
+
+	<table
+		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed; border-collapse: collapse; border: 1px solid black;">
+
+		<thead>
+			<tr style="border: 1px solid black; text-align: center;">
+				<th style="border: 1px solid black; width: 10%;">Sr No</th>
+				<th style="border: 1px solid black; width: 13%;">Carting Date</th>
+				<th style="border: 1px solid black; width: 10%;">SB No</th>
+				<th style="border: 1px solid black; width: 10%;">SB Date</th>
+				<th style="border: 1px solid black; width: 20%;">Exporter</th>
+				<th style="border: 1px solid black; width: 20%;">Consignee</th>
+				<th style="border: 1px solid black; width: 20%;">Cargo Description</th>
+				<th style="border: 1px solid black; width: 10%;">Pkg Type</th>
+				<th style="border: 1px solid black; width: 10%;">Declare Pkgs</th>
+				<th style="border: 1px solid black; width: 10%;">Stuffing Pkgs</th>
+				<th style="border: 1px solid black; width: 10%;">Stuffed Wt</th>
+				<th style="border: 1px solid black; width: 10%;">FOB</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr th:each="item, iterStat : ${stuffData}"
+				style="border: 1px solid black; text-align: center;">
+				<td style="border: 1px solid black;" th:text="${iterStat.index+1}"></td>
+				<td style="border: 1px solid black;" th:text="${item[20]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[21]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[22]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[23]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[24]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[25]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[26]}"></td>
+				<td style="border: 1px solid black;" th:text="${item[27]}"></td>
+				<td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${item[28]}"></td>
+				<td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${item[29]}"></td>
+				<td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${item[30]}"></td>
+				
+			</tr>
+			<tr style="border: 1px solid black; text-align: center;">
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td style="border: 1px solid black;font-weight: bold;">Total</td>
+			    <td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${totalStuffPkg}"></td>
+			    <td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${totalStuffWt}"></td>
+			    <td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${totalFob}"></td>
+			</tr>
+			<tr style="border: 1px solid black; text-align: center;">
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td style="border: 1px solid black;font-weight: bold;word-wrap: break-word; overflow-wrap: break-word;" colspan="2">Tare Wt. in Kgs.</td>
+			    <td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${tareWt}"></td>
+			    <td></td>
+			</tr>
+			<tr style="border: 1px solid black; text-align: center;">
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td ></td>
+			    <td style="border: 1px solid black;font-weight: bold;word-wrap: break-word; overflow-wrap: break-word;" colspan="2">Gross Wt.in Kgs.</td>
+			    <td style="border: 1px solid black;word-wrap: break-word; overflow-wrap: break-word;" th:text="${totalGrossWt}"></td>
+			    <td></td>
+			</tr>
+
+		</tbody>
+	</table> 
+
+      
+<table
+		style="width: 100%; margin-top: 20px; font-size: 30px; table-layout: fixed;">
+		<tr>
+			<td style="width: 60%; text-align: left;font-size: 13px;">NOTE:</td>
+			
+		</tr>
+		<tr>
+			<td style="width: 60%; text-align: left;font-size: 13px;">1) All Activities included those at incoming &amp; in process stage have been satisfactorily completed.</td>
+			<td style="width: 40%; text-align: right;font-size: 13px;">The Container is allowed to be sent to Port.</td>
+			
+		</tr>
+		<tr>
+			<td style="width: 60%; text-align: left;font-size: 13px;">2) All necessary records have been completed and verified with date and seal.</td>
+			
+		</tr>
+		<tr>
+			<td style="width: 60%; text-align: left;font-size: 13px;">3) Cargo/Container delivered in good condition.</td>
+			
+			
+		</tr>
+		
+</table>
+	
+
+	<table
+		style="width: 100%; margin-top: 80px; font-size: 20px; table-layout: fixed;">
+		<tr>
+			<td style="width: 23%; text-align: left;">
+			   <span>________________________________</span><br />
+			   <span style="font-weight: bold;">Representative / Surveyor</span><br />
+			    <span style="font-weight: bold;">of Shipping Agent / Shipping Line</span>
+			</td>
+			<td style="width: 15%; text-align: left;">
+			   <span>________________________</span><br />
+			   <span style="font-weight: bold;">CFS Surveyor</span><br />&nbsp;
+			</td>
+			<td style="width: 15%; text-align: left;">
+			   <span>________________________</span><br />
+			   <span style="font-weight: bold;">CFS Executive</span><br />&nbsp;
+			</td>
+			<td style="width: 35%; text-align: left;">
+			   <span>________________________________________________________________</span><br />
+			   <span style="font-weight: bold;">(Suptd.of Customs / Preventive Officer)</span><br />
+			   <span style="font-weight: bold;"> (On behalf of SEABIRD MARINE SERVICES PVT LTD. Customs House)</span>
+			</td>
+			
+			
+		</tr>
+
+
+	</table>
+	
+
+
+</body>
+
+</html>

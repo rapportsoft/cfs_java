@@ -479,4 +479,31 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 			+ "e.sbNo=:sb and e.stuffReqId=:id and e.status != 'D'")
 	ExportStuffRequest getDataBySbNoSbTransAndStuffReqId1(@Param("cid") String cid,@Param("bid") String bid,
 			@Param("sbtrans") String sbtrans,@Param("sb") String sb,@Param("id") String id);
+	
+	
+	
+	@Query(value="select DISTINCT e.stuffReqId,DATE_FORMAT(e.stuffReqDate,'%d/%m/%Y'),p1.partyName,p2.partyName,"
+			+ "v.vesselName,e.containerNo,e.containerSize,e.containerType,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y %h:%i'),"
+			+ "e.exporterName,e.cargoDescription,e.typeOfPackage,e.noOfPackagesStuffed,e.cargoWeight "
+			+ "from ExportStuffRequest e "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.shippingLine=p2.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId=v.vesselId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status='A' and e.stuffReqId=:id and e.containerNo=:con "
+			+ "order by e.stuffReqLineId")
+	List<Object[]> getContWiseReportDate(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("id") String id ,@Param("con") String con);
+	
+	
+	@Query(value="select DISTINCT e.stuffReqId,DATE_FORMAT(e.stuffReqDate,'%d/%m/%Y'),p1.partyName,p2.partyName,"
+			+ "v.vesselName,e.containerNo,e.containerSize,e.containerType,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y %h:%i'),"
+			+ "e.exporterName,e.cargoDescription,e.typeOfPackage,e.noOfPackagesStuffed,e.cargoWeight "
+			+ "from ExportStuffRequest e "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON e.companyId=p2.companyId and e.branchId=p2.branchId and e.shippingLine=p2.partyId "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId=v.vesselId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.status='A' and e.stuffReqId=:id and e.sbNo=:sb "
+			+ "order by e.stuffReqLineId")
+	List<Object[]> getSBWiseReportDate(@Param("cid") String cid,@Param("bid") String bid,
+			@Param("id") String id ,@Param("sb") String sb);
 }

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Export Stuff Req Report</title>
+
+<style>
+@page {
+	margin: 0.7cm;
+	margin-top: 0.5cm;
+	/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+	size: A4;
+}
+
+@media print {
+	tbody {
+		
+	}
+	tr {
+		page-break-inside: avoid;
+	}
+}
+
+.blank-cell {
+	border: none;
+	padding: 0;
+	/* Optional: remove any padding/margin */
+}
+
+.underline {
+	border-bottom: 1px solid black;
+	/* You can customize the color and style of the underline */
+	display: inline-block;
+	/* Ensures that the underline only spans the width of the text */
+	padding-bottom: 2px;
+	/* Adjust this value to control the distance between the text and the underline */
+}
+
+.page-break {
+	page-break-before: after;
+}
+
+p {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+}
+
+h1 {
+	font-size: 20pt;
+	margin: 0;
+	padding: 0;
+}
+
+th {
+	font-size: 10pt;
+}
+
+td {
+	font-size: 9pt;
+}
+
+/* Center text horizontally and vertically */
+.text-center {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.margin-top {
+	margin-top: 20px;
+}
+
+.main {
+	width: 100%;
+}
+
+.text-right {
+	text-align: right;
+	display: flex;
+	justify-content: right;
+	align-items: right;
+	margin-top: 40px;
+}
+
+/* Style tables */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table th, .table td {
+	/* text-align: center;
+	justify-content: center; */
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+}
+
+.table thead {
+	height: 20px;
+}
+
+.table td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.table123 {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table123 th, .table123 td {
+	align-items: center;
+	border: 1px solid grey;
+	color: graytext;
+	margin: 10px;
+}
+
+.customer {
+	width: 100%;
+	overflow: hidden;
+	/* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	font-size: 10pt;
+	width: 65%;
+	float: left;
+}
+
+.part-2 {
+	font-size: 10pt;
+	width: 35%;
+	float: right;
+}
+
+.page-break {
+	page-break-before: always;
+}
+
+.current-date {
+	font-size: 12pt;
+	padding: 0;
+	margin: 3px;
+	text-align: end;
+}
+
+p br {
+	content: " ";
+	/* Add a space character */
+	margin-top: 0.1px;
+	/* Adjust the margin-top value as needed */
+	display: block;
+	/* Ensure the space is displayed */
+}
+
+hr.red {
+	border: 0;
+	height: 2px;
+	background-color: #ff8080;
+	/*  background-color: #990000; */
+}
+
+table.table th, table.table td {
+	font-weight: normal;
+	/* Set the font weight to normal */
+}
+
+.horizontal {
+	width: 100%;
+	overflow: hidden; /* Clear any floats */
+	margin-top: 1pt;
+}
+
+.part-1 {
+	width: 35%;
+	align-items: center;
+}
+
+.part-2 {
+	width: 30%;
+	align-items: center;
+}
+
+.part-3 {
+	width: 35%;
+	align-items: center;
+}
+</style>
+
+</head>
+
+<body>
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+
+
+	<!-- Centered heading with bold and font size 18 -->
+	<div style="margin-bottom: 18px; text-align: center;">
+		<span th:text="${companyname}"
+			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
+		<br /> <span th:text="${address}"
+			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+	</div>
+
+	<hr />
+
+	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
+		<span
+			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">Export Stuffing Request</span><br /> 
+	</div>
+
+    <div style="font-size: 13px;margin-top: 10px;">To,</div>
+    <div style="font-size: 13px;margin-top: 5px;">VENDOR</div>
+    <div style="font-size: 13px;font-weight: bold;margin-top: 5px;">Please Stuff Following Container.</div>
+    
+
+	<table
+		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
+		<tr>
+			<td style="width: 15%; text-align: left; font-weight: bold;">Stuff Req No</td>
+			<td style="width: 5%; text-align: center;">:</td>
+			<td style="width: 30%; text-align: left;" th:text="${stuffReqId}"></td>
+
+			<td style="width: 20%; text-align: left; font-weight: bold;">Stuff Req Date</td>
+			<td style="width: 5%; text-align: center;">:</td>
+			<td style="width: 25%; text-align: left;" th:text="${stuffReqDate}"></td>
+		</tr>
+		<tr>
+			<td style="width: 15%; text-align: left; font-weight: bold;">Agent</td>
+			<td style="width: 5%; text-align: center;">:</td>
+			<td style="width: 30%; text-align: left;" th:text="${sa}"></td>
+
+			<td style="width: 20%; text-align: left; font-weight: bold;">Line</td>
+			<td style="width: 5%; text-align: center;">:</td>
+			<td style="width: 25%; text-align: left;" th:text="${sl}"></td>
+		</tr>
+		<tr>
+			<td style="width: 15%; text-align: left; font-weight: bold;">Vessel</td>
+			<td style="width: 5%; text-align: center;">:</td>
+			<td style="width: 30%; text-align: left;" th:text="${vessel}"></td>
+
+		
+		</tr>
+		
+	</table>
+
+	<table
+		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed; border-collapse: collapse; border: 1px solid black;">
+
+		<thead>
+			<tr style="border: 1px solid black; text-align: center;">
+				<th style="border: 1px solid black; width: 10%;">SB No.</th>
+				<th style="border: 1px solid black; width: 15%;">SB Date</th>
+				<th style="border: 1px solid black; width: 20%;">Exporter Name</th>
+				<th style="border: 1px solid black; width: 20%;">Cargo Details</th>
+				<th style="border: 1px solid black; width: 15%;">Package Type</th>
+				<th style="border: 1px solid black; width: 10%;">Packages</th>
+				<th style="border: 1px solid black; width: 10%;">Weight</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr style="border: 1px solid black; text-align: center;">
+				<td style="border: 1px solid black;" th:text="${sbNo}"></td>
+				<td style="border: 1px solid black;" th:text="${sbDate}"></td>
+				<td style="border: 1px solid black;" th:text="${exporter}"></td>
+				<td style="border: 1px solid black;" th:text="${cargo}"></td>
+				<td style="border: 1px solid black;" th:text="${type}"></td>
+				<td style="border: 1px solid black;" th:text="${totalPkg}"></td>
+				<td style="border: 1px solid black;" th:text="${totalWt}"></td>
+				
+			</tr>
+			<tr style="border: 1px solid black; text-align: center;">
+			    <td style="border: 1px solid black;"></td>
+			    <td style="border: 1px solid black;"></td>
+			    <td style="border: 1px solid black;"></td>
+			    <td style="border: 1px solid black;"></td>
+			    <td style="border: 1px solid black;font-weight: bold;">Total</td>
+			    <td style="border: 1px solid black;" th:text="${totalPkg}"></td>
+			    <td style="border: 1px solid black;" th:text="${totalWt}"></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+      <table
+		style="width: 60%; margin-top: 50px; font-size: 20px; table-layout: fixed; border-collapse: collapse; border: 1px solid black;">
+
+		<thead>
+			<tr style="border: 1px solid black; text-align: center;">
+				<th style="border: 1px solid black; width: 10%;">Container No.</th>
+				<th style="border: 1px solid black; width: 15%;">Size</th>
+				<th style="border: 1px solid black; width: 15%;">Type</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			
+			<tr style="border: 1px solid black; text-align: center;" th:each="item, iterStat : ${stuffData}">
+			   <td style="border: 1px solid black;" th:text="${item[5]}"></td>
+			   <td style="border: 1px solid black;" th:text="${item[6]}"></td>
+			   <td style="border: 1px solid black;" th:text="${item[7]}"></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	
+
+	<table
+		style="width: 100%; margin-top: 80px; font-size: 20px; table-layout: fixed;">
+		<tr>
+			<td style="width: 33%; text-align: left;">
+			   <span>____________________________</span><br />
+			   <span style="font-weight: bold;">Agent Signature</span>
+			</td>
+			<td style="width: 34%; text-align: left;">
+			   <span>____________________________</span><br />
+			   <span style="font-weight: bold;">Operational Executive Signature</span>
+			</td>
+			<td style="width: 33%; text-align: left;">
+			   <span>____________________________</span><br />
+			   <span style="font-weight: bold;">Supdt. Of Customs Signature</span>
+			</td>
+			
+			
+		</tr>
+
+
+	</table>
+	
+
+
+</body>
+
+</html>

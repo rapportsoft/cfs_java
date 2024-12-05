@@ -233,4 +233,15 @@ public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 			+ "AND E.status <> 'D'")
 	ExportCarting getDataByLineNoAndCartingTransId(@Param("companyId") String companyId, @Param("branchId") String branchId,
 			@Param("cartrans") String cartrans, @Param("cartline") String cartline);
+	
+	
+	
+	
+	//Reports
+	
+		@Query(value="select e.cartingTransId,DATE_FORMAT(e.cartingTransDate,'%d/%m/%Y %h:%i'),e.vehicleNo,e.sbNo,"
+				+ "e.gateInPackages,e.actualNoOfPackages "
+				+ "from ExportCarting e "
+				+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and e.cartingTransId=:id")
+		List<Object[]> getDataForCartingreport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 }

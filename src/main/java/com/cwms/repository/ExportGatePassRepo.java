@@ -76,4 +76,27 @@ public interface ExportGatePassRepo extends JpaRepository<ExportGatePass, String
 	@Query(value="select e from ExportGatePass e where e.companyId=:cid and e.branchId=:bid and e.gatePassId=:id "
 			+ "and e.srNo=:sr and e.status != 'D' and (e.gateOutId is null OR e.gateOutId = '')")
 	ExportGatePass getGataPassData(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("sr") int sr);
+	
+	
+	
+	@Query(value="select e.gatePassId,DATE_FORMAT(e.gatePassDate,'%d/%m/%Y %h:%i'),e.containerNo,e.containerSize,"
+			+ "e.containerType,e.pol,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),e.pod,e.customsSealNo,e.agentSealNo,"
+			+ "e.grossWt,e.vehicleNo,e.transporterName,v.vesselName,e.voyageNo,p1.partyName,p2.partyName,e.comments "
+			+ "from ExportGatePass e "
+			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId=v.vesselId "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.sl=p1.partyId "		
+			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo and e.sbTransId=sb.sbTransId "
+			+ "LEFT OUTER JOIN Party p2 ON sb.companyId=p2.companyId and sb.branchId=p2.branchId and sb.onAccountOf=p2.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.gatePassId=:id and e.status = 'A'")
+	List<Object[]> getGatepassDataForReport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	@Query(value="select e.gatePassId,DATE_FORMAT(e.gatePassDate,'%d/%m/%Y %h:%i'),e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),"
+			+ "e.vehicleNo,e.backToTownPackages,p1.partyName,crg.grossWeight,sb.exporterName,crg.commodity,p2.partyName "
+			+ "from ExportGatePass e "
+			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.cha=p1.partyId "		
+			+ "LEFT OUTER JOIN ExportSbEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo and e.sbTransId=sb.sbTransId "
+			+ "LEFT OUTER JOIN ExportSbCargoEntry crg ON e.companyId=crg.companyId and e.branchId=crg.branchId and e.sbNo=crg.sbNo and e.sbTransId=crg.sbTransId "
+			+ "LEFT OUTER JOIN Party p2 ON sb.companyId=p2.companyId and sb.branchId=p2.branchId and sb.onAccountOf=p2.partyId "
+			+ "where e.companyId=:cid and e.branchId=:bid and e.gatePassId=:id and e.status = 'A'")
+	List<Object[]> getCRGGatepassDataForReport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 }
