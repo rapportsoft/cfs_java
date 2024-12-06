@@ -28,12 +28,21 @@ public interface VoyageRepository extends JpaRepository<Voyage, String> {
 	
 	
 
+//	@Query(value = "select p.portName, p1.portName, v.vesselCode, v.voyageNo, v.viaNo, DATE_FORMAT(v.eta,'%d/%m/%Y'),"
+//			+ "DATE_FORMAT(v.gateOpenDate,'%d/%m/%Y'),DATE_FORMAT(v.atb,'%d/%m/%Y'), DATE_FORMAT(v.atd,'%d/%m/%Y'), "
+//			+ "DATE_FORMAT(v.cutOffDateTime,'%d/%m/%Y'), v.status, v.srNo from Voyage v LEFT JOIN Port p ON v.companyId=p.companyId and "
+//			+ "v.branchId=p.branchId and v.pol = p.portCode LEFT JOIN Port p1 ON v.companyId=p1.companyId and "
+//			+ "v.branchId=p1.branchId and v.pod = p1.portCode where v.companyId=:cid and v.branchId=:bid and v.status != 'D' "
+//			+ "AND v.vesselCode=:code AND (:voyage is null OR :voyage = '' OR v.voyageNo like CONCAT('%', :voyage ,'%')) and p.status !='D' and p1.status !='D'")
+//	List<Object[]> search(@Param("cid") String cid, @Param("bid") String bid, @Param("code") String code,
+//			@Param("voyage") String voyage);
+	
 	@Query(value = "select p.portName, p1.portName, v.vesselCode, v.voyageNo, v.viaNo, DATE_FORMAT(v.eta,'%d/%m/%Y'),"
 			+ "DATE_FORMAT(v.gateOpenDate,'%d/%m/%Y'),DATE_FORMAT(v.atb,'%d/%m/%Y'), DATE_FORMAT(v.atd,'%d/%m/%Y'), "
 			+ "DATE_FORMAT(v.cutOffDateTime,'%d/%m/%Y'), v.status, v.srNo from Voyage v LEFT JOIN Port p ON v.companyId=p.companyId and "
 			+ "v.branchId=p.branchId and v.pol = p.portCode LEFT JOIN Port p1 ON v.companyId=p1.companyId and "
 			+ "v.branchId=p1.branchId and v.pod = p1.portCode where v.companyId=:cid and v.branchId=:bid and v.status != 'D' "
-			+ "AND v.vesselCode=:code AND (:voyage is null OR :voyage = '' OR v.voyageNo like CONCAT('%', :voyage ,'%')) and p.status !='D' and p1.status !='D'")
+			+ "AND v.vesselCode=:code AND (:voyage is null OR :voyage = '' OR v.voyageNo like CONCAT('%', :voyage ,'%'))")
 	List<Object[]> search(@Param("cid") String cid, @Param("bid") String bid, @Param("code") String code,
 			@Param("voyage") String voyage);
 
