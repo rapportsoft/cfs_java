@@ -1522,5 +1522,24 @@ public class ProcessNextIdService {
 				    return nextIdDholi;
 				}
 				
-				
+				@Transactional
+				public synchronized String autoExportGateInJobOrderId(String companyId, String branchId, String processId) {
+				    // Find the next vehicle ID from the database
+				    String nextIdDholi = processNextIdRepository.findNextIdByCompositeKey(companyId, branchId, processId);
+
+				    // Convert the String to an int
+				    int nextId = Integer.parseInt(nextIdDholi);
+
+				    // Increment the ID by 1
+				    nextId++;
+
+				    // Format it as a 4-digit number and convert it back to a String
+				    String formattedNextId = String.format("%04d", nextId);
+
+				    // Update the Next_Id directly in the database using the repository
+				    processNextIdRepository.updateNextIdByCompositeKey(companyId, branchId, processId, formattedNextId);
+
+				    // Return the formatted next ID as a String
+				    return formattedNextId;
+				}
 }

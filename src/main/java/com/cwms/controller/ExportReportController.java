@@ -32,6 +32,7 @@ import com.cwms.repository.ExportGatePassRepo;
 import com.cwms.repository.ExportStuffRequestRepo;
 import com.cwms.repository.ExportStuffTallyRepo;
 import com.cwms.repository.GateInRepository;
+import com.cwms.service.ExportReportService;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.lowagie.text.DocumentException;
 
@@ -63,6 +64,154 @@ public class ExportReportController {
 
 	@Autowired
 	private TemplateEngine templateEngine;
+	
+	
+	
+	@Autowired
+	private ExportReportService exportReportService;
+
+//	GATE IN PASS - EXPORT CARGO CARTING
+	
+
+	@GetMapping(value = "/downLoadExportGateInReport")
+	public ResponseEntity<?> getExportTruckWiseGateInReport(
+	        @RequestParam("companyId") String companyid,
+	        @RequestParam("branchId") String branchId,
+	        @RequestParam("gateInId") String gateInId,
+	        @RequestParam("profitCenterId") String profitCenterId,
+	        @RequestParam("type") String type,
+	        @RequestParam("userId") String userId) {
+	    
+		System.out.println(companyid + " "  + branchId + " " + gateInId + " " + " profitCenterId " + " "+ type + " " + userId);
+		
+	    byte[] gateInReport = null; 
+
+	    try {
+	        // Check if the type is "GateIn" and fetch the report
+	        if ("GateIn".equals(type)) {
+	            gateInReport = exportReportService.getExportTruckWiseGateInReport(companyid, branchId, profitCenterId, gateInId, userId);
+	        } else {
+	            gateInReport = exportReportService.getExportTruckWiseJobOrderReport(companyid, branchId, profitCenterId, gateInId, userId);
+	        }
+
+	        // If no report is generated or returned, return a bad request with a message
+	        if (gateInReport == null || gateInReport.length == 0) {
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+	                    .body("No report available for the provided parameters.");
+	        }
+
+	        // Prepare the headers for the response
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF);
+	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=getExportTruckWiseGateInReport.pdf");
+
+	        // Return the report as a response
+	        return ResponseEntity.ok().headers(headers).body(gateInReport);
+
+	    } catch (Exception e) {
+	        // Log the exception (ensure to use a logger in real code)
+	        e.printStackTrace();  // Replace with proper logging (e.g., log.error(e.getMessage(), e))
+
+	        // Return an internal server error response with an error message
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An error occurred while generating the report: ");
+	    }
+	}
+
+	
+	
+
+	@GetMapping(value = "/downLoadExportBackToTownReport")
+	public ResponseEntity<?> getExportBackToTownReport(
+	        @RequestParam("companyId") String companyid,
+	        @RequestParam("branchId") String branchId,
+	        @RequestParam("backToTownTransId") String backToTownTransId,
+	        @RequestParam("profitCenterId") String profitCenterId,
+	        @RequestParam("userId") String userId) {
+	    
+		System.out.println(companyid + " "  + branchId + " " + backToTownTransId + " " +  profitCenterId   + " " + userId);
+		   try {  
+	    byte[] gateInReport  = exportReportService.getExportBackToTownReport(companyid, branchId, profitCenterId, backToTownTransId, userId);
+	        
+	        // If no report is generated or returned, return a bad request with a message
+	        if (gateInReport == null || gateInReport.length == 0) {
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+	                    .body("No report available for the provided parameters.");
+	        }
+
+	        // Prepare the headers for the response
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF);
+	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=downLoadExportBackToTownReport.pdf");
+
+	        // Return the report as a response
+	        return ResponseEntity.ok().headers(headers).body(gateInReport);
+
+	    } catch (Exception e) {
+	        // Log the exception (ensure to use a logger in real code)
+	        e.printStackTrace();  // Replace with proper logging (e.g., log.error(e.getMessage(), e))
+
+	        // Return an internal server error response with an error message
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An error occurred while generating the report: ");
+	    }
+	}
+	
+	
+
+	@GetMapping(value = "/downLoadExportPortReturnReport")
+	public ResponseEntity<?> getExportPortReturnReport(
+	        @RequestParam("companyId") String companyid,
+	        @RequestParam("branchId") String branchId,
+	        @RequestParam("gateInId") String gateInId,
+	        @RequestParam("profitCenterId") String profitCenterId,
+	        @RequestParam("userId") String userId) {
+	    
+		System.out.println(companyid + " "  + branchId + " " + gateInId + " " +  profitCenterId   + " " + userId);
+		   try {  
+	    byte[] gateInReport  = exportReportService.downLoadExportPortReturnReport(companyid, branchId, profitCenterId, gateInId, userId);
+	        
+	        // If no report is generated or returned, return a bad request with a message
+	        if (gateInReport == null || gateInReport.length == 0) {
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+	                    .body("No report available for the provided parameters.");
+	        }
+
+	        // Prepare the headers for the response
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF);
+	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=downLoadExportBackToTownReport.pdf");
+
+	        // Return the report as a response
+	        return ResponseEntity.ok().headers(headers).body(gateInReport);
+
+	    } catch (Exception e) {
+	        // Log the exception (ensure to use a logger in real code)
+	        e.printStackTrace();  // Replace with proper logging (e.g., log.error(e.getMessage(), e))
+
+	        // Return an internal server error response with an error message
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An error occurred while generating the report: ");
+	    }
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@PostMapping("/exportCartingReport")
 	public ResponseEntity<?> exportCartingReport(@RequestParam("cid") String cid,@RequestParam("bid") String bid,

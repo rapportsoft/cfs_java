@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SExportCargoJobTruckwiseReport</title>
+
+<style th:inline="text">
+/* Define page size and margins here */
+ @page {
+   
+    size: A4;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    margin: 0.7cm;
+    counter-increment: page;
+      
+    @top-center {
+        content: element(page-header);
+    }   
+}
+body {
+    margin: 0;
+}
+
+@page {
+    size: Wpx 1px;
+    margin-top: 310px;
+}
+
+
+@media print {
+	
+	
+
+	/* Center text horizontally and vertically */
+	.text-center {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* Style tables */
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+	.table th {
+		align-items: center;
+		border: 1px solid grey;
+		color: graytext;
+		font-size: 11pt;
+		height: 22px;
+	}
+	
+	.table thead {
+		height: 25px;
+		
+	}
+	.table td {
+		align-items: center;
+		border: 1px solid grey;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		font-size: 8pt;
+		padding: 2px;
+	}
+	.page-header {
+		position: running(page-header);
+		margin-top: 20px;
+	}
+	.horizontal {
+		width: 100%;
+		overflow: hidden; /* Clear any floats */
+		margin-top: 1pt;
+	}
+	
+		
+	.part-1 {
+		font-size: 10pt;
+		width: 39%;
+		float: left;
+	}
+	.part-2 {
+		font-size: 12pt;
+		width: 50%;
+		float: left;
+	}
+	.part-3 {
+		font-weight: bold;
+		font-size: 11pt;
+		width: 10%;
+		float: left;
+	}
+	.pageNumber::before {
+		content: counter(page);
+	}
+	@page :left { @top-center { content:element(page-header);
+		
+	}
+}
+
+@page :right { @top-center { content:element(page-header);
+	
+}
+
+}
+.pageNumber::before {
+	content: counter(page);
+}
+}
+</style>
+</head>
+<body>
+
+
+	<div class="page-header">
+	
+	
+		<div class=" text-center">
+		
+<div style="margin-top: 40px; padding: 0px; width: 80%; margin-left: auto; margin-right: auto;">
+    <div class="text-center" style="margin-bottom: 10px; ">
+ <span style="display: block; font-size: 15pt;"><strong><span th:text="${branch.companyName}"></span></strong></span> 
+					<span style="display: block; font-size: 10pt; margin-top: 5px;"><b>Container Freight Station</b></span> 
+					<span style="display: block; font-size: 10pt; margin-top: 3px;"><span th:text="${branch.address1}"></span></span>					
+    </div>
+</div> 			 
+<!--			<span style="font-weight: bold; font-size: 16pt;">GATE IN PASS - EXPORT CARGO CARTING</span><br /> 			
+-->			
+
+<hr style="border-top: 0.5px solid black; margin: 2;"/>  <!-- Horizontal line before -->
+<span style="font-weight: bold; font-size: 16pt;">JOB ORDER / GATE PASS</span>
+<hr style="border-top: 0.5px solid black; margin: 2;"/>  <!-- Horizontal line after -->
+
+
+			<table class="customer">
+					<tr>
+						<td style="width: 60%; vertical-align: top;">
+						<table style="border-collapse: collapse; font-size: 10pt;">
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">Gate Pass No</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>: <span class="value" th:text="${gateInId}"></span>							</strong></td>
+						  </tr>
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">J. O. No</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${jobOrderId}"></span>							</strong></td>
+						  </tr>
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; text-align: left;"><span class="label">A/C</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${onAccountOf}"></span>							</strong></td>
+						  </tr>
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">CHA</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${cha}"></span>							</strong></td>
+						  </tr>
+						
+						</table>
+						
+						
+						</td>
+						
+						
+						
+						<td style="width: 40%; padding-left: 10px; vertical-align: top;">
+							
+							<table style="border-collapse: collapse; font-size: 10pt;">
+													  <tr>
+													    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;text-align: left;"><span class="label">Gate In Date</span></td>
+													    <td style="padding: 1px; font-size: 10pt; text-align: left;">  <strong>														: <span class="value" th:text="${gateInDate}"></span></strong></td>
+													  </tr>
+													  
+													  
+													  <tr>
+													  													    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;text-align: left;"><span class="label">J. O. Date </span></td>
+													  													    <td style="padding: 1px; font-size: 10pt; text-align: left;">  <strong>														: <span class="value" th:text="${jobDate}"></span></strong></td>
+													  													  </tr>
+							</table>
+							
+							
+							</td>
+						
+			
+							</tr>
+			</table>			
+			
+			
+				
+		</div>    
+	
+		<h5><strong>
+					Please allow vehicle gate-in in the CFS.</strong>
+				</h5>	
+				
+				
+		<table class="table ">
+			<thead>
+ <tr class="text-center">
+    <th style="width: 10%; word-wrap: break-word;">SB No</th>
+    <th style="width: 13%; word-wrap: break-word;">SB Date</th>
+    <th style="width: 12%; word-wrap: break-word;">Declared Pkgs</th>
+    <th style="width: 11%; word-wrap: break-word;">Declared Weight(Kgs)</th>
+    <th style="width: 11%; word-wrap: break-word;">Truck No</th>  
+    <th style="width: 13%; word-wrap: break-word;">JO Pkgs</th>      
+    <th style="width: 13%; word-wrap: break-word;">JO Weight</th>
+	<th style="width: 18%; word-wrap: break-word;">	Equipment Name
+</th>
+</tr>
+      
+			</thead>
+		</table>
+
+
+	</div>
+	
+	
+	<div class="print-content">
+		
+			<table class="table">
+			<tbody>			
+			
+				<tr th:each="importData, invoicePData: ${reportData}" class="text-center">
+				    <td style="width: 10%; word-wrap: break-word;" th:text="${importData[2]}"></td>
+				    <td style="width: 13%; word-wrap: break-word;" th:text="${importData[3]}"></td>
+				    <td style="width: 12%; word-wrap: break-word;" th:text="${importData[7]}"></td>
+				    <td style="width: 11%; word-wrap: break-word;" th:text="${importData[8]}"></td>     
+				    <td style="width: 11%; word-wrap: break-word;" th:text="${importData[4]}"></td>
+				    <td style="width: 13%; word-wrap: break-word;" th:text="${importData[11]}"></td>
+				    <td style="width: 13%; word-wrap: break-word;" th:text="${importData[12]}"></td>
+					<td style="width: 18%; word-wrap: break-word;" th:text="${importData[15]}"></td>
+				
+				</tr>
+    				
+			 <tr>
+					<td class="text-center" style="font-weight: bold;" colspan="5">Total</td>
+				
+					<td class="text-center" style="font-weight: bold;" ><span th:text="${totalPackage}"></span></td>
+					<td class="text-center" style="font-weight: bold;" ><span th:text="${totalWeight}"></span></td>
+					<td></td>
+										
+				</tr> 
+			</tbody>
+
+		</table>
+		
+		
+		
+		
+		<table class="customer" style="width: 100%; margin-top: 15px; table-layout: fixed;">
+							<tr>
+								<td style="width: 34%; vertical-align: top; text-align: center;">
+									
+																												  <div style="margin-top: 40px;"> <!-- Added div to apply margin-top -->
+																												    <hr style="border: 0.5px solid black; width: 90%; margin: 0 auto 5px;" /> <!-- Increased border width and reduced margin-bottom -->
+																												    <strong><span class="label">Surveyor's Signature</span></strong>
+																												  </div>
+																												
+								  
+								</td>
+
+		
+								<td style="width: 33%; padding-left: 10px; vertical-align: top; text-align: center;">
+															
+															 <div style="margin-top: 40px;"> <!-- Added div to apply margin-top -->
+																												    <hr style="border: 0.5px solid black; width: 90%; margin: 0 auto 5px;" /> <!-- Increased border width and reduced margin-bottom -->
+																												    <strong><span class="label">Labour Supervisor Signature</span></strong>
+																												  </div>
+															
+															</td>
+															
+															
+															<td style="width: 33%; padding-left: 10px; vertical-align: top; text-align: center;">
+																														 <div style="margin-top: 40px;"> <!-- Added div to apply margin-top -->
+																												    <hr style="border: 0.5px solid black; width: 90%; margin: 0 auto 5px;" /> <!-- Increased border width and reduced margin-bottom -->
+																												    <strong><span class="label">Executive Signature</span></strong>
+																												  </div>
+																														
+																														
+																														</td>
+														
+											
+															</tr>
+											</table>
+		
+		<br />
+		
+		<span style="font-size: 10pt;"> 		<strong>Generated By :<span th:text="${createdBy}"> </span> 		</strong></span>	
+		
+	</div>
+
+	<script>
+        // JavaScript code to show the header table on each page
+          const allPages = document.querySelectorAll('.page-break');
+
+        // Show header table on each page
+        allPages.forEach(page => {
+            const clonedHeader = headerTable.cloneNode(true);
+            page.insertBefore(clonedHeader, page.firstChild);
+        });
+
+        // Other JavaScript code remains unchanged
+    </script>
+</body>
+</html>

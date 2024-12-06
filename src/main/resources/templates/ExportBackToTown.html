@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+<head>	
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SExportBacktoTownReport</title>
+
+<style th:inline="text">
+/* Define page size and margins here */
+ @page {
+   
+    size: A4;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    margin: 0.7cm;
+    counter-increment: page;
+      
+    @top-center {
+        content: element(page-header);
+    }   
+}
+body {
+    margin: 0;
+}
+
+@page {
+    size: Wpx 1px;
+    margin-top: 200px;
+}
+
+
+@media print {
+	
+	
+
+	/* Center text horizontally and vertically */
+	.text-center {
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* Style tables */
+	.table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+	.table th {
+		align-items: center;
+		border: 1px solid grey;
+		color: graytext;
+		font-size: 11pt;
+		height: 22px;
+	}
+	
+	.table thead {
+		height: 25px;
+		
+	}
+	.table td {
+		align-items: center;
+		border: 1px solid grey;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		font-size: 8pt;
+		padding: 2px;
+	}
+	.page-header {
+		position: running(page-header);
+		margin-top: 20px;
+	}
+	.horizontal {
+		width: 100%;
+		overflow: hidden; /* Clear any floats */
+		margin-top: 1pt;
+	}
+	
+		
+	.part-1 {
+		font-size: 10pt;
+		width: 39%;
+		float: left;
+	}
+	.part-2 {
+		font-size: 12pt;
+		width: 50%;
+		float: left;
+	}
+	.part-3 {
+		font-weight: bold;
+		font-size: 11pt;
+		width: 10%;
+		float: left;
+	}
+	.pageNumber::before {
+		content: counter(page);
+	}
+	@page :left { @top-center { content:element(page-header);
+		
+	}
+}
+
+@page :right { @top-center { content:element(page-header);
+	
+}
+
+}
+.pageNumber::before {
+	content: counter(page);
+}
+}
+</style>
+</head>
+<body>
+
+
+	<div class="page-header">
+	
+	
+		<div class=" text-center">
+		
+<div style="margin-top: 40px; padding: 0px; width: 80%; margin-left: auto; margin-right: auto;">
+    <div class="text-center" style="margin-bottom: 10px; ">
+ <span style="display: block; font-size: 15pt;"><strong><span th:text="${branch.companyName}"></span></strong></span>					
+						
+    </div>
+</div> 			 
+		
+
+<hr style="border-top: 0.5px solid black; margin: 2;"/>
+<span style="font-weight: bold; font-size: 13pt;">BACK TO TOWN WORK ORDER</span>
+<hr style="border-top: 0.5px solid black; margin: 2;"/>
+
+
+			<table class="customer">
+					<tr>
+						<td style="width: 70%; vertical-align: top;">
+						<table style="border-collapse: collapse; font-size: 10pt;">
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">Work Order Number</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>: <span class="value" th:text="${workOrderId}"></span>							</strong></td>
+						  </tr>
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">Work Order Date</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${workOrderDate}"></span>							</strong></td>
+						  </tr>
+						  
+						  <tr>
+						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">CHA Name</span></td>
+						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${cha}"></span>							</strong></td>
+						  </tr>
+						  
+						  <tr>
+						  						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; text-align: left;"><span class="label">Liner Agent Name</span></td>
+						  						    <td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value" th:text="${lineAgent}"></span>							</strong></td>
+						  						  </tr>					  
+						 
+						</table>
+						
+						
+						</td>
+						
+						
+						
+						<td style="width: 30%; padding-left: 10px; vertical-align: top;">
+							
+							<table style="border-collapse: collapse; font-size: 10pt;">
+													  <tr>
+													    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;text-align: left;"><span class="label">Truck No</span></td>
+													    <td style="padding: 1px; font-size: 10pt; text-align: left;">  <strong>	: <span class="value" th:text="${truckNo}"></span></strong></td>
+													  </tr>
+							</table>
+							
+							
+							</td>
+						
+			
+							</tr>
+			</table>			
+			
+			
+				
+		</div>    
+	
+		<hr style="border: 0.5px solid black; width: 100%; margin: 5px auto 5px;" />
+				
+				
+		<table class="table" style="margin-top: 15px;">
+			<thead>
+ <tr class="text-center">
+    <th style="width: 16%; word-wrap: break-word;">Shipping Bill No</th>
+    <th style="width: 17%; word-wrap: break-word;">Shipping Bill Date</th>
+    <th style="width: 17%; word-wrap: break-word;">Cargo Wt.in Kgs</th>
+    <th style="width: 16%; word-wrap: break-word;">No of Pkgs</th>
+    <th style="width: 17%; word-wrap: break-word;">Pkg Type</th>  
+    <th style="width: 17%; word-wrap: break-word;">Cargo Description</th>      
+</tr>
+      
+			</thead>
+		</table>
+
+
+	</div>
+	
+	
+	<div class="print-content">
+		
+			<table class="table">
+			<tbody>			
+			
+ <tr th:each="importData, invoicePData: ${reportData}" class="text-center">
+    <td style="width: 16%; word-wrap: break-word;" th:text="${importData[0]}"></td>
+    <td style="width: 17%; word-wrap: break-word;" th:text="${importData[1]}"></td>
+    <td style="width: 17%; word-wrap: break-word;" th:text="${importData[9]}"></td>
+    <td style="width: 16%; word-wrap: break-word;" th:text="${importData[6]}"></td>     
+    <td style="width: 17%; word-wrap: break-word;" th:text="${importData[10]}"></td>
+    <td style="width: 17%; word-wrap: break-word;" th:text="${importData[8]}"></td>
+
+</tr>
+    				
+			
+			</tbody>
+
+		</table>
+		
+		<div style="text-align: center; margin-top: 5px;">
+		  <span>Equipment:</span>
+		</div>
+
+		
+		
+		
+		<table class="customer" style="width: 100%; margin-top: 15px; table-layout: fixed;">
+		  <tr>
+		    <td style="width: 50%; vertical-align: top; ">
+		      <table style="border-collapse: collapse; font-size: 10pt; width: 100%;">
+		                
+				<tr>
+					<td style="font-size: 10pt; text-align: center;">
+					  <div style="margin-top: 50px;"> <!-- Added div to apply margin-top -->
+					    <hr style="border: 0.5px solid black; width: 100%; margin: 0 auto 5px;" /> <!-- Increased border width and reduced margin-bottom -->
+					   
+						<div><strong><span th:text="${branch.companyName}"></span></strong></div> <!-- Block element for new line -->
+						   <div><strong><span class="label">Surveyor Signature</span></strong></div> <!-- Block element for new line -->
+					  </div>
+					</td>
+
+
+
+				</tr>
+
+		      </table>
+		    </td>
+		
+		    <td style="width: 50%; padding-left: 10px; vertical-align: top;">
+		      <table style="border-collapse: collapse; font-size: 10pt; width: 100%;">
+		       		        
+		        <tr>
+					<td style="font-size: 10pt; text-align: center;">
+										  <div style="margin-top: 50px;"> <!-- Added div to apply margin-top -->
+										    <hr style="border: 0.5px solid black; width: 100%; margin: 0 auto 5px;" /> <!-- Increased border width and reduced margin-bottom -->
+											<strong><span th:text="${branch.companyName}"></span></strong>
+											 <strong><span class="label">Executive Signature</span></strong>
+										  </div>
+										</td>
+		        </tr>
+		      </table>
+		    </td>
+		  </tr>
+		</table>
+
+		<br />
+		
+		
+	</div>
+
+	<script>
+        // JavaScript code to show the header table on each page
+          const allPages = document.querySelectorAll('.page-break');
+
+        // Show header table on each page
+        allPages.forEach(page => {
+            const clonedHeader = headerTable.cloneNode(true);
+            page.insertBefore(clonedHeader, page.firstChild);
+        });
+
+        // Other JavaScript code remains unchanged
+    </script>
+</body>
+</html>

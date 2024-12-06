@@ -4234,6 +4234,30 @@ public GateIn(String gateInId, String gateInType, String profitcentreId, BigDeci
 	this.lineNo = lineNo;
 }
 
+//Port Return Report
+
+public GateIn(String gateInId, Date inGateInDate, String containerNo, String containerSize, String containerType,
+	    String containerSealNo, String vehicleNo, String transporterName, String gateInType,
+	    String importerName, String cha, String sl, String comments, String commodityDescription, String containerHealth, 
+	    String shippingLineName, String transporter) {
+	    this.gateInId = gateInId;
+	    this.inGateInDate = inGateInDate;
+	    this.containerNo = containerNo;
+	    this.containerSize = containerSize;
+	    this.containerType = containerType;
+	    this.containerSealNo = containerSealNo;
+	    this.vehicleNo = vehicleNo;
+	    this.transporterName = transporterName;
+	    this.gateInType = gateInType;
+	    this.importerName = importerName;
+	    this.cha = cha;
+	    this.sl = sl;
+	    this.comments = comments;
+	    this.commodityDescription = commodityDescription;
+	    this.containerHealth = containerHealth;
+	    this.shippingLineName = shippingLineName;
+	    this.transporter = transporter;
+	}
 
 
 }

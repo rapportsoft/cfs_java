@@ -13,6 +13,15 @@ import com.cwms.entities.Branch;
 @EnableJpaRepositories
 public interface BranchRepo extends JpaRepository<Branch, String> {
 	
+	@Query("SELECT NEW com.cwms.entities.Branch(i.companyId, i.branchId, i.branchName, i.address1, i.address2, i.GST_No, i.Pan_No, i.address3, i.city, i.state, i.country, i.pin, i.stdCode, i.phoneNo, i.cfsCode, c.Company_name) " +
+		       "FROM Branch i " +
+		       "LEFT JOIN Company c on i.companyId = c.Company_Id AND c.status <> 'D' " +
+		       "WHERE i.companyId = :companyId AND i.branchId = :branchId AND i.status <> 'D'")
+	Branch getCompleteCompanyAndBranch(@Param("companyId") String companyId, @Param("branchId") String branchId);
+
+	
+	
+	
 	@Query("SELECT NEW com.cwms.entities.Branch(i.companyId, i.branchId, i.branchName) " +
 	           "FROM Branch i " +
 	           "WHERE i.companyId = :companyId AND i.status <> 'D'")

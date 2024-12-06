@@ -139,6 +139,22 @@ public class Branch {
     @Column(name="Cfs_code",length = 20)
     private String cfsCode;
     
+    transient private String companyName;
+    
+    
+    
+   	public String getCompanyName() {
+   		return companyName;
+   	}
+
+
+
+
+   	public void setCompanyName(String companyName) {
+   		this.companyName = companyName;
+   	}
+
+    
     
         
 	public Branch(String companyId, String branchId, String branchName, Character bizCentreType, String baseCurrency,
@@ -802,6 +818,27 @@ public class Branch {
 		this.branchName = branchName;
 	}
 
-	
+
+public Branch(String companyId, String branchId, String branchName, String address1, String address2, String gST_No,
+		String pan_No, String address3, String city, String state, String country, String pin, String stdCode,
+		String phoneNo, String cfsCode, String companyName) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.branchName = branchName;
+	this.address1 = address1;
+	this.address2 = address2;
+	GST_No = gST_No;
+	Pan_No = pan_No;
+	this.address3 = address3;
+	this.city = city;
+	this.state = state;
+	this.country = country;
+	this.pin = pin;
+	this.stdCode = stdCode;
+	this.phoneNo = phoneNo;
+	this.cfsCode = cfsCode;
+	this.companyName = companyName;
+}
 	
 }

@@ -176,7 +176,8 @@ public class GateInService {
 	            	System.out.println("Here for :  } else { "+ gateInLoop.getGateInId() + " gateInLoop.getDocRefNo() "+gateInLoop.getDocRefNo());
 
 	            	String autoGateInId = processService.autoExportGateInId(companyId, branchId, "P00102");
-
+	            	String autojobOrderId = processService.autoExportGateInJobOrderId(companyId, branchId, "P00112");
+	            	
 	                ExportSbEntry exportSbEntry = exportSbService.getExportSbEntry(companyId, branchId, 
 	                                                                                gateInLoop.getDocRefNo(), 
 	                                                                                gateInLoop.getErpDocRefNo());
@@ -192,6 +193,8 @@ public class GateInService {
 	              //  gateInLoop.setGateInPackages(gateInLoop.getGateInPackages().add(gateInLoop.getQtyTakenIn()));
 	                gateInLoop.setGateInId(autoGateInId);
 	                gateInLoop.setStatus("A");
+	                gateInLoop.setJobOrderId(autojobOrderId);
+	                gateInLoop.setJobDate(currentDate);
 	                gateInLoop.setCreatedBy(user);
 	                gateInLoop.setCreatedDate(currentDate);
 	                gateInLoop.setEditedBy(user);
