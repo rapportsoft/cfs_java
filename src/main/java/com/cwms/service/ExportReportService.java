@@ -162,7 +162,7 @@ public class ExportReportService {
 		        context.setVariable("reportData", exportTruckWiseGateInReport);
 			
 		        // Process the Thymeleaf template with dynamic values
-		        String htmlContent = templateEngine.process("ExportTruckWisejobOrder", context);
+		        String htmlContent = templateEngine.process("ExportTruckWiseJobOrder", context);
 
 		        // Create an ITextRenderer instance
 		        ITextRenderer renderer = new ITextRenderer();
