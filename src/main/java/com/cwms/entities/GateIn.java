@@ -672,13 +672,42 @@ public class GateIn implements Cloneable{
 	private String slName;
 	
 	
+	transient private BigDecimal sbGateInPackages;
+    transient private BigDecimal sbCartedPackages;
+    transient private BigDecimal sbPackages;
+    
+    
+    
 	
 	
 	
 	
 	
 	
-	
+
+	public BigDecimal getSbGateInPackages() {
+		return sbGateInPackages;
+	}
+
+	public void setSbGateInPackages(BigDecimal sbGateInPackages) {
+		this.sbGateInPackages = sbGateInPackages;
+	}
+
+	public BigDecimal getSbCartedPackages() {
+		return sbCartedPackages;
+	}
+
+	public void setSbCartedPackages(BigDecimal sbCartedPackages) {
+		this.sbCartedPackages = sbCartedPackages;
+	}
+
+	public BigDecimal getSbPackages() {
+		return sbPackages;
+	}
+
+	public void setSbPackages(BigDecimal sbPackages) {
+		this.sbPackages = sbPackages;
+	}
 
 	public String getReworkId() {
 		return reworkId;
@@ -4257,6 +4286,34 @@ public GateIn(String gateInId, Date inGateInDate, String containerNo, String con
 	    this.containerHealth = containerHealth;
 	    this.shippingLineName = shippingLineName;
 	    this.transporter = transporter;
+	}
+
+
+//New Carting
+public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, String onAccountOf, String cha,
+		String commodityDescription, BigDecimal actualNoOfPackages, BigDecimal qtyTakenIn, String vehicleNo,
+		BigDecimal cargoWeight,BigDecimal fob, Date inGateInDate, Date docRefDate, BigDecimal grossWeight, BigDecimal cartedPackages
+		, BigDecimal sbCartedPackages, BigDecimal sbGateInPackages, BigDecimal sbPackages) {
+	super();
+	this.gateInId = gateInId;
+	this.erpDocRefNo = erpDocRefNo;
+	this.docRefNo = docRefNo;
+	this.srNo = srNo;
+	this.onAccountOf = onAccountOf;
+	this.cha = cha;
+	this.commodityDescription = commodityDescription;
+	this.actualNoOfPackages = actualNoOfPackages;
+	this.qtyTakenIn = qtyTakenIn;
+	this.vehicleNo = vehicleNo;
+	this.cargoWeight = cargoWeight;
+	this.fob = fob;
+	this.inGateInDate = inGateInDate;
+	this.docRefDate = docRefDate;
+	this.grossWeight = grossWeight;
+	this.cartedPackages = cartedPackages;
+	this.sbCartedPackages = sbCartedPackages;
+	this.sbGateInPackages = sbGateInPackages;
+	this.sbPackages = sbPackages;
 	}
 
 

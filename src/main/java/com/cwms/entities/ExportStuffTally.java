@@ -3185,13 +3185,13 @@ public class ExportStuffTally implements Cloneable {
 	    @Column(name = "POL", length = 100)
 	    private String pol;
 
-	    @Column(name = "Terminal", length = 10)
+	    @Column(name = "Terminal", length = 50)
 	    private String terminal;
 
 	    @Column(name = "pod", length = 140)
 	    private String pod;
 
-	    @Column(name = "Final_POD", length = 40)
+	    @Column(name = "Final_POD", length = 50)
 	    private String finalPod;
 
 	    @Column(name = "Container_No", length = 11)
@@ -6217,7 +6217,76 @@ public class ExportStuffTally implements Cloneable {
 
 				
 		
-		
+				
+//				Stuff created By
+					
+
+					public ExportStuffTally(String stuffTallyId, String sbTransId, String sbNo, String movementType,
+							Date stuffTallyDate, Date sbDate, String agentSealNo, String vesselId, String voyageNo,
+							String rotationNo, Date rotationDate, String terminal, String pod, String finalPod, String containerNo,String stuffId,
+							String gateInId, String containerSize, String containerType, String onAccountOf, String cha,
+							BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal balanceQty,BigDecimal cargoWeight, BigDecimal totalCargoWeight,
+							BigDecimal tareWeight, String shippingAgent, String shippingLine, String commodity,
+							String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
+							String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
+							String stuffMode, String vesselName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
+							Date gateInDate, String cargoType, Date berthingDate, String reworkFlag, String createdBy) {
+						this.stuffTallyId = stuffTallyId;
+						this.sbTransId = sbTransId;
+						this.sbNo = sbNo;
+						this.movementType = movementType;
+						this.stuffTallyDate = stuffTallyDate;
+						this.sbDate = sbDate;
+						this.agentSealNo = agentSealNo;
+						this.vesselId = vesselId;
+						this.voyageNo = voyageNo;
+						this.rotationNo = rotationNo;
+						this.rotationDate = rotationDate;
+						this.terminal = terminal;
+						this.pod = pod;
+						this.finalPod = finalPod;
+						this.containerNo = containerNo;
+						this.stuffId = stuffId;
+						this.gateInId = gateInId;
+						this.containerSize = containerSize;
+						this.containerType = containerType;
+						this.onAccountOf = onAccountOf;
+						this.cha = cha;
+						this.stuffRequestQty = stuffRequestQty;
+						this.stuffedQty = stuffedQty;
+						this.balanceQty = balanceQty;
+						this.cargoWeight = cargoWeight;
+						this.totalCargoWeight = totalCargoWeight;
+						this.tareWeight = tareWeight;
+						this.shippingAgent = shippingAgent;
+						this.shippingLine = shippingLine;
+						this.commodity = commodity;
+						this.customsSealNo = customsSealNo;
+						this.viaNo = viaNo;
+						this.exporterName = exporterName;
+						this.consignee = consignee;
+						this.fob = fob;
+						this.status = status;
+						this.stuffTallyWoTransId = stuffTallyWoTransId;
+						this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+						this.deliveryOrderNo = deliveryOrderNo;
+						this.stuffMode = stuffMode;
+						this.vesselName = vesselName;
+						this.sbPackages = sbPackages;
+						this.stuffedQuantity = stuffedQuantity;
+						this.sbWt = sbWt;
+						this.gateInDate = gateInDate;
+						this.cargoType = cargoType;
+						this.berthingDate = berthingDate;
+						this.reworkFlag = reworkFlag;
+						this.createdBy = createdBy;
+					}
+
+
+
+					
+			
+		    
 		
 		
 	    

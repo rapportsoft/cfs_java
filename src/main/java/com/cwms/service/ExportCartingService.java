@@ -58,8 +58,9 @@ public class ExportCartingService {
 	
 	
 	
+//	
 //	@Transactional
-//	public ResponseEntity<?> addExportCarting(String companyId, String branchId, List<ExportCarting> cartingList, String User)
+//	public ResponseEntity<?> addExportCarting(String companyId, String branchId, List<ExportCarting> cartingList, String User, String status)
 //	{
 //		Date currentDate = new Date();	
 //		String autoCartingTransId = "";
@@ -106,14 +107,10 @@ public class ExportCartingService {
 //
 //				BigDecimal difference = ExistingPackages.subtract(newPackages);
 //				
-//				System.out.println("difference "+difference + "\n ExistingPackages :  "+ ExistingPackages + " \n newPackages "+newPackages);
+////				System.out.println("difference "+difference + "\n ExistingPackages :  "+ ExistingPackages + " \n newPackages "+newPackages);
 //				
 //				gateInByIds.setCartedPackages(gateInByIds.getCartedPackages().add(difference));
 //				exportSbCargoEntry.setCartedPackages(exportSbCargoEntry.getCartedPackages().add(difference));
-//				
-//				
-//				ExportCarting save = cartingRepo.save(existing);
-//				cartingListToSend.add(save);
 //				
 //				
 //				existing.setAreaOccupied(cartingEntry.getAreaOccupied());
@@ -121,6 +118,22 @@ public class ExportCartingService {
 //				existing.setActualNoOfPackages(cartingEntry.getActualNoOfPackages());
 //				existing.setExcessPackages(cartingEntry.getExcessPackages());
 //				existing.setShortagePackages(cartingEntry.getShortagePackages());
+//				
+//				existing.setStatus(status.equals("A") ? status : existing.getStatus());
+//				
+//				System.out.println( "status "+ status + " getApprovedBy \n" + existing.getApprovedBy());
+//				if (existing.getApprovedBy() == null || existing.getApprovedBy().trim().isEmpty()) {
+//				    System.out.println(" IN ");
+//				    existing.setApprovedBy(status.equals("A") ? User : existing.getApprovedBy());
+//				}
+//
+//				
+//				System.out.println(" AFTER "+existing.getApprovedBy());
+//				ExportCarting save = cartingRepo.save(existing);
+//				cartingListToSend.add(save);
+//				
+//				
+//				
 //
 //			}
 ////			Add
@@ -149,9 +162,16 @@ public class ExportCartingService {
 //                cartingEntry.setFinYear(helperMethods.getFinancialYear());				
 //				cartingEntry.setCreatedBy(User);
 //				cartingEntry.setCreatedDate(currentDate);	
-//				cartingEntry.setApprovedBy(User);
+//				cartingEntry.setApprovedBy(status.equals("A") ? User : " ");
 //				cartingEntry.setApprovedDate(currentDate);
-//				cartingEntry.setStatus("A");	
+////				cartingEntry.setStatus("A");	
+//				
+//				if (cartingEntry.getApprovedBy() == null || cartingEntry.getApprovedBy().trim().isEmpty()) {
+//				    System.out.println(" IN ");
+//				    cartingEntry.setApprovedBy(status.equals("A") ? User : cartingEntry.getApprovedBy());
+//				}
+//				
+//				cartingEntry.setStatus(status.equals("A") ? status : "N");
 //				ExportCarting save = cartingRepo.save(cartingEntry);
 //				cartingListToSend.add(save);
 //				
@@ -167,10 +187,10 @@ public class ExportCartingService {
 //				grid.setBlockCellNo(cartingEntry.getGridBlock());
 //				grid.setYardPackages(cartingEntry.getYardPackages().intValue());				
 //				grid.setTransType("EXP");
-//				grid.setAreaReleased(cartingEntry.getAreaOccupied());
+//				grid.setAreaReleased(BigDecimal.ZERO);
 //				grid.setCellArea(cartingEntry.getAreaOccupied());
 //				grid.setCellAreaAllocated(cartingEntry.getAreaOccupied());
-//				grid.setCellAreaUsed(cartingEntry.getAreaOccupied());
+//				grid.setCellAreaUsed(new BigDecimal("0"));
 //				
 //				grid.setCreatedBy(User);
 //				grid.setCreatedDate(currentDate);
@@ -196,9 +216,14 @@ public class ExportCartingService {
 //			exportSbService.saveExportSbCargoEntry(exportSbCargoEntry);
 //			
 //		}
+//ExportCarting exportCarting = cartingListToSend.get(0);
 //		
-//		return ResponseEntity.ok(cartingListToSend);
+//		List<ExportCarting> selectedGateInEntry = cartingRepo.getSelectedCartingEntry(companyId, branchId, exportCarting.getProfitcentreId(), exportCarting.getCartingTransId(), "EXP");
+//
+//		return ResponseEntity.ok(selectedGateInEntry);
 //	}
+//	
+	
 	
 	
 	@Transactional
@@ -244,8 +269,8 @@ public class ExportCartingService {
 				existing.setDamageComments(cartingEntry.getDamageComments());
 				
 								
-				BigDecimal ExistingPackages = existing.getActualNoOfPackages().add(existing.getShortagePackages()).subtract(existing.getExcessPackages());
-				BigDecimal newPackages = cartingEntry.getActualNoOfPackages().add(cartingEntry.getShortagePackages()).subtract(cartingEntry.getExcessPackages());
+				BigDecimal ExistingPackages = existing.getActualNoOfPackages();
+				BigDecimal newPackages = cartingEntry.getActualNoOfPackages();
 
 				BigDecimal difference = ExistingPackages.subtract(newPackages);
 				
@@ -260,6 +285,9 @@ public class ExportCartingService {
 				existing.setActualNoOfPackages(cartingEntry.getActualNoOfPackages());
 				existing.setExcessPackages(cartingEntry.getExcessPackages());
 				existing.setShortagePackages(cartingEntry.getShortagePackages());
+				
+				
+				
 				
 				existing.setStatus(status.equals("A") ? status : existing.getStatus());
 				
@@ -285,17 +313,13 @@ public class ExportCartingService {
 				gateInByIds.setCartingStatus("Y");
 				gateInByIds.setCartedPackages(
 					    gateInByIds.getCartedPackages().add(
-					        cartingEntry.getActualNoOfPackages()
-					            .add(cartingEntry.getShortagePackages())
-					            .subtract(cartingEntry.getExcessPackages())
+					        cartingEntry.getActualNoOfPackages()				            
 					    )
 					);
 				
 				
 				exportSbCargoEntry.setCartedPackages(exportSbCargoEntry.getCartedPackages()
-						.add(cartingEntry.getActualNoOfPackages()
-			            .add(cartingEntry.getShortagePackages())
-			            .subtract(cartingEntry.getExcessPackages())));
+						.add(cartingEntry.getActualNoOfPackages()));
 				
 				gateInByIds.setCartingTransId(autoCartingTransId);
 				
@@ -324,15 +348,16 @@ public class ExportCartingService {
 				grid.setProcessTransId(autoCartingTransId);
 				grid.setLineNo(Integer.parseInt(cartingEntry.getCartingLineId()));
 				grid.setSubSrNo(1);
-				grid.setYardLocation(cartingEntry.getGridBlock());
+				grid.setYardLocation(cartingEntry.getGridLoc());
 				grid.setYardBlock(cartingEntry.getGridBlock());
-				grid.setBlockCellNo(cartingEntry.getGridBlock());
+				grid.setBlockCellNo(cartingEntry.getGridCellNo());
 				grid.setYardPackages(cartingEntry.getYardPackages().intValue());				
 				grid.setTransType("EXP");
 				grid.setAreaReleased(BigDecimal.ZERO);
-				grid.setCellArea(cartingEntry.getAreaOccupied());
+				grid.setCellArea(cartingEntry.getYardArea());
 				grid.setCellAreaAllocated(cartingEntry.getAreaOccupied());
-				grid.setCellAreaUsed(new BigDecimal("0"));
+				
+				grid.setCellAreaUsed(cartingEntry.getYardAreaUsed().add(cartingEntry.getAreaOccupied()));
 				
 				grid.setCreatedBy(User);
 				grid.setCreatedDate(currentDate);
@@ -340,7 +365,7 @@ public class ExportCartingService {
 				grid.setEditedDate(currentDate);
 				grid.setApprovedBy(User);
 				grid.setApprovedDate(currentDate);
-				grid.setStatus("A");	
+				grid.setStatus("A");
 				
 				impGridRepo.save(grid);
 				

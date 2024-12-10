@@ -475,6 +475,8 @@ public class ExportStuffRequestService {
 					dataForUpdateEntry.setVoyageNo(exportStuffLoop.getVoyageNo());
 					dataForUpdateEntry.setShift(exportStuffLoop.getShift());				
 					dataForUpdateEntry.setContainerHealth(exportStuffLoop.getContainerHealth());
+					dataForUpdateEntry.setPod(exportStuffLoop.getPod());
+					
 
 					System.out.println("dataForUpdateEntry \n"+dataForUpdateEntry);
 				
@@ -730,6 +732,7 @@ public class ExportStuffRequestService {
 			    map.put("inGateInDate", row[9]);
 			    map.put("deliveryOrderNo", row[10]);
 			    map.put("gateInId", row[11]);
+			    map.put("containerHealth", row[12]);
 			    return map;
 			}).orElse(null); // This will be null if no record is found
 

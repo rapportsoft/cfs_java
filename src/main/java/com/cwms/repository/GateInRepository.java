@@ -16,6 +16,26 @@ import com.cwms.entities.GateIn;
 
 public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
+	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight, E.cartedPackages, ex.cartedPackages, ex.gateInPackages, ex.noOfPackages) " +
+		       "FROM GateIn E " +
+		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
+		       "LEFT JOIN ExportSbCargoEntry ex ON E.companyId = ex.companyId AND E.branchId = ex.branchId AND E.erpDocRefNo = ex.sbTransId AND E.docRefNo=ex.sbNo AND ex.status <> 'D' " +
+		       "WHERE E.companyId = :companyId " +
+		       "AND E.branchId = :branchId " +
+		       "AND E.profitcentreId = :profitcentreId " +
+		       "AND E.containerStatus != 'MTY' " +
+		       "AND E.qtyTakenIn - E.cartedPackages > 0 " +
+		       "AND E.vehicleNo = :vehicleNo " +
+		       "AND E.gateInType = :type " +		       
+		       "AND E.status <> 'D' " +
+		       "ORDER BY E.createdDate DESC")
+		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
+		                                   @Param("branchId") String branchId,
+		                                   @Param("profitcentreId") String profitcentreId,
+		                                   @Param("vehicleNo") String vehicleNo,
+		                                   @Param("type") String type);
+
+	
 	
 
 	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.gateInType, "
@@ -108,23 +128,23 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		    @Param("profitcentreId") String profitcentreId
 		);
 
-	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight, E.cartedPackages) " +
-		       "FROM GateIn E " +
-		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
-		       "WHERE E.companyId = :companyId " +
-		       "AND E.branchId = :branchId " +
-		       "AND E.profitcentreId = :profitcentreId " +
-		       "AND E.containerStatus != 'MTY' " +
-		       "AND E.qtyTakenIn - E.cartedPackages > 0 " +
-		       "AND E.vehicleNo = :vehicleNo " +
-		       "AND E.gateInType = :type " +		       
-		       "AND E.status <> 'D' " +
-		       "ORDER BY E.createdDate DESC")
-		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
-		                                   @Param("branchId") String branchId,
-		                                   @Param("profitcentreId") String profitcentreId,
-		                                   @Param("vehicleNo") String vehicleNo,
-		                                   @Param("type") String type);
+//	@Query("SELECT NEW com.cwms.entities.GateIn(E.gateInId, E.erpDocRefNo, E.docRefNo, E.srNo, E.onAccountOf, pa.partyName, E.commodityDescription, E.actualNoOfPackages, E.qtyTakenIn, E.vehicleNo, E.cargoWeight, E.fob, E.inGateInDate, E.docRefDate, E.grossWeight, E.cartedPackages) " +
+//		       "FROM GateIn E " +
+//		       "Left Join Party pa on E.companyId = pa.companyId and E.branchId = pa.branchId and E.onAccountOf = pa.partyId and pa.status != 'D' " +
+//		       "WHERE E.companyId = :companyId " +
+//		       "AND E.branchId = :branchId " +
+//		       "AND E.profitcentreId = :profitcentreId " +
+//		       "AND E.containerStatus != 'MTY' " +
+//		       "AND E.qtyTakenIn - E.cartedPackages > 0 " +
+//		       "AND E.vehicleNo = :vehicleNo " +
+//		       "AND E.gateInType = :type " +		       
+//		       "AND E.status <> 'D' " +
+//		       "ORDER BY E.createdDate DESC")
+//		List<GateIn> getGateInEntryFromVehicleNo(@Param("companyId") String companyId, 
+//		                                   @Param("branchId") String branchId,
+//		                                   @Param("profitcentreId") String profitcentreId,
+//		                                   @Param("vehicleNo") String vehicleNo,
+//		                                   @Param("type") String type);
 
 	
 	

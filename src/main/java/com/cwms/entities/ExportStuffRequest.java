@@ -121,7 +121,7 @@ public class ExportStuffRequest implements Cloneable {
     @Column(name = "Container_Type", length = 6, nullable = false)
     private String containerType;
 
-    @Column(name = "POD", length = 40)
+    @Column(name = "POD", length = 50)
     private String pod;
 
     @Column(name = "Comments", length = 150, nullable = true)

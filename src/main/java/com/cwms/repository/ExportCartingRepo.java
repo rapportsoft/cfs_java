@@ -11,6 +11,35 @@ import com.cwms.entities.ExportCarting;
 public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 {
 	
+	
+	@Query("SELECT NEW com.cwms.entities.ExportCarting( "
+	        + "E.companyId, E.branchId, E.cartingTransId, E.cartingLineId, E.finYear, "
+	        + "E.profitcentreId, E.sbTransId, E.sbNo, E.sbLineNo, E.sbDate, "
+	        + "E.cartingTransDate, E.gateInId, E.gateInDate, E.crgExamId, "
+	        + "E.shift, E.vehicleNo, o.partyName, E.commodity, "
+	        + "E.gateInPackages, E.gateInWeight, E.actualNoOfPackages, E.actualNoOfWeight, "
+	        + "E.fob, E.gateInType, E.invoiceType, E.gridLocation, "
+	        + "E.gridBlock, E.gridCellNo, E.stuffReqId, E.stuffedNoOfPackages, "
+	        + "E.areaOccupied, E.yardPackages, E.damageComments, E.status, "
+	        + "E.createdBy, E.createdDate, E.editedBy, E.editedDate, "
+	        + "E.approvedBy, E.approvedDate, E.fromSbTransId, E.fromSbNo, "
+	        + "E.fromSbLineNo, E.lastStorageInvoiceDate, E.lastStorageFlag, "
+	        + "E.storageWeeks, E.storageDays, E.storageMonths, "
+	        + "E.handlingCharges, E.excessPackages, E.shortagePackages, "
+	        + "E.damagePackages, g.cartedPackages, E.gridLoc, ex.noOfPackages, ex.gateInPackages, ex.cartedPackages ) "
+	        + "FROM ExportCarting E "
+	        + "LEFT JOIN Party o ON E.companyId = o.companyId AND E.branchId = o.branchId AND E.onAccountOf = o.partyId AND o.status != 'D' "
+	        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND E.profitcentreId = g.profitcentreId AND E.sbNo = g.docRefNo AND E.sbTransId = g.erpDocRefNo AND E.gateInId = g.gateInId AND g.status != 'D' "
+	        + "LEFT JOIN ExportSbCargoEntry ex ON E.companyId = ex.companyId AND E.branchId = ex.branchId AND E.sbTransId = ex.sbTransId AND E.sbNo = ex.sbNo AND ex.status <> 'D' "
+	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId AND E.profitcentreId = :profitcentreId "
+	        + "AND E.cartingTransId = :cartingTransId AND E.gateInType = :type AND E.status <> 'D'")
+	List<ExportCarting> getSelectedCartingEntry(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("profitcentreId") String profitcentreId,
+	    @Param("cartingTransId") String cartingTransId,
+	    @Param("type") String type);
+	
 	@Query("SELECT NEW com.cwms.entities.ExportCarting(E.cartingTransId, E.cartingLineId, E.sbNo, E.profitcentreId, E.createdBy) " +
 		       "FROM ExportCarting E " +
 		       "WHERE E.companyId = :companyId " +
@@ -38,32 +67,32 @@ public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 	
 	
 	
-	@Query("SELECT NEW com.cwms.entities.ExportCarting( "
-	        + "E.companyId, E.branchId, E.cartingTransId, E.cartingLineId, E.finYear, "
-	        + "E.profitcentreId, E.sbTransId, E.sbNo, E.sbLineNo, E.sbDate, "
-	        + "E.cartingTransDate, E.gateInId, E.gateInDate, E.crgExamId, "
-	        + "E.shift, E.vehicleNo, o.partyName, E.commodity, "
-	        + "E.gateInPackages, E.gateInWeight, E.actualNoOfPackages, E.actualNoOfWeight, "
-	        + "E.fob, E.gateInType, E.invoiceType, E.gridLocation, "
-	        + "E.gridBlock, E.gridCellNo, E.stuffReqId, E.stuffedNoOfPackages, "
-	        + "E.areaOccupied, E.yardPackages, E.damageComments, E.status, "
-	        + "E.createdBy, E.createdDate, E.editedBy, E.editedDate, "
-	        + "E.approvedBy, E.approvedDate, E.fromSbTransId, E.fromSbNo, "
-	        + "E.fromSbLineNo, E.lastStorageInvoiceDate, E.lastStorageFlag, "
-	        + "E.storageWeeks, E.storageDays, E.storageMonths, "
-	        + "E.handlingCharges, E.excessPackages, E.shortagePackages, "
-	        + "E.damagePackages, g.cartedPackages) "
-	        + "FROM ExportCarting E "
-	        + "LEFT JOIN Party o ON E.companyId = o.companyId AND E.branchId = o.branchId AND E.onAccountOf = o.partyId AND o.status != 'D' "
-	        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND E.profitcentreId = g.profitcentreId AND E.sbNo = g.docRefNo AND E.sbTransId = g.erpDocRefNo AND E.gateInId = g.gateInId AND g.status != 'D' "
-	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId AND E.profitcentreId = :profitcentreId "
-	        + "AND E.cartingTransId = :cartingTransId AND E.gateInType = :type AND E.status <> 'D'")
-	List<ExportCarting> getSelectedCartingEntry(
-	    @Param("companyId") String companyId,
-	    @Param("branchId") String branchId,
-	    @Param("profitcentreId") String profitcentreId,
-	    @Param("cartingTransId") String cartingTransId,
-	    @Param("type") String type);
+//	@Query("SELECT NEW com.cwms.entities.ExportCarting( "
+//	        + "E.companyId, E.branchId, E.cartingTransId, E.cartingLineId, E.finYear, "
+//	        + "E.profitcentreId, E.sbTransId, E.sbNo, E.sbLineNo, E.sbDate, "
+//	        + "E.cartingTransDate, E.gateInId, E.gateInDate, E.crgExamId, "
+//	        + "E.shift, E.vehicleNo, o.partyName, E.commodity, "
+//	        + "E.gateInPackages, E.gateInWeight, E.actualNoOfPackages, E.actualNoOfWeight, "
+//	        + "E.fob, E.gateInType, E.invoiceType, E.gridLocation, "
+//	        + "E.gridBlock, E.gridCellNo, E.stuffReqId, E.stuffedNoOfPackages, "
+//	        + "E.areaOccupied, E.yardPackages, E.damageComments, E.status, "
+//	        + "E.createdBy, E.createdDate, E.editedBy, E.editedDate, "
+//	        + "E.approvedBy, E.approvedDate, E.fromSbTransId, E.fromSbNo, "
+//	        + "E.fromSbLineNo, E.lastStorageInvoiceDate, E.lastStorageFlag, "
+//	        + "E.storageWeeks, E.storageDays, E.storageMonths, "
+//	        + "E.handlingCharges, E.excessPackages, E.shortagePackages, "
+//	        + "E.damagePackages, g.cartedPackages) "
+//	        + "FROM ExportCarting E "
+//	        + "LEFT JOIN Party o ON E.companyId = o.companyId AND E.branchId = o.branchId AND E.onAccountOf = o.partyId AND o.status != 'D' "
+//	        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND E.profitcentreId = g.profitcentreId AND E.sbNo = g.docRefNo AND E.sbTransId = g.erpDocRefNo AND E.gateInId = g.gateInId AND g.status != 'D' "
+//	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId AND E.profitcentreId = :profitcentreId "
+//	        + "AND E.cartingTransId = :cartingTransId AND E.gateInType = :type AND E.status <> 'D'")
+//	List<ExportCarting> getSelectedCartingEntry(
+//	    @Param("companyId") String companyId,
+//	    @Param("branchId") String branchId,
+//	    @Param("profitcentreId") String profitcentreId,
+//	    @Param("cartingTransId") String cartingTransId,
+//	    @Param("type") String type);
 
 	
 	

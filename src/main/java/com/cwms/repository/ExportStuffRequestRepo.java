@@ -12,6 +12,20 @@ import com.cwms.entities.ExportStuffRequest;
 public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest, String>
 {	
 	
+	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, g.onAccountOf, g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.gateInId, g.containerHealth "          
+	        + "FROM ExportInventory E "
+	        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND g.containerStatus = 'MTY' AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' AND (g.stuffRequestId = '' OR g.stuffRequestId IS NULL) AND g.containerNo = E.containerNo "
+	        + "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.sa = psa.partyId AND psa.status <> 'D' "
+	        + "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
+	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
+	        + "AND (E.stuffReqId = '' OR E.stuffReqId IS NULL) "
+	        + "AND E.profitcentreId = :profitcentreId "
+	        + "AND E.containerNo = :searchValue "
+	        + "AND E.status <> 'D'")
+	List<Object[]> searchContainerNoForStuffingContainerWise(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
+
+	
 	@Query("SELECT new com.cwms.entities.ExportStuffRequest(E.stuffReqId, E.stuffReqLineId, E.stuffTally, E.stuffTallyId, "
 	           + "E.gateInId, E.containerNo, E.sbNo, E.sbTransId, E.sbLineNo) "
 	           + "FROM ExportStuffRequest E "	           
@@ -211,18 +225,18 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
 //	List<Object[]> searchContainerNoForStuffingContainerWise(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
 
 	
-	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, g.onAccountOf, g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.gateInId "          
-	        + "FROM ExportInventory E "
-	        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND g.containerStatus = 'MTY' AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' AND (g.stuffRequestId = '' OR g.stuffRequestId IS NULL) AND g.containerNo = E.containerNo "
-	        + "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.sa = psa.partyId AND psa.status <> 'D' "
-	        + "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
-	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
-	        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
-	        + "AND (E.stuffReqId = '' OR E.stuffReqId IS NULL) "
-	        + "AND E.profitcentreId = :profitcentreId "
-	        + "AND E.containerNo = :searchValue "
-	        + "AND E.status <> 'D'")
-	List<Object[]> searchContainerNoForStuffingContainerWise(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
+//	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, g.onAccountOf, g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.gateInId "          
+//	        + "FROM ExportInventory E "
+//	        + "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId AND g.containerStatus = 'MTY' AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' AND (g.stuffRequestId = '' OR g.stuffRequestId IS NULL) AND g.containerNo = E.containerNo "
+//	        + "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId AND g.sa = psa.partyId AND psa.status <> 'D' "
+//	        + "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId AND g.sl = psl.partyId AND psl.status <> 'D' "
+//	        + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+//	        + "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') "
+//	        + "AND (E.stuffReqId = '' OR E.stuffReqId IS NULL) "
+//	        + "AND E.profitcentreId = :profitcentreId "
+//	        + "AND E.containerNo = :searchValue "
+//	        + "AND E.status <> 'D'")
+//	List<Object[]> searchContainerNoForStuffingContainerWise(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId);
 
 	
 	
