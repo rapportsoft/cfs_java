@@ -121,6 +121,33 @@
 				content: counter(page);
 			}
 		}
+		
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 	</style>
 </head>
 
@@ -128,25 +155,22 @@
 
 	<div class=" text-center">
 
-		<div style="margin-top: 5px; padding: 0px; width: 80%; margin-left: auto; margin-right: auto;">
-			<div class="text-center" style="margin-bottom: 10px; ">
-				<span style="display: block; font-size: 15pt;"><strong><span
-							th:text="${branch.companyName}"></span></strong></span>
+	<div style="margin-bottom: 18px; text-align: center;">
 
-			</div>
-		</div>
+		<span th:text="${branch.companyName}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
+	</div>
 
+<hr />
 
-		<hr style="border-top: 0.5px solid black; margin: 2;" />
-		<span style="font-weight: bold; font-size: 13pt;">LOADED CONTAINER GATE-PASS-EXPORT IN</span>
-		<hr style="border-top: 0.5px solid black; margin: 2;" />
+	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
+		<span class="heading">LOADED CONTAINER GATE-PASS-EXPORT IN</span><br /> 
+	</div>
 
+    <hr />
 
-
-
-
-
-
+	
 	</div>
 
 
@@ -156,9 +180,9 @@
 			<td style="width: 50%; vertical-align: top;">
 				<table style="border-collapse: collapse; font-size: 10pt;">
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-size: 10pt; font-weight: bold;	text-align: left;"><span
 								class="label"> Gate Pass No</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
+						<td class="content"  style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
 									th:text="${reportData.gateInId}"></span></strong></td>
 					</tr>
 				</table>
@@ -172,7 +196,7 @@
 
 				<table style="border-collapse: collapse; font-size: 10pt;">
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; font-weight: bold;	text-align: left;"><span
 								class="label">Gate In Date/Time</span></td>
 						<!--<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
 									th:text="${reportData.inGateInDate}"></span></strong></td>-->
@@ -190,7 +214,7 @@
 		</tr>
 	</table>
 
-	<div style="margin-top: 5px;">
+	<div style="margin-top: 5px;margin-left: 4px;">
 		<strong>
 			<h5>CONTAINER DETAILS</h5>
 		</strong>
@@ -200,56 +224,56 @@
 	<table class="customer" 	style="width: 100%; table-layout: fixed;">
 		<tr>
 			<td style="width: 60%; vertical-align: top;">
-				<table style="border-collapse: collapse; font-size: 10pt;">
+				<table style="border-collapse: collapse;">
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold;	text-align: left;"><span
 								class="label"> Container No</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-									th:text="${reportData.containerNo}"></span></strong></td>
+						<td class="content"  style="padding: 1px; text-align: left;">: <span class="value"
+									th:text="${reportData.containerNo}"></span></td>
 					</tr>
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold; 	text-align: left;"><span
 								class="label">Truck No</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-									th:text="${reportData.vehicleNo}"></span></strong></td>
+						<td class="content"  style="padding: 1px; text-align: left;">: <span class="value"
+									th:text="${reportData.vehicleNo}"></span></td>
 					</tr>
 
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold;	text-align: left;"><span
 								class="label"> Shipper</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span
-									class="value"></span></strong></td>
+						<td class="content"  style="padding: 1px; text-align: left;">: <span
+									class="value"></span></td>
 					</tr>
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold; text-align: left;"><span
 								class="label"> Shipping Line</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-									th:text="${reportData.shippingLineName}"></span></strong></td>
+						<td class="content"  style="padding: 1px;  text-align: left;">: <span class="value"
+									th:text="${reportData.shippingLineName}"></span></td>
 					</tr>
 
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold;	text-align: left;"><span
 								class="label">Commodity</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-									th:text="${reportData.commodityDescription}"></span></strong></td>
+						<td class="content"  style="padding: 1px;  text-align: left;">: <span class="value"
+									th:text="${reportData.commodityDescription}"></span></td>
 					</tr>
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold;	text-align: left;"><span
 								class="label">Remarks</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-									th:text="${reportData.comments}"></span></strong></td>
+						<td class="content"  style="padding: 1px;  text-align: left;">: <span class="value"
+									th:text="${reportData.comments}"></span></td>
 					</tr>
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold;	text-align: left;"><span
 								class="label">Factory Code</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span
-									class="value"></span></strong></td>
+						<td class="content"  style="padding: 1px; text-align: left;">: <span
+									class="value"></span></td>
 					</tr>
 				</table>
 
@@ -262,55 +286,55 @@
 
 				<table style="border-collapse: collapse; font-size: 10pt;">
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold;	text-align: left;"><span
 								class="label">Size/Type</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: 
-							<span class="value"	th:text="${reportData.containerSize}"></span>/<span class="value" th:text="${reportData.containerType}"></span></strong></td>
+						<td class="content"  style="padding: 1px; text-align: left;">: 
+							<span class="value"	th:text="${reportData.containerSize}"></span>/<span class="value" th:text="${reportData.containerType}"></span></td>
 					</tr>
 
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold;text-align: left;"><span
 								class="label">Transporter</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value" th:text="${#strings.isEmpty(reportData.transporter) ? reportData.transporterName : reportData.transporter}"></span>
-</strong></td>
+						<td class="content"  style="padding: 1px;text-align: left;">: <span class="value" th:text="${#strings.isEmpty(reportData.transporter) ? reportData.transporterName : reportData.transporter}"></span>
+                       </td>
 					</tr>
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold;	text-align: left;"><span
 								class="label">CHA</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-									></span></strong></td>
+						<td class="content"  style="padding: 1px; text-align: left;">: <span class="value"
+									></span></td>
 					</tr>
 
 					<tr>
-						<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+						<td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold;	text-align: left;"><span
 								class="label">Condition</span></td>
-						<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span
-									class="value"							th:text="${reportData.containerHealth}"></span></strong></td>
+						<td class="content"  style="padding: 1px;  text-align: left;">: <span
+									class="value"							th:text="${reportData.containerHealth}"></span></td>
 					</tr>
 					
 					
 					<tr>
-														<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+														<td class="content"  style="padding: 1px;font-weight: bold; padding-right: 20px; text-align: left;"><span
 																class="label">Seal No</span></td>
-														<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: 
-															<span class="value"	th:text="${reportData.containerSealNo}"></span>/<span class="value" th:text="${reportData.containerType}"></span></strong></td>
+														<td class="content"  style="padding: 1px;  text-align: left;">: 
+															<span class="value"	th:text="${reportData.containerSealNo}"></span>/<span class="value" th:text="${reportData.containerType}"></span></td>
 													</tr>
 								
 								
 													<tr>
-														<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+														<td class="content"  style="padding: 1px;font-weight: bold; padding-right: 20px;text-align: left;"><span
 																class="label">Movement Type</span></td>
-														<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value" 	th:text="${reportData.gateInType}"></span>
-								</strong></td>
+														<td class="content"  style="padding: 1px; text-align: left;">: <span class="value" 	th:text="${reportData.gateInType}"></span>
+</td>
 													</tr>
 								
 													<tr>
-														<td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
+														<td class="content"  style="padding: 1px;font-weight: bold; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span
 																class="label">Account Holder</span></td>
-														<td style="padding: 1px; font-size: 10pt; text-align: left;"><strong>: <span class="value"
-															th:text="${reportData.importerName}"></span></strong></td>
+														<td class="content"  style="padding: 1px; text-align: left;">: <span class="value"
+															th:text="${reportData.importerName}"></span></td>
 													</tr>
 					
 					

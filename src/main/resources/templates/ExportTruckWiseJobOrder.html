@@ -24,7 +24,7 @@ body {
 
 @page {
     size: Wpx 1px;
-    margin-top: 310px;
+    margin-top: 329px;
 }
 
 
@@ -110,6 +110,33 @@ body {
 	content: counter(page);
 }
 }
+
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 </head>
 <body>
@@ -120,19 +147,23 @@ body {
 	
 		<div class=" text-center">
 		
-<div style="margin-top: 40px; padding: 0px; width: 80%; margin-left: auto; margin-right: auto;">
-    <div class="text-center" style="margin-bottom: 10px; ">
- <span style="display: block; font-size: 15pt;"><strong><span th:text="${branch.companyName}"></span></strong></span> 
-					<span style="display: block; font-size: 10pt; margin-top: 5px;"><b>Container Freight Station</b></span> 
-					<span style="display: block; font-size: 10pt; margin-top: 3px;"><span th:text="${branch.address1}"></span></span>					
-    </div>
-</div> 			 
+	<div style="margin-bottom: 18px; text-align: center;">
+
+		<span th:text="${branch.companyName}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
+	</div>
+
+	<hr />
+
+	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
+		<span class="heading">JOB ORDER / GATE PASS</span><br /> 
+	</div>
+
+    <hr />		 
 <!--			<span style="font-weight: bold; font-size: 16pt;">GATE IN PASS - EXPORT CARGO CARTING</span><br /> 			
 -->			
 
-<hr style="border-top: 0.5px solid black; margin: 2;"/>  <!-- Horizontal line before -->
-<span style="font-weight: bold; font-size: 16pt;">JOB ORDER / GATE PASS</span>
-<hr style="border-top: 0.5px solid black; margin: 2;"/>  <!-- Horizontal line after -->
 
 
 			<table class="customer">
@@ -140,20 +171,20 @@ body {
 						<td style="width: 60%; vertical-align: top;">
 						<table style="border-collapse: collapse; font-size: 10pt;">
 						  <tr>
-						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">Gate Pass No</span></td>
-						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>: <span class="value" th:text="${gateInId}"></span>							</strong></td>
+						    <td class="content" style="padding: 1px; padding-right: 20px; font-size: 10pt; font-weight: bold;	text-align: left;"><span class="label">Gate Pass No</span></td>
+						    <td class="content" style="padding: 1px; font-size: 10pt; text-align: left;">				: <span class="value" th:text="${gateInId}"></span>			</td>
 						  </tr>
 						  <tr>
-						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">J. O. No</span></td>
-						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${jobOrderId}"></span>							</strong></td>
+						    <td class="content" style="padding: 1px; padding-right: 20px; font-size: 10pt; font-weight: bold;	text-align: left;"><span class="label">J. O. No</span></td>
+						    <td class="content" style="padding: 1px; font-size: 10pt; text-align: left;">			: <span class="value" th:text="${jobOrderId}"></span>		</td>
 						  </tr>
 						  <tr>
-						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; text-align: left;"><span class="label">A/C</span></td>
-						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${onAccountOf}"></span>							</strong></td>
+						    <td class="content" style="padding: 1px; padding-right: 20px; font-size: 10pt; font-weight: bold;text-align: left;"><span class="label">A/C</span></td>
+						    <td class="content" style="padding: 1px; font-size: 10pt; text-align: left;">				: <span class="value" th:text="${onAccountOf}"></span>		</td>
 						  </tr>
 						  <tr>
-						    <td style="padding: 1px; padding-right: 20px; font-size: 10pt; 	text-align: left;"><span class="label">CHA</span></td>
-						    <td style="padding: 1px; font-size: 10pt; text-align: left;">							<strong>							: <span class="value" th:text="${cha}"></span>							</strong></td>
+						    <td class="content" style="padding: 1px; padding-right: 20px; font-size: 10pt; font-weight: bold;	text-align: left;"><span class="label">CHA</span></td>
+						    <td class="content" style="padding: 1px; font-size: 10pt; text-align: left;">					: <span class="value" th:text="${cha}"></span>			</td>
 						  </tr>
 						
 						</table>
@@ -167,14 +198,14 @@ body {
 							
 							<table style="border-collapse: collapse; font-size: 10pt;">
 													  <tr>
-													    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;text-align: left;"><span class="label">Gate In Date</span></td>
-													    <td style="padding: 1px; font-size: 10pt; text-align: left;">  <strong>														: <span class="value" th:text="${gateInDate}"></span></strong></td>
+													    <td class="content" style="padding: 1px; padding-right: 20px;font-weight: bold; font-size: 10pt;text-align: left;"><span class="label">Gate In Date</span></td>
+													    <td class="content" style="padding: 1px; font-size: 10pt; text-align: left;"> 			: <span class="value" th:text="${gateInDate}"></span></td>
 													  </tr>
 													  
 													  
 													  <tr>
-													  													    <td style="padding: 1px; padding-right: 20px; font-size: 10pt;text-align: left;"><span class="label">J. O. Date </span></td>
-													  													    <td style="padding: 1px; font-size: 10pt; text-align: left;">  <strong>														: <span class="value" th:text="${jobDate}"></span></strong></td>
+													  													    <td class="content" style="padding: 1px; padding-right: 20px; font-size: 10pt;font-weight: bold;text-align: left;"><span class="label">J. O. Date </span></td>
+													  													    <td class="content" style="padding: 1px; font-size: 10pt; text-align: left;">			: <span class="value" th:text="${jobDate}"></span></td>
 													  													  </tr>
 							</table>
 							

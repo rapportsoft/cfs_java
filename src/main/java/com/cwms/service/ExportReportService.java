@@ -64,6 +64,13 @@ public class ExportReportService {
 		        for (Object element : firstRecord) {
 		            System.out.println(element);
 		        }		        
+		        
+		        String branchAdd = branch.getAddress1() + " " + branch.getAddress2() + " "
+						+ branch.getAddress3();
+
+
+		        context.setVariable("address", branchAdd);
+				context.setVariable("branchName", branch.getBranchName());
 		        context.setVariable("gateInId", (String) firstRecord[0]);
 		        context.setVariable("gateInDate", (String) firstRecord[1]);
 		        context.setVariable("truckNo", (String) firstRecord[4]);
@@ -141,7 +148,12 @@ public class ExportReportService {
 		        }
 		        
 		        
-		        
+		        String branchAdd = branch.getAddress1() + " " + branch.getAddress2() + " "
+						+ branch.getAddress3();
+
+
+		        context.setVariable("address", branchAdd);
+				context.setVariable("branchName", branch.getBranchName());
 		        context.setVariable("gateInId", (String) firstRecord[0]);
 		        context.setVariable("gateInDate", (String) firstRecord[1]);
 		        context.setVariable("jobDate", (String) firstRecord[18]);
@@ -202,7 +214,8 @@ public class ExportReportService {
 		        System.out.println("exportTruckWiseGateInReport : " + exportTruckWiseGateInReport.size());
 		        Object[] firstRecord = exportTruckWiseGateInReport.get(0);
 		        
-		        
+		        String branchAdd = branch.getAddress1() + " " + branch.getAddress2() + " "
+							+ branch.getAddress3();
 		     
 		        
 		        System.out.println("firstRecord : ");
@@ -214,13 +227,11 @@ public class ExportReportService {
 		        context.setVariable("truckNo", (String) firstRecord[2]);
 		        context.setVariable("lineAgent", (String) firstRecord[11]);
 		        context.setVariable("cha", (String) firstRecord[12]);
-		       
-		        
-		        
-		       
-		        
-		        
-		        
+	
+
+
+		        context.setVariable("address", branchAdd);
+				context.setVariable("branchName", branch.getBranchName());
 		        context.setVariable("branch", branch);
 		        context.setVariable("reportData", exportTruckWiseGateInReport);
 			
@@ -266,8 +277,12 @@ public class ExportReportService {
 		        List<GateIn> exportPortReturnReportList = reportRepo.getExportPortReturnReport(companyId, branchId, "N00004",gateInId);
 			
 		        GateIn  exportPortReturnReport =exportPortReturnReportList.get(0);
-		        System.out.println("exportTruckWiseGateInReport : " + exportPortReturnReport);
-		        
+		        String branchAdd = branch.getAddress1() + " " + branch.getAddress2() + " "
+								+ branch.getAddress3();
+
+
+				        context.setVariable("address", branchAdd);
+						context.setVariable("branchName", branch.getBranchName());
 		        
 		        context.setVariable("branch", branch);
 		        context.setVariable("reportData", exportPortReturnReport);
