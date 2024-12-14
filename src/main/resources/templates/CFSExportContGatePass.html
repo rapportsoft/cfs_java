@@ -193,6 +193,32 @@ table.table th, table.table td {
 	width: 35%;
 	align-items: center;
 }
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -210,99 +236,99 @@ table.table th, table.table td {
 	<!-- Centered heading with bold and font size 18 -->
    <div th:each="item, iterStat : ${gatePassData}" >
       	<div style="margin-bottom: 18px; text-align: center;">
-		<span th:text="${companyname}"
-			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
-		<br /> <span th:text="${address}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+
+		<span th:text="${companyname}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
 	</div>
 
 	<hr />
 
 	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
 		<span
-			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">LOADED CONTAINER GATE-PASS-EXPORT OUT</span><br /> 
+			class="heading">LOADED CONTAINER GATE-PASS-EXPORT OUT</span><br /> 
 	</div>
 
-
+   <hr />
 
 	<table
 		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Gate Pass No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[0]}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Gate Pass No</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[0]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Gate Pass Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[1]}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Gate Pass Date</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[1]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Container No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[2]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Container No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[2]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Size / Type</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[3]}+${item[4]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Size / Type</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[3]}+'/'+${item[4]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">SB No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[6]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">SB No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[6]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">SB Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[7]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">SB Date</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[7]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Terminal</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[5]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Terminal</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[5]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">POD</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[8]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">POD</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[8]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Customs Seal No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[9]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Customs Seal No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[9]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Agent Seal No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[10]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Agent Seal No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[10]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Truck No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[12]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Truck No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[12]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Transporter</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[13]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Transporter</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[13]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Weight</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[11]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Weight</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[11]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Vessel/Voyage No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[14]}+' / '+${item[15]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Vessel/Voyage No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[14]}+' / '+${item[15]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Shipping Line</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[16]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Shipping Line</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[16]}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Account Holder</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${item[17]}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Account Holder</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${item[17]}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Remarks</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${item[18]}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Remarks</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${item[18]}"></td>
 
 			
 		</tr>

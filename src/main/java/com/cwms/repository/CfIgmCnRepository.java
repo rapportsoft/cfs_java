@@ -353,7 +353,23 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	            "AND (:search IS NULL OR :search = '' OR cn.containerNo LIKE CONCAT('%', :search, '%'))")
 	    List<Object[]> getContainers(@Param("cid") String cid, @Param("bid") String bid, @Param("search") String search);
 	    
-	    @Query(value = "SELECT distinct cn.containerNo, cn.containerSize, cn.containerType, cn.iso, cn.containerStatus, cn.customsSealNo, i.shippingAgent, i.shippingLine, " +
+//	    @Query(value = "SELECT distinct cn.containerNo, cn.containerSize, cn.containerType, cn.iso, cn.containerStatus, cn.customsSealNo, i.shippingAgent, i.shippingLine, " +
+//	            "cn.igmTransId, cn.igmNo, i.igmDate, i.port, i.portJo, i.docDate, i.viaNo, i.profitcentreId, " +
+//	            "p.profitcentreDesc, py.partyName, py1.partyName, py2.partyName, po.portName, cn.scannerType, v.vesselName, cn.refer, cn.lowBed, cn.temperature, " +
+//	            "cn.odcStatus,i.vesselId,cn.containerWeight,cn.grossWt,cn.igmLineNo,cn.typeOfContainer,crg.origin FROM Cfigmcn cn " +
+//	            "LEFT OUTER JOIN CFIgm i ON cn.companyId = i.companyId AND cn.branchId = i.branchId AND cn.igmNo = i.igmNo AND cn.igmTransId = i.igmTransId " +
+//	            "LEFT OUTER JOIN Cfigmcrg crg ON cn.companyId = crg.companyId AND cn.branchId = crg.branchId AND cn.igmNo = crg.igmNo AND cn.igmTransId = crg.igmTransId and cn.igmLineNo=crg.igmLineNo " +
+//	            "LEFT OUTER JOIN Profitcentre p ON cn.companyId = p.companyId AND cn.branchId = p.branchId AND cn.profitcentreId = p.profitcentreId " +
+//	            "LEFT OUTER JOIN Party py ON i.companyId = py.companyId AND i.branchId = py.branchId AND i.partyId = py.partyId " +
+//	            "LEFT OUTER JOIN Party py1 ON i.companyId = py1.companyId AND i.branchId = py1.branchId AND i.shippingAgent = py1.partyId " +
+//	            "LEFT OUTER JOIN Party py2 ON i.companyId = py2.companyId AND i.branchId = py2.branchId AND i.shippingLine = py2.partyId " +
+//	            "LEFT OUTER JOIN Port po ON i.companyId = po.companyId AND i.branchId = po.branchId AND i.port = po.portCode " +
+//	            "LEFT OUTER JOIN Vessel v ON i.companyId = v.companyId AND i.branchId = v.branchId AND i.vesselId = v.vesselId " +
+//	            "WHERE cn.companyId = :cid AND cn.branchId = :bid AND cn.status != 'D' AND (cn.gateInId is null OR cn.gateInId = '') " +
+//	            "AND cn.containerNo = :search")
+//	    List<Object[]> getContainers1(@Param("cid") String cid, @Param("bid") String bid, @Param("search") String search);
+	    
+	    @Query(value = "SELECT distinct cn.containerNo, cn.containerSize, cn.containerType, cn.iso, cn.containerStatus, cn.containerSealNo, i.shippingAgent, i.shippingLine, " +
 	            "cn.igmTransId, cn.igmNo, i.igmDate, i.port, i.portJo, i.docDate, i.viaNo, i.profitcentreId, " +
 	            "p.profitcentreDesc, py.partyName, py1.partyName, py2.partyName, po.portName, cn.scannerType, v.vesselName, cn.refer, cn.lowBed, cn.temperature, " +
 	            "cn.odcStatus,i.vesselId,cn.containerWeight,cn.grossWt,cn.igmLineNo,cn.typeOfContainer,crg.origin FROM Cfigmcn cn " +
@@ -887,21 +903,38 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 						  @Param("igm") String igm,@Param("con") String con,@Param("jobid") String jobid);
 				  
 				  
+//				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %h:%i'),c.igmNo,"
+//				  		+ "c.igmLineNo,p1.partyName,crg.importerName,p2.partyName,crg.commodityDescription,c.containerNo,c.containerSize,"
+//				  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
+//				  		+ "from Cfigmcn c "
+//				  		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
+//				  		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
+//				  		+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
+//				  		+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.shippingLine=p2.partyId "
+//				  		+ "LEFT OUTER JOIN EquipmentActivity e ON c.companyId=e.companyId and c.branchId=e.branchId and c.igmTransId=e.erpDocRefNo and c.igmNo=e.docRefNo and c.containerNo=e.containerNo and c.containerExamWoTransId=e.deStuffId "
+//				  		+ "LEFT OUTER JOIN JarDetail j ON e.companyId=j.companyId and e.equipment=j.jarDtlId and j.jarId='J00012' "
+//				  		+ "where c.companyId=:cid and c.branchId=:bid and c.status != 'D' and c.igmNo=:igm and c.igmLineNo=:line and "
+//				  		+ "c.noOfItem=1 and c.containerExamWoTransId=:jobid and c.igmTransId=:trans and c.containerStatus='FCL' "
+//				  		+ "GROUP BY c.igmNo,c.igmTransId,c.containerNo")
+//				  List<Object[]> getDataForExaminationItemWiseReport(@Param("cid") String cid,@Param("bid") String bid,
+//						  @Param("igm") String igm,@Param("line") String line,@Param("jobid") String jobid,@Param("trans") String trans);
+				  
+				  
 				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %h:%i'),c.igmNo,"
-				  		+ "c.igmLineNo,p1.partyName,crg.importerName,p2.partyName,crg.commodityDescription,c.containerNo,c.containerSize,"
-				  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
-				  		+ "from Cfigmcn c "
-				  		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
-				  		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
-				  		+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
-				  		+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.shippingLine=p2.partyId "
-				  		+ "LEFT OUTER JOIN EquipmentActivity e ON c.companyId=e.companyId and c.branchId=e.branchId and c.igmTransId=e.erpDocRefNo and c.igmNo=e.docRefNo and c.containerNo=e.containerNo and c.containerExamWoTransId=e.deStuffId "
-				  		+ "LEFT OUTER JOIN JarDetail j ON e.companyId=j.companyId and e.equipment=j.jarDtlId and j.jarId='J00012' "
-				  		+ "where c.companyId=:cid and c.branchId=:bid and c.status != 'D' and c.igmNo=:igm and c.igmLineNo=:line and "
-				  		+ "c.noOfItem=1 and c.containerExamWoTransId=:jobid and c.igmTransId=:trans and c.containerStatus='FCL' "
-				  		+ "GROUP BY c.igmNo,c.igmTransId,c.containerNo")
-				  List<Object[]> getDataForExaminationItemWiseReport(@Param("cid") String cid,@Param("bid") String bid,
-						  @Param("igm") String igm,@Param("line") String line,@Param("jobid") String jobid,@Param("trans") String trans);
+					  		+ "c.igmLineNo,p1.partyName,crg.importerName,p2.partyName,crg.commodityDescription,c.containerNo,c.containerSize,"
+					  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
+					  		+ "from Cfigmcn c "
+					  		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
+					  		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
+					  		+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
+					  		+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.shippingLine=p2.partyId "
+					  		+ "LEFT OUTER JOIN EquipmentActivity e ON c.companyId=e.companyId and c.branchId=e.branchId and c.igmTransId=e.erpDocRefNo and c.igmNo=e.docRefNo and c.containerNo=e.containerNo and c.containerExamWoTransId=e.deStuffId and e.status != 'D' "
+					  		+ "LEFT OUTER JOIN JarDetail j ON e.companyId=j.companyId and e.equipment=j.jarDtlId and j.jarId='J00012' "
+					  		+ "where c.companyId=:cid and c.branchId=:bid and c.status != 'D' and c.igmNo=:igm and c.igmLineNo=:line and "
+					  		+ "c.noOfItem=1 and c.containerExamWoTransId=:jobid and c.igmTransId=:trans and c.containerStatus='FCL' "
+					  		+ "GROUP BY c.igmNo,c.igmTransId,c.containerNo")
+					  List<Object[]> getDataForExaminationItemWiseReport(@Param("cid") String cid,@Param("bid") String bid,
+							  @Param("igm") String igm,@Param("line") String line,@Param("jobid") String jobid,@Param("trans") String trans);
 				  
 				  
 				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %h:%i'),c.igmNo,"

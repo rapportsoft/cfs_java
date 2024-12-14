@@ -193,6 +193,32 @@ table.table th, table.table td {
 	width: 35%;
 	align-items: center;
 }
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -209,18 +235,20 @@ table.table th, table.table td {
 
 	<!-- Centered heading with bold and font size 18 -->
 	<div style="margin-bottom: 18px; text-align: center;">
-		<span th:text="${companyname}"
-			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
-		<br /> <span th:text="${address}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+
+		<span th:text="${companyname}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
 	</div>
 
 	<hr />
 
 	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
 		<span
-			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">Export Stuffing Request</span><br /> 
+			class="heading">Export Stuffing Request</span><br /> 
 	</div>
+	
+	<hr />
 
     <div style="font-size: 13px;margin-top: 10px;">To,</div>
     <div style="font-size: 13px;margin-top: 5px;">VENDOR</div>
@@ -230,27 +258,27 @@ table.table th, table.table td {
 	<table
 		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Stuff Req No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${stuffReqId}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Stuff Req No</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${stuffReqId}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Stuff Req Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${stuffReqDate}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Stuff Req Date</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${stuffReqDate}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Agent</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${sa}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Agent</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${sa}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Line</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${sl}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Line</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${sl}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Vessel</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${vessel}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Vessel</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${vessel}"></td>
 
 		
 		</tr>

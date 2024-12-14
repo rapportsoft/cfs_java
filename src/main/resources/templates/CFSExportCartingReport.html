@@ -193,6 +193,32 @@ table.table th, table.table td {
 	width: 35%;
 	align-items: center;
 }
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -209,31 +235,30 @@ table.table th, table.table td {
 
 	<!-- Centered heading with bold and font size 18 -->
 	<div style="margin-bottom: 18px; text-align: center;">
-		<span th:text="${companyname}"
-			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
-		<br /> <span th:text="${address}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+
+		<span th:text="${companyname}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
 	</div>
 
 	<hr />
 
 	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
-		<span
-			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">EXPORT CARTING</span><br /> 
+		<span class="heading">EXPORT CARTING</span><br /> 
 	</div>
 
-
+    <hr />
 
 	<table
 		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Carting Trans Id</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${cartingId}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Carting Trans Id</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${cartingId}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Carting Trans Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${cartingDate}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Carting Trans Date</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${cartingDate}"></td>
 		</tr>
 		
 	</table>

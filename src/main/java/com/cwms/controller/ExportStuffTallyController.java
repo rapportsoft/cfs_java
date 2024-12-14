@@ -233,14 +233,14 @@ public class ExportStuffTallyController {
 			int sr = 1;
 			for (ExportStuffTally e : tally) {
 
-				List<ExportCarting> cartingData = exportcartingrepo.getDataBySbNoSbTransAndLineNo(cid, bid,
-						e.getSbTransId(), e.getSbNo(), e.getSbLineId());
+				List<ExportCarting> cartingData = exportcartingrepo.getDataBySbNoSbTrans1(cid, bid,
+						e.getSbTransId(), e.getSbNo());
 
 				if (cartingData.isEmpty()) {
 					return new ResponseEntity<>("Carting data not found", HttpStatus.CONFLICT);
 				}
 
-				System.out.println("cartingData " + cartingData.size());
+
 
 				ExportStuffRequest stuffReq = exportstuffrepo.getDataBySbNoSbTransAndStuffReqLineId2(cid, bid,
 						e.getSbTransId(), e.getSbNo(), singleTally.getStuffId());

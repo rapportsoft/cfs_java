@@ -69,7 +69,7 @@ public class CFIgm {
     private Date vesselEta = new Date(0);
 
     @Column(name = "Vessel_Arv_Date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date vesselArvDate = new Date(0);
 

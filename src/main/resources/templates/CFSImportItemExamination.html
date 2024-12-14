@@ -193,6 +193,33 @@ table.table th, table.table td {
 	width: 35%;
 	align-items: center;
 }
+
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -209,20 +236,20 @@ table.table th, table.table td {
 
 	<!-- Centered heading with bold and font size 18 -->
 	<div style="margin-bottom: 18px; text-align: center;">
-		<span th:text="${companyname}"
-			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
-		<br /> <span th:text="${address}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+
+		<span th:text="${companyname}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
 	</div>
 
 	<hr />
 
 	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
 		<span
-			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">WORK ORDER CUSTOMS EXAMINATION</span><br /> 
+			class="heading">WORK ORDER CUSTOMS EXAMINATION</span><br /> 
 	</div>
 
-
+  <hr />
 
 	<div style="margin-top: 10px; font-size: 14px;">
 	<span
@@ -233,39 +260,39 @@ table.table th, table.table td {
 	<table
 		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Work
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Work
 				Order No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${jobOrderId}"></td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${jobOrderId}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Work
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">Work
 				Order Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${jobOrderDate}"></td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${jobOrderDate}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">IGM
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">IGM
 				No/Item No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${igmNo}+'/'+${itemNo}"></td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${igmNo}+'/'+${itemNo}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">CHA Name</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${cha}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">CHA Name</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${cha}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Importer Name</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${imp}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Importer Name</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${imp}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Liner Name</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${sl}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Liner Name</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${sl}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Cargo Description</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${commodity}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Cargo Description</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${commodity}"></td>
 
 			
 		</tr>
@@ -292,20 +319,20 @@ table.table th, table.table td {
 			<!-- Example row, replace with Thymeleaf code for dynamic content -->
 			<tr th:each="item, iterStat : ${conData}"
 				style="border: 1px solid black; text-align: center;">
-				<td style="border: 1px solid black;" th:text="${iterStat.index + 1}"></td>
+				<td  style="border: 1px solid black;" th:text="${iterStat.index + 1}"></td>
 				<!-- Sr No. -->
-				<td style="border: 1px solid black;" th:text="${item[8]}"></td>
+				<td  style="border: 1px solid black;" th:text="${item[8]}"></td>
 				<!-- Cont No. -->
 				<td style="border: 1px solid black;"
-					th:text="${item[9]} + ${item[10]}"></td>
+					th:text="${item[9]} + '/' + ${item[10]}"></td>
 				<!-- Size/Type -->
-				<td style="border: 1px solid black;" th:text="${item[11]}"></td>
+				<td  style="border: 1px solid black;" th:text="${item[11]}"></td>
 				<!-- Agent Seal -->
 				<td style="border: 1px solid black;" th:text="${item[12]}"></td>
 				<!-- Customs Seal -->
 				<td style="border: 1px solid black; word-wrap: break-word; overflow-wrap: break-word;" th:text="${item[13]}"></td>
 				<!-- Gate In Date -->
-				<td style="border: 1px solid black;" th:text="${item[14]}"></td>
+				<td  style="border: 1px solid black;" th:text="${item[14]}"></td>
 				<!-- Pkgs -->
 				<td style="border: 1px solid black;" th:text="${item[3]}"></td>
 				<!-- Wt -->

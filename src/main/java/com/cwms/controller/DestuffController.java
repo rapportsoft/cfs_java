@@ -1038,7 +1038,7 @@ public class DestuffController {
 		if (isExistBe) {
 			return new ResponseEntity<>("BE No already exist.", HttpStatus.BAD_REQUEST);
 		}
-		String examId = "";
+	
 
 		for (ExamCrg c : crgs) {
 
@@ -1050,7 +1050,7 @@ public class DestuffController {
 						HttpStatus.CONFLICT);
 			}
 
-			if (decr.getExamTallyId().isEmpty() || decr.getExamTallyId() == null) {
+			if (decr.getExamTallyId() == null || decr.getExamTallyId().isEmpty()) {
 
 				c.setExamTallyId(HoldNextIdD1);
 				c.setExamTallyLineId(String.valueOf(sr));

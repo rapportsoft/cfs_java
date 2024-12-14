@@ -240,9 +240,11 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
+
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("cartingId", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("cartingDate", singleData[1] != null ? String.valueOf(singleData[1]) : "");
@@ -295,9 +297,10 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("gateInId", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("gateInDate", singleData[1] != null ? String.valueOf(singleData[1]) : "");
@@ -372,9 +375,10 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("stuffReqId", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("stuffReqDate", singleData[1] != null ? String.valueOf(singleData[1]) : "");
@@ -446,9 +450,10 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("stuffReqId", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("stuffReqDate", singleData[1] != null ? String.valueOf(singleData[1]) : "");
@@ -534,9 +539,10 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("stuffReqId", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("tallyDate", singleData[1] != null ? String.valueOf(singleData[1]) : "");
@@ -627,10 +633,10 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-		
+				+ branchAddress.getAddress3();
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("sbNo", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("viaNo", singleData[1] != null ? String.valueOf(singleData[1]) : "");
@@ -703,11 +709,12 @@ public class ExportReportController {
 				return new ResponseEntity<>("Branch data not found", HttpStatus.CONFLICT);
 			}
 
-			String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-					+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-			
+    		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+    				+ branchAddress.getAddress3();
 
-			context.setVariable("companyname", comp.getCompany_name());
+ 
+    		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
 			context.setVariable("address", branchAdd);
 			context.setVariable("gatePassData", data);
 
@@ -750,11 +757,12 @@ public class ExportReportController {
 				return new ResponseEntity<>("Branch data not found", HttpStatus.CONFLICT);
 			}
 
-			String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-					+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-			
+    		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+    				+ branchAddress.getAddress3();
 
-			context.setVariable("companyname", comp.getCompany_name());
+ 
+    		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
 			context.setVariable("address", branchAdd);
 			context.setVariable("gatePassData", data);
 
@@ -778,6 +786,8 @@ public class ExportReportController {
 	}
 	
 	
+	
+
 	@PostMapping("/exportBufferGateInReport")
 	public ResponseEntity<?> exportBufferGateInReport(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
 			@RequestParam("id") String id) throws DocumentException{
@@ -807,10 +817,11 @@ public class ExportReportController {
 			}
 
 			String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-					+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+    				+ branchAddress.getAddress3();
 
-
-			context.setVariable("companyname", comp.getCompany_name());
+ 
+    		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
 			context.setVariable("address", branchAdd);
 			context.setVariable("gateInId", gateInData[0] != null ? String.valueOf(gateInData[0]) : "");
 			context.setVariable("gateInDate", gateInData[1] != null ? String.valueOf(gateInData[1]) : "");
@@ -901,9 +912,11 @@ public class ExportReportController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
+
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("stuffReqId", singleData[0] != null ? String.valueOf(singleData[0]) : "");
 		context.setVariable("tallyDate", singleData[1] != null ? String.valueOf(singleData[1]) : "");

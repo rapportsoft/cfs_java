@@ -3,10 +3,15 @@
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+
+
+
 <title>Gate In Pass</title>
 
 <style>
-
 @page {
 	margin: 0.7cm;
 	margin-top: 0.5cm;
@@ -194,6 +199,33 @@ table.table th, table.table td {
 	width: 35%;
 	align-items: center;
 }
+
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -210,137 +242,167 @@ table.table th, table.table td {
 
 	<!-- Centered heading with bold and font size 18 -->
 	<div style="margin-bottom: 18px; text-align: center;">
-		<span th:text="${companyname}"
-			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
-		<br /> <span th:text="${address}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+
+		<span th:text="${companyname}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
 	</div>
-	
+
 	<hr />
 
-    <div style="margin-top: 5px; text-align: center;">
-       <span style="text-align: center; font-weight: bold; font-size: 18px;text-decoration: underline;">LOADED CONTAINER GATE-PASS-IMPORT IN</span>
-    </div>
-    
-<table style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
-    <!-- Gate In Details -->
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Gate In No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${gateId}"></td>
-        
-        <td style="width: 20%; text-align: left; font-weight: bold;">Gate In Date</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${gateInDate}"></td>
-    </tr>
+	<div style="margin-top: 5px; text-align: center;">
+		<span class="heading">LOADED CONTAINER GATE-PASS-IMPORT IN</span>
+	</div>
 
-    <!-- Port Details -->
-    <tr>
-        <td style="width: 20%; text-align: left; font-weight: bold;">Port</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${portName}"></td>
+	<hr />
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">Port Out Date/Time</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${portExitDate}"></td>
-    </tr>
+	<table style="width: 100%; margin-top: 20px; table-layout: fixed;">
+		<!-- Gate In Details -->
+		<tr>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;"
+				>Gate In No</td>
+			<td class="content" style="width: 2%; text-align: center;" >:</td>
+			<td class="content" style="width: 30%; text-align: left;" 
+				th:text="${gateId}"></td>
 
-    <!-- Container and Truck Details -->
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Container No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${containerNo}"></td>
+			<td class="content" 
+				style="width: 18%; text-align: left; font-weight: bold;">Gate
+				In Date</td>
+			<td class="content"  style="width: 2%; text-align: center;">:</td>
+			<td class="content"  style="width: 30%; text-align: left;"
+				th:text="${gateInDate}"></td>
+		</tr>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">ISO/Container Size/Type</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${iso} + '/' + ${containerSize} + ${containerType}"></td>
-    </tr>
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Truck No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${vehicleNo}"></td>
+		<!-- Port Details -->
+		<tr>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Port</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${portName}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">Transporter Name</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${transporterName}"></td>
-    </tr>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Port
+				Out Date/Time</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${portExitDate}"></td>
+		</tr>
 
-    <!-- Vessel and Seal Details -->
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Vessel Name</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${vesselName}"></td>
+		<!-- Container and Truck Details -->
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Container
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${containerNo}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">VCN No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${viaNo}"></td>
-    </tr>
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Seal No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${containerSealNo}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">ISO/Container
+				Size/Type</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;"
+				th:text="${iso} + '/' + ${containerSize} + '/' + ${containerType}"></td>
+		</tr>
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Truck
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${vehicleNo}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">Physical Seal No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${actualSealNo}"></td>
-    </tr>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Transporter
+				Name</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;"
+				th:text="${transporterName}"></td>
+		</tr>
 
-    <!-- BL and IGM Details -->
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">BL No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${blNo}"></td>
+		<!-- Vessel and Seal Details -->
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Vessel
+				Name</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${vesselName}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">BL Date</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${blDate}"></td>
-    </tr>
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">IGM No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${igmNo}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">VCN
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${viaNo}"></td>
+		</tr>
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Seal
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;"
+				th:text="${containerSealNo}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">Item No</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${lineNo}"></td>
-    </tr>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Physical
+				Seal No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${actualSealNo}"></td>
+		</tr>
 
-    <!-- Other Details -->
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Scan Status</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${scanningDoneStatus}"></td>
+		<!-- BL and IGM Details -->
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">BL
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${blNo}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">Condition</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${conHealth}"></td>
-    </tr>
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Shipping Line</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${sl}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">BL
+				Date</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${blDate}"></td>
+		</tr>
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">IGM
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${igmNo}"></td>
 
-        <td style="width: 20%; text-align: left; font-weight: bold;">Importer</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 25%; text-align: left;" th:text="${impName}"></td>
-    </tr>
-    <tr>
-        <td style="width: 10%; text-align: left; font-weight: bold;">Remark</td>
-        <td style="width: 5%; text-align: center;">:</td>
-        <td style="width: 30%; text-align: left;" th:text="${remark}"></td>
-    </tr>
-</table>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Item
+				No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${lineNo}"></td>
+		</tr>
+
+		<!-- Other Details -->
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Scan
+				Status</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;"
+				th:text="${scanningDoneStatus}"></td>
+
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Condition</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${conHealth}"></td>
+		</tr>
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Shipping
+				Line</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${sl}"></td>
+
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Importer</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${impName}"></td>
+		</tr>
+		<tr>
+			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Remark</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${remark}"></td>
+		</tr>
+	</table>
 
 
-<br/>
+	<br />
 
-<hr/>
+	<hr />
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 90px;">
-   <span style="font-size: 14px; font-weight: bold; float: left;">CFS Executive Sign</span>
-   <span style="font-size: 14px; font-weight: bold; margin-left: 180px;">Gate Surveyor Sign</span>
-   <span style="font-size: 14px; font-weight: bold; float: right;">Gate Security Sign</span>
-</div>
+	<div
+		style="display: flex; justify-content: space-between; align-items: center; margin-top: 90px;">
+		<span style="font-size: 14px; font-weight: bold; float: left;">CFS
+			Executive Sign</span> <span
+			style="font-size: 14px; font-weight: bold; margin-left: 180px;">Gate
+			Surveyor Sign</span> <span
+			style="font-size: 14px; font-weight: bold; float: right;">Gate
+			Security Sign</span>
+	</div>
 
 
 

@@ -1,5 +1,7 @@
 package com.cwms.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.HashMap;
@@ -9,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,12 +27,10 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.cwms.entities.Branch;
 import com.cwms.entities.Company;
-import com.cwms.entities.GateIn;
 import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
-import com.cwms.repository.ChildMenuRepository;
 import com.cwms.repository.CompanyRepo;
 import com.cwms.repository.DestuffCrgRepository;
 import com.cwms.repository.GateInRepository;
@@ -40,7 +40,6 @@ import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.ManualContainerGateInRepo;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.ProcessNextIdRepository;
-import com.cwms.repository.VehicleTrackRepository;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.lowagie.text.DocumentException;
 
@@ -90,6 +89,9 @@ public class ImportReportsController {
 	
 	@Autowired
 	private ImportGateOutRepository gateOutRepo;
+	
+	
+
 
 	@PostMapping("/importGateInReport")
 	public ResponseEntity<?> importGateInReport(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -120,9 +122,12 @@ public class ImportReportsController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
+		
+		
 
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("city", branchAddress.getCity());
 		context.setVariable("state", branchAddress.getState());
@@ -151,6 +156,7 @@ public class ImportReportsController {
 		context.setVariable("impName", String.valueOf(gateData[20]));
 		context.setVariable("remark", String.valueOf(gateData[21]));
 		context.setVariable("conHealth", String.valueOf(gateData[22]));
+	
 
 		String htmlContent = templateEngine.process("CFSImportGateInReport", context);
 
@@ -203,7 +209,11 @@ public class ImportReportsController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
+		
+		
+
+
 		
 		BigDecimal totalPkgs = conData.stream()
 		        .map(record -> record[8]) // Renamed lambda parameter to "record"
@@ -222,6 +232,7 @@ public class ImportReportsController {
 
 		Context context = new Context();
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("jobOrderId", String.valueOf(conData.get(0)[0]));
 		context.setVariable("jobOrderDate", String.valueOf(conData.get(0)[1]));
@@ -282,7 +293,8 @@ public class ImportReportsController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+				+ branchAddress.getAddress3();
+		
 	
 		Context context = new Context();
 		
@@ -293,6 +305,7 @@ public class ImportReportsController {
 		        .reduce(BigDecimal.ZERO, BigDecimal::add); // Sum all values
 			
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("jobOrderId", String.valueOf(data[0]));
 		context.setVariable("jobOrderDate", String.valueOf(data[1]));
@@ -357,14 +370,11 @@ public class ImportReportsController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-		
-
-
-
+				+ branchAddress.getAddress3();
 
 		Context context = new Context();
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("jobOrderId", String.valueOf(crgData[0]));
 		context.setVariable("jobOrderDate", String.valueOf(crgData[1]));
@@ -423,14 +433,11 @@ public class ImportReportsController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-		
-
-
-
+				+ branchAddress.getAddress3();
 
 		Context context = new Context();
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("jobOrderId", String.valueOf(crgData[0]));
 		context.setVariable("jobOrderDate", String.valueOf(crgData[1]));
@@ -501,12 +508,11 @@ public class ImportReportsController {
 		}
 
 		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-		
-
+				+ branchAddress.getAddress3();
 
 		Context context = new Context();
 		context.setVariable("companyname", comp.getCompany_name());
+		context.setVariable("branchName", branchAddress.getBranchName());
 		context.setVariable("address", branchAdd);
 		context.setVariable("jobOrderId", String.valueOf(crgData[0]));
 		context.setVariable("jobOrderDate", String.valueOf(crgData[1]));
@@ -583,12 +589,11 @@ public class ImportReportsController {
     		}
 
     		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-
-
+    				+ branchAddress.getAddress3();
 
     		Context context = new Context();
     		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
     		context.setVariable("address", branchAdd);
     		context.setVariable("jobOrderId", crgData[0] != null ? String.valueOf(crgData[0]) : "");
     		context.setVariable("jobOrderDate", crgData[1] != null ? String.valueOf(crgData[1]) : "");
@@ -651,10 +656,11 @@ public class ImportReportsController {
     		}
 
     		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+    				+ branchAddress.getAddress3();
 
     		Context context = new Context();
     		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
     		context.setVariable("address", branchAdd);
     		context.setVariable("gatePassId", crgData[0] != null ? String.valueOf(crgData[0]) : "");
     		context.setVariable("gatePassDate", crgData[1] != null ? String.valueOf(crgData[1]) : "");
@@ -720,10 +726,11 @@ public class ImportReportsController {
     		}
 
     		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+    				+ branchAddress.getAddress3();
 
     		Context context = new Context();
     		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
     		context.setVariable("address", branchAdd);
     		context.setVariable("igmNo", crgData[0] != null ? String.valueOf(crgData[0]) : "");
     		context.setVariable("itemNo", crgData[1] != null ? String.valueOf(crgData[1]) : "");
@@ -746,6 +753,78 @@ public class ImportReportsController {
     		context.setVariable("remark", crgData[18] != null ? String.valueOf(crgData[18]) : "");
     		context.setVariable("conData", conData);
     		String htmlContent = templateEngine.process("CFSImportItemwiseLCLGatePass", context);
+
+    		ITextRenderer renderer = new ITextRenderer();
+
+    		renderer.setDocumentFromString(htmlContent);
+    		renderer.layout();
+
+    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    		renderer.createPDF(outputStream);
+
+    		byte[] pdfBytes = outputStream.toByteArray();
+
+    		String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
+    		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(base64Pdf);
+        }
+       
+	
+	@PostMapping("/importGatePassItemWiseDestuffReport")
+	public ResponseEntity<?> importGatePassItemWiseDestuffReport(@RequestParam("cid") String cid,
+			@RequestParam("bid") String bid, @RequestParam("gate") String gate)
+			throws DocumentException {
+
+
+    		List<Object[]> conData = importGatePassRepo.getDataForImportGatePassItemWiseLCLReport(cid, bid, gate);
+
+    		if (conData.isEmpty()) {
+    			return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
+    		}
+    		
+    		
+    		Object[] crgData = conData.get(0);
+
+    		Company comp = companyRepo.findByCompany_Id(cid);
+
+    		if (comp == null) {
+    			return new ResponseEntity<>("Company data not found", HttpStatus.CONFLICT);
+    		}
+
+    		Branch branchAddress = branchRepo.findByBranchIdWithCompanyId(cid, bid);
+
+    		if (branchAddress == null) {
+    			return new ResponseEntity<>("Branch data not found", HttpStatus.CONFLICT);
+    		}
+
+    		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+    				+ branchAddress.getAddress3();
+
+    		Context context = new Context();
+    		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
+    		context.setVariable("address", branchAdd);
+    		context.setVariable("igmNo", crgData[0] != null ? String.valueOf(crgData[0]) : "");
+    		context.setVariable("itemNo", crgData[1] != null ? String.valueOf(crgData[1]) : "");
+    		context.setVariable("gatePassId", crgData[2] != null ? String.valueOf(crgData[2]) : "");
+    		context.setVariable("igmDate", crgData[3] != null ? String.valueOf(crgData[3]) : "");
+    		context.setVariable("gatePassDate", crgData[4] != null ? String.valueOf(crgData[4]) : "");
+    		context.setVariable("boeNo", crgData[5] != null ? String.valueOf(crgData[5]) : "");
+    		context.setVariable("boeDate", crgData[6] != null ? String.valueOf(crgData[6]) : "");
+    		context.setVariable("blNo", crgData[7] != null ? String.valueOf(crgData[7]) : "");
+    		context.setVariable("vessel", crgData[8] != null ? String.valueOf(crgData[8]) : "");
+    		context.setVariable("voyageNo", crgData[9] != null ? String.valueOf(crgData[9]) : "");
+    		context.setVariable("con", crgData[10] != null ? String.valueOf(crgData[10]) : "");
+    		context.setVariable("cha", crgData[11] != null ? String.valueOf(crgData[11]) : "");
+    		context.setVariable("size", crgData[12] != null ? String.valueOf(crgData[12]) : "");
+    		context.setVariable("imp", crgData[13] != null ? String.valueOf(crgData[13]) : "");
+    		context.setVariable("sa", crgData[14] != null ? String.valueOf(crgData[14]) : "");
+    		context.setVariable("qty", crgData[15] != null ? String.valueOf(crgData[15]) : "");
+    		context.setVariable("validity", crgData[16] != null ? String.valueOf(crgData[16]) : "");
+    		context.setVariable("wt", crgData[17] != null ? String.valueOf(crgData[17]) : "");
+    		context.setVariable("remark", crgData[18] != null ? String.valueOf(crgData[18]) : "");
+    		context.setVariable("conData", conData);
+    		String htmlContent = templateEngine.process("CFSImportItemwiseDestuffGatePass", context);
 
     		ITextRenderer renderer = new ITextRenderer();
 
@@ -793,11 +872,11 @@ public class ImportReportsController {
     		}
 
     		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
-
+    				+ branchAddress.getAddress3();
 
     		Context context = new Context();
     		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
     		context.setVariable("address", branchAdd);
     		context.setVariable("gateOutId", crgData[0] != null ? String.valueOf(crgData[0]) : "");
     		context.setVariable("gateOutDate", crgData[1] != null ? String.valueOf(crgData[1]) : "");
@@ -871,11 +950,11 @@ public class ImportReportsController {
     		}
 
     		String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
-    				+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+    				+ branchAddress.getAddress3();
 
-    		
     		Context context = new Context();
     		context.setVariable("companyname", comp.getCompany_name());
+    		context.setVariable("branchName", branchAddress.getBranchName());
     		context.setVariable("address", branchAdd);
     		context.setVariable("gateInId", crgData[0] != null ? String.valueOf(crgData[0]) : "");
     		context.setVariable("gateInDate", crgData[1] != null ? String.valueOf(crgData[1]) : "");

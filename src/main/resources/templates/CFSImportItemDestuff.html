@@ -193,6 +193,33 @@ table.table th, table.table td {
 	width: 35%;
 	align-items: center;
 }
+
+.comNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.branchNameHeading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.address {
+	text-align: center;
+	font-size: 14px;
+}
+
+.heading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.content {
+	font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -209,20 +236,20 @@ table.table th, table.table td {
 
 	<!-- Centered heading with bold and font size 18 -->
 	<div style="margin-bottom: 18px; text-align: center;">
-		<span th:text="${companyname}"
-			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
-		<br /> <span th:text="${address}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
+
+		<span th:text="${companyname}" class="comNameHeading"></span> <br />
+		<span th:text="${branchName}" class="branchNameHeading"></span> <br />
+		<span th:text="${address}" class="address"></span>
 	</div>
 
 	<hr />
 
 	<div style="margin-top: 5px; margin-bottom: 5px; text-align: center;">
 		<span
-			style="text-align: center; font-weight: bold; font-size: 18px; text-decoration: underline;">WORK ORDER-DESTUFFING-FCL</span><br /> 
+			class="heading">WORK ORDER-DESTUFFING-FCL</span><br /> 
 	</div>
 
-
+  <hr />
 
 	<div style="margin-top: 10px; font-size: 14px;">
 	<span
@@ -233,54 +260,54 @@ table.table th, table.table td {
 	<table
 		style="width: 100%; margin-top: 20px; font-size: 20px; table-layout: fixed;">
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">WO No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${jobOrderId}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">WO No</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${jobOrderId}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">WO Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${jobOrderDate}"></td>
+			<td class="content" style="width: 18%; text-align: left; font-weight: bold;">WO Date</td>
+			<td class="content" style="width: 2%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${jobOrderDate}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">IGM
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">IGM
 				No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${igmNo}"></td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${igmNo}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Item No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${itemNo}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Item No</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${itemNo}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">BOE
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">BOE
 				No</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${boeNo}"></td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${boeNo}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">BOE Date</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${boeDate}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">BOE Date</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${boeDate}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">CHA</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${cha}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">CHA</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${cha}"></td>
 
-			<td style="width: 20%; text-align: left; font-weight: bold;">Importer</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 25%; text-align: left;" th:text="${imp}"></td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Importer</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${imp}"></td>
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Shipping Line</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${sl}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Shipping Line</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${sl}"></td>
 
 			
 		</tr>
 		<tr>
-			<td style="width: 15%; text-align: left; font-weight: bold;">Cargo Description</td>
-			<td style="width: 5%; text-align: center;">:</td>
-			<td style="width: 30%; text-align: left;" th:text="${commodity}"></td>
+			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Cargo Description</td>
+			<td class="content" style="width: 5%; text-align: center;">:</td>
+			<td class="content" style="width: 30%; text-align: left;" th:text="${commodity}"></td>
 
 			
 		</tr>
@@ -312,7 +339,7 @@ table.table th, table.table td {
 				<td style="border: 1px solid black;" th:text="${item[10]}"></td>
 				<!-- Cont No. -->
 				<td style="border: 1px solid black;"
-					th:text="${item[11]} + ${item[12]}"></td>
+					th:text="${item[11]} +'/'+ ${item[12]}"></td>
 				<!-- Size/Type -->
 				<td style="border: 1px solid black;" th:text="${item[13]}"></td>
 				<!-- Agent Seal -->
@@ -356,7 +383,7 @@ table.table th, table.table td {
 			   <span>_________________________</span><br />
 			   <span style="font-weight: bold;">CHA Sign</span>
 			</td>
-			<td style="width: 25%; text-align: left;">
+			<td  style="width: 25%; text-align: left;">
 			   <span>_________________________</span><br />
 			   <span style="font-weight: bold;">CFS Executive Sign</span>
 			</td>
