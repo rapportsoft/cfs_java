@@ -76,6 +76,37 @@ List<Object[]> getExportBackToTownReport(@Param("companyId") String companyId,
 
 
 
+//@Query(value = "SELECT NEW com.cwms.entities.GateIn(a.gateInId, " +
+//        "a.inGateInDate as gateInDateString, " +
+//        "a.containerNo as containerNo, " +
+//        "a.containerSize as containerSize, " +
+//        "a.containerType as containerType, " +
+//        "a.containerSealNo as containerSealNo, " +
+//        "a.vehicleNo as vehicleNo, " +
+//        "a.transporterName as transporterName, " +
+//        "a.gateInType as gateInType, " +
+//        "a.importerName as importerName, " +
+//        "a.cha as cha, " +
+//        "a.sl as sl, " +
+//        "a.comments as comments, " +
+//        "a.commodityDescription as commodityDescription, " +
+//        "a.containerHealth as containerHealth, " +
+//        "s.partyName as shippingLineName, " +
+//        "p.partyName as transporter) " +
+//        "FROM GateIn a " +
+//        "LEFT OUTER JOIN Party s ON s.companyId = a.companyId AND s.partyId = a.sl " +
+//        "LEFT OUTER JOIN Party p ON p.companyId = a.companyId AND p.partyId = a.transporter " +
+//        "WHERE a.companyId = :companyId " +
+//        "AND a.branchId = :branchId " +
+//        "AND a.profitcentreId = :profitcentreId " +
+//        "AND a.status = 'A' " +
+//        "AND a.gateInId = :gateInId")
+//List<GateIn> getExportPortReturnReport(@Param("companyId") String companyId,
+//                               @Param("branchId") String branchId,
+//                               @Param("profitcentreId") String profitcentreId,
+//                               @Param("gateInId") String gateInId);
+
+
 @Query(value = "SELECT NEW com.cwms.entities.GateIn(a.gateInId, " +
         "a.inGateInDate as gateInDateString, " +
         "a.containerNo as containerNo, " +
@@ -92,10 +123,12 @@ List<Object[]> getExportBackToTownReport(@Param("companyId") String companyId,
         "a.commodityDescription as commodityDescription, " +
         "a.containerHealth as containerHealth, " +
         "s.partyName as shippingLineName, " +
-        "p.partyName as transporter) " +
+        "p.partyName as transporter, " +
+        "o.partyName as onAccountOf) " +
         "FROM GateIn a " +
-        "LEFT OUTER JOIN Party s ON s.companyId = a.companyId AND s.partyId = a.sl " +
-        "LEFT OUTER JOIN Party p ON p.companyId = a.companyId AND p.partyId = a.transporter " +
+        "LEFT OUTER JOIN Party s ON s.companyId = a.companyId AND s.branchId = a.branchId AND s.partyId = a.sl " +
+        "LEFT OUTER JOIN Party p ON p.companyId = a.companyId AND p.branchId = a.branchId AND p.partyId = a.transporter " +
+        "LEFT OUTER JOIN Party o ON o.companyId = a.companyId AND o.branchId = a.branchId AND o.partyId = a.onAccountOf " +
         "WHERE a.companyId = :companyId " +
         "AND a.branchId = :branchId " +
         "AND a.profitcentreId = :profitcentreId " +
@@ -105,9 +138,6 @@ List<GateIn> getExportPortReturnReport(@Param("companyId") String companyId,
                                @Param("branchId") String branchId,
                                @Param("profitcentreId") String profitcentreId,
                                @Param("gateInId") String gateInId);
-
-
-
 	
 
 }

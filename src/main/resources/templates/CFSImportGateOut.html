@@ -276,19 +276,11 @@ table.table th, table.table td {
 			<td class="content" style="width: 5%; text-align: center;">:</td>
 			<td class="content" style="width: 30%; text-align: left;" th:text="${vehicleNo}"></td>
 
-			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Transporter Name</td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Vessel / VCN No</td>
 			<td class="content" style="width: 5%; text-align: center;">:</td>
-			<td class="content" style="width: 25%; text-align: left;" th:text="${transporterName}"></td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${vessel}+' / '+${via}"></td>
 		</tr>
-	    <tr>
-			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Vessel / VCN No</td>
-			<td class="content" style="width: 5%; text-align: center;">:</td>
-			<td class="content" style="width: 30%; text-align: left;" th:text="${vessel}+' / '+${via}"></td>
 
-			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Seal No</td>
-			<td class="content" style="width: 5%; text-align: center;">:</td>
-			<td class="content" style="width: 25%; text-align: left;" th:text="${sealNo}"></td>
-		</tr>
 		 <tr>
 			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">BL No</td>
 			<td class="content" style="width: 5%; text-align: center;">:</td>
@@ -339,17 +331,11 @@ table.table th, table.table td {
 			<td class="content" style="width: 5%; text-align: center;">:</td>
 			<td class="content" style="width: 30%; text-align: left;" th:text="${cha}"></td>
 
-			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Condition</td>
+			<td class="content" style="width: 20%; text-align: left; font-weight: bold;">Remarks</td>
 			<td class="content" style="width: 5%; text-align: center;">:</td>
-			<td class="content" style="width: 25%; text-align: left;" th:text="${condition}"></td>
+			<td class="content" style="width: 25%; text-align: left;" th:text="${remark}"></td>
 		</tr>
-		 <tr>
-			<td class="content" style="width: 15%; text-align: left; font-weight: bold;">Remarks</td>
-			<td class="content" style="width: 5%; text-align: center;">:</td>
-			<td class="content" style="width: 30%; text-align: left;" th:text="${remarks}"></td>
-
-			
-		</tr>
+		
 	</table>
 
 	<hr/>

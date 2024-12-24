@@ -4268,7 +4268,7 @@ public GateIn(String gateInId, String gateInType, String profitcentreId, BigDeci
 public GateIn(String gateInId, Date inGateInDate, String containerNo, String containerSize, String containerType,
 	    String containerSealNo, String vehicleNo, String transporterName, String gateInType,
 	    String importerName, String cha, String sl, String comments, String commodityDescription, String containerHealth, 
-	    String shippingLineName, String transporter) {
+	    String shippingLineName, String transporter, String onAccountOf) {
 	    this.gateInId = gateInId;
 	    this.inGateInDate = inGateInDate;
 	    this.containerNo = containerNo;
@@ -4286,6 +4286,7 @@ public GateIn(String gateInId, Date inGateInDate, String containerNo, String con
 	    this.containerHealth = containerHealth;
 	    this.shippingLineName = shippingLineName;
 	    this.transporter = transporter;
+	    this.onAccountOf = onAccountOf;
 	}
 
 
