@@ -83,6 +83,7 @@ public class ExportStuffRequestService {
 		        map.put("noOfPackages", row[8]);
 		        map.put("pod", row[9]); 
 		        map.put("grossWeight", row[10]);
+		        map.put("typeOfPackage", row[11]);
 		        return map;
 		    }).collect(Collectors.toList());			
 		

@@ -78,7 +78,7 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
 	
 	
 	
-	@Query("SELECT E.sbNo, E.sbTransId, E.srno, g.exporterId, g.exporterName, E.sbDate, E.stuffReqQty, E.commodity, E.noOfPackages, g.pod, E.grossWeight " +
+	@Query("SELECT E.sbNo, E.sbTransId, E.srno, g.exporterId, g.exporterName, E.sbDate, E.stuffReqQty, E.commodity, E.noOfPackages, g.pod, E.grossWeight, E.typeOfPackage " +
 		       "FROM ExportSbCargoEntry E " +
 		       "LEFT JOIN ExportSbEntry g ON E.companyId = g.companyId AND E.branchId = g.branchId AND g.sbNo = E.sbNo AND g.sbTransId = E.sbTransId AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' " +
 		       "LEFT JOIN ExportStuffRequest st ON E.companyId = st.companyId AND E.branchId = st.branchId AND st.sbNo = E.sbNo AND st.sbTransId = E.sbTransId AND st.profitcentreId = E.profitcentreId AND st.status <> 'D' AND st.stuffReqId = :stuffReqId " +
