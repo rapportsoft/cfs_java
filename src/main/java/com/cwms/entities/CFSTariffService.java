@@ -6,7 +6,7 @@ import java.util.Date;
 @Entity
 @Table(name = "cfstdtrfsrv")
 @IdClass(CfstdtrfsrvId.class)
-public class CFSTariffService 
+public class CFSTariffService implements Cloneable
 {
 	
 	    @Id
@@ -38,7 +38,7 @@ public class CFSTariffService
 	    private BigDecimal srNo;
 
 	    @Id
-	    @Column(name = "Container_Size", length = 5)
+	    @Column(name = "Container_Size", length = 10)
 	    private String containerSize;
 
 	    @Id
@@ -105,9 +105,31 @@ public class CFSTariffService
 	    private String ammendStatus;
 
 	    @Column(name = "Default_chk", length = 1, columnDefinition = "char(1) default 'N'")
-	    private String defaultChk = "N";
-
+	    private String defaultChk = "N";	    
+	    
+	    transient private String sacCode;
+	    transient private String serviceName;
+	    
+	    
+	    
+	    
 		
+		public String getServiceName() {
+			return serviceName;
+		}
+
+		public void setServiceName(String serviceName) {
+			this.serviceName = serviceName;
+		}
+
+		public String getSacCode() {
+			return sacCode;
+		}
+
+		public void setSacCode(String sacCode) {
+			this.sacCode = sacCode;
+		}
+
 		public CFSTariffService(String companyId, String branchId, String finYear, String cfsTariffNo,
 				String cfsAmendNo, String serviceId, BigDecimal srNo, String containerSize, String commodityCode,
 				String cargoType, String status, String rangeType, String profitCentreId, String serviceUnit,
@@ -379,9 +401,123 @@ public class CFSTariffService
 			this.serviceId = serviceId;
 			this.rate = rate;
 		}
+
+		
+//		For Adding a tariff
+		public CFSTariffService(String companyId, String branchId, String finYear, String cfsTariffNo,
+				String cfsAmendNo, String serviceId, BigDecimal srNo, String containerSize, String commodityCode,
+				String cargoType, String status, String rangeType, String profitCentreId, String serviceUnit,
+				String serviceUnitI, BigDecimal fromRange, BigDecimal toRange, BigDecimal rate, BigDecimal minimumRate,
+				String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+				Date approvedDate, String currencyId, String ammendStatus, String defaultChk, String sacCode) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.cfsTariffNo = cfsTariffNo;
+			this.cfsAmendNo = cfsAmendNo;
+			this.serviceId = serviceId;
+			this.srNo = srNo;
+			this.containerSize = containerSize;
+			this.commodityCode = commodityCode;
+			this.cargoType = cargoType;
+			this.status = status;
+			this.rangeType = rangeType;
+			this.profitCentreId = profitCentreId;
+			this.serviceUnit = serviceUnit;
+			this.serviceUnitI = serviceUnitI;
+			this.fromRange = fromRange;
+			this.toRange = toRange;
+			this.rate = rate;
+			this.minimumRate = minimumRate;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.currencyId = currencyId;
+			this.ammendStatus = ammendStatus;
+			this.defaultChk = defaultChk;
+			this.sacCode = sacCode;
+		}
+
+		@Override
+		public String toString() {
+			return "CFSTariffService [companyId=" + companyId + ", branchId=" + branchId + ", finYear=" + finYear
+					+ ", cfsTariffNo=" + cfsTariffNo + ", cfsAmendNo=" + cfsAmendNo + ", serviceId=" + serviceId
+					+ ", srNo=" + srNo + ", containerSize=" + containerSize + ", commodityCode=" + commodityCode
+					+ ", cargoType=" + cargoType + ", status=" + status + ", rangeType=" + rangeType
+					+ ", profitCentreId=" + profitCentreId + ", serviceUnit=" + serviceUnit + ", serviceUnitI="
+					+ serviceUnitI + ", fromRange=" + fromRange + ", toRange=" + toRange + ", rate=" + rate
+					+ ", minimumRate=" + minimumRate + ", createdBy=" + createdBy + ", createdDate=" + createdDate
+					+ ", editedBy=" + editedBy + ", editedDate=" + editedDate + ", approvedBy=" + approvedBy
+					+ ", approvedDate=" + approvedDate + ", currencyId=" + currencyId + ", ammendStatus=" + ammendStatus
+					+ ", defaultChk=" + defaultChk + ", sacCode=" + sacCode + ", getSacCode()=" + getSacCode()
+					+ ", getCompanyId()=" + getCompanyId() + ", getBranchId()=" + getBranchId() + ", getFinYear()="
+					+ getFinYear() + ", getCfsTariffNo()=" + getCfsTariffNo() + ", getCfsAmendNo()=" + getCfsAmendNo()
+					+ ", getServiceId()=" + getServiceId() + ", getSrNo()=" + getSrNo() + ", getContainerSize()="
+					+ getContainerSize() + ", getCommodityCode()=" + getCommodityCode() + ", getCargoType()="
+					+ getCargoType() + ", getStatus()=" + getStatus() + ", getRangeType()=" + getRangeType()
+					+ ", getProfitCentreId()=" + getProfitCentreId() + ", getServiceUnit()=" + getServiceUnit()
+					+ ", getServiceUnitI()=" + getServiceUnitI() + ", getFromRange()=" + getFromRange()
+					+ ", getToRange()=" + getToRange() + ", getRate()=" + getRate() + ", getMinimumRate()="
+					+ getMinimumRate() + ", getCreatedBy()=" + getCreatedBy() + ", getCreatedDate()=" + getCreatedDate()
+					+ ", getEditedBy()=" + getEditedBy() + ", getEditedDate()=" + getEditedDate() + ", getApprovedBy()="
+					+ getApprovedBy() + ", getApprovedDate()=" + getApprovedDate() + ", getCurrencyId()="
+					+ getCurrencyId() + ", getAmmendStatus()=" + getAmmendStatus() + ", getDefaultChk()="
+					+ getDefaultChk() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+					+ super.toString() + "]";
+		}
 	    
 	    
-	    
+		
+		@Override
+		public Object clone() throws CloneNotSupportedException {
+		    return super.clone();
+		}
+
+		
+		
+//		For Tariff Report
+		public CFSTariffService(BigDecimal srNo, String containerSize, String commodityCode, String cargoType, String rangeType,
+				BigDecimal fromRange, BigDecimal toRange, BigDecimal rate, String serviceName, String currencyId) {
+			super();
+			this.srNo = srNo;
+			this.containerSize = containerSize;
+			this.commodityCode = commodityCode;
+			this.cargoType = cargoType;
+			this.rangeType = rangeType;
+			this.fromRange = fromRange;
+			this.toRange = toRange;
+			this.rate = rate;
+			this.serviceName = serviceName;
+			this.currencyId = currencyId;
+		}
+		
+		
+		
+		
+//		For AuditTrail Report
+		public CFSTariffService(BigDecimal srNo, String containerSize, String commodityCode, String cargoType, String rangeType,
+				BigDecimal fromRange, BigDecimal toRange, BigDecimal rate, String serviceName, String currencyId, String cfsAmendNo,
+				String serviceId, String  editedBy, Date editedDate) {
+			super();
+			this.srNo = srNo;
+			this.containerSize = containerSize;
+			this.commodityCode = commodityCode;
+			this.cargoType = cargoType;
+			this.rangeType = rangeType;
+			this.fromRange = fromRange;
+			this.toRange = toRange;
+			this.rate = rate;
+			this.serviceName = serviceName;
+			this.currencyId = currencyId;
+			this.cfsAmendNo = cfsAmendNo;
+			this.serviceId = serviceId;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+		}
 	
 	
 }

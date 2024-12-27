@@ -15,6 +15,38 @@ import jakarta.transaction.Transactional;
 public interface SerViceRepositary extends JpaRepository<Services, String>
 {	 
 	 
+	
+
+	@Query(value = "SELECT new com.cwms.entities.Services(" +
+            "s.serviceId, s.serviceShortDesc, s.criteriaType, s.companyId, s.branchId, s.serviceUnit, s.serviceUnit1) " +
+            "FROM Services s " +            
+            "WHERE s.companyId = :companyId AND s.branchId = :branchId AND s.status <> 'D' AND s.serviceShortDesc = :serviceShortDesc")
+	Services getServiceForTariffUpload(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("serviceShortDesc") String serviceShortDesc);
+
+	
+	
+	@Query(value = "SELECT new com.cwms.entities.Services(" +
+            "s.serviceId, s.serviceShortDesc, s.criteriaType, j.jarDtlDesc) " +
+            "FROM Services s " +
+            "LEFT JOIN JarDetail j " +
+            "ON s.companyId = j.companyId AND j.status <> 'D' AND j.jarId = 'J00024' AND j.jarDtlId = s.sacCode " +
+            "WHERE s.companyId = :companyId AND s.branchId = :branchId AND s.status <> 'D' " +
+            "ORDER BY s.serviceId DESC")
+List<Services> getActiveServicesTariff(@Param("companyId") String companyId, 
+                                    @Param("branchId") String branchId);
+
+	
+	@Query(value = "SELECT new com.cwms.entities.Services(" +
+            "s.serviceId, s.serviceShortDesc, s.serviceLongDesc, s.serviceUnit, s.serviceUnit1, " +
+            "s.serviceType, s.typeOfCharges, s.taxApplicable, s.taxId, s.commodity, s.rangeType, " +
+            "s.criteriaType, j.jarDtlDesc, s.defaultChk) " +
+            "FROM Services s " +
+            "LEFT join  JarDetail j on s.companyId = j.companyId And s.sacCode = j.jarDtlId AND j.jarId = 'J00024' AND j.status <> 'D' " +
+            "WHERE s.companyId = :companyId AND s.branchId = :branchId AND s.serviceId = :serviceId AND s.status <> 'D' " +
+            "ORDER BY s.serviceId DESC")
+Services getActiveService(String companyId, String branchId, String serviceId);
+	
+	
 	@Query(value = "SELECT * FROM Services AS s WHERE s.Company_Id = :companyId AND s.Branch_Id = :branchId AND s.Service_Id = :serviceId  AND s.status <> 'D'", nativeQuery = true)
 	public Services findByService_Id(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("serviceId") String serviceId);
 

@@ -789,6 +789,46 @@ public class Services {
 	}
 	
 	
+//	tariff select
+	public Services(String serviceId, String serviceShortDesc, String serviceLongDesc, String serviceUnit,
+			String serviceUnit1, String serviceType, String typeOfCharges, String taxApplicable, String taxId,
+			String commodity, String rangeType, String criteriaType, String sacCode, String defaultChk) {
+		super();
+		this.serviceId = serviceId;
+		this.serviceShortDesc = serviceShortDesc;
+		this.serviceLongDesc = serviceLongDesc;
+		this.serviceUnit = serviceUnit;
+		this.serviceUnit1 = serviceUnit1;
+		this.serviceType = serviceType;
+		this.typeOfCharges = typeOfCharges;
+		this.taxApplicable = taxApplicable;
+		this.taxId = taxId;
+		this.commodity = commodity;
+		this.rangeType = rangeType;
+		this.criteriaType = criteriaType;
+		this.sacCode = sacCode;
+		this.defaultChk = defaultChk;
+	}
+
+	public Services(String serviceId, String serviceShortDesc, String criteriaType, String sacCode) {
+		super();
+		this.serviceId = serviceId;
+		this.serviceShortDesc = serviceShortDesc;
+		this.criteriaType = criteriaType;
+		this.sacCode = sacCode;
+	}
+	
+	
+	public Services(String serviceId, String serviceShortDesc, String criteriaType, String companyId, String branchId, String serviceUnit, String serviceUnit1) {
+		super();
+		this.serviceId = serviceId;
+		this.serviceShortDesc = serviceShortDesc;
+		this.criteriaType = criteriaType;
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.serviceUnit = serviceUnit;
+		this.serviceUnit1 = serviceUnit1;
+	}
 	
 	
 }

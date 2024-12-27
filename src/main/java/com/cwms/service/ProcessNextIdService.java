@@ -1542,4 +1542,24 @@ public class ProcessNextIdService {
 				    // Return the formatted next ID as a String
 				    return formattedNextId;
 				}
+				
+				@Transactional
+				public synchronized String autoCFSTariffNo(String companyId, String branchId, String processId) {
+
+					String nextIdDholi = processNextIdRepository.findNextIdByCompositeKey(companyId, branchId, processId);
+
+				    
+				    String firstThreeCharacters = nextIdDholi.substring(0, 3);
+				    String lastSevenDigits = nextIdDholi.substring(nextIdDholi.length() - 7);
+				    
+				    int incrementedNumber = Integer.parseInt(lastSevenDigits) + 1;
+				    
+				    String formattedIncrementedNumber = String.format("%07d", incrementedNumber);
+
+				    String formattedNextId = firstThreeCharacters  + formattedIncrementedNumber;
+
+				    processNextIdRepository.updateNextIdByCompositeKey(companyId, branchId, processId, formattedNextId);
+
+				    return formattedNextId;
+				}
 }

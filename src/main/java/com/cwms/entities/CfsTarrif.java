@@ -3,10 +3,12 @@ package com.cwms.entities;
 import jakarta.persistence.*;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @IdClass(CfstdtrfId.class)
 @Table(name = "cfstdtrf")
-public class CfsTarrif {
+public class CfsTarrif implements Cloneable {
 	@Id
     @Column(name = "Company_Id", length = 6)
     private String companyId;
@@ -63,14 +65,17 @@ public class CfsTarrif {
     @Column(name = "Consoler_Id", length = 6)
     private String consolerId;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CFS_Tariff_Date")
     private Date cfsTariffDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CFS_From_Date")
     private Date cfsFromDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CFS_Validate_Date")
     private Date cfsValidateDate;
@@ -87,6 +92,7 @@ public class CfsTarrif {
     @Column(name = "Created_By", length = 10)
     private String createdBy;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "Created_Date")
     private Date createdDate;
@@ -94,6 +100,7 @@ public class CfsTarrif {
     @Column(name = "Edited_By", length = 10)
     private String editedBy;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "Edited_Date")
     private Date editedDate;
@@ -101,6 +108,7 @@ public class CfsTarrif {
     @Column(name = "Approved_By", length = 10)
     private String approvedBy;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "Approved_Date")
     private Date approvedDate;
@@ -122,7 +130,240 @@ public class CfsTarrif {
 
     @Column(name = "Ref_Tariff_Amnd_Id", length = 3)
     private String refTariffAmndId;
+    
+    transient private String partyName;
+    transient private String shippingAgentName;
+    transient private String shippingLineName;
+    transient private String chaName;
+    transient private String importerName;
+    transient private String forwarderName;
+    
+    transient private String applyTariffNo;
+    transient private String applyAmendNo;
 
+    
+    
+    
+    
+    
+
+	
+
+	public String getApplyTariffNo() {
+		return applyTariffNo;
+	}
+
+
+
+
+
+
+
+	public void setApplyTariffNo(String applyTariffNo) {
+		this.applyTariffNo = applyTariffNo;
+	}
+
+
+
+
+
+
+
+	public String getApplyAmendNo() {
+		return applyAmendNo;
+	}
+
+
+
+
+
+
+
+	public void setApplyAmendNo(String applyAmendNo) {
+		this.applyAmendNo = applyAmendNo;
+	}
+
+
+
+
+
+
+
+	public String getPartyName() {
+		return partyName;
+	}
+
+
+
+
+
+
+
+	public void setPartyName(String partyName) {
+		this.partyName = partyName;
+	}
+
+
+
+
+
+
+
+	public String getShippingAgentName() {
+		return shippingAgentName;
+	}
+
+
+
+
+
+
+
+	public void setShippingAgentName(String shippingAgentName) {
+		this.shippingAgentName = shippingAgentName;
+	}
+
+
+
+
+
+
+
+	public String getShippingLineName() {
+		return shippingLineName;
+	}
+
+
+
+
+
+
+
+	public void setShippingLineName(String shippingLineName) {
+		this.shippingLineName = shippingLineName;
+	}
+
+
+
+
+
+
+
+	public String getChaName() {
+		return chaName;
+	}
+
+
+
+
+
+
+
+	public void setChaName(String chaName) {
+		this.chaName = chaName;
+	}
+
+
+
+
+
+
+
+	public String getImporterName() {
+		return importerName;
+	}
+
+
+
+
+
+
+
+	public void setImporterName(String importerName) {
+		this.importerName = importerName;
+	}
+
+
+
+
+
+
+
+	public String getForwarderName() {
+		return forwarderName;
+	}
+
+
+
+
+
+
+
+	public void setForwarderName(String forwarderName) {
+		this.forwarderName = forwarderName;
+	}
+
+
+
+
+
+
+
+	public CfsTarrif(String companyId, String branchId, String finYear, String profitCentreId, String cfsTariffNo,
+			String cfsAmndNo, String partyId, String status, String contractName, String shippingLine, String cha,
+			String importerId, String exporterId, String shippingAgent, String forwarderId, String consolerId,
+			Date cfsTariffDate, Date cfsFromDate, Date cfsValidateDate, String filePath, String refTariffNo,
+			String comments, String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+			Date approvedDate, String ammendStatus, String nvoccTariff, String offdocTariff, String tariffType,
+			String refTariffId, String refTariffAmndId, String partyName, String shippingAgentName,
+			String shippingLineName, String chaName, String importerName, String forwarderName) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.profitCentreId = profitCentreId;
+		this.cfsTariffNo = cfsTariffNo;
+		this.cfsAmndNo = cfsAmndNo;
+		this.partyId = partyId;
+		this.status = status;
+		this.contractName = contractName;
+		this.shippingLine = shippingLine;
+		this.cha = cha;
+		this.importerId = importerId;
+		this.exporterId = exporterId;
+		this.shippingAgent = shippingAgent;
+		this.forwarderId = forwarderId;
+		this.consolerId = consolerId;
+		this.cfsTariffDate = cfsTariffDate;
+		this.cfsFromDate = cfsFromDate;
+		this.cfsValidateDate = cfsValidateDate;
+		this.filePath = filePath;
+		this.refTariffNo = refTariffNo;
+		this.comments = comments;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.ammendStatus = ammendStatus;
+		this.nvoccTariff = nvoccTariff;
+		this.offdocTariff = offdocTariff;
+		this.tariffType = tariffType;
+		this.refTariffId = refTariffId;
+		this.refTariffAmndId = refTariffAmndId;
+		this.partyName = partyName;
+		this.shippingAgentName = shippingAgentName;
+		this.shippingLineName = shippingLineName;
+		this.chaName = chaName;
+		this.importerName = importerName;
+		this.forwarderName = forwarderName;
+	}
+	
+	
+	
+	
+	
 	
 
 	public CfsTarrif(String companyId, String branchId, String finYear, String profitCentreId, String cfsTariffNo,
@@ -445,5 +686,96 @@ public class CfsTarrif {
 	public void setRefTariffAmndId(String refTariffAmndId) {
 		this.refTariffAmndId = refTariffAmndId;
 	}
-    
+
+	public CfsTarrif(String cfsTariffNo, String cfsAmndNo, String contractName) {
+		super();
+		this.cfsTariffNo = cfsTariffNo;
+		this.cfsAmndNo = cfsAmndNo;
+		this.contractName = contractName;
+	}
+
+	@Override
+	public String toString() {
+		return "CfsTarrif [companyId=" + companyId + ", branchId=" + branchId + ", finYear=" + finYear
+				+ ", profitCentreId=" + profitCentreId + ", cfsTariffNo=" + cfsTariffNo + ", cfsAmndNo=" + cfsAmndNo
+				+ ", partyId=" + partyId + ", status=" + status + ", contractName=" + contractName + ", shippingLine="
+				+ shippingLine + ", cha=" + cha + ", importerId=" + importerId + ", exporterId=" + exporterId
+				+ ", shippingAgent=" + shippingAgent + ", forwarderId=" + forwarderId + ", consolerId=" + consolerId
+				+ ", cfsTariffDate=" + cfsTariffDate + ", cfsFromDate=" + cfsFromDate + ", cfsValidateDate="
+				+ cfsValidateDate + ", filePath=" + filePath + ", refTariffNo=" + refTariffNo + ", comments=" + comments
+				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", editedBy=" + editedBy
+				+ ", editedDate=" + editedDate + ", approvedBy=" + approvedBy + ", approvedDate=" + approvedDate
+				+ ", ammendStatus=" + ammendStatus + ", nvoccTariff=" + nvoccTariff + ", offdocTariff=" + offdocTariff
+				+ ", tariffType=" + tariffType + ", refTariffId=" + refTariffId + ", refTariffAmndId=" + refTariffAmndId
+				+ "]";
+	}
+
+	public CfsTarrif(String cfsTariffNo, String cfsAmndNo, String status, String ammendStatus) {
+		super();
+		this.cfsTariffNo = cfsTariffNo;
+		this.cfsAmndNo = cfsAmndNo;
+		this.status = status;
+		this.ammendStatus = ammendStatus;
+	}	
+	
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+	    return super.clone();
+	}
+
+
+
+
+
+
+
+	public CfsTarrif(String partyId, String status, String contractName, String shippingLine, String cha,
+			String importerId, String exporterId, String shippingAgent, String forwarderId, String consolerId,
+			Date cfsTariffDate, Date cfsFromDate, Date cfsValidateDate) {
+		super();
+		this.partyId = partyId;
+		this.status = status;
+		this.contractName = contractName;
+		this.shippingLine = shippingLine;
+		this.cha = cha;
+		this.importerId = importerId;
+		this.exporterId = exporterId;
+		this.shippingAgent = shippingAgent;
+		this.forwarderId = forwarderId;
+		this.consolerId = consolerId;
+		this.cfsTariffDate = cfsTariffDate;
+		this.cfsFromDate = cfsFromDate;
+		this.cfsValidateDate = cfsValidateDate;
+	}
+
+
+
+
+
+// AuditTrail Report
+
+	public CfsTarrif(String cfsTariffNo, String cfsAmndNo, String contractName, String partyName,
+			String shippingAgentName, String shippingLineName, String chaName, String importerName,
+			String forwarderName) {
+		super();
+		this.cfsTariffNo = cfsTariffNo;
+		this.cfsAmndNo = cfsAmndNo;
+		this.contractName = contractName;
+		this.partyName = partyName;
+		this.shippingAgentName = shippingAgentName;
+		this.shippingLineName = shippingLineName;
+		this.chaName = chaName;
+		this.importerName = importerName;
+		this.forwarderName = forwarderName;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
