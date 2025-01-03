@@ -123,6 +123,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/exportBackToTown/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/portReturn/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/importReports/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/api/exportOperationalReports/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/importReports/**")).authenticated()
                         .anyRequest().authenticated()
                 )
