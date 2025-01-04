@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +30,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties.Couchbase;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -160,9 +162,8 @@ public class ExportReportsServiceReports {
 		        		sbNo,acc,cha);
 	            break;
 	            
-	        case "WEIGHMENT REPORT":
-	            importDetails = importReportsRepository.getWeighmentReport(
-	                    companyId, branchId, startDate, endDate, sbNo, bookingNo, exporterName, acc, cha);
+	        case "Export Stuffing Equipments Report":
+	            importDetails = exportOperationalReportRepo.getEquipmentActivityDetails(companyId, branchId);
 	            break;
 	            
 	        case "TRANSPORTER WISE TUES REPORT":
@@ -514,17 +515,6 @@ public class ExportReportsServiceReports {
 
 		        // Populate data rows
 		        int rowNum = headerRowIndex + 1;
-
-
-		        BigDecimal totalInbondPkgs = BigDecimal.ZERO;
-		        BigDecimal totalInbondWeight = BigDecimal.ZERO;
-		        BigDecimal totalInbondAssetValue = BigDecimal.ZERO;
-		        BigDecimal totalInbondDutyValue = BigDecimal.ZERO;
-		        BigDecimal totalBalPkgs = BigDecimal.ZERO;
-		        BigDecimal totalBalWeight = BigDecimal.ZERO;
-		        BigDecimal totalBalAssetValue = BigDecimal.ZERO;
-		        BigDecimal totalBalDutyValue = BigDecimal.ZERO;
-		        BigDecimal totalAreaBalance = BigDecimal.ZERO;
 		        
 		        
 		        int serialNo = 1; // Initialize serial number counter
@@ -573,13 +563,44 @@ public class ExportReportsServiceReports {
 		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
 		                    break;
 
+//		                case "Dec Pkgs":
+//		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "0.00");
+//		                    cell.setCellStyle(numberCellStyle);
+//		                    break;
+		                    
 		                case "Dec Pkgs":
-		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "0.00");
+		                    // Parsing logic for Dec Pkgs as Double
+		                    Double decPkgs = 0.00;
+		                    if (resultData1[6] != null) {
+		                        try {
+		                            decPkgs = Double.parseDouble(resultData1[6].toString());
+		                        } catch (NumberFormatException e) {
+		                            decPkgs = 0.00;
+		                        }
+		                    }
+		                    cell.setCellValue(decPkgs);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
+//		                case "Dec Wt":
+//		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "0.00");
+//		                    break;
+		                    
+		                    
 		                case "Dec Wt":
-		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "0.00");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double decWt = 0.00;
+		                    if (resultData1[7] != null) {
+		                        try {
+		                            decWt = Double.parseDouble(resultData1[7].toString());
+		                        } catch (NumberFormatException e) {
+		                            decWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(decWt);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
+
 
 		                case "Carting Date":
 		                    if (resultData1[8] != null) {
@@ -590,17 +611,60 @@ public class ExportReportsServiceReports {
 		                    }
 		                    break;
 
+//		                case "Bal Pkgs":
+//		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
+//		                    break;
+//
+//		                case "Bal Wt":
+//		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
+//		                    break;
+//
+//		                case "Bal Area":
+//		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+//		                    break; 
+		                    
 		                case "Bal Pkgs":
-		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double balPkgs = 0.00;
+		                    if (resultData1[9] != null) {
+		                        try {
+		                            balPkgs = Double.parseDouble(resultData1[9].toString());
+		                        } catch (NumberFormatException e) {
+		                            balPkgs = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(balPkgs);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "Bal Wt":
-		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double balWt = 0.00;
+		                    if (resultData1[10] != null) {
+		                        try {
+		                            balWt = Double.parseDouble(resultData1[10].toString());
+		                        } catch (NumberFormatException e) {
+		                            balWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(balWt);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "Bal Area":
-		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double balArea = 0.00;
+		                    if (resultData1[11] != null) {
+		                        try {
+		                            balArea = Double.parseDouble(resultData1[11].toString());
+		                        } catch (NumberFormatException e) {
+		                            balArea = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(balArea);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
+
 
 		                case "WH Location":
 		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
@@ -618,8 +682,22 @@ public class ExportReportsServiceReports {
 		                    cell.setCellValue(resultData1[15] != null ? resultData1[15].toString() : "");
 		                    break;
 
+//		                case "FOB":
+//		                    cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "0.00");
+//		                    break;
+		                    
 		                case "FOB":
-		                    cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "0.00");
+		                    // Parsing logic for FOB as Double
+		                    Double fob = 0.00;
+		                    if (resultData1[16] != null) {
+		                        try {
+		                            fob = Double.parseDouble(resultData1[16].toString());
+		                        } catch (NumberFormatException e) {
+		                            fob = 0.00;
+		                        }
+		                    }
+		                    cell.setCellValue(fob);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                default:
@@ -1137,26 +1215,97 @@ public class ExportReportsServiceReports {
 		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
 		                    break;
 
+//		                case "SB Pkgs":
+//		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "0");
+//		                    break;
+//
+//		                case "SB WT":
+//		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "0.00");
+//		                    break;
+//
+//		                case "PKG WT":
+//		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "0.00");
+//		                    break;
+//
+//		                case "JO PKGS":
+//		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "0");
+//		                    break;
+//
+//		                case "JO WT":
+//		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "0.00");
+//		                    break;
+
 		                case "SB Pkgs":
-		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "0");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0
+		                    Double sbPkgs = 0.00;
+		                    if (resultData1[8] != null) {
+		                        try {
+		                            sbPkgs = Double.parseDouble(resultData1[8].toString());
+		                        } catch (NumberFormatException e) {
+		                            sbPkgs = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(sbPkgs);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "SB WT":
-		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "0.00");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double sbWt = 0.00;
+		                    if (resultData1[9] != null) {
+		                        try {
+		                            sbWt = Double.parseDouble(resultData1[9].toString());
+		                        } catch (NumberFormatException e) {
+		                            sbWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(sbWt);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "PKG WT":
-		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "0.00");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double pkgWt = 0.00;
+		                    if (resultData1[10] != null) {
+		                        try {
+		                            pkgWt = Double.parseDouble(resultData1[10].toString());
+		                        } catch (NumberFormatException e) {
+		                            pkgWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(pkgWt);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "JO PKGS":
-		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "0");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0
+		                    Double joPkgs = 0.00;
+		                    if (resultData1[11] != null) {
+		                        try {
+		                            joPkgs = Double.parseDouble(resultData1[11].toString());
+		                        } catch (NumberFormatException e) {
+		                            joPkgs = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(joPkgs);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "JO WT":
-		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "0.00");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double joWt = 0.00;
+		                    if (resultData1[12] != null) {
+		                        try {
+		                            joWt = Double.parseDouble(resultData1[12].toString());
+		                        } catch (NumberFormatException e) {
+		                            joWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(joWt);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
+		                    
 		                case "Pkg Type":
 		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
 		                    break;
@@ -1584,13 +1733,42 @@ public class ExportReportsServiceReports {
 		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
 		                    break;
 
+//		                case "Truck Qty":
+//		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
+//		                    break;
+//
+//		                case "Truck Wt":
+//		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
+//		                    break;
+		                    
 		                case "Truck Qty":
-		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double truckQty = 0.00;
+		                    if (resultData1[3] != null) {
+		                        try {
+		                            truckQty = Double.parseDouble(resultData1[3].toString());
+		                        } catch (NumberFormatException e) {
+		                            truckQty = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(truckQty);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "Truck Wt":
-		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double truckWt = 0.00;
+		                    if (resultData1[4] != null) {
+		                        try {
+		                            truckWt = Double.parseDouble(resultData1[4].toString());
+		                        } catch (NumberFormatException e) {
+		                            truckWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(truckWt);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
+
 
 		                case "S.BILL NO":
 		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
@@ -1606,17 +1784,60 @@ public class ExportReportsServiceReports {
 		                    }
 		                    break;
 
+//		                case "SB QTY":
+//		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
+//		                    break;
+//
+//		                case "SB WEIGHT":
+//		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
+//		                    break;
+//
+//		                case "AREA":
+//		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
+//		                    break;
+		                    
 		                case "SB QTY":
-		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double sbQty = 0.00;
+		                    if (resultData1[7] != null) {
+		                        try {
+		                            sbQty = Double.parseDouble(resultData1[7].toString());
+		                        } catch (NumberFormatException e) {
+		                            sbQty = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(sbQty);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "SB WEIGHT":
-		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double sbWeight = 0.00;
+		                    if (resultData1[8] != null) {
+		                        try {
+		                            sbWeight = Double.parseDouble(resultData1[8].toString());
+		                        } catch (NumberFormatException e) {
+		                            sbWeight = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(sbWeight);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "AREA":
-		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double area = 0.00;
+		                    if (resultData1[9] != null) {
+		                        try {
+		                            area = Double.parseDouble(resultData1[9].toString());
+		                        } catch (NumberFormatException e) {
+		                            area = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(area);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
+
 
 		                case "AREA TYPE":
 		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
@@ -3030,13 +3251,42 @@ public class ExportReportsServiceReports {
 		                    }
 		                    break;
 
+//		                case "PACKAGES":
+//		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+//		                    break;
+//
+//		                case "WEIGHT":
+//		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+//		                    break;
+		                    
 		                case "PACKAGES":
-		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.0
+		                    Double packages = 0.0;
+		                    if (resultData1[5] != null) {
+		                        try {
+		                            packages = Double.parseDouble(resultData1[5].toString());
+		                        } catch (NumberFormatException e) {
+		                            packages = 0.0; // Default to 0.0 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(packages);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "WEIGHT":
-		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.0
+		                    Double weight = 0.0;
+		                    if (resultData1[6] != null) {
+		                        try {
+		                            weight = Double.parseDouble(resultData1[6].toString());
+		                        } catch (NumberFormatException e) {
+		                            weight = 0.0; // Default to 0.0 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(weight);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
+
 
 		                default:
 		                    cell.setCellValue(""); // Handle undefined columns
@@ -4291,25 +4541,21 @@ cell.setCellStyle(cellStyle);
 //		        });
 		        
 		        List<String> concatenatedValues = new ArrayList<>();
-
-		     // Iterate through each element of the importDetails list
-		     importDetails.forEach(i -> {
-		         // Check if index 7 exists in the element to avoid IndexOutOfBoundsException
-		         if (i.length > 7) {
-		             // Get the value at index 7 and add it to the list
-		             concatenatedValues.add(i[7].toString());  // Add the value at index 7 as a string
-		         }
-		     });
-
-		     // Join the concatenated values with a comma separator
-		     String result = String.join(",", concatenatedValues);
-
-		     // Print the result to see the output
-		     System.out.println(result);
-
 		        
-		        
-		        System.out.println("newlist__________________________________________"+result);
+		       
+               
+
+//               
+//		     importDetails.forEach(i -> {
+//		         // Check if index 7 exists in the element to avoid IndexOutOfBoundsException
+//		         if (i.length > 7) {
+//		             concatenatedValues.add(i[7].toString());  // Add the value at index 7 as a string
+//		         }
+//		     });
+//               
+//		     String result = String.join(",", concatenatedValues);
+               
+		    
 		        
 		        Sheet sheet = workbook.createSheet("Export Stuffing Equipments Report");
 
@@ -4355,12 +4601,60 @@ cell.setCellStyle(cellStyle);
 		        numberCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
 
 		        
+		        Vector<String> dynamic = new Vector<>();
+		        
+		        Map<String, Integer> containerValueCount = new HashMap<>(); // Map to store container count
 
 		        String[] columnsHeader = {
 		        	    "Sr No", "CONT NO", "CONT SIZE", "Stuffing JOB ORDER DATE", "CARGO COMMODITY", 
-		        	    "AGENT NAME", "STUFFED WT", "TARE WT", "Dynamic Columns"
+		        	    "AGENT NAME", "STUFFED WT", "TARE WT" 
 		        	};
 
+		        
+		        importDetails.forEach(i -> {
+		    	    // Check if index 7 exists in the element to avoid IndexOutOfBoundsException
+		    	    if (i.length > 0) {
+		    	        String element = i[7].toString();
+		    	        
+		    	        String container = i[0].toString(); // Get the container value from i[0]
+		    	        
+		    	        String sb = i[8].toString();
+		    	        // Split the element by comma
+		    	        String[] values = element.split(",");
+		    	        
+		    	      
+		    	        // Check each value for duplicates before adding to the Vector
+		    	        for (String value : values) {
+		    	            value = value.trim(); // Remove extra spaces around the value
+		    	            
+		    	            String mainValue = container+","+sb+","+value ;
+		    	            
+		    	            containerValueCount.put(mainValue, containerValueCount.getOrDefault(mainValue, 0) + 1);
+		    	            
+		    	            if (!dynamic.contains(value)) {
+		    	                dynamic.add(value);
+		    	            }
+		    	        }
+		    	    }
+		    	});
+		        
+		        containerValueCount.forEach((container, count) -> {
+		            System.out.println("Container: " + container + " | Count of values: " + count);
+		        });
+
+
+		     // Join the concatenated values with a comma separator
+		     String result = String.join(",", dynamic);
+
+		     System.out.println(result);
+
+		     String[] dynamicHeaders = result.split(",");
+
+		  // Create a combined array of static and dynamic headers
+		  String[] combinedHeaders = new String[columnsHeader.length + dynamicHeaders.length];
+		  System.arraycopy(columnsHeader, 0, combinedHeaders, 0, columnsHeader.length);
+		  System.arraycopy(dynamicHeaders, 0, combinedHeaders, columnsHeader.length, dynamicHeaders.length);
+		  
 		        // Add Company Name (Centered)
 		        Row companyRow = sheet.createRow(0);
 		        Cell companyCell = companyRow.createCell(0);
@@ -4490,9 +4784,9 @@ cell.setCellStyle(cellStyle);
 		        boldFont.setBold(true);
 		        boldFont.setFontHeightInPoints((short) 16);
 
-		        for (int i = 0; i < columnsHeader.length; i++) {
+		        for (int i = 0; i < combinedHeaders.length; i++) {
 		            Cell cell = headerRow.createCell(i);
-		            cell.setCellValue(columnsHeader[i]);
+		            cell.setCellValue(combinedHeaders[i]);
 
 		            CellStyle headerStyle = workbook.createCellStyle();
 		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -4522,7 +4816,7 @@ cell.setCellStyle(cellStyle);
 			        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
 		            cell.setCellStyle(headerStyle);
-		            int headerWidth = (int) (columnsHeader[i].length() * 360 * widthFactor);
+		            int headerWidth = (int) (combinedHeaders[i].length() * 360 * widthFactor);
 		            sheet.setColumnWidth(i, headerWidth);
 		        }
 		        
@@ -4533,21 +4827,43 @@ cell.setCellStyle(cellStyle);
 
 		        
 		        int serialNo = 1; // Initialize serial number counter
-		        String[] dynamicColumns = result.split(",");
+		     
 		        
+		      
+
 		       
+		  System.out.println("lenght 4566 :"+ combinedHeaders.length);
 		        
+		
+			  
 		        for (Object[] resultData1 : importDetails) {
 		            Row dataRow = sheet.createRow(rowNum++);
-		            Row row = sheet.createRow(rowNum++);
+		         
+		            int cellNum = 0; 
 		            
-		            int cellNum = 0;
+		            String container = resultData1[0].toString(); // Container value
+		            String sb = resultData1[8].toString(); // sb value
+		            
+		            String mainkey= null;
+		            
+		          	for (String a : dynamic)
+                	{
+                		 mainkey = container+","+sb+","+a ;
+                		
+ 
+                	}
 
-		            for (int i = 0; i < columnsHeader.length; i++) {
+		            // Variable to hold the dynamic value (based on your data)
+		            String value = ""; // You will populate this dynamically as needed
+		            
+		            for (int i = 0; i < combinedHeaders.length; i++) {
+		            
 		                Cell cell = dataRow.createCell(i);
 		                
 		                cell.setCellStyle(borderStyle);
-		                switch (columnsHeader[i]) {
+		                
+		                switch (combinedHeaders[i]) {
+		                
 		                case "Sr No":
 		                    cell.setCellValue(serialNo++); // Increment serial number
 		                    break;
@@ -4578,30 +4894,59 @@ cell.setCellStyle(cellStyle);
 		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
 		                    break;
 
+//		                case "STUFFED WT":
+//		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+//		                    break;
+//
+//		                case "TARE WT":
+//		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+//		                    break;
+
 		                case "STUFFED WT":
-		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double stuffedWt = 0.00;
+		                    if (resultData1[5] != null) {
+		                        try {
+		                            stuffedWt = Double.parseDouble(resultData1[5].toString());
+		                        } catch (NumberFormatException e) {
+		                            stuffedWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(stuffedWt);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "TARE WT":
-		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double tareWt = 0.00;
+		                    if (resultData1[6] != null) {
+		                        try {
+		                            tareWt = Double.parseDouble(resultData1[6].toString());
+		                        } catch (NumberFormatException e) {
+		                            tareWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(tareWt);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                default:
-		                    // Handle dynamic columns from 'result'
-		                    int dynamicColumnStartIndex = columnsHeader.length; // Start after fixed columns
-		                    
-		                    System.out.println("dynamicColumnStartIndex :"+dynamicColumnStartIndex);
-		                    for (String dynamicColumn : dynamicColumns) {
-		                        Cell dynamicCell = row.createCell(dynamicColumnStartIndex++);
-		                        dynamicCell.setCellValue(dynamicColumn.trim()); // Add dynamic column label
-		                    }
+		                			                    // Generate the key from container, sb, and header (assuming header relates to value)
+		                    String mainValue = container + "," + sb + "," + combinedHeaders[i];
+//		                    
+//		                    // Get the count from containerValueCount map (default to 0 if not found)
+//		                    
+//		                    
+//		                   
+//		                    
+		                    Integer count = containerValueCount.getOrDefault(mainValue, 0);
+		                	cell.setCellValue(count);
+		                   
 		                    break;
 		            }
 
-
-		            }
 		        }
-		       
+		        }
 
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
@@ -7217,18 +7562,61 @@ cell.setCellStyle(cellStyle);
 		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
 		                    break;
 
+//		                case "Stuff Package":
+//		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+//		                    break;
+//
+//		                case "Stuff Weight":
+//		                    cell.setCellValue(resultData1[14] != null ? resultData1[14].toString() : "");
+//		                    break;
+//
+//		                case "Tare Weight":
+//		                    cell.setCellValue(resultData1[15] != null ? resultData1[15].toString() : "");
+//		                    break;
+
 		                case "Stuff Package":
-		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double stuffPackage = 0.00;
+		                    if (resultData1[13] != null) {
+		                        try {
+		                            stuffPackage = Double.parseDouble(resultData1[13].toString());
+		                        } catch (NumberFormatException e) {
+		                            stuffPackage = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(stuffPackage);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "Stuff Weight":
-		                    cell.setCellValue(resultData1[14] != null ? resultData1[14].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double stuffWeight = 0.00;
+		                    if (resultData1[14] != null) {
+		                        try {
+		                            stuffWeight = Double.parseDouble(resultData1[14].toString());
+		                        } catch (NumberFormatException e) {
+		                            stuffWeight = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(stuffWeight);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
 		                case "Tare Weight":
-		                    cell.setCellValue(resultData1[15] != null ? resultData1[15].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double tareWeight = 0.00;
+		                    if (resultData1[15] != null) {
+		                        try {
+		                            tareWeight = Double.parseDouble(resultData1[15].toString());
+		                        } catch (NumberFormatException e) {
+		                            tareWeight = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(tareWeight);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
+		                    
 		                case "Transporter":
 		                    cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "");
 		                    break;
@@ -7815,13 +8203,42 @@ cell.setCellStyle(cellStyle);
 		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
 		                    break;
 
+//		                case "Packages":
+//		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+//		                    break;
+//
+//		                case "Weight":
+//		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+//		                    break;
+		                    
 		                case "Packages":
-		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double packages = 0.00;
+		                    if (resultData1[5] != null) {
+		                        try {
+		                            packages = Double.parseDouble(resultData1[5].toString());
+		                        } catch (NumberFormatException e) {
+		                            packages = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(packages);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
 		                case "Weight":
-		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double weight = 0.00;
+		                    if (resultData1[6] != null) {
+		                        try {
+		                            weight = Double.parseDouble(resultData1[6].toString());
+		                        } catch (NumberFormatException e) {
+		                            weight = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(weight);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
+
 
 		                case "Agent Name":
 		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
@@ -10179,17 +10596,47 @@ cell.setCellStyle(cellStyle);
 		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
 		                    break;
 
+//		                case "Stuffed Pkgs":
+//		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+//		                    break;
+
 		                case "Stuffed Pkgs":
-		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0
+		                    Double stuffedPkgs = 0.00;
+		                    if (resultData1[11] != null) {
+		                        try {
+		                            stuffedPkgs = Double.parseDouble(resultData1[11].toString());
+		                        } catch (NumberFormatException e) {
+		                            stuffedPkgs = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(stuffedPkgs);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
 
+		                    
 		                case "Remarks":
 		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
 		                    break;
 
+//		                case "Gross Wt":
+//		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+//		                    break;
+		                    
 		                case "Gross Wt":
-		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+		                    // Try to parse the value as Double, if it's not a valid number, set to 0.00
+		                    Double grossWt = 0.00;
+		                    if (resultData1[13] != null) {
+		                        try {
+		                            grossWt = Double.parseDouble(resultData1[13].toString());
+		                        } catch (NumberFormatException e) {
+		                            grossWt = 0.00; // Default to 0.00 if it's not a valid number
+		                        }
+		                    }
+		                    cell.setCellValue(grossWt);
+		                    cell.setCellStyle(numberCellStyle); // Apply number formatting style
 		                    break;
+
 
 		                case "VCN No":
 		                    cell.setCellValue(resultData1[14] != null ? resultData1[14].toString() : "");

@@ -915,7 +915,8 @@ List<Object[]> findExportContainerONWHBuffer(
 			    "    a.Agent_Seal_No, " +
 			    "    a.Cargo_Weight, " +
 			    "    a.Tare_Weight, " +
-			    "    GROUP_CONCAT(d.Jar_Dtl_Desc) AS Jar_Details " +
+			    "    GROUP_CONCAT(d.Jar_Dtl_Desc) AS Jar_Details, " +
+			    " a.Stuff_Tally_Id "+
 			    "FROM " +
 			    "    cfequipmentactivity b " +
 			    "LEFT OUTER JOIN " +
