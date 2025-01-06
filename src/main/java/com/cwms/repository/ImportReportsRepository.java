@@ -1850,6 +1850,91 @@ List<Object[]> scanContainerReport1(
 
 
 		    	    
+//		    	    @Query(value = "SELECT " +
+//		    	            "a.Container_No, a.Container_Size, a.Container_Type, a.Igm_no, a.IGM_Line_No, " +
+//		    	            "c.bl_no, IFNULL(a.No_Of_Packages, '0.00'), " +
+//		    	            "c.Importer_Name, c.Commodity_Description, " +
+//		    	            "v.Vessel_Name, " +
+//		    	            "f.Voyage_No, " +
+//		    	            "IFNULL(c.Type_Of_Package, '0.00'), " +
+//		    	            "DATE_FORMAT(f.IGM_Date, '%d/%b/%Y %H:%i'), " +
+//		    	            "DATE_FORMAT(a.Gate_In_Date, '%d/%b/%Y %H:%i'), " +
+//		    	            "p.party_Name, " +
+//		    	            "'' AS Consoler, " +
+//		    	            "IFNULL(b.Actual_No_Of_Packages, '0.00'), " +
+//		    	            "IFNULL(b.Qty_Taken_Out, '0.00'), " +
+//		    	            "(b.Actual_No_Of_Packages - b.Qty_Taken_Out) AS Remaining_Packages, " +
+//		    	            "IFNULL(b.Actual_Weight, '0.00'), " +
+//		    	            "IFNULL(c.Qty_Taken_Out_weight, '0.00'), " +
+//		    	            "DATE_FORMAT(c.bl_Date, '%d/%b/%Y %H:%i'), " +
+//		    	            "DATE_FORMAT(a.De_stuff_Date, '%d/%b/%Y %H:%i'), " +
+//		    	            "(DATEDIFF(:endDate, a.De_stuff_Date) + 1) AS OTY, " +
+//		    	            "b.Warehouse_Location, " +
+//		    	            "b.Area_Occupied, " +
+//		    	            "c.Cargo_Movement, " +
+//		    	            "'' AS Remarks, " +
+//		    	            "'' AS Location, " +
+//		    	            "c.Hold_Remarks, " +
+//		    	            "c.cargo_Type, " +
+//		    	            "IFNULL(c.Cargo_Value, '0.00'), " +
+//		    	            "IFNULL(c.Cargo_Duty, '0.00'), " +
+//		    	            "c.IMO_Code, " +
+//		    	            "c.UN_No " +
+//		    	            "FROM cfigmcn a " +
+//		    	            "LEFT OUTER JOIN cfdestuffcn e ON a.Company_Id = e.Company_Id " +
+//		    	            "AND a.Branch_Id = e.Branch_Id " +
+//		    	            "AND a.IGM_Trans_Id = e.IGM_Trans_Id " +
+//		    	            "AND a.IGM_No = e.IGM_No " +
+//		    	            "AND a.IGM_Line_No = e.IGM_Line_No " +
+//		    	            "AND a.Profitcentre_Id = e.Profitcentre_Id " +
+//		    	            "AND a.Container_No = e.Container_No " +
+//		    	            "LEFT OUTER JOIN cfdestuffcrg b ON e.Company_Id = b.Company_Id " +
+//		    	            "AND e.Branch_Id = b.Branch_Id " +
+//		    	            "AND e.IGM_Trans_Id = b.IGM_Trans_Id " +
+//		    	            "AND e.IGM_No = b.IGM_No " +
+//		    	            "AND e.IGM_Line_No = b.IGM_Line_No " +
+//		    	            "AND e.Profitcentre_Id = b.Profitcentre_Id " +
+//		    	            "LEFT OUTER JOIN cfigmcrg c ON a.Company_Id = c.Company_Id " +
+//		    	            "AND a.Branch_Id = c.Branch_Id " +
+//		    	            "AND a.IGM_Trans_Id = c.IGM_Trans_Id " +
+//		    	            "AND a.IGM_No = c.IGM_No " +
+//		    	            "AND a.IGM_Line_No = c.IGM_Line_No " +
+//		    	            "AND a.Profitcentre_Id = c.Profitcentre_Id " +
+//		    	            "LEFT OUTER JOIN cfigm f ON f.Company_Id = c.Company_Id " +
+//		    	            "AND f.Branch_Id = c.Branch_Id " +
+//		    	            "AND f.IGM_Trans_Id = c.IGM_Trans_Id " +
+//		    	            "AND f.IGM_No = c.IGM_No " +
+//		    	            "AND f.Profitcentre_Id = c.Profitcentre_Id " +
+//		    	            "LEFT OUTER JOIN party p ON f.Company_Id = p.Company_Id " +
+//		    	            "AND f.Shipping_Agent = p.Party_Id " +
+//		    	            "LEFT OUTER JOIN vessel v ON f.Company_Id = v.Company_Id " +
+//		    	            "AND f.vessel_Id = v.vessel_Id " +
+//		    	            "WHERE a.Company_Id = :companyId " +
+//		    	            "AND a.Branch_Id = :branchId " +
+//		    	            "AND a.status = 'A' " +
+//		    	            "AND a.Container_Status = 'FCL' " +
+//		    	            "AND a.De_Stuff_Id IS NOT NULL " +
+//		    	            "AND ((b.Actual_No_Of_Packages - b.Qty_Taken_Out) > 0 OR (b.Actual_Weight - c.Qty_Taken_Out_weight) > 0) " +
+//		    	            "AND a.De_stuff_Date <= :endDate " +
+//		    	            "AND (:igmNo IS NULL OR :igmNo = '' OR a.IGM_No = :igmNo) " +
+//		    	            "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR a.IGM_Line_No = :igmLineNo) " +
+//		    	            "AND (:sl IS NULL OR :sl = '' OR f.Shipping_line = :sl) " +
+//		    	            "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR c.Account_Holder_Id = :accountHolderId) " +
+//		    	            "AND (:cha IS NULL OR :cha = '' OR a.cha = :cha) " +
+//		    	            "ORDER BY OTY DESC", nativeQuery = true)
+//		    	    List<Object[]> getDataForFCLDestuffBalanceReport(
+//		    	            @Param("companyId") String companyId,
+//		    	            @Param("branchId") String branchId,
+//		    	            @Param("endDate") Date endDate,
+//		    	            @Param("igmNo") String igmNo,
+//		    	            @Param("igmLineNo") String igmLineNo,
+//		    	            @Param("sl") String sl,
+//		    	            @Param("accountHolderId") String accountHolderId,
+//		    	            @Param("cha") String cha
+//		    	    );
+
+		    	    
+		    	    
 		    	    @Query(value = "SELECT " +
 		    	            "a.Container_No, a.Container_Size, a.Container_Type, a.Igm_no, a.IGM_Line_No, " +
 		    	            "c.bl_no, IFNULL(a.No_Of_Packages, '0.00'), " +
@@ -1861,11 +1946,12 @@ List<Object[]> scanContainerReport1(
 		    	            "DATE_FORMAT(a.Gate_In_Date, '%d/%b/%Y %H:%i'), " +
 		    	            "p.party_Name, " +
 		    	            "'' AS Consoler, " +
-		    	            "IFNULL(b.Actual_No_Of_Packages, '0.00'), " +
+		    	            "IFNULL(a.No_Of_Packages, '0.00'), " +
 		    	            "IFNULL(b.Qty_Taken_Out, '0.00'), " +
-		    	            "(b.Actual_No_Of_Packages - b.Qty_Taken_Out) AS Remaining_Packages, " +
-		    	            "IFNULL(b.Actual_Weight, '0.00'), " +
+		    	            "IFNULL((a.No_Of_Packages - COALESCE(b.Qty_Taken_Out,0)),'0.00') AS Remaining_Packages, " +
+		    	            "IFNULL(a.cargo_wt, '0.00'), " +
 		    	            "IFNULL(c.Qty_Taken_Out_weight, '0.00'), " +
+		    	            "IFNULL((a.cargo_wt - c.Qty_Taken_Out_weight),'0.00') AS Remaining_Wt, " +
 		    	            "DATE_FORMAT(c.bl_Date, '%d/%b/%Y %H:%i'), " +
 		    	            "DATE_FORMAT(a.De_stuff_Date, '%d/%b/%Y %H:%i'), " +
 		    	            "(DATEDIFF(:endDate, a.De_stuff_Date) + 1) AS OTY, " +
@@ -1905,17 +1991,18 @@ List<Object[]> scanContainerReport1(
 		    	            "AND f.IGM_Trans_Id = c.IGM_Trans_Id " +
 		    	            "AND f.IGM_No = c.IGM_No " +
 		    	            "AND f.Profitcentre_Id = c.Profitcentre_Id " +
-		    	            "LEFT OUTER JOIN party p ON f.Company_Id = p.Company_Id " +
+		    	            "LEFT OUTER JOIN party p ON f.Company_Id = p.Company_Id AND f.Branch_Id = p.Branch_Id " +
 		    	            "AND f.Shipping_Agent = p.Party_Id " +
-		    	            "LEFT OUTER JOIN vessel v ON f.Company_Id = v.Company_Id " +
+		    	            "LEFT OUTER JOIN vessel v ON f.Company_Id = v.Company_Id AND f.Branch_Id = v.Branch_Id " +
 		    	            "AND f.vessel_Id = v.vessel_Id " +
 		    	            "WHERE a.Company_Id = :companyId " +
 		    	            "AND a.Branch_Id = :branchId " +
 		    	            "AND a.status = 'A' " +
 		    	            "AND a.Container_Status = 'FCL' " +
-		    	            "AND a.De_Stuff_Id IS NOT NULL " +
-		    	            "AND ((b.Actual_No_Of_Packages - b.Qty_Taken_Out) > 0 OR (b.Actual_Weight - c.Qty_Taken_Out_weight) > 0) " +
-		    	            "AND a.De_stuff_Date <= :endDate " +
+		    	            "AND a.Gate_Out_Type = 'CRG' " +
+		    	            "AND (a.De_Stuff_Id IS NULL OR a.De_Stuff_Id = '' OR " +
+		    	            "(((b.Actual_No_Of_Packages - b.Qty_Taken_Out) > 0 OR (b.Actual_Weight - c.Qty_Taken_Out_weight) > 0) " +
+		    	            "AND a.De_stuff_Date <= :endDate)) " +
 		    	            "AND (:igmNo IS NULL OR :igmNo = '' OR a.IGM_No = :igmNo) " +
 		    	            "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR a.IGM_Line_No = :igmLineNo) " +
 		    	            "AND (:sl IS NULL OR :sl = '' OR f.Shipping_line = :sl) " +
@@ -1932,10 +2019,6 @@ List<Object[]> scanContainerReport1(
 		    	            @Param("accountHolderId") String accountHolderId,
 		    	            @Param("cha") String cha
 		    	    );
-
-		    	    
-		    	    
-		    	    
 		    	    
 		    	    
 		    	    

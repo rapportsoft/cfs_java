@@ -415,7 +415,7 @@ public class ExportReportController {
 	public ResponseEntity<?> exportSBWiseStuffreqReport(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
 			@RequestParam("id") String id,@RequestParam("sb") String sb) throws DocumentException{
 		
-		List<Object[]> data = exportStuffReqRepo.getSBWiseReportDate(cid, bid, id, sb);
+		List<Object[]> data = exportStuffReqRepo.getSBWiseReportDate(cid, bid,  sb);
 		
 		if(data.isEmpty()) {
 			return new ResponseEntity<>("Stuff Req data not found",HttpStatus.CONFLICT);

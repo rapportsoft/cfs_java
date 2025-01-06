@@ -192,7 +192,7 @@ public class ExportReportsServiceReports {
 	            break;
 	            
 	        case "Export Container Gate Out Report":
-	            importDetails = exportOperationalReportRepo.findEmptyGateOutContainerDetails(companyId, branchId,startDate, endDate,sbNo,bookingNo,acc,cha);
+	            importDetails = exportOperationalReportRepo.findEmptyGateOutContainerDetails(companyId, branchId,startDate, endDate,sbNo,bookingNo,exporterName,acc,cha);
 	            break;
 	            
 	        case "Export Container Reworking":
@@ -7269,7 +7269,7 @@ cell.setCellStyle(cellStyle);
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = exportOperationalReportRepo.findEmptyGateOutContainerDetails(companyId, branchId,startDate, endDate,sbNo,bookingNo,acc,cha);
+		        List<Object[]> importDetails = exportOperationalReportRepo.findEmptyGateOutContainerDetails(companyId, branchId,startDate, endDate,sbNo,bookingNo,exporterName,acc,cha);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);

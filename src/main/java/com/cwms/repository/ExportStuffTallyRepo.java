@@ -146,7 +146,19 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 	
 //	Export Buffer
 	
-
+//
+//	@Query(value = "select c.stuffTallyId, c.stuffTallyDate, c.stuffTallyLineId,c.profitcentreId, p.profitcentreDesc,psa.partyName, psa.partyName, c.containerNo, c.status "
+//	        + "from ExportStuffTally c "
+//	        + "LEFT JOIN Profitcentre p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.profitcentreId = p.profitcentreId "
+//	        + "LEFT JOIN Party psa ON c.companyId = psa.companyId AND c.branchId = psa.branchId AND c.shippingAgent = psa.partyId AND psa.status <> 'D' "
+//	        + "LEFT JOIN Party psl ON c.companyId = psl.companyId AND c.branchId = psl.branchId AND c.shippingLine = psl.partyId AND psl.status <> 'D' "
+//	        + "where c.companyId = :companyId and c.branchId = :branchId and c.status != 'D' AND c.movementType IN ('Buffer', 'ONWH') "
+//	        + "and (:searchValue is null OR :searchValue = '' OR c.containerNo LIKE %:searchValue% OR c.stuffTallyId LIKE %:searchValue%) "
+//	        + "ORDER BY c.stuffTallyDate DESC")
+//	List<Object[]> getBufferStuffingToSelect(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue);
+//	
+//	
+	
 	@Query(value = "select c.stuffTallyId, c.stuffTallyDate, c.stuffTallyLineId,c.profitcentreId, p.profitcentreDesc,psa.partyName, psa.partyName, c.containerNo, c.status "
 	        + "from ExportStuffTally c "
 	        + "LEFT JOIN Profitcentre p ON c.companyId = p.companyId AND c.branchId = p.branchId AND c.profitcentreId = p.profitcentreId "
@@ -154,9 +166,8 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 	        + "LEFT JOIN Party psl ON c.companyId = psl.companyId AND c.branchId = psl.branchId AND c.shippingLine = psl.partyId AND psl.status <> 'D' "
 	        + "where c.companyId = :companyId and c.branchId = :branchId and c.status != 'D' AND c.movementType IN ('Buffer', 'ONWH') "
 	        + "and (:searchValue is null OR :searchValue = '' OR c.containerNo LIKE %:searchValue% OR c.stuffTallyId LIKE %:searchValue%) "
-	        + "ORDER BY c.stuffTallyDate DESC")
+	        + "GROUP BY c.stuffTallyId ORDER BY c.stuffTallyDate DESC")
 	List<Object[]> getBufferStuffingToSelect(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue);
-	
 	
 	
 	
