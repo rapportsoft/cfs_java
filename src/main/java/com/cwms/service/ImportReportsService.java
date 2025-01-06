@@ -133,8 +133,7 @@ public class ImportReportsService {
 	            break;
 
 	        case "Import Long Standing Report":
-	            importDetails = importReportsRepository.findDataForLongStandingReport(
-	                    companyId, branchId, endDate);
+	            importDetails = importReportsRepository.findDataForLongStandingReport(companyId, branchId, endDate,igmNo,itemNo,cha,acc,sl);
 	            break;
 		        
 	        // Add more cases for other reports as needed
@@ -165,7 +164,7 @@ public class ImportReportsService {
 	            
 	        case "Loaded To Distuff Empty Inventory":
 	            importDetails = importReportsRepository.getLoadedToDistuffEmptyContainerDetails(
-	                    companyId, branchId, startDate, endDate);
+	                    companyId, branchId, startDate, endDate,igmNo, itemNo, sl,  cha);
 	            break;
 
 	        case "LCL Cargo Balance Inventory Report":
@@ -182,11 +181,11 @@ public class ImportReportsService {
 	            
 	        case "Import FCL Custom Tally Sheet Report":
 	            importDetails = importReportsRepository.importFCLCustomTallySheetReport(
-	                    companyId, branchId, startDate, endDate);
+	                    companyId, branchId, startDate, endDate,igmNo, itemNo, sl, cha);
 	            break;
 	            
 	        case "Import LCL Cargo Destuff Report":
-	            importDetails = importReportsRepository.toGetImportLCLCargoDestuffReport(companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
+	            importDetails = importReportsRepository.toGetImportLCLCargoDestuffReport(companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc);
 	            break;
 	            
 	        case "Yard Balance Report Details":
@@ -2828,7 +2827,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.findDataForLongStandingReport(companyId, branchId, endDate);
+		        List<Object[]> importDetails = importReportsRepository.findDataForLongStandingReport(companyId, branchId, endDate,igmNo,itemNo,cha,acc,sl);
 		        
 		        Sheet sheet = workbook.createSheet("Import Long Standing Report");
 
@@ -5706,7 +5705,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.importFCLCustomTallySheetReport(companyId, branchId, startDate, endDate);
+		        List<Object[]> importDetails = importReportsRepository.importFCLCustomTallySheetReport(companyId, branchId, startDate, endDate,igmNo,itemNo,sl,cha);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);
@@ -6815,7 +6814,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.getLoadedToDistuffEmptyContainerDetails(companyId, branchId, startDate, endDate);
+		        List<Object[]> importDetails = importReportsRepository.getLoadedToDistuffEmptyContainerDetails(companyId, branchId, startDate, endDate,igmNo, itemNo, sl,  cha);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);
@@ -8072,7 +8071,7 @@ public class ImportReportsService {
 		                     cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : "");
 		                     break;
 
-		                 case "BOE_NO":
+		                 case "BL_NO":
 		                     cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : "");
 		                     break;
 
@@ -9793,7 +9792,7 @@ cell.setCellStyle(cellStyle);
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.toGetImportLCLCargoDestuffReport(companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
+		        List<Object[]> importDetails = importReportsRepository.toGetImportLCLCargoDestuffReport(companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);
