@@ -226,6 +226,13 @@ public class ImporterReportsController {
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
 	            fileName = "Loaded To Destuff Empty Out Report Details.xlsx";
 	            break;
+	            
+	        case "Import BOE Wise Gate Out Report":
+	            excelBytes = importReporsService.createExcelReportOfImportBOEWiseGateOutReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Import BOE Wise Gate Out Report.xlsx";
+	            break;
 
 	        default:
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)

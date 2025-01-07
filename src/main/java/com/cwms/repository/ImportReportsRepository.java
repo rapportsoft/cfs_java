@@ -2344,4 +2344,39 @@ List<Object[]> scanContainerReport1(
 
 
 
+		    	    	
+		    	    	
+		    	    	 @Query(value = "SELECT DISTINCT b.BE_No, " +
+		    		             "IFNULL(DATE_FORMAT(b.BE_Date,'%d-%b-%Y'),'') AS BEDate, " +
+		    		             "c.Importer_Name, " +
+		    		             "IFNULL(q.Party_Name, '-') AS CHAName, " +
+		    		             "DATE_FORMAT(MAX(GREATEST(b.Gate_Out_Date , a.Empty_Out_Date)), '%d-%b-%Y') AS GateoutDate " +
+		    		             "FROM cfimpinventory a " +
+		    		             "LEFT OUTER JOIN cfigmcn b ON a.Company_Id = b.Company_Id AND b.Branch_Id = a.Branch_Id AND a.Container_No = b.Container_No " +
+		    		             "AND a.Gate_In_Id = b.Gate_In_Id AND a.IGM_Trans_Id = b.IGM_Trans_Id AND a.Igm_no = b.Igm_no " +
+		    		             "AND a.Profitcentre_Id = b.Profitcentre_Id " +
+		    		             "LEFT OUTER JOIN cfigmcrg c ON b.Company_Id = c.Company_Id AND b.Branch_Id = c.Branch_Id " +
+		    		             "AND b.IGM_Trans_Id = c.IGM_Trans_Id AND b.Igm_no = c.Igm_no " +
+		    		             "AND b.IGM_Line_No = c.IGM_Line_No AND a.Profitcentre_Id = c.Profitcentre_Id " +
+		    		             "LEFT OUTER JOIN party q ON a.Company_Id = q.Company_Id AND a.branch_id = q.branch_id " +
+		    		             "AND q.Party_Id = b.cha " +
+		    		             "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId AND a.Profitcentre_Id = 'N00002' " +
+		    		             "AND b.Seal_Cut_Trans_Id != '' AND b.BE_No <> '' " +
+		    		             "AND GREATEST(b.Gate_Out_Date , a.Empty_Out_Date) BETWEEN :startDate AND :endDate " 
+		    		             + "AND (:igmNo IS NULL OR :igmNo = '' OR b.IGM_Trans_Id = :igmNo) "
+		    				     + "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR b.IGM_Line_No = :igmLineNo) "
+		    				     + "AND (:sl IS NULL OR :sl = '' OR a.sl = :sl) "
+//		    				     + "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR z.cha = :accountHolderId) "
+		    				     + "AND (:cha IS NULL OR :cha = '' OR b.cha = :cha) " +
+		    		             "GROUP BY b.Igm_no, b.IGM_Line_No " +
+		    		             "ORDER BY b.Gate_Out_Date ASC", nativeQuery = true)
+		    		     List<Object[]> findBOEWiseContainerOutDetails( @Param("companyId") String companyId,
+		    		             @Param("branchId") String branchId,
+		    		             @Param("startDate") Date startDate,
+		    		             @Param("endDate") Date endDate,
+		    		             @Param("igmNo") String igmNo,
+		    					    @Param("igmLineNo") String igmLineNo,
+		    					    @Param("sl") String sl,
+//		    					    @Param("accountHolderId") String accountHolderId,
+		    					    @Param("cha") String cha);   
 }
