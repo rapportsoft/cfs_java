@@ -51,4 +51,16 @@ public interface BranchRepo extends JpaRepository<Branch, String> {
 	
     @Query(value="select New com.cwms.entities.Branch(b.companyId, b.branchId, b.branchName) from Branch b where b.companyId=:cid")
     List<Branch> getBranchByCompany(@Param("cid") String cid);
+    
+    
+	@Query("SELECT i.invoiceRoundOff " +
+		       "FROM Branch i " +
+		       "WHERE i.companyId = :companyId AND i.branchId = :branchId AND i.status <> 'D'")
+	String getInvoiceRoundOffStatus(@Param("companyId") String companyId, @Param("branchId") String branchId);
+	
+	
+	@Query("SELECT i " +
+		       "FROM Branch i " +
+		       "WHERE i.companyId = :companyId AND i.branchId = :branchId AND i.status = 'A'")
+	Branch getDataByCompanyAndBranch(@Param("companyId") String companyId, @Param("branchId") String branchId);
 }

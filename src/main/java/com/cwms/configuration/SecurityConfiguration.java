@@ -125,6 +125,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/importReports/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/exportOperationalReports/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/importReports/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/assessment/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

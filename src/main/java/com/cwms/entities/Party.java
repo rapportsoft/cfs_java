@@ -522,6 +522,9 @@ public class Party {
 
 	    @Column(name = "Dmr_interval", length = 1, nullable = false)
 	    private String dmrInterval = "Y";
+	    
+	    @Column(name="Tds_Percentage",length = 3)
+	    private String tdsPercentage;
 
 		public Party() {
 			super();
@@ -529,6 +532,223 @@ public class Party {
 		}
 
 		
+
+		public Party(String companyId, String branchId, String partyId, String masterPartyId, String partyName,
+				String partyType, String address1, String address2, String address3, String city, String pin,
+				String state, String country, String movementBlock, BigDecimal creditLimit, String phoneNo,
+				String faxNo, String partyAcCode, String partyTermId, String bankId, String panNo,
+				String panAppliedRefNo, String tdsApplicable, String currency, String tariffType, String discountDays,
+				String freeDays, String serviceTaxApplicable, String contactPerson, String contactDesignation,
+				String contactPhone, String contactFaxNo, String contactEmail, String portPartyId, String tanNoId,
+				String tdsRange, String defaultBranch, String shippingLineCode, String customsExporterId,
+				String stdCode, String hide, String marketingPerson, String movementType, String facilitationCharge,
+				String facilitationUnit, String facilitationRate, String facilitationRate1, String internalShifting,
+				String internalShiftingUnit, String internalShiftingRate, String internalShiftingRate1,
+				String additionalRemarks, String freeDaysTariff, String extraServices, String tariffActiveFlag,
+				String onlineFlag, String movementCharge, String truckHandling, String cfsTariffNo, String gstNo,
+				String iecCode, String monthlyReport, String blUserId, String createdBy, Date createdDate,
+				String editedBy, Date editedDate, String approvedBy, Date approvedDate, String dpdDailyReport,
+				String dailyReport, String dsrprtType, String linDailyReport, String agtDailyReport,
+				String chaDailyReport, String impDailyReport, String frwDailyReport, String dsrxlsType,
+				String excelToMail, String excelCcMail, String sentStatus, Date reportTime, String activationRemarks,
+				String deactivationRemarks, String status, String exportMarketingPerson, String exportToMail,
+				String exportCcMail, String importToMail, String importCcMail, String codacoCcMail, String codacoToMail,
+				String ediFlag, String agt, String cha, String frw, String imp, String lin, String exp, String biddr,
+				String customerType, String accountType, String customerCode, String operationalMail,
+				String linOperationalMailTo, String agtOperationalMailTo, String chaOperationalMailTo,
+				String impOperationalMailTo, String frwOperationalMailTo, String operationalMailCc,
+				String operationalMailBcc, String financeMail, String codecoMail, String impGrdrentFrm,
+				String impMtgrdrentFrm, String impCrgStorage, String expCrgStorage, String expCrgStoFactor,
+				String expCrgFrDays, String importerMail, String shippingTypeLine, String inbondInvoiceCheck,
+				String bondnocWeek, String cartingInvoice, String custLedgerCode, String checkDeposite,
+				BigDecimal crAmtLmt, BigDecimal crPeriod, BigDecimal currentBal, String lclSpaceOccupied,
+				String impHubOccupied, String expHubOccupied, String bondHubOccupied, BigDecimal lclAreaOccupied,
+				BigDecimal imphAreaOccupied, BigDecimal exphAreaOccupied, BigDecimal bondhAreaOccupied, String slType,
+				String upDockType, String vnd, String acton, String crtlbr, String dstlbr, String dstrct, String eqpmsp,
+				String fmgtN, String scnopr, String stuflb, String subctr, String survey, String trns, String valer,
+				String resendFlag, String uiFlag, String doSubmitReqFlag, String nvoccTariff, String offdocTariff,
+				String leschaco, BigDecimal crAmtLmtUse, String monthlyAgentReportFlag, String weeklyLclAgentReportFlag,
+				String invoiceFromMail, String cycle, String dmrInterval, String tdsPercentage) {
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.partyId = partyId;
+			this.masterPartyId = masterPartyId;
+			this.partyName = partyName;
+			this.partyType = partyType;
+			this.address1 = address1;
+			this.address2 = address2;
+			this.address3 = address3;
+			this.city = city;
+			this.pin = pin;
+			this.state = state;
+			this.country = country;
+			this.movementBlock = movementBlock;
+			this.creditLimit = creditLimit;
+			this.phoneNo = phoneNo;
+			this.faxNo = faxNo;
+			this.partyAcCode = partyAcCode;
+			this.partyTermId = partyTermId;
+			this.bankId = bankId;
+			this.panNo = panNo;
+			this.panAppliedRefNo = panAppliedRefNo;
+			this.tdsApplicable = tdsApplicable;
+			this.currency = currency;
+			this.tariffType = tariffType;
+			this.discountDays = discountDays;
+			this.freeDays = freeDays;
+			this.serviceTaxApplicable = serviceTaxApplicable;
+			this.contactPerson = contactPerson;
+			this.contactDesignation = contactDesignation;
+			this.contactPhone = contactPhone;
+			this.contactFaxNo = contactFaxNo;
+			this.contactEmail = contactEmail;
+			this.portPartyId = portPartyId;
+			this.tanNoId = tanNoId;
+			this.tdsRange = tdsRange;
+			this.defaultBranch = defaultBranch;
+			this.shippingLineCode = shippingLineCode;
+			this.customsExporterId = customsExporterId;
+			this.stdCode = stdCode;
+			this.hide = hide;
+			this.marketingPerson = marketingPerson;
+			this.movementType = movementType;
+			this.facilitationCharge = facilitationCharge;
+			this.facilitationUnit = facilitationUnit;
+			this.facilitationRate = facilitationRate;
+			this.facilitationRate1 = facilitationRate1;
+			this.internalShifting = internalShifting;
+			this.internalShiftingUnit = internalShiftingUnit;
+			this.internalShiftingRate = internalShiftingRate;
+			this.internalShiftingRate1 = internalShiftingRate1;
+			this.additionalRemarks = additionalRemarks;
+			this.freeDaysTariff = freeDaysTariff;
+			this.extraServices = extraServices;
+			this.tariffActiveFlag = tariffActiveFlag;
+			this.onlineFlag = onlineFlag;
+			this.movementCharge = movementCharge;
+			this.truckHandling = truckHandling;
+			this.cfsTariffNo = cfsTariffNo;
+			this.gstNo = gstNo;
+			this.iecCode = iecCode;
+			this.monthlyReport = monthlyReport;
+			this.blUserId = blUserId;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.dpdDailyReport = dpdDailyReport;
+			this.dailyReport = dailyReport;
+			this.dsrprtType = dsrprtType;
+			this.linDailyReport = linDailyReport;
+			this.agtDailyReport = agtDailyReport;
+			this.chaDailyReport = chaDailyReport;
+			this.impDailyReport = impDailyReport;
+			this.frwDailyReport = frwDailyReport;
+			this.dsrxlsType = dsrxlsType;
+			this.excelToMail = excelToMail;
+			this.excelCcMail = excelCcMail;
+			this.sentStatus = sentStatus;
+			this.reportTime = reportTime;
+			this.activationRemarks = activationRemarks;
+			this.deactivationRemarks = deactivationRemarks;
+			this.status = status;
+			this.exportMarketingPerson = exportMarketingPerson;
+			this.exportToMail = exportToMail;
+			this.exportCcMail = exportCcMail;
+			this.importToMail = importToMail;
+			this.importCcMail = importCcMail;
+			this.codacoCcMail = codacoCcMail;
+			this.codacoToMail = codacoToMail;
+			this.ediFlag = ediFlag;
+			this.agt = agt;
+			this.cha = cha;
+			this.frw = frw;
+			this.imp = imp;
+			this.lin = lin;
+			this.exp = exp;
+			this.biddr = biddr;
+			this.customerType = customerType;
+			this.accountType = accountType;
+			this.customerCode = customerCode;
+			this.operationalMail = operationalMail;
+			this.linOperationalMailTo = linOperationalMailTo;
+			this.agtOperationalMailTo = agtOperationalMailTo;
+			this.chaOperationalMailTo = chaOperationalMailTo;
+			this.impOperationalMailTo = impOperationalMailTo;
+			this.frwOperationalMailTo = frwOperationalMailTo;
+			this.operationalMailCc = operationalMailCc;
+			this.operationalMailBcc = operationalMailBcc;
+			this.financeMail = financeMail;
+			this.codecoMail = codecoMail;
+			this.impGrdrentFrm = impGrdrentFrm;
+			this.impMtgrdrentFrm = impMtgrdrentFrm;
+			this.impCrgStorage = impCrgStorage;
+			this.expCrgStorage = expCrgStorage;
+			this.expCrgStoFactor = expCrgStoFactor;
+			this.expCrgFrDays = expCrgFrDays;
+			this.importerMail = importerMail;
+			this.shippingTypeLine = shippingTypeLine;
+			this.inbondInvoiceCheck = inbondInvoiceCheck;
+			this.bondnocWeek = bondnocWeek;
+			this.cartingInvoice = cartingInvoice;
+			this.custLedgerCode = custLedgerCode;
+			this.checkDeposite = checkDeposite;
+			this.crAmtLmt = crAmtLmt;
+			this.crPeriod = crPeriod;
+			this.currentBal = currentBal;
+			this.lclSpaceOccupied = lclSpaceOccupied;
+			this.impHubOccupied = impHubOccupied;
+			this.expHubOccupied = expHubOccupied;
+			this.bondHubOccupied = bondHubOccupied;
+			this.lclAreaOccupied = lclAreaOccupied;
+			this.imphAreaOccupied = imphAreaOccupied;
+			this.exphAreaOccupied = exphAreaOccupied;
+			this.bondhAreaOccupied = bondhAreaOccupied;
+			this.slType = slType;
+			this.upDockType = upDockType;
+			this.vnd = vnd;
+			this.acton = acton;
+			this.crtlbr = crtlbr;
+			this.dstlbr = dstlbr;
+			this.dstrct = dstrct;
+			this.eqpmsp = eqpmsp;
+			this.fmgtN = fmgtN;
+			this.scnopr = scnopr;
+			this.stuflb = stuflb;
+			this.subctr = subctr;
+			this.survey = survey;
+			this.trns = trns;
+			this.valer = valer;
+			this.resendFlag = resendFlag;
+			this.uiFlag = uiFlag;
+			this.doSubmitReqFlag = doSubmitReqFlag;
+			this.nvoccTariff = nvoccTariff;
+			this.offdocTariff = offdocTariff;
+			this.leschaco = leschaco;
+			this.crAmtLmtUse = crAmtLmtUse;
+			this.monthlyAgentReportFlag = monthlyAgentReportFlag;
+			this.weeklyLclAgentReportFlag = weeklyLclAgentReportFlag;
+			this.invoiceFromMail = invoiceFromMail;
+			this.cycle = cycle;
+			this.dmrInterval = dmrInterval;
+			this.tdsPercentage = tdsPercentage;
+		}
+
+
+
+		public String getTdsPercentage() {
+			return tdsPercentage;
+		}
+
+
+
+		public void setTdsPercentage(String tdsPercentage) {
+			this.tdsPercentage = tdsPercentage;
+		}
+
+
 
 		public String getBranchId() {
 			return branchId;

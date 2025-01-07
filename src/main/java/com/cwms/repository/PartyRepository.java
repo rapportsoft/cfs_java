@@ -216,4 +216,7 @@ List<Object[]> getDataForOnAccount(@Param("cid") String cid, @Param("bid") Strin
 
 @Query(value = "select p.partyName from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
 String getPartyNameById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
+
+@Query(value = "select p.tdsPercentage from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
+String getTdsById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
 }

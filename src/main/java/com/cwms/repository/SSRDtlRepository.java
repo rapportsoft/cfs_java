@@ -44,4 +44,13 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 			+ "OR s.docRefNo LIKE CONCAT ('%',:val,'%') OR s.igmLineNo LIKE CONCAT ('%',:val,'%') OR s.blNo LIKE CONCAT ('%',:val,'%') "
 			+ "OR s.beNo LIKE CONCAT ('%',:val,'%'))")
 	List<Object[]> searchSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+	
+	
+	
+	@Query(value="select NEW com.cwms.entities.SSRDtl(s.containerNo, s.serviceId, s.serviceUnit, s.executionUnit,s.serviceUnit1, s.executionUnit1, s.rate,"
+			+ "s.totalRate) "
+			+ "from SSRDtl s "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.transId=:trans and s.containerNo=:con and s.status = 'A'")
+	List<SSRDtl> getServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
+			@Param("con") String con);
 }

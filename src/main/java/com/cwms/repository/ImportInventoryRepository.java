@@ -43,4 +43,13 @@ public interface ImportInventoryRepository extends JpaRepository<ImportInventory
     Boolean isExistContainer(@Param("cid") String cid,
                              @Param("bid") String bid,
                              @Param("con") String con);
+    
+    
+    @Transactional
+    @Modifying
+    @Query(value="Update ImportInventory c SET c.assessmentId=:id "
+    		+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+			+ "c.containerNo=:con")
+    int updateInvData(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+			@Param("con") String con,@Param("id") String id);
 }

@@ -153,5 +153,25 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 	 
 	 CfsTarrif findByCompanyIdAndBranchIdAndPartyId(String companyId, String branchId,String partyId);
 	 
+	 
+	 
+
+	 @Query(value="select c.cfsTariffNo "
+	 		+ "from CfsTarrif c "
+	 		+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.partyId IN :partyid and "
+	 		+ "c.importerId IN :importer and c.cha IN :cha and c.forwarderId IN :forwarder and c.nvoccTariff='N' "
+	 		+ "and c.offdocTariff='N' and c.tariffType = 'Standard' order by FIELD(c.partyId,:partyid1,''),FIELD(c.importerId,:importer1,''),"
+	 		+ "FIELD(c.cha,:cha1,''),FIELD(c.forwarderId,:forwarder1,'') limit 1")
+	 String getTarrifNo(@Param("cid") String cid,@Param("bid") String bid,@Param("partyid") List<String> partyid,
+			 @Param("importer") List<String> importer,@Param("cha") List<String> cha,@Param("forwarder") List<String> forwarder,
+			 @Param("partyid1") String partyid1,@Param("importer1") String importer1,@Param("cha1") String cha1,@Param("forwarder1") String forwarder1);
+	 
+	 
+	 @Query(value="select c.serviceId "
+	 		+ "from CFSTariffService c "
+	 		+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId=t.companyId and c.branchId=t.branchId and c.cfsTariffNo=t.cfsTariffNo "
+	 		+ "and c.cfsAmendNo=t.cfsAmndNo where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and t.status='A' and "
+	 		+ "c.cfsTariffNo=:tarrifNo and c.defaultChk='Y' group by c.serviceId order by c.serviceId")
+	 List<String> getDefaultServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("tarrifNo") String tarrifNo);
 
 }
