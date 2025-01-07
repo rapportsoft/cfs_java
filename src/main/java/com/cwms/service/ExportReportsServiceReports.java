@@ -145,6 +145,11 @@ public class ExportReportsServiceReports {
 	        case "Export Factory Stuff GateIn Report":
 	            importDetails =  exportOperationalReportRepo.exportFactoryStuffGateInReport(companyId, branchId,startDate,endDate,sbNo,bookingNo,exporterName, acc,cha);
 	            break;
+	            
+	        case "Export SB Wise Container Out Report":
+	            importDetails =  exportOperationalReportRepo.findExportGateOutBasedData(companyId, branchId,startDate, endDate,
+		        		sbNo,bookingNo,exporterName,acc,cha);
+	            break;
 		        
 	        case "Carting Pendency":
 	        	importDetails = exportOperationalReportRepo.findCartingPendancyData(companyId, branchId, endDate,
@@ -216,6 +221,483 @@ public class ExportReportsServiceReports {
 	    return new ResponseEntity<>(importDetails, HttpStatus.OK); // Records found
 	}
 
+	
+	public byte[] createExcelReportOfExportContainerOutBasedReport(String companyId,
+		    String branchId, String username, String type, String companyname,
+		    String branchname,
+		    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+	        String sbNo,
+	        String bookingNo,
+	        String exporterName,
+	        String acc,
+	        String cha,
+	        String selectedReport
+			) throws DocumentException {
+		    try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
+		    {
+		    	System.out.println("startDate_______________________"+startDate);
+		    	
+		    	
+		    	System.out.println("endDate_______________________"+endDate);
+		    	
+		    	
+		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy");
+
+		        String formattedStartDate = startDate != null ? dateFormatService.format(startDate) : "N/A";
+		        String formattedEndDate = endDate != null ? dateFormatService.format(endDate) : "N/A";
+
+		        Calendar cal = Calendar.getInstance();
+
+		     // Set startDate to 00:00 if the time component is not set
+		     if (startDate != null) {
+		         cal.setTime(startDate);
+		         cal.set(Calendar.HOUR_OF_DAY, 0);
+		         cal.set(Calendar.MINUTE, 0);
+		         cal.set(Calendar.SECOND, 0);
+		         cal.set(Calendar.MILLISECOND, 0);
+		         startDate = cal.getTime();
+		     }
+
+		     // Set endDate to 23:59 if the time component is not set
+		     if (endDate != null) {
+		         cal.setTime(endDate);
+		         cal.set(Calendar.HOUR_OF_DAY, 23);
+		         cal.set(Calendar.MINUTE, 59);
+		         cal.set(Calendar.SECOND, 59);
+		         cal.set(Calendar.MILLISECOND, 999);
+		         endDate = cal.getTime();
+		     }
+		     
+		        
+		        String user = username;
+		        String companyName = companyname;
+		        String branchName = branchname;
+
+		        Company companyAddress = companyRepo.findByCompany_Id(companyId);
+		        Branch branchAddress = branchRepo.findByBranchId(branchId);
+
+		        String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
+		                + companyAddress.getAddress_3() + companyAddress.getCity();
+
+		        String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+		                + branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+		        double widthFactor = 1;
+
+		        
+		        List<Object[]> importDetails = exportOperationalReportRepo.findExportGateOutBasedData(companyId, branchId,startDate, endDate,
+		        		sbNo,bookingNo,exporterName,acc,cha);
+		        
+		  
+		        
+		        
+//		        System.out.println("importDetails___________________________________________"+importDetails);
+		        
+		        List<Object[]> newlist = new ArrayList<>();
+		        importDetails.forEach(i -> {
+		            System.out.println(Arrays.toString(i)); // Print the element
+		            newlist.add(i);                         // Add to the new list
+		        });
+		        
+		        
+//		        System.out.println("newlist__________________________________________"+newlist);
+		        
+		        Sheet sheet = workbook.createSheet("Export SB Wise Container Out Report");
+
+		        CellStyle dateCellStyle = workbook.createCellStyle();
+		        CreationHelper createHelper = workbook.getCreationHelper();
+		        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MMM/yyyy HH:mm:ss"));
+		        dateCellStyle.setAlignment(HorizontalAlignment.CENTER);
+		        dateCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        dateCellStyle.setBorderBottom(BorderStyle.THIN);
+		        dateCellStyle.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderTop(BorderStyle.THIN);
+		        dateCellStyle.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderLeft(BorderStyle.THIN);
+		        dateCellStyle.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderRight(BorderStyle.THIN);
+		        dateCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        
+		        CellStyle dateCellStyle1 = workbook.createCellStyle();
+		        CreationHelper createHelper1 = workbook.getCreationHelper();
+		        dateCellStyle1.setDataFormat(createHelper1.createDataFormat().getFormat("dd/MMM/yyyy"));
+		        dateCellStyle1.setAlignment(HorizontalAlignment.CENTER);
+		        dateCellStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		        dateCellStyle1.setBorderBottom(BorderStyle.THIN);
+		        dateCellStyle1.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderTop(BorderStyle.THIN);
+		        dateCellStyle1.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderLeft(BorderStyle.THIN);
+		        dateCellStyle1.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderRight(BorderStyle.THIN);
+		        dateCellStyle1.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        
+		        
+		        // Create numeric format for Excel
+		        CellStyle numberCellStyle = workbook.createCellStyle();
+		        numberCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#,##0.00"));
+		        numberCellStyle.setBorderBottom(BorderStyle.THIN);
+		        numberCellStyle.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderTop(BorderStyle.THIN);
+		        numberCellStyle.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderLeft(BorderStyle.THIN);
+		        numberCellStyle.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderRight(BorderStyle.THIN);
+		        numberCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+
+		        
+
+		        String[] columnsHeader = {
+		        	    "Sr No",
+		        	    "SB No",
+		        	    "SB Date",
+		        	    "Pack",
+		        	    "Stuff Pack",
+		        	    "Pack Type",
+		        	    "MCIPCIN",
+		        	    "Cont No",
+		        	    "Cont Size",
+		        	    "Stuff Order Date",
+		        	    "Seal No 1",
+		        	    "Seal No 2",
+		        	    "SF Status",
+		        	    "ASR Error",
+		        	    "Officer Approve Status",
+		        	    "Out Date"
+		        	};
+
+
+
+	
+		        // Add Company Name (Centered)
+		        Row companyRow = sheet.createRow(0);
+		        Cell companyCell = companyRow.createCell(0);
+		        companyCell.setCellValue(companyName);
+
+		        // Create and style for centering
+		        CellStyle companyStyle = workbook.createCellStyle();
+		        companyStyle.setAlignment(HorizontalAlignment.CENTER);
+		        companyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font companyFont = workbook.createFont();
+		        companyFont.setBold(true);
+		        companyFont.setFontHeightInPoints((short)18);
+		        companyStyle.setFont(companyFont);
+		        companyCell.setCellStyle(companyStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+
+		        // Add Branch Address (Centered)
+		        Row branchRow = sheet.createRow(1);
+		        Cell branchCell = branchRow.createCell(0);
+		        branchCell.setCellValue(branchAdd);
+		        CellStyle branchStyle = workbook.createCellStyle();
+		        branchStyle.setAlignment(HorizontalAlignment.CENTER);
+		        branchStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font branchFont = workbook.createFont();
+		        branchFont.setFontHeightInPoints((short) 12);
+		        branchStyle.setFont(branchFont);
+		        branchCell.setCellStyle(branchStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+
+		        
+		        Row branchRow1 = sheet.createRow(2);
+		        Cell branchCell1 = branchRow1.createCell(0);
+//		        branchCell1.setCellValue(branchAdd);
+		        CellStyle branchStyle1 = workbook.createCellStyle();
+		        branchStyle1.setAlignment(HorizontalAlignment.CENTER);
+		        branchStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font branchFont1 = workbook.createFont();
+		        branchFont1.setFontHeightInPoints((short) 12);
+		        branchStyle1.setFont(branchFont1);
+		        branchCell1.setCellStyle(branchStyle1);
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+	
+		        // Add Report Title "Bond cargo Inventory Report"
+		        Row reportTitleRow = sheet.createRow(3);
+		        Cell reportTitleCell = reportTitleRow.createCell(0);
+		        reportTitleCell.setCellValue("Export SB Wise Container Out Report" );
+
+		        // Set alignment and merge cells for the heading
+		        CellStyle reportTitleStyle = workbook.createCellStyle();
+		        reportTitleStyle.setAlignment(HorizontalAlignment.CENTER);
+		        reportTitleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font reportTitleFont = workbook.createFont();
+		        reportTitleFont.setBold(true);
+		        reportTitleFont.setFontHeightInPoints((short) 16);
+		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
+		        reportTitleStyle.setFont(reportTitleFont);
+		        reportTitleCell.setCellStyle(reportTitleStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        		        
+		        Row reportTitleRow1 = sheet.createRow(4);
+		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
+		        if(formattedStartDate.equals("N/A"))
+		        {
+		        	 reportTitleCell1.setCellValue("Export SB Wise Container Out Report As On Date : " + formattedEndDate);
+		        }
+		        else 
+		        {
+		        	 reportTitleCell1.setCellValue("Export SB Wise Container Out Report From : " + formattedStartDate + " to " + formattedEndDate);
+		        }
+		       
+
+		        // Create and set up the CellStyle for the report title
+		        CellStyle reportTitleStyle1 = workbook.createCellStyle();
+		        reportTitleStyle1.setAlignment(HorizontalAlignment.LEFT); // Set alignment
+
+		        // Create the font and set its properties
+		        Font reportTitleFont1 = workbook.createFont();
+		        reportTitleFont1.setBold(true); // Make font bold
+		        reportTitleFont1.setFontHeightInPoints((short) 12); // Set font size
+
+		        // Apply the font to the CellStyle
+		        reportTitleStyle1.setFont(reportTitleFont1);
+
+		        // Set the style to the cell
+		        reportTitleCell1.setCellStyle(reportTitleStyle1);
+		     // Create a font and set its properties
+		    
+
+		        
+		        // Set headers after the title
+		        int headerRowIndex = 6; // Adjusted for the title rows above
+		        Row headerRow = sheet.createRow(headerRowIndex);
+		        
+		        CellStyle borderStyle = workbook.createCellStyle();
+		        borderStyle.setAlignment(HorizontalAlignment.CENTER);
+		        borderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        borderStyle.setBorderBottom(BorderStyle.THIN);
+		        borderStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderTop(BorderStyle.THIN);
+		        borderStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderLeft(BorderStyle.THIN);
+		        borderStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderRight(BorderStyle.THIN);
+		        borderStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		        Font boldFont = workbook.createFont();
+		        boldFont.setBold(true);
+		        boldFont.setFontHeightInPoints((short) 16);
+
+		        for (int i = 0; i < columnsHeader.length; i++) {
+		            Cell cell = headerRow.createCell(i);
+		            cell.setCellValue(columnsHeader[i]);
+
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            
+		
+			        
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		            
+		            
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+					   
+			        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+			        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeader[i].length() * 360 * widthFactor);
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+		        
+		        
+
+		        // Populate data rows
+		        int rowNum = headerRowIndex + 1;
+		        
+		        
+		        int serialNo = 1; // Initialize serial number counter
+		        for (Object[] resultData1 : importDetails) {
+		            Row dataRow = sheet.createRow(rowNum++);
+		    
+		            int cellNum = 0;
+
+		            for (int i = 0; i < columnsHeader.length; i++) {
+		                Cell cell = dataRow.createCell(i);
+		                cell.setCellStyle(borderStyle);
+
+		                // Switch case to handle each column header
+
+		                switch (columnsHeader[i]) {
+		                case "Sr No":
+		                    cell.setCellValue(serialNo++); // Serial Number increment
+		                    break;
+
+		                case "SB No":
+		                    cell.setCellValue(resultData1[0] != null ? resultData1[0].toString() : "");
+		                    break;
+
+		                case "SB Date":
+		                    if (resultData1[1] != null) {
+		                        cell.setCellValue(resultData1[1].toString());
+		                        cell.setCellStyle(dateCellStyle); // Assuming dateCellStyle is defined for formatting dates
+		                    } else {
+		                        cell.setBlank();
+		                    }
+		                    break;
+
+		                case "Pack":
+		                    Double pack = 0.00;
+		                    if (resultData1[2] != null) {
+		                        try {
+		                            pack = Double.parseDouble(resultData1[2].toString());
+		                        } catch (NumberFormatException e) {
+		                            pack = 0.00;
+		                        }
+		                    }
+		                    cell.setCellValue(pack);
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+
+		                case "Stuff Pack":
+		                    Double stuffPack = 0.00;
+		                    if (resultData1[3] != null) {
+		                        try {
+		                            stuffPack = Double.parseDouble(resultData1[3].toString());
+		                        } catch (NumberFormatException e) {
+		                            stuffPack = 0.00;
+		                        }
+		                    }
+		                    cell.setCellValue(stuffPack);
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+
+		                case "Pack Type":
+		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : "");
+		                    break;
+
+		                case "MCIPCIN":
+		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : "");
+		                    break;
+
+		                case "Cont No":
+		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : "");
+		                    break;
+
+		                case "Cont Size":
+		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : "");
+		                    break;
+
+		                case "Stuff Order Date":
+		                    if (resultData1[8] != null) {
+		                        cell.setCellValue(resultData1[8].toString());
+		                        cell.setCellStyle(dateCellStyle);
+		                    } else {
+		                        cell.setBlank();
+		                    }
+		                    break;
+
+		                case "Seal No 1":
+		                    cell.setCellValue(resultData1[9] != null ? resultData1[9].toString() : "");
+		                    break;
+
+		                case "Seal No 2":
+		                    cell.setCellValue(resultData1[10] != null ? resultData1[10].toString() : "");
+		                    break;
+
+		                case "SF Status":
+		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : "");
+		                    break;
+
+		                case "ASR Error":
+		                    cell.setCellValue(resultData1[12] != null ? resultData1[12].toString() : "");
+		                    break;
+
+		                case "Officer Approve Status":
+		                    cell.setCellValue(resultData1[13] != null ? resultData1[13].toString() : "");
+		                    break;
+
+		                case "Out Date":
+		                    if (resultData1[14] != null) {
+		                        cell.setCellValue(resultData1[14].toString());
+		                        cell.setCellStyle(dateCellStyle);
+		                    } else {
+		                        cell.setBlank();
+		                    }
+		                    break;
+
+		                default:
+		                    cell.setCellValue(""); // Handle undefined columns
+		                    break;
+		            }
+
+		            }
+		        }
+
+
+		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
+		        sheet.setColumnWidth(0,  9 * 306); 
+		        sheet.setColumnWidth(1, 18 * 306); 
+		        sheet.setColumnWidth(2, 18 * 306); 
+		        sheet.setColumnWidth(3, 18 * 306); 
+		        
+		        sheet.setColumnWidth(4, 18 * 306); 
+		        sheet.setColumnWidth(5, 18 * 306); 
+		        
+		        sheet.setColumnWidth(6, 18 * 306); 
+		        sheet.setColumnWidth(7, 18 * 306); 
+		        
+		        sheet.setColumnWidth(8, 18 * 306); 
+		        sheet.setColumnWidth(9, 18 * 306); 
+		        sheet.setColumnWidth(10, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        
+		        sheet.setColumnWidth(11, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(12, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        
+		        sheet.setColumnWidth(13,  18 * 306); 
+		        sheet.setColumnWidth(14, 18 * 306); 
+		        sheet.setColumnWidth(15, 18 * 306); 
+		        sheet.setColumnWidth(16, 18 * 306); 
+
+		        
+		        sheet.setColumnWidth(17, 18 * 306); 
+		        sheet.setColumnWidth(18, 18 * 306); 
+		        sheet.setColumnWidth(19, 18 * 306); 
+		        sheet.setColumnWidth(20,18 * 306); 
+		        sheet.setColumnWidth(21, 18 * 306);
+		        sheet.setColumnWidth(22, 18 * 306); 
+		        sheet.setColumnWidth(23, 18 * 306); 
+		        sheet.setColumnWidth(24, 18 * 306); 
+		        sheet.setColumnWidth(25, 18 * 306);
+		        sheet.setColumnWidth(26, 18 * 306);
+		        sheet.setColumnWidth(27, 18 * 306); 
+		
+		        
+		     // Apply autofilter to the header row
+		        sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, headerRowIndex, 0, columnsHeader.length - 1));
+
+		        // Freeze the header row
+		        sheet.createFreezePane(0, headerRowIndex + 1); // Freeze rows above the 6th row
+
+		        workbook.write(outputStream);
+		        return outputStream.toByteArray();
+
+		    }
+		        
+		        catch (IOException e) {
+		        e.printStackTrace();
+		    }
+
+		    return null;
+	}
+	
+	
+	
 	
 	public byte[] createExcelReportOfExortCargoBalanceDetailedReport(String companyId,
 		    String branchId, String username, String type, String companyname,

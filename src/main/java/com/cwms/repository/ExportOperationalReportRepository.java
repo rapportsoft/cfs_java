@@ -1932,5 +1932,78 @@ List<Object[]> findExportContainerONWHBuffer(
 			         @Param("branchId") String branchId);
 
 
+			@Query(value = 
+					"SELECT DISTINCT " +
+					"c.SB_No AS sbNo, " +
+					"IFNULL(DATE_FORMAT(c.Stuff_Tally_Date, '%d-%b-%Y'), '') AS stuffTallyDate, " +
+					"sb.No_Of_Packages AS pack, " +
+					"SUM(c.Stuffed_Qty) AS stuffPack, " +
+					"sb.Type_Of_Package AS typeOfPackage, " +
+					"cb.MPCIN AS mpcin, " +
+					"a.Container_No AS containerNo, " +
+					"a.Container_Size AS containerSize, " +
+					"IFNULL(DATE_FORMAT(c.SF_Job_Date, '%d-%b-%Y'), '') AS sfJobDate, " +
+					"c.Customs_Seal_No AS customsSealNo, " +
+					"c.Agent_Seal_No AS agentSealNo, " +
+					"c.ASR_Container_Status AS asrContainerStatus, " +
+					"'' AS emptyField1, " +
+					"'' AS emptyField2, " +
+					"IFNULL(DATE_FORMAT(a.Gate_Out_Date, '%d-%b-%Y'), '') AS gateOutDate, " +
+					"IFNULL(DATE_FORMAT(c.DP_Job_Date, '%d-%b-%Y'), '') AS dpJobDate, " +
+					"IFNULL(DATE_FORMAT(c.SB_Date, '%d-%b-%Y'), '') AS sbDate " +
+					"FROM cfgateout a " +
+					"LEFT OUTER JOIN cfexportgatepass b ON a.Company_Id = b.Company_Id " +
+					"AND a.Branch_Id = b.Branch_Id " +
+					"AND a.Profitcentre_Id = b.Profitcentre_Id " +
+					"AND a.Gate_Pass_No = b.Gate_Pass_Id " +
+					"AND a.Container_No = b.Container_No " +
+					"AND a.Gate_Out_Id = b.Gate_Out_Id " +
+					"LEFT OUTER JOIN cfstufftally c ON c.Company_Id = b.Company_Id " +
+					"AND c.Branch_Id = b.Branch_Id " +
+					"AND c.Profitcentre_Id = b.Profitcentre_Id " +
+					"AND c.Movement_Req_Id = b.Movement_Req_Id " +
+					"AND c.Container_No = b.Container_No " +
+					"AND c.Stuff_Tally_Id = b.Stuff_Tally_Id " +
+					"LEFT OUTER JOIN cfsbcrg sb ON c.Company_Id = sb.Company_Id " +
+					"AND c.Branch_Id = sb.Branch_Id " +
+					"AND c.Profitcentre_Id = sb.Profitcentre_Id " +
+					"AND c.SB_Trans_Id = sb.SB_Trans_Id " +
+					"AND c.SB_No = sb.SB_No " +
+					"AND c.SB_Line_Id = sb.SB_Line_No " +
+					"LEFT OUTER JOIN cfsb cb ON cb.Company_Id = sb.Company_Id " +
+					"AND cb.Branch_Id = sb.Branch_Id " +
+					"AND cb.Profitcentre_Id = sb.Profitcentre_Id " +
+					"AND cb.SB_Trans_Id = sb.SB_Trans_Id " +
+					"AND cb.SB_No = sb.SB_No " +
+					"WHERE a.Company_Id = :companyId " +
+					"AND a.Branch_Id = :branchId " +
+					"AND a.Profitcentre_Id IN ('N00004') " +
+					"AND a.trans_type IN ('CONT', 'MOVE', 'BOWC') " +
+					"AND a.Container_no != '' " +
+					"AND a.Gate_Out_Date BETWEEN :startDate AND :endDate " +
+					"AND a.Status = 'A' " +
+					"AND c.Status = 'A' " +
+					"AND b.Status = 'A' " +
+					"AND a.Gate_Out_Id != '' " +
+					"AND b.Container_No != '' " +
+					"AND (:sbNo IS NULL OR :sbNo = '' OR cb.SB_No = :sbNo) " +
+					"AND (:bookingNo IS NULL OR :bookingNo = '' OR a.Delivery_Order_No = :bookingNo) " +
+					"AND (:exporterName IS NULL OR :exporterName = '' OR cb.exporter_id = :exporterName) " +
+					"AND (:accountHolderId IS NULL OR :accountHolderId = '' OR cb.On_Account_Of = :accountHolderId) " +
+					"AND (:cha IS NULL OR :cha = '' OR cb.CHA = :cha) " +
+					"GROUP BY c.Stuff_Tally_Id, a.Container_No, c.SB_Trans_Id, c.SB_No " +
+					"ORDER BY c.Stuff_Tally_Date",
+					nativeQuery = true)
+					List<Object[]> findExportGateOutBasedData(
+					    @Param("companyId") String companyId, 
+					    @Param("branchId") String branchId, 
+					    @Param("startDate") Date startDate, 
+					    @Param("endDate") Date endDate,
+					    @Param("sbNo") String sbNo,
+					    @Param("bookingNo") String bookingNo,
+					    @Param("exporterName") String exporterName,
+					    @Param("accountHolderId") String accountHolderId,
+					    @Param("cha") String cha);
+
 }
 

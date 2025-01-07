@@ -92,6 +92,16 @@ public class ExportReportsController {
 	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
 	            fileName = "Import GateOut Container detailed Report.xlsx";
 	            break;
+	            
+	            
+	            
+	            
+	        case "Export SB Wise Container Out Report":
+	            excelBytes = exportReportService.createExcelReportOfExportContainerOutBasedReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "Export SB Wise Container Out Report.xlsx";
+	            break;
 
 	        case "Export Factory Stuff GateIn Report":
 	            excelBytes = exportReportService.createExcelReportOfFactoryStuffGateInReport(
