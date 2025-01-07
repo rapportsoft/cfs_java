@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -58,8 +59,8 @@ public class CfbondnocService {
 	@Autowired
 	private GateInRepo gateInRepo;
 
-  @Autowired
-  private VehicleTrackRepository vehicleTrackRepository;
+	@Autowired
+	private VehicleTrackRepository vehicleTrackRepository;
 
 	public List<Cfbondnoc> findAll() {
 		return repository.findAll();
@@ -90,12 +91,11 @@ public class CfbondnocService {
 	public List<Party> findAllShippingLine(String companyId, String branchId, String partyName) {
 		return cfbondnocRepository.getAllShippingLine(companyId, branchId, partyName);
 	}
-	
+
 	public List<Party> getAllAccountHolder(String companyId, String branchId, String partyName) {
 		return cfbondnocRepository.getAllAccountHolder(companyId, branchId, partyName);
 	}
-	
-	
+
 	public List<PartyAddress> findAllImporterAddress(String companyId, String branchId, String partyId) {
 		return cfbondnocRepository.findPartyAddress(companyId, branchId, partyId);
 	}
@@ -104,10 +104,11 @@ public class CfbondnocService {
 		return cfbondnocDtlRepository.getCfBondNocDtl(companyId, branchId, nocTransId, nocNo);
 	}
 
-	public List<CfBondNocDtl> getCfBondNocDtlForNocScreen(String companyId, String branchId, String nocTransId, String nocNo) {
+	public List<CfBondNocDtl> getCfBondNocDtlForNocScreen(String companyId, String branchId, String nocTransId,
+			String nocNo) {
 		return cfbondnocDtlRepository.getCfBondNocDtlForNocScreen(companyId, branchId, nocTransId, nocNo);
 	}
-	
+
 	public Party getDataByPartyIdAndGstNoForImporter(String companyId, String branchId, String partyId, String gstNo,
 			String sr) {
 		return cfbondnocRepository.getDataOfImporter1(companyId, branchId, partyId, gstNo, sr);
@@ -149,11 +150,6 @@ public class CfbondnocService {
 		return cfbondnocRepository.findCfbondnocByCompanyIdAndBranchIdOrSerach(companyId, branchId, transId, nocNo);
 	}
 
-	
-	
-	
-	
-	
 	@Transactional
 	public ResponseEntity<?> saveDataOfCfBondNoc(String cid, String bid, String user, String flag,
 			Cfbondnoc cfBondNoc) {
@@ -178,7 +174,7 @@ public class CfbondnocService {
 //   				    }
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Area should be less than :" + addValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -246,7 +242,7 @@ public class CfbondnocService {
 
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Area should be less than :" + addValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -306,7 +302,6 @@ public class CfbondnocService {
 		}
 	}
 
-	
 	@Transactional
 	public ResponseEntity<?> saveData(String cid, String bid, String user, String flag,
 			Map<String, Object> requestBody) {
@@ -337,6 +332,8 @@ public class CfbondnocService {
 					BigDecimal addValue = validate.getCusAppArea().subtract(validate.getInbondAres())
 							.add(validate.getExbondArea() != null ? validate.getExbondArea() : BigDecimal.ZERO);
 
+					BigDecimal roundValue = addValue.setScale(2, RoundingMode.HALF_UP);
+
 					// Compare using compareTo method
 //   				    if (addValue.compareTo(cfBondNoc.getArea()) < 0) {
 //   				    	return new ResponseEntity<>("Area validation failed", HttpStatus.BAD_REQUEST);
@@ -344,7 +341,7 @@ public class CfbondnocService {
 
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Area should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -361,9 +358,11 @@ public class CfbondnocService {
 //   				    	return new ResponseEntity<>("Cif Value validation failed", HttpStatus.BAD_REQUEST);
 //   				    }
 
+					BigDecimal roundValue = addValue.setScale(2, RoundingMode.HALF_UP);
+
 					if (bondnocDtl.getCifValue().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Cif should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Cif should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -377,9 +376,12 @@ public class CfbondnocService {
 //   				    if (addValue.compareTo(bondnocDtl.getCargoDuty()) < 0) {
 //   				    	return new ResponseEntity<>("Crago Duty value validation failed", HttpStatus.BAD_REQUEST);
 //   				    }
+
+					BigDecimal roundValue = addValue.setScale(2, RoundingMode.HALF_UP);
+
 					if (bondnocDtl.getCargoDuty().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Crago should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>("Crago should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
 					}
 				}
 
@@ -483,12 +485,11 @@ public class CfbondnocService {
 
 				Cfbondnoc existingCfBondNoc = cfbondnocRepository.getDataOfDtlId(cid, bid, cfBondNoc.getNocTransId(),
 						cfBondNoc.getNocNo());
-				
+
 				if (isExist) {
 					return new ResponseEntity<>("Duplicate Bill of entry no", HttpStatus.BAD_REQUEST);
 				}
 
-				
 //   				if (validate != null && existing != null) 
 //   				{
 //   				    BigDecimal addValue = validate.getCusAppArea()
@@ -551,16 +552,19 @@ public class CfbondnocService {
 					existing.setEditedDate(new Date());
 					cfbondnocDtlRepository.save(existing);
 				} else {
-					
+
 					Cfbondinsbal validate = cfbondnocDtlRepository.getDataOfCfBondCifForValidation(cid, bid);
 
 					if (validate != null) {
 						BigDecimal addValue = validate.getCusAppArea().subtract(validate.getInbondAres())
 								.add(validate.getExbondArea() != null ? validate.getExbondArea() : BigDecimal.ZERO);
 
+						BigDecimal roundValue = addValue.setScale(2, RoundingMode.HALF_UP);
+
 						if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 							// If cfBondNoc.getArea() is greater than addValue
-							return new ResponseEntity<>("Area should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>("Area should be less than :" + roundValue,
+									HttpStatus.BAD_REQUEST);
 						}
 					}
 
@@ -568,18 +572,25 @@ public class CfbondnocService {
 						BigDecimal addValue = validate.getCusAppCifValue().subtract(validate.getInbondCifValue())
 								.add(validate.getExbondCifValue());
 
+						BigDecimal roundValue = addValue.setScale(2, RoundingMode.HALF_UP);
+
 						if (bondnocDtl.getCifValue().compareTo(addValue) > 0) {
 							// If cfBondNoc.getArea() is greater than addValue
-							return new ResponseEntity<>("Cif should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>("Cif should be less than :" + roundValue,
+									HttpStatus.BAD_REQUEST);
 						}
 					}
 
 					if (validate != null) {
 						BigDecimal addValue = validate.getCusAppCargoDuty().subtract(validate.getInbondCargoDuty())
 								.add(validate.getExbondCargoDuty());
+
+						BigDecimal roundValue = addValue.setScale(2, RoundingMode.HALF_UP);
+
 						if (bondnocDtl.getCargoDuty().compareTo(addValue) > 0) {
 							// If cfBondNoc.getArea() is greater than addValue
-							return new ResponseEntity<>("Crago should be less than :"+addValue, HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>("Crago should be less than :" + roundValue,
+									HttpStatus.BAD_REQUEST);
 						}
 					}
 					CfBondNocDtl bondnocDtl1 = new CfBondNocDtl();
@@ -695,8 +706,7 @@ public class CfbondnocService {
 
 					gateInNextId = String.format("GIBM%06d", nextNumericNextID1);
 
-					for (GateIn item : bondnocDtl) 
-					{ // Replace ItemType with the actual type of items in bondnocDtl
+					for (GateIn item : bondnocDtl) { // Replace ItemType with the actual type of items in bondnocDtl
 						GateIn gateIn = new GateIn();
 						gateIn.setCompanyId(cid);
 						gateIn.setBranchId(bid);
@@ -738,18 +748,16 @@ public class CfbondnocService {
 
 						gateInList.add(gateIn);
 
-						GateIn saved = 	gateInRepo.save(gateIn);
-						
-						if (saved!=null)
-						{
-							
+						GateIn saved = gateInRepo.save(gateIn);
+
+						if (saved != null) {
+
 							CfBondNocDtl existingDetail = cfbondnocDtlRepository.findCfBondDetails(cid, bid,
 									saved.getErpDocRefNo(), saved.getCommodity(), saved.getDocRefNo());
 
-							
 							Cfbondnoc existingNoc = cfbondnocRepository.findCfBondNoc(cid, bid, saved.getErpDocRefNo(),
 									saved.getDocRefNo());
-							
+
 							if (existingDetail != null) {
 
 								BigDecimal newQtyTakenIn = (existingDetail.getGateInPackages() != null
@@ -768,11 +776,8 @@ public class CfbondnocService {
 
 							}
 
-							
-
 							// Check if the existing NOC record is found
-							if (existingNoc != null) 
-							{
+							if (existingNoc != null) {
 								System.out.println("existingNoc.getGateInPackages()____________________"
 										+ existingNoc.getGateInPackages());
 
@@ -785,49 +790,44 @@ public class CfbondnocService {
 								System.out.println("updatedGateInPackages____________________" + updatedGateInPackages);
 								existingNoc.setGateInPackages(updatedGateInPackages);
 								cfbondnocRepository.save(existingNoc);
-	//
+								//
 //						        // Update the NOC record in the database
 //						        int updateCfBondNoc = cfbondnocRepository.updateCfBondNoc(updatedGateInPackages, cid, bid, item.getErpDocRefNo(), item.getDocRefNo());
 //						        System.out.println("updateCfBondNoc____________________________________" + updateCfBondNoc);
 							}
 
 						}
-						
-			
-			
+
 						// Increment srNo after setting it
 						srNo++;
 					}
-					
-					
 
 					savedGatein = gateInList;
 
-					if (!savedGatein.isEmpty()) 
-					{
+					if (!savedGatein.isEmpty()) {
 						VehicleTrack vtrac = new VehicleTrack();
 						vtrac.setCompanyId(cid);
 						vtrac.setBranchId(bid);
 						vtrac.setCreatedBy(user);
-						 vtrac.setCreatedDate(new Date());
-						 vtrac.setApprovedBy(user);
-						 vtrac.setApprovedDate(new Date ());
-						 vtrac.setVehicleNo(cfGateIn.getVehicleNo());
-						 vtrac.setDriverName(cfGateIn.getDriverName());
-						 vtrac.setTransporterName(cfGateIn.getTransporterName());
-						 vtrac.setTransporterStatus(cfGateIn.getTransporterStatus().charAt(0));
-						 vtrac.setFinYear("2025");
-						 vtrac.setContainerNo(cfGateIn.getContainerNo()!=null ? cfGateIn.getContainerNo() : "");
-						 vtrac.setContainerSize(cfGateIn.getContainerSize()!=null ? cfGateIn.getContainerSize() :"");
-						 vtrac.setContainerType(cfGateIn.getContainerType()!=null ? cfGateIn.getContainerType() : "");
-						 vtrac.setStatus('A');
-						 vtrac.setProfitcentreId(cfGateIn.getProfitcentreId());
-						 vtrac.setSrNo(1);
-						 vtrac.setShiftIn(cfGateIn.getShift());
-						 vtrac.setGateInId(gateInNextId);
-						 vtrac.setGateInDate(cfGateIn.getInGateInDate());
-						 vtrac.setVehicleStatus('E');
-                         vehicleTrackRepository.save(vtrac);
+						vtrac.setCreatedDate(new Date());
+						vtrac.setApprovedBy(user);
+						vtrac.setApprovedDate(new Date());
+						vtrac.setVehicleNo(cfGateIn.getVehicleNo());
+						vtrac.setDriverName(cfGateIn.getDriverName());
+						vtrac.setTransporterName(cfGateIn.getTransporterName());
+						vtrac.setTransporterStatus(cfGateIn.getTransporterStatus().charAt(0));
+						vtrac.setFinYear("2025");
+						vtrac.setContainerNo(cfGateIn.getContainerNo() != null ? cfGateIn.getContainerNo() : "");
+						vtrac.setContainerSize(cfGateIn.getContainerSize() != null ? cfGateIn.getContainerSize() : "");
+						vtrac.setContainerType(cfGateIn.getContainerType() != null ? cfGateIn.getContainerType() : "");
+						vtrac.setStatus('A');
+						vtrac.setProfitcentreId(cfGateIn.getProfitcentreId());
+						vtrac.setSrNo(1);
+						vtrac.setShiftIn(cfGateIn.getShift());
+						vtrac.setGateInId(gateInNextId);
+						vtrac.setGateInDate(cfGateIn.getInGateInDate());
+						vtrac.setVehicleStatus('E');
+						vehicleTrackRepository.save(vtrac);
 
 						processNextIdRepository.updateAuditTrail(cid, bid, "P03204", gateInNextId, "2241");
 
@@ -860,7 +860,6 @@ public class CfbondnocService {
 //
 //						});
 
-
 					} else {
 						return new ResponseEntity<>("Gate In data not found", HttpStatus.BAD_REQUEST);
 					}
@@ -887,18 +886,18 @@ public class CfbondnocService {
 				cfGateIn.setTransporterName(cfGateIn.getTransporterName());
 
 				gateInRepo.save(cfGateIn);
-				
-				
+
 				String transporterStatus = cfGateIn.getTransporterStatus();
-				char statusChar = (transporterStatus != null && !transporterStatus.isEmpty()) ? transporterStatus.charAt(0) : ' ';
-				
-				int updateDataBondGateInVehicle=vehicleTrackRepository.updateDataBondGateInVehicle(cfGateIn.getVehicleNo(),statusChar,
-						cfGateIn.getTransporterName(),cfGateIn.getDriverName(),'E',cfGateIn.getShift(),
-						cfGateIn.getContainerNo(),cfGateIn.getContainerSize(),cfGateIn.getContainerType(),
-						user,
-						cid,bid,cfGateIn.getGateInId());
-				
-				System.out.println("updateDataBondGateInVehicle updated row count is "+updateDataBondGateInVehicle);
+				char statusChar = (transporterStatus != null && !transporterStatus.isEmpty())
+						? transporterStatus.charAt(0)
+						: ' ';
+
+				int updateDataBondGateInVehicle = vehicleTrackRepository.updateDataBondGateInVehicle(
+						cfGateIn.getVehicleNo(), statusChar, cfGateIn.getTransporterName(), cfGateIn.getDriverName(),
+						'E', cfGateIn.getShift(), cfGateIn.getContainerNo(), cfGateIn.getContainerSize(),
+						cfGateIn.getContainerType(), user, cid, bid, cfGateIn.getGateInId());
+
+				System.out.println("updateDataBondGateInVehicle updated row count is " + updateDataBondGateInVehicle);
 
 				bondnocDtl.forEach(item1 -> {
 
@@ -1353,7 +1352,7 @@ public class CfbondnocService {
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 
-			// return new ResponseEntity<>(myMap,HttpStatus.OK) ;
+			 return new ResponseEntity<>(myMap,HttpStatus.OK) ;
 		}
 
 		Boolean check9 = cfbondnocDtlRepository.checkInBondedPackages(cid, bid, list.getNocNo(), list.getNocTransId());
@@ -1375,67 +1374,9 @@ public class CfbondnocService {
 		if (check2) {
 			idList.add("P00249");
 			idList.add("P00250");
-
-			myMap.put("list", list);
-			myMap.put("idList", idList);
-
-			// return new ResponseEntity<>(myMap, HttpStatus.OK);
-		}
-
-		
-		Boolean check3 = cfbondnocDtlRepository.checkInBondedHdeDtl(cid, bid, list.getNocNo(), list.getNocTransId());
-
-		System.out.println("check3______________________________________" + check3);
-
-		if (check3) 
-		{
-			idList.add("P00249");
-			idList.add("P00250");
-			idList.add("P00251");
-
-			Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
-
-			System.out.println("check3 check5______________________________________" + check5);
-			if (check5) {
-				idList.add("P00252");
-				idList.add("P00253");
-				
-			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
-				 
-			if (!result.isEmpty())
-
-			{
-				firstGatePass = result.get(0);
-			} else {
-				return null; // Handle cases where no records are found
-			}
-
-				
-
-			}
 			
-			Boolean checkForQtyOut = cfbondnocDtlRepository.checkInForALLGatePass(cid, bid, list.getNocNo(),
-					list.getNocTransId());
-
-			if (checkForQtyOut) {
-				idList.add("P00252");
-				idList.add("P00253");
-				
-				List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
-				 
-				if (!result.isEmpty())
-
-				{
-					firstGatePass = result.get(0);
-				} else 
-				{
-					return null; // Handle cases where no records are found
-				}
-
-					 myMap.put("firstGatePass", firstGatePass);
-				
-			}
-
+			idList.add("P00251");
+			
 			List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results.isEmpty())
@@ -1446,13 +1387,121 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 			
+			
+			myMap.put("firstInbond", firstInbond);
+			myMap.put("list", list);
+			myMap.put("idList", idList);
 
-			List<CfExBondCrg> results1 = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+//		 return new ResponseEntity<>(myMap, HttpStatus.OK);
+		}
+
+		Boolean check3 = cfbondnocDtlRepository.checkInBondedHdeDtl(cid, bid, list.getNocNo(), list.getNocTransId());
+
+		System.out.println("check3______________________________________" + check3);
+
+		if (check3) {
+			idList.add("P00249");
+			idList.add("P00250");
+			idList.add("P00251");
+//			idList.add("P00252");
+			
+			List<Cfinbondcrg> results = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results.isEmpty())
+
+			{
+				firstInbond = results.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+			
+			
+			myMap.put("firstInbond", firstInbond);
+
+			Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
+
+			System.out.println("check3check5______________________________________" + check5);
+			if (check5) {
+				
+//				idList.add("P00249");
+//				idList.add("P00250");
+//				idList.add("P00251");
+				
+				idList.add("P00252");
+				idList.add("P00253");
+
+				List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
+						list.getNocNo());
+				if (!results1.isEmpty())
+
+				{
+					firstInbond = results1.get(0);
+				} else {
+					return null; // Handle cases where no records are found
+				}
+				
+				
+				myMap.put("firstInbond", firstInbond);
+				
+				List<CFBondGatePass> result = cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,
+						list.getNocTransId(), list.getNocNo());
+
+				if (!result.isEmpty())
+
+				{
+					firstGatePass = result.get(0);
+				} else {
+					return null; // Handle cases where no records are found
+				}
+				
+				myMap.put("firstGatePass", firstGatePass);
+				
+//				return new ResponseEntity<>(myMap, HttpStatus.OK);
+			}
+
+			Boolean checkForQtyOut = cfbondnocDtlRepository.checkInForALLGatePass(cid, bid, list.getNocNo(),
+					list.getNocTransId());
+
+			if (checkForQtyOut) {
+				
+//				idList.add("P00249");
+//				idList.add("P00250");
+//				idList.add("P00251");
+				
+				idList.add("P00252");
+				idList.add("P00253");
+
+				List<CFBondGatePass> result = cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,
+						list.getNocTransId(), list.getNocNo());
+
+				if (!result.isEmpty())
+
+				{
+					firstGatePass = result.get(0);
+				} else {
+					return null; // Handle cases where no records are found
+				}
+
+				myMap.put("firstGatePass", firstGatePass);
+
+			}
+
+			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results1.isEmpty())
 
 			{
-				firstExBond = results1.get(0);
+				firstInbond = results1.get(0);
+			} else {
+				return null; // Handle cases where no records are found
+			}
+
+			List<CfExBondCrg> results11 = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+			if (!results11.isEmpty())
+
+			{
+				firstExBond = results11.get(0);
 			} else {
 				return null; // Handle cases where no records are found
 			}
@@ -1463,20 +1512,16 @@ public class CfbondnocService {
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
 			myMap.put("firstExBond", firstExBond);
-		    myMap.put("firstGatePass", firstGatePass);
-			// return new ResponseEntity<>(myMap, HttpStatus.OK);
+			myMap.put("firstGatePass", firstGatePass);
+//		return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
 
-		
-		
-		
 		Boolean check4 = cfbondnocDtlRepository.checkExBondedPackagesAllDone(cid, bid, list.getNocNo(),
 				list.getNocTransId());
 
 		System.out.println("check4______________________________________" + check4);
 
-		if (check4) 
-		{
+		if (check4) {
 			idList.add("P00249");
 			idList.add("P00250");
 			idList.add("P00251");
@@ -1502,19 +1547,16 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 			System.out.println("firstExBond________________________________" + firstExBond);
-			
-			
-			
+
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
 			myMap.put("firstExBond", firstExBond);
 
-		
 		}
 
-	// check letter its alredy prsent in check3 loop 	
-		
+		// check letter its alredy prsent in check3 loop
+
 		Boolean check5 = cfbondnocDtlRepository.checkInForGatePass(cid, bid, list.getNocNo(), list.getNocTransId());
 
 		System.out.println("check45______________________________________" + check5);
@@ -1524,8 +1566,7 @@ public class CfbondnocService {
 			idList.add("P00250");
 			idList.add("P00251");
 			idList.add("P00252");
-			
-			
+
 			List<CfExBondCrg> results = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results.isEmpty())
@@ -1535,7 +1576,7 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
-			
+
 			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results1.isEmpty())
@@ -1546,19 +1587,14 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 			System.out.println("firstExBond________________________________" + firstExBond);
-			
-			
 
-		
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
 			myMap.put("firstExBond", firstExBond);
 			// return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
-		
-		
-		
+
 		Boolean check54 = cfbondnocDtlRepository.checkInForGatePassOut(cid, bid, list.getNocNo(), list.getNocTransId());
 
 		System.out.println("check454______________________________________" + check54);
@@ -1578,7 +1614,7 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
-			
+
 			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results1.isEmpty())
@@ -1589,9 +1625,10 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 			System.out.println("firstExBond________________________________" + firstExBond);
-			
-			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
-			 
+
+			List<CFBondGatePass> result = cfbondnocDtlRepository.getCfBondGatePassList(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+
 			if (!result.isEmpty())
 
 			{
@@ -1600,8 +1637,6 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 
-
-		
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
@@ -1609,8 +1644,9 @@ public class CfbondnocService {
 			myMap.put("firstGatePass", firstGatePass);
 			// return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
-		
-		Boolean checkPass = cfbondnocDtlRepository.checkInForALLGatePassOut(cid, bid, list.getNocNo(), list.getNocTransId());
+
+		Boolean checkPass = cfbondnocDtlRepository.checkInForALLGatePassOut(cid, bid, list.getNocNo(),
+				list.getNocTransId());
 
 		System.out.println("checkPass______________________________________" + checkPass);
 
@@ -1629,7 +1665,7 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
-			
+
 			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results1.isEmpty())
@@ -1640,9 +1676,10 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 			System.out.println("firstExBond________________________________" + firstExBond);
-			
-			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
-			 
+
+			List<CFBondGatePass> result = cfbondnocDtlRepository.getCfBondGatePassList(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+
 			if (!result.isEmpty())
 
 			{
@@ -1651,8 +1688,6 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 
-
-		
 			myMap.put("list", list);
 			myMap.put("idList", idList);
 			myMap.put("firstInbond", firstInbond);
@@ -1660,20 +1695,19 @@ public class CfbondnocService {
 			myMap.put("firstGatePass", firstGatePass);
 			// return new ResponseEntity<>(myMap, HttpStatus.OK);
 		}
-		
-		
-		
+
 		Boolean check55 = cfbondnocDtlRepository.checkInForGateGateOut(cid, bid, list.getNocNo(), list.getNocTransId());
 
 		System.out.println("ccheck55______________________________________" + check55);
 
-		if (check55) {
+		if (check55) 
+		{
 			idList.add("P00249");
 			idList.add("P00250");
 			idList.add("P00251");
 			idList.add("P00252");
 			idList.add("P00253");
-			
+
 			List<Cfinbondcrg> results1 = cfbondnocDtlRepository.getInBondingIdAndBoeNo(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results1.isEmpty())
@@ -1683,7 +1717,7 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
-			
+
 			List<CfExBondCrg> results111 = cfbondnocDtlRepository.getExbondIdAndInbondId(cid, bid, list.getNocTransId(),
 					list.getNocNo());
 			if (!results111.isEmpty())
@@ -1693,9 +1727,10 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
-			
-			List<CFBondGatePass> result =cfbondnocDtlRepository.getCfBondGatePassList(cid, bid,list.getNocTransId(),list.getNocNo());
-			 
+
+			List<CFBondGatePass> result = cfbondnocDtlRepository.getCfBondGatePassList(cid, bid, list.getNocTransId(),
+					list.getNocNo());
+
 			if (!result.isEmpty())
 
 			{
@@ -1704,9 +1739,8 @@ public class CfbondnocService {
 				return null; // Handle cases where no records are found
 			}
 
-			
-			List<GateOut> results11 = cfbondnocDtlRepository.getDetailsInMainSearch(cid, bid, 
-					list.getNocNo(),list.getNocTransId());
+			List<GateOut> results11 = cfbondnocDtlRepository.getDetailsInMainSearch(cid, bid, list.getNocNo(),
+					list.getNocTransId());
 			if (!results11.isEmpty())
 
 			{
@@ -1714,7 +1748,6 @@ public class CfbondnocService {
 			} else {
 				return null; // Handle cases where no records are found
 			}
-
 
 			System.out.println("firstExBond________________________________" + firstGateOut);
 
