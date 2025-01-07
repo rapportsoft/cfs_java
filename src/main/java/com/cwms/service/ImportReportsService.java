@@ -4422,7 +4422,7 @@ public class ImportReportsService {
 		        	     "Vessel Name", "VOY No", "Package Type", 
 		        	    "IGM Date", "Gate In Date", "Shipping Agent Name", "Console Agent", 
 		        	    "No Of Packages 1", "Cargo Delv Pack", "Balance Packages", 
-		        	    "New Wt", "Cargo Delv Wt", "Balance Wt"
+		        	    "Net Wt", "Cargo Delv Wt", "Balance Wt"
 		        	};
 
 
