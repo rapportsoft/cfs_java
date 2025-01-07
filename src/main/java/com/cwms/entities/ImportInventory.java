@@ -213,10 +213,105 @@ public class ImportInventory {
 
     @Column(name = "DocRefNo", length = 35)
     private String docRefNo;
+    
+    @Column(name = "Assessment_Id", length = 10)
+    private String assessmentId;
+    
+    
+    
+
+	public String getAssessmentId() {
+		return assessmentId;
+	}
+
+	public void setAssessmentId(String assessmentId) {
+		this.assessmentId = assessmentId;
+	}
+
+	public void setNoOfItem(int noOfItem) {
+		this.noOfItem = noOfItem;
+	}
 
 	public ImportInventory() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+
+	public ImportInventory(String companyId, String branchId, String finYear, String igmTransId, String profitcentreId,
+			String igmNo, String containerNo, String gateInId, String vesselId, String viaNo, String containerSize,
+			String containerType, String iso, String importerName, String cha, String sa, String sl,
+			String containerStatus, String containerSealNo, String scannerType, String sealCutTransId,
+			Date sealCutReqDate, String containerExamStatus, Date containerExamDate, String yardLocation,
+			String yardLocation1, String yardBlock, String blockCellNo, String deStuffId, Date deStuffDate,
+			Date gateInDate, String gateOutId, Date gateOutDate, String holdStatus, String holdingAgentName,
+			Date holdDate, Date releaseDate, String holdRemarks, String releaseRemarks, String releaseUserName,
+			String gatePassNo, Date gatePassDate, String emptyPassId, Date emptyPassDate, String emptyOutId,
+			Date emptyOutDate, String status, String createdBy, Date createdDate, String editedBy, Date editedDate,
+			String approvedBy, Date approvedDate, int noOfItem, BigDecimal containerWeight, String cycle,
+			String doEntryFlag, Date doEntryDate, String docRefNo, String assessmentId) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.igmTransId = igmTransId;
+		this.profitcentreId = profitcentreId;
+		this.igmNo = igmNo;
+		this.containerNo = containerNo;
+		this.gateInId = gateInId;
+		this.vesselId = vesselId;
+		this.viaNo = viaNo;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.iso = iso;
+		this.importerName = importerName;
+		this.cha = cha;
+		this.sa = sa;
+		this.sl = sl;
+		this.containerStatus = containerStatus;
+		this.containerSealNo = containerSealNo;
+		this.scannerType = scannerType;
+		this.sealCutTransId = sealCutTransId;
+		this.sealCutReqDate = sealCutReqDate;
+		this.containerExamStatus = containerExamStatus;
+		this.containerExamDate = containerExamDate;
+		this.yardLocation = yardLocation;
+		this.yardLocation1 = yardLocation1;
+		this.yardBlock = yardBlock;
+		this.blockCellNo = blockCellNo;
+		this.deStuffId = deStuffId;
+		this.deStuffDate = deStuffDate;
+		this.gateInDate = gateInDate;
+		this.gateOutId = gateOutId;
+		this.gateOutDate = gateOutDate;
+		this.holdStatus = holdStatus;
+		this.holdingAgentName = holdingAgentName;
+		this.holdDate = holdDate;
+		this.releaseDate = releaseDate;
+		this.holdRemarks = holdRemarks;
+		this.releaseRemarks = releaseRemarks;
+		this.releaseUserName = releaseUserName;
+		this.gatePassNo = gatePassNo;
+		this.gatePassDate = gatePassDate;
+		this.emptyPassId = emptyPassId;
+		this.emptyPassDate = emptyPassDate;
+		this.emptyOutId = emptyOutId;
+		this.emptyOutDate = emptyOutDate;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.noOfItem = noOfItem;
+		this.containerWeight = containerWeight;
+		this.cycle = cycle;
+		this.doEntryFlag = doEntryFlag;
+		this.doEntryDate = doEntryDate;
+		this.docRefNo = docRefNo;
+		this.assessmentId = assessmentId;
 	}
 
 	public ImportInventory(String companyId, String branchId, String finYear, String igmTransId, String profitcentreId,
