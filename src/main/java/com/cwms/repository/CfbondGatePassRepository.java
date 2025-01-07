@@ -40,6 +40,7 @@ public interface CfbondGatePassRepository extends JpaRepository<CFBondGatePass, 
 	    "AND ((:partyName IS NULL OR :partyName = '' OR c.gatePassId LIKE concat (:partyName, '%')) " +
 	        "OR (:partyName IS NULL OR :partyName = '' OR c.exBondingId LIKE concat (:partyName, '%')) " +
 	        "OR (:partyName IS NULL OR :partyName = '' OR c.exBondBeNo LIKE concat (:partyName, '%'))) " +
+	        "GROUP BY c.gatePassId " +
 	    "ORDER BY c.gatePassId DESC")
 	List<CFBondGatePass> findCfbondnocByCompanyIdAndBranchIdForCfbondGateIn(
 	    @Param("companyId") String companyId, 

@@ -40,6 +40,7 @@ List<Object[]> searchExportGateOut(@Param("cid") String cid, @Param("bid") Strin
 	        "OR (:partyName IS NULL OR :partyName = '' OR c.erpDocRefNo LIKE concat(:partyName, '%')) " +
 	        "OR (:partyName IS NULL OR :partyName = '' OR c.docRefNo LIKE concat(:partyName, '%')) " +
 	        "OR (:partyName IS NULL OR :partyName = '' OR c.exBondBeNo LIKE concat(:partyName, '%'))) " +
+	        "GROUP BY c.gateOutId " +
 	    "ORDER BY c.gateOutId DESC")
 	List<GateOut> findDataOfGateOutDetails(
 	    @Param("companyId") String companyId, 

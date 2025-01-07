@@ -120,6 +120,7 @@ public interface GateInRepo extends JpaRepository<GateIn, String> {
 		       "OR (:search IS NULL OR :search = '' OR g.transporterStatus LIKE concat (:search, '%')) " +
 		       "OR (:search IS NULL OR :search = '' OR g.vehicleNo LIKE concat (:search, '%')) " +
 		       "OR (:search IS NULL OR :search = '' OR g.importerName LIKE concat (:search, '%'))) " +
+		       "GROUP BY g.gateInId "+
 		   "ORDER BY g.gateInId DESC")
 	 List<GateIn> findGateInByCriteria(
 		       @Param("companyId") String companyId,
