@@ -487,6 +487,15 @@ public class PartyController {
 		return getPort;
 	}
 	
+	
+	@GetMapping("/getForwarder")
+	public List<Object[]> getForwarder(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "val", required = false) String val) {
+		List<Object[]> getPort = partyrepo.getFwdWithAdd(cid, bid, val);
+
+		return getPort;
+	}
+	
 	@GetMapping("/getImpAddress")
 	public List<Object[]> getImpAddress(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "val", required = false) String val) {
@@ -499,6 +508,14 @@ public class PartyController {
 	public List<Object[]> getCha(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "val", required = false) String val) {
 		List<Object[]> getPort = partyrepo.getCHA(cid, bid, val);
+
+		return getPort;
+	}
+	
+	@GetMapping("/getChaWithAdd")
+	public List<Object[]> getChaWithAdd(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "val", required = false) String val) {
+		List<Object[]> getPort = partyrepo.getCHAWithAdd(cid, bid, val);
 
 		return getPort;
 	}
@@ -522,6 +539,14 @@ public class PartyController {
 	public List<Object[]> getAll(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "val", required = false) String val) {
 		List<Object[]> getPort = partyrepo.getAll(cid, bid, val);
+
+		return getPort;
+	}
+	
+	@GetMapping("/getAllWithAdd")
+	public List<Object[]> getAllWithAdd(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "val", required = false) String val) {
+		List<Object[]> getPort = partyrepo.getAllWithAdd(cid, bid, val);
 
 		return getPort;
 	}

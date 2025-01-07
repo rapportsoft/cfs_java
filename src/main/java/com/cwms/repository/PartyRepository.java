@@ -219,4 +219,24 @@ String getPartyNameById(@Param("cid") String cid, @Param("bid") String bid, @Par
 
 @Query(value = "select p.tdsPercentage from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
 String getTdsById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
+
+
+@Query(value = "select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo,a.gstNo,a.state from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "
+		+ "p.branchId=a.branchId and p.partyId=a.partyId  where p.companyId=:cid and p.branchId=:bid and p.frw = 'Y' "
+		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.partyName LIKE CONCAT (:val,'%'))")
+List<Object[]> getFwdWithAdd(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
+
+
+@Query(value = "select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo,a.gstNo from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "
+		+ "p.branchId=a.branchId and p.partyId=a.partyId where p.companyId=:cid and p.branchId=:bid and p.cha = 'Y' "
+		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.partyName LIKE CONCAT (:val,'%'))")
+List<Object[]> getCHAWithAdd(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
+
+@Query(value = "select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo,a.gstNo,a.state from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "
+		+ "p.branchId=a.branchId and p.partyId=a.partyId  where p.companyId=:cid and p.branchId=:bid "
+		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.partyName LIKE CONCAT (:val,'%'))")
+List<Object[]> getAllWithAdd(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
 }
