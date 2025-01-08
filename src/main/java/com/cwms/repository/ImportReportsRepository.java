@@ -1935,7 +1935,7 @@ List<Object[]> scanContainerReport1(
 
 		    	    
 		    	    
-		    	    @Query(value = "SELECT " +
+		      	    @Query(value = "SELECT " +
 		    	            "a.Container_No, a.Container_Size, a.Container_Type, a.Igm_no, a.IGM_Line_No, " +
 		    	            "c.bl_no, IFNULL(a.No_Of_Packages, '0.00'), " +
 		    	            "c.Importer_Name, c.Commodity_Description, " +

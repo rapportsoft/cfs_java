@@ -4683,11 +4683,11 @@ public class ImportReportsService {
 		                    break;
 
 		                case "No Of Packages 1":
-		                    cell.setCellValue(resultData1[16] != null ? Integer.parseInt(resultData1[16].toString()) : 0);
+		                    cell.setCellValue(resultData1[16] != null ? Double.parseDouble(resultData1[16].toString()) : 0);
 		                    break;
 
 		                case "Cargo Delv Pack":
-		                    cell.setCellValue(resultData1[17] != null ? Integer.parseInt(resultData1[17].toString()) : 0);
+		                    cell.setCellValue(resultData1[17] != null ? Double.parseDouble(resultData1[17].toString()) : 0);
 		                    break;
 
 		                case "Balance Packages":
