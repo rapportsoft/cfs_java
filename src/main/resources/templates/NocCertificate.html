@@ -489,11 +489,11 @@ table.table th, table.table td {
 
 
 	<br />
-	<br />
 
-	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 12px !important;">
+
+<!--  	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 12px !important;">
 	<thead>
-						<tr>
+					<tr>
 				<th
 					style="height: 14px; width: 45%; border: 1px solid white; font-size: 12px !important;"><b>Total Duty Limit approved</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
@@ -504,10 +504,10 @@ table.table th, table.table td {
 				</th>
 				
 				<br />
-			</tr>
+			</tr> 
 			
 			
-				<tr>
+			 <tr>
 				<th
 					style="height: 14px; width: 45%; border: 1px solid white; font-size: 12px !important;"><b>Duty on Stored Goods as on Date including this Consignment</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
@@ -516,18 +516,53 @@ table.table th, table.table td {
 				 <span
 					th:text="${storedDuty}"></span> <br />
 				</th>
-				
 				<br />
-			</tr>
+			</tr> 
 		
 	</thead>
-</table>
+</table>  -->
+
+
+<table class="table" style="width: 100%; border-collapse: collapse;font-size: 12px !important;">
+    <tr>
+
+        <td style="width: 50%; border: 1px solid white;">
+            <table style="width: 100%; border-collapse: collapse;">
+  
+                <tr>
+                    <th style="height: 14px; width: 45%; border: 1px solid white; font-size: 12px; text-align: left;">
+                        <b>Total Duty Limit approved</b>
+                    </th>
+                    <th style="height: 14px; width: 2%; border: 1px solid white;">:</th>
+                    <th style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px; font-weight: normal;">
+                        <span th:text="${cusAppCrgoDuty}"></span>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th style="height: 14px; width: 45%; border: 1px solid white; font-size: 12px; text-align: left;">
+                        <b>Duty on Stored Goods as on Date including this Consignment</b>
+                    </th>
+                    <th style="height: 14px; width: 2%; border: 1px solid white;">:</th>
+                    <th style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px; font-weight: normal;">
+                        <span th:text="${storedDuty}"></span>
+                    </th>
+                </tr>
+
+            </table>
+        </td>
+
+
+         <td style="width: 50%; text-align: right; border: 1px solid white;">
+            <img th:src="'data:image/png;base64,' + ${qrCode}" alt="QR Code" width="180" height="180" />
+        </td> 
+    </tr>
+</table> 
 
 
 
 
-
-	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 12px !important;margin-top: 54px;">
+	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 12px !important;margin-top: 81px;">
 	<thead>
 		<tr>
 			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: left;"><b>__________________</b></th>
@@ -547,6 +582,9 @@ table.table th, table.table td {
 		
 	</thead>
 </table>
+<!-- 	<div style="text-align: right;">
+    <img th:src="'data:image/png;base64,' + ${qrCode}" alt="QR Code" width="250" height="250"/>
+</div> -->
 </body>
 
 </html>

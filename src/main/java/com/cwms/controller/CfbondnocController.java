@@ -33,6 +33,7 @@ import com.lowagie.text.DocumentException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -40,6 +41,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.awt.image.BufferedImage;
+//import java.io.ByteArrayOutputStream;
+import java.util.Base64;
+import javax.imageio.ImageIO;
 
 @RestController
 @RequestMapping("/api/cfbondnoc")
@@ -230,6 +241,22 @@ public class CfbondnocController {
 		return cfbondnocService.getCfbondnocDataByidOrSearch(companyId, branchId, nocTransID, nocNo);
 	}
 
+	
+
+
+	public String generateQRCodeBase64(String data, int width, int height) throws Exception {
+	    QRCodeWriter qrCodeWriter = new QRCodeWriter();
+	    BitMatrix bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, width, height);
+	    
+	    BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	    ImageIO.write(qrImage, "png", outputStream);
+	    
+	    byte[] qrBytes = outputStream.toByteArray();
+	    return Base64.getEncoder().encodeToString(qrBytes);
+	}
+
+	
 	@GetMapping("/getNocCerificatePrint")
 	public ResponseEntity<String> printOfSurveyDetails(
 			@RequestParam(name = "companyId") String companyId,
@@ -311,6 +338,95 @@ public class CfbondnocController {
 		context.setVariable("branchAdd", branchAdd);
 		context.setVariable("bondCode", bondCode);
 		context.setVariable("city", city);
+		
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		
+		String qrData =  "Company Name: " + b1 + "\n" +
+				"Branch Name: " + u1 + "\n" +
+				"Ware House Code : " + bondCode + "\n" +
+				"NOC No: " + dataForPrint.getNocNo() + "\n" +
+                "NOC Date: " + dateFormatter.format(dataForPrint.getNocDate()) + "\n" +
+                "BOE No: " + dataForPrint.getBoeNo() + "\n" +
+                "BOE Date: " + dateFormatter.format(dataForPrint.getBoeDate()) + "\n" +
+                "IGM No: " + dataForPrint.getIgmNo() + "\n" +
+                "IGM Line No: " + dataForPrint.getIgmLineNo() + "\n" +
+                "NOC Quantity: " + dataForPrint.getNocPackages() + "\n" +
+                "Weight: " + dataForPrint.getGrossWeight() + "\n" +
+                "CIF Value: " + dataForPrint.getCifValue() + "\n" +
+                "Duty: " + dataForPrint.getCargoDuty() + "\n" +
+                "Consignee: " + dataForPrint.getImporterName() + "\n" +
+                "CHA: " + dataForPrint.getCha() + "\n" +
+                "Address: " + dataForPrint.getImporterAddress1() + " " +
+                                dataForPrint.getImporterAddress2() + " " +
+                                dataForPrint.getImporterAddress3() + "\n" +
+                "Gate-In Type: " + dataForPrint.getGateInType() + "\n" +
+                "Package Type: " + dataForPrint.getTypeOfPackage() + "\n" +
+                "NOC Area: " + dataForPrint.getArea() + "\n" +
+                "Space Type: " + dataForPrint.getSpaceType() + "\n" +
+                "Storage Week: " + dataForPrint.getNocWeek() + "\n" +
+                "NOC From: " + dateFormatter.format(dataForPrint.getNocFromDate()) + "\n" +
+                "NOC To: " + dataForPrint.getNocValidityDate() + "\n" +
+                "No of 20ft Containers: " + (dataForPrint.getNoOf20ft() != null ? dataForPrint.getNoOf20ft() : BigDecimal.ZERO) + "\n" +
+                "No of 40ft Containers: " + (dataForPrint.getNoOf40ft() != null ? dataForPrint.getNoOf40ft() : BigDecimal.ZERO) + "\n" +
+                "Cargo Description: " + dataForPrint.getCommodityDescription() + "\n" +
+                "Hazardous: " + dataForPrint.getHaz() + "\n" +
+                "Stored Duty: " + dataForPrint.getStoredCragoDuty() + "\n" +
+                "Custom Approved Cargo Duty: " + dataForPrint.getInsuranceValue();
+
+		
+		String qrDataTable = ""
+			    + "====================|=====================\n"
+			    + "Field               | Value               \n"
+			    + "====================|=====================\n"
+			    + "Company Name        | " + b1 + "\n"
+			    + "Branch Name         | " + u1 + "\n"
+			    + "Warehouse Code      | " + bondCode + "\n"
+			    + "NOC No              | " + dataForPrint.getNocNo() + "\n"
+			    + "NOC Date            | " + dateFormatter.format(dataForPrint.getNocDate()) + "\n"
+			    + "BOE No              | " + dataForPrint.getBoeNo() + "\n"
+			    + "BOE Date            | " + dateFormatter.format(dataForPrint.getBoeDate()) + "\n"
+			    + "IGM No              | " + dataForPrint.getIgmNo() + "\n"
+			    + "IGM Line No         | " + dataForPrint.getIgmLineNo() + "\n"
+			    + "NOC Quantity        | " + dataForPrint.getNocPackages() + "\n"
+			    + "Weight              | " + dataForPrint.getGrossWeight() + "\n"
+			    + "CIF Value           | " + dataForPrint.getCifValue() + "\n"
+			    + "Duty                | " + dataForPrint.getCargoDuty() + "\n"
+			    + "Consignee           | " + dataForPrint.getImporterName() + "\n"
+			    + "CHA                 | " + dataForPrint.getCha() + "\n"
+			    + "Address             | " + dataForPrint.getImporterAddress1() + " " 
+			                                      + dataForPrint.getImporterAddress2() + " " 
+			                                      + dataForPrint.getImporterAddress3() + "\n"
+			    + "Gate-In Type        | " + dataForPrint.getGateInType() + "\n"
+			    + "Package Type        | " + dataForPrint.getTypeOfPackage() + "\n"
+			    + "NOC Area            | " + dataForPrint.getArea() + "\n"
+			    + "Space Type          | " + dataForPrint.getSpaceType() + "\n"
+			    + "Storage Week        | " + dataForPrint.getNocWeek() + "\n"
+			    + "NOC From            | " + dateFormatter.format(dataForPrint.getNocFromDate()) + "\n"
+			    + "NOC To              | " + dateFormatter.format(dataForPrint.getNocValidityDate()) + "\n"
+			    + "No of 20ft Containers| " + (dataForPrint.getNoOf20ft() != null ? dataForPrint.getNoOf20ft() : BigDecimal.ZERO) + "\n"
+			    + "No of 40ft Containers| " + (dataForPrint.getNoOf40ft() != null ? dataForPrint.getNoOf40ft() : BigDecimal.ZERO) + "\n"
+			    + "Cargo Description   | " + dataForPrint.getCommodityDescription() + "\n"
+			    + "Hazardous           | " + dataForPrint.getHaz() + "\n"
+			    + "Stored Duty         | " + dataForPrint.getStoredCragoDuty() + "\n"
+			    + "Custom Cargo Duty   | " + dataForPrint.getInsuranceValue() + "\n"
+			    + "====================|=====================";
+
+
+
+String qrCodeBase64 = null;
+
+try {
+	qrCodeBase64 = generateQRCodeBase64(qrData, 180, 180);
+} catch (Exception e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}  // 200x200 is the size of the QR code
+
+context.setVariable("qrCode", qrCodeBase64);
+
+		
+
 
 //			context.setVariable("gatePassdata", gatePassdata);
 
