@@ -7479,7 +7479,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        

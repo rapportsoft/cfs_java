@@ -4418,7 +4418,7 @@ public class ImportReportsService {
 
 		        String[] columnsHeader = {
 		        	    "Sr No", "Container No", "Container Size","Container Type", "IGM No", "ITEM No", "BL NO", 
-		        	    "No Of Packages", "Importer Name", "Crago Description", 
+		        	    "No Of Packages", "Importer Name", "Cargo Description", 
 		        	     "Vessel Name", "VOY No", "Package Type", 
 		        	    "IGM Date", "Gate In Date", "Shipping Agent Name", "Console Agent", 
 		        	    "No Of Packages 1", "Cargo Delv Pack", "Balance Packages", 
