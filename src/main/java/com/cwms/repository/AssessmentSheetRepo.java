@@ -45,7 +45,7 @@ public interface AssessmentSheetRepo extends JpaRepository<AssessmentSheet, Stri
 	List<AssessmentSheet> getDataByAssessmentId1(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 	
 	
-	@Query(value="select a.invoiceNo,a.assesmentId,DATE_FORMAT(a.assesmentDate,'%d/%m/%Y %h:%i'),a.igmTransId,"
+	@Query(value="select DISTINCT a.invoiceNo,a.assesmentId,DATE_FORMAT(a.assesmentDate,'%d/%m/%Y %h:%i'),a.igmTransId,"
 			+ "a.igmNo,a.igmLineNo,DATE_FORMAT(a.igmDate,'%d/%m/%Y %h:%i'),a.blNo,DATE_FORMAT(a.blDate,'%d/%m/%Y %h:%i'),"
 			+ "p.partyName "
 			+ "from AssessmentSheet a "
