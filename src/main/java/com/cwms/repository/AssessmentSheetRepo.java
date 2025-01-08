@@ -58,7 +58,7 @@ public interface AssessmentSheetRepo extends JpaRepository<AssessmentSheet, Stri
 			+ "LEFT OUTER JOIN PartyAddress pa3 ON a.companyId=pa3.companyId and a.branchId=pa3.branchId and a.othPartyId=pa3.partyId and a.othSrNo=pa3.srNo "
 			+ "LEFT OUTER JOIN Party p5 ON a.companyId=p5.companyId and a.branchId=p5.branchId and a.onAccountOf=p5.partyId "
 			+ "LEFT OUTER JOIN PartyAddress pa4 ON a.companyId=pa4.companyId and a.branchId=pa4.branchId and a.onAccountOf=pa4.partyId and a.accSrNo=CAST(pa4.srNo as INTEGER) "
-			+ "LEFT OUTER JOIN Cfinvsrvanx i ON a.companyId=i.companyId and a.branchId=i.branchId and a.assesmentId=i.processTransId "
+			+ "LEFT OUTER JOIN Cfinvsrvanx i ON a.companyId=i.companyId and a.branchId=i.branchId and a.assesmentId=i.processTransId and a.igmTransId=i.erpDocRefNo and a.containerNo=i.containerNo "
 			+ "LEFT OUTER JOIN Services s ON i.companyId=s.companyId and i.branchId=s.branchId and i.serviceId=s.serviceId "
 			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.assesmentId=:id order by i.serviceId")
 	List<Object[]> getAssessmentData(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
