@@ -213,38 +213,42 @@ table.table th, table.table td {
 		<span th:text="${b1}"
 			style="text-align: center; font-weight: bold; font-size: 27px;"></span>
 		<br /> <span th:text="${u1}"
-			style="text-align: center; font-weight: bold; font-size: 14px;"></span>
-	</div>
-	<hr class='red' />
-	<p style="text-align: center; font-size: 14px;">
+			style="text-align: center; font-weight: bold; font-size: 16px;"></span>
+			
+			<p style="text-align: center; font-size: 14px;">
 		<span th:text="${branchAdd}"></span>
 	</p>
-	<hr class='red' />
-
+	</div>
+<!-- 	<hr class='red' /> -->
+<hr />
 	<p
-		style="text-align: center; font-size: 20px; text-decoration: underline; margin-bottom: 9px;">
+		style="text-align: center; font-size: 18px;font-weight: bold;">
 		SPACE CERTIFICATE W/H CODE (<span th:text="${bondCode}"></span>)
 	</p>
+	<!-- <hr class='red' /> -->
+	<hr />
+
+	
 	<br />
 	<br />
 
 	<table class="table"
-		style="border-collapse: collapse; border-color: white; font-size: 14px !important;">
+		style="border-collapse: collapse; border-color: white; font-size: 12px !important;">
 		<thead>
 			<tr>
 				<th
-					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>NOC No </b></th>
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 12px !important;"><b>NOC No </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span th:text="${nocNo}"></span>
 
 				</th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>NOC Date </b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>NOC Date </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 	<span
 					th:text="${#dates.format(nocDate, 'dd/MM/yyyy HH:mm')}"></span>
 					<br /> 
@@ -254,19 +258,19 @@ table.table th, table.table td {
 
 			<tr>
 				<th
-					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>BOE No</b></th>
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 12px !important;"><b>BOE No</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 <span
 					th:text="${boeNo}"></span>
 				</th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>BOE Date
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>BOE Date
 				</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					<span
 					th:text="${#dates.format(boeDate, 'dd/MM/yyyy')}"></span>
 					<br /> 
@@ -274,18 +278,18 @@ table.table th, table.table td {
 			</tr>
 			<tr>
 				<th
-					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>IGM No </b></th>
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 12px !important;"><b>IGM No </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				<span
 					th:text="${igmNo}"></span> 
 				</th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Item No </b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Item No </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 						<span
 					th:text="${igmLineNo}"></span> 
 					<!-- 	<span
@@ -296,18 +300,18 @@ table.table th, table.table td {
 
 			<tr>
 				<th
-					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>NOC Qty </b></th>
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 12px !important;"><b>NOC Qty </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 40%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 40%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 			 <span
 					th:text="${nocQty}"></span> 
 				</th>
 				<th
-					style="height: 14px; width: 20%; border: 1px solid white; font-size: 14px !important;"><b>Weight</b></th>
+					style="height: 14px; width: 20%; border: 1px solid white; font-size: 12px !important;"><b>Weight</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					<span
 					th:text="${weight}"></span>
 					<br />
@@ -315,76 +319,76 @@ table.table th, table.table td {
 			</tr>
 			<tr>
 				<th
-					style="height: 14px; width: 18%; border: 1px solid white; font-size: 14px !important;"><b>Value</b></th>
+					style="height: 14px; width: 18%; border: 1px solid white; font-size: 12px !important;"><b>Value</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:
 				</th>
 				<th
-					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 			 <span
 					th:text="${value}"></span>
 				</th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Duty</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Duty</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span th:text="${duty}"></span> <br />
 				</th>
 			</tr>
 
 			<tr>
 				<th
-					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>Importer</b></th>
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 12px !important;"><b>Importer</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:
 				</th>
 				<th
-					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span th:text="${consignee}"></span>
 				</th>
 
 
 				<th
-					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>CHA</b></th>
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 12px !important;"><b>CHA</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:
 				</th>
 				<th
-					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 			 <span th:text="${cha}"></span>
 				</th>
 			</tr>
 
 			<tr>
 				<th
-					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>Address</b></th>
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 12px !important;"><b>Address</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:
 				</th>
 				<th
-					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 			 <span th:text="${address}"></span>
 				</th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Gate In Type</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Gate In Type</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 <span th:text="${gateInType}"></span> <br />
 				</th>
 			</tr>
 
 			<tr>
 				<th
-					style="height: 14px; width: 13%; border: 1px solid white; font-size: 14px !important;"><b>Package Type</b></th>
+					style="height: 14px; width: 13%; border: 1px solid white; font-size: 12px !important;"><b>Package Type</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:
 				</th>
 				<th
-					style="height: 14px; width: 2%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 2%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 <span th:text="${packageType}"></span> 
 				</th>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>NOC Area</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>NOC Area</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 <span
 					th:text="${nocArea}"></span> <br /> 
 					</th>
@@ -394,20 +398,20 @@ table.table th, table.table td {
 
 			<tr>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Space Type</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Space Type</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 <span
 					th:text="${spaceType}"></span> <br /> 
 				</th>
 
 
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Storage Week</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Storage Week</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span
 					th:text="${storageWeek}"></span> <br /> 
 					</th>
@@ -416,20 +420,20 @@ table.table th, table.table td {
 			
 					<tr>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>NOC From</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>NOC From</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span
 					th:text="${#dates.format(nocFrom, 'dd/MM/yyyy HH:mm')}"></span>
 				</th>
 
 
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Noc To </b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Noc To </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					<span
 					th:text="${#dates.format(nocTo, 'dd/MM/yyyy HH:mm')}"></span> <br /> 
 					</th>
@@ -442,40 +446,40 @@ table.table th, table.table td {
 			
 					<tr>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>No of 20FT</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>No of 20FT</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span
 					th:text="${noOfTw}"></span> <br />
 				</th>
 
 
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>No of 40FT </b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>No of 40FT </b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 			<span
 					th:text="${noOfFw}"></span> <br />
 					</th>
 			</tr>		
 				<tr>
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>Cargo Desription</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>Cargo Desription</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					 <span
 					th:text="${cargoDesc}"></span> <br />
 				</th>
 
 
 				<th
-					style="height: 14px; width: 10%; border: 1px solid white; font-size: 14px !important;"><b>HAZ Status</b></th>
+					style="height: 14px; width: 10%; border: 1px solid white; font-size: 12px !important;"><b>HAZ Status</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 					<span th:text="${haz == 'Y' ? 'YES' : 'NO'}"></span>
 <br />
 					</th>
@@ -487,14 +491,14 @@ table.table th, table.table td {
 	<br />
 	<br />
 
-	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 14px !important;">
+	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 12px !important;">
 	<thead>
 						<tr>
 				<th
-					style="height: 14px; width: 45%; border: 1px solid white; font-size: 14px !important;"><b>Total Duty Limit approved</b></th>
+					style="height: 14px; width: 45%; border: 1px solid white; font-size: 12px !important;"><b>Total Duty Limit approved</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span th:text="${cusAppCrgoDuty}">
 					</span> <br />
 				</th>
@@ -505,10 +509,10 @@ table.table th, table.table td {
 			
 				<tr>
 				<th
-					style="height: 14px; width: 45%; border: 1px solid white; font-size: 14px !important;"><b>Duty on Stored Goods as on Date including this Consignment</b></th>
+					style="height: 14px; width: 45%; border: 1px solid white; font-size: 12px !important;"><b>Duty on Stored Goods as on Date including this Consignment</b></th>
 				<th style="height: 14px; width: 2%; border: 1px solid white;">:<b></b></th>
 				<th
-					style="height: 14px; width: 30%; border: 1px solid white; font-size: 14px !important; font-weight: normal;">
+					style="height: 14px; width: 30%; border: 1px solid white; font-size: 12px !important; font-weight: normal;">
 				 <span
 					th:text="${storedDuty}"></span> <br />
 				</th>
@@ -523,7 +527,7 @@ table.table th, table.table td {
 
 
 
-	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 14px !important;margin-top: 54px;">
+	<table class="table" style="border-collapse: collapse; border-color: white; font-size: 12px !important;margin-top: 54px;">
 	<thead>
 		<tr>
 			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: left;"><b>__________________</b></th>
@@ -537,7 +541,7 @@ table.table th, table.table td {
 		<tr>
 			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: left;"><b> <span
 					th:text="${cha}"></span></b></th>
-			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14px !important; text-align: right;"><b><span
+			<th style="height: 14px; width: 50%; border: 1px solid white; font-size: 14 px !important; text-align: right;"><b><span
 					th:text="${b1}"></span> </b></th>
 		</tr>
 		
