@@ -149,5 +149,14 @@ public class ServiceController {
 	    	int data =serViceRepositary.updateStatusToD(companyId, branchId, serviceId);
 			return "success";
 		}
+	 
+	 
+	 @GetMapping("/getServiceDataforMapping")
+	 public List<Object[]> getServiceDataforMapping(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+				@RequestParam(name = "val", required = false) String val) {
+			List<Object[]> getServiceList = serViceRepositary.getServiceDataforMapping(cid, bid, val);
+
+			return getServiceList;
+		}
 
 }

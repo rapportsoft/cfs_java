@@ -88,4 +88,10 @@ Services getActiveService(String companyId, String branchId, String serviceId);
 	    @Transactional
 	    @Query("UPDATE Services p SET p.status = 'D' WHERE p.companyId = :companyId AND p.branchId = :branchId AND p.serviceId = :serviceId")
 	    int updateStatusToD(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("serviceId") String serviceId);
+	 
+	 
+	 
+	 @Query(value="select s.serviceId,s.serviceShortDesc from Services s where s.companyId=:cid and s.branchId=:bid "
+				+ "and (:val is null OR :val = '' OR s.serviceShortDesc like CONCAT(:val,'%')) and s.status = 'A'")
+		List<Object[]> getServiceDataforMapping(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 }
