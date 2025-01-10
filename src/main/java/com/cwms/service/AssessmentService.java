@@ -119,10 +119,10 @@ public class AssessmentService {
 
 	@Autowired
 	private PartyRepository partyRepository;
-	
+
 	@Autowired
 	private CfbondnocRepository cfBondNocRepo;
-	
+
 	@Autowired
 	private CfBondNocDtlRepository cfsBondNocDtlRepo;
 
@@ -301,7 +301,7 @@ public class AssessmentService {
 
 						List<String> conSize1 = new ArrayList<>();
 						conSize1.add("ALL");
-						conSize1.add(con.getContainerSize());
+						conSize1.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 						List<String> conTypeOfCon1 = new ArrayList<>();
 						conTypeOfCon1.add("ALL");
@@ -335,7 +335,7 @@ public class AssessmentService {
 							List<String> tempPricing = notInPricing;
 							List<String> conSize2 = new ArrayList<>();
 							conSize2.add("ALL");
-							conSize2.add(con.getContainerSize());
+							conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 							List<String> conTypeOfCon2 = new ArrayList<>();
 							conTypeOfCon2.add("ALL");
@@ -460,7 +460,7 @@ public class AssessmentService {
 
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
-												conSize2.add(con.getContainerSize());
+												conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 												List<String> conTypeOfCon2 = new ArrayList<>();
 												conTypeOfCon2.add("ALL");
@@ -530,8 +530,7 @@ public class AssessmentService {
 															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															tempAss.setServiceRate(serviceRate.get());
-															
-															
+
 															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
 															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
 															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
@@ -710,37 +709,35 @@ public class AssessmentService {
 															tempAss.setExecutionUnit(String.valueOf(weeksBetween));
 															tempAss.setExecutionUnit1("");
 
-															BigDecimal totalRate = rangeValues.stream()
-																    .filter(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        // Include slabs that overlap with weeksBetween
-																        return weeksBetween >= fromRange;
-																    })
-																    .map(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        BigDecimal rate = (BigDecimal) r[8];
+															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																// Include slabs that overlap with weeksBetween
+																return weeksBetween >= fromRange;
+															}).map(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																BigDecimal rate = (BigDecimal) r[8];
 
-																        // Adjust the fromRange to exclude week 0
-																        int adjustedFromRange = Math.max(fromRange, 1);
+																// Adjust the fromRange to exclude week 0
+																int adjustedFromRange = Math.max(fromRange, 1);
 
-																        // Determine actual weeks in this slab that contribute to the total
-																        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+																// Determine actual weeks in this slab that contribute
+																// to the total
+																long weeksInSlab = Math.max(0,
+																		Math.min(toRange, weeksBetween)
+																				- adjustedFromRange + 1);
 
-																        // Exclude slabs where weeksInSlab is 0
-																        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-																    })
-																    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
-
-
+																// Exclude slabs where weeksInSlab is 0
+																return weeksInSlab > 0
+																		? rate.multiply(new BigDecimal(weeksInSlab))
+																		: BigDecimal.ZERO;
+															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-															
-															System.out.println("totalRate "+totalRate+" "+weeksBetween);
+
+															System.out.println(
+																	"totalRate " + totalRate + " " + weeksBetween);
 															tempAss.setServiceRate(serviceRate.get());
 															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
 															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
@@ -815,33 +812,34 @@ public class AssessmentService {
 															tempAss.setExecutionUnit(String.valueOf(weeksBetween));
 															tempAss.setExecutionUnit1("");
 
-															BigDecimal totalRate = rangeValues.stream()
-																    .filter(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        // Include slabs that overlap with weeksBetween
-																        return weeksBetween >= fromRange;
-																    })
-																    .map(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        BigDecimal rate = (BigDecimal) r[8];
+															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																// Include slabs that overlap with weeksBetween
+																return weeksBetween >= fromRange;
+															}).map(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																BigDecimal rate = (BigDecimal) r[8];
 
-																        // Adjust the fromRange to exclude week 0
-																        int adjustedFromRange = Math.max(fromRange, 1);
+																// Adjust the fromRange to exclude week 0
+																int adjustedFromRange = Math.max(fromRange, 1);
 
-																        // Determine actual weeks in this slab that contribute to the total
-																        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+																// Determine actual weeks in this slab that contribute
+																// to the total
+																long weeksInSlab = Math.max(0,
+																		Math.min(toRange, weeksBetween)
+																				- adjustedFromRange + 1);
 
-																        // Exclude slabs where weeksInSlab is 0
-																        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-																    })
-																    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
+																// Exclude slabs where weeksInSlab is 0
+																return weeksInSlab > 0
+																		? rate.multiply(new BigDecimal(weeksInSlab))
+																		: BigDecimal.ZERO;
+															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-															System.out.println("totalRate "+totalRate+" "+weeksBetween);
+															System.out.println(
+																	"totalRate " + totalRate + " " + weeksBetween);
 															tempAss.setServiceRate(serviceRate.get());
 															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
 															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
@@ -906,7 +904,7 @@ public class AssessmentService {
 												BigDecimal executionUnit = BigDecimal.ZERO;
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
-												conSize2.add(con.getContainerSize());
+												conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 												List<String> conTypeOfCon2 = new ArrayList<>();
 												conTypeOfCon2.add("ALL");
@@ -1415,7 +1413,7 @@ public class AssessmentService {
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
-										conSize2.add(con.getContainerSize());
+										conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 										List<String> conTypeOfCon2 = new ArrayList<>();
 										conTypeOfCon2.add("ALL");
@@ -1645,34 +1643,32 @@ public class AssessmentService {
 													tempAss.setExecutionUnit(String.valueOf(weeksBetween));
 													tempAss.setExecutionUnit1("");
 
-													BigDecimal totalRate = rangeValues.stream()
-														    .filter(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        // Include slabs that overlap with weeksBetween
-														        return weeksBetween >= fromRange;
-														    })
-														    .map(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        BigDecimal rate = (BigDecimal) r[8];
+													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														// Include slabs that overlap with weeksBetween
+														return weeksBetween >= fromRange;
+													}).map(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														BigDecimal rate = (BigDecimal) r[8];
 
-														        // Adjust the fromRange to exclude week 0
-														        int adjustedFromRange = Math.max(fromRange, 1);
+														// Adjust the fromRange to exclude week 0
+														int adjustedFromRange = Math.max(fromRange, 1);
 
-														        // Determine actual weeks in this slab that contribute to the total
-														        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+														// Determine actual weeks in this slab that contribute to the
+														// total
+														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+																- adjustedFromRange + 1);
 
-														        // Exclude slabs where weeksInSlab is 0
-														        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-														    })
-														    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
+														// Exclude slabs where weeksInSlab is 0
+														return weeksInSlab > 0
+																? rate.multiply(new BigDecimal(weeksInSlab))
+																: BigDecimal.ZERO;
+													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-													System.out.println("totalRate "+totalRate+" "+weeksBetween);
+													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
 													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
 													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
@@ -1743,34 +1739,32 @@ public class AssessmentService {
 													tempAss.setExecutionUnit(String.valueOf(weeksBetween));
 													tempAss.setExecutionUnit1("");
 
-													BigDecimal totalRate = rangeValues.stream()
-														    .filter(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        // Include slabs that overlap with weeksBetween
-														        return weeksBetween >= fromRange;
-														    })
-														    .map(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        BigDecimal rate = (BigDecimal) r[8];
+													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														// Include slabs that overlap with weeksBetween
+														return weeksBetween >= fromRange;
+													}).map(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														BigDecimal rate = (BigDecimal) r[8];
 
-														        // Adjust the fromRange to exclude week 0
-														        int adjustedFromRange = Math.max(fromRange, 1);
+														// Adjust the fromRange to exclude week 0
+														int adjustedFromRange = Math.max(fromRange, 1);
 
-														        // Determine actual weeks in this slab that contribute to the total
-														        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+														// Determine actual weeks in this slab that contribute to the
+														// total
+														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+																- adjustedFromRange + 1);
 
-														        // Exclude slabs where weeksInSlab is 0
-														        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-														    })
-														    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
+														// Exclude slabs where weeksInSlab is 0
+														return weeksInSlab > 0
+																? rate.multiply(new BigDecimal(weeksInSlab))
+																: BigDecimal.ZERO;
+													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-													System.out.println("totalRate "+totalRate+" "+weeksBetween);
+													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
 													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
 													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
@@ -1831,7 +1825,7 @@ public class AssessmentService {
 										BigDecimal executionUnit = BigDecimal.ZERO;
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
-										conSize2.add(con.getContainerSize());
+										conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 										List<String> conTypeOfCon2 = new ArrayList<>();
 										conTypeOfCon2.add("ALL");
@@ -2513,7 +2507,7 @@ public class AssessmentService {
 						List<String> conTypeOfCon = new ArrayList<>();
 						conTypeOfCon.add("");
 						conTypeOfCon.add(con.getTypeOfContainer());
-						
+
 						String conStatus = "FCL".equals(con.getContainerStatus()) ? "IMPSEN" : "IMPCRGSEN";
 
 						List<String> serviceMappingData = serviceMappingRepo.getServicesForImportInvoice3(cid, bid,
@@ -2568,15 +2562,15 @@ public class AssessmentService {
 						}
 
 						List<SSRDtl> finalSsrServices = ssrServices;
-						
+
 						List<String> finalServices = new ArrayList<>(combinedService);
-						
+
 						List<Object[]> finalPricing = new ArrayList<>();
 						List<String> notInPricing = new ArrayList<>();
 
 						List<String> conSize1 = new ArrayList<>();
 						conSize1.add("ALL");
-						conSize1.add(con.getContainerSize());
+						conSize1.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 						List<String> conTypeOfCon1 = new ArrayList<>();
 						conTypeOfCon1.add("ALL");
@@ -2589,8 +2583,7 @@ public class AssessmentService {
 
 						List<Object[]> pricingData = cfstariffservicerepo.getServiceRate(cid, bid, parsedDate,
 								con.getContainerNo(), assessment.getIgmTransId(), assessment.getIgmNo(),
-								assessment.getIgmLineNo(), finalServices, tariffNo, conSize1,
-								conTypeOfCon1);
+								assessment.getIgmLineNo(), finalServices, tariffNo, conSize1, conTypeOfCon1);
 
 						if (!pricingData.isEmpty()) {
 							List<Object[]> remainingPricing = pricingData.stream()
@@ -2611,7 +2604,7 @@ public class AssessmentService {
 							List<String> tempPricing = notInPricing;
 							List<String> conSize2 = new ArrayList<>();
 							conSize2.add("ALL");
-							conSize2.add(con.getContainerSize());
+							conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 							List<String> conTypeOfCon2 = new ArrayList<>();
 							conTypeOfCon2.add("ALL");
@@ -2633,7 +2626,7 @@ public class AssessmentService {
 						finalPricing.stream().forEach(f -> {
 							AssessmentContainerDTO tempAss = new AssessmentContainerDTO();
 							CFSDay day = cfsdayrepo.getData(cid, bid);
-							
+
 							if (con.getSsrTransId() != null && !con.getSsrTransId().isEmpty()) {
 
 								if (!finalSsrServices.isEmpty()) {
@@ -2736,7 +2729,7 @@ public class AssessmentService {
 
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
-												conSize2.add(con.getContainerSize());
+												conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 												List<String> conTypeOfCon2 = new ArrayList<>();
 												conTypeOfCon2.add("ALL");
@@ -2776,8 +2769,7 @@ public class AssessmentService {
 															}
 
 															final long daysBetween1 = daysBetween;
-															
-															
+
 															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
 																	convertToLocalDateTime(con.getDestuffDate()),
 																	day.getStartTime());
@@ -2787,7 +2779,7 @@ public class AssessmentService {
 
 															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 																	destuffDateTime1);
-															
+
 															if (daysBetween2 == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime1, destuffDateTime1) > 0) {
 																daysBetween2 = 1;
@@ -2795,7 +2787,6 @@ public class AssessmentService {
 
 															tempAss.setExecutionUnit(String.valueOf(daysBetween2));
 															tempAss.setExecutionUnit1("");
-
 
 															BigDecimal totalRate = rangeValues.stream().map(r -> {
 
@@ -2821,15 +2812,15 @@ public class AssessmentService {
 															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															tempAss.setServiceRate(serviceRate.get());
-															
-															
-															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-																	assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-															
-															totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-															
+
+															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																	assessment.getIgmTransId(), assessment.getIgmNo(),
+																	assessment.getIgmLineNo(), con.getContainerNo());
+
+															totalRate = totalRate.subtract(oldVal).setScale(3,
+																	RoundingMode.HALF_UP);
+
 															tempAss.setRates(totalRate);
-															
 
 														} else {
 
@@ -2850,7 +2841,8 @@ public class AssessmentService {
 															final long daysBetween1 = daysBetween;
 
 															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
-																	convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+																	convertToLocalDateTime(
+																			con.getLastInvoiceUptoDate()),
 																	day.getStartTime());
 															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
 																	convertToLocalDateTime(con.getInvoiceDate()),
@@ -2858,7 +2850,7 @@ public class AssessmentService {
 
 															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 																	destuffDateTime1);
-															
+
 															if (daysBetween2 == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime1, destuffDateTime1) > 0) {
 																daysBetween2 = 1;
@@ -2895,12 +2887,14 @@ public class AssessmentService {
 															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															tempAss.setServiceRate(serviceRate.get());
-															
-															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-																	assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-															
-															totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-															
+
+															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																	assessment.getIgmTransId(), assessment.getIgmNo(),
+																	assessment.getIgmLineNo(), con.getContainerNo());
+
+															totalRate = totalRate.subtract(oldVal).setScale(3,
+																	RoundingMode.HALF_UP);
+
 															tempAss.setRates(totalRate);
 
 														}
@@ -2924,8 +2918,7 @@ public class AssessmentService {
 
 															final long daysBetween1 = daysBetween;
 															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
-															
-															
+
 															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
 																	convertToLocalDateTime(con.getDestuffDate()),
 																	day.getStartTime());
@@ -2935,56 +2928,55 @@ public class AssessmentService {
 
 															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 																	destuffDateTime1);
-															
+
 															if (daysBetween2 == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime1, destuffDateTime1) > 0) {
 																daysBetween2 = 1;
 															}
-															
-															long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
-													
+															long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
 															tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
 															tempAss.setExecutionUnit1("");
 
-															BigDecimal totalRate = rangeValues.stream()
-																    .filter(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        // Include slabs that overlap with weeksBetween
-																        return weeksBetween >= fromRange;
-																    })
-																    .map(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        BigDecimal rate = (BigDecimal) r[8];
+															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																// Include slabs that overlap with weeksBetween
+																return weeksBetween >= fromRange;
+															}).map(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																BigDecimal rate = (BigDecimal) r[8];
 
-																        // Adjust the fromRange to exclude week 0
-																        int adjustedFromRange = Math.max(fromRange, 1);
+																// Adjust the fromRange to exclude week 0
+																int adjustedFromRange = Math.max(fromRange, 1);
 
-																        // Determine actual weeks in this slab that contribute to the total
-																        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+																// Determine actual weeks in this slab that contribute
+																// to the total
+																long weeksInSlab = Math.max(0,
+																		Math.min(toRange, weeksBetween)
+																				- adjustedFromRange + 1);
 
-																        // Exclude slabs where weeksInSlab is 0
-																        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-																    })
-																    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
+																// Exclude slabs where weeksInSlab is 0
+																return weeksInSlab > 0
+																		? rate.multiply(new BigDecimal(weeksInSlab))
+																		: BigDecimal.ZERO;
+															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-															
-															System.out.println("totalRate "+totalRate+" "+weeksBetween);
+
+															System.out.println(
+																	"totalRate " + totalRate + " " + weeksBetween);
 															tempAss.setServiceRate(serviceRate.get());
-															
-															
-															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-																	assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-															
-															totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-															
+
+															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																	assessment.getIgmTransId(), assessment.getIgmNo(),
+																	assessment.getIgmLineNo(), con.getContainerNo());
+
+															totalRate = totalRate.subtract(oldVal).setScale(3,
+																	RoundingMode.HALF_UP);
+
 															tempAss.setRates(totalRate);
 														} else {
 															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
@@ -3005,7 +2997,8 @@ public class AssessmentService {
 															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
 
 															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
-																	convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+																	convertToLocalDateTime(
+																			con.getLastInvoiceUptoDate()),
 																	day.getStartTime());
 															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
 																	convertToLocalDateTime(con.getInvoiceDate()),
@@ -3013,53 +3006,53 @@ public class AssessmentService {
 
 															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 																	destuffDateTime1);
-															
+
 															if (daysBetween2 == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime1, destuffDateTime1) > 0) {
 																daysBetween2 = 1;
 															}
-															
-															long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
-													
+															long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
 															tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
 															tempAss.setExecutionUnit1("");
 
-															BigDecimal totalRate = rangeValues.stream()
-																    .filter(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        // Include slabs that overlap with weeksBetween
-																        return weeksBetween >= fromRange;
-																    })
-																    .map(r -> {
-																        int fromRange = ((BigDecimal) r[6]).intValue();
-																        int toRange = ((BigDecimal) r[7]).intValue();
-																        BigDecimal rate = (BigDecimal) r[8];
+															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																// Include slabs that overlap with weeksBetween
+																return weeksBetween >= fromRange;
+															}).map(r -> {
+																int fromRange = ((BigDecimal) r[6]).intValue();
+																int toRange = ((BigDecimal) r[7]).intValue();
+																BigDecimal rate = (BigDecimal) r[8];
 
-																        // Adjust the fromRange to exclude week 0
-																        int adjustedFromRange = Math.max(fromRange, 1);
+																// Adjust the fromRange to exclude week 0
+																int adjustedFromRange = Math.max(fromRange, 1);
 
-																        // Determine actual weeks in this slab that contribute to the total
-																        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+																// Determine actual weeks in this slab that contribute
+																// to the total
+																long weeksInSlab = Math.max(0,
+																		Math.min(toRange, weeksBetween)
+																				- adjustedFromRange + 1);
 
-																        // Exclude slabs where weeksInSlab is 0
-																        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-																    })
-																    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
+																// Exclude slabs where weeksInSlab is 0
+																return weeksInSlab > 0
+																		? rate.multiply(new BigDecimal(weeksInSlab))
+																		: BigDecimal.ZERO;
+															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-															System.out.println("totalRate "+totalRate+" "+weeksBetween);
+															System.out.println(
+																	"totalRate " + totalRate + " " + weeksBetween);
 															tempAss.setServiceRate(serviceRate.get());
-															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-																	assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-															
-															totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-															
+															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																	assessment.getIgmTransId(), assessment.getIgmNo(),
+																	assessment.getIgmLineNo(), con.getContainerNo());
+
+															totalRate = totalRate.subtract(oldVal).setScale(3,
+																	RoundingMode.HALF_UP);
+
 															tempAss.setRates(totalRate);
 														}
 
@@ -3067,7 +3060,7 @@ public class AssessmentService {
 
 												}
 
-											} 
+											}
 
 											finalConData.add(tempAss);
 
@@ -3078,12 +3071,11 @@ public class AssessmentService {
 									}
 								}
 
-							}
-							else {
+							} else {
 								try {
 									tempAss = (AssessmentContainerDTO) con.clone();
-									Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
-											day.getStartTime(), day.getEndTime());
+									Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(), day.getStartTime(),
+											day.getEndTime());
 
 									tempAss.setInvoiceDate(invDate);
 									if ("SA".equals(String.valueOf(f[8]))) {
@@ -3093,38 +3085,34 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage(
-												f[13] != null ? new BigDecimal(String.valueOf(f[13]))
-														: BigDecimal.ZERO);
-										tempAss.setDiscValue(
-												f[14] != null ? new BigDecimal(String.valueOf(f[14]))
-														: BigDecimal.ZERO);
-										tempAss.setmPercentage(
-												f[15] != null ? new BigDecimal(String.valueOf(f[15]))
-														: BigDecimal.ZERO);
+										tempAss.setDiscPercentage(f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+												: BigDecimal.ZERO);
+										tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+												: BigDecimal.ZERO);
+										tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+												: BigDecimal.ZERO);
 										tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
 												: BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
-										tempAss.setRangeFrom(
-												f[19] != null ? new BigDecimal(String.valueOf(f[19]))
-														: BigDecimal.ZERO);
+										tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+												: BigDecimal.ZERO);
 										tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
 												: BigDecimal.ZERO);
 										tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
 										tempAss.setContainerStatus(con.getContainerStatus());
 										tempAss.setGateOutId(con.getGateOutId());
 										tempAss.setGatePassNo(con.getGatePassNo());
-										tempAss.setTaxPerc((f[12] == null || String.valueOf(f[12]).isEmpty())
-												? BigDecimal.ZERO
-												: new BigDecimal(String.valueOf(f[12])));
+										tempAss.setTaxPerc(
+												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+														: new BigDecimal(String.valueOf(f[12])));
 										tempAss.setTaxId(String.valueOf(f[11]));
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
-										conSize2.add(con.getContainerSize());
+										conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 										List<String> conTypeOfCon2 = new ArrayList<>();
 										conTypeOfCon2.add("ALL");
@@ -3134,11 +3122,11 @@ public class AssessmentService {
 										commodityType.add("ALL");
 										commodityType.add(assessment.getCommodityCode());
 
-										List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(
-												cid, bid, String.valueOf(f[3]), String.valueOf(f[4]),
-												String.valueOf(f[0]), String.valueOf(f[8]), conSize2,
-												conTypeOfCon2, commodityType, con.getContainerSize(),
-												con.getTypeOfContainer(), assessment.getCommodityCode());
+										List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(cid, bid,
+												String.valueOf(f[3]), String.valueOf(f[4]), String.valueOf(f[0]),
+												String.valueOf(f[8]), conSize2, conTypeOfCon2, commodityType,
+												con.getContainerSize(), con.getTypeOfContainer(),
+												assessment.getCommodityCode());
 
 										if (!rangeValues.isEmpty()) {
 
@@ -3158,14 +3146,13 @@ public class AssessmentService {
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
 															destuffDateTime);
 
-													if (daysBetween == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime, destuffDateTime) > 0) {
+													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+															destuffDateTime) > 0) {
 														daysBetween = 1;
 													}
 
 													final long daysBetween1 = daysBetween;
-													
-													
+
 													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
 															convertToLocalDateTime(con.getDestuffDate()),
 															day.getStartTime());
@@ -3175,15 +3162,14 @@ public class AssessmentService {
 
 													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 															destuffDateTime1);
-													
-													if (daysBetween2 == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime1, destuffDateTime1) > 0) {
+
+													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+															destuffDateTime1) > 0) {
 														daysBetween2 = 1;
 													}
 
 													tempAss.setExecutionUnit(String.valueOf(daysBetween2));
 													tempAss.setExecutionUnit1("");
-
 
 													BigDecimal totalRate = rangeValues.stream().map(r -> {
 
@@ -3192,8 +3178,7 @@ public class AssessmentService {
 
 														BigDecimal rate = (BigDecimal) r[8];
 
-														if (daysBetween1 >= fromRange
-																&& daysBetween1 <= toRange) {
+														if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
 															serviceRate.set(rate); // Set the rate for the
 																					// matching
 																					// slab
@@ -3209,15 +3194,15 @@ public class AssessmentService {
 													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													tempAss.setServiceRate(serviceRate.get());
-													
-													
-													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-															assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-													
-													totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-													
+
+													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+															assessment.getIgmTransId(), assessment.getIgmNo(),
+															assessment.getIgmLineNo(), con.getContainerNo());
+
+													totalRate = totalRate.subtract(oldVal).setScale(3,
+															RoundingMode.HALF_UP);
+
 													tempAss.setRates(totalRate);
-													
 
 												} else {
 
@@ -3230,8 +3215,8 @@ public class AssessmentService {
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
 															destuffDateTime);
 
-													if (daysBetween == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime, destuffDateTime) > 0) {
+													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+															destuffDateTime) > 0) {
 														daysBetween = 1;
 													}
 
@@ -3246,9 +3231,9 @@ public class AssessmentService {
 
 													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 															destuffDateTime1);
-													
-													if (daysBetween2 == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime1, destuffDateTime1) > 0) {
+
+													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+															destuffDateTime1) > 0) {
 														daysBetween2 = 1;
 													}
 
@@ -3268,8 +3253,7 @@ public class AssessmentService {
 														BigDecimal rate = (BigDecimal) r[8]; // Rate per day in
 																								// the
 																								// slab
-														if (daysBetween1 >= fromRange
-																&& daysBetween1 <= toRange) {
+														if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
 															serviceRate.set(rate); // Set the rate for the
 																					// matching
 																					// slab
@@ -3283,12 +3267,14 @@ public class AssessmentService {
 													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													tempAss.setServiceRate(serviceRate.get());
-													
-													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-															assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-													
-													totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-													
+
+													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+															assessment.getIgmTransId(), assessment.getIgmNo(),
+															assessment.getIgmLineNo(), con.getContainerNo());
+
+													totalRate = totalRate.subtract(oldVal).setScale(3,
+															RoundingMode.HALF_UP);
+
 													tempAss.setRates(totalRate);
 
 												}
@@ -3305,15 +3291,14 @@ public class AssessmentService {
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
 															destuffDateTime);
 
-													if (daysBetween == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime, destuffDateTime) > 0) {
+													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+															destuffDateTime) > 0) {
 														daysBetween = 1;
 													}
 
 													final long daysBetween1 = daysBetween;
 													long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
-													
-													
+
 													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
 															convertToLocalDateTime(con.getDestuffDate()),
 															day.getStartTime());
@@ -3323,55 +3308,52 @@ public class AssessmentService {
 
 													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 															destuffDateTime1);
-													
-													if (daysBetween2 == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime1, destuffDateTime1) > 0) {
+
+													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+															destuffDateTime1) > 0) {
 														daysBetween2 = 1;
 													}
-													
-													long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
-											
+													long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
 													tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
 													tempAss.setExecutionUnit1("");
 
-													BigDecimal totalRate = rangeValues.stream()
-														    .filter(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        // Include slabs that overlap with weeksBetween
-														        return weeksBetween >= fromRange;
-														    })
-														    .map(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        BigDecimal rate = (BigDecimal) r[8];
+													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														// Include slabs that overlap with weeksBetween
+														return weeksBetween >= fromRange;
+													}).map(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														BigDecimal rate = (BigDecimal) r[8];
 
-														        // Adjust the fromRange to exclude week 0
-														        int adjustedFromRange = Math.max(fromRange, 1);
+														// Adjust the fromRange to exclude week 0
+														int adjustedFromRange = Math.max(fromRange, 1);
 
-														        // Determine actual weeks in this slab that contribute to the total
-														        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+														// Determine actual weeks in this slab that contribute to the
+														// total
+														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+																- adjustedFromRange + 1);
 
-														        // Exclude slabs where weeksInSlab is 0
-														        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-														    })
-														    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
+														// Exclude slabs where weeksInSlab is 0
+														return weeksInSlab > 0
+																? rate.multiply(new BigDecimal(weeksInSlab))
+																: BigDecimal.ZERO;
+													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-													System.out.println("totalRate "+totalRate+" "+weeksBetween);
+													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
-													
-													
-													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-															assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-													
-													totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-													
+
+													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+															assessment.getIgmTransId(), assessment.getIgmNo(),
+															assessment.getIgmLineNo(), con.getContainerNo());
+
+													totalRate = totalRate.subtract(oldVal).setScale(3,
+															RoundingMode.HALF_UP);
+
 													tempAss.setRates(totalRate);
 												} else {
 													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
@@ -3383,8 +3365,8 @@ public class AssessmentService {
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
 															destuffDateTime);
 
-													if (daysBetween == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime, destuffDateTime) > 0) {
+													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+															destuffDateTime) > 0) {
 														daysBetween = 1;
 													}
 
@@ -3400,53 +3382,51 @@ public class AssessmentService {
 
 													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
 															destuffDateTime1);
-													
-													if (daysBetween2 == 0 && ChronoUnit.HOURS
-															.between(gateInDateTime1, destuffDateTime1) > 0) {
+
+													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+															destuffDateTime1) > 0) {
 														daysBetween2 = 1;
 													}
-													
-													long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
-											
+													long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
 
 													tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
 													tempAss.setExecutionUnit1("");
 
-													BigDecimal totalRate = rangeValues.stream()
-														    .filter(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        // Include slabs that overlap with weeksBetween
-														        return weeksBetween >= fromRange;
-														    })
-														    .map(r -> {
-														        int fromRange = ((BigDecimal) r[6]).intValue();
-														        int toRange = ((BigDecimal) r[7]).intValue();
-														        BigDecimal rate = (BigDecimal) r[8];
+													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														// Include slabs that overlap with weeksBetween
+														return weeksBetween >= fromRange;
+													}).map(r -> {
+														int fromRange = ((BigDecimal) r[6]).intValue();
+														int toRange = ((BigDecimal) r[7]).intValue();
+														BigDecimal rate = (BigDecimal) r[8];
 
-														        // Adjust the fromRange to exclude week 0
-														        int adjustedFromRange = Math.max(fromRange, 1);
+														// Adjust the fromRange to exclude week 0
+														int adjustedFromRange = Math.max(fromRange, 1);
 
-														        // Determine actual weeks in this slab that contribute to the total
-														        long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween) - adjustedFromRange + 1);
+														// Determine actual weeks in this slab that contribute to the
+														// total
+														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+																- adjustedFromRange + 1);
 
-														        // Exclude slabs where weeksInSlab is 0
-														        return weeksInSlab > 0 ? rate.multiply(new BigDecimal(weeksInSlab)) : BigDecimal.ZERO;
-														    })
-														    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-
+														// Exclude slabs where weeksInSlab is 0
+														return weeksInSlab > 0
+																? rate.multiply(new BigDecimal(weeksInSlab))
+																: BigDecimal.ZERO;
+													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-													System.out.println("totalRate "+totalRate+" "+weeksBetween);
+													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
-													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid, assessment.getIgmTransId(), 
-															assessment.getIgmNo(), assessment.getIgmLineNo(), con.getContainerNo());
-													
-													totalRate = totalRate.subtract(oldVal).setScale(3, RoundingMode.HALF_UP);
-													
+													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+															assessment.getIgmTransId(), assessment.getIgmNo(),
+															assessment.getIgmLineNo(), con.getContainerNo());
+
+													totalRate = totalRate.subtract(oldVal).setScale(3,
+															RoundingMode.HALF_UP);
+
 													tempAss.setRates(totalRate);
 												}
 
@@ -3454,7 +3434,7 @@ public class AssessmentService {
 
 										}
 
-									} 
+									}
 
 									finalConData.add(tempAss);
 
@@ -3463,13 +3443,9 @@ public class AssessmentService {
 									e.printStackTrace();
 								}
 							}
-							
 
 						});
-						
-						
-						
-						
+
 						AssessmentSheet tempAssessment = (AssessmentSheet) assessment.clone();
 
 						AssessmentSheet newAss = tempAssessment;
@@ -3670,7 +3646,6 @@ public class AssessmentService {
 							anx.setRangeType(c.getCriteria());
 							anx.setTaxId(c.getTaxId());
 							anx.setExRate(c.getExRate());
-							
 
 							if (("Y".equals(newAss.getIgst()))
 									|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
@@ -3733,8 +3708,9 @@ public class AssessmentService {
 				}
 			}
 
-			int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(), assessment.getIgmTransId(), 
-					assessment.getIgmLineNo(), assessment.getInsuranceValue(), assessment.getDutyValue());
+			int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(),
+					assessment.getIgmTransId(), assessment.getIgmLineNo(), assessment.getInsuranceValue(),
+					assessment.getDutyValue());
 
 			List<Object[]> result = assessmentsheetrepo.getAssessmentData(cid, bid, assessment.getAssesmentId());
 
@@ -4075,10 +4051,6 @@ public class AssessmentService {
 			o.setAcCodeN(o.getAcCode());
 
 			cfinvsrvanxrepo.save(o);
-			
-			
-			
-			
 
 		});
 
@@ -4350,19 +4322,18 @@ public class AssessmentService {
 			o.setTds(tdsDeductee);
 
 			assessmentsheetrepo.save(o);
-			
-			
-			
-			int updateAssessmentId = ssrRepo.updateAssessmentId(cid, bid, o.getSsrTransId(), o.getContainerNo(), o.getAssesmentId());
+
+			int updateAssessmentId = ssrRepo.updateAssessmentId(cid, bid, o.getSsrTransId(), o.getContainerNo(),
+					o.getAssesmentId());
 
 		});
 
 		int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess(cid, bid, assSheet.getAssesmentId(), new Date(), 'Y',
 				HoldNextIdD1, assSheet.getCreditType(), totalBillAmt, totalInvAmt);
-		
-		int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(), assessment.getIgmTransId(), 
-				assessment.getIgmLineNo(), assessment.getInsuranceValue(), assessment.getDutyValue());
 
+		int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(),
+				assessment.getIgmTransId(), assessment.getIgmLineNo(), assessment.getInsuranceValue(),
+				assessment.getDutyValue());
 
 		List<Object[]> result = assessmentsheetrepo.getAssessmentData(cid, bid, assessment.getAssesmentId());
 
@@ -4503,12 +4474,6 @@ public class AssessmentService {
 
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 	}
-	
-	
-	
-	
-	
-	
-	
 
+	
 }
