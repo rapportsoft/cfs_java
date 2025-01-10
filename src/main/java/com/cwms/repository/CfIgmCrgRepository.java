@@ -267,4 +267,16 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 			                  @Param("igm") String igm,
 			                  @Param("line") String igmLineNo);
 		
+		
+		@Modifying
+		@Transactional
+		@Query(value="Update Cfigmcrg c "
+				+ "SET c.cargoValue=:val,c.cargoDuty=:duty where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and "
+				+ "c.igmTransId=:trans and c.igmLineNo=:line and c.status = 'A'")  
+		int updateAssessmentData(@Param("cid") String cid,
+                @Param("bid") String bid,
+                @Param("igm") String igm,
+                @Param("trans") String trans,
+                @Param("line") String igmLineNo,@Param("val") BigDecimal val,@Param("duty") BigDecimal duty);
+		
 }

@@ -1,8 +1,10 @@
 package com.cwms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cwms.entities.SSRDtl;
 
@@ -53,4 +55,12 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 			+ "where s.companyId=:cid and s.branchId=:bid and s.transId=:trans and s.containerNo=:con and s.status = 'A'")
 	List<SSRDtl> getServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
 			@Param("con") String con);
+	
+	
+	@Modifying
+	@Transactional
+	@Query(value="UPDATE SSRDtl s SET s.assessmentId=:id where s.companyId=:cid and s.branchId=:bid and s.transId=:trans and "
+			+ "s.containerNo=:con and s.status = 'A' and (s.assessmentId is null OR s.assessmentId = '')")
+	int updateAssessmentId(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
+			@Param("con") String con,@Param("id") String id);
 }

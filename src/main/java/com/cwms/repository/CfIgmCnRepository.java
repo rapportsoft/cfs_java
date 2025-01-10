@@ -956,14 +956,46 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 					  //assessment
 					  
 					  
-					  @Query(value = "select c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo "
+//					  @Query(value = "select c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo "
+//								+ "from Cfigmcn c "
+//								+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
+//								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (c.invoiceAssesed != 'Y' OR CAST(c.invCount AS INTEGER)>0) and "
+//								+ "crg.status = 'A' and (:val is null OR :val = '' OR c.igmNo LIKE CONCAT('%',:val,'%') OR "
+//								+ "crg.blNo LIKE CONCAT('%',:val,'%') OR crg.beNo LIKE CONCAT('%',:val,'%')) ")
+//						List<Object[]> getBeforeAssessmentData(@Param("cid") String cid, @Param("bid") String bid,
+//								@Param("val") String val);
+					  
+						@Query(value = "select DISTINCT c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo "
 								+ "from Cfigmcn c "
 								+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
-								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (c.invoiceAssesed != 'Y' OR CAST(c.invCount AS INTEGER)>0) and "
-								+ "crg.status = 'A' and (:val is null OR :val = '' OR c.igmNo LIKE CONCAT('%',:val,'%') OR "
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and "
+								+ "crg.status = 'A' and (crg.beNo is not null AND crg.beNo != '') and (:val is null OR :val = '' OR c.igmNo LIKE CONCAT('%',:val,'%') OR "
 								+ "crg.blNo LIKE CONCAT('%',:val,'%') OR crg.beNo LIKE CONCAT('%',:val,'%')) ")
 						List<Object[]> getBeforeAssessmentData(@Param("cid") String cid, @Param("bid") String bid,
 								@Param("val") String val);
+						
+						
+//						@Query(value = "select c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo,p.profitcentreDesc,i.viaNo,i.igmDate,crg.blDate,"
+//								+ "p1.partyName,p2.partyName,crg.cargoValue,crg.cargoDuty,crg.commodityDescription,crg.importerId,crg.importerName,"
+//								+ "crg.importerSr,crg.importerAddress1,crg.importerAddress2,crg.importerAddress3,pa1.gstNo,c.cha,p3.partyName,"
+//								+ "pa2.srNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,crg.accountHolderId,crg.accountHolderName,pa3.srNo,"
+//								+ "pa3.gstNo,pa3.state,c.containerNo,c.containerSize,c.containerType,c.gateInDate,c.deStuffDate,c.gateOutDate"
+//								+ ",c.examinedPackages,c.typeOfContainer,c.scannerType,c.gateOutType,c.upTariffNo,c.profitcentreId,"
+//								+ "c.grossWt,c.cargoWt,c.ssrTransId,i.shippingAgent,i.shippingLine,c.containerStatus,c.gatePassNo,c.gateOutId "
+//								+ "from Cfigmcn c "
+//								+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
+//								+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+//								+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
+//								+ "LEFT OUTER JOIN Party p1 ON i.companyId=p1.companyId and i.branchId=p1.branchId and i.shippingLine=p1.partyId "
+//								+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.shippingAgent=p2.partyId "
+//								+ "LEFT OUTER JOIN PartyAddress pa1 ON crg.companyId=pa1.companyId and crg.branchId=pa1.branchId and crg.importerId=pa1.partyId and crg.importerSr=pa1.srNo "
+//								+ "LEFT OUTER JOIN Party p3 ON c.companyId=p3.companyId and c.branchId=p3.branchId and c.cha=p3.partyId "
+//								+ "LEFT OUTER JOIN PartyAddress pa2 ON p3.companyId=pa2.companyId and p3.branchId=pa2.branchId and p3.partyId=pa2.partyId and pa2.defaultChk = 'Y' "
+//								+ "LEFT OUTER JOIN PartyAddress pa3 ON crg.companyId=pa3.companyId and crg.branchId=pa3.branchId and crg.accountHolderId=pa3.partyId and pa3.defaultChk = 'Y' "
+//								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (c.invoiceAssesed != 'Y' OR CAST(c.invCount AS INTEGER)>0) and "
+//								+ "crg.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:lineNo ")
+//						List<Object[]> getBeforeSaveAssessmentData(@Param("cid") String cid, @Param("bid") String bid,
+//								@Param("trans") String trans,@Param("igm") String igm,@Param("lineNo") String lineNo);
 						
 						
 						@Query(value = "select c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo,p.profitcentreDesc,i.viaNo,i.igmDate,crg.blDate,"
@@ -972,7 +1004,8 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								+ "pa2.srNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,crg.accountHolderId,crg.accountHolderName,pa3.srNo,"
 								+ "pa3.gstNo,pa3.state,c.containerNo,c.containerSize,c.containerType,c.gateInDate,c.deStuffDate,c.gateOutDate"
 								+ ",c.examinedPackages,c.typeOfContainer,c.scannerType,c.gateOutType,c.upTariffNo,c.profitcentreId,"
-								+ "c.grossWt,c.cargoWt,c.ssrTransId,i.shippingAgent,i.shippingLine,c.containerStatus,c.gatePassNo,c.gateOutId "
+								+ "c.grossWt,c.cargoWt,c.ssrTransId,i.shippingAgent,i.shippingLine,c.containerStatus,c.gatePassNo,c.gateOutId,"
+								+ "c.assesmentId,c.lastAssesmentDate,c.invoiceNo,c.invoiceDate,c.invoiceUptoDate "
 								+ "from Cfigmcn c "
 								+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
 								+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
@@ -983,8 +1016,9 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								+ "LEFT OUTER JOIN Party p3 ON c.companyId=p3.companyId and c.branchId=p3.branchId and c.cha=p3.partyId "
 								+ "LEFT OUTER JOIN PartyAddress pa2 ON p3.companyId=pa2.companyId and p3.branchId=pa2.branchId and p3.partyId=pa2.partyId and pa2.defaultChk = 'Y' "
 								+ "LEFT OUTER JOIN PartyAddress pa3 ON crg.companyId=pa3.companyId and crg.branchId=pa3.branchId and crg.accountHolderId=pa3.partyId and pa3.defaultChk = 'Y' "
-								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (c.invoiceAssesed != 'Y' OR CAST(c.invCount AS INTEGER)>0) and "
-								+ "crg.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:lineNo ")
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (crg.beNo is not null AND crg.beNo != '') and "
+								+ "crg.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:lineNo and "
+								+ "((c.containerStatus = 'FCL' AND c.containerExamStatus = 'Y') OR c.containerStatus='LCL') and (c.gateOutId is null OR c.gateOutId = '') ")
 						List<Object[]> getBeforeSaveAssessmentData(@Param("cid") String cid, @Param("bid") String bid,
 								@Param("trans") String trans,@Param("igm") String igm,@Param("lineNo") String lineNo);
 						
@@ -998,6 +1032,19 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 						int updateInvoiceData(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
 								@Param("con") String con,@Param("invAmt") BigDecimal invAmt,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,
 								@Param("crgday") BigDecimal crgStorageDay,@Param("cvalue") BigDecimal cvalue,@Param("invday")BigDecimal invoiceDaysOld,
+								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
+						
+						
+						@Modifying
+						@Transactional
+						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
+								+ "c.crgStorageDay=c.crgStorageDay + :crgday,c.cargoValue=:cvalue ,c.invoiceUptoDate=:invDate,"
+								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+								+ "c.containerNo=:con")
+						int updateInvoiceData2(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
+								@Param("cvalue") BigDecimal cvalue,
 								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
 						
 						
@@ -1022,6 +1069,12 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 						int updateInvoiceDataAtProcess(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("invDate") 
 						Date invDate,@Param("invass") char invass,@Param("invNo") String invNo,@Param("type") char type,@Param("billAmt") BigDecimal billAMt,
 						@Param("invAmt") BigDecimal invAmt);
+						
+						
+						@Query(value="select COALESCE(a.crgStorageAmt,0) from Cfigmcn a where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.igmTransId=:trans and "
+								+ "a.igmNo=:igm and a.igmLineNo=:line and a.containerNo=:con")
+						BigDecimal getRateByServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
+								@Param("igm") String igm,@Param("line") String line,@Param("con") String con);
 					  
 }
 
