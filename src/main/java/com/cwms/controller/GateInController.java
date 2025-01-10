@@ -904,7 +904,7 @@ public class GateInController {
 			gatein.setApprovedBy(user);
 			gatein.setApprovedDate(new Date());
 			gatein.setStatus("A");
-			gatein.setGateInType("EXP");
+			gatein.setGateInType("COM");
 			gatein.setErpDocRefNo("");
 			gatein.setProcessId("P00219");
 			gatein.setProfitcentreId("N00004");
