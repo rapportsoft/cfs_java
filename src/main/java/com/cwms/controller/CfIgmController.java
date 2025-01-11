@@ -511,7 +511,7 @@ public class CfIgmController {
 					gatein.setDrt("N");
 					gatein.setHazardous(manual.getHazardous());
 					gatein.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
-					
+					gatein.setProcessId("P00212");
 					gateinrepo.save(gatein);
 					
 					VehicleTrack v = new VehicleTrack();
