@@ -50,7 +50,7 @@ public class ExportReportsController {
 	        @RequestParam(name = "companyId") String companyId,
 	        @RequestParam(name = "branchId") String branchId,
 	        @RequestParam(name = "uname") String username,
-	        @RequestParam(name = "type") String type,
+	        @RequestParam(name = "type",required = false) String type,
 	        @RequestParam(name = "cname") String companyname,
 	        @RequestParam(name = "bname") String branchname,
 	        @RequestParam(name = "startDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
@@ -92,16 +92,6 @@ public class ExportReportsController {
 	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
 	            fileName = "Import GateOut Container detailed Report.xlsx";
 	            break;
-	            
-	            
-	            
-	            
-	        case "Export SB Wise Container Out Report":
-	            excelBytes = exportReportService.createExcelReportOfExportContainerOutBasedReport(
-	                    companyId, branchId, username, type, companyname, branchname,
-	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
-	            fileName = "Export SB Wise Container Out Report.xlsx";
-	            break;
 
 	        case "Export Factory Stuff GateIn Report":
 	            excelBytes = exportReportService.createExcelReportOfFactoryStuffGateInReport(
@@ -126,13 +116,13 @@ public class ExportReportsController {
 	            break;
 
 
-//	        case "Scan Container Report":
-//	            excelBytes = exportReportService.createExcelReportOfScanContainerReport(
-//	                    companyId, branchId, username, type, companyname, branchname,
-//	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
-//	            fileName = "Scan Container Report.xlsx";
-//	            break;
-//
+	        case "Export SB Wise Container Out Report":
+	            excelBytes = exportReportService.createExcelReportOfExportContainerOutBasedReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "Export SB Wise Container Out Report.xlsx";
+	            break;
+
 
 //
 	        case "Export Stuffing Equipments Report":
@@ -162,7 +152,8 @@ public class ExportReportsController {
 	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
 	            fileName = "Empty Container Report.xlsx";
 	            break;
-
+	            
+	     
 	        case "Export Container Gate Out Report":
 	            excelBytes = exportReportService.createExcelReportOfYardBalanceReportDetails(
 	                    companyId, branchId, username, type, companyname, branchname,
@@ -208,6 +199,56 @@ public class ExportReportsController {
 	            
 	            
 	            
+	            
+	            
+	            
+	            
+	            
+	        case "EXPORT EMPTY IN":
+	            excelBytes = exportReportService.createExcelReportOfEmptyContainerReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "Empty Container Report.xlsx";
+	            break;
+
+	            
+	            
+	        case "BUFFER GATE IN":
+	            excelBytes = exportReportService.createExcelReportExportBufferGateInInExportSection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "BUFFER GATE IN.xlsx";
+	            break;
+	            
+	        case "EXPORT FCL":
+	            excelBytes = exportReportService.createExcelReportExportFCLGateInInExportSection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "EXPORT FCL.xlsx";
+	            break;
+	            
+	        case "EXP MOVEMENT OUT":
+	            excelBytes = exportReportService.createExcelReportExportMovementOutInExportSection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "EXP MOVEMENT OUT.xlsx";
+	            break;
+	            
+	        case "EXP LDD PENDENCY":
+	            excelBytes = exportReportService.createExportLDDPendencyReportExcle(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "EXP LDD PENDENCY.xlsx";
+	            break;
+	            
+	        case "STUFFING TALLY":
+	            excelBytes = exportReportService.createExportStuffingTallyReportExcle(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
+	            fileName = "STUFFING TALLY.xlsx";
+	            break;
+	            
+	             	
 
 	        default:
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)

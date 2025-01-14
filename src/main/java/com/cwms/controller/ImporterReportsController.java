@@ -66,7 +66,7 @@ public class ImporterReportsController {
 	        @RequestParam(name = "companyId") String companyId,
 	        @RequestParam(name = "branchId") String branchId,
 	        @RequestParam(name = "uname") String username,
-	        @RequestParam(name = "type") String type,
+	        @RequestParam(name = "type",required = false) String type,
 	        @RequestParam(name = "cname") String companyname,
 	        @RequestParam(name = "bname") String branchname,
 	        @RequestParam(name = "startDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
@@ -86,6 +86,13 @@ public class ImporterReportsController {
 	    switch (selectedReport) {
 	    
 	        case "Import GateIn Container detailed Report":
+	            excelBytes = importReporsService.createExcelReportOfImportGateInContainerDetailedReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Import GateIn Container detailed Report.xlsx";
+	            break;
+	            
+	        case "IMPORT GATE IN":
 	            excelBytes = importReporsService.createExcelReportOfImportGateInContainerDetailedReport(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
@@ -156,7 +163,9 @@ public class ImporterReportsController {
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
 	            fileName = "Import FCL Custom Tally Sheet Report.xlsx";
 	            break;
-
+	            
+	       
+	            	
 	        case "Import Manual GateIn Report":
 	            excelBytes = importReporsService.createExcelReportOfImportManualGateInReport(
 	                    companyId, branchId, username, type, companyname, branchname,
@@ -179,6 +188,13 @@ public class ImporterReportsController {
 	            break;
 
 	        case "SealCutting Report":
+	            excelBytes = importReporsService.createExcelReportOfSealCuttingReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "SealCutting Report.xlsx";
+	            break;
+	            
+	        case "SEAL CUTTING":
 	            excelBytes = importReporsService.createExcelReportOfSealCuttingReport(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
@@ -212,6 +228,13 @@ public class ImporterReportsController {
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
 	            fileName = "Import LCL Cargo Destuff Report.xlsx";
 	            break;
+	            
+//	        case "LCL DESTUFF":
+//	            excelBytes = importReporsService.createExcelReportOfImportLclCargoDestuffReport(
+//	                    companyId, branchId, username, type, companyname, branchname,
+//	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+//	            fileName = "Import LCL Cargo Destuff Report.xlsx";
+//	            break;
 
 	        case "Yard Balance Report Details":
 	            excelBytes = importReporsService.createExcelReportOfYardBalanceReportDetails(
@@ -234,6 +257,138 @@ public class ImporterReportsController {
 	            fileName = "Import BOE Wise Gate Out Report.xlsx";
 	            break;
 
+	            
+	        case "IMPORT CUSTOM EXAM":
+	            excelBytes = importReporsService.createExcelReportOfImportCustomExamReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Import FCL Custom Tally Sheet Report.xlsx";
+	            break;
+	            
+	        case "JOB ORDER":
+	            excelBytes = importReporsService.createExcelReportOfIJobOrderReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "JOB ORDER.xlsx";
+	            break;
+	            
+	        case "Export Carting Report":
+	        	excelBytes = importReporsService.createExcelReportOfExportCartingReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Export Carting Report.xlsx";
+	            break;
+
+	        case "ExportEmptyInOutReport":
+	            excelBytes = importReporsService.createExcelReportOfExportInOutContainersDetails(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "ExportEmptyInOutReport.xlsx";
+	            break;
+	            
+	        case "Import Empty Inventory":
+	            excelBytes = importReporsService.createExcelReportOfImportEmptyInventoryDetails(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "ExportEmptyInOutReport.xlsx";
+	            break;
+	            
+	        case "Export Empty Inventory":
+	            excelBytes = importReporsService.createExcelReportOfExportEmptyInventoryDetails(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "ExportEmptyInOutReport.xlsx";
+	            break;
+	            
+	           
+	            
+	            
+	        case "Total":
+	            excelBytes = importReporsService.createExcelReportOfLCLLoadedInventoryTotalReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Total.xlsx";
+	            break;
+	            
+	            
+	        case "Hazardous":
+	            excelBytes = importReporsService.createExcelReportOfLCLLoadedInventoryHazardousReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Hazardous.xlsx";
+	            break;
+	            
+	        case "Reefer":
+	            excelBytes = importReporsService.createExcelReportOfLCLLoadedInventoryReeferConReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Hazardous.xlsx";
+	            break;
+	            
+	        case "ODC":
+	            excelBytes = importReporsService.createExcelReportOfLCLLoadedInventoryODCConReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "ODC.xlsx";
+	            break;
+	            
+	        case "General":
+	            excelBytes = importReporsService.createExcelReportOfLCLLoadedInventoryGeneralConReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "General.xlsx";
+	            break;
+	            
+	        case "FCL LOADED BALANCE":
+	            excelBytes = importReporsService.createExcelReportOfLongStandingNewReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "FCL LOADED BALANCE.xlsx";
+	            break;
+	            
+	        case "LOADING JO":
+	            excelBytes = importReporsService.createExcelReportOfLoadingJoReportInDeliverySection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "LOADING JO.xlsx";
+	            break;
+	            
+	        case "FCL DESTUFF":
+	            excelBytes = importReporsService.createExcelReportOfFCLDestuffInDeliverySection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "FCL DESTUFF.xlsx";
+	            break;
+	            
+	        case "FCL LOADED":
+	            excelBytes = importReporsService.createExcelReportOfFCLLoadedInDeliverySection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "FCL LOADED.xlsx";
+	            break;
+	            
+	        case "LCL DESTUFF":
+	            excelBytes = importReporsService.createExcelReportOfLCLDestuffInDeliverySection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "FCL LOADED.xlsx";
+	            break;
+	            
+	        case "EMPTY OUT":
+	            excelBytes = importReporsService.createExcelReportOfEMPTYOUTInDeliverySection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "EMPTY OUT.xlsx";
+	            break;
+	            
+	        case "LCL DELIVERED":
+	            excelBytes = importReporsService.createExcelReportOfLCLCargoDeliviredDeliverySection(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "LCL DELIVERED.xlsx";
+	            break;
+	            
+	            
 	        default:
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                    .body(("Unsupported report type: " + selectedReport).getBytes());
