@@ -140,19 +140,33 @@ public class SecurityConfiguration {
     }
 
     
+//    @Bean
+//    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        config.addAllowedOriginPattern("http://103.189.88.215:84");
+//      //  config.addAllowedOriginPattern("http://localhost:3000");
+//        config.addAllowedHeader("*");
+//        config.addAllowedMethod("*");
+//        config.setMaxAge(3600L);
+//        source.registerCorsConfiguration("/**", config);
+//        return source;
+//    }
+    
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("http://103.189.88.215:84");
-      //  config.addAllowedOriginPattern("http://localhost:3000");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.setMaxAge(3600L);
+        config.setAllowCredentials(true); // Enable cookies and credentials
+        config.addAllowedOriginPattern("*"); // Accept any origin
+        config.addAllowedHeader("*"); // Allow all headers
+        config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+        config.setMaxAge(3600L); // Cache the preflight request for 3600 seconds
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
     
     
     
