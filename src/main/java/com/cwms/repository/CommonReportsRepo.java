@@ -2147,5 +2147,72 @@ List<Object[]> findExportLDDPendencyContainerDetails(
 		    @Param("branchId") String branchId,
 		    @Param("startDate") Date startDate,
 		    @Param("endDate") Date endDate);
+	
+	@Query(value = "SELECT DISTINCT " +
+            "    b.container_no, " +
+            "    b.container_size, " +
+            "    b.container_type, " +
+            "    q.customer_code, " +
+            "    q.party_name, " +
+            "    b.Type_of_Container, " +
+            "    b.Hold_Status, " +
+            "    b.REFER, " +
+            "    DATE_FORMAT(b.Gate_in_Date, '%d %b %Y %T') AS gateInDate, " +
+            "    ch.party_name AS chaName, " +
+            "    d.importer_name " +
+            "FROM " +
+            "    cfigmcn b " +
+            "LEFT OUTER JOIN cfigm c " +
+            "    ON c.igm_trans_id = b.igm_trans_id " +
+            "    AND c.igm_no = b.igm_no " +
+            "    AND c.company_id = b.company_id " +
+            "    AND c.branch_id = b.branch_id " +
+            "    AND c.profitcentre_id = b.profitcentre_id " +
+            "LEFT OUTER JOIN cfigmcrg d " +
+            "    ON d.igm_trans_id = b.igm_trans_id " +
+            "    AND d.igm_no = b.igm_no " +
+            "    AND d.company_id = b.company_id " +
+            "    AND d.branch_id = b.branch_id " +
+            "    AND d.profitcentre_id = b.profitcentre_id " +
+            "    AND d.igm_line_no = b.igm_line_no " +
+            "LEFT OUTER JOIN vessel v " +
+            "    ON c.company_id = v.company_id " +
+            "    AND c.vessel_id = v.vessel_id " +
+            "    AND c.branch_id = v.branch_id " +
+            "LEFT OUTER JOIN party p " +
+            "    ON c.company_id = p.company_id " +
+            "    AND c.shipping_line = p.party_id " +
+            "    AND c.branch_id = p.branch_id " +
+            "LEFT OUTER JOIN party q " +
+            "    ON c.company_id = q.company_id " +
+            "    AND c.shipping_Agent = q.party_id " +
+            "    AND c.branch_id = q.branch_id " +
+            "LEFT OUTER JOIN party ch " +
+            "    ON b.company_id = ch.company_id " +
+            "    AND b.CHA = ch.party_id " +
+            "    AND b.branch_id = ch.branch_id " +
+            "WHERE " +
+            "    b.company_id = :companyId " +
+            "    AND b.branch_id = :branchId " +
+            "    AND b.status = 'A' " +
+            "    AND b.profitcentre_id = 'N00002' " +
+            "    AND b.Gate_In_Date < :date " +
+            "    AND (b.gate_out_id = '' OR b.gate_out_date > :date) " +
+            "    AND (b.de_stuff_id = '' OR b.de_stuff_Date > :date) " +
+            "    AND b.gate_in_id != '' " +
+            "    AND c.status = 'A' " +
+            "    AND d.status = 'A' " +
+            "    AND b.Type_of_Container ='Manual' " +
+            "GROUP BY " +
+            "    b.container_no, " +
+            "    b.igm_no " +
+            "ORDER BY " +
+            "    b.Gate_in_Date", 
+     nativeQuery = true)
+List<Object[]> findManualConContainerDetails(
+ @Param("companyId") String companyId, 
+ @Param("branchId") String branchId, 
+ @Param("date") Date date
+);
 
 }

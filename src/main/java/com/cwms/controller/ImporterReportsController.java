@@ -339,6 +339,13 @@ public class ImporterReportsController {
 	            fileName = "General.xlsx";
 	            break;
 	            
+	        case "Manual":
+	            excelBytes = importReporsService.createExcelReportOfManualReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Manual.xlsx";
+	            break;
+	            
 	        case "FCL LOADED BALANCE":
 	            excelBytes = importReporsService.createExcelReportOfLongStandingNewReport(
 	                    companyId, branchId, username, type, companyname, branchname,
