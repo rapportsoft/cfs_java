@@ -90,7 +90,7 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		       "c.beNo, c.beDate, c.chaCode, c.chaName, c.mobileNo, c.sealCuttingType, c.sealCuttingRemarks, c.blType, " +
 		       "c.beWt, c.notifyPartyName, p.partyName, c.examinationRemarks) " +
 		       "from Cfigmcrg c " +
-		       "LEFT JOIN CFIgm f ON c.companyId = f.companyId AND c.branchId = f.branchId AND c.igmNo = f.igmNo " +
+		       "LEFT JOIN CFIgm f ON c.companyId = f.companyId AND c.branchId = f.branchId AND c.igmNo = f.igmNo AND c.igmTransId = f.igmTransId " +
 		       "LEFT JOIN Party p ON f.companyId = p.companyId AND f.branchId = p.branchId AND f.shippingLine = p.partyId " +
 		       "where c.companyId = :cid " +
 		       "and c.branchId = :bid " +
