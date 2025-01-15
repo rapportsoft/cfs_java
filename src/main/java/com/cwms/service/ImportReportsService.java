@@ -260,24 +260,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -926,24 +932,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -1541,24 +1553,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -2214,24 +2232,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -2627,24 +2651,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -3206,24 +3236,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        String user = username;
 		        String companyName = companyname;
@@ -3689,24 +3725,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -4335,24 +4377,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -4815,24 +4863,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -5444,24 +5498,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -6083,24 +6143,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -6660,24 +6726,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -7192,24 +7264,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -7708,24 +7786,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -8210,24 +8294,30 @@ public class ImportReportsService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -8741,24 +8831,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -9250,24 +9346,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -9684,24 +9786,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -10170,24 +10278,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -10792,24 +10906,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -11297,24 +11417,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -11722,24 +11848,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -12186,24 +12318,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -12609,24 +12747,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -13324,24 +13468,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -13919,24 +14069,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -14318,24 +14474,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -14773,24 +14935,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -15376,24 +15544,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -15997,24 +16171,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -16600,24 +16780,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -17194,24 +17380,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -17797,24 +17989,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -18490,24 +18688,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -19129,24 +19333,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -19786,24 +19996,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -20452,24 +20668,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -21190,24 +21412,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
@@ -21811,24 +22039,30 @@ cell.setCellStyle(cellStyle);
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		      if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 		     
 		        
 		        String user = username;
