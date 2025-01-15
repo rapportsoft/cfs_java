@@ -1069,7 +1069,7 @@ public class AssessmentService {
 												} else if ("TEU".equals(unit) || "SM".equals(unit)
 														|| "CNTR".equals(unit) || "PBL".equals(unit)
 														|| "ACT".equals(unit) || "PCK".equals(unit)
-														|| "SHFT".equals(unit)) {
+														|| "SHFT".equals(unit) || "KG".equals(unit)) {
 
 													if ("SM".equals(unit) || "CNTR".equals(unit) || "PBL".equals(unit)
 															|| "ACT".equals(unit) || "PCK".equals(unit)
@@ -1091,6 +1091,26 @@ public class AssessmentService {
 															tempAss.setExecutionUnit1("");
 														} else if ("45".equals(con.getContainerSize())) {
 															executionUnit = new BigDecimal("2.5");
+															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+															tempAss.setExecutionUnit1("");
+														}
+													}
+													
+													if ("KG".equals(unit)) {
+														String serviceGrp = String.valueOf(f[18]);
+														if ("H".equals(serviceGrp)) {
+															
+															BigDecimal cargoWt = new BigDecimal(
+																	String.valueOf(con.getGrossWt()));
+															
+															executionUnit = cargoWt;
+
+															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+															tempAss.setExecutionUnit1("");
+														} else {
+															BigDecimal cargoWt = con.getCargoWt();
+
+															executionUnit = cargoWt;
 															tempAss.setExecutionUnit(String.valueOf(executionUnit));
 															tempAss.setExecutionUnit1("");
 														}
@@ -1988,9 +2008,10 @@ public class AssessmentService {
 
 											}
 
-										} else if ("TEU".equals(unit) || "SM".equals(unit) || "CNTR".equals(unit)
-												|| "PBL".equals(unit) || "ACT".equals(unit) || "PCK".equals(unit)
-												|| "SHFT".equals(unit)) {
+										} else if ("TEU".equals(unit) || "SM".equals(unit)
+												|| "CNTR".equals(unit) || "PBL".equals(unit)
+												|| "ACT".equals(unit) || "PCK".equals(unit)
+												|| "SHFT".equals(unit) || "KG".equals(unit)) {
 
 											if ("SM".equals(unit) || "CNTR".equals(unit) || "PBL".equals(unit)
 													|| "ACT".equals(unit) || "PCK".equals(unit)
@@ -2012,6 +2033,26 @@ public class AssessmentService {
 													tempAss.setExecutionUnit1("");
 												} else if ("45".equals(con.getContainerSize())) {
 													executionUnit = new BigDecimal("2.5");
+													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+													tempAss.setExecutionUnit1("");
+												}
+											}
+											
+											if ("KG".equals(unit)) {
+												String serviceGrp = String.valueOf(f[18]);
+												if ("H".equals(serviceGrp)) {
+													
+													BigDecimal cargoWt = new BigDecimal(
+															String.valueOf(con.getGrossWt()));
+													
+													executionUnit = cargoWt;
+
+													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+													tempAss.setExecutionUnit1("");
+												} else {
+													BigDecimal cargoWt = con.getCargoWt();
+
+													executionUnit = cargoWt;
 													tempAss.setExecutionUnit(String.valueOf(executionUnit));
 													tempAss.setExecutionUnit1("");
 												}
@@ -4548,6 +4589,6 @@ public class AssessmentService {
 
 	// Bond NOC Invoice
 
-	
+
 
 }
