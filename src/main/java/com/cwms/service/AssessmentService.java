@@ -3,6 +3,7 @@ package com.cwms.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,6 +29,7 @@ import com.cwms.entities.AssessmentContainerDTO;
 import com.cwms.entities.AssessmentSheet;
 import com.cwms.entities.Branch;
 import com.cwms.entities.CFSDay;
+import com.cwms.entities.Cfbondnoc;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.Cfinvsrv;
 import com.cwms.entities.Cfinvsrvanx;
@@ -195,6 +197,7 @@ public class AssessmentService {
 				String HoldNextIdD1 = String.format("INCO%06d", nextNumericNextID1);
 
 				for (AssessmentContainerDTO con : containerData) {
+					System.out.println("con.getLastInvoiceUptoDate() "+con.getLastInvoiceUptoDate()+" "+con.getContainerNo());
 					if (con.getLastInvoiceUptoDate() == null) {
 
 						List<String> conSize = new ArrayList<>();
@@ -353,6 +356,10 @@ public class AssessmentService {
 								finalPricing.addAll(remainingPricing);
 							}
 						}
+						
+//					   if(finalPricing != null || !finalPricing.isEmpty()) {
+//							return new ResponseEntity<>(finalPricing,HttpStatus.CONFLICT);
+//					   }
 
 						finalPricing.stream().forEach(f -> {
 							AssessmentContainerDTO tempAss = new AssessmentContainerDTO();
@@ -460,7 +467,8 @@ public class AssessmentService {
 
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
-												conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+												conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+														: con.getContainerSize());
 
 												List<String> conTypeOfCon2 = new ArrayList<>();
 												conTypeOfCon2.add("ALL");
@@ -690,10 +698,10 @@ public class AssessmentService {
 													if ("WEEK".equals(unit)) {
 														if (con.getDestuffDate() != null) {
 															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
-																	convertToLocalDateTime(con.getGateInDate()),
+																	convertToLocalDateTime(con.getDestuffDate()),
 																	day.getStartTime());
 															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
-																	convertToLocalDateTime(con.getDestuffDate()),
+																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
 																	destuffDateTime);
@@ -735,6 +743,11 @@ public class AssessmentService {
 															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															if ("SM".equals(String.valueOf(f[7]))) {
+																totalRate = (totalRate.multiply(con.getArea()))
+																		.setScale(3, RoundingMode.HALF_UP);
+															}
 
 															System.out.println(
 																	"totalRate " + totalRate + " " + weeksBetween);
@@ -840,6 +853,11 @@ public class AssessmentService {
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															System.out.println(
 																	"totalRate " + totalRate + " " + weeksBetween);
+
+															if ("SM".equals(String.valueOf(f[7]))) {
+																totalRate = (totalRate.multiply(con.getArea()))
+																		.setScale(3, RoundingMode.HALF_UP);
+															}
 															tempAss.setServiceRate(serviceRate.get());
 															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
 															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
@@ -904,7 +922,8 @@ public class AssessmentService {
 												BigDecimal executionUnit = BigDecimal.ZERO;
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
-												conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+												conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+														: con.getContainerSize());
 
 												List<String> conTypeOfCon2 = new ArrayList<>();
 												conTypeOfCon2.add("ALL");
@@ -918,8 +937,13 @@ public class AssessmentService {
 													String serviceGrp = String.valueOf(f[18]);
 
 													if ("H".equals(serviceGrp)) {
-														executionUnit = new BigDecimal(
-																String.valueOf(con.getGrossWt()));
+														
+														BigDecimal cargoWt = new BigDecimal(
+																String.valueOf(con.getGrossWt()))
+																.divide(new BigDecimal(1000))
+																.setScale(3, RoundingMode.HALF_UP);
+														
+														executionUnit = cargoWt;
 
 														tempAss.setExecutionUnit(String.valueOf(executionUnit));
 														tempAss.setExecutionUnit1("");
@@ -1413,7 +1437,8 @@ public class AssessmentService {
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
-										conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+										conSize2.add(
+												("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 										List<String> conTypeOfCon2 = new ArrayList<>();
 										conTypeOfCon2.add("ALL");
@@ -1624,10 +1649,10 @@ public class AssessmentService {
 											if ("WEEK".equals(unit)) {
 												if (con.getDestuffDate() != null) {
 													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
-															convertToLocalDateTime(con.getGateInDate()),
+															convertToLocalDateTime(con.getDestuffDate()),
 															day.getStartTime());
 													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
-															convertToLocalDateTime(con.getDestuffDate()),
+															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
 															destuffDateTime);
@@ -1668,6 +1693,10 @@ public class AssessmentService {
 													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+													if ("SM".equals(String.valueOf(f[7]))) {
+														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
+																RoundingMode.HALF_UP);
+													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
 													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
@@ -1764,6 +1793,10 @@ public class AssessmentService {
 													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+													if ("SM".equals(String.valueOf(f[7]))) {
+														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
+																RoundingMode.HALF_UP);
+													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
 													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
@@ -1825,7 +1858,8 @@ public class AssessmentService {
 										BigDecimal executionUnit = BigDecimal.ZERO;
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
-										conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+										conSize2.add(
+												("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 										List<String> conTypeOfCon2 = new ArrayList<>();
 										conTypeOfCon2.add("ALL");
@@ -1839,7 +1873,12 @@ public class AssessmentService {
 											String serviceGrp = String.valueOf(f[18]);
 
 											if ("H".equals(serviceGrp)) {
-												executionUnit = new BigDecimal(String.valueOf(con.getGrossWt()));
+												BigDecimal cargoWt = new BigDecimal(
+														String.valueOf(con.getGrossWt()))
+														.divide(new BigDecimal(1000))
+														.setScale(3, RoundingMode.HALF_UP);
+												
+												executionUnit = cargoWt;
 
 												tempAss.setExecutionUnit(String.valueOf(executionUnit));
 												tempAss.setExecutionUnit1("");
@@ -2398,8 +2437,11 @@ public class AssessmentService {
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+						
+						System.out.println("finalConData "+finalConData);
 
 						finalConData.stream().forEach(c -> {
+						if(c.getServiceId() != null && !c.getServiceId().isEmpty()) {
 							Cfinvsrvanx anx = new Cfinvsrvanx();
 							anx.setCompanyId(cid);
 							anx.setBranchId(bid);
@@ -2463,7 +2505,11 @@ public class AssessmentService {
 								anx.setTaxPerc(BigDecimal.ZERO);
 							}
 
-							totalAmount.set(totalAmount.get().add(c.getRates()));
+							BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
+							BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get() : BigDecimal.ZERO;
+
+							// Perform addition
+							totalAmount.set(currentTotal.add(currentRate));
 
 							cfinvsrvanxrepo.save(anx);
 
@@ -2478,6 +2524,7 @@ public class AssessmentService {
 //      						}
 
 							srNo1.set(srNo1.get().add(new BigDecimal(1)));
+						}
 						});
 						totalAmount.updateAndGet(amount -> amount.setScale(3, RoundingMode.HALF_UP));
 
@@ -2729,7 +2776,8 @@ public class AssessmentService {
 
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
-												conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+												conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+														: con.getContainerSize());
 
 												List<String> conTypeOfCon2 = new ArrayList<>();
 												conTypeOfCon2.add("ALL");
@@ -2903,7 +2951,7 @@ public class AssessmentService {
 													if ("WEEK".equals(unit)) {
 														if (con.getDestuffDate() != null) {
 															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
-																	convertToLocalDateTime(con.getGateInDate()),
+																	convertToLocalDateTime(con.getDestuffDate()),
 																	day.getStartTime());
 															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
 																	convertToLocalDateTime(con.getInvoiceDate()),
@@ -2920,7 +2968,8 @@ public class AssessmentService {
 															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
 
 															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
-																	convertToLocalDateTime(con.getDestuffDate()),
+																	convertToLocalDateTime(
+																			con.getLastInvoiceUptoDate()),
 																	day.getStartTime());
 															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
 																	convertToLocalDateTime(con.getInvoiceDate()),
@@ -2965,7 +3014,10 @@ public class AssessmentService {
 															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
-
+															if ("SM".equals(String.valueOf(f[7]))) {
+																totalRate = (totalRate.multiply(con.getArea()))
+																		.setScale(3, RoundingMode.HALF_UP);
+															}
 															System.out.println(
 																	"totalRate " + totalRate + " " + weeksBetween);
 															tempAss.setServiceRate(serviceRate.get());
@@ -3043,6 +3095,10 @@ public class AssessmentService {
 															}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+															if ("SM".equals(String.valueOf(f[7]))) {
+																totalRate = (totalRate.multiply(con.getArea()))
+																		.setScale(3, RoundingMode.HALF_UP);
+															}
 															System.out.println(
 																	"totalRate " + totalRate + " " + weeksBetween);
 															tempAss.setServiceRate(serviceRate.get());
@@ -3112,7 +3168,8 @@ public class AssessmentService {
 
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
-										conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+										conSize2.add(
+												("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
 
 										List<String> conTypeOfCon2 = new ArrayList<>();
 										conTypeOfCon2.add("ALL");
@@ -3283,7 +3340,7 @@ public class AssessmentService {
 											if ("WEEK".equals(unit)) {
 												if (con.getDestuffDate() != null) {
 													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
-															convertToLocalDateTime(con.getGateInDate()),
+															convertToLocalDateTime(con.getDestuffDate()),
 															day.getStartTime());
 													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
 															convertToLocalDateTime(con.getInvoiceDate()),
@@ -3300,7 +3357,7 @@ public class AssessmentService {
 													long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
 
 													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
-															convertToLocalDateTime(con.getDestuffDate()),
+															convertToLocalDateTime(con.getLastInvoiceUptoDate()),
 															day.getStartTime());
 													LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
 															convertToLocalDateTime(con.getInvoiceDate()),
@@ -3344,6 +3401,10 @@ public class AssessmentService {
 													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+													if ("SM".equals(String.valueOf(f[7]))) {
+														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
+																RoundingMode.HALF_UP);
+													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
 
@@ -3418,6 +3479,10 @@ public class AssessmentService {
 													}).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+													if ("SM".equals(String.valueOf(f[7]))) {
+														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
+																RoundingMode.HALF_UP);
+													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
 													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
@@ -3591,84 +3656,90 @@ public class AssessmentService {
 						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
 
 						finalConData.stream().forEach(c -> {
-							Cfinvsrvanx anx = new Cfinvsrvanx();
-							anx.setCompanyId(cid);
-							anx.setBranchId(bid);
-							anx.setErpDocRefNo(newAss.getIgmTransId());
-							anx.setProcessTransId(HoldNextIdD1);
-							anx.setServiceId(c.getServiceId());
-							anx.setSrlNo(srNo1.get());
-							anx.setDocRefNo(newAss.getIgmNo());
-							anx.setIgmLineNo(newAss.getIgmLineNo());
-							anx.setProfitcentreId(newAss.getProfitcentreId());
-							anx.setInvoiceType("IMP");
-							anx.setServiceUnit(c.getServiceUnit());
-							anx.setExecutionUnit(c.getExecutionUnit());
-							anx.setServiceUnit1(c.getServiceUnit1());
-							anx.setExecutionUnit1(c.getExecutionUnit1());
-							anx.setRate(c.getServiceRate());
-							anx.setActualNoOfPackages(c.getRates());
-							anx.setCurrencyId("INR");
-							anx.setLocalAmt(c.getRates());
-							anx.setInvoiceAmt(c.getRates());
-							anx.setCommodityDescription(newAss.getCommodityDescription());
-							anx.setDiscPercentage(c.getDiscPercentage());
-							anx.setDiscValue(c.getDiscValue());
-							anx.setmPercentage(c.getmPercentage());
-							anx.setmAmount(c.getmAmount());
-							anx.setAcCode(c.getAcCode());
-							anx.setProcessTransDate(newAss.getAssesmentDate());
-							anx.setProcessId("P01101");
-							anx.setPartyId(newAss.getPartyId());
-							anx.setWoNo(c.getWoNo());
-							anx.setWoAmndNo(c.getWoAmndNo());
-							anx.setContainerNo(c.getContainerNo());
-							anx.setContainerStatus(con.getContainerStatus());
-							anx.setGateOutDate(c.getGateoutDate());
-							anx.setAddServices("N");
-							anx.setStartDate(c.getGateInDate());
-							anx.setInvoiceUptoDate(c.getInvoiceDate());
-							anx.setInvoiceUptoWeek(c.getInvoiceDate());
-							anx.setStatus("A");
-							anx.setCreatedBy(user);
-							anx.setCreatedDate(new Date());
-//      						anx.setApprovedBy(user);
-//      						anx.setApprovedDate(new Date());
-							anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
-							anx.setSrvManualFlag("N");
-							anx.setCriteria(
-									"SA".equals(c.getCriteria()) ? "DW" : "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
-							anx.setRangeFrom(c.getRangeFrom());
-							anx.setRangeTo(c.getRangeTo());
-							anx.setRangeType(c.getContainerStatus());
-							anx.setGateOutId(c.getGateOutId());
-							anx.setGatePassNo(c.getGatePassNo());
-							anx.setRangeType(c.getCriteria());
-							anx.setTaxId(c.getTaxId());
-							anx.setExRate(c.getExRate());
+							if(c.getServiceId() != null && !c.getServiceId().isEmpty()) {
+								Cfinvsrvanx anx = new Cfinvsrvanx();
+								anx.setCompanyId(cid);
+								anx.setBranchId(bid);
+								anx.setErpDocRefNo(newAss.getIgmTransId());
+								anx.setProcessTransId(HoldNextIdD1);
+								anx.setServiceId(c.getServiceId());
+								anx.setSrlNo(srNo1.get());
+								anx.setDocRefNo(newAss.getIgmNo());
+								anx.setIgmLineNo(newAss.getIgmLineNo());
+								anx.setProfitcentreId(newAss.getProfitcentreId());
+								anx.setInvoiceType("IMP");
+								anx.setServiceUnit(c.getServiceUnit());
+								anx.setExecutionUnit(c.getExecutionUnit());
+								anx.setServiceUnit1(c.getServiceUnit1());
+								anx.setExecutionUnit1(c.getExecutionUnit1());
+								anx.setRate(c.getServiceRate());
+								anx.setActualNoOfPackages(c.getRates());
+								anx.setCurrencyId("INR");
+								anx.setLocalAmt(c.getRates());
+								anx.setInvoiceAmt(c.getRates());
+								anx.setCommodityDescription(newAss.getCommodityDescription());
+								anx.setDiscPercentage(c.getDiscPercentage());
+								anx.setDiscValue(c.getDiscValue());
+								anx.setmPercentage(c.getmPercentage());
+								anx.setmAmount(c.getmAmount());
+								anx.setAcCode(c.getAcCode());
+								anx.setProcessTransDate(newAss.getAssesmentDate());
+								anx.setProcessId("P01101");
+								anx.setPartyId(newAss.getPartyId());
+								anx.setWoNo(c.getWoNo());
+								anx.setWoAmndNo(c.getWoAmndNo());
+								anx.setContainerNo(c.getContainerNo());
+								anx.setContainerStatus(con.getContainerStatus());
+								anx.setGateOutDate(c.getGateoutDate());
+								anx.setAddServices("N");
+								anx.setStartDate(c.getGateInDate());
+								anx.setInvoiceUptoDate(c.getInvoiceDate());
+								anx.setInvoiceUptoWeek(c.getInvoiceDate());
+								anx.setStatus("A");
+								anx.setCreatedBy(user);
+								anx.setCreatedDate(new Date());
+//	      						anx.setApprovedBy(user);
+//	      						anx.setApprovedDate(new Date());
+								anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
+								anx.setSrvManualFlag("N");
+								anx.setCriteria(
+										"SA".equals(c.getCriteria()) ? "DW" : "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
+								anx.setRangeFrom(c.getRangeFrom());
+								anx.setRangeTo(c.getRangeTo());
+								anx.setRangeType(c.getContainerStatus());
+								anx.setGateOutId(c.getGateOutId());
+								anx.setGatePassNo(c.getGatePassNo());
+								anx.setRangeType(c.getCriteria());
+								anx.setTaxId(c.getTaxId());
+								anx.setExRate(c.getExRate());
 
-							if (("Y".equals(newAss.getIgst()))
-									|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
-								anx.setTaxPerc(c.getTaxPerc());
-							} else {
-								anx.setTaxPerc(BigDecimal.ZERO);
+								if (("Y".equals(newAss.getIgst()))
+										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
+									anx.setTaxPerc(c.getTaxPerc());
+								} else {
+									anx.setTaxPerc(BigDecimal.ZERO);
+								}
+
+								BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
+								BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get() : BigDecimal.ZERO;
+
+								// Perform addition
+								totalAmount.set(currentTotal.add(currentRate));
+
+								cfinvsrvanxrepo.save(anx);
+
+//	      						if ("S00007".equals(c.getServiceId())) {
+//	      							crgStorageDay.set(new BigDecimal(c.getExecutionUnit()));
+//	      							crgStorageAmt.set(c.getRates());
+								//
+//	      						}
+								//
+//	      						if ("S00003".equals(c.getServiceId())) {
+//	      							invDay.set(new BigDecimal(c.executionUnit));
+//	      						}
+
+								srNo1.set(srNo1.get().add(new BigDecimal(1)));
 							}
-
-							totalAmount.set(totalAmount.get().add(c.getRates()));
-
-							cfinvsrvanxrepo.save(anx);
-
-//      						if ("S00007".equals(c.getServiceId())) {
-//      							crgStorageDay.set(new BigDecimal(c.getExecutionUnit()));
-//      							crgStorageAmt.set(c.getRates());
-							//
-//      						}
-							//
-//      						if ("S00003".equals(c.getServiceId())) {
-//      							invDay.set(new BigDecimal(c.executionUnit));
-//      						}
-
-							srNo1.set(srNo1.get().add(new BigDecimal(1)));
 						});
 						totalAmount.updateAndGet(amount -> amount.setScale(3, RoundingMode.HALF_UP));
 
@@ -4475,5 +4546,8 @@ public class AssessmentService {
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 	}
 
+	// Bond NOC Invoice
+
 	
+
 }

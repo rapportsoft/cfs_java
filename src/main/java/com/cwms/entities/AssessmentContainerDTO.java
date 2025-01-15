@@ -53,6 +53,7 @@ public class AssessmentContainerDTO implements Cloneable {
 	public String taxId;
 	public BigDecimal exRate;
 	public String serviceGroup;
+	public BigDecimal area;
 	
 	public AssessmentContainerDTO() {
 		super();
@@ -65,7 +66,27 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
-	 public Date getInvoiceUptoDate() {
+	 public BigDecimal getArea() {
+		return area;
+	}
+
+
+
+
+
+
+
+	public void setArea(BigDecimal area) {
+		this.area = area;
+	}
+
+
+
+
+
+
+
+	public Date getInvoiceUptoDate() {
 		return invoiceUptoDate;
 	}
 
@@ -982,14 +1003,6 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
-
-
-
-
-
-
-
-
 	public AssessmentContainerDTO(String containerNo, String containerSize, String containerType, Date gateInDate,
 			Date destuffDate, Date gateoutDate, String examPercentage, String typeOfContainer, String scannerType,
 			String gateOutType, String checkDate, Date invoiceDate, String upTariffNo, String profitcentreId,
@@ -999,7 +1012,7 @@ public class AssessmentContainerDTO implements Cloneable {
 			BigDecimal discValue, BigDecimal mPercentage, BigDecimal mAmount, String woNo, String woAmndNo,
 			String criteria, BigDecimal rangeFrom, BigDecimal rangeTo, String containerStatus, String gateOutId,
 			String gatePassNo, String taxApp, String acCode, BigDecimal serviceRate, BigDecimal taxPerc, String taxId,
-			BigDecimal exRate, String serviceGroup) {
+			BigDecimal exRate, String serviceGroup, BigDecimal area) {
 		this.containerNo = containerNo;
 		this.containerSize = containerSize;
 		this.containerType = containerType;
@@ -1046,6 +1059,7 @@ public class AssessmentContainerDTO implements Cloneable {
 		this.taxId = taxId;
 		this.exRate = exRate;
 		this.serviceGroup = serviceGroup;
+		this.area = area;
 	}
 
 
@@ -1058,6 +1072,32 @@ public class AssessmentContainerDTO implements Cloneable {
 		@Override
 		public Object clone() throws CloneNotSupportedException {
 		    return super.clone();
+		}
+
+
+
+
+
+
+
+		@Override
+		public String toString() {
+			return "AssessmentContainerDTO [containerNo=" + containerNo + ", containerSize=" + containerSize
+					+ ", containerType=" + containerType + ", gateInDate=" + gateInDate + ", destuffDate=" + destuffDate
+					+ ", gateoutDate=" + gateoutDate + ", examPercentage=" + examPercentage + ", typeOfContainer="
+					+ typeOfContainer + ", scannerType=" + scannerType + ", gateOutType=" + gateOutType + ", checkDate="
+					+ checkDate + ", invoiceDate=" + invoiceDate + ", upTariffNo=" + upTariffNo + ", profitcentreId="
+					+ profitcentreId + ", serviceId=" + serviceId + ", serviceName=" + serviceName + ", rates=" + rates
+					+ ", grossWt=" + grossWt + ", cargoWt=" + cargoWt + ", ssrTransId=" + ssrTransId
+					+ ", invoiceUptoDate=" + invoiceUptoDate + ", lastInvoiceUptoDate=" + lastInvoiceUptoDate
+					+ ", serviceUnit=" + serviceUnit + ", executionUnit=" + executionUnit + ", serviceUnit1="
+					+ serviceUnit1 + ", executionUnit1=" + executionUnit1 + ", currencyId=" + currencyId
+					+ ", discPercentage=" + discPercentage + ", discValue=" + discValue + ", mPercentage=" + mPercentage
+					+ ", mAmount=" + mAmount + ", woNo=" + woNo + ", woAmndNo=" + woAmndNo + ", criteria=" + criteria
+					+ ", rangeFrom=" + rangeFrom + ", rangeTo=" + rangeTo + ", containerStatus=" + containerStatus
+					+ ", gateOutId=" + gateOutId + ", gatePassNo=" + gatePassNo + ", taxApp=" + taxApp + ", acCode="
+					+ acCode + ", serviceRate=" + serviceRate + ", taxPerc=" + taxPerc + ", taxId=" + taxId
+					+ ", exRate=" + exRate + ", serviceGroup=" + serviceGroup + ", area=" + area + "]";
 		}
 
 

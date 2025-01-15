@@ -998,6 +998,31 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 //								@Param("trans") String trans,@Param("igm") String igm,@Param("lineNo") String lineNo);
 						
 						
+//						@Query(value = "select c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo,p.profitcentreDesc,i.viaNo,i.igmDate,crg.blDate,"
+//								+ "p1.partyName,p2.partyName,crg.cargoValue,crg.cargoDuty,crg.commodityDescription,crg.importerId,crg.importerName,"
+//								+ "crg.importerSr,crg.importerAddress1,crg.importerAddress2,crg.importerAddress3,pa1.gstNo,c.cha,p3.partyName,"
+//								+ "pa2.srNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,crg.accountHolderId,crg.accountHolderName,pa3.srNo,"
+//								+ "pa3.gstNo,pa3.state,c.containerNo,c.containerSize,c.containerType,c.gateInDate,c.deStuffDate,c.gateOutDate"
+//								+ ",c.examinedPackages,c.typeOfContainer,c.scannerType,c.gateOutType,c.upTariffNo,c.profitcentreId,"
+//								+ "c.grossWt,c.cargoWt,c.ssrTransId,i.shippingAgent,i.shippingLine,c.containerStatus,c.gatePassNo,c.gateOutId,"
+//								+ "c.assesmentId,c.lastAssesmentDate,c.invoiceNo,c.invoiceDate,c.invoiceUptoDate "
+//								+ "from Cfigmcn c "
+//								+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
+//								+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+//								+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
+//								+ "LEFT OUTER JOIN Party p1 ON i.companyId=p1.companyId and i.branchId=p1.branchId and i.shippingLine=p1.partyId "
+//								+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.shippingAgent=p2.partyId "
+//								+ "LEFT OUTER JOIN PartyAddress pa1 ON crg.companyId=pa1.companyId and crg.branchId=pa1.branchId and crg.importerId=pa1.partyId and crg.importerSr=pa1.srNo "
+//								+ "LEFT OUTER JOIN Party p3 ON c.companyId=p3.companyId and c.branchId=p3.branchId and c.cha=p3.partyId "
+//								+ "LEFT OUTER JOIN PartyAddress pa2 ON p3.companyId=pa2.companyId and p3.branchId=pa2.branchId and p3.partyId=pa2.partyId and pa2.defaultChk = 'Y' "
+//								+ "LEFT OUTER JOIN PartyAddress pa3 ON crg.companyId=pa3.companyId and crg.branchId=pa3.branchId and crg.accountHolderId=pa3.partyId and pa3.defaultChk = 'Y' "
+//								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (crg.beNo is not null AND crg.beNo != '') and "
+//								+ "crg.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:lineNo and "
+//								+ "((c.containerStatus = 'FCL' AND c.containerExamStatus = 'Y') OR c.containerStatus='LCL') and (c.gateOutId is null OR c.gateOutId = '') ")
+//						List<Object[]> getBeforeSaveAssessmentData(@Param("cid") String cid, @Param("bid") String bid,
+//								@Param("trans") String trans,@Param("igm") String igm,@Param("lineNo") String lineNo);
+						
+						
 						@Query(value = "select c.igmTransId,c.igmNo,c.igmLineNo,crg.blNo,crg.beNo,p.profitcentreDesc,i.viaNo,i.igmDate,crg.blDate,"
 								+ "p1.partyName,p2.partyName,crg.cargoValue,crg.cargoDuty,crg.commodityDescription,crg.importerId,crg.importerName,"
 								+ "crg.importerSr,crg.importerAddress1,crg.importerAddress2,crg.importerAddress3,pa1.gstNo,c.cha,p3.partyName,"
@@ -1005,7 +1030,7 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								+ "pa3.gstNo,pa3.state,c.containerNo,c.containerSize,c.containerType,c.gateInDate,c.deStuffDate,c.gateOutDate"
 								+ ",c.examinedPackages,c.typeOfContainer,c.scannerType,c.gateOutType,c.upTariffNo,c.profitcentreId,"
 								+ "c.grossWt,c.cargoWt,c.ssrTransId,i.shippingAgent,i.shippingLine,c.containerStatus,c.gatePassNo,c.gateOutId,"
-								+ "c.assesmentId,c.lastAssesmentDate,c.invoiceNo,c.invoiceDate,c.invoiceUptoDate "
+								+ "c.assesmentId,c.lastAssesmentDate,c.invoiceNo,c.invoiceDate,c.invoiceUptoDate,d.areaOccupied "
 								+ "from Cfigmcn c "
 								+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
 								+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
@@ -1016,6 +1041,7 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								+ "LEFT OUTER JOIN Party p3 ON c.companyId=p3.companyId and c.branchId=p3.branchId and c.cha=p3.partyId "
 								+ "LEFT OUTER JOIN PartyAddress pa2 ON p3.companyId=pa2.companyId and p3.branchId=pa2.branchId and p3.partyId=pa2.partyId and pa2.defaultChk = 'Y' "
 								+ "LEFT OUTER JOIN PartyAddress pa3 ON crg.companyId=pa3.companyId and crg.branchId=pa3.branchId and crg.accountHolderId=pa3.partyId and pa3.defaultChk = 'Y' "
+								+ "LEFT OUTER JOIN DestuffCrg d ON c.companyId=d.companyId and c.branchId=d.branchId and c.igmTransId=d.igmTransId and c.igmNo=d.igmNo and c.igmLineNo=d.igmLineNo and c.deStuffId=d.deStuffId and d.status = 'A' "
 								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and (crg.beNo is not null AND crg.beNo != '') and "
 								+ "crg.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:lineNo and "
 								+ "((c.containerStatus = 'FCL' AND c.containerExamStatus = 'Y') OR c.containerStatus='LCL') and (c.gateOutId is null OR c.gateOutId = '') ")
