@@ -104,23 +104,29 @@ public class ImportReportsService {
 
 	    // Normalize startDate to the beginning of the day (00:00:00.000)
 	    if (startDate != null) {
-	        cal.setTime(startDate);
-	        cal.set(Calendar.HOUR_OF_DAY, 0);
-	        cal.set(Calendar.MINUTE, 0);
-	        cal.set(Calendar.SECOND, 0);
-	        cal.set(Calendar.MILLISECOND, 0);
-	        startDate = cal.getTime();
-	    }
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-	    // Normalize endDate to the end of the day (23:59:59.999)
-	    if (endDate != null) {
-	        cal.setTime(endDate);
-	        cal.set(Calendar.HOUR_OF_DAY, 23);
-	        cal.set(Calendar.MINUTE, 59);
-	        cal.set(Calendar.SECOND, 59);
-	        cal.set(Calendar.MILLISECOND, 999);
-	        endDate = cal.getTime();
-	    }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 
 	    List<Object[]> importDetails;
 
@@ -1957,7 +1963,7 @@ public class ImportReportsService {
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -10551,7 +10557,7 @@ cell.setCellStyle(cellStyle);
 			        
 
 			        Row empty = sheet.createRow(rowNum++);
-			        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+			        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 			        		
 			        Row emptyRow1 = sheet.createRow(rowNum++);
 			        
@@ -13083,7 +13089,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -13684,7 +13690,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -15124,7 +15130,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -15742,7 +15748,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -16354,7 +16360,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -16951,7 +16957,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -17545,7 +17551,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -18240,7 +18246,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -18880,7 +18886,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -19540,7 +19546,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -20202,7 +20208,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -20937,7 +20943,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -21558,7 +21564,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -22260,7 +22266,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -22508,23 +22514,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -22543,7 +22555,7 @@ cell.setCellStyle(cellStyle);
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = commonReportsRepo.findManualConContainerDetails(companyId, branchId, endDate);
+		        List<Object[]> importDetails = commonReportsRepo.findManualConContainerDetails(companyId, branchId);
 		        
 		        
 		        Sheet sheet = workbook.createSheet("Loaded Inventory Manual Report");
@@ -22864,7 +22876,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -22875,7 +22887,7 @@ cell.setCellStyle(cellStyle);
 		        // Create a row for totals
 //		        Row totalRow = sheet.createRow(rowNum+ 2);
 
-		        // Header row for summary
+		        // Header row for Summary
 		        String[] columnsHeaderSummery = {
 		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
 		        };

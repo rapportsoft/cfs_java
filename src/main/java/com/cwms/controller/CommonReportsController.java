@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cwms.entities.ContainerCountDTO;
 import com.cwms.service.CommonReportsService;
 import com.lowagie.text.DocumentException;
 
@@ -129,6 +130,19 @@ public class CommonReportsController {
 		
 		
 		return  commonReportService.getDataForPortWisePendency(companyId, branchId, startDate, endDate);
+		
+	}
+	@GetMapping("/getCFSBondingData")
+	public ResponseEntity<Map<String, Map<String, Object>>> getCFSBondingSectionData(
+			@RequestParam ("companyId") String companyId ,
+			@RequestParam ("branchId") String branchId,
+			 @RequestParam(name = "startDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+		        @RequestParam(name = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate
+			
+			) {
+		
+		
+		return  commonReportService.getCFSBondingSectionData(companyId, branchId, startDate, endDate);
 		
 	}
 	

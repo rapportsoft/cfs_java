@@ -205,7 +205,7 @@ public class ExportReportsController {
 	            
 	            
 	        case "EXPORT EMPTY IN":
-	            excelBytes = exportReportService.createExcelReportOfEmptyContainerReport(
+	            excelBytes = exportReportService.createExcelReportExportEmptyGateInInExportSection(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, sbNo, bookingNo, exporterName, accountHolder, cha, selectedReport);
 	            fileName = "Empty Container Report.xlsx";

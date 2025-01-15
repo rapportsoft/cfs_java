@@ -36,6 +36,7 @@ import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfExBondCrgRepository;
 import com.cwms.repository.CfexbondcrgEditRepository;
 import com.cwms.repository.CfinbondcrgRepo;
+import com.cwms.repository.CommonReportsRepo;
 import com.cwms.repository.CompanyRepo;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.lowagie.text.DocumentException;
@@ -62,6 +63,9 @@ public class CFSBondingReportService {
 	@Autowired
 	private CfexbondcrgEditRepository cfexbondcrgEditRepository;
 	
+	@Autowired
+	private CommonReportsRepo commonReportRepo;
+	
 	
 	
 	public ResponseEntity<List<Cfinbondcrg>> getDataOfInventoryToShow(
@@ -77,25 +81,51 @@ public class CFSBondingReportService {
         Calendar cal = Calendar.getInstance();
 
         // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+
+        
         if (startDate != null) {
             cal.setTime(startDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            startDate = cal.getTime();
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
         }
 
-        // Set endDate to 23:59 if the time component is not set
+        // Check if time component is not set (i.e., time is null or empty)
         if (endDate != null) {
             cal.setTime(endDate);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MILLISECOND, 999);
-            endDate = cal.getTime();
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
         }
-
+        
         List<Cfinbondcrg> resultData = cfinbondcrgRepo.getDataForInBondInventoryReport(companyId, branchId, startDate, endDate);
 
         if (resultData.isEmpty()) {
@@ -127,23 +157,48 @@ public class CFSBondingReportService {
         Calendar cal = Calendar.getInstance();
 
         // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+        
         if (startDate != null) {
             cal.setTime(startDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            startDate = cal.getTime();
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
         }
 
-        // Set endDate to 23:59 if the time component is not set
+        // Check if time component is not set (i.e., time is null or empty)
         if (endDate != null) {
             cal.setTime(endDate);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MILLISECOND, 999);
-            endDate = cal.getTime();
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
         }
 
 //        List<Cfinbondcrg> resultData = cfinbondcrgRepo.getDataForInBondDepositeReport(companyId, branchId, startDate,endDate,boeNo);
@@ -192,24 +247,49 @@ public class CFSBondingReportService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -739,24 +819,50 @@ public class CFSBondingReportService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		     
 		        String user = username;
@@ -1011,7 +1117,7 @@ public class CFSBondingReportService {
 		        
   System.out.println("resultData_________________"+companyId +"" +branchId +"" +boeNo);
   
-  System.out.println("resultData_________________"+companyId +"" +branchId +"" +boeNo +""+startDate +""+ endDate);
+  System.out.println("resultData_________________"+startDate +"_____________________ "+ endDate);
   
 		        // Case 1: If both startDate and endDate are null, use getDataForBondDeliveryReportWithoutDates
 		           if (startDate == null && endDate == null) {
@@ -1290,7 +1396,528 @@ public class CFSBondingReportService {
 	
 	
 	
+	public byte[] createExcelReportOfnocDepositRegister(
+			String companyId,
+			 String branchId,
+	            String username,
+	            String type,
+	            String companyname,
+	            String branchname,
+	            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+	            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+	            String boeNo
+			) throws DocumentException {
+
+		    try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy");
+
+		        String formattedStartDate = startDate != null ? dateFormatService.format(startDate) : "N/A";
+		        String formattedEndDate = endDate != null ? dateFormatService.format(endDate) : "N/A";
+
+		        Calendar cal = Calendar.getInstance();
+
+		     // Set startDate to 00:00 if the time component is not set
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
+
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
+		     
+		     
+		        String user = username;
+		        String companyName = companyname;
+		        String branchName = branchname;
+
+		        Company companyAddress = companyRepo.findByCompany_Id(companyId);
+		        Branch branchAddress = branchRepo.findByBranchId(branchId);
+
+		        String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
+		                + companyAddress.getAddress_3() + companyAddress.getCity();
+
+		        String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+		                + branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+		        double widthFactor = 1;
+		        
+//		        List<Cfinbondcrg> resultData = cfinbondcrgRepo.getDataForInBondDepositeReport(companyId, branchId, startDate,endDate,boeNo);
+
+		      
+
+		        
+
+		        
+		        Sheet sheet = workbook.createSheet("NOC Deposit Register ");
+
+		        CellStyle dateCellStyle = workbook.createCellStyle();
+		        CreationHelper createHelper = workbook.getCreationHelper();
+		        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MMM/yyyy HH:mm:ss"));
+		        dateCellStyle.setAlignment(HorizontalAlignment.CENTER);
+		        dateCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        dateCellStyle.setBorderBottom(BorderStyle.THIN);
+		        dateCellStyle.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderTop(BorderStyle.THIN);
+		        dateCellStyle.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderLeft(BorderStyle.THIN);
+		        dateCellStyle.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderRight(BorderStyle.THIN);
+		        dateCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        
+		        CellStyle dateCellStyle1 = workbook.createCellStyle();
+		        CreationHelper createHelper1 = workbook.getCreationHelper();
+		        dateCellStyle1.setDataFormat(createHelper1.createDataFormat().getFormat("dd/MMM/yyyy"));
+		        dateCellStyle1.setAlignment(HorizontalAlignment.CENTER);
+		        dateCellStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		        dateCellStyle1.setBorderBottom(BorderStyle.THIN);
+		        dateCellStyle1.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderTop(BorderStyle.THIN);
+		        dateCellStyle1.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderLeft(BorderStyle.THIN);
+		        dateCellStyle1.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderRight(BorderStyle.THIN);
+		        dateCellStyle1.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        
+		        
+		        // Create numeric format for Excel
+		        CellStyle numberCellStyle = workbook.createCellStyle();
+		        numberCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#,##0.00"));
+		        numberCellStyle.setBorderBottom(BorderStyle.THIN);
+		        numberCellStyle.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderTop(BorderStyle.THIN);
+		        numberCellStyle.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderLeft(BorderStyle.THIN);
+		        numberCellStyle.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderRight(BorderStyle.THIN);
+		        numberCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+
+		        String[] columnsHeader = {
+		        	    "SR NO", 
+		        	    "DATE", 
+		        	    "NOC No.", 
+		        	    "Importer Name", 
+		        	    "CHA Name", 
+		        	    "B/E NO.", 
+		        	    "B/E Date", 
+		        	    "Noc Package", 
+		        	    "B/E Weight", 
+		        	    "Area", 
+		        	    "Cargo Value", 
+		        	    "Duty", 
+		        	    "NOC Validity", 
+		        	    "Inbond Date", 
+		        	    "Inbond Pkg"
+		        	};
+
+
 	
+		        // Add Company Name (Centered)
+		        Row companyRow = sheet.createRow(0);
+		        Cell companyCell = companyRow.createCell(0);
+		        companyCell.setCellValue(companyName);
+
+		        // Create and style for centering
+		        CellStyle companyStyle = workbook.createCellStyle();
+		        companyStyle.setAlignment(HorizontalAlignment.CENTER);
+		        companyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font companyFont = workbook.createFont();
+		        companyFont.setBold(true);
+		        companyFont.setFontHeightInPoints((short)18);
+		        companyStyle.setFont(companyFont);
+		        companyCell.setCellStyle(companyStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+
+		        // Add Branch Address (Centered)
+		        Row branchRow = sheet.createRow(1);
+		        Cell branchCell = branchRow.createCell(0);
+		        branchCell.setCellValue(branchAdd);
+		        CellStyle branchStyle = workbook.createCellStyle();
+		        branchStyle.setAlignment(HorizontalAlignment.CENTER);
+		        branchStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font branchFont = workbook.createFont();
+		        branchFont.setFontHeightInPoints((short) 12);
+		        branchStyle.setFont(branchFont);
+		        branchCell.setCellStyle(branchStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
+
+		        
+		        Row branchRow1 = sheet.createRow(2);
+		        Cell branchCell1 = branchRow1.createCell(0);
+//		        branchCell1.setCellValue(branchAdd);
+		        CellStyle branchStyle1 = workbook.createCellStyle();
+		        branchStyle1.setAlignment(HorizontalAlignment.CENTER);
+		        branchStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font branchFont1 = workbook.createFont();
+		        branchFont1.setFontHeightInPoints((short) 12);
+		        branchStyle1.setFont(branchFont1);
+		        branchCell1.setCellStyle(branchStyle1);
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
+	
+		        // Add Report Title "Bond cargo Inventory Report"
+		        Row reportTitleRow = sheet.createRow(3);
+		        Cell reportTitleCell = reportTitleRow.createCell(0);
+		        reportTitleCell.setCellValue("NOC Deposit Register" );
+
+		        // Set alignment and merge cells for the heading
+		        CellStyle reportTitleStyle = workbook.createCellStyle();
+		        reportTitleStyle.setAlignment(HorizontalAlignment.CENTER);
+		        reportTitleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font reportTitleFont = workbook.createFont();
+		        reportTitleFont.setBold(true);
+		        reportTitleFont.setFontHeightInPoints((short) 16);
+		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
+		        reportTitleStyle.setFont(reportTitleFont);
+		        reportTitleCell.setCellStyle(reportTitleStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 7));
+		        
+		        
+		        Row reportTitleRow1 = sheet.createRow(4);
+		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
+		         if(startDate ==null && endDate ==null)
+		         {
+		        	  reportTitleCell1.setCellValue("NOC Deposit Register Report for BOE No : " + boeNo);
+		         }
+		         else
+		         {
+		        	  reportTitleCell1.setCellValue("NOC Deposit Register Report From : " + formattedStartDate + " to " + formattedEndDate);
+		         }
+		      
+
+		        // Create and set up the CellStyle for the report title
+		        CellStyle reportTitleStyle1 = workbook.createCellStyle();
+		        reportTitleStyle1.setAlignment(HorizontalAlignment.LEFT); // Set alignment
+
+		        // Create the font and set its properties
+		        Font reportTitleFont1 = workbook.createFont();
+		        reportTitleFont1.setBold(true); // Make font bold
+		        reportTitleFont1.setFontHeightInPoints((short) 12); // Set font size
+
+		        // Apply the font to the CellStyle
+		        reportTitleStyle1.setFont(reportTitleFont1);
+
+		        // Set the style to the cell
+		        reportTitleCell1.setCellStyle(reportTitleStyle1);
+		     // Create a font and set its properties
+		    
+
+		        
+		        // Set headers after the title
+		        int headerRowIndex = 6; // Adjusted for the title rows above
+		        Row headerRow = sheet.createRow(headerRowIndex);
+		        
+		        CellStyle borderStyle = workbook.createCellStyle();
+		        borderStyle.setAlignment(HorizontalAlignment.CENTER);
+		        borderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        borderStyle.setBorderBottom(BorderStyle.THIN);
+		        borderStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderTop(BorderStyle.THIN);
+		        borderStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderLeft(BorderStyle.THIN);
+		        borderStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderRight(BorderStyle.THIN);
+		        borderStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		        Font boldFont = workbook.createFont();
+		        boldFont.setBold(true);
+		        boldFont.setFontHeightInPoints((short) 16);
+
+		        for (int i = 0; i < columnsHeader.length; i++) {
+		            Cell cell = headerRow.createCell(i);
+		            cell.setCellValue(columnsHeader[i]);
+
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+					   
+			        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+			        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			        
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeader[i].length() * 306 * widthFactor);
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+
+		        // Populate data rows
+		        int rowNum = headerRowIndex + 1;
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		        BigDecimal totalNocPkg = BigDecimal.ZERO;
+		        BigDecimal totalBoeWeight = BigDecimal.ZERO;
+		        BigDecimal totalCargoValue = BigDecimal.ZERO;
+		        BigDecimal totalDuty = BigDecimal.ZERO;
+		        BigDecimal totalInbondPkg = BigDecimal.ZERO;
+		       
+		       
+		        
+  List<Object[]> resultData = commonReportRepo.findNocData(companyId, branchId, startDate, endDate);
+		        
+  System.out.println("resultData_________________"+companyId +"" +branchId +"" +boeNo);
+  
+  System.out.println("resultData_________________"+startDate +"_____________________ "+ endDate);
+  
+		        // Case 1: If both startDate and endDate are null, use getDataForBondDeliveryReportWithoutDates
+		     
+		               
+		  
+		        int serialNo = 1; // Initialize serial number counter
+		        for (Object[] resultData1 : resultData) {
+		            Row dataRow = sheet.createRow(rowNum++);
+		    
+		            int cellNum = 0;
+
+		            for (int i = 0; i < columnsHeader.length; i++) {
+		                Cell cell = dataRow.createCell(i);
+		                cell.setCellStyle(borderStyle);
+
+		                // Switch case to handle each column header
+		                switch (columnsHeader[i]) {
+		                case "SR NO":
+		                    cell.setCellValue(serialNo++); // Serial Number increment
+		                    break;
+		                case "DATE":
+		                    cell.setCellValue(resultData1[0] != null ? resultData1[0].toString() : ""); // Accessing index 0 data
+		                    break;
+		                case "NOC No.":
+		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : ""); // Accessing index 1 data
+		                    break;
+		                case "Importer Name":
+		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : ""); // Accessing index 2 data
+		                    break;
+		                case "CHA Name":
+		                    cell.setCellValue(resultData1[3] != null ? resultData1[3].toString() : ""); // Accessing index 3 data
+		                    break;
+		                case "B/E NO.":
+		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : ""); // Accessing index 4 data
+		                    break;
+		                case "B/E Date":
+		                    if (resultData1[5] != null && resultData1[5].toString() != null) {
+		                        cell.setCellValue(resultData1[5].toString());
+		                        cell.setCellStyle(dateCellStyle1); // Apply date format
+		                    } else {
+		                        cell.setBlank();
+		                    }
+		                    break;
+		                case "Noc Package":
+		                    BigDecimal nocPkg = resultData1[6] != null ? BigDecimal.valueOf(Double.parseDouble(resultData1[6].toString())) : BigDecimal.ZERO;
+		                    totalNocPkg = totalNocPkg.add(nocPkg);
+		                    cell.setCellValue(nocPkg.doubleValue());
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+		                case "B/E Weight":
+		                    BigDecimal boeWeight = resultData1[7] != null ? BigDecimal.valueOf(Double.parseDouble(resultData1[7].toString())) : BigDecimal.ZERO;
+		                    totalBoeWeight = totalBoeWeight.add(boeWeight);
+		                    cell.setCellValue(boeWeight.doubleValue());
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+		                case "Area":
+		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : ""); // Accessing index 8 data
+		                    break;
+		                case "Cargo Value":
+		                    BigDecimal cargoValue = resultData1[9] != null ? BigDecimal.valueOf(Double.parseDouble(resultData1[9].toString())) : BigDecimal.ZERO;
+		                    totalCargoValue = totalCargoValue.add(cargoValue);
+		                    cell.setCellValue(cargoValue.doubleValue());
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+		                case "Duty":
+		                    BigDecimal duty = resultData1[10] != null ? BigDecimal.valueOf(Double.parseDouble(resultData1[10].toString())) : BigDecimal.ZERO;
+		                    totalDuty = totalDuty.add(duty);
+		                    cell.setCellValue(duty.doubleValue());
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+		                case "NOC Validity":
+		                    cell.setCellValue(resultData1[11] != null ? resultData1[11].toString() : ""); // Accessing index 11 data
+		                    break;
+		                case "Inbond Date":
+		                    if (resultData1[12] != null && resultData1[12].toString() != null) {
+		                        cell.setCellValue(resultData1[12].toString());
+		                        cell.setCellStyle(dateCellStyle); // Apply date format
+		                    } else {
+		                        cell.setBlank();
+		                    }
+		                    break;
+		                case "Inbond Pkg":
+		                    BigDecimal inbondPkg = resultData1[13] != null ? BigDecimal.valueOf(Double.parseDouble(resultData1[13].toString())) : BigDecimal.ZERO;
+		                    totalInbondPkg = totalInbondPkg.add(inbondPkg);
+		                    cell.setCellValue(inbondPkg.doubleValue());
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+		                default:
+		                    cell.setCellValue(""); // Handle undefined columns if necessary
+		                    break;
+		            }
+
+
+
+		            }
+		        }
+		        
+		        
+		        
+		        
+		        
+		        
+		        
+		        
+		        // Create a row for spacing before totals
+		        Row emptyRow = sheet.createRow(rowNum++);
+		        emptyRow.createCell(0).setCellValue(""); // You can set a value or keep it blank
+
+		     // Create a row for totals
+		        Row totalRow = sheet.createRow(rowNum++);
+
+		     // Create a CellStyle for the background color
+		        CellStyle totalRowStyle = sheet.getWorkbook().createCellStyle();
+		        totalRowStyle.cloneStyleFrom(numberCellStyle); // Copy base style
+		        totalRowStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
+		        totalRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		        // Create a font for bold text
+		        Font boldFont1 = workbook.createFont();
+		        boldFont1.setBold(true);
+		        totalRowStyle.setFont(boldFont1);
+
+		        // Add "Total" label to the first cell and apply the style
+		        Cell totalLabelCell = totalRow.createCell(0);
+		        totalLabelCell.setCellValue("Total");
+		        totalLabelCell.setCellStyle(totalRowStyle); // Apply the background color and bold style
+
+		        CellStyle centerStyle = workbook.createCellStyle();
+		        centerStyle.cloneStyleFrom(totalRowStyle); // Use totalRowStyle as base (light green background)
+		        centerStyle.setAlignment(HorizontalAlignment.CENTER); // Center the text
+		        centerStyle.setVerticalAlignment(VerticalAlignment.CENTER); // Center the text vertically if necessary
+
+		     
+		        for (int i = 0; i < columnsHeader.length; i++) {
+		            Cell totalCell = totalRow.createCell(i);
+		            totalCell.setCellStyle(numberCellStyle);
+		            totalCell.setCellStyle(totalRowStyle); // Set the total row style
+		            
+		            switch (columnsHeader[i]) {
+		            
+		            case "SR NO":
+		            	 totalCell.setCellValue("Total");
+		                 totalCell.setCellStyle(centerStyle); // Apply centered style
+		            
+                    break;
+		            case "B/E Weight":
+		                    totalCell.setCellValue(totalBoeWeight.doubleValue());
+		                    break;
+		                    case "Noc Package":
+		                    totalCell.setCellValue(totalNocPkg.doubleValue());
+		                    break;
+		                    case "Cargo Value":
+		                    totalCell.setCellValue(totalCargoValue.doubleValue());
+		                    break;
+		                    case "Duty":
+		                    totalCell.setCellValue(totalDuty.doubleValue());
+		                    break;
+		                    case "Inbond Pkg":
+		                    totalCell.setCellValue(totalInbondPkg.doubleValue());
+		                    break;
+		                default:
+		                    totalCell.setCellValue(""); // Leave cells blank for non-numeric columns
+		                    break;
+		            }
+		        }
+
+		     // Set specific column widths after populating the data
+		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
+		        sheet.setColumnWidth(0,  9 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(1, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(2, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(3, 36 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(4, 36 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(5, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(6, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(7, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(8, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(9, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(10, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        
+		        sheet.setColumnWidth(11, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(12, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(13, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(14, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(15, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(16, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        sheet.setColumnWidth(19, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(20, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        
+		        sheet.setColumnWidth(21, 18 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(22, 18 * 306); // Set width for "Importer" (40 characters wide)
+
+		        
+		     // Apply autofilter to the header row
+		        sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, headerRowIndex, 0, columnsHeader.length - 1));
+
+		        // Freeze the header row
+		        sheet.createFreezePane(0, headerRowIndex + 1); // Freeze rows above the 6th row
+
+		        
+		        workbook.write(outputStream);
+		        return outputStream.toByteArray();
+
+		    } catch (IOException e) 
+		    {
+		        e.printStackTrace();
+		    }
+
+		    return null;
+	}	
 	
 	
 	
@@ -1310,23 +1937,48 @@ public class CFSBondingReportService {
 
         
         // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+        
         if (startDate != null) {
             cal.setTime(startDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            startDate = cal.getTime();
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
         }
 
-        // Set endDate to 23:59 if the time component is not set
+        // Check if time component is not set (i.e., time is null or empty)
         if (endDate != null) {
             cal.setTime(endDate);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MILLISECOND, 999);
-            endDate = cal.getTime();
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
         }
 
         List<CfExBondCrg> resultData=null;
@@ -1384,24 +2036,49 @@ public class CFSBondingReportService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		     
 		     System.out.println("companyId, branchId, startDate,endDate,boeNo,exBondBeNo________________" +companyId +" "+ branchId +" "+ startDate+" "+endDate +" "+boeNo +" "+exBondBeNo);
@@ -1935,24 +2612,50 @@ public class CFSBondingReportService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		     
 		        String user = username;
@@ -2845,23 +3548,49 @@ public class CFSBondingReportService {
         Calendar cal = Calendar.getInstance();
 
         // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+        
+        
         if (startDate != null) {
             cal.setTime(startDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            startDate = cal.getTime();
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
         }
 
-        // Set endDate to 23:59 if the time component is not set
+        // Check if time component is not set (i.e., time is null or empty)
         if (endDate != null) {
             cal.setTime(endDate);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MILLISECOND, 999);
-            endDate = cal.getTime();
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
         }
 
         List<Cfinbondcrg> resultData = cfinbondcrgRepo.getDataForExpiredBondReport(companyId, branchId, startDate,endDate);
@@ -2887,23 +3616,49 @@ public class CFSBondingReportService {
         Calendar cal = Calendar.getInstance();
 
         // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+        
+        
         if (startDate != null) {
             cal.setTime(startDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            startDate = cal.getTime();
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
         }
 
-        // Set endDate to 23:59 if the time component is not set
+        // Check if time component is not set (i.e., time is null or empty)
         if (endDate != null) {
             cal.setTime(endDate);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MILLISECOND, 999);
-            endDate = cal.getTime();
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
         }
 
         List<CfexbondcrgEdit> resultData = cfexbondcrgEditRepository.getdataForAuditTrailReport(companyId, branchId, startDate,endDate,boeNo);
@@ -2940,24 +3695,49 @@ public class CFSBondingReportService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -4142,25 +4922,50 @@ public class CFSBondingReportService {
         Calendar cal = Calendar.getInstance();
 
         // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+
+        
         if (startDate != null) {
             cal.setTime(startDate);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            startDate = cal.getTime();
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
         }
 
-        // Set endDate to 23:59 if the time component is not set
+        // Check if time component is not set (i.e., time is null or empty)
         if (endDate != null) {
             cal.setTime(endDate);
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            cal.set(Calendar.MILLISECOND, 999);
-            endDate = cal.getTime();
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
         }
-
         List<Cfinbondcrg> resultData = cfinbondcrgRepo.getDataForSection49ExpiredBondReport(companyId, branchId, startDate,endDate);
 
         if (resultData.isEmpty()) {
@@ -4801,24 +5606,49 @@ public class CFSBondingReportService {
 		        Calendar cal = Calendar.getInstance();
 
 		     // Set startDate to 00:00 if the time component is not set
-		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+//		     if (startDate != null) {
+//		         cal.setTime(startDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 0);
+//		         cal.set(Calendar.MINUTE, 0);
+//		         cal.set(Calendar.SECOND, 0);
+//		         cal.set(Calendar.MILLISECOND, 0);
+//		         startDate = cal.getTime();
+//		     }
+//
+//		     // Set endDate to 23:59 if the time component is not set
+//		     if (endDate != null) {
+//		         cal.setTime(endDate);
+//		         cal.set(Calendar.HOUR_OF_DAY, 23);
+//		         cal.set(Calendar.MINUTE, 59);
+//		         cal.set(Calendar.SECOND, 59);
+//		         cal.set(Calendar.MILLISECOND, 999);
+//		         endDate = cal.getTime();
+//		     }
+		        
+		        if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;

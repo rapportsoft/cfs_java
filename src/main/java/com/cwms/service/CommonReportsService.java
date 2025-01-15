@@ -365,6 +365,10 @@ public class CommonReportsService {
 	                String containerSize = (String) row[1]; // Container size (20, 40, etc.)
 	                String currentContainerType = (String) row[4]; // Container type from row
 
+		            if (currentContainerType == null || currentContainerType.isEmpty()) {
+		            	currentContainerType = "General"; // Default to General if container type is null or empty
+	            }
+	                
 	                // If the current container type from row matches the type we are iterating on
 	                if (containerType.equals(currentContainerType)) {
 	                    // Handle 20ft containers
@@ -706,8 +710,12 @@ public class CommonReportsService {
 	        for (Object[] row : lclDelivery) {
 	            
 	            
-	            BigDecimal qty = (BigDecimal) row[5]; // Assuming qty is at index [5]
-	            BigDecimal weight = (BigDecimal) row[6]; // Assuming weight is at index [6]
+//	            BigDecimal qty = (BigDecimal) row[5]; // Assuming qty is at index [5]
+//	            BigDecimal weight = (BigDecimal) row[6]; // Assuming weight is at index [6]
+	        	
+	        	BigDecimal qty = row[5] != null ? (BigDecimal) row[5] : BigDecimal.ZERO;
+	            BigDecimal weight = row[6] != null ? (BigDecimal) row[6] : BigDecimal.ZERO;
+
 
 	            // Use the add() method to add the values
 	            totalQty = totalQty.add(qty);
@@ -2412,15 +2420,7 @@ public class CommonReportsService {
  		        int rowNum = headerRowIndex + 1;
 
 
- 		        BigDecimal totalInbondPkgs = BigDecimal.ZERO;
- 		        BigDecimal totalInbondWeight = BigDecimal.ZERO;
- 		        BigDecimal totalInbondAssetValue = BigDecimal.ZERO;
- 		        BigDecimal totalInbondDutyValue = BigDecimal.ZERO;
- 		        BigDecimal totalBalPkgs = BigDecimal.ZERO;
- 		        BigDecimal totalBalWeight = BigDecimal.ZERO;
- 		        BigDecimal totalBalAssetValue = BigDecimal.ZERO;
- 		        BigDecimal totalBalDutyValue = BigDecimal.ZERO;
- 		        BigDecimal totalAreaBalance = BigDecimal.ZERO;
+ 		      
  		        
  		        
  		        int serialNo = 1; // Initialize serial number counter
@@ -2895,4 +2895,93 @@ public class CommonReportsService {
 
 		    return null;
 	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public ResponseEntity<Map<String, Map<String, Object>>> getCFSBondingSectionData(
+	        String companyId, String branchId,
+	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
+
+	    // Fetch data for job order and seal cutting
+	    List<Object[]> nocData = commonReportRepo.getCountAndSumOfCargoDuty(companyId, branchId, startDate, endDate);
+	    List<Object[]> inbondData = commonReportRepo.getCountAndSumOfInbond(companyId, branchId, startDate, endDate);
+	    List<Object[]> exBondData = commonReportRepo.getCountAndSumOfExbond(companyId, branchId, startDate, endDate);
+	   
+	    
+	    
+	    Map<String, Object> noc = new HashMap<>();
+	 // Process job order data
+	 if (nocData != null) {
+	     for (Object[] row : nocData) {
+	         // Handle nocCount as Long
+	         Long nocCount = row[0] != null ? ((Number) row[0]).longValue() : 0L; 
+	         
+	         // Handle dutysum as BigDecimal or Long and convert to BigDecimal
+	         BigDecimal dutysum = row[1] != null 
+	             ? (row[1] instanceof BigDecimal ? (BigDecimal) row[1] : BigDecimal.valueOf(((Number) row[1]).longValue())) 
+	             : BigDecimal.ZERO;
+
+	         noc.put("nocCount", nocCount);
+	         noc.put("dutysum", dutysum);
+	     }
+	 }
+
+
+	    noc.put("name", "CFS NOC");
+	   
+
+	    // Initialize container counts for seal cutting
+	    Map<String, Object> inbond = new HashMap<>();
+	    // Process seal cutting data (corrected loop)
+	    if (inbondData != null) {
+	        for (Object[] row : inbondData) { // Corrected: use sealCutting instead of joGateIn
+	        	  Long nocCount = row[0] != null ? ((Number) row[0]).longValue() : 0L; 
+	 	         
+	 	         // Handle dutysum as BigDecimal or Long and convert to BigDecimal
+	 	         BigDecimal dutysum = row[1] != null 
+	 	             ? (row[1] instanceof BigDecimal ? (BigDecimal) row[1] : BigDecimal.valueOf(((Number) row[1]).longValue())) 
+	 	             : BigDecimal.ZERO;
+
+	 	        inbond.put("nocCount", nocCount);
+	 	       inbond.put("dutysum", dutysum);
+	        }
+	    }
+	    inbond.put("name", "INBOND DATA");
+	    
+	    
+	    Map<String, Object> exbond = new HashMap<>();
+	    // Process seal cutting data (corrected loop)
+	    if (exBondData != null) {
+	        for (Object[] row : exBondData) { // Corrected: use sealCutting instead of joGateIn
+	        	  Long nocCount = row[0] != null ? ((Number) row[0]).longValue() : 0L; 
+	 	         
+	 	         // Handle dutysum as BigDecimal or Long and convert to BigDecimal
+	 	         BigDecimal dutysum = row[1] != null 
+	 	             ? (row[1] instanceof BigDecimal ? (BigDecimal) row[1] : BigDecimal.valueOf(((Number) row[1]).longValue())) 
+	 	             : BigDecimal.ZERO;
+
+	 	        exbond.put("nocCount", nocCount);
+	 	       exbond.put("dutysum", dutysum);
+	        }
+	    }
+	    exbond.put("name", "EXBOND DATA");
+	    
+	    // Combine results
+	    Map<String, Map<String, Object>> result = new HashMap<>();
+	    result.put("noc", noc);
+	    result.put("inbond", inbond);
+	    result.put("exbond", exbond);
+
+//	    result.put("exportCarting", exportCarting);
+
+	    return ResponseEntity.ok(result);
+	}
 }

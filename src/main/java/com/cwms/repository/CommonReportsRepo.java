@@ -1,5 +1,6 @@
 package com.cwms.repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -1132,6 +1133,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                    "    AND b.gate_in_id != '' " +
             	                    "    AND c.status = 'A' " +
             	                    "    AND d.status = 'A' " +
+//            	                    "    AND b.Type_of_Container!='' " +
             	                    "GROUP BY " +
             	                    "    b.container_no, " +
             	                    "    b.igm_no " +
@@ -1834,6 +1836,50 @@ List<Object[]> findLCLCargoDelivered(@Param("companyId") String companyId,
 
 
 @Query(value = 
+" SELECT DISTINCT " +
+"     a.container_no, " +
+"     a.container_size, " +
+"     a.container_type, " +
+"     DATE_FORMAT(a.in_Gate_In_Date, '%d %b %Y %H:%i') AS inDate, " +
+"     p.party_name, " +
+"     n.CUSTOMER_CODE AS agentCode, " +
+"     p.CUSTOMER_CODE AS lineCode, " +
+"     c.Port AS origin, " +
+"     a.Comments " +
+" FROM cfgatein a " +
+" LEFT OUTER JOIN party p " +
+"     ON p.company_id = a.company_id " +
+"     AND a.sa = p.party_id " +
+"     AND p.branch_id = a.branch_id " +
+" LEFT OUTER JOIN cfigm c " +
+"     ON c.company_id = a.company_id " +
+"     AND c.branch_id = a.branch_id " +
+"     AND a.Profitcentre_Id = c.Profitcentre_Id " +
+"     AND a.VIA_NO = c.VIA_NO " +
+"     AND a.Doc_Ref_Date = c.Doc_Date " +
+"     AND a.profitcentre_id = c.profitcentre_id " +
+" LEFT OUTER JOIN party n " +
+"     ON a.company_id = n.company_id " +
+"     AND a.sl = n.party_id " +
+"     AND a.branch_id = n.branch_id " +
+" WHERE a.company_id = :companyId " +
+"   AND a.branch_id = :branchId " +
+"   AND a.status = 'A' " +
+"   AND a.Profitcentre_Id = 'N00004' " +
+"   AND a.Gate_In_Type = 'COM' " +
+"   AND a.Process_Id = 'P00219' " +
+"   AND a.in_Gate_In_Date BETWEEN :startDate AND :endDate ", 
+nativeQuery = true)
+List<Object[]> getExportEmptyContainerGateInDetails(
+@Param("companyId") String companyId,
+@Param("branchId") String branchId,
+@Param("startDate") Date startDate,
+@Param("endDate") Date endDate
+);
+
+
+
+@Query(value = 
 "SELECT " + 
 "b.Gate_In_Type, " + 
 "'', '', " + 
@@ -2128,7 +2174,7 @@ List<Object[]> findExportLDDPendencyContainerDetails(
 	       "DATE_FORMAT(i.Stuff_Date, '%d %b %Y %H:%i'), a.Comments " +
 	       "FROM cfstufftally i " +
 	       "LEFT OUTER JOIN cfgatein a ON i.Company_Id = a.Company_Id AND i.Branch_id = a.Branch_id AND i.Container_no = a.Container_no " +
-	       "AND i.Profitcentre_Id = a.Profitcentre_Id AND DATE_FORMAT(i.Period_From, '%d %b %Y') = DATE_FORMAT(a.in_gate_in_date, '%d %b %Y') " +
+	       "AND i.Profitcentre_Id = a.Profitcentre_Id AND i.gate_In_id =a.gate_in_id " +
 	       "LEFT OUTER JOIN cfsb b ON a.company_id = b.company_id AND b.SB_Trans_Id = a.erp_doc_ref_no AND a.Branch_Id = b.Branch_Id " +
 	       "LEFT OUTER JOIN party p ON p.company_id = a.company_id AND a.sa = p.party_id AND p.branch_id = a.branch_id " +
 	       "LEFT OUTER JOIN cfigm c ON c.company_id = b.company_id AND c.branch_id = b.branch_id AND a.Profitcentre_Id = c.Profitcentre_Id " +
@@ -2148,71 +2194,196 @@ List<Object[]> findExportLDDPendencyContainerDetails(
 		    @Param("startDate") Date startDate,
 		    @Param("endDate") Date endDate);
 	
-	@Query(value = "SELECT DISTINCT " +
-            "    b.container_no, " +
-            "    b.container_size, " +
-            "    b.container_type, " +
-            "    q.customer_code, " +
-            "    q.party_name, " +
-            "    b.Type_of_Container, " +
-            "    b.Hold_Status, " +
-            "    b.REFER, " +
-            "    DATE_FORMAT(b.Gate_in_Date, '%d %b %Y %T') AS gateInDate, " +
-            "    ch.party_name AS chaName, " +
-            "    d.importer_name " +
-            "FROM " +
-            "    cfigmcn b " +
-            "LEFT OUTER JOIN cfigm c " +
-            "    ON c.igm_trans_id = b.igm_trans_id " +
-            "    AND c.igm_no = b.igm_no " +
-            "    AND c.company_id = b.company_id " +
-            "    AND c.branch_id = b.branch_id " +
-            "    AND c.profitcentre_id = b.profitcentre_id " +
-            "LEFT OUTER JOIN cfigmcrg d " +
-            "    ON d.igm_trans_id = b.igm_trans_id " +
-            "    AND d.igm_no = b.igm_no " +
-            "    AND d.company_id = b.company_id " +
-            "    AND d.branch_id = b.branch_id " +
-            "    AND d.profitcentre_id = b.profitcentre_id " +
-            "    AND d.igm_line_no = b.igm_line_no " +
-            "LEFT OUTER JOIN vessel v " +
-            "    ON c.company_id = v.company_id " +
-            "    AND c.vessel_id = v.vessel_id " +
-            "    AND c.branch_id = v.branch_id " +
-            "LEFT OUTER JOIN party p " +
-            "    ON c.company_id = p.company_id " +
-            "    AND c.shipping_line = p.party_id " +
-            "    AND c.branch_id = p.branch_id " +
-            "LEFT OUTER JOIN party q " +
-            "    ON c.company_id = q.company_id " +
-            "    AND c.shipping_Agent = q.party_id " +
-            "    AND c.branch_id = q.branch_id " +
-            "LEFT OUTER JOIN party ch " +
-            "    ON b.company_id = ch.company_id " +
-            "    AND b.CHA = ch.party_id " +
-            "    AND b.branch_id = ch.branch_id " +
-            "WHERE " +
-            "    b.company_id = :companyId " +
-            "    AND b.branch_id = :branchId " +
-            "    AND b.status = 'A' " +
-            "    AND b.profitcentre_id = 'N00002' " +
-            "    AND b.Gate_In_Date < :date " +
-            "    AND (b.gate_out_id = '' OR b.gate_out_date > :date) " +
-            "    AND (b.de_stuff_id = '' OR b.de_stuff_Date > :date) " +
-            "    AND b.gate_in_id != '' " +
-            "    AND c.status = 'A' " +
-            "    AND d.status = 'A' " +
-            "    AND b.Type_of_Container ='Manual' " +
-            "GROUP BY " +
-            "    b.container_no, " +
-            "    b.igm_no " +
-            "ORDER BY " +
-            "    b.Gate_in_Date", 
-     nativeQuery = true)
+//	@Query(value = "SELECT DISTINCT " +
+//            "    b.container_no, " +
+//            "    b.container_size, " +
+//            "    b.container_type, " +
+//            "    q.customer_code, " +
+//            "    q.party_name, " +
+//            "    b.Type_of_Container, " +
+//            "    b.Hold_Status, " +
+//            "    b.REFER, " +
+//            "    DATE_FORMAT(b.Gate_in_Date, '%d %b %Y %T') AS gateInDate, " +
+//            "    ch.party_name AS chaName, " +
+//            "    d.importer_name " +
+//            "FROM " +
+//            "    cfigmcn b " +
+//            "LEFT OUTER JOIN cfigm c " +
+//            "    ON c.igm_trans_id = b.igm_trans_id " +
+//            "    AND c.igm_no = b.igm_no " +
+//            "    AND c.company_id = b.company_id " +
+//            "    AND c.branch_id = b.branch_id " +
+//            "    AND c.profitcentre_id = b.profitcentre_id " +
+//            "LEFT OUTER JOIN cfigmcrg d " +
+//            "    ON d.igm_trans_id = b.igm_trans_id " +
+//            "    AND d.igm_no = b.igm_no " +
+//            "    AND d.company_id = b.company_id " +
+//            "    AND d.branch_id = b.branch_id " +
+//            "    AND d.profitcentre_id = b.profitcentre_id " +
+//            "    AND d.igm_line_no = b.igm_line_no " +
+//            "LEFT OUTER JOIN vessel v " +
+//            "    ON c.company_id = v.company_id " +
+//            "    AND c.vessel_id = v.vessel_id " +
+//            "    AND c.branch_id = v.branch_id " +
+//            "LEFT OUTER JOIN party p " +
+//            "    ON c.company_id = p.company_id " +
+//            "    AND c.shipping_line = p.party_id " +
+//            "    AND c.branch_id = p.branch_id " +
+//            "LEFT OUTER JOIN party q " +
+//            "    ON c.company_id = q.company_id " +
+//            "    AND c.shipping_Agent = q.party_id " +
+//            "    AND c.branch_id = q.branch_id " +
+//            "LEFT OUTER JOIN party ch " +
+//            "    ON b.company_id = ch.company_id " +
+//            "    AND b.CHA = ch.party_id " +
+//            "    AND b.branch_id = ch.branch_id " +
+//            "WHERE " +
+//            "    b.company_id = :companyId " +
+//            "    AND b.branch_id = :branchId " +
+//            "    AND b.status = 'A' " +
+//            "    AND b.profitcentre_id = 'N00002' " +
+//            "    AND b.Gate_In_Date < :date " +
+//            "    AND (b.gate_out_id = '' OR b.gate_out_date > :date) " +
+//            "    AND (b.de_stuff_id = '' OR b.de_stuff_Date > :date) " +
+//            "    AND b.gate_in_id != '' " +
+//            "    AND c.status = 'A' " +
+//            "    AND d.status = 'A' " +
+//            "    AND b.Type_of_Container ='Manual' " +
+//            "GROUP BY " +
+//            "    b.container_no, " +
+//            "    b.igm_no " +
+//            "ORDER BY " +
+//            "    b.Gate_in_Date", 
+//     nativeQuery = true)
+//List<Object[]> findManualConContainerDetails(
+// @Param("companyId") String companyId, 
+// @Param("branchId") String branchId, 
+// @Param("date") Date date
+//);
+
+	
+	
+	
+	
+	
+@Query(value = "SELECT DISTINCT " + 
+        "a.container_no, " + 
+        "a.container_size, " + 
+        "a.container_type, " + 
+        "'Manual' AS agentName, " + 
+        "'Manual' AS line, " + 
+        "'Manual' AS agentCode, " + 
+        "'Manual' AS origin, " + 
+        "'Manual' AS remark, " + 
+        "DATE_FORMAT(a.in_Gate_in_Date, '%d %b %Y %H:%i') AS inDate, " + 
+        "'Manual' AS vessel, " + 
+        "'Manual' AS pod " + 
+        "FROM cfgatein a " + 
+        "WHERE " + 
+        "a.company_id = :companyId " + 
+        "AND a.branch_id = :branchId " + 
+        "AND a.Process_Id ='P00203' " + 
+        "ORDER BY a.in_Gate_in_Date", 
+       nativeQuery = true)
 List<Object[]> findManualConContainerDetails(
- @Param("companyId") String companyId, 
- @Param("branchId") String branchId, 
- @Param("date") Date date
+    @Param("companyId") String companyId,
+    @Param("branchId") String branchId
 );
+
+//@Query("SELECT COALESCE(SUM(c.inBondPackages), 0) FROM CfInBondGrid c " +
+//	       "WHERE c.companyId = :companyId " +
+//	       "AND c.branchId = :branchId " +
+//	       "AND c.status != 'D' " +
+//	       "AND c.inBondingId = :inBondingId " +
+//	       "AND c.nocTransId = :nocTransId")
+//BigDecimal  getCOuntOfNoc(@Param("companyId") String companyId,
+//	                            @Param("branchId") String branchId,
+//	                            @Param("inBondingId") String inBondingId,
+//	                            @Param("nocTransId") String nocTransId);
+
+
+@Query(value="SELECT COUNT(c.noc_Trans_Id), COALESCE(SUM(c.cargo_Duty), 0) FROM cfbondnoc c " +
+	       "WHERE c.company_Id = :companyId " +
+	       "AND c.branch_Id = :branchId " +
+	       "AND c.status = 'A' " +
+	       "AND c.noc_Trans_Date BETWEEN :startDate AND :endDate",nativeQuery = true)
+	List<Object[]> getCountAndSumOfCargoDuty(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("startDate") Date startDate,
+	    @Param("endDate") Date endDate
+	);
+	
+	@Query(value="SELECT COUNT(c.In_Bonding_Id), COALESCE(SUM(c.cargo_Duty), 0) FROM cfinbondcrg c " +
+		       "WHERE c.company_Id = :companyId " +
+		       "AND c.branch_Id = :branchId " +
+		       "AND c.status = 'A' " +
+		       "AND c.In_Bonding_Date BETWEEN :startDate AND :endDate",nativeQuery = true)
+		List<Object[]> getCountAndSumOfInbond(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("startDate") Date startDate,
+		    @Param("endDate") Date endDate
+		);
+
+		
+		
+		@Query(value="SELECT COUNT(c.Ex_Bonding_Id), COALESCE(SUM(c.Ex_Bonded_Cargo_Duty), 0) FROM cfexbondcrg c " +
+			       "WHERE c.company_Id = :companyId " +
+			       "AND c.branch_Id = :branchId " +
+			       "AND c.status = 'A' " +
+			       "AND c.Ex_Bonding_Date BETWEEN :startDate AND :endDate",nativeQuery = true)
+			List<Object[]> getCountAndSumOfExbond(
+			    @Param("companyId") String companyId,
+			    @Param("branchId") String branchId,
+			    @Param("startDate") Date startDate,
+			    @Param("endDate") Date endDate
+			);
+			
+			
+			
+			
+			
+			
+			
+			@Query(value = 
+				    "SELECT " + 
+				    		 "DATE_FORMAT(a.NOC_Date, '%d-%b-%Y %H:%i') AS NOC_Date, " + 
+				    "a.NOC_No, " + 
+				    "a.importer_name, " + 
+				    "p.party_name, " + 
+				    "a.BOE_No, " + 
+				    "DATE_FORMAT(a.boe_date, '%d-%b-%Y %H:%i') AS boe_date, " + 
+				    "a.NOC_Packages, " + 
+				    "a.Gross_Weight, " + 
+				    "a.Area, " + 
+				    "a.cif_value, " + 
+				    "a.cargo_duty, " + 
+				    "DATE_FORMAT(a.NOC_Validity_Date, '%d-%b-%Y %H:%i') AS NOC_Validity_Date, " + 
+				    "DATE_FORMAT(b.In_Bonding_Date,'%d-%b-%Y %H:%i' )," + 
+				    "b.in_Bonded_Packages " + 
+				    "FROM cfbondnoc a " + 
+				    "LEFT OUTER JOIN cfinbondcrg b " + 
+				    "ON a.company_id = b.company_Id " + 
+				    "AND a.Branch_Id = b.Branch_Id " + 
+				    "AND a.NOC_Trans_Id = b.NOC_Trans_Id " + 
+				    "LEFT OUTER JOIN party p " + 
+				    "ON a.company_id = p.company_Id " + 
+				    "AND a.cha = p.party_id " + 
+				    "AND a.branch_id = p.branch_id " + 
+				    "WHERE " + 
+				    "a.Company_Id = :companyId " + 
+				    "AND a.Branch_Id = :branchId " + 
+				    "AND a.status = 'A' " + 
+				    "AND b.Status = 'A' " + 
+				    "AND a.Noc_Trans_Date BETWEEN :startDate AND :endDate " + 
+				    "ORDER BY a.Noc_Trans_Date", 
+				    nativeQuery = true)
+				List<Object[]> findNocData(
+				        @Param("companyId") String companyId,
+				        @Param("branchId") String branchId,
+				        @Param("startDate") Date startDate,
+				        @Param("endDate") Date endDate
+				);
 
 }

@@ -111,24 +111,49 @@ public class ExportReportsServiceReports {
 	    Calendar cal = Calendar.getInstance();
 
 	    // Normalize startDate to the beginning of the day (00:00:00.000)
+//	    if (startDate != null) {
+//	        cal.setTime(startDate);
+//	        cal.set(Calendar.HOUR_OF_DAY, 0);
+//	        cal.set(Calendar.MINUTE, 0);
+//	        cal.set(Calendar.SECOND, 0);
+//	        cal.set(Calendar.MILLISECOND, 0);
+//	        startDate = cal.getTime();
+//	    }
+//
+//	    // Normalize endDate to the end of the day (23:59:59.999)
+//	    if (endDate != null) {
+//	        cal.setTime(endDate);
+//	        cal.set(Calendar.HOUR_OF_DAY, 23);
+//	        cal.set(Calendar.MINUTE, 59);
+//	        cal.set(Calendar.SECOND, 59);
+//	        cal.set(Calendar.MILLISECOND, 999);
+//	        endDate = cal.getTime();
+//	    }
+	    
 	    if (startDate != null) {
-	        cal.setTime(startDate);
-	        cal.set(Calendar.HOUR_OF_DAY, 0);
-	        cal.set(Calendar.MINUTE, 0);
-	        cal.set(Calendar.SECOND, 0);
-	        cal.set(Calendar.MILLISECOND, 0);
-	        startDate = cal.getTime();
-	    }
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
 
-	    // Normalize endDate to the end of the day (23:59:59.999)
-	    if (endDate != null) {
-	        cal.setTime(endDate);
-	        cal.set(Calendar.HOUR_OF_DAY, 23);
-	        cal.set(Calendar.MINUTE, 59);
-	        cal.set(Calendar.SECOND, 59);
-	        cal.set(Calendar.MILLISECOND, 999);
-	        endDate = cal.getTime();
-	    }
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
 
 	    List<Object[]> importDetails;
 
@@ -253,23 +278,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -893,23 +924,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -1370,23 +1407,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -1914,23 +1957,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -2488,23 +2537,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        String user = username;
 		        String companyName = companyname;
@@ -2990,23 +3045,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -3448,23 +3509,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -3873,23 +3940,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -4457,23 +4530,29 @@ public class ExportReportsServiceReports {
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -4988,23 +5067,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -5512,23 +5597,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -5912,23 +6003,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -6398,23 +6495,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -6781,7 +6884,7 @@ cell.setCellStyle(cellStyle);
 			        
 
 			        Row empty = sheet.createRow(rowNum++);
-			        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+			        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 			        		
 			        Row emptyRow1 = sheet.createRow(rowNum++);
 			        
@@ -7012,23 +7115,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -7491,7 +7600,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -7728,23 +7837,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -8160,7 +8275,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -8405,23 +8520,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -8759,7 +8880,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -8978,23 +9099,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -9343,7 +9470,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -9573,23 +9700,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -9926,7 +10059,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -10166,23 +10299,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -10569,7 +10708,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -10801,23 +10940,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -11205,7 +11350,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank	
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank	
 		        		
 		        Row emptyRow1 = sheet.createRow(rowNum++);
 		        
@@ -11438,23 +11583,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -11935,7 +12086,7 @@ cell.setCellStyle(cellStyle);
 //		        
 //
 //		        Row empty = sheet.createRow(rowNum++);
-//		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+//		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 //		        
 //		        		
 //		        		
@@ -12185,23 +12336,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -12682,7 +12839,7 @@ cell.setCellStyle(cellStyle);
 //		        
 //
 //		        Row empty = sheet.createRow(rowNum++);
-//		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+//		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 //		        
 //		        		
 //		        		
@@ -12932,23 +13089,29 @@ cell.setCellStyle(cellStyle);
 
 		     // Set startDate to 00:00 if the time component is not set
 		     if (startDate != null) {
-		         cal.setTime(startDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 0);
-		         cal.set(Calendar.MINUTE, 0);
-		         cal.set(Calendar.SECOND, 0);
-		         cal.set(Calendar.MILLISECOND, 0);
-		         startDate = cal.getTime();
-		     }
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
 
-		     // Set endDate to 23:59 if the time component is not set
-		     if (endDate != null) {
-		         cal.setTime(endDate);
-		         cal.set(Calendar.HOUR_OF_DAY, 23);
-		         cal.set(Calendar.MINUTE, 59);
-		         cal.set(Calendar.SECOND, 59);
-		         cal.set(Calendar.MILLISECOND, 999);
-		         endDate = cal.getTime();
-		     }
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
 		     
 		        
 		        String user = username;
@@ -13395,7 +13558,7 @@ cell.setCellStyle(cellStyle);
 		        
 
 		        Row empty = sheet.createRow(rowNum++);
-		        empty.createCell(0).setCellValue("Summery"); // You can set a value or keep it blank
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
 		        
 		        		
 		        		
@@ -14023,7 +14186,7 @@ cell.setCellStyle(cellStyle);
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Shipping Agent Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Shipping Agent Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -14833,7 +14996,7 @@ cell.setCellStyle(cellStyle);
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Shipping Agent Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Shipping Agent Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -15192,6 +15355,608 @@ cell.setCellStyle(cellStyle);
  		        catch (IOException e) {
  		        e.printStackTrace();
  		    }
+		    return null;
+	}	
+	
+	
+	
+	
+	public byte[] createExcelReportExportEmptyGateInInExportSection(String companyId,
+		    String branchId, String username, String type, String companyname,
+		    String branchname,
+		    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+	        String igmNo,
+	        String itemNo,
+	        String sl,
+	        String acc,
+	        String cha,
+	        String selectedReport
+			) throws DocumentException {
+		    try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
+		    {
+		    	System.out.println("startDate_______________________"+startDate);
+		    	
+		    	
+		    	System.out.println("endDate_______________________"+endDate);
+		    	
+		    	
+		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		        String formattedStartDate = startDate != null ? dateFormatService.format(startDate) : "N/A";
+		        String formattedEndDate = endDate != null ? dateFormatService.format(endDate) : "N/A";
+
+		        Calendar cal = Calendar.getInstance();
+
+		     // Set startDate to 00:00 if the time component is not set
+		     if (startDate != null) {
+		            cal.setTime(startDate);
+		            // If the time is at the default 00:00:00, reset it to 00:00:00
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+		                cal.set(Calendar.HOUR_OF_DAY, 0);
+		                cal.set(Calendar.MINUTE, 0);
+		                cal.set(Calendar.SECOND, 0);
+		                cal.set(Calendar.MILLISECOND, 0);
+		                startDate = cal.getTime();
+		            }
+		        }
+
+		        // Check if time component is not set (i.e., time is null or empty)
+		        if (endDate != null) {
+		            cal.setTime(endDate);
+		            // If the time is at the default 23:59:59, reset it to 23:59:59
+		            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+		                cal.set(Calendar.HOUR_OF_DAY, 23);
+		                cal.set(Calendar.MINUTE, 59);
+		                cal.set(Calendar.SECOND, 59);
+		                cal.set(Calendar.MILLISECOND, 999);
+		                endDate = cal.getTime();
+		            }
+		        }
+		     
+		        
+		        String user = username;
+		        String companyName = companyname;
+		        String branchName = branchname;
+
+		        Company companyAddress = companyRepo.findByCompany_Id(companyId);
+		        Branch branchAddress = branchRepo.findByBranchId(branchId);
+
+		        String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
+		                + companyAddress.getAddress_3() + companyAddress.getCity();
+
+		        String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
+		                + branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
+
+		        double widthFactor = 1;
+
+		        
+		        List<Object[]> importDetails = commonReportsRepo.getExportEmptyContainerGateInDetails(companyId, branchId,startDate, endDate);
+		        
+		        
+		        Sheet sheet = workbook.createSheet("Export Empty Gate In Report");
+
+		        CellStyle dateCellStyle = workbook.createCellStyle();
+		        CreationHelper createHelper = workbook.getCreationHelper();
+		        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MMM/yyyy HH:mm:ss"));
+		        dateCellStyle.setAlignment(HorizontalAlignment.CENTER);
+		        dateCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        dateCellStyle.setBorderBottom(BorderStyle.THIN);
+		        dateCellStyle.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderTop(BorderStyle.THIN);
+		        dateCellStyle.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderLeft(BorderStyle.THIN);
+		        dateCellStyle.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle.setBorderRight(BorderStyle.THIN);
+		        dateCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        
+		        CellStyle dateCellStyle1 = workbook.createCellStyle();
+		        CreationHelper createHelper1 = workbook.getCreationHelper();
+		        dateCellStyle1.setDataFormat(createHelper1.createDataFormat().getFormat("dd/MMM/yyyy"));
+		        dateCellStyle1.setAlignment(HorizontalAlignment.CENTER);
+		        dateCellStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		        dateCellStyle1.setBorderBottom(BorderStyle.THIN);
+		        dateCellStyle1.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderTop(BorderStyle.THIN);
+		        dateCellStyle1.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderLeft(BorderStyle.THIN);
+		        dateCellStyle1.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        dateCellStyle1.setBorderRight(BorderStyle.THIN);
+		        dateCellStyle1.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        
+		        
+		        // Create numeric format for Excel
+		        CellStyle numberCellStyle = workbook.createCellStyle();
+		        numberCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#,##0.00"));
+		        numberCellStyle.setBorderBottom(BorderStyle.THIN);
+		        numberCellStyle.setBottomBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderTop(BorderStyle.THIN);
+		        numberCellStyle.setTopBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderLeft(BorderStyle.THIN);
+		        numberCellStyle.setLeftBorderColor(IndexedColors.DARK_BLUE.getIndex());
+		        numberCellStyle.setBorderRight(BorderStyle.THIN);
+		        numberCellStyle.setRightBorderColor(IndexedColors.DARK_BLUE.getIndex());
+
+		        
+
+		        String[] columnsHeader = {
+		        	    "Sr No",            // Serial Number
+		        	    "Container No",      // Container Number
+		        	    "Size",              // Size of Container
+		        	    "Container Type",           // Container Type
+		        	    "In Date",           // Date of Entry
+		        	    "Agent Name",         // Name of Agent
+		        	    "Line Code",              // Line Information
+		        	    "Agent Code",           // Agent Code
+		        	    "Origin",            // Origin Information
+		        	    "Remark"             // Remarks
+		        	};
+
+
+
+
+
+
+	
+		        // Add Company Name (Centered)
+		        Row companyRow = sheet.createRow(0);
+		        Cell companyCell = companyRow.createCell(0);
+		        companyCell.setCellValue(companyName);
+
+		        // Create and style for centering
+		        CellStyle companyStyle = workbook.createCellStyle();
+		        companyStyle.setAlignment(HorizontalAlignment.CENTER);
+		        companyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font companyFont = workbook.createFont();
+		        companyFont.setBold(true);
+		        companyFont.setFontHeightInPoints((short)18);
+		        companyStyle.setFont(companyFont);
+		        companyCell.setCellStyle(companyStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+
+		        // Add Branch Address (Centered)
+		        Row branchRow = sheet.createRow(1);
+		        Cell branchCell = branchRow.createCell(0);
+		        branchCell.setCellValue(branchAdd);
+		        CellStyle branchStyle = workbook.createCellStyle();
+		        branchStyle.setAlignment(HorizontalAlignment.CENTER);
+		        branchStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font branchFont = workbook.createFont();
+		        branchFont.setFontHeightInPoints((short) 12);
+		        branchStyle.setFont(branchFont);
+		        branchCell.setCellStyle(branchStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 6));
+
+		        
+		        Row branchRow1 = sheet.createRow(2);
+		        Cell branchCell1 = branchRow1.createCell(0);
+//		        branchCell1.setCellValue(branchAdd);
+		        CellStyle branchStyle1 = workbook.createCellStyle();
+		        branchStyle1.setAlignment(HorizontalAlignment.CENTER);
+		        branchStyle1.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font branchFont1 = workbook.createFont();
+		        branchFont1.setFontHeightInPoints((short) 12);
+		        branchStyle1.setFont(branchFont1);
+		        branchCell1.setCellStyle(branchStyle1);
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 6));
+	
+		        // Add Report Title "Bond cargo Inventory Report"
+		        Row reportTitleRow = sheet.createRow(3);
+		        Cell reportTitleCell = reportTitleRow.createCell(0);
+		        reportTitleCell.setCellValue("Export Empty Gate In Report" );
+
+		        // Set alignment and merge cells for the heading
+		        CellStyle reportTitleStyle = workbook.createCellStyle();
+		        reportTitleStyle.setAlignment(HorizontalAlignment.CENTER);
+		        reportTitleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        Font reportTitleFont = workbook.createFont();
+		        reportTitleFont.setBold(true);
+		        reportTitleFont.setFontHeightInPoints((short) 16);
+		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
+		        reportTitleStyle.setFont(reportTitleFont);
+		        reportTitleCell.setCellStyle(reportTitleStyle);
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 6));
+		        		        
+		        Row reportTitleRow1 = sheet.createRow(4);
+		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
+		        if(formattedStartDate.equals("N/A"))
+		        {
+		        	 reportTitleCell1.setCellValue("Export Empty Gate In Report As On Date : " + formattedEndDate);
+		        }
+		        else 
+		        {
+		        	 reportTitleCell1.setCellValue("Export Empty Gate In Report From : " + formattedStartDate + " to " + formattedEndDate);
+		        }
+		       
+
+		        // Create and set up the CellStyle for the report title
+		        CellStyle reportTitleStyle1 = workbook.createCellStyle();
+		        reportTitleStyle1.setAlignment(HorizontalAlignment.LEFT); // Set alignment
+
+		        // Create the font and set its properties
+		        Font reportTitleFont1 = workbook.createFont();
+		        reportTitleFont1.setBold(true); // Make font bold
+		        reportTitleFont1.setFontHeightInPoints((short) 12); // Set font size
+
+		        // Apply the font to the CellStyle
+		        reportTitleStyle1.setFont(reportTitleFont1);
+
+		        // Set the style to the cell
+		        reportTitleCell1.setCellStyle(reportTitleStyle1);
+		     // Create a font and set its properties
+		    
+
+		        
+		        // Set headers after the title
+		        int headerRowIndex = 6; // Adjusted for the title rows above
+		        Row headerRow = sheet.createRow(headerRowIndex);
+		        
+		        CellStyle borderStyle = workbook.createCellStyle();
+		        borderStyle.setAlignment(HorizontalAlignment.CENTER);
+		        borderStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		        borderStyle.setBorderBottom(BorderStyle.THIN);
+		        borderStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderTop(BorderStyle.THIN);
+		        borderStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderLeft(BorderStyle.THIN);
+		        borderStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		        borderStyle.setBorderRight(BorderStyle.THIN);
+		        borderStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		        Font boldFont = workbook.createFont();
+		        boldFont.setBold(true);
+		        boldFont.setFontHeightInPoints((short) 16);
+
+		        for (int i = 0; i < columnsHeader.length; i++) 
+		        {
+		            Cell cell = headerRow.createCell(i);
+		            cell.setCellValue(columnsHeader[i]);
+
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            
+		
+			        
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		            
+		            
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+					   
+			        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+			        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeader[i].length() * 360 * widthFactor);
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+		        
+		        
+
+		        // Populate data rows
+		        int rowNum = headerRowIndex + 1;
+
+
+		        BigDecimal totalInbondPkgs = BigDecimal.ZERO;
+		        BigDecimal totalInbondWeight = BigDecimal.ZERO;
+		        BigDecimal totalInbondAssetValue = BigDecimal.ZERO;
+		        BigDecimal totalInbondDutyValue = BigDecimal.ZERO;
+		        BigDecimal totalBalPkgs = BigDecimal.ZERO;
+		        BigDecimal totalBalWeight = BigDecimal.ZERO;
+		        BigDecimal totalBalAssetValue = BigDecimal.ZERO;
+		        BigDecimal totalBalDutyValue = BigDecimal.ZERO;
+		        BigDecimal totalAreaBalance = BigDecimal.ZERO;
+		        
+		        
+		        int serialNo = 1; // Initialize serial number counter
+		        for (Object[] resultData1 : importDetails) {
+		            Row dataRow = sheet.createRow(rowNum++);
+		    
+		            int cellNum = 0;
+
+		            for (int i = 0; i < columnsHeader.length; i++) {
+		                Cell cell = dataRow.createCell(i);
+		                cell.setCellStyle(borderStyle);
+
+		                // Switch case to handle each column header
+
+		                switch (columnsHeader[i]) {
+		                case "Sr No":
+		                    cell.setCellValue(serialNo++); // Serial Number increment
+		                    break;
+
+		                case "Container No":
+		                    cell.setCellValue(resultData1[0] != null ? resultData1[0].toString() : ""); // Container Number
+		                    break;
+
+		                case "Size":
+		                    cell.setCellValue(resultData1[1] != null ? resultData1[1].toString() : ""); // Size
+		                    break;
+
+		                case "Container Type":
+		                    cell.setCellValue(resultData1[2] != null ? resultData1[2].toString() : ""); // Container Type
+		                    break;
+
+		                case "In Date":
+		                    if (resultData1[3] != null) {
+		                        cell.setCellValue(resultData1[3].toString()); // In Date
+		                        cell.setCellStyle(dateCellStyle); // Apply date style
+		                    } else {
+		                        cell.setBlank();
+		                        cell.setCellStyle(dateCellStyle);
+		                    }
+		                    break;
+
+		                case "Agent Name":
+		                    cell.setCellValue(resultData1[4] != null ? resultData1[4].toString() : ""); // Agent Name
+		                    break;
+
+		                case "Line Code":
+		                    cell.setCellValue(resultData1[5] != null ? resultData1[5].toString() : ""); // Line Information
+		                    break;
+
+		                case "Agent Code":
+		                    cell.setCellValue(resultData1[6] != null ? resultData1[6].toString() : ""); // Agent Code
+		                    break;
+
+		                case "Origin":
+		                    cell.setCellValue(resultData1[7] != null ? resultData1[7].toString() : ""); // Origin Information
+		                    break;
+
+		                case "Remark":
+		                    cell.setCellValue(resultData1[8] != null ? resultData1[8].toString() : ""); // Remarks
+		                    break;
+
+		                default:
+		                    cell.setCellValue(""); // Handle undefined columns
+		                    break;
+		            }
+
+
+
+
+		            }
+		        }
+		       
+//		        // Create a font for bold text
+//		       
+//		        
+//		      
+//
+//		        
+		     /// Create a row for spacing before totals
+		     // Create a row for spacing before totals
+		        Row emptyRow = sheet.createRow(rowNum++);
+		        emptyRow.createCell(0).setCellValue(""); // You can set a value or keep it blank
+		        
+
+		        Row empty = sheet.createRow(rowNum++);
+		        empty.createCell(0).setCellValue("Summary"); // You can set a value or keep it blank
+		        
+		        		
+		        		
+		        Row emptyRow1 = sheet.createRow(rowNum++);
+		        
+		        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
+
+		        // Create a row for totals
+//		        Row totalRow = sheet.createRow(rowNum+ 2);
+
+		        // Header row for summary
+		        String[] columnsHeaderSummery = {
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		        };
+
+		        // Create a map to store container count for each agent
+		        Map<String, int[]> agentContainerCount = new HashMap<>();
+
+		        // Iterate over importDetails and count the container sizes for each shipping agent
+		        importDetails.forEach(i -> {
+		            String agent = i[4] != null ? i[4].toString() : "Unknown"; // Shipping Agent at index 10
+		            String containerSize = i[1] != null ? i[1].toString() : ""; // Container Size at index 3
+
+		            // Initialize counts for this agent if not already present
+		            if (!agentContainerCount.containsKey(agent)) {
+		                agentContainerCount.put(agent, new int[4]); // Index 0 - Size 20, 1 - Size 22, 2 - Size 40, 3 - Size 45
+		            }
+
+		            // Increment the count based on container size
+		            switch (containerSize) {
+		                case "20":
+		                    agentContainerCount.get(agent)[0]++;
+		                    break;
+		                case "22":
+		                    agentContainerCount.get(agent)[1]++;
+		                    break;
+		                case "40":
+		                    agentContainerCount.get(agent)[2]++;
+		                    break;
+		                case "45":
+		                    agentContainerCount.get(agent)[3]++;
+		                    break;
+		                default:
+		                    break;
+		            }
+		        });
+
+		        // Apply header row styling and set values
+		        Row headerRow1 = sheet.createRow(rowNum++);
+		        for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		            Cell cell = headerRow1.createCell(i);
+		            cell.setCellValue(columnsHeaderSummery[i]);
+
+		            // Set cell style for header
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+		            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+		            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeaderSummery[i].length() * 360); // Adjust width based on column header length
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+
+		        // Iterate over the map to create rows for each shipping agent and their container count
+		        int srNo = 1;
+		        
+		        String shippingAgent =null;
+		        for (Map.Entry<String, int[]> entry : agentContainerCount.entrySet()) {
+		             shippingAgent = entry.getKey();
+		            int[] sizes = entry.getValue(); // Sizes[0] = Size 20, Sizes[1] = Size 22, Sizes[2] = Size 40, Sizes[3] = Size 45
+
+		            // Create a new row for this shipping agent
+		            Row row = sheet.createRow(rowNum++);
+		            row.createCell(0).setCellValue(srNo++); // Sr No (1, 2, 3,...)
+		            row.createCell(1).setCellValue(shippingAgent); // Shipping Agent
+		            row.createCell(2).setCellValue(sizes[0]); // Size 20 count
+		            row.createCell(3).setCellValue(sizes[1]); // Size 22 count
+		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
+		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
+		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
+//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+		            
+		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
+		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		        }
+
+
+		        int totalSize20 = 0, totalSize22 = 0, totalSize40 = 0, totalSize45 = 0;
+		        for (int[] sizes : agentContainerCount.values()) {
+		            totalSize20 += sizes[0];
+		            totalSize22 += sizes[1];
+		            totalSize40 += sizes[2];
+		            totalSize45 += sizes[3];
+		        }
+
+		     // Create a row for the totals
+		        Row totalRow = sheet.createRow(rowNum++);
+
+		        // Set the values for the total row
+		        totalRow.createCell(0).setCellValue("Total"); // Label for the total row
+		        totalRow.createCell(2).setCellValue(totalSize20); // Total Size 20
+		        totalRow.createCell(3).setCellValue(totalSize22); // Total Size 22
+		        totalRow.createCell(4).setCellValue(totalSize40); // Total Size 40
+		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
+		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
+
+		        // Calculate and set the total TUE'S value
+		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+
+		     // Apply the total row style (light green background and bold font)
+
+		     // Create a CellStyle for the background color
+		     CellStyle totalRowStyle = sheet.getWorkbook().createCellStyle();
+		     totalRowStyle.cloneStyleFrom(numberCellStyle); // Copy base style
+		     totalRowStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
+		     totalRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		     // Apply the style to the cells of the total row
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         // Ensure the cell exists before applying style
+		         Cell cell = totalRow.getCell(i);
+		         if (cell == null) {
+		             cell = totalRow.createCell(i);
+		         }
+		         cell.setCellStyle(totalRowStyle);
+		     }
+
+		     // Create a font for bold text
+		     Font boldFont1 = workbook.createFont();
+		     boldFont1.setBold(true);
+		     totalRowStyle.setFont(boldFont1);
+
+		     // Apply bold font and other styling
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         Cell cell = totalRow.getCell(i);
+		         cell.setCellStyle(totalRowStyle);
+		     }
+
+
+
+
+
+
+		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
+		        sheet.setColumnWidth(0,  9 * 306); 
+		        sheet.setColumnWidth(1, 18 * 306); 
+		        sheet.setColumnWidth(2, 18 * 306); 
+		        sheet.setColumnWidth(3, 18 * 306); 
+		        
+		        sheet.setColumnWidth(4, 18 * 306); 
+		        sheet.setColumnWidth(5, 36 * 306); 
+		        
+		        sheet.setColumnWidth(6, 18 * 306); 
+		        sheet.setColumnWidth(7, 18 * 306); 
+		        
+		        sheet.setColumnWidth(8, 18 * 306); 
+		        sheet.setColumnWidth(9, 18 * 306); 
+		        sheet.setColumnWidth(10, 18 * 306); // Set width for "Importer" (40 characters wide)
+		        
+		        sheet.setColumnWidth(11, 36 * 306); // Set width for "CHA" (30 characters wide)
+		        sheet.setColumnWidth(12, 36 * 306); // Set width for "Importer" (40 characters wide)
+		        
+		        sheet.setColumnWidth(13,  36 * 306); 
+		        sheet.setColumnWidth(14, 18 * 306); 
+		        sheet.setColumnWidth(15, 18 * 306); 
+		        sheet.setColumnWidth(16, 18 * 306); 
+
+		        
+		        sheet.setColumnWidth(17, 18 * 306); 
+		        sheet.setColumnWidth(18, 18 * 306); 
+		        sheet.setColumnWidth(19, 18 * 306); 
+		        sheet.setColumnWidth(20,18 * 306); 
+		        
+		        sheet.setColumnWidth(21,18 * 306); 
+		        sheet.setColumnWidth(22,18 * 306); 
+		        sheet.setColumnWidth(23,18 * 306); 
+		        sheet.setColumnWidth(24,18 * 306); 
+		        sheet.setColumnWidth(25,18 * 306); 
+		        sheet.setColumnWidth(26,18 * 306); 
+		        sheet.setColumnWidth(27,18 * 306); 
+		       
+		        
+		        sheet.setAutoFilter(new CellRangeAddress(headerRowIndex, headerRowIndex, 0, columnsHeader.length - 1));
+		        sheet.createFreezePane(0, headerRowIndex + 1); // Freeze rows above the 6th row
+
+		        workbook.write(outputStream);
+		        return outputStream.toByteArray();
+
+		    }
+		        
+		        catch (IOException e) {
+		        e.printStackTrace();
+		    }
+
 		    return null;
 	}	
 }
