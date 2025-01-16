@@ -118,7 +118,7 @@ List<Object[]> findDistinctContainersForImportCustomExam(
         "FROM cfgatein a " +
         "WHERE a.Company_Id = :companyId " +
         "AND a.Branch_Id = :branchId " +
-        "AND a.Process_Id = 'P00203' " +
+        "AND a.Process_Id = 'P00212' " +
         "AND a.status = 'A'", nativeQuery = true)
 List<Object[]> getLoadedInventoryData(@Param("companyId") String companyId,
                                           @Param("branchId") String branchId,
@@ -718,7 +718,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	    "FROM cfgatein a " +
             	    "LEFT OUTER JOIN party p ON a.company_id = p.company_id AND a.branch_id =p.branch_id and  a.sl = p.party_id " +
             	    "LEFT OUTER JOIN party q ON a.company_id = q.company_id AND a.branch_id =q.branch_id and  a.sa = q.party_id " +
-            	    "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.Process_Id = 'P00203' " +
+            	    "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.Process_Id = 'P00212' " +
             	    "ORDER BY a.in_Gate_in_Date)",
             	    nativeQuery = true)
             	    List<Object[]> findLoadedInventoryTotal(
@@ -828,13 +828,79 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	            "WHERE " +
             	            "    b.Company_Id = :companyId " +
             	            "    AND b.Branch_Id = :branchId " +
-            	            "    AND b.Process_Id = 'P00203' " +
+            	            "    AND b.Process_Id = 'P00212' " +
             	            "    AND b.Hazardous = 'Y' " +
             	            ")",
             	            nativeQuery = true)
             	        List<Object[]> findHazardousContainers( @Param("companyId") String companyId,
                     	        @Param("branchId") String branchId,
                     	        @Param("date") Date date);
+
+            	    
+            	    
+            	    
+            	    
+            	    
+            	    
+            	    
+//            	    @Query(value = 
+//            	    	    "SELECT DISTINCT " +
+//            	    	    "    d.igm_no AS igmNo, " +
+//            	    	    "    d.igm_line_no AS igmLineNo, " +
+//            	    	    "    b.container_no AS containerNo, " +
+//            	    	    "    b.container_size AS containerSize, " +
+//            	    	    "    b.container_type AS containerType, " +
+//            	    	    "    b.Container_Status AS containerStatus, " +
+//            	    	    "    d.No_Of_Packages AS noOfPackages, " +
+//            	    	    "    b.Gross_Wt AS grossWeight, " +
+//            	    	    "    d.Type_Of_Package AS typeOfPackage, " +
+//            	    	    "    DATE_FORMAT(b.Gate_in_Date, '%d %b %Y %T') AS gateInDate, " +
+//            	    	    "    d.importer_name AS importerName, " +
+//            	    	    "    d.commodity_Code AS commodityCode, " +
+//            	    	    "    d.UN_No AS unNo, " +
+//            	    	    "    b.Haz_Class AS hazClass, " +
+//            	    	    "    d.commodity_description AS commodityDescription, " +
+//            	    	    "    d.BL_No AS blNo, " +
+//            	    	    "    p.Party_Name AS agent, " +
+//            	    	    "    p.Shipping_Line_Code AS line, " +
+//            	    	    "    p.Party_Name AS cha " +
+//            	    	    "FROM " +
+//            	    	    "    cfigmcn b " +
+//            	    	    "LEFT OUTER JOIN cfigm c " +
+//            	    	    "    ON b.igm_trans_id = c.igm_trans_id " +
+//            	    	    "    AND b.igm_no = c.igm_no " +
+//            	    	    "    AND c.company_id = b.company_id " +
+//            	    	    "    AND c.branch_id = b.branch_id " +
+//            	    	    "LEFT OUTER JOIN party p " +
+//            	    	    "    ON c.company_id = p.company_id " +
+//            	    	    "    AND c.branch_id = p.branch_id " +
+//            	    	    "    AND c.shipping_line = p.Party_Id " +
+//            	    	    "LEFT OUTER JOIN cfigmcrg d " +
+//            	    	    "    ON b.igm_trans_id = d.igm_trans_id " +
+//            	    	    "    AND b.igm_no = d.igm_no " +
+//            	    	    "    AND b.company_id = d.company_id " +
+//            	    	    "    AND b.branch_id = d.branch_id " +
+//            	    	    "    AND b.igm_line_no = d.igm_line_no " +
+//            	    	    "WHERE " +
+//            	    	    "    b.Company_Id = :companyId " +
+//            	    	    "    AND b.Branch_Id = :branchId " +
+//            	    	    "    AND b.Status = 'A' " +
+//            	    	    "    AND d.status = 'A' " +
+//            	    	    "    AND c.status = 'A' " +
+//            	    	    "    AND (b.gate_out_id = '' OR b.gate_out_date > :date) " +
+//            	    	    "    AND (b.de_stuff_id = '' OR b.de_stuff_Date > :date) " +
+//            	    	    "    AND b.Gate_in_Date < :date " +
+//            	    	    "    AND b.type_of_container = 'Hazardous' " +
+//            	    	    "    AND b.gate_in_id != '' " +
+//            	    	    "GROUP BY " +
+//            	    	    "    b.container_no " +
+//            	    	    "ORDER BY " +
+//            	    	    "    b.Gate_in_Date",
+//            	    	    nativeQuery = true)
+//            	    	List<Object[]> findHazardousContainers( 
+//            	    	    @Param("companyId") String companyId,
+//            	    	    @Param("branchId") String branchId,
+//            	    	    @Param("date") Date date);
 
             	        @Query(value = 
             	                "(" +
@@ -931,7 +997,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                "WHERE " +
             	                "    b.company_id = :companyId " +
             	                "    AND b.branch_id = :branchId " +
-            	                "    AND b.Process_Id = 'P00203' " +
+            	                "    AND b.Process_Id = 'P00212' " +
             	                "    AND b.container_type IN ('RF', 'HRF', 'HR') " +
             	                ")",
             	                nativeQuery = true)
@@ -1019,7 +1085,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                    "    AND b.status = 'A' " +
             	                    "    AND b.gate_in_id != '' " +
             	                    "    AND b.gate_in_date < :date " +
-            	                    "    AND (b.ODC_Status = 'Y' OR b.container_type = 'FR') " +
+            	                    "    AND (b.ODC_Status = 'Y' OR b.container_type = 'FR' OR b.type_of_container='ODC' ) " +
             	                    "    AND b.profitcentre_id = 'N00002' " +
             	                    "UNION " +
             	                    "SELECT DISTINCT " +
@@ -1066,7 +1132,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                    "WHERE " +
             	                    "    b.company_id = :companyId " +
             	                    "    AND b.branch_id = :branchId " +
-            	                    "    AND b.Process_Id = 'P00203' " +
+            	                    "    AND b.Process_Id = 'P00212' " +
             	                    "    AND (b.ODC_Status = 'Y' OR b.container_type = 'FR')", 
             	                    nativeQuery = true)
             	            List<Object[]> findODCContainerDetails(
@@ -1133,7 +1199,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                    "    AND b.gate_in_id != '' " +
             	                    "    AND c.status = 'A' " +
             	                    "    AND d.status = 'A' " +
-//            	                    "    AND b.Type_of_Container!='' " +
+            	                    "    AND b.Type_of_Container IN ('', 'General') " +
             	                    "GROUP BY " +
             	                    "    b.container_no, " +
             	                    "    b.igm_no " +
@@ -2282,7 +2348,7 @@ List<Object[]> findExportLDDPendencyContainerDetails(
         "WHERE " + 
         "a.company_id = :companyId " + 
         "AND a.branch_id = :branchId " + 
-        "AND a.Process_Id ='P00203' " + 
+        "AND a.Process_Id ='P00212' " + 
         "ORDER BY a.in_Gate_in_Date", 
        nativeQuery = true)
 List<Object[]> findManualConContainerDetails(

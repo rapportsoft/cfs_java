@@ -364,10 +364,23 @@ public class CommonReportsService {
 	            for (Object[] row : loadedInventory) {
 	                String containerSize = (String) row[1]; // Container size (20, 40, etc.)
 	                String currentContainerType = (String) row[4]; // Container type from row
+	                
+	                String type = (String) row[2]; // Container size (20, 40, etc.)
+	                String status = (String) row[3]; // Container type from row
 
-		            if (currentContainerType == null || currentContainerType.isEmpty()) {
-		            	currentContainerType = "General"; // Default to General if container type is null or empty
+	                
+	    
+
+	                
+		            if (currentContainerType == null || currentContainerType.isEmpty() || "General".equals(currentContainerType)) {
+		            	currentContainerType = "General";
 	            }
+		            
+//		            if ("FR".equalsIgnoreCase(type) || "Y".equalsIgnoreCase(status)) {
+//		                currentContainerType = "ODC";
+//		            } else if ("ODC".equalsIgnoreCase(currentContainerType)) {
+//		                currentContainerType = "ODC";
+//		            }
 	                
 	                // If the current container type from row matches the type we are iterating on
 	                if (containerType.equals(currentContainerType)) {
@@ -1207,6 +1220,8 @@ public class CommonReportsService {
 	    if (ports != null) {
 	        for (Object[] port : ports) {
 	            String portCode = (String) port[0];
+	            
+	            System.out.println("portCode :" +portCode);
 	            portCodes.add(portCode);
 	        }
 	    }
