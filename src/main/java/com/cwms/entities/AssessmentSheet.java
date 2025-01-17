@@ -547,6 +547,10 @@ public class AssessmentSheet implements Cloneable {
     @Column(name = "Payable_Party", length = 6)
     private String payableParty;
     
+    
+    @Column(name = "Payable_Party_Id", length = 6)
+    private String payablePartyId;
+    
     @Transient
     private String impAddress;
     
@@ -598,6 +602,7 @@ public class AssessmentSheet implements Cloneable {
 
 
 
+
 	public AssessmentSheet(String assesmentId, String companyId, String branchId, String assesmentLineNo,
 			String transType, Date assesmentDate, String igmTransId, String sbTransId, int impSrNo,
 			String profitcentreId, String igmNo, String sbNo, Date sbDate, Date igmDate, String igmLineNo, String viaNo,
@@ -630,10 +635,10 @@ public class AssessmentSheet implements Cloneable {
 			String newCommodity, BigDecimal invoiceDaysOld, BigDecimal invoiceAmtOld, Date oldInvoiceUpto,
 			char forceEntryFlag, Date minGateInTransDate, int noOfItem, BigDecimal otherDeduction, String stuffMode,
 			Date formThirteenEntryDate, char invCatH, char invCatG, char isAncillary, char rebateCalFlag,
-			char customerLedgerFlag, char srcCollectedFlag, String payableParty, String impAddress, String impGst,
-			String chaName, String chaAddress, String chaGst, String fwdGst, String fwdName, String fwdState,
-			String accHolderGst, String accHolderName, String accHolderState, String creditAllowed, String saId,
-			String slId) {
+			char customerLedgerFlag, char srcCollectedFlag, String payableParty, String payablePartyId,
+			String impAddress, String impGst, String chaName, String chaAddress, String chaGst, String fwdGst,
+			String fwdName, String fwdState, String accHolderGst, String accHolderName, String accHolderState,
+			String creditAllowed, String saId, String slId) {
 		this.assesmentId = assesmentId;
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -799,6 +804,7 @@ public class AssessmentSheet implements Cloneable {
 		this.customerLedgerFlag = customerLedgerFlag;
 		this.srcCollectedFlag = srcCollectedFlag;
 		this.payableParty = payableParty;
+		this.payablePartyId = payablePartyId;
 		this.impAddress = impAddress;
 		this.impGst = impGst;
 		this.chaName = chaName;
@@ -814,6 +820,25 @@ public class AssessmentSheet implements Cloneable {
 		this.saId = saId;
 		this.slId = slId;
 	}
+
+
+
+
+
+
+	public String getPayablePartyId() {
+		return payablePartyId;
+	}
+
+
+
+
+
+
+	public void setPayablePartyId(String payablePartyId) {
+		this.payablePartyId = payablePartyId;
+	}
+
 
 
 

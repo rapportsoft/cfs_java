@@ -31,6 +31,7 @@ import com.cwms.entities.Branch;
 import com.cwms.entities.CFSDay;
 import com.cwms.entities.Cfbondnoc;
 import com.cwms.entities.Cfigmcrg;
+import com.cwms.entities.CfinbondcrgHDR;
 import com.cwms.entities.Cfinvsrv;
 import com.cwms.entities.Cfinvsrvanx;
 import com.cwms.entities.Cfinvsrvanxback;
@@ -49,6 +50,7 @@ import com.cwms.repository.CfBondNocDtlRepository;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfbondnocRepository;
+import com.cwms.repository.CfinbondCrgHdrRepo;
 import com.cwms.repository.CfinvsrvRepo;
 import com.cwms.repository.CfinvsrvanxRepo;
 import com.cwms.repository.CfinvsrvanxbackRepo;
@@ -128,6 +130,10 @@ public class AssessmentService {
 	@Autowired
 	private CfBondNocDtlRepository cfsBondNocDtlRepo;
 
+
+	@Autowired
+	private CfinbondCrgHdrRepo cfinbondhdrrepo;
+
 	public ResponseEntity<?> searchImportBeforeSaveAssessmentData(String cid, String bid, String val) {
 		List<Object[]> data = cfigmcnrepo.getBeforeAssessmentData(cid, bid, val);
 
@@ -197,7 +203,8 @@ public class AssessmentService {
 				String HoldNextIdD1 = String.format("INCO%06d", nextNumericNextID1);
 
 				for (AssessmentContainerDTO con : containerData) {
-					System.out.println("con.getLastInvoiceUptoDate() "+con.getLastInvoiceUptoDate()+" "+con.getContainerNo());
+					System.out.println("con.getLastInvoiceUptoDate() " + con.getLastInvoiceUptoDate() + " "
+							+ con.getContainerNo());
 					if (con.getLastInvoiceUptoDate() == null) {
 
 						List<String> conSize = new ArrayList<>();
@@ -356,7 +363,7 @@ public class AssessmentService {
 								finalPricing.addAll(remainingPricing);
 							}
 						}
-						
+
 //					   if(finalPricing != null || !finalPricing.isEmpty()) {
 //							return new ResponseEntity<>(finalPricing,HttpStatus.CONFLICT);
 //					   }
@@ -937,12 +944,12 @@ public class AssessmentService {
 													String serviceGrp = String.valueOf(f[18]);
 
 													if ("H".equals(serviceGrp)) {
-														
+
 														BigDecimal cargoWt = new BigDecimal(
 																String.valueOf(con.getGrossWt()))
 																.divide(new BigDecimal(1000))
 																.setScale(3, RoundingMode.HALF_UP);
-														
+
 														executionUnit = cargoWt;
 
 														tempAss.setExecutionUnit(String.valueOf(executionUnit));
@@ -1095,14 +1102,14 @@ public class AssessmentService {
 															tempAss.setExecutionUnit1("");
 														}
 													}
-													
+
 													if ("KG".equals(unit)) {
 														String serviceGrp = String.valueOf(f[18]);
 														if ("H".equals(serviceGrp)) {
-															
+
 															BigDecimal cargoWt = new BigDecimal(
 																	String.valueOf(con.getGrossWt()));
-															
+
 															executionUnit = cargoWt;
 
 															tempAss.setExecutionUnit(String.valueOf(executionUnit));
@@ -1893,11 +1900,9 @@ public class AssessmentService {
 											String serviceGrp = String.valueOf(f[18]);
 
 											if ("H".equals(serviceGrp)) {
-												BigDecimal cargoWt = new BigDecimal(
-														String.valueOf(con.getGrossWt()))
-														.divide(new BigDecimal(1000))
-														.setScale(3, RoundingMode.HALF_UP);
-												
+												BigDecimal cargoWt = new BigDecimal(String.valueOf(con.getGrossWt()))
+														.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+
 												executionUnit = cargoWt;
 
 												tempAss.setExecutionUnit(String.valueOf(executionUnit));
@@ -2008,9 +2013,8 @@ public class AssessmentService {
 
 											}
 
-										} else if ("TEU".equals(unit) || "SM".equals(unit)
-												|| "CNTR".equals(unit) || "PBL".equals(unit)
-												|| "ACT".equals(unit) || "PCK".equals(unit)
+										} else if ("TEU".equals(unit) || "SM".equals(unit) || "CNTR".equals(unit)
+												|| "PBL".equals(unit) || "ACT".equals(unit) || "PCK".equals(unit)
 												|| "SHFT".equals(unit) || "KG".equals(unit)) {
 
 											if ("SM".equals(unit) || "CNTR".equals(unit) || "PBL".equals(unit)
@@ -2037,14 +2041,14 @@ public class AssessmentService {
 													tempAss.setExecutionUnit1("");
 												}
 											}
-											
+
 											if ("KG".equals(unit)) {
 												String serviceGrp = String.valueOf(f[18]);
 												if ("H".equals(serviceGrp)) {
-													
+
 													BigDecimal cargoWt = new BigDecimal(
 															String.valueOf(con.getGrossWt()));
-													
+
 													executionUnit = cargoWt;
 
 													tempAss.setExecutionUnit(String.valueOf(executionUnit));
@@ -2389,6 +2393,8 @@ public class AssessmentService {
 
 							newAss.setPartyId(billingId);
 							newAss.setPartySrNo(new BigDecimal(billingAdd));
+							newAss.setPayableParty(assessment.getBillingParty());
+							newAss.setPayablePartyId(billingId);
 
 							if (b.getState().equals(p.getState())) {
 								newAss.setIgst("N");
@@ -2470,6 +2476,7 @@ public class AssessmentService {
 						newAss.setSl(tempAssessment.getSlId());
 						newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
 						newAss.setSsrServiceId(con.getSsrTransId());
+
 						assessmentsheetrepo.save(newAss);
 						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
 
@@ -2478,94 +2485,95 @@ public class AssessmentService {
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
-						
-						System.out.println("finalConData "+finalConData);
+
+						System.out.println("finalConData " + finalConData);
 
 						finalConData.stream().forEach(c -> {
-						if(c.getServiceId() != null && !c.getServiceId().isEmpty()) {
-							Cfinvsrvanx anx = new Cfinvsrvanx();
-							anx.setCompanyId(cid);
-							anx.setBranchId(bid);
-							anx.setErpDocRefNo(newAss.getIgmTransId());
-							anx.setProcessTransId(HoldNextIdD1);
-							anx.setServiceId(c.getServiceId());
-							anx.setSrlNo(srNo1.get());
-							anx.setDocRefNo(newAss.getIgmNo());
-							anx.setIgmLineNo(newAss.getIgmLineNo());
-							anx.setProfitcentreId(newAss.getProfitcentreId());
-							anx.setInvoiceType("IMP");
-							anx.setServiceUnit(c.getServiceUnit());
-							anx.setExecutionUnit(c.getExecutionUnit());
-							anx.setServiceUnit1(c.getServiceUnit1());
-							anx.setExecutionUnit1(c.getExecutionUnit1());
-							anx.setRate(c.getServiceRate());
-							anx.setActualNoOfPackages(c.getRates());
-							anx.setCurrencyId("INR");
-							anx.setLocalAmt(c.getRates());
-							anx.setInvoiceAmt(c.getRates());
-							anx.setCommodityDescription(newAss.getCommodityDescription());
-							anx.setDiscPercentage(c.getDiscPercentage());
-							anx.setDiscValue(c.getDiscValue());
-							anx.setmPercentage(c.getmPercentage());
-							anx.setmAmount(c.getmAmount());
-							anx.setAcCode(c.getAcCode());
-							anx.setProcessTransDate(newAss.getAssesmentDate());
-							anx.setProcessId("P01101");
-							anx.setPartyId(newAss.getPartyId());
-							anx.setWoNo(c.getWoNo());
-							anx.setWoAmndNo(c.getWoAmndNo());
-							anx.setContainerNo(c.getContainerNo());
-							anx.setContainerStatus(con.getContainerStatus());
-							anx.setGateOutDate(c.getGateoutDate());
-							anx.setAddServices("N");
-							anx.setStartDate(c.getGateInDate());
-							anx.setInvoiceUptoDate(c.getInvoiceDate());
-							anx.setInvoiceUptoWeek(c.getInvoiceDate());
-							anx.setStatus("A");
-							anx.setCreatedBy(user);
-							anx.setCreatedDate(new Date());
+							if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
+								Cfinvsrvanx anx = new Cfinvsrvanx();
+								anx.setCompanyId(cid);
+								anx.setBranchId(bid);
+								anx.setErpDocRefNo(newAss.getIgmTransId());
+								anx.setProcessTransId(HoldNextIdD1);
+								anx.setServiceId(c.getServiceId());
+								anx.setSrlNo(srNo1.get());
+								anx.setDocRefNo(newAss.getIgmNo());
+								anx.setIgmLineNo(newAss.getIgmLineNo());
+								anx.setProfitcentreId(newAss.getProfitcentreId());
+								anx.setInvoiceType("IMP");
+								anx.setServiceUnit(c.getServiceUnit());
+								anx.setExecutionUnit(c.getExecutionUnit());
+								anx.setServiceUnit1(c.getServiceUnit1());
+								anx.setExecutionUnit1(c.getExecutionUnit1());
+								anx.setRate(c.getServiceRate());
+								anx.setActualNoOfPackages(c.getRates());
+								anx.setCurrencyId("INR");
+								anx.setLocalAmt(c.getRates());
+								anx.setInvoiceAmt(c.getRates());
+								anx.setCommodityDescription(newAss.getCommodityDescription());
+								anx.setDiscPercentage(c.getDiscPercentage());
+								anx.setDiscValue(c.getDiscValue());
+								anx.setmPercentage(c.getmPercentage());
+								anx.setmAmount(c.getmAmount());
+								anx.setAcCode(c.getAcCode());
+								anx.setProcessTransDate(newAss.getAssesmentDate());
+								anx.setProcessId("P01101");
+								anx.setPartyId(newAss.getPartyId());
+								anx.setWoNo(c.getWoNo());
+								anx.setWoAmndNo(c.getWoAmndNo());
+								anx.setContainerNo(c.getContainerNo());
+								anx.setContainerStatus(con.getContainerStatus());
+								anx.setGateOutDate(c.getGateoutDate());
+								anx.setAddServices("N");
+								anx.setStartDate(c.getGateInDate());
+								anx.setInvoiceUptoDate(c.getInvoiceDate());
+								anx.setInvoiceUptoWeek(c.getInvoiceDate());
+								anx.setStatus("A");
+								anx.setCreatedBy(user);
+								anx.setCreatedDate(new Date());
 //      						anx.setApprovedBy(user);
 //      						anx.setApprovedDate(new Date());
-							anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
-							anx.setSrvManualFlag("N");
-							anx.setCriteria(
-									"SA".equals(c.getCriteria()) ? "DW" : "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
-							anx.setRangeFrom(c.getRangeFrom());
-							anx.setRangeTo(c.getRangeTo());
-							anx.setRangeType(c.getContainerStatus());
-							anx.setGateOutId(c.getGateOutId());
-							anx.setGatePassNo(c.getGatePassNo());
-							anx.setRangeType(c.getCriteria());
-							anx.setTaxId(c.getTaxId());
-							anx.setExRate(c.getExRate());
+								anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
+								anx.setSrvManualFlag("N");
+								anx.setCriteria("SA".equals(c.getCriteria()) ? "DW"
+										: "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
+								anx.setRangeFrom(c.getRangeFrom());
+								anx.setRangeTo(c.getRangeTo());
+								anx.setRangeType(c.getContainerStatus());
+								anx.setGateOutId(c.getGateOutId());
+								anx.setGatePassNo(c.getGatePassNo());
+								anx.setRangeType(c.getCriteria());
+								anx.setTaxId(c.getTaxId());
+								anx.setExRate(c.getExRate());
 
-							if (("Y".equals(newAss.getIgst()))
-									|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
-								anx.setTaxPerc(c.getTaxPerc());
-							} else {
-								anx.setTaxPerc(BigDecimal.ZERO);
-							}
+								if (("Y".equals(newAss.getIgst()))
+										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
+									anx.setTaxPerc(c.getTaxPerc());
+								} else {
+									anx.setTaxPerc(BigDecimal.ZERO);
+								}
 
-							BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
-							BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get() : BigDecimal.ZERO;
+								BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
+								BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get()
+										: BigDecimal.ZERO;
 
-							// Perform addition
-							totalAmount.set(currentTotal.add(currentRate));
+								// Perform addition
+								totalAmount.set(currentTotal.add(currentRate));
 
-							cfinvsrvanxrepo.save(anx);
+								cfinvsrvanxrepo.save(anx);
 
 //      						if ("S00007".equals(c.getServiceId())) {
 //      							crgStorageDay.set(new BigDecimal(c.getExecutionUnit()));
 //      							crgStorageAmt.set(c.getRates());
-							//
+								//
 //      						}
-							//
+								//
 //      						if ("S00003".equals(c.getServiceId())) {
 //      							invDay.set(new BigDecimal(c.executionUnit));
 //      						}
 
-							srNo1.set(srNo1.get().add(new BigDecimal(1)));
-						}
+								srNo1.set(srNo1.get().add(new BigDecimal(1)));
+							}
 						});
 						totalAmount.updateAndGet(amount -> amount.setScale(3, RoundingMode.HALF_UP));
 
@@ -3601,6 +3609,8 @@ public class AssessmentService {
 
 							newAss.setPartyId(billingId);
 							newAss.setPartySrNo(new BigDecimal(billingAdd));
+							newAss.setPayableParty(assessment.getBillingParty());
+							newAss.setPayablePartyId(billingId);
 
 							if (b.getState().equals(p.getState())) {
 								newAss.setIgst("N");
@@ -3677,7 +3687,7 @@ public class AssessmentService {
 						newAss.setContainerHandlingAmt(BigDecimal.ZERO);
 						newAss.setContainerStorageAmt(totalRates1);
 						newAss.setInvoiceCategory(assessment.getInvoiceCategory());
-						newAss.setInvType("First");
+						newAss.setInvType("Second");
 						newAss.setSa(tempAssessment.getSaId());
 						newAss.setSl(tempAssessment.getSlId());
 						newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
@@ -3697,7 +3707,7 @@ public class AssessmentService {
 						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
 
 						finalConData.stream().forEach(c -> {
-							if(c.getServiceId() != null && !c.getServiceId().isEmpty()) {
+							if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
 								Cfinvsrvanx anx = new Cfinvsrvanx();
 								anx.setCompanyId(cid);
 								anx.setBranchId(bid);
@@ -3743,8 +3753,8 @@ public class AssessmentService {
 //	      						anx.setApprovedDate(new Date());
 								anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
 								anx.setSrvManualFlag("N");
-								anx.setCriteria(
-										"SA".equals(c.getCriteria()) ? "DW" : "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
+								anx.setCriteria("SA".equals(c.getCriteria()) ? "DW"
+										: "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
 								anx.setRangeFrom(c.getRangeFrom());
 								anx.setRangeTo(c.getRangeTo());
 								anx.setRangeType(c.getContainerStatus());
@@ -3762,7 +3772,8 @@ public class AssessmentService {
 								}
 
 								BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
-								BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get() : BigDecimal.ZERO;
+								BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get()
+										: BigDecimal.ZERO;
 
 								// Perform addition
 								totalAmount.set(currentTotal.add(currentRate));
@@ -4309,7 +4320,7 @@ public class AssessmentService {
 		srv.setAccSrNo(assSheet.getPartySrNo().intValue());
 		srv.setProfitcentreId(assSheet.getProfitcentreId());
 		srv.setInvoiceDate(new Date());
-		srv.setContainerNo(assSheet.getContainerNo());
+		srv.setContainerNo(assSheet.getAssesmentId());
 		srv.setWoNo(consolidatedData.get(0).getWoNo());
 		srv.setWoAmndNo(consolidatedData.get(0).getWoAmndNo());
 		srv.setPartyType(assSheet.getBillingParty());
@@ -4366,7 +4377,7 @@ public class AssessmentService {
 			fin.setDocType("RE");
 			fin.setProfitcentreId(assSheet.getProfitcentreId());
 			fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
-			fin.setPartyId(assSheet.getPartyId());
+			fin.setPartyId(assSheet.getPayablePartyId());
 			fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 			fin.setAcCode(consolidatedData.get(0).getAcCode());
 			fin.setChequeNo(p.getChequeNo());
@@ -4583,12 +4594,7 @@ public class AssessmentService {
 			}
 
 		}
-
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 	}
-
-	// Bond NOC Invoice
-
-
 
 }
