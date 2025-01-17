@@ -300,8 +300,7 @@ public class GateInController {
 					c.setHazClass(gatein.getHazClass());
 					c.setEirGrossWeight(gatein.getEirGrossWeight());
 					c.setVehicleType(gatein.getVehicleType());
-					c.setContainerWeight(c.getGrossWt()
-							.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
+					c.setContainerWeight(gatein.getTareWeight());
 					c.setContainerSealNo(gatein.getContainerSealNo());
 					c.setYardLocation(gatein.getYardLocation());
 					c.setYardBlock(gatein.getYardBlock());
