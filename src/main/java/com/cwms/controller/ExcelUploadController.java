@@ -1880,7 +1880,7 @@ public class ExcelUploadController {
 	                add.put("Packages", c.get(26));
 	                add.put("Package Type", c.get(27));
 	                add.put("Cargo wt", c.get(28));
-	                add.put("Commodity", c.get(29));
+	                add.put("Commodity", c.get(33));
 	                itemData.add(add);
 	                itemList.add(c.get(6));
 	            }
