@@ -1,5 +1,6 @@
 package com.cwms.controller;
 
+import java.text.ParseException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,46 @@ public class AssessmentSheetController {
 	 public ResponseEntity<?> getSelectedInvoiceData1(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
 			 @RequestParam("assId") String assId,@RequestParam("invId") String invId){
 		 return assessmentService.getSelectedInvoiceData1(cid, bid, assId, invId);
+	 }
+	 
+	 
+	 
+	 @GetMapping("/searchBONDNOCBeforeSaveAssessmentData")
+	 public ResponseEntity<?> searchBONDNOCBeforeSaveAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam(name="val",required = false) String val){
+		 return assessmentService.searchBONDNOCBeforeSaveAssessmentData(cid, bid, val);
+	 }
+	 
+	 
+	 @GetMapping("/getBONDNOCBeforeSaveAssessmentData")
+	 public ResponseEntity<?> getBONDNOCBeforeSaveAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("trans") String trans,@RequestParam("boe") String boe){
+		 return assessmentService.getBONDNOCBeforeSaveAssessmentData(cid, bid, trans, boe);
+	 }
+	 
+	 @PostMapping("/saveBondNocAssessmentData")
+	 public ResponseEntity<?> saveBondNocAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException, ParseException, CloneNotSupportedException{
+		 return assessmentService.saveBondNOCAssessmentData(cid, bid, user, assessmentData);
+	 }
+	 
+	 
+	 @PostMapping("/saveBondNocInvoiceReceipt")
+	 public ResponseEntity<?> saveBondNocInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
+		 return assessmentService.saveBondNocInvoiceReceipt(cid, bid, user, assessmentData);
+	 }
+	 
+	 
+	 @GetMapping("/searchBondNOCInvoiceData")
+	 public ResponseEntity<?> searchBondNOCInvoiceData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam(name="val",required = false) String val){
+		 return assessmentService.searchBondNOCInvoiceData(cid, bid, val);
+	 }
+	 
+	 @GetMapping("/getSelectedBondNOCInvoiceData")
+	 public ResponseEntity<?> getSelectedBondNOCInvoiceData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("assId") String assId,@RequestParam("invId") String invId){
+		 return assessmentService.getSelectedBondNOCInvoiceData(cid, bid, assId, invId);
 	 }
 }

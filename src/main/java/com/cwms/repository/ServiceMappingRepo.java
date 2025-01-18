@@ -110,5 +110,24 @@ public interface ServiceMappingRepo extends JpaRepository<ServiceMapping, String
 			int deleteServiceData(@Param("cid") String cid,@Param("bid") String bid,@Param("sid") String sid,@Param("pid") String pid,
 					@Param("containerSize") String containerSize,@Param("containerType") String containerType,@Param("InvoiceType") String InvoiceType,@Param("getOutType") String getOutType,
 					@Param("scannerType") String scannerType,@Param("typeOfContainer") String typeOfContainer);
+			
+			
+			@Query(value = "select s.serviceId " + "from ServiceMapping s "
+					+ "where s.companyId = :cid and s.branchId = :bid and s.status = 'A' and "
+					+ "s.profitcentreId = :profit and s.invoiceType = :type ")
+			List<String> getServicesForBondNocInvoice1(@Param("cid") String cid, @Param("bid") String bid,
+					@Param("profit") String profit, @Param("type") String type
+
+			);
+
+			@Query(value = "select s.serviceId " + "from ServiceMapping s "
+					+ "LEFT OUTER JOIN Services s1 ON s.companyId=s1.companyId and s.branchId=s1.branchId and s.serviceId=s1.serviceId "
+					+ "where s.companyId = :cid and s.branchId = :bid and s.status = 'A' and "
+					+ "s.profitcentreId = :profit and s.invoiceType = :type and s1.serviceGroup=:sgroup")
+			List<String> getServicesForBondNocInvoice2(@Param("cid") String cid, @Param("bid") String bid,
+					@Param("profit") String profit, @Param("type") String type,@Param("sgroup") String group
+
+			);
+			
 
 }

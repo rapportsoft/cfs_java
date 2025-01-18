@@ -166,5 +166,45 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			@Param("ctype") List<String> ctype,@Param("code") List<String> code,@Param("size1") String size1,
 			@Param("ctype1") String ctype1,@Param("code1") String code1);
 	
+	@Query(value="select c.cfsTariffNo,c.serviceId,c.cfsAmendNo,c.containerSize,c.cargoType,c.commodityCode,c.fromRange,"
+			+ "c.toRange,c.rate "
+			+ "from CFSTariffService c "
+			+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.cfsTariffNo=:tariffNo and c.cfsAmendNo=:amd "
+			+ "and c.serviceId=:service and :rtype between c.fromRange and c.toRange and "
+			+ "c.commodityCode IN :code order by c.cfsTariffNo,c.serviceId,FIELD(c.commodityCode,:code1,'ALL')")
+	Object getRangeDataByForbondNocServiceId(@Param("cid") String cid, @Param("bid") String bid,@Param("tariffNo") String tariffNo,
+			@Param("amd") String amd,@Param("service") String service,@Param("rtype") BigDecimal rtype,@Param("code") List<String> code,@Param("code1") String code1);
+	
+	
+	
+	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
+	        + "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, tx.taxPerc, '', '', "
+	        + "'', '', s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc "
+	        + "FROM CFSTariffService c "
+	        + "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+	        + "AND c.cfsAmendNo = t.cfsAmndNo AND c.profitCentreId = t.profitCentreId "
+	        + "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+	        + "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
+	        + "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
+	        + "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+	        + "WHERE c.companyId = :cid AND c.branchId = :bid "
+	        + "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
+	        + "AND c.cfsTariffNo = :tariffNo "
+	        + "GROUP BY c.serviceId "
+	        + "ORDER BY c.serviceId")
+	List<Object[]> getServiceRateForBondNoc(@Param("cid") String cid, @Param("bid") String bid, @Param("assessDate") Date assessDate,
+	                              @Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo);
+	
+	
+	
+	@Query(value="select c.cfsTariffNo,c.serviceId,c.cfsAmendNo,c.containerSize,c.cargoType,c.commodityCode,c.fromRange,"
+			+ "c.toRange,c.rate "
+			+ "from CFSTariffService c "
+			+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.cfsTariffNo=:tariffNo and c.cfsAmendNo=:amd "
+			+ "and c.serviceId=:service and c.rangeType=:rtype and "
+			+ "c.commodityCode IN :code order by c.cfsTariffNo,c.serviceId,FIELD(c.commodityCode,:code1,'ALL')")
+	List<Object[]> getDataByServiceIdForBondNOC(@Param("cid") String cid, @Param("bid") String bid,@Param("tariffNo") String tariffNo,
+			@Param("amd") String amd,@Param("service") String service,@Param("rtype") String rtype,@Param("code") List<String> code,@Param("code1") String code1);
+	
 
 }

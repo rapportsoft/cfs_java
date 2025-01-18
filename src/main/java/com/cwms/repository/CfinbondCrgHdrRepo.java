@@ -1,6 +1,7 @@
 package com.cwms.repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -230,5 +231,29 @@ public interface CfinbondCrgHdrRepo extends JpaRepository<CfinbondcrgHDR, String
 	     @Param("boeNo") String boeNo
 	 );
 
+	 
+	 @Query("SELECT c FROM CfinbondcrgHDR c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo and c.status='A'")
+	 CfinbondcrgHDR findCfInBondCrgHdrForUpdationg1(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocTransId") String nocTransId,
+	        @Param("nocNo") String nocNo
+	    );
+
+	 
+	 @Transactional
+	 @Modifying
+	 @Query("UPDATE CfinbondcrgHDR c SET c.invoiceNo=:invNo,c.invoiceUptoDate=:uptoDate "
+	 		+ "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+	 		+ "AND c.inBondingHdrId = :inBondingHdrId AND c.nocNo = :nocNo and c.status='A'")
+	 int updateInvoiceData(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocTransId") String nocTransId,
+	        @Param("inBondingHdrId") String inBondingHdrId,
+	        @Param("nocNo") String nocNo,
+	        @Param("invNo") String invNo,
+	        @Param("uptoDate") Date uptoDate
+	    );
 		
 }

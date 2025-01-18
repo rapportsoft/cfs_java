@@ -1061,40 +1061,74 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
 						
 						
+//						@Modifying
+//						@Transactional
+//						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
+//								+ "c.crgStorageDay=c.crgStorageDay + :crgday,c.cargoValue=:cvalue ,c.invoiceUptoDate=:invDate,"
+//								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
+//								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+//								+ "c.containerNo=:con")
+//						int updateInvoiceData2(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+//								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
+//								@Param("cvalue") BigDecimal cvalue,
+//								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
+//						
+//						
+//						@Modifying
+//						@Transactional
+//						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
+//								+ "c.crgStorageDay=:crgday,c.cargoValue=:cvalue ,c.invoiceUptoDate=:invDate,"
+//								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=:crgStorage "
+//								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+//								+ "c.containerNo=:con")
+//						int updateInvoiceData1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+//								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
+//								@Param("cvalue") BigDecimal cvalue,
+//								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
+//						
+//						
+//						@Modifying
+//						@Transactional
+//						@Query(value="UPDATE Cfigmcn c SET c.invoiceDate=:invDate,c.invoiceAssesed=:invass,c.invoiceNo=:invNo,c.creditType=:type,"
+//								+ "c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.lastInvoiceNo=:invNo where c.companyId=:cid and c.branchId=:bid and "
+//								+ "c.status='A' and c.assesmentId=:id")
+//						int updateInvoiceDataAtProcess(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("invDate") 
+//						Date invDate,@Param("invass") char invass,@Param("invNo") String invNo,@Param("type") char type,@Param("billAmt") BigDecimal billAMt,
+//						@Param("invAmt") BigDecimal invAmt);
+						
 						@Modifying
 						@Transactional
 						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
-								+ "c.crgStorageDay=c.crgStorageDay + :crgday,c.cargoValue=:cvalue ,c.invoiceUptoDate=:invDate,"
-								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
-								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
-								+ "c.containerNo=:con")
-						int updateInvoiceData2(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
-								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
-								@Param("cvalue") BigDecimal cvalue,
-								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
-						
-						
-						@Modifying
-						@Transactional
-						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
-								+ "c.crgStorageDay=:crgday,c.cargoValue=:cvalue ,c.invoiceUptoDate=:invDate,"
+								+ "c.crgStorageDay=:crgday,c.cargoValue=:cvalue ,"
 								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=:crgStorage "
 								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
 								+ "c.containerNo=:con")
 						int updateInvoiceData1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
 								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
-								@Param("cvalue") BigDecimal cvalue,
-								@Param("invDate") Date invDate,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
+								@Param("cvalue") BigDecimal cvalue,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
+						
+						
+						@Modifying
+						@Transactional
+						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
+								+ "c.crgStorageDay=c.crgStorageDay + :crgday,c.cargoValue=:cvalue ,"
+								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+								+ "c.containerNo=:con")
+						int updateInvoiceData2(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
+								@Param("cvalue") BigDecimal cvalue,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
 						
 						
 						@Modifying
 						@Transactional
 						@Query(value="UPDATE Cfigmcn c SET c.invoiceDate=:invDate,c.invoiceAssesed=:invass,c.invoiceNo=:invNo,c.creditType=:type,"
-								+ "c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.lastInvoiceNo=:invNo where c.companyId=:cid and c.branchId=:bid and "
+								+ "c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.lastInvoiceNo=:invNo,c.invoiceUptoDate=:invUptoDate where c.companyId=:cid and c.branchId=:bid and "
 								+ "c.status='A' and c.assesmentId=:id")
 						int updateInvoiceDataAtProcess(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("invDate") 
 						Date invDate,@Param("invass") char invass,@Param("invNo") String invNo,@Param("type") char type,@Param("billAmt") BigDecimal billAMt,
-						@Param("invAmt") BigDecimal invAmt);
+						@Param("invAmt") BigDecimal invAmt,@Param("invUptoDate") Date invUptoDate);
+						
 						
 						
 						@Query(value="select COALESCE(a.crgStorageAmt,0) from Cfigmcn a where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.igmTransId=:trans and "

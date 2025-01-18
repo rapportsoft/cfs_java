@@ -63,4 +63,17 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 			+ "s.containerNo=:con and s.status = 'A' and (s.assessmentId is null OR s.assessmentId = '')")
 	int updateAssessmentId(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
 			@Param("con") String con,@Param("id") String id);
+	
+	
+	@Query(value="select NEW com.cwms.entities.SSRDtl(s.containerNo, s.serviceId, s.serviceUnit, s.executionUnit,s.serviceUnit1, s.executionUnit1, s.rate,"
+			+ "s.totalRate) "
+			+ "from SSRDtl s "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.transId=:trans and s.status = 'A' and (s.assessmentId is null OR s.assessmentId = '')")
+	List<SSRDtl> getServiceId1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans);
+	
+	@Modifying
+	@Transactional
+	@Query(value="UPDATE SSRDtl s SET s.assessmentId=:id where s.companyId=:cid and s.branchId=:bid and s.transId=:trans and "
+			+ "s.status = 'A' and (s.assessmentId is null OR s.assessmentId = '')")
+	int updateAssessmentId1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("id") String id);
 }

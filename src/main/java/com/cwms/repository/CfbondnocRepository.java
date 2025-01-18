@@ -689,4 +689,55 @@ int updateCfBondNocAfterAuditTrailForHeaderChange(
     @Param("nocNo") String nocNo
 );
 
+
+
+
+
+@Query(value = "select c.boeNo, c.bondingNo, c.nocTransId " +
+        "from Cfbondnoc c " +
+        "where c.companyId = :cid and c.branchId = :bid and c.status = 'A' " +
+        "and (:val is null OR :val = '' OR c.boeNo LIKE CONCAT('%', :val, '%') OR c.bondingNo LIKE CONCAT('%', :val, '%'))")
+List<Object[]> getDataBeforeAssessment(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
+
+
+@Query(value="select c.nocTransId,c.profitcentreId,p.profitcentreDesc,c.nocNo,c.nocDate,c.insuranceValue,c.cargoDuty,"
+ 		+ "c.importerId,c.importerName,c.impSrNo,c.importerAddress1,c.importerAddress2,c.importerAddress3,pa1.gstNo,"
+ 		+ "c.cha,p1.partyName,c.chaSrNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,GROUP_CONCAT(dtl.commodityDescription),c.nocPackages,c.area,"
+ 		+ "c.grossWeight,c.insuranceValue,c.noOf20ft,c.noOf40ft,c.nocFromDate,c.nocValidityDate,"
+ 		+ "CEIL(DATEDIFF(c.nocValidityDate, c.nocFromDate) / 7),c.ssrTransId,c.invoiceUptoDate,c.assesmentId,c.invoiceNo,c.lastAssesmentDate,c.invoiceDate,"
+ 		+ "(select COALESCE(SUM(g.qtyTakenOut),0) from GateOut g where g.companyId=:cid and g.branchId=:bid and g.erpDocRefNo=:trans and g.status='A')  "
+  		+ "from Cfbondnoc c "
+		+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+		+ "LEFT OUTER JOIN PartyAddress pa1 ON c.companyId=pa1.companyId and c.branchId=pa1.branchId and c.importerId=pa1.partyId and c.impSrNo=CAST(pa1.srNo AS INTEGER) "
+		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
+		+ "LEFT OUTER JOIN PartyAddress pa2 ON c.companyId=pa2.companyId and c.branchId=pa2.branchId and c.cha=pa2.partyId and c.chaSrNo=CAST(pa2.srNo AS INTEGER) "
+		+ "LEFT OUTER JOIN CfBondNocDtl dtl ON c.companyId=dtl.companyId and c.branchId=dtl.branchId and c.nocTransId=dtl.nocTransId and "
+		+ "c.nocNo=dtl.nocNo and dtl.status = 'A' and c.boeNo=dtl.boeNo "
+  		+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.nocTransId=:trans and c.boeNo=:boe group by c.nocTransId,c.nocNo")
+  List<Object[]> getSelectedDataBeforeAssessment(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
+		  @Param("boe") String boe);
+  
+  
+  @Query("SELECT c FROM Cfbondnoc c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+    		+ "AND c.nocNo = :nocNo and c.status = 'A'")
+	Cfbondnoc getDataByNocAndTrans(
+	    @Param("companyId") String companyId, 
+	    @Param("branchId") String branchId, 
+	    @Param("nocTransId") String nocTransId, 
+	    @Param("nocNo") String nocNo
+	);
+    
+    @Transactional
+    @Modifying
+    @Query(value="UPDATE Cfbondnoc c SET c.invoiceAssesed='Y',c.invoiceNo=:invNo,c.invoiceDate=CURRENT_DATE,"
+    		+ "c.invoiceUptoDate=:uptoDate,c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.creditType=:ctype "
+    		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+    		+ "AND c.nocNo = :nocNo and c.status = 'A'")
+    int updateInvoiceData( @Param("companyId") String companyId, 
+  	  	    @Param("branchId") String branchId, 
+  	  	    @Param("nocTransId") String nocTransId, 
+  	  	    @Param("nocNo") String nocNo,@Param("invNo") String invNo,@Param("uptoDate") Date uptoDate,
+  	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
+
 }
