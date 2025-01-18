@@ -3274,10 +3274,10 @@ public class ExportStuffTally implements Cloneable {
 	    @Column(name = "Balance_Qty", precision = 8, scale = 0)
 	    private BigDecimal balanceQty;
 
-	    @Column(name = "Cargo_weight", precision = 10, scale = 4)
+	    @Column(name = "Cargo_weight", precision = 16, scale = 4)
 	    private BigDecimal cargoWeight;
 
-	    @Column(name = "Total_Cargo_Wt", precision = 10, scale = 3)
+	    @Column(name = "Total_Cargo_Wt", precision = 16, scale = 4)
 	    private BigDecimal totalCargoWeight;
 
 	    @Column(name = "Total_GW", precision = 16, scale = 4)

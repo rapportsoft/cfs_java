@@ -61,7 +61,7 @@ public class ExportStuffRequest implements Cloneable {
     @Column(name = "Stuff_Tally_Id", length = 10)
     private String stuffTallyId;
 
-    @Column(name = "Total_Cargo_Weight", precision = 12, scale = 2, nullable = false)
+    @Column(name = "Total_Cargo_Weight", precision = 16, scale = 4, nullable = false)
     private BigDecimal totalCargoWeight;
 
     @Column(name = "Shipping_Agent", length = 6, nullable = false)
@@ -155,7 +155,7 @@ public class ExportStuffRequest implements Cloneable {
     @Column(name = "container_health", length = 6)
     private String containerHealth;
 
-    @Column(name = "Cargo_Weight", precision = 12, scale = 2, nullable = false)
+    @Column(name = "Cargo_Weight", precision = 16, scale = 4, nullable = false)
     private BigDecimal cargoWeight;
 
     @Column(name = "Status", length = 1, nullable = false)
