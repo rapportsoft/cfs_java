@@ -116,6 +116,9 @@ public class CfinbondcrgHDR implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     private Date bondValidityDate;
+    
+    @Column(name = "Invoice_no", length = 16)
+    private String invoiceNo;
 
     @Column(name = "INVOICE_UPTO_DATE", nullable = true)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -322,6 +325,14 @@ public class CfinbondcrgHDR implements Serializable {
 	  
 	  
 	
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
 	public BigDecimal getExBondedCargoDuty() {
 		return exBondedCargoDuty;
 	}
@@ -1034,7 +1045,119 @@ public class CfinbondcrgHDR implements Serializable {
 	public void setBreakage(BigDecimal breakage) {
 		this.breakage = breakage;
 	}
+	
+	
 
+
+	public CfinbondcrgHDR(String companyId, String branchId, String finYear, String inBondingHdrId, Date inBondingDate,
+			String profitcentreId, String nocTransId, String nocNo, Date nocTransDate, String igmNo, Date igmDate,
+			String igmLineNo, Date nocDate, Date nocValidityDate, Date nocFromDate, String shift, String gateInId,
+			String boeNo, Date boeDate, int accSrNo, String onAccountOf, String shippingAgent, String shippingLine,
+			String bondingNo, Date bondingDate, Date bondValidityDate, String invoiceNo, Date invoiceUptoDate,
+			int chaSrNo, String cha, String chaCode, String billingParty, String igst, String cgst, String sgst,
+			int impSrNo, String importerId, String importerName, String importerAddress1, String importerAddress2,
+			String importerAddress3, String numberOfMarks, String commodityDescription, BigDecimal grossWeight,
+			String uom, String containerNo, String nocPackages, int sampleQty, BigDecimal areaAllocated,
+			BigDecimal areaOccupied, String cargoCondition, BigDecimal gateInPackages, BigDecimal inBondedPackages,
+			BigDecimal exBondedPackages, BigDecimal toBondedPackages, String spaceAllocated, String section49,
+			String containerSize, String containerType, String examinationId, String comments, BigDecimal cifValue,
+			BigDecimal cargoDuty, BigDecimal insuranceValue, BigDecimal inbondGrossWt, BigDecimal inbondInsuranceValue,
+			String inBond20Ft, String inBond40Ft, String exBond20Ft, String exBond40Ft, String otlNo, String bondYard,
+			String status, String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+			Date approvedDate, String reasonForChange, String reasonForChangeDetails, String syncFlag,
+			String documentStatus, BigDecimal shortagePackages, BigDecimal damagedQty, BigDecimal breakage,
+			BigDecimal exBondedCargoDuty, BigDecimal exBondedInsurance, BigDecimal exBondedCif, BigDecimal exBondedGw) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.inBondingHdrId = inBondingHdrId;
+		this.inBondingDate = inBondingDate;
+		this.profitcentreId = profitcentreId;
+		this.nocTransId = nocTransId;
+		this.nocNo = nocNo;
+		this.nocTransDate = nocTransDate;
+		this.igmNo = igmNo;
+		this.igmDate = igmDate;
+		this.igmLineNo = igmLineNo;
+		this.nocDate = nocDate;
+		this.nocValidityDate = nocValidityDate;
+		this.nocFromDate = nocFromDate;
+		this.shift = shift;
+		this.gateInId = gateInId;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.accSrNo = accSrNo;
+		this.onAccountOf = onAccountOf;
+		this.shippingAgent = shippingAgent;
+		this.shippingLine = shippingLine;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.bondValidityDate = bondValidityDate;
+		this.invoiceNo = invoiceNo;
+		this.invoiceUptoDate = invoiceUptoDate;
+		this.chaSrNo = chaSrNo;
+		this.cha = cha;
+		this.chaCode = chaCode;
+		this.billingParty = billingParty;
+		this.igst = igst;
+		this.cgst = cgst;
+		this.sgst = sgst;
+		this.impSrNo = impSrNo;
+		this.importerId = importerId;
+		this.importerName = importerName;
+		this.importerAddress1 = importerAddress1;
+		this.importerAddress2 = importerAddress2;
+		this.importerAddress3 = importerAddress3;
+		this.numberOfMarks = numberOfMarks;
+		this.commodityDescription = commodityDescription;
+		this.grossWeight = grossWeight;
+		this.uom = uom;
+		this.containerNo = containerNo;
+		this.nocPackages = nocPackages;
+		this.sampleQty = sampleQty;
+		this.areaAllocated = areaAllocated;
+		this.areaOccupied = areaOccupied;
+		this.cargoCondition = cargoCondition;
+		this.gateInPackages = gateInPackages;
+		this.inBondedPackages = inBondedPackages;
+		this.exBondedPackages = exBondedPackages;
+		this.toBondedPackages = toBondedPackages;
+		this.spaceAllocated = spaceAllocated;
+		this.section49 = section49;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.examinationId = examinationId;
+		this.comments = comments;
+		this.cifValue = cifValue;
+		this.cargoDuty = cargoDuty;
+		this.insuranceValue = insuranceValue;
+		this.inbondGrossWt = inbondGrossWt;
+		this.inbondInsuranceValue = inbondInsuranceValue;
+		this.inBond20Ft = inBond20Ft;
+		this.inBond40Ft = inBond40Ft;
+		this.exBond20Ft = exBond20Ft;
+		this.exBond40Ft = exBond40Ft;
+		this.otlNo = otlNo;
+		this.bondYard = bondYard;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.reasonForChange = reasonForChange;
+		this.reasonForChangeDetails = reasonForChangeDetails;
+		this.syncFlag = syncFlag;
+		this.documentStatus = documentStatus;
+		this.shortagePackages = shortagePackages;
+		this.damagedQty = damagedQty;
+		this.breakage = breakage;
+		this.exBondedCargoDuty = exBondedCargoDuty;
+		this.exBondedInsurance = exBondedInsurance;
+		this.exBondedCif = exBondedCif;
+		this.exBondedGw = exBondedGw;
+	}
 
 	public CfinbondcrgHDR(String companyId, String branchId, String finYear, String inBondingHdrId, Date inBondingDate,
 			String profitcentreId, String nocTransId, String nocNo, Date nocTransDate, String igmNo, Date igmDate,
