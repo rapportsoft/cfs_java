@@ -279,5 +279,41 @@ public class YardController {
 	        return new ResponseEntity<>(data, HttpStatus.OK);
 	    }
 	}
+	
+	
+	@GetMapping("/getAllYardForReworking")
+	public ResponseEntity<?> getAllYardForReworking(
+	        @RequestParam("companyId") String companyId,
+	        @RequestParam("branchId") String branchId,
+	        @RequestParam(name = "search", required = false) String search) {
+
+	    String partA = search;  // Default to the whole search string
+	    String partB = null;
+	    String partC = null;
+
+	    // Check if search contains "-"
+	    if (search != null && search.contains("-")) {
+	        String[] parts = search.split("-");
+
+	        if (parts.length > 0) {
+	            partA = parts[0];
+	        }
+	        if (parts.length > 1) {
+	            partB = parts[1];
+	        }
+	        if (parts.length > 2) {
+	            partC = parts[2];
+	        }
+	    }
+
+	    List<YardBlockCell> data = yardBlockCellRepository.getAll2(companyId, partA, partB, partC);
+
+	    if (data.isEmpty()) {
+	        return new ResponseEntity<>("Not found", HttpStatus.CONFLICT);
+	    } else {
+	        return new ResponseEntity<>(data, HttpStatus.OK);
+	    }
+	}
+
 
 }

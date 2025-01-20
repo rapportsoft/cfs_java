@@ -115,5 +115,17 @@ List<YardBlockCell> findYardBlockCell(@Param("companyId") String companyId,
 	        @Param("yardLocationId") String yardLocationId,
 	        @Param("blockId") String blockId,
 	        @Param("cellNoRow") String cellNoRow);
+	
+	
+	@Query(value="select new com.cwms.entities.YardBlockCell("
+			+ "y.companyId, y.yardId, y.yardLocationId, y.blockId, y.cellNoRow,"
+			+ "y.cellArea, y.cellAreaUsed, y.locationCategory, y.cellStatus, y.status) " 
+			+ "from YardBlockCell y "
+			+ "where y.companyId=:cid  and y.status != 'D' "
+			+ "AND ((:val is null OR :val = '' OR y.yardLocationId like CONCAT ('%',:val,'%')) AND "
+			+ "(:val1 is null OR :val1 = '' OR y.blockId like CONCAT ('%',:val1,'%')) AND "
+			+ "(:val2 is null OR :val2 = '' OR y.cellNoRow like CONCAT ('%',:val2,'%')))")
+	List<YardBlockCell> getAll2(@Param("cid") String cid,@Param("val") String val,@Param("val1") String val1,@Param("val2") String val2);
+	
 
 }
