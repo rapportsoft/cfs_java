@@ -1,6 +1,7 @@
 package com.cwms.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -284,7 +285,9 @@ public class ExportStuffTallyController {
 						qty = remainingQty;
 					}
 
-					BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+					BigDecimal area = c.getAreaOccupied()
+			                   .multiply(qty)
+			                   .divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 					ExportStuffTally newTally = new ExportStuffTally();
 
@@ -663,7 +666,7 @@ public class ExportStuffTallyController {
 								System.out.println("less qty " + qty);
 
 								BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-										.divide(existCar.getYardPackages());
+										.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 								Optional<ExportStuffTally> optionalExportStuffTally = tally.stream()
 										.filter(t1 -> t1.getSbNo().equals(exist.getSbNo())).findFirst();
@@ -819,7 +822,7 @@ public class ExportStuffTallyController {
 									}
 
 									BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-											.divide(existCar.getYardPackages());
+											.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									Optional<ExportStuffTally> optionalExportStuffTally = tally.stream()
 											.filter(t1 -> t1.getSbNo().equals(exist.getSbNo())).findFirst();
@@ -1012,7 +1015,7 @@ public class ExportStuffTallyController {
 									}
 
 									BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-											.divide(existCar.getYardPackages());
+											.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									Optional<ExportStuffTally> optionalExportStuffTally = tally.stream()
 											.filter(t1 -> t1.getSbNo().equals(exist.getSbNo())).findFirst();
@@ -1171,7 +1174,7 @@ public class ExportStuffTallyController {
 										}
 
 										BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-												.divide(existCar.getYardPackages());
+												.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 										Optional<ExportStuffTally> optionalExportStuffTally = tally.stream()
 												.filter(t1 -> t1.getSbNo().equals(exist.getSbNo())).findFirst();
@@ -1432,7 +1435,7 @@ public class ExportStuffTallyController {
 										}
 									}
 
-									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
 									exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
@@ -1580,7 +1583,7 @@ public class ExportStuffTallyController {
 
 									System.out.println("qty qty " + qty);
 
-									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									ExportStuffTally newTally = new ExportStuffTally();
 
@@ -1828,7 +1831,7 @@ public class ExportStuffTallyController {
 
 									}
 
-									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
 									exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
@@ -2005,7 +2008,7 @@ public class ExportStuffTallyController {
 										}
 
 										BigDecimal area = (c.getAreaOccupied().multiply(qty))
-												.divide(c.getYardPackages());
+												.divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 										ExportStuffTally newTally = new ExportStuffTally();
 
@@ -2259,7 +2262,7 @@ public class ExportStuffTallyController {
 									}
 
 									System.out.println("qty qty " + qty);
-									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+									BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									ExportStuffTally newTally = new ExportStuffTally();
 
@@ -2908,7 +2911,9 @@ public class ExportStuffTallyController {
 						qty = remainingQty;
 					}
 
-					BigDecimal area = (c.getAreaOccupied().multiply(qty)).divide(c.getYardPackages());
+					BigDecimal area = c.getAreaOccupied()
+			                   .multiply(qty)
+			                   .divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 					ExportStuffTally newTally = new ExportStuffTally();
 
@@ -3204,7 +3209,7 @@ public class ExportStuffTallyController {
 									}
 
 									BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-											.divide(existCar.getYardPackages());
+											.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									exist.setStuffedQty(exist.getStuffedQty().add(qty));
 									exist.setBalanceQty(exist.getBalanceQty().subtract(qty));
@@ -3307,7 +3312,7 @@ public class ExportStuffTallyController {
 										}
 
 										BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-												.divide(existCar.getYardPackages());
+												.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 										exist.setStuffedQty(exist.getStuffedQty().add(qty));
 										exist.setBalanceQty(exist.getBalanceQty().subtract(qty));
@@ -3466,7 +3471,7 @@ public class ExportStuffTallyController {
 												System.out.println("qty11 " + qty);
 
 												BigDecimal area = (c.getAreaOccupied().multiply(qty))
-														.divide(c.getYardPackages());
+														.divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 												exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
 												exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
@@ -3622,7 +3627,7 @@ public class ExportStuffTallyController {
 												}
 
 												BigDecimal area = (c.getAreaOccupied().multiply(qty))
-														.divide(c.getYardPackages());
+														.divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 												ExportStuffTally newTally = new ExportStuffTally();
 
@@ -3875,7 +3880,7 @@ public class ExportStuffTallyController {
 												}
 
 												BigDecimal area = (c.getAreaOccupied().multiply(qty))
-														.divide(c.getYardPackages());
+														.divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 												exist1.setStuffedQty(exist1.getStuffedQty().add(qty));
 												exist1.setBalanceQty(exist1.getBalanceQty().subtract(qty));
@@ -4058,7 +4063,7 @@ public class ExportStuffTallyController {
 													}
 
 													BigDecimal area = (c.getAreaOccupied().multiply(qty))
-															.divide(c.getYardPackages());
+															.divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 													ExportStuffTally newTally = new ExportStuffTally();
 
@@ -4314,7 +4319,7 @@ public class ExportStuffTallyController {
 													}
 
 													BigDecimal area = (c.getAreaOccupied().multiply(qty))
-															.divide(c.getYardPackages());
+															.divide(c.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 													ExportStuffTally newTally = new ExportStuffTally();
 
@@ -4535,7 +4540,7 @@ public class ExportStuffTallyController {
 									}
 
 									BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-											.divide(existCar.getYardPackages());
+											.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 									exist.setStuffedQty(exist.getStuffedQty().subtract(qty));
 									exist.setBalanceQty(exist.getBalanceQty().add(qty));
@@ -4659,7 +4664,7 @@ public class ExportStuffTallyController {
 										}
 
 										BigDecimal area = (existCar.getAreaOccupied().multiply(qty))
-												.divide(existCar.getYardPackages());
+												.divide(existCar.getYardPackages(), 2, RoundingMode.HALF_UP);
 
 										exist.setStuffedQty(exist.getStuffedQty().subtract(qty));
 										exist.setBalanceQty(exist.getBalanceQty().add(qty));
