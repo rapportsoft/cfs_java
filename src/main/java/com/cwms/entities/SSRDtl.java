@@ -789,7 +789,17 @@ public class SSRDtl {
 		this.impId = impId;
 	}
     
-	
+	public SSRDtl(String containerNo, String serviceId, String serviceUnit, String executionUnit,String serviceUnit1, String executionUnit1, BigDecimal rate,
+			BigDecimal totalRate) {
+		this.containerNo = containerNo;
+		this.serviceId = serviceId;
+		this.serviceUnit = serviceUnit;
+		this.executionUnit = executionUnit;
+		this.serviceUnit1 = serviceUnit1;
+		this.executionUnit1 = executionUnit1;
+		this.rate = rate;
+		this.totalRate = totalRate;
+	}
 	
     
 	
