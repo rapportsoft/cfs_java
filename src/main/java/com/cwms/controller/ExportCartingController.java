@@ -222,8 +222,12 @@ public class ExportCartingController {
 									c.getGridBlock(), c.getGridCellNo());
 
 							if (cell != null) {
-								BigDecimal remainArea = cell.getCellArea().subtract(
-										cell.getCellAreaUsed() == null ? BigDecimal.ZERO : cell.getCellAreaUsed());
+								BigDecimal remainArea = (cell != null && cell.getCellArea() != null) 
+									    ? cell.getCellArea().subtract(
+									        cell.getCellAreaUsed() == null ? BigDecimal.ZERO : cell.getCellAreaUsed()
+									      )
+									    : BigDecimal.ZERO;
+
 
 								if (c.getYardArea().compareTo(remainArea) > 0) {
 									return new ResponseEntity<>("The maximum remaining area for location "
