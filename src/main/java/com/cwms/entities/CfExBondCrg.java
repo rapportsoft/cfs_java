@@ -283,6 +283,36 @@ public class CfExBondCrg {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvedDate;
+    
+    
+    @Column(name="Invoice_Assesed",length = 1)
+    private String invoiceAssesed;
+    
+	@Column(name = "Last_Assesment_Id", length = 20)
+	private String lastAssesmentId;
+
+	@Column(name = "Last_Assesment_Date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastAssesmentDate;
+	
+	@Column(name = "Last_Invoice_No", length = 16)
+	private String lastInvoiceNo;
+
+	@Column(name = "Last_Invoice_Date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastInvoiceDate;
+	
+	@Column(name = "Last_Invoice_Assesed", length = 1, nullable = true)
+	private String lastInvoiceAssesed;
+
+	@Column(name = "Bill_Amt", precision = 12, scale = 2, nullable = true)
+	private BigDecimal billAmt;
+
+	@Column(name = "Invoice_Amt", precision = 12, scale = 2, nullable = true)
+	private BigDecimal invoiceAmt;
+    
+	@Column(name = "Credit_Type", length = 16, nullable = true)
+	private String creditType;
     // Getters and Setters for all the fields
 
     // Constructors
@@ -382,7 +412,153 @@ public class CfExBondCrg {
     public CfExBondCrg() {
     }
 
+    
+    
    
+
+	public String getInvoiceAssesed() {
+		return invoiceAssesed;
+	}
+
+
+
+
+
+	public void setInvoiceAssesed(String invoiceAssesed) {
+		this.invoiceAssesed = invoiceAssesed;
+	}
+
+
+
+
+
+	public String getLastAssesmentId() {
+		return lastAssesmentId;
+	}
+
+
+
+
+
+	public void setLastAssesmentId(String lastAssesmentId) {
+		this.lastAssesmentId = lastAssesmentId;
+	}
+
+
+
+
+
+	public Date getLastAssesmentDate() {
+		return lastAssesmentDate;
+	}
+
+
+
+
+
+	public void setLastAssesmentDate(Date lastAssesmentDate) {
+		this.lastAssesmentDate = lastAssesmentDate;
+	}
+
+
+
+
+
+	public String getLastInvoiceNo() {
+		return lastInvoiceNo;
+	}
+
+
+
+
+
+	public void setLastInvoiceNo(String lastInvoiceNo) {
+		this.lastInvoiceNo = lastInvoiceNo;
+	}
+
+
+
+
+
+	public Date getLastInvoiceDate() {
+		return lastInvoiceDate;
+	}
+
+
+
+
+
+	public void setLastInvoiceDate(Date lastInvoiceDate) {
+		this.lastInvoiceDate = lastInvoiceDate;
+	}
+
+
+
+
+
+	public String getLastInvoiceAssesed() {
+		return lastInvoiceAssesed;
+	}
+
+
+
+
+
+	public void setLastInvoiceAssesed(String lastInvoiceAssesed) {
+		this.lastInvoiceAssesed = lastInvoiceAssesed;
+	}
+
+
+
+
+
+	public BigDecimal getBillAmt() {
+		return billAmt;
+	}
+
+
+
+
+
+	public void setBillAmt(BigDecimal billAmt) {
+		this.billAmt = billAmt;
+	}
+
+
+
+
+
+	public BigDecimal getInvoiceAmt() {
+		return invoiceAmt;
+	}
+
+
+
+
+
+	public void setInvoiceAmt(BigDecimal invoiceAmt) {
+		this.invoiceAmt = invoiceAmt;
+	}
+
+
+
+
+
+	public String getCreditType() {
+		return creditType;
+	}
+
+
+
+
+
+	public void setCreditType(String creditType) {
+		this.creditType = creditType;
+	}
+
+
+
+
 
 	public String getSection49() {
 		return section49;
@@ -1415,6 +1591,162 @@ public class CfExBondCrg {
 	public void setIgmLineNo(String igmLineNo) {
 		this.igmLineNo = igmLineNo;
 	}
+	
+	
+	
+
+
+
+	public CfExBondCrg(String companyId, String branchId, String finYear, String exBondingId, Date exBondingDate,
+			String profitcentreId, String nocTransId, String nocNo, Date nocValidityDate, String boeNo,
+			String bondingNo, Date bondingDate, String exBondBeNo, Date exBondBeDate, String inBondingId,
+			Date inBondingDate, Date invoiceUptoDate, String igmNo, String igmLineNo, int accSrNo, String onAccountOf,
+			int chaSrNo, String cha, String shift, String commodityDescription, BigDecimal grossWeight,
+			BigDecimal inBondedGw, BigDecimal exBondedGw, BigDecimal remainingGw, BigDecimal balanceGw,
+			String numberOfMarks, String uom, char periodicBill, String nocPackages, BigDecimal areaOccupied,
+			BigDecimal areaReleased, BigDecimal areaBalanced, BigDecimal areaRemaining, BigDecimal inBondedPackages,
+			BigDecimal exBondedPackages, BigDecimal remainingPackages, BigDecimal balancedQty,
+			BigDecimal balancedPackages, BigDecimal qtyTakenOut, String spaceAllocated, BigDecimal cifValue,
+			BigDecimal inBondedCif, BigDecimal exBondedCif, BigDecimal remainingCif, BigDecimal balanceCif,
+			BigDecimal inBondedCargoDuty, BigDecimal exBondedCargoDuty, BigDecimal remainingCargoDuty,
+			BigDecimal balanceCargoDuty, BigDecimal inBondedInsurance, BigDecimal exBondedInsurance,
+			BigDecimal remainingInsurance, BigDecimal balanceInsurance, BigDecimal cifQty, String exBondNo,
+			Date exBondDate, String noOf20Ft, String noOf40Ft, String comments, String giTransporterStatus,
+			String giTransporter, String giTransporterName, String giVehicleNo, String giDriverName, String gateOutId,
+			Date gateOutDate, String gateOutTransporter, String gateOutVehicleNo, String gateOutDriverName,
+			String status, String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+			Date approvedDate, String invoiceAssesed, String lastAssesmentId, Date lastAssesmentDate,
+			String lastInvoiceNo, Date lastInvoiceDate, String lastInvoiceAssesed, BigDecimal billAmt,
+			BigDecimal invoiceAmt, String creditType, String gateInType, String spaceType, String section49,
+			Date bondValidityDate, Date igmDate, Date nocDate, String chaName, String importerName,
+			BigDecimal exBondedPackagesdtl, BigDecimal exBondedCIFdtl, BigDecimal exBondedCargoDutydtl,
+			BigDecimal exBondedGWdtl, String typeOfPackage, BigDecimal inBondedPackagesdtl, BigDecimal inbondGrossWt,
+			BigDecimal inbondInsuranceValue, BigDecimal inbondCifValue, BigDecimal inbondCargoDuty,
+			String importerAddress1, String importerAddress2, String importerAddress3, String exBondType, String sbNo,
+			Date sbDate, BigDecimal sbValue, BigDecimal sbDuty, BigDecimal sbQty, String trnsferBondNo,
+			Date trnsferBondDate) {
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.finYear = finYear;
+		this.exBondingId = exBondingId;
+		this.exBondingDate = exBondingDate;
+		this.profitcentreId = profitcentreId;
+		this.nocTransId = nocTransId;
+		this.nocNo = nocNo;
+		this.nocValidityDate = nocValidityDate;
+		this.boeNo = boeNo;
+		this.bondingNo = bondingNo;
+		this.bondingDate = bondingDate;
+		this.exBondBeNo = exBondBeNo;
+		this.exBondBeDate = exBondBeDate;
+		this.inBondingId = inBondingId;
+		this.inBondingDate = inBondingDate;
+		this.invoiceUptoDate = invoiceUptoDate;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
+		this.accSrNo = accSrNo;
+		this.onAccountOf = onAccountOf;
+		this.chaSrNo = chaSrNo;
+		this.cha = cha;
+		this.shift = shift;
+		this.commodityDescription = commodityDescription;
+		this.grossWeight = grossWeight;
+		this.inBondedGw = inBondedGw;
+		this.exBondedGw = exBondedGw;
+		this.remainingGw = remainingGw;
+		this.balanceGw = balanceGw;
+		this.numberOfMarks = numberOfMarks;
+		this.uom = uom;
+		this.periodicBill = periodicBill;
+		this.nocPackages = nocPackages;
+		this.areaOccupied = areaOccupied;
+		this.areaReleased = areaReleased;
+		this.areaBalanced = areaBalanced;
+		this.areaRemaining = areaRemaining;
+		this.inBondedPackages = inBondedPackages;
+		this.exBondedPackages = exBondedPackages;
+		this.remainingPackages = remainingPackages;
+		this.balancedQty = balancedQty;
+		this.balancedPackages = balancedPackages;
+		this.qtyTakenOut = qtyTakenOut;
+		this.spaceAllocated = spaceAllocated;
+		this.cifValue = cifValue;
+		this.inBondedCif = inBondedCif;
+		this.exBondedCif = exBondedCif;
+		this.remainingCif = remainingCif;
+		this.balanceCif = balanceCif;
+		this.inBondedCargoDuty = inBondedCargoDuty;
+		this.exBondedCargoDuty = exBondedCargoDuty;
+		this.remainingCargoDuty = remainingCargoDuty;
+		this.balanceCargoDuty = balanceCargoDuty;
+		this.inBondedInsurance = inBondedInsurance;
+		this.exBondedInsurance = exBondedInsurance;
+		this.remainingInsurance = remainingInsurance;
+		this.balanceInsurance = balanceInsurance;
+		this.cifQty = cifQty;
+		this.exBondNo = exBondNo;
+		this.exBondDate = exBondDate;
+		this.noOf20Ft = noOf20Ft;
+		this.noOf40Ft = noOf40Ft;
+		this.comments = comments;
+		this.giTransporterStatus = giTransporterStatus;
+		this.giTransporter = giTransporter;
+		this.giTransporterName = giTransporterName;
+		this.giVehicleNo = giVehicleNo;
+		this.giDriverName = giDriverName;
+		this.gateOutId = gateOutId;
+		this.gateOutDate = gateOutDate;
+		this.gateOutTransporter = gateOutTransporter;
+		this.gateOutVehicleNo = gateOutVehicleNo;
+		this.gateOutDriverName = gateOutDriverName;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.invoiceAssesed = invoiceAssesed;
+		this.lastAssesmentId = lastAssesmentId;
+		this.lastAssesmentDate = lastAssesmentDate;
+		this.lastInvoiceNo = lastInvoiceNo;
+		this.lastInvoiceDate = lastInvoiceDate;
+		this.lastInvoiceAssesed = lastInvoiceAssesed;
+		this.billAmt = billAmt;
+		this.invoiceAmt = invoiceAmt;
+		this.creditType = creditType;
+		this.gateInType = gateInType;
+		this.spaceType = spaceType;
+		this.section49 = section49;
+		this.bondValidityDate = bondValidityDate;
+		this.igmDate = igmDate;
+		this.nocDate = nocDate;
+		this.chaName = chaName;
+		this.importerName = importerName;
+		this.exBondedPackagesdtl = exBondedPackagesdtl;
+		this.exBondedCIFdtl = exBondedCIFdtl;
+		this.exBondedCargoDutydtl = exBondedCargoDutydtl;
+		this.exBondedGWdtl = exBondedGWdtl;
+		this.typeOfPackage = typeOfPackage;
+		this.inBondedPackagesdtl = inBondedPackagesdtl;
+		this.inbondGrossWt = inbondGrossWt;
+		this.inbondInsuranceValue = inbondInsuranceValue;
+		this.inbondCifValue = inbondCifValue;
+		this.inbondCargoDuty = inbondCargoDuty;
+		this.importerAddress1 = importerAddress1;
+		this.importerAddress2 = importerAddress2;
+		this.importerAddress3 = importerAddress3;
+		this.exBondType = exBondType;
+		this.sbNo = sbNo;
+		this.sbDate = sbDate;
+		this.sbValue = sbValue;
+		this.sbDuty = sbDuty;
+		this.sbQty = sbQty;
+		this.trnsferBondNo = trnsferBondNo;
+		this.trnsferBondDate = trnsferBondDate;
+	}
+
+
 
 
 

@@ -728,16 +728,30 @@ List<Object[]> getDataBeforeAssessment(@Param("cid") String cid, @Param("bid") S
 	    @Param("nocNo") String nocNo
 	);
     
-    @Transactional
-    @Modifying
-    @Query(value="UPDATE Cfbondnoc c SET c.invoiceAssesed='Y',c.invoiceNo=:invNo,c.invoiceDate=CURRENT_DATE,"
-    		+ "c.invoiceUptoDate=:uptoDate,c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.creditType=:ctype "
-    		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
-    		+ "AND c.nocNo = :nocNo and c.status = 'A'")
-    int updateInvoiceData( @Param("companyId") String companyId, 
-  	  	    @Param("branchId") String branchId, 
-  	  	    @Param("nocTransId") String nocTransId, 
-  	  	    @Param("nocNo") String nocNo,@Param("invNo") String invNo,@Param("uptoDate") Date uptoDate,
-  	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
+  @Transactional
+  @Modifying
+  @Query(value="UPDATE Cfbondnoc c SET c.invoiceAssesed='Y',c.invoiceNo=:invNo,c.invoiceDate=CURRENT_DATE,"
+  		+ "c.invoiceUptoDate=:uptoDate,c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.creditType=:ctype "
+  		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+  		+ "AND c.nocNo = :nocNo and c.status = 'A'")
+  int updateInvoiceData( @Param("companyId") String companyId, 
+	  	    @Param("branchId") String branchId, 
+	  	    @Param("nocTransId") String nocTransId, 
+	  	    @Param("nocNo") String nocNo,@Param("invNo") String invNo,@Param("uptoDate") Date uptoDate,
+	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
+
+  
+  
+  @Transactional
+  @Modifying
+  @Query(value="UPDATE Cfbondnoc c SET c.lastInvoiceNo=:invNo,c.lastInvoiceDate=CURRENT_DATE,c.lastInvoiceAssesed='Y',"
+  		+ "c.lastBillAmt=:billAmt,c.lastInvoiceAmt=:invAmt,c.lastCreditType=:ctype "
+  		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+  		+ "AND c.nocNo = :nocNo and c.status = 'A'")
+  int updateInvoiceData1( @Param("companyId") String companyId, 
+	  	    @Param("branchId") String branchId, 
+	  	    @Param("nocTransId") String nocTransId, 
+	  	    @Param("nocNo") String nocNo,@Param("invNo") String invNo,
+	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
 
 }

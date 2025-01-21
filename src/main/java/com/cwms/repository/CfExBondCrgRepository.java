@@ -440,4 +440,70 @@ List<CfExBondCrg> getDataForBondDeliveryReportWithoutDates(@Param("companyId") S
 	);
 
 
+
+// For invoice
+
+
+@Query(value="select e.exBondBeNo from CfExBondCrg e "
+		+ "where e.companyId=:cid and e.branchId=:bid and e.status='A' and (:val is null OR :val = '' OR e.exBondBeNo LIKE CONCAT('%',:val,'%')) "
+		+ "and (e.invoiceAssesed = '' OR e.invoiceAssesed is null OR e.invoiceAssesed='N')")
+List<String> getExBondBeNo(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+
+
+
+
+@Query(value="select c.nocTransId,c.profitcentreId,p.profitcentreDesc,c.nocNo,noc.nocDate,c.exBondedInsurance,c.exBondedCargoDuty,"
+	 		+ "noc.importerId,noc.importerName,noc.impSrNo,noc.importerAddress1,noc.importerAddress2,noc.importerAddress3,pa1.gstNo,"
+	 		+ "noc.cha,p1.partyName,noc.chaSrNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,GROUP_CONCAT(dtl.commodityDescription),"
+	 		+ "c.onAccountOf,p2.partyName,pa3.gstNo,pa3.state,c.accSrNo,c.remainingPackages,c.areaRemaining,"
+	 		+ "c.remainingGw,c.remainingInsurance,c.noOf20Ft,c.noOf40Ft,d.storageValidityDate,"
+	 		+ "(select s.transId from SSRDtl s where s.companyId=:cid and s.branchId=:bid and s.exBondBeId=:boe and s.status='A'),"
+	 		+ "c.exBondBeNo,c.exBondingId "
+	  		+ "from CfExBondCrg c "
+	  		+ "LEFT OUTER JOIN Cfbondnoc noc ON c.companyId=noc.companyId and c.branchId=noc.branchId and c.nocNo=noc.nocNo and c.nocTransId=noc.nocTransId "
+			+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+			+ "LEFT OUTER JOIN PartyAddress pa1 ON noc.companyId=pa1.companyId and noc.branchId=pa1.branchId and noc.importerId=pa1.partyId and noc.impSrNo=CAST(pa1.srNo AS INTEGER) "
+			+ "LEFT OUTER JOIN Party p1 ON noc.companyId=p1.companyId and noc.branchId=p1.branchId and noc.cha=p1.partyId "
+			+ "LEFT OUTER JOIN PartyAddress pa2 ON noc.companyId=pa2.companyId and noc.branchId=pa2.branchId and noc.cha=pa2.partyId and noc.chaSrNo=CAST(pa2.srNo AS INTEGER) "
+			+ "LEFT OUTER JOIN Party p2 ON c.companyId=p2.companyId and c.branchId=p2.branchId and c.onAccountOf=p2.partyId "
+			+ "LEFT OUTER JOIN PartyAddress pa3 ON c.companyId=pa3.companyId and c.branchId=pa3.branchId and c.onAccountOf=pa3.partyId and c.accSrNo=CAST(pa3.srNo AS INTEGER) "
+			+ "LEFT OUTER JOIN CfexBondCrgDtl dtl ON c.companyId=dtl.companyId and c.branchId=dtl.branchId and dtl.status = 'A' "
+			+ "and c.exBondingId=dtl.exBondingId and c.nocNo=dtl.nocNo and c.nocTransId=dtl.nocTransId "
+			+ "LEFT OUTER JOIN Cfexbonddts d ON noc.companyId=d.companyId and noc.branchId=d.branchId and noc.nocTransId=d.nocTransId and "
+			+ "noc.nocNo=d.nocNo and d.storageValidityDate is not null "
+	  		+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.exBondBeNo=:boe group by c.nocTransId,c.nocNo order by d.createdDate desc LIMIT 1 ")
+	  List<Object[]> getSelectedDataBeforeAssessment(@Param("cid") String cid,@Param("bid") String bid,@Param("boe") String boe);
+	  
+	  
+	  
+	  
+	  //Invoice 
+	  
+		 @Query("SELECT c FROM CfExBondCrg c WHERE c.companyId = :companyId AND c.branchId = :branchId "
+		 		+ "AND c.nocTransId = :nocTransId AND c.nocNo = :nocNo AND c.exBondingId = :exBondingId AND "
+		 		+ "c.exBondBeNo=:beNo ")
+		 CfExBondCrg findExistingCfexbondCrg1(
+		        @Param("companyId") String companyId,
+		        @Param("branchId") String branchId,
+		        @Param("nocTransId") String nocTransId,
+		        @Param("nocNo") String nocNo,
+		        @Param("exBondingId") String exBondingId,
+		        @Param("beNo") String beNo
+		    );
+		 
+		 
+		 @Transactional
+	      @Modifying
+	      @Query(value="UPDATE CfExBondCrg c SET c.lastInvoiceNo=:invNo,c.lastInvoiceDate=CURRENT_DATE,c.lastInvoiceAssesed='Y',"
+	      		+ "c.invoiceUptoDate=:uptoDate,c.invoiceAssesed='Y',c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.creditType=:ctype "
+	      		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+	      		+ "AND c.exBondingId = :id and c.status = 'A'")
+	      int updateInvoiceData( @Param("companyId") String companyId, 
+	    	  	    @Param("branchId") String branchId, 
+	    	  	    @Param("nocTransId") String nocTransId, 
+	    	  	    @Param("id") String id,@Param("invNo") String invNo,@Param("uptoDate") Date uptoDate,
+	    	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
+
 }
+
+

@@ -115,13 +115,40 @@ public class AssessmentSheetController {
 	 
 	 @GetMapping("/searchBondNOCInvoiceData")
 	 public ResponseEntity<?> searchBondNOCInvoiceData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			 @RequestParam(name="val",required = false) String val){
-		 return assessmentService.searchBondNOCInvoiceData(cid, bid, val);
+			 @RequestParam(name="val",required = false) String val,@RequestParam("type") String type){
+		 return assessmentService.searchBondNOCInvoiceData(cid, bid, val, type);
 	 }
 	 
 	 @GetMapping("/getSelectedBondNOCInvoiceData")
 	 public ResponseEntity<?> getSelectedBondNOCInvoiceData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			 @RequestParam("assId") String assId,@RequestParam("invId") String invId){
-		 return assessmentService.getSelectedBondNOCInvoiceData(cid, bid, assId, invId);
+			 @RequestParam("assId") String assId,@RequestParam("invId") String invId,@RequestParam("type") String type){
+		 return assessmentService.getSelectedBondNOCInvoiceData(cid, bid, assId, invId, type);
 	 }
+	 
+	 @GetMapping("/searchExbondBeforeData")
+	 public ResponseEntity<?> searchExbondBeforeData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam(name="val",required = false) String val){
+		 return assessmentService.searchExbondbeNo(cid, bid, val);
+	 }
+	 
+	 
+	 @GetMapping("/getExbondBeforeSaveAssessmentData")
+	 public ResponseEntity<?> getExbondBeforeSaveAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("val") String val){
+		 return assessmentService.getExbondBeforeSaveAssessmentData(cid, bid, val);
+	 }
+	 
+	 
+	 @PostMapping("/saveExbondAssessmentData")
+	 public ResponseEntity<?> saveExbondAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException, ParseException, CloneNotSupportedException{
+		 return assessmentService.saveExbondAssessmentData(cid, bid, user, assessmentData);
+	 }
+	 
+	 @PostMapping("/saveExBondInvoiceReceipt")
+	 public ResponseEntity<?> saveExBondInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
+		 return assessmentService.saveExbondInvoiceReceipt(cid, bid, user, assessmentData);
+	 }
+	 
 }
