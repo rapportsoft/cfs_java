@@ -177,8 +177,8 @@ public class ImportReportsService {
 	            		  companyId, branchId, startDate, endDate, igmNo, itemNo, sl, acc, cha);
 	            break;
 	            
-	        case "Loaded To Distuff Empty Inventory":
-	            importDetails = importReportsRepository.getLoadedToDistuffEmptyContainerDetails(
+	        case "Loaded To Destuff Empty Inventory":
+	            importDetails = importReportsRepository.getLoadedToDestuffEmptyContainerDetails(
 	                    companyId, branchId, startDate, endDate,igmNo, itemNo, sl,  cha);
 	            break;
 
@@ -387,7 +387,7 @@ public class ImportReportsService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -400,7 +400,7 @@ public class ImportReportsService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -413,7 +413,7 @@ public class ImportReportsService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -430,7 +430,7 @@ public class ImportReportsService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0,7));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
@@ -817,6 +817,168 @@ public class ImportReportsService {
 		            }
 		        }
 
+		        
+		        Row emptyRow1 = sheet.createRow(rowNum++);
+		        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
+		        
+
+		        Row empty = sheet.createRow(rowNum++);
+		        empty.createCell(0).setCellValue("Shipping Line Wise Summary"); // You can set a value or keep it blank
+		        
+		        		
+		        		
+		        Row emptyRow11 = sheet.createRow(rowNum++);
+		        
+		        emptyRow11.createCell(0).setCellValue(""); // You can set a value or keep it blank
+
+		        // Create a row for totals
+//		        Row totalRow = sheet.createRow(rowNum+ 2);
+
+		        // Header row for summary
+		        String[] columnsHeaderSummery = {
+		            "Sr No", "Shipping Line", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
+		        };
+
+		        // Create a map to store container count for each agent
+		        Map<String, int[]> agentContainerCount = new HashMap<>();
+
+		        // Iterate over importDetails and count the container sizes for each shipping agent
+		        importDetails.forEach(i -> {
+		            String agent = i[4] != null ? i[4].toString() : "Unknown"; // Shipping Agent at index 10
+		            String containerSize = i[9] != null ? i[9].toString() : ""; // Container Size at index 3
+
+		            // Initialize counts for this agent if not already present
+		            if (!agentContainerCount.containsKey(agent)) {
+		                agentContainerCount.put(agent, new int[4]); // Index 0 - Size 20, 1 - Size 22, 2 - Size 40, 3 - Size 45
+		            }
+
+		            // Increment the count based on container size
+		            switch (containerSize) {
+		                case "20":
+		                    agentContainerCount.get(agent)[0]++;
+		                    break;
+		                case "22":
+		                    agentContainerCount.get(agent)[1]++;
+		                    break;
+		                case "40":
+		                    agentContainerCount.get(agent)[2]++;
+		                    break;
+		                case "45":
+		                    agentContainerCount.get(agent)[3]++;
+		                    break;
+		                default:
+		                    break;
+		            }
+		        });
+
+		        // Apply header row styling and set values
+		        Row headerRow1 = sheet.createRow(rowNum++);
+		        for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		            Cell cell = headerRow1.createCell(i);
+		            cell.setCellValue(columnsHeaderSummery[i]);
+
+		            // Set cell style for header
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+		            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeaderSummery[i].length() * 360); // Adjust width based on column header length
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+
+		        // Iterate over the map to create rows for each shipping agent and their container count
+		        int srNo = 1;
+		        
+		        String shippingAgent =null;
+		        for (Map.Entry<String, int[]> entry : agentContainerCount.entrySet()) {
+		             shippingAgent = entry.getKey();
+		            int[] sizes = entry.getValue(); // Sizes[0] = Size 20, Sizes[1] = Size 22, Sizes[2] = Size 40, Sizes[3] = Size 45
+
+		            // Create a new row for this shipping agent
+		            Row row = sheet.createRow(rowNum++);
+		            row.createCell(0).setCellValue(srNo++); // Sr No (1, 2, 3,...)
+		            row.createCell(1).setCellValue(shippingAgent); // Shipping Agent
+		            row.createCell(2).setCellValue(sizes[0]); // Size 20 count
+		            row.createCell(3).setCellValue(sizes[1]); // Size 22 count
+		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
+		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
+		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
+		            
+		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
+		        }
+
+
+		        int totalSize20 = 0, totalSize22 = 0, totalSize40 = 0, totalSize45 = 0;
+		        for (int[] sizes : agentContainerCount.values()) {
+		            totalSize20 += sizes[0];
+		            totalSize22 += sizes[1];
+		            totalSize40 += sizes[2];
+		            totalSize45 += sizes[3];
+		        }
+
+		     // Create a row for the totals
+		        Row totalRow1 = sheet.createRow(rowNum++);
+
+		        // Set the values for the total row
+		        totalRow1.createCell(0).setCellValue("Total"); // Label for the total row
+		        totalRow1.createCell(2).setCellValue(totalSize20); // Total Size 20
+		        totalRow1.createCell(3).setCellValue(totalSize22); // Total Size 22
+		        totalRow1.createCell(4).setCellValue(totalSize40); // Total Size 40
+		        totalRow1.createCell(5).setCellValue(totalSize45); // Total Size 45
+		        totalRow1.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
+
+		        // Calculate and set the total TEU'S value
+		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
+		        totalRow1.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
+
+		     // Apply the total row style (light green background and bold font)
+
+		     // Create a CellStyle for the background color
+		     CellStyle totalRowStyle1 = sheet.getWorkbook().createCellStyle();
+		     totalRowStyle1.cloneStyleFrom(numberCellStyle); // Copy base style
+		     totalRowStyle1.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
+		     totalRowStyle1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		     // Apply the style to the cells of the total row
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         // Ensure the cell exists before applying style
+		         Cell cell = totalRow1.getCell(i);
+		         if (cell == null) {
+		             cell = totalRow1.createCell(i);
+		         }
+		         cell.setCellStyle(totalRowStyle1);
+		     }
+
+		     // Create a font for bold text
+		     Font boldFont11 = workbook.createFont();
+		     boldFont11.setBold(true);
+		     totalRowStyle1.setFont(boldFont11);
+
+		     // Apply bold font and other styling
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         Cell cell = totalRow1.getCell(i);
+		         cell.setCellStyle(totalRowStyle1);
+		     }
 		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
@@ -1058,7 +1220,7 @@ public class ImportReportsService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -1071,7 +1233,7 @@ public class ImportReportsService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -1084,7 +1246,7 @@ public class ImportReportsService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -1101,7 +1263,7 @@ public class ImportReportsService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 7));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
@@ -1450,6 +1612,172 @@ public class ImportReportsService {
 //		            }
 //		        }
 
+		        
+		        
+		        
+		        
+		        
+		        Row emptyRow1 = sheet.createRow(rowNum++);
+		        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
+		        
+
+		        Row empty = sheet.createRow(rowNum++);
+		        empty.createCell(0).setCellValue("Shipping Line Wise Summary"); // You can set a value or keep it blank
+		        
+		        		
+		        		
+		        Row emptyRow11 = sheet.createRow(rowNum++);
+		        
+		        emptyRow11.createCell(0).setCellValue(""); // You can set a value or keep it blank
+
+		        // Create a row for totals
+//		        Row totalRow = sheet.createRow(rowNum+ 2);
+
+		        // Header row for summary
+		        String[] columnsHeaderSummery = {
+		            "Sr No", "Shipping Line", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
+		        };
+
+		        // Create a map to store container count for each agent
+		        Map<String, int[]> agentContainerCount = new HashMap<>();
+
+		        // Iterate over importDetails and count the container sizes for each shipping agent
+		        importDetails.forEach(i -> {
+		            String agent = i[13] != null ? i[13].toString() : "Unknown"; // Shipping Agent at index 10
+		            String containerSize = i[1] != null ? i[1].toString() : ""; // Container Size at index 3
+
+		            // Initialize counts for this agent if not already present
+		            if (!agentContainerCount.containsKey(agent)) {
+		                agentContainerCount.put(agent, new int[4]); // Index 0 - Size 20, 1 - Size 22, 2 - Size 40, 3 - Size 45
+		            }
+
+		            // Increment the count based on container size
+		            switch (containerSize) {
+		                case "20":
+		                    agentContainerCount.get(agent)[0]++;
+		                    break;
+		                case "22":
+		                    agentContainerCount.get(agent)[1]++;
+		                    break;
+		                case "40":
+		                    agentContainerCount.get(agent)[2]++;
+		                    break;
+		                case "45":
+		                    agentContainerCount.get(agent)[3]++;
+		                    break;
+		                default:
+		                    break;
+		            }
+		        });
+
+		        // Apply header row styling and set values
+		        Row headerRow1 = sheet.createRow(rowNum++);
+		        for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		            Cell cell = headerRow1.createCell(i);
+		            cell.setCellValue(columnsHeaderSummery[i]);
+
+		            // Set cell style for header
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+		            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeaderSummery[i].length() * 360); // Adjust width based on column header length
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+
+		        // Iterate over the map to create rows for each shipping agent and their container count
+		        int srNo = 1;
+		        
+		        String shippingAgent =null;
+		        for (Map.Entry<String, int[]> entry : agentContainerCount.entrySet()) {
+		             shippingAgent = entry.getKey();
+		            int[] sizes = entry.getValue(); // Sizes[0] = Size 20, Sizes[1] = Size 22, Sizes[2] = Size 40, Sizes[3] = Size 45
+
+		            // Create a new row for this shipping agent
+		            Row row = sheet.createRow(rowNum++);
+		            row.createCell(0).setCellValue(srNo++); // Sr No (1, 2, 3,...)
+		            row.createCell(1).setCellValue(shippingAgent); // Shipping Agent
+		            row.createCell(2).setCellValue(sizes[0]); // Size 20 count
+		            row.createCell(3).setCellValue(sizes[1]); // Size 22 count
+		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
+		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
+		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
+		            
+		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
+		        }
+
+
+		        int totalSize20 = 0, totalSize22 = 0, totalSize40 = 0, totalSize45 = 0;
+		        for (int[] sizes : agentContainerCount.values()) {
+		            totalSize20 += sizes[0];
+		            totalSize22 += sizes[1];
+		            totalSize40 += sizes[2];
+		            totalSize45 += sizes[3];
+		        }
+
+		     // Create a row for the totals
+		        Row totalRow1 = sheet.createRow(rowNum++);
+
+		        // Set the values for the total row
+		        totalRow1.createCell(0).setCellValue("Total"); // Label for the total row
+		        totalRow1.createCell(2).setCellValue(totalSize20); // Total Size 20
+		        totalRow1.createCell(3).setCellValue(totalSize22); // Total Size 22
+		        totalRow1.createCell(4).setCellValue(totalSize40); // Total Size 40
+		        totalRow1.createCell(5).setCellValue(totalSize45); // Total Size 45
+		        totalRow1.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
+
+		        // Calculate and set the total TEU'S value
+		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
+		        totalRow1.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
+
+		     // Apply the total row style (light green background and bold font)
+
+		     // Create a CellStyle for the background color
+		     CellStyle totalRowStyle1 = sheet.getWorkbook().createCellStyle();
+		     totalRowStyle1.cloneStyleFrom(numberCellStyle); // Copy base style
+		     totalRowStyle1.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
+		     totalRowStyle1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		     // Apply the style to the cells of the total row
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         // Ensure the cell exists before applying style
+		         Cell cell = totalRow1.getCell(i);
+		         if (cell == null) {
+		             cell = totalRow1.createCell(i);
+		         }
+		         cell.setCellStyle(totalRowStyle1);
+		     }
+
+		     // Create a font for bold text
+		     Font boldFont11 = workbook.createFont();
+		     boldFont11.setBold(true);
+		     totalRowStyle1.setFont(boldFont11);
+
+		     // Apply bold font and other styling
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         Cell cell = totalRow1.getCell(i);
+		         cell.setCellStyle(totalRowStyle1);
+		     }
 		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
@@ -1657,7 +1985,7 @@ public class ImportReportsService {
 		        String[] columnsHeader = {
 		        	    "Sr No", "IGM No", "Item No", "Cont No", "Cont Size", "Cont Type", "BOE no", 
 		        	    "BOE Date", "Gate In Date", "Hold Remarks", "Importer", "Agent", "FCL/LCL", 
-		        	    "Hold BY", "Hold Type", "Hold Date", "Relese Date", "Relese Remark", 
+		        	    "Hold BY", "Hold Type", "Hold Date", "Release Date", "Release Remark", 
 		        	    "Cargo Description", "Gate Out","Destuff Date"
 		        	};
 
@@ -1920,7 +2248,7 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Relese Date":
+		                case "Release Date":
 		                    if (resultData1[15] != null) {
 		                        cell.setCellValue(resultData1[15].toString());
 		                        cell.setCellStyle(dateCellStyle);
@@ -1930,7 +2258,7 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Relese Remark":
+		                case "Release Remark":
 		                    cell.setCellValue(resultData1[16] != null ? resultData1[16].toString() : "");
 		                    break;
 
@@ -1994,7 +2322,7 @@ public class ImportReportsService {
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -2079,10 +2407,10 @@ public class ImportReportsService {
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -2142,8 +2470,8 @@ public class ImportReportsService {
 //		                case "Total":
 //		                    totalCell.setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45);
 //		                    break;
-//		                case "TUE'S":
-//		                    totalCell.setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		                case "TEU'S":
+//		                    totalCell.setCellValue(""); // TEU'S (empty or can be filled if necessary)
 //		                    break;
 //		                default:
 //		                    totalCell.setCellValue(""); // Default blank
@@ -2756,7 +3084,7 @@ public class ImportReportsService {
 		        String[] columnsHeader = {
 		        	    "Sr No", "IGM No", "Item No", "Cont No", "Cont Size", "Cont Type", "BOE no", 
 		        	    "BOE Date", "Gate In Date", "Hold Remarks", "Importer", "Agent", "FCL/LCL", 
-		        	    "Hold BY", "Hold Type", "Hold Date", "Relese Date", "Relese Remark", 
+		        	    "Hold BY", "Hold Type", "Hold Date", "Release Date", "Release Remark", 
 		        	    "Cargo Description", "Gate Out/Destuff Date"
 		        	};
 
@@ -3018,7 +3346,7 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Relese Date":
+		                case "Release Date":
 		                    if (resultData1[16] != null) {
 		                        cell.setCellValue(resultData1[16].toString());
 		                        cell.setCellStyle(dateCellStyle);
@@ -3028,7 +3356,7 @@ public class ImportReportsService {
 		                    }
 		                    break;
 
-		                case "Relese Remark":
+		                case "Release Remark":
 		                    cell.setCellValue(resultData1[17] != null ? resultData1[17].toString() : "");
 		                    break;
 
@@ -3854,7 +4182,7 @@ public class ImportReportsService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -3867,7 +4195,7 @@ public class ImportReportsService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -3880,7 +4208,7 @@ public class ImportReportsService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -3897,7 +4225,7 @@ public class ImportReportsService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 7));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
@@ -4263,6 +4591,172 @@ public class ImportReportsService {
 //		            }
 //		        }
 
+		        
+		        
+		       
+		        
+		        
+		        Row emptyRow1 = sheet.createRow(rowNum++);
+		        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
+		        
+
+		        Row empty = sheet.createRow(rowNum++);
+		        empty.createCell(0).setCellValue("Shipping Agent Wise Summary"); // You can set a value or keep it blank
+		        
+		        		
+		        		
+		        Row emptyRow11 = sheet.createRow(rowNum++);
+		        
+		        emptyRow11.createCell(0).setCellValue(""); // You can set a value or keep it blank
+
+		        // Create a row for totals
+//		        Row totalRow = sheet.createRow(rowNum+ 2);
+
+		        // Header row for summary
+		        String[] columnsHeaderSummery = {
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
+		        };
+
+		        // Create a map to store container count for each agent
+		        Map<String, int[]> agentContainerCount = new HashMap<>();
+
+		        // Iterate over importDetails and count the container sizes for each shipping agent
+		        importDetails.forEach(i -> {
+		            String agent = i[19] != null ? i[19].toString() : "Unknown"; // Shipping Agent at index 10
+		            String containerSize = i[1] != null ? i[1].toString() : ""; // Container Size at index 3
+
+		            // Initialize counts for this agent if not already present
+		            if (!agentContainerCount.containsKey(agent)) {
+		                agentContainerCount.put(agent, new int[4]); // Index 0 - Size 20, 1 - Size 22, 2 - Size 40, 3 - Size 45
+		            }
+
+		            // Increment the count based on container size
+		            switch (containerSize) {
+		                case "20":
+		                    agentContainerCount.get(agent)[0]++;
+		                    break;
+		                case "22":
+		                    agentContainerCount.get(agent)[1]++;
+		                    break;
+		                case "40":
+		                    agentContainerCount.get(agent)[2]++;
+		                    break;
+		                case "45":
+		                    agentContainerCount.get(agent)[3]++;
+		                    break;
+		                default:
+		                    break;
+		            }
+		        });
+
+		        // Apply header row styling and set values
+		        Row headerRow1 = sheet.createRow(rowNum++);
+		        for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		            Cell cell = headerRow1.createCell(i);
+		            cell.setCellValue(columnsHeaderSummery[i]);
+
+		            // Set cell style for header
+		            CellStyle headerStyle = workbook.createCellStyle();
+		            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+		            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		            Font headerFont = workbook.createFont();
+		            headerFont.setBold(true);
+		            headerFont.setFontHeightInPoints((short) 11);
+		            headerStyle.setFont(headerFont);
+		            headerStyle.setBorderBottom(BorderStyle.THIN);
+		            headerStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderTop(BorderStyle.THIN);
+		            headerStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderLeft(BorderStyle.THIN);
+		            headerStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		            headerStyle.setBorderRight(BorderStyle.THIN);
+		            headerStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+		            headerFont.setColor(IndexedColors.WHITE.getIndex());
+		            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		            cell.setCellStyle(headerStyle);
+		            int headerWidth = (int) (columnsHeaderSummery[i].length() * 360); // Adjust width based on column header length
+		            sheet.setColumnWidth(i, headerWidth);
+		        }
+
+		        // Iterate over the map to create rows for each shipping agent and their container count
+		        int srNo = 1;
+		        
+		        String shippingAgent =null;
+		        for (Map.Entry<String, int[]> entry : agentContainerCount.entrySet()) {
+		             shippingAgent = entry.getKey();
+		            int[] sizes = entry.getValue(); // Sizes[0] = Size 20, Sizes[1] = Size 22, Sizes[2] = Size 40, Sizes[3] = Size 45
+
+		            // Create a new row for this shipping agent
+		            Row row = sheet.createRow(rowNum++);
+		            row.createCell(0).setCellValue(srNo++); // Sr No (1, 2, 3,...)
+		            row.createCell(1).setCellValue(shippingAgent); // Shipping Agent
+		            row.createCell(2).setCellValue(sizes[0]); // Size 20 count
+		            row.createCell(3).setCellValue(sizes[1]); // Size 22 count
+		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
+		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
+		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
+		            
+		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
+		        }
+
+
+		        int totalSize20 = 0, totalSize22 = 0, totalSize40 = 0, totalSize45 = 0;
+		        for (int[] sizes : agentContainerCount.values()) {
+		            totalSize20 += sizes[0];
+		            totalSize22 += sizes[1];
+		            totalSize40 += sizes[2];
+		            totalSize45 += sizes[3];
+		        }
+
+		     // Create a row for the totals
+		        Row totalRow1 = sheet.createRow(rowNum++);
+
+		        // Set the values for the total row
+		        totalRow1.createCell(0).setCellValue("Total"); // Label for the total row
+		        totalRow1.createCell(2).setCellValue(totalSize20); // Total Size 20
+		        totalRow1.createCell(3).setCellValue(totalSize22); // Total Size 22
+		        totalRow1.createCell(4).setCellValue(totalSize40); // Total Size 40
+		        totalRow1.createCell(5).setCellValue(totalSize45); // Total Size 45
+		        totalRow1.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
+
+		        // Calculate and set the total TEU'S value
+		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
+		        totalRow1.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
+
+		     // Apply the total row style (light green background and bold font)
+
+		     // Create a CellStyle for the background color
+		     CellStyle totalRowStyle1 = sheet.getWorkbook().createCellStyle();
+		     totalRowStyle1.cloneStyleFrom(numberCellStyle); // Copy base style
+		     totalRowStyle1.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Set to light green
+		     totalRowStyle1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+		     // Apply the style to the cells of the total row
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         // Ensure the cell exists before applying style
+		         Cell cell = totalRow1.getCell(i);
+		         if (cell == null) {
+		             cell = totalRow1.createCell(i);
+		         }
+		         cell.setCellStyle(totalRowStyle1);
+		     }
+
+		     // Create a font for bold text
+		     Font boldFont11 = workbook.createFont();
+		     boldFont11.setBold(true);
+		     totalRowStyle1.setFont(boldFont11);
+
+		     // Apply bold font and other styling
+		     for (int i = 0; i < columnsHeaderSummery.length; i++) {
+		         Cell cell = totalRow1.getCell(i);
+		         cell.setCellStyle(totalRowStyle1);
+		     }
 		        // Assuming 'CHA' is at index 14 and 'Importer' at index 15 based on your headers
 		        sheet.setColumnWidth(0,  9 * 306); 
 		        sheet.setColumnWidth(1, 18 * 306); 
@@ -7236,7 +7730,7 @@ public class ImportReportsService {
 	
 	
 	
-	public byte[] createExcelReportOfLoadedToDistuffEmptyInventoryReport(String companyId,
+	public byte[] createExcelReportOfLoadedToDestuffEmptyInventoryReport(String companyId,
 		    String branchId, String username, String type, String companyname,
 		    String branchname,
 		    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
@@ -7306,7 +7800,7 @@ public class ImportReportsService {
 		        double widthFactor = 1;
 
 		        
-		        List<Object[]> importDetails = importReportsRepository.getLoadedToDistuffEmptyContainerDetails(companyId, branchId, startDate, endDate,igmNo, itemNo, sl,  cha);
+		        List<Object[]> importDetails = importReportsRepository.getLoadedToDestuffEmptyContainerDetails(companyId, branchId, startDate, endDate,igmNo, itemNo, sl,  cha);
 		        
 		        
 		        System.out.println("importDetails___________________________________________"+importDetails);
@@ -7320,7 +7814,7 @@ public class ImportReportsService {
 		        
 		        System.out.println("newlist__________________________________________"+newlist);
 		        
-		        Sheet sheet = workbook.createSheet("Loaded To Distuff Empty Inventory");
+		        Sheet sheet = workbook.createSheet("Loaded To Destuff Empty Inventory");
 
 //		        CellStyle dateCellStyle = workbook.createCellStyle();
 //		        CreationHelper createHelper = workbook.getCreationHelper();
@@ -7434,7 +7928,7 @@ public class ImportReportsService {
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
 		        Cell reportTitleCell = reportTitleRow.createCell(0);
-		        reportTitleCell.setCellValue("Loaded To Distuff Empty Inventory" );
+		        reportTitleCell.setCellValue("Loaded To Destuff Empty Inventory" );
 
 		        // Set alignment and merge cells for the heading
 		        CellStyle reportTitleStyle = workbook.createCellStyle();
@@ -7452,11 +7946,11 @@ public class ImportReportsService {
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
 		        if(formattedStartDate.equals("N/A"))
 		        {
-		        	 reportTitleCell1.setCellValue("Loaded To Distuff Empty Inventory As On Date : " + formattedEndDate);
+		        	 reportTitleCell1.setCellValue("Loaded To Destuff Empty Inventory As On Date : " + formattedEndDate);
 		        }
 		        else 
 		        {
-		        	 reportTitleCell1.setCellValue("Loaded To Distuff Empty Inventory From : " + formattedStartDate + " to " + formattedEndDate);
+		        	 reportTitleCell1.setCellValue("Loaded To Destuff Empty Inventory From : " + formattedStartDate + " to " + formattedEndDate);
 		        }
 		       
 
@@ -10678,7 +11172,7 @@ cell.setCellStyle(cellStyle);
 			        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
 			        // Header row for summary
 			        String[] columnsHeaderSummery = {
-			            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+			            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 			        };
 
 			        // Create a map to store container count for each agent
@@ -10801,10 +11295,10 @@ cell.setCellStyle(cellStyle);
 			            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 			            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 			            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//			            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//			            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 			            
 			            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-			            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+			            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 			        }
 
 
@@ -13847,7 +14341,7 @@ cell.setCellStyle(cellStyle);
 		        emptyRow1.createCell(0).setCellValue(""); // You can set a value or keep it blank
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Line", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Line", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -13939,10 +14433,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -15311,7 +15805,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -15396,10 +15890,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -15422,9 +15916,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -15588,6 +16082,8 @@ cell.setCellStyle(cellStyle);
 		        
 		        List<Object[]> importDetails = commonReportsRepo.findHazardousContainers(companyId, branchId, endDate);
 		        
+		        
+		        System.out.println( " importDetails :" + importDetails.size());
 		        
 		        Sheet sheet = workbook.createSheet("Loaded Inventory Hazardous Report");
 
@@ -15935,7 +16431,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -16020,10 +16516,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -16046,9 +16542,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -16553,7 +17049,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -16638,10 +17134,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -16664,9 +17160,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -17156,7 +17652,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -17241,10 +17737,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -17267,9 +17763,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -17756,7 +18252,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -17841,10 +18337,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -17867,9 +18363,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -18457,7 +18953,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -18542,10 +19038,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -18568,9 +19064,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -19103,7 +19599,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -19188,10 +19684,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -19214,9 +19710,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -19769,7 +20265,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -19854,10 +20350,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -19880,9 +20376,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -20437,7 +20933,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -20522,10 +21018,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -20548,9 +21044,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -21178,7 +21674,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -21263,10 +21759,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -21289,9 +21785,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -21805,7 +22301,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -21890,10 +22386,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -21916,9 +22412,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -22513,7 +23009,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -22598,10 +23094,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -22624,9 +23120,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 
@@ -23123,7 +23619,7 @@ cell.setCellStyle(cellStyle);
 
 		        // Header row for Summary
 		        String[] columnsHeaderSummery = {
-		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TUE'S"
+		            "Sr No", "Shipping Agent", "Size 20", "Size 22", "Size 40", "Size 45", "Total", "TEU'S"
 		        };
 
 		        // Create a map to store container count for each agent
@@ -23208,10 +23704,10 @@ cell.setCellStyle(cellStyle);
 		            row.createCell(4).setCellValue(sizes[2]); // Size 40 count
 		            row.createCell(5).setCellValue(sizes[3]); // Size 45 count
 		            row.createCell(6).setCellValue(sizes[0] + sizes[1] + sizes[2] + sizes[3]); // Total count of containers
-//		            row.createCell(7).setCellValue(""); // TUE'S (empty or can be filled if necessary)
+//		            row.createCell(7).setCellValue(""); // TEU'S (empty or can be filled if necessary)
 		            
 		            int tuesValue = (sizes[0] * 1) + (sizes[1] * 1) + (sizes[2] * 2) + (sizes[3] * 2);
-		            row.createCell(7).setCellValue(tuesValue); // TUE'S value
+		            row.createCell(7).setCellValue(tuesValue); // TEU'S value
 		        }
 
 
@@ -23234,9 +23730,9 @@ cell.setCellStyle(cellStyle);
 		        totalRow.createCell(5).setCellValue(totalSize45); // Total Size 45
 		        totalRow.createCell(6).setCellValue(totalSize20 + totalSize22 + totalSize40 + totalSize45); // Total of all containers
 
-		        // Calculate and set the total TUE'S value
+		        // Calculate and set the total TEU'S value
 		        int totalTuesValue = (totalSize20 * 1) + (totalSize22 * 1) + (totalSize40 * 2) + (totalSize45 * 2);
-		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TUE'S value
+		        totalRow.createCell(7).setCellValue(totalTuesValue); // Total TEU'S value
 
 		     // Apply the total row style (light green background and bold font)
 

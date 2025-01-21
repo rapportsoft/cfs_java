@@ -261,7 +261,8 @@ public class CfExBondCrgService {
 				cfexbondcrg.setSbValue(cfexbondcrg.getExBondedCif());
 				cfexbondcrg.setSbDuty(cfexbondcrg.getExBondedCargoDuty());
 				cfexbondcrg.setSbQty(cfexbondcrg.getExBondedPackages());
-
+				cfexbondcrg.setNoOf20Ft(cfexbondcrg.getNoOf20Ft());
+				cfexbondcrg.setNoOf40Ft(cfexbondcrg.getNoOf40Ft());
 				cfexbondcrg.setBalancedPackages(cfexbondcrg.getRemainingPackages()
 						.subtract(Optional.ofNullable(totalInBondPackages[0]).orElse(BigDecimal.ZERO)));
 

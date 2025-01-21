@@ -1254,7 +1254,9 @@ public interface ImportReportsRepository extends JpaRepository<GateIn, String> {
            "(:sl IS NULL OR :sl = '' OR a.sl = :sl) AND " +
            "(:accountHolderId IS NULL OR :accountHolderId = '' OR g.Account_Holder_Id = :accountHolderId) AND " +
            "(:cha IS NULL OR :cha = '' OR a.cha = :cha) AND " +
-           "(a.RSCAN_OUT = 'N' OR (a.RSCAN_OUT = 'Y' AND a.OUT_GATE_OUT_DATE > :endDate))", 
+           "a.status = 'A' AND " +
+           "(a.RSCAN_OUT = 'N' OR (a.RSCAN_OUT = 'Y' AND a.OUT_GATE_OUT_DATE > :endDate)) " +
+            "ORDER BY a.IN_GATE_IN_DATE ", 
    nativeQuery = true)
 List<Object[]> scanContainerReport1(
 		 @Param("companyId") String companyId,
@@ -1640,7 +1642,7 @@ List<Object[]> scanContainerReport1(
 //		    	        "AND b.Special_Delivery = 'SCON' " +
 		    	        "GROUP BY a.Container_No", 
 		    	        nativeQuery = true)
-		    	List<Object[]> getLoadedToDistuffEmptyContainerDetails(
+		    	List<Object[]> getLoadedToDestuffEmptyContainerDetails(
 		    	        @Param("companyId") String companyId,
 		    	        @Param("branchId") String branchId,
 		    	        @Param("startDate") Date startDate,
@@ -1829,7 +1831,7 @@ List<Object[]> scanContainerReport1(
 		    	            "WHERE a.company_id = :companyId " +
 		    	            "  AND a.branch_id = :branchId " +
 		    	            "  AND a.Status = 'A' " +
-		    	            "  AND (a.LCL_ZERO_ENTRY_FLAG = 'N' OR a.LCL_ZERO_ENTRY_FLAG is null OR a.LCL_ZERO_ENTRY_FLAG = '') " +
+		    	            "  AND (a.LCL_ZERO_ENTRY_FLAG = 'Y' OR a.LCL_ZERO_ENTRY_FLAG is null OR a.LCL_ZERO_ENTRY_FLAG = '') " +
 		    	            "  AND a.LCL_ZERO_ENTRY_DATE BETWEEN :startDate AND :endDate " +
 		    	            "AND (:igmNo IS NULL OR :igmNo = '' OR a.IGM_No = :igmNo) " +
 		    		    	        "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR a.IGM_Line_No = :igmLineNo) " +

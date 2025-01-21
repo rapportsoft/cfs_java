@@ -173,11 +173,11 @@ public class ImporterReportsController {
 	            fileName = "Import Manual GateIn Report.xlsx";
 	            break;
 
-	        case "Loaded To Distuff Empty Inventory":
-	            excelBytes = importReporsService.createExcelReportOfLoadedToDistuffEmptyInventoryReport(
+	        case "Loaded To Destuff Empty Inventory":
+	            excelBytes = importReporsService.createExcelReportOfLoadedToDestuffEmptyInventoryReport(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
-	            fileName = "Loaded To Distuff Empty Inventory.xlsx";
+	            fileName = "Loaded To Destuff Empty Inventory.xlsx";
 	            break;
 
 	        case "Scan Container Report":
