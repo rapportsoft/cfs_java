@@ -983,7 +983,7 @@ public class CfbondGatePassService {
 			String companyAdd = companyAddress.getAddress_1() + companyAddress.getAddress_2()
 					+ companyAddress.getAddress_3() + companyAddress.getCity();
 
-			String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress1() + " "
+			String branchAdd = branchAddress.getAddress1() + " " + branchAddress.getAddress2() + " "
 					+ branchAddress.getAddress3() + " " + branchAddress.getCity() + " " + branchAddress.getPin();
 
 			String city = companyAddress.getCity();
