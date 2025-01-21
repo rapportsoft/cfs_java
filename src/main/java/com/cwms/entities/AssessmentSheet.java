@@ -57,7 +57,7 @@ public class AssessmentSheet implements Cloneable {
     @Column(name = "Igm_No", length = 25)
     private String igmNo;
 
-    @Column(name = "SB_No", length = 10)
+    @Column(name = "SB_No", length = 20)
     private String sbNo;
 
     @Temporal(TemporalType.DATE)
