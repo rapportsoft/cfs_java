@@ -38,7 +38,7 @@ List<Object[]> getDataForGatePass(@Param("cid") String cid, @Param("bid") String
 	        + "AND E.profitcentreId = :profitcentreId "
 	        + "AND st.movementType = :movementType "
 	        + "AND E.containerNo LIKE %:searchValue% "
-	        + "AND E.status <> 'D'")
+	        + "AND E.status <> 'D' Group By E.containerNo")
 	List<Object[]> searchContainerNoForMovement(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("searchValue") String searchValue, @Param("profitcentreId") String profitcentreId , @Param("movementType") String movementType);
 
 	
