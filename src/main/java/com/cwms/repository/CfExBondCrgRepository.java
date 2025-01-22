@@ -444,7 +444,7 @@ List<CfExBondCrg> getDataForBondDeliveryReportWithoutDates(@Param("companyId") S
 // For invoice
 
 
-@Query(value="select e.exBondBeNo from CfExBondCrg e "
+@Query(value="select DISTINCT e.exBondBeNo from CfExBondCrg e "
 		+ "where e.companyId=:cid and e.branchId=:bid and e.status='A' and (:val is null OR :val = '' OR e.exBondBeNo LIKE CONCAT('%',:val,'%')) "
 		+ "and (e.invoiceAssesed = '' OR e.invoiceAssesed is null OR e.invoiceAssesed='N')")
 List<String> getExBondBeNo(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
