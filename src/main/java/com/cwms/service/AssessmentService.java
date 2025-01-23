@@ -2472,7 +2472,7 @@ public class AssessmentService {
 						newAss.setCargoWeight(con.getCargoWt());
 						newAss.setDestuffDate(con.getDestuffDate() == null ? null : con.getDestuffDate());
 						newAss.setCalculateInvoice('N');
-						newAss.setInvoiceUptoDate(finalConData.get(0).getInvoiceUptoDate());
+						newAss.setInvoiceUptoDate(finalConData.get(0).getInvoiceDate());
 						newAss.setContainerHandlingAmt(totalRates);
 						newAss.setContainerStorageAmt(totalRates1);
 						newAss.setInvoiceCategory(assessment.getInvoiceCategory());
@@ -2480,7 +2480,7 @@ public class AssessmentService {
 						newAss.setSa(tempAssessment.getSaId());
 						newAss.setSl(tempAssessment.getSlId());
 						newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
-						newAss.setSsrServiceId(con.getSsrTransId());
+						newAss.setSsrTransId(con.getSsrTransId());
 
 						assessmentsheetrepo.save(newAss);
 						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
@@ -3687,7 +3687,7 @@ public class AssessmentService {
 						newAss.setCargoWeight(con.getCargoWt());
 						newAss.setDestuffDate(con.getDestuffDate() == null ? null : con.getDestuffDate());
 						newAss.setCalculateInvoice('N');
-						newAss.setInvoiceUptoDate(finalConData.get(0).getInvoiceUptoDate());
+						newAss.setInvoiceUptoDate(finalConData.get(0).getInvoiceDate());
 						newAss.setContainerHandlingAmt(BigDecimal.ZERO);
 						newAss.setContainerStorageAmt(totalRates1);
 						newAss.setInvoiceCategory(assessment.getInvoiceCategory());
@@ -3695,7 +3695,7 @@ public class AssessmentService {
 						newAss.setSa(tempAssessment.getSaId());
 						newAss.setSl(tempAssessment.getSlId());
 						newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
-						newAss.setSsrServiceId(con.getSsrTransId());
+						newAss.setSsrTransId(con.getSsrTransId());
 						newAss.setLastAssesmentDate(assessment.getLastAssesmentDate());
 						newAss.setLastAssesmentId(assessment.getLastAssesmentId());
 						newAss.setLastInvoiceDate(assessment.getLastInvoiceDate());
@@ -6429,7 +6429,7 @@ public class AssessmentService {
 					newAss.setSa("");
 					newAss.setSl("");
 					newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
-					newAss.setSsrServiceId(con.getSsrTransId());
+					newAss.setSsrTransId(con.getSsrTransId());
 //					newAss.setLastAssesmentDate(assessment.getLastAssesmentDate());
 //					newAss.setLastAssesmentId(assessment.getLastAssesmentId());
 //					newAss.setLastInvoiceDate(assessment.getLastInvoiceDate());
@@ -8350,7 +8350,7 @@ public class AssessmentService {
 					newAss.setSa("");
 					newAss.setSl("");
 					newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
-					newAss.setSsrServiceId(con.getSsrTransId());
+					newAss.setSsrTransId(con.getSsrTransId());
 					newAss.setLastAssesmentDate(assessment.getLastAssesmentDate());
 					newAss.setLastAssesmentId(assessment.getLastAssesmentId());
 					newAss.setLastInvoiceDate(assessment.getLastInvoiceDate());
@@ -11075,7 +11075,7 @@ public class AssessmentService {
 				newAss.setSa("");
 				newAss.setSl("");
 				newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
-				newAss.setSsrServiceId(con.getSsrTransId());
+				newAss.setSsrTransId(con.getSsrTransId());
 //					newAss.setLastAssesmentDate(assessment.getLastAssesmentDate());
 //					newAss.setLastAssesmentId(assessment.getLastAssesmentId());
 //					newAss.setLastInvoiceDate(assessment.getLastInvoiceDate());
