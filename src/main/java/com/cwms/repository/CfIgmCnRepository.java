@@ -1107,17 +1107,30 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
 								@Param("cvalue") BigDecimal cvalue,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
 						
+//						
+//						@Modifying
+//						@Transactional
+//						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
+//								+ "c.crgStorageDay=c.crgStorageDay + :crgday,c.cargoValue=:cvalue ,"
+//								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
+//								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+//								+ "c.containerNo=:con")
+//						int updateInvoiceData2(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+//								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
+//								@Param("cvalue") BigDecimal cvalue,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
 						
 						@Modifying
 						@Transactional
 						@Query(value="UPDATE Cfigmcn c SET c.cargoDuty=:duty,c.assesmentId=:id,c.lastAssesmentId=:id,"
 								+ "c.crgStorageDay=c.crgStorageDay + :crgday,c.cargoValue=:cvalue ,"
-								+ "c.lastAssesmentDate=:assDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
+								+ "c.lastAssesmentDate=:assDate "
 								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
 								+ "c.containerNo=:con")
 						int updateInvoiceData2(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
 								@Param("con") String con,@Param("duty") BigDecimal cargoDuty,@Param("id") String id,@Param("crgday") BigDecimal crgStorageDay,
-								@Param("cvalue") BigDecimal cvalue,@Param("assDate") Date assDate,@Param("crgStorage") BigDecimal crgStorage);
+								@Param("cvalue") BigDecimal cvalue,@Param("assDate") Date assDate);
+						
+						
 						
 						
 						@Modifying
@@ -1128,6 +1141,30 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 						int updateInvoiceDataAtProcess(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("invDate") 
 						Date invDate,@Param("invass") char invass,@Param("invNo") String invNo,@Param("type") char type,@Param("billAmt") BigDecimal billAMt,
 						@Param("invAmt") BigDecimal invAmt,@Param("invUptoDate") Date invUptoDate);
+						
+						@Modifying
+						@Transactional
+						@Query(value = "UPDATE Cfigmcn c SET c.invoiceDate=:invDate,c.invoiceAssesed=:invass,c.invoiceNo=:invNo,c.creditType=:type,"
+								+ "c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.lastInvoiceNo=:invNo,c.invoiceUptoDate=:invUptoDate,c.crgStorageAmt=ROUND(c.crgStorageAmt + :crgStorage,3) "
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+								+ "c.containerNo=:con")
+						int updateInvoiceDataAtProcess1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+								@Param("igm") String igm, @Param("con") String con, @Param("invDate") Date invDate,
+								@Param("invass") char invass, @Param("invNo") String invNo, @Param("type") char type,
+								@Param("billAmt") BigDecimal billAMt, @Param("invAmt") BigDecimal invAmt,
+								@Param("invUptoDate") Date invUptoDate,@Param("crgStorage") BigDecimal crgStorage);
+						
+						@Modifying
+						@Transactional
+						@Query(value = "UPDATE Cfigmcn c SET c.invoiceDate=:invDate,c.invoiceAssesed=:invass,c.invoiceNo=:invNo,c.creditType=:type,"
+								+ "c.billAmt=:billAmt,c.invoiceAmt=:invAmt,c.lastInvoiceNo=:invNo,c.invoiceUptoDate=:invUptoDate "
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.igmTransId=:trans and c.igmNo=:igm and "
+								+ "c.containerNo=:con")
+						int updateInvoiceDataAtProcess2(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+								@Param("igm") String igm, @Param("con") String con, @Param("invDate") Date invDate,
+								@Param("invass") char invass, @Param("invNo") String invNo, @Param("type") char type,
+								@Param("billAmt") BigDecimal billAMt, @Param("invAmt") BigDecimal invAmt,
+								@Param("invUptoDate") Date invUptoDate);
 						
 						
 						

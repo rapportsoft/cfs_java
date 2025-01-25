@@ -3178,6 +3178,392 @@ public class AssessmentService {
 											e.printStackTrace();
 										}
 									}
+
+								} else {
+									try {
+										tempAss = (AssessmentContainerDTO) con.clone();
+										Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(), day.getStartTime(),
+												day.getEndTime());
+
+										tempAss.setInvoiceDate(invDate);
+										if ("SA".equals(String.valueOf(f[8]))) {
+											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+											tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+											tempAss.setDiscPercentage(
+													f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+															: BigDecimal.ZERO);
+											tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+													: BigDecimal.ZERO);
+											tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+													: BigDecimal.ZERO);
+											tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+													: BigDecimal.ZERO);
+											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+											tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+													: BigDecimal.ZERO);
+											tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+													: BigDecimal.ZERO);
+											tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+											tempAss.setContainerStatus(con.getContainerStatus());
+											tempAss.setGateOutId(con.getGateOutId());
+											tempAss.setGatePassNo(con.getGatePassNo());
+											tempAss.setTaxPerc(
+													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+															: new BigDecimal(String.valueOf(f[12])));
+											tempAss.setTaxId(String.valueOf(f[11]));
+											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+
+											List<String> conSize2 = new ArrayList<>();
+											conSize2.add("ALL");
+											conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+													: con.getContainerSize());
+
+											List<String> conTypeOfCon2 = new ArrayList<>();
+											conTypeOfCon2.add("ALL");
+											conTypeOfCon2.add(con.getTypeOfContainer());
+
+											List<String> commodityType = new ArrayList<>();
+											commodityType.add("ALL");
+											commodityType.add(assessment.getCommodityCode());
+
+											List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(cid,
+													bid, String.valueOf(f[3]), String.valueOf(f[4]),
+													String.valueOf(f[0]), String.valueOf(f[8]), conSize2, conTypeOfCon2,
+													commodityType, con.getContainerSize(), con.getTypeOfContainer(),
+													assessment.getCommodityCode());
+
+											if (!rangeValues.isEmpty()) {
+
+												String unit = String.valueOf(f[1]);
+
+												AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
+														BigDecimal.ZERO);
+												if ("DAY".equals(unit)) {
+
+													if (con.getDestuffDate() != null) {
+														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getGateInDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+																destuffDateTime);
+
+														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+																destuffDateTime) > 0) {
+															daysBetween = 1;
+														}
+
+														final long daysBetween1 = daysBetween;
+
+														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getDestuffDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+
+														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+																destuffDateTime1);
+
+														if (daysBetween2 == 0 && ChronoUnit.HOURS
+																.between(gateInDateTime1, destuffDateTime1) > 0) {
+															daysBetween2 = 1;
+														}
+
+														tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+														tempAss.setExecutionUnit1("");
+
+														BigDecimal totalRate = rangeValues.stream().map(r -> {
+
+															int fromRange = ((BigDecimal) r[6]).intValue();
+															int toRange = ((BigDecimal) r[7]).intValue();
+
+															BigDecimal rate = (BigDecimal) r[8];
+
+															if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+																serviceRate.set(rate); // Set the rate for the
+																						// matching
+																						// slab
+															}
+
+															long daysInSlab = Math.min(toRange, daysBetween1)
+																	- Math.max(fromRange, 1) + 1;
+
+															daysInSlab = Math.max(daysInSlab, 0);
+
+															serviceRate.set(rate);
+															return rate.multiply(new BigDecimal(daysInSlab));
+														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+														tempAss.setServiceRate(serviceRate.get());
+
+														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																assessment.getIgmTransId(), assessment.getIgmNo(),
+																assessment.getIgmLineNo(), con.getContainerNo());
+
+														totalRate = totalRate.subtract(oldVal).setScale(3,
+																RoundingMode.HALF_UP);
+
+														tempAss.setRates(totalRate);
+
+													} else {
+
+														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getGateInDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+																destuffDateTime);
+
+														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+																destuffDateTime) > 0) {
+															daysBetween = 1;
+														}
+
+														final long daysBetween1 = daysBetween;
+
+														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+
+														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+																destuffDateTime1);
+
+														if (daysBetween2 == 0 && ChronoUnit.HOURS
+																.between(gateInDateTime1, destuffDateTime1) > 0) {
+															daysBetween2 = 1;
+														}
+
+														tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+														tempAss.setExecutionUnit1("");
+
+														System.out.println("daysBetween " + daysBetween1);
+
+														BigDecimal totalRate = rangeValues.stream().map(r -> {
+															int fromRange = ((BigDecimal) r[6]).intValue(); // Start
+																											// of
+																											// the
+																											// slab
+															int toRange = ((BigDecimal) r[7]).intValue(); // End of
+																											// the
+																											// slab
+															BigDecimal rate = (BigDecimal) r[8]; // Rate per day in
+																									// the
+																									// slab
+															if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+																serviceRate.set(rate); // Set the rate for the
+																						// matching
+																						// slab
+															}
+															// Calculate days in the current slab
+															long daysInSlab = Math.min(toRange, daysBetween1)
+																	- Math.max(fromRange, 1) + 1;
+
+															daysInSlab = Math.max(daysInSlab, 0);
+															return rate.multiply(new BigDecimal(daysInSlab));
+														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+														tempAss.setServiceRate(serviceRate.get());
+
+														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																assessment.getIgmTransId(), assessment.getIgmNo(),
+																assessment.getIgmLineNo(), con.getContainerNo());
+
+														totalRate = totalRate.subtract(oldVal).setScale(3,
+																RoundingMode.HALF_UP);
+
+														tempAss.setRates(totalRate);
+
+													}
+												}
+
+												if ("WEEK".equals(unit)) {
+													if (con.getDestuffDate() != null) {
+														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getDestuffDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+																destuffDateTime);
+
+														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+																destuffDateTime) > 0) {
+															daysBetween = 1;
+														}
+
+														final long daysBetween1 = daysBetween;
+														long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+
+														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+
+														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+																destuffDateTime1);
+
+														if (daysBetween2 == 0 && ChronoUnit.HOURS
+																.between(gateInDateTime1, destuffDateTime1) > 0) {
+															daysBetween2 = 1;
+														}
+
+														long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+
+														tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+														tempAss.setExecutionUnit1("");
+
+														BigDecimal totalRate = rangeValues.stream().filter(r -> {
+															int fromRange = ((BigDecimal) r[6]).intValue();
+															int toRange = ((BigDecimal) r[7]).intValue();
+															// Include slabs that overlap with weeksBetween
+															return weeksBetween >= fromRange;
+														}).map(r -> {
+															int fromRange = ((BigDecimal) r[6]).intValue();
+															int toRange = ((BigDecimal) r[7]).intValue();
+															BigDecimal rate = (BigDecimal) r[8];
+
+															// Adjust the fromRange to exclude week 0
+															int adjustedFromRange = Math.max(fromRange, 1);
+
+															// Determine actual weeks in this slab that contribute
+															// to the total
+															long weeksInSlab = Math.max(0,
+																	Math.min(toRange, weeksBetween) - adjustedFromRange
+																			+ 1);
+
+															// Exclude slabs where weeksInSlab is 0
+															return weeksInSlab > 0
+																	? rate.multiply(new BigDecimal(weeksInSlab))
+																	: BigDecimal.ZERO;
+														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+														if ("SM".equals(String.valueOf(f[7]))) {
+															totalRate = (totalRate.multiply(con.getArea())).setScale(3,
+																	RoundingMode.HALF_UP);
+														}
+														System.out
+																.println("totalRate " + totalRate + " " + weeksBetween);
+														tempAss.setServiceRate(serviceRate.get());
+
+														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																assessment.getIgmTransId(), assessment.getIgmNo(),
+																assessment.getIgmLineNo(), con.getContainerNo());
+
+														totalRate = totalRate.subtract(oldVal).setScale(3,
+																RoundingMode.HALF_UP);
+
+														tempAss.setRates(totalRate);
+													} else {
+														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getGateInDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+																destuffDateTime);
+
+														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+																destuffDateTime) > 0) {
+															daysBetween = 1;
+														}
+
+														final long daysBetween1 = daysBetween;
+														long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+
+														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+																convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+																day.getStartTime());
+														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+																convertToLocalDateTime(con.getInvoiceDate()),
+																day.getEndTime());
+
+														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+																destuffDateTime1);
+
+														if (daysBetween2 == 0 && ChronoUnit.HOURS
+																.between(gateInDateTime1, destuffDateTime1) > 0) {
+															daysBetween2 = 1;
+														}
+
+														long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+
+														tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+														tempAss.setExecutionUnit1("");
+
+														BigDecimal totalRate = rangeValues.stream().filter(r -> {
+															int fromRange = ((BigDecimal) r[6]).intValue();
+															int toRange = ((BigDecimal) r[7]).intValue();
+															// Include slabs that overlap with weeksBetween
+															return weeksBetween >= fromRange;
+														}).map(r -> {
+															int fromRange = ((BigDecimal) r[6]).intValue();
+															int toRange = ((BigDecimal) r[7]).intValue();
+															BigDecimal rate = (BigDecimal) r[8];
+
+															// Adjust the fromRange to exclude week 0
+															int adjustedFromRange = Math.max(fromRange, 1);
+
+															// Determine actual weeks in this slab that contribute
+															// to the total
+															long weeksInSlab = Math.max(0,
+																	Math.min(toRange, weeksBetween) - adjustedFromRange
+																			+ 1);
+
+															// Exclude slabs where weeksInSlab is 0
+															return weeksInSlab > 0
+																	? rate.multiply(new BigDecimal(weeksInSlab))
+																	: BigDecimal.ZERO;
+														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+														if ("SM".equals(String.valueOf(f[7]))) {
+															totalRate = (totalRate.multiply(con.getArea())).setScale(3,
+																	RoundingMode.HALF_UP);
+														}
+														System.out
+																.println("totalRate " + totalRate + " " + weeksBetween);
+														tempAss.setServiceRate(serviceRate.get());
+														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+																assessment.getIgmTransId(), assessment.getIgmNo(),
+																assessment.getIgmLineNo(), con.getContainerNo());
+
+														totalRate = totalRate.subtract(oldVal).setScale(3,
+																RoundingMode.HALF_UP);
+
+														tempAss.setRates(totalRate);
+													}
+
+												}
+
+											}
+
+										}
+
+										finalConData.add(tempAss);
+
+									} catch (CloneNotSupportedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
 
 							} else {
@@ -3804,10 +4190,15 @@ public class AssessmentService {
 //      							HoldNextIdD1, crgStorageDay.get(), assessment.getInsuranceValue(), invDay.get(),
 //      							con.getInvoiceDate(), newAss.getAssesmentDate(), crgStorageAmt.get());
 
+//						int updateIgmCn = cfigmcnrepo.updateInvoiceData2(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), con.getContainerNo(), assessment.getDutyValue(), HoldNextIdD1,
+//								crgDays.isEmpty() ? BigDecimal.ZERO : new BigDecimal(crgDays),
+//								assessment.getInsuranceValue(), newAss.getAssesmentDate(), totalRates1);
+						
 						int updateIgmCn = cfigmcnrepo.updateInvoiceData2(cid, bid, assessment.getIgmTransId(),
 								assessment.getIgmNo(), con.getContainerNo(), assessment.getDutyValue(), HoldNextIdD1,
 								crgDays.isEmpty() ? BigDecimal.ZERO : new BigDecimal(crgDays),
-								assessment.getInsuranceValue(), newAss.getAssesmentDate(), totalRates1);
+								assessment.getInsuranceValue(), newAss.getAssesmentDate());
 
 						int updateInventory = impInventoryRepo.updateInvData(cid, bid, assessment.getIgmTransId(),
 								assessment.getIgmNo(), con.getContainerNo(), HoldNextIdD1);
@@ -4452,10 +4843,18 @@ public class AssessmentService {
 			int updateAssessmentId = ssrRepo.updateAssessmentId(cid, bid, o.getSsrTransId(), o.getContainerNo(),
 					o.getAssesmentId());
 
+			if("Second".equals(o.getInvType())) {
+				int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess1(cid, bid, o.getIgmTransId(),o.getIgmLineNo(),o.getContainerNo(), new Date(), 'Y',
+						HoldNextIdD1, assSheet.getCreditType(), billAmt.get(), invAmt.get(), assSheet.getInvoiceUptoDate(),o.getContainerStorageAmt());
+			}
+			else {
+				int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess2(cid, bid, o.getIgmTransId(),o.getIgmLineNo(),o.getContainerNo(), new Date(), 'Y',
+						HoldNextIdD1, assSheet.getCreditType(), billAmt.get(), invAmt.get(), assSheet.getInvoiceUptoDate());
+			}
 		});
 
-		int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess(cid, bid, assSheet.getAssesmentId(), new Date(), 'Y',
-				HoldNextIdD1, assSheet.getCreditType(), totalBillAmt, totalInvAmt, assSheet.getInvoiceUptoDate());
+//		int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess(cid, bid, assSheet.getAssesmentId(), new Date(), 'Y',
+//				HoldNextIdD1, assSheet.getCreditType(), totalBillAmt, totalInvAmt, assSheet.getInvoiceUptoDate());
 
 		int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(),
 				assessment.getIgmTransId(), assessment.getIgmLineNo(), assessment.getInsuranceValue(),
@@ -11824,7 +12223,5 @@ public class AssessmentService {
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 
 	}
-
-
 
 }
