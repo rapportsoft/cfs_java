@@ -4844,11 +4844,11 @@ public class AssessmentService {
 					o.getAssesmentId());
 
 			if("Second".equals(o.getInvType())) {
-				int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess1(cid, bid, o.getIgmTransId(),o.getIgmLineNo(),o.getContainerNo(), new Date(), 'Y',
+				int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess1(cid, bid, o.getIgmTransId(),o.getIgmNo(),o.getContainerNo(), new Date(), 'Y',
 						HoldNextIdD1, assSheet.getCreditType(), billAmt.get(), invAmt.get(), assSheet.getInvoiceUptoDate(),o.getContainerStorageAmt());
 			}
 			else {
-				int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess2(cid, bid, o.getIgmTransId(),o.getIgmLineNo(),o.getContainerNo(), new Date(), 'Y',
+				int updateIgmCn = cfigmcnrepo.updateInvoiceDataAtProcess2(cid, bid, o.getIgmTransId(),o.getIgmNo(),o.getContainerNo(), new Date(), 'Y',
 						HoldNextIdD1, assSheet.getCreditType(), billAmt.get(), invAmt.get(), assSheet.getInvoiceUptoDate());
 			}
 		});
