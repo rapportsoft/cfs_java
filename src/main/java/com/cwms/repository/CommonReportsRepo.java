@@ -1577,7 +1577,6 @@ List<Object[]> findFCLDestuffContainerDetails( @Param("companyId") String compan
 
 
 
-
 @Query(value = "SELECT DISTINCT b.container_no, b.container_size, b.container_type, "
         + "IFNULL(DATE_FORMAT(b.Gate_in_Date,'%d/%m/%Y %H:%i'),'') AS GateInDate,v.vessel_name,c.igm_no,"
         + "b.igm_line_no,k.CUSTOMER_CODE,d.no_of_packages,ch.party_name AS CHA,  c.shipping_Agent, q.party_name AS ShippingAgent,IFNULL(DATE_FORMAT(b.Gate_Out_Date,'%d/%m/%Y %T'),'') AS GateOutDate, "
@@ -1612,6 +1611,7 @@ List<Object[]> findFCLDestuffContainerDetails( @Param("companyId") String compan
         + "AND b.status = 'A' AND b.gate_in_id != '' "
         + "AND b.gate_in_date < :date "
         + "AND b.Gate_Out_date BETWEEN :startDate AND :date "
+        + " AND b.container_no != '' " 
         + "GROUP BY b.container_no "
         + "ORDER BY b.Gate_in_Date", nativeQuery = true)
 List<Object[]> findFCLLoadedContainerInfo(@Param("companyId") String companyId, 
@@ -2251,7 +2251,7 @@ List<Object[]> findExportLDDPendencyContainerDetails(
 	       "LEFT OUTER JOIN party tp ON tp.company_id = a.company_id AND a.Transporter = tp.party_id AND tp.branch_id = a.branch_id " +
 	       "WHERE a.company_id = :companyId AND a.branch_id = :branchId "
 	       + " AND a.status = 'A' AND i.status = 'A' " +
-	       "AND a.Gate_In_Type = 'COM' AND a.Profitcentre_Id = 'N00004' " +
+	       "AND a.Gate_In_Type = 'EXP' AND a.Profitcentre_Id = 'N00004' " +
 	       "AND i.Stuff_Tally_Date BETWEEN :startDate AND :endDate " +
 	       "GROUP BY i.container_no " +
 	       "ORDER BY i.Stuff_Tally_Date ",nativeQuery = true)

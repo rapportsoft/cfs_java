@@ -408,4 +408,180 @@ List<Object[]> findInvoiceServices( @Param("companyId") String companyId,
 
 
 
+
+
+
+@Query(value = 
+"SELECT pp.Party_Name AS partyName, " +
+"       a.Invoice_No AS invoiceNo, " +
+"       DATE_FORMAT(a.Created_Date, '%d/%b/%Y %H:%i') AS createdDate, " +
+"       a.Invoice_Amt AS invoiceAmount, " +
+"       a.Comments AS comments, " +
+"       b.Container_No AS containerNo, " +
+"       b.Container_Size AS containerSize, " +
+"       a.Invoice_Amt AS partyAmount " +
+"FROM cfinvsrv a " +
+"LEFT OUTER JOIN cfassesmentsheet b " +
+"    ON a.Company_Id = b.Company_Id " +
+"    AND a.Branch_Id = b.Branch_Id " +
+"    AND a.Profitcentre_Id = b.Profitcentre_Id " +
+"    AND a.Invoice_No = b.Invoice_No " +
+"    AND a.Container_no = b.Assesment_Id " +
+"LEFT OUTER JOIN cfigmcn c " +
+"    ON b.Company_Id = c.Company_Id " +
+"    AND b.Branch_Id = c.Branch_Id " +
+"    AND b.IGM_Trans_Id = c.IGM_Trans_Id " +
+"    AND b.Igm_No = c.Igm_No " +
+"    AND b.igm_line_no = c.IGM_Line_No " +
+"    AND b.Container_No = c.Container_no " +
+"LEFT OUTER JOIN party pp " +
+"    ON b.Company_Id = pp.Company_Id " +
+"    AND b.SL = pp.Party_Id " +
+"    AND b.branch_id = pp.branch_id " +
+"WHERE a.company_id = :companyId " +
+"  AND a.branch_id = :branchId " +
+"  AND a.Profitcentre_Id = 'N00002' " +
+"  AND c.Container_Status = 'FCL' " +
+"  AND a.Created_Date BETWEEN :startDate AND :endDate " +
+"  AND a.Status = 'A' " +
+" AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty)  " +
+"GROUP BY a.Invoice_No " +
+"ORDER BY a.Created_Date", 
+nativeQuery = true)
+List<Object[]> findReceiptFCLReportDataOnly(
+@Param("companyId") String companyId, 
+@Param("branchId") String branchId, 
+@Param("startDate") Date startDate, 
+@Param("endDate") Date endDate,
+@Param ("billParty") String billParty);
+
+
+@Query(value = "SELECT pp.Party_Name,b.Container_No, b.Container_Size, a.Invoice_No, DATE_FORMAT(a.Created_Date, '%d-%b-%Y %T'), a.Comments,  " +
+        "a.Invoice_Amt  " +
+        "FROM cfinvsrv a " +
+        "LEFT OUTER JOIN cfassesmentsheet b ON a.Company_Id = b.Company_Id AND a.Branch_Id = b.Branch_Id " +
+        "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.Invoice_No = b.Invoice_No AND a.Container_no = b.Assesment_Id " +
+        "LEFT OUTER JOIN cfigmcn c ON b.Company_Id = c.Company_Id AND b.Branch_Id = c.Branch_Id AND b.IGM_Trans_Id = c.IGM_Trans_Id " +
+        "AND b.Igm_No = c.Igm_No AND b.igm_line_no = c.IGM_Line_No AND b.Container_No = c.Container_no " +
+        "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id AND b.SL = pp.Party_Id AND b.branch_id = pp.branch_id " +
+        "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.Profitcentre_Id = 'N00002' " +
+        "AND c.Container_Status = 'FCL' AND a.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND a.Status = 'A' " +
+        " AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty)  " +
+        "GROUP BY c.IGM_Trans_Id, c.Container_No " +
+        "ORDER BY a.Created_Date", 
+nativeQuery = true)
+List<Object[]> findInvoiceDetailsFCLTeusOnly(@Param("companyId") String companyId, 
+		@Param("branchId") String branchId, 
+		@Param("startDate") Date startDate, 
+		@Param("endDate") Date endDate,
+		@Param ("billParty") String billParty);
+
+
+
+
+
+
+
+@Query(value = "SELECT pp.Party_Name, a.Invoice_No, " +
+        "DATE_FORMAT(a.Created_Date, '%d/%b/%Y %H:%i') AS createdDate, " +
+        "a.Invoice_Amt, a.Comments, b.Container_No, b.Container_Size, " +
+        "a.Invoice_Amt AS Prtyamt " +
+        "FROM cfinvsrv a " +
+        "LEFT OUTER JOIN cfassesmentsheet b ON a.Company_Id = b.Company_Id " +
+        "AND a.Branch_Id = b.Branch_Id AND a.Profitcentre_Id = b.Profitcentre_Id " +
+        "AND a.Invoice_No = b.Invoice_No AND a.Container_no = b.Assesment_Id " +
+        "LEFT OUTER JOIN cfexpmovementreq c ON b.Company_Id = c.Company_Id " +
+        "AND b.Branch_Id = c.Branch_Id AND b.SB_Trans_Id = c.SB_Trans_Id " +
+        "AND b.SB_No = c.SB_No AND b.Movement_Req_Id = c.Movement_Req_Id " +
+        "AND b.Container_No = c.Container_no " +
+        "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id " +
+        "AND b.SL = pp.Party_Id AND b.branch_id = pp.branch_id " +
+        "WHERE a.company_id = :companyId AND a.branch_id = :branchId " +
+        "AND a.Profitcentre_Id = 'N00004' AND c.Mov_Req_Type = 'CLP' " +
+        "AND a.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND a.Status = 'A' " +
+        " AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty)  " +
+        "GROUP BY a.Invoice_No, c.Movement_Req_Id, c.Container_No " +
+        "ORDER BY a.Created_Date", nativeQuery = true)
+List<Object[]>  findExportCLPInvoiceReceiptOnly(@Param("companyId") String companyId,
+                                           @Param("branchId") String branchId,
+                                           @Param("startDate") Date startDate,
+                                           @Param("endDate") Date endDate,
+                                           @Param("billParty") String billParty);
+
+@Query(value = "SELECT pp.Party_Name, b.Container_No, b.Container_Size, a.Invoice_No, " +
+        "DATE_FORMAT(a.Created_Date, '%d-%b-%Y %H:%i') AS createdDate, a.Comments, a.Invoice_Amt " +
+        "FROM cfinvsrv a " +
+        "LEFT OUTER JOIN cfassesmentsheet b ON a.Company_Id = b.Company_Id AND a.Branch_Id = b.Branch_Id " +
+        "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.Invoice_No = b.Invoice_No AND a.Container_no = b.Assesment_Id " +
+        "LEFT OUTER JOIN cfexpmovementreq c ON b.Company_Id = c.Company_Id AND b.Branch_Id = c.Branch_Id " +
+        "AND b.SB_Trans_Id = c.SB_Trans_Id AND b.SB_No = c.SB_No AND b.Movement_Req_Id = c.Movement_Req_Id " +
+        "AND b.Container_No = c.Container_no " +
+        "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id AND b.SL = pp.Party_Id " +
+        "AND b.branch_id = pp.branch_id " +
+        "WHERE a.company_id = :companyId AND a.branch_id = :branchId " +
+        "AND a.Profitcentre_Id = 'N00004' AND c.Mov_Req_Type = 'CLP' " +
+        "AND a.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND a.Status = 'A' " +
+        "AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty) " +
+        "GROUP BY a.Invoice_No, c.Movement_Req_Id, c.Container_No " +
+        "ORDER BY a.Created_Date", nativeQuery = true)
+List<Object[]> findExportCLPTeusReportOnly(@Param("companyId") String companyId,
+                                               @Param("branchId") String branchId,
+                                               @Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate,
+                                               @Param("billParty") String billParty);
+
+
+
+
+
+@Query(value = 
+"SELECT " +
+"b.Invoice_No, " +
+"ta.tan_no_id, " +
+"DATE_FORMAT(b.Invoice_Date, '%d-%b-%Y') AS Invoice_Date, " +
+"pb.Party_Name AS Billing_Party_Name, " +
+"p.Party_Name AS CHA_Name, " +
+"b.Importer_Name, " +
+"IFNULL(b.Bill_Amt, '0.00') AS Bill_Amount, " +
+"IFNULL((b.Invoice_Amt - b.Bill_Amt), '0.00') AS ServiceTax, " +
+"IFNULL(b.Invoice_Amt, '0.00') AS Invoice_Amount, " +
+"GROUP_CONCAT(DISTINCT a.Payment_Mode, '~', IFNULL(a.Document_Amt, '0.00'), '~', a.Line_Id) AS Payment_Details, " +
+"'' AS Extra_Column " +
+"FROM fintrans a " +
+"LEFT OUTER JOIN cfassesmentsheet b " +
+"ON b.Company_Id = a.Company_Id " +
+"AND b.Branch_Id = a.Branch_Id " +
+"AND b.Receipt_No = a.Trans_Id " +
+"AND b.Assesment_Id = a.Assesment_Id " +
+"LEFT OUTER JOIN party p " +
+"ON b.Company_Id = p.Company_Id " +
+"AND b.CHA = p.Party_Id " +
+"AND b.Branch_Id = p.Branch_Id " +
+"LEFT OUTER JOIN party pb " +
+"ON pb.Company_Id = a.Company_Id " +
+"AND pb.Party_Id = a.Party_Id " +
+"AND pb.Branch_Id = a.Branch_Id " +
+"LEFT OUTER JOIN party ta " +
+"ON ta.Company_Id = a.Company_Id " +
+"AND ta.Party_Id = a.Party_Id " +
+"AND ta.Branch_Id = a.Branch_Id " +
+"WHERE " +
+"a.Company_Id = :companyId " +
+"AND a.Branch_Id = :branchId " +
+"AND a.Status = 'A' " +
+"AND b.Invoice_Date BETWEEN :startDate AND :endDate " +
+"AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty) " +
+"AND b.Invoice_No != '' " +
+"GROUP BY a.Trans_Id", nativeQuery = true)
+List<Object[]> findFinanceTransactions(
+    @Param("companyId") String companyId,
+    @Param("branchId") String branchId,
+    @Param("startDate") Date startDate,
+    @Param("endDate") Date endDate,
+    @Param("billParty") String billParty);
+
+
 }

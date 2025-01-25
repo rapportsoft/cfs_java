@@ -72,33 +72,40 @@ public class FinanceReportsController {
 	            break;
 
 	            
-	        case "Truck Wise Carting Report":
-	            excelBytes = exportReportService.createExcelReportOFTruckWiseDetailedReport(
+	        case "Credit Note Report":
+	            excelBytes = financeReportServices.createExcelReportOFCreditNoteReport(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
-	            fileName = "Import GateOut Container detailed Report.xlsx";
+	            fileName = "Credit Note Report.xlsx";
+	            break;
+	            
+	        case "Import Monthly Revenue Report":
+	            excelBytes = financeReportServices.createExcelReportOfImportMonthlyRevenueReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
+	            fileName = "Import Monthly Revenue Report.xlsx";
 	            break;
 
-	        case "Export Factory Stuff GateIn Report":
-	            excelBytes = exportReportService.createExcelReportOfFactoryStuffGateInReport(
+	        case "Export Monthly Revenue Report":
+	            excelBytes = financeReportServices.createExcelReportOfExportMonthlyRevenueReport(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
-	            fileName = "Export Factory Stuff GateIn Report.xlsx";
+	            fileName = "Export Monthly Revenue Report.xlsx";
 	            break;
 //
 	        // Add remaining cases
-	        case "Movement Pendency":
-	            excelBytes = exportReportService.createExcelReportOfMovementPendencyReport(
-	                    companyId, branchId, username, type, companyname, branchname,
-	                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
-	            fileName = "Movement Pendency.xlsx";
-	            break;
+	        case "TDS Report":
+	        	 excelBytes = financeReportServices.createExcelReportOfTDSReportReport(
+		                    companyId, branchId, username, type, companyname, branchname,
+		                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
+		            fileName = "TDS Report.xlsx";
+		            break;
 
-	        case "Cargo Back To Town":
-	            excelBytes = exportReportService.createExcelReportOfCargoBackToTown(
+	        case "Daily Receipt Report":
+	            excelBytes = financeReportServices.createExcelReportOfDailyReceiptReport(
 	                    companyId, branchId, username, type, companyname, branchname,
 	                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
-	            fileName = "Cargo Back To Town.xlsx";
+	            fileName = "Daily Receipt Report.xlsx";
 	            break;
 
 
@@ -118,12 +125,7 @@ public class FinanceReportsController {
 	            fileName = "Export Stuffing Equipments Report.xlsx";
 	            break;
 //
-	        case "TRANSPORTER WISE TUES REPORT":
-	            excelBytes = exportReportService.createExcelReportOfTransporterWiseTuesReport(
-	                    companyId, branchId, username, type, companyname, branchname,
-	                    startDate, endDate, sbNo, bookingNo, billParty, accountHolder, cha, selectedReport);
-	            fileName = "TRANSPORTER WISE TUES REPORT.xlsx";
-	            break;
+	       
 //
 	        case "Export Carting Report":
 	        	excelBytes = exportReportService.createExcelReportOfExportCartingReport(

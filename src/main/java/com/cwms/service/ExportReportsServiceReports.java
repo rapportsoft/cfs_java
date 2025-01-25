@@ -198,7 +198,7 @@ public class ExportReportsServiceReports {
 	            importDetails = exportOperationalReportRepo.getEquipmentActivityDetails(companyId, branchId);
 	            break;
 	            
-	        case "TRANSPORTER WISE TUES REPORT":
+	        case "TRANSPORTER WISE TEUS REPORT":
 	            importDetails = exportOperationalReportRepo.getTransporterWiseTuesReport(
 	                    companyId, branchId, startDate, endDate);
 	            break;
@@ -5652,7 +5652,7 @@ cell.setCellStyle(cellStyle);
 		        
 		        System.out.println("newlist__________________________________________"+newlist);
 		        
-		        Sheet sheet = workbook.createSheet("TRANSPORTER WISE TUES REPORT");
+		        Sheet sheet = workbook.createSheet("TRANSPORTER WISE TEUS REPORT");
 
 		        CellStyle dateCellStyle = workbook.createCellStyle();
 		        CreationHelper createHelper = workbook.getCreationHelper();
@@ -5746,7 +5746,7 @@ cell.setCellStyle(cellStyle);
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
 		        Cell reportTitleCell = reportTitleRow.createCell(0);
-		        reportTitleCell.setCellValue("TRANSPORTER WISE TUES REPORT" );
+		        reportTitleCell.setCellValue("TRANSPORTER WISE TEUS REPORT" );
 
 		        // Set alignment and merge cells for the heading
 		        CellStyle reportTitleStyle = workbook.createCellStyle();
@@ -5764,11 +5764,11 @@ cell.setCellStyle(cellStyle);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
 		        if(formattedStartDate.equals("N/A"))
 		        {
-		        	 reportTitleCell1.setCellValue("TRANSPORTER WISE TUES REPORT As On Date : " + formattedEndDate);
+		        	 reportTitleCell1.setCellValue("TRANSPORTER WISE TEUS REPORT As On Date : " + formattedEndDate);
 		        }
 		        else 
 		        {
-		        	 reportTitleCell1.setCellValue("TRANSPORTER WISE TUES REPORT From : " + formattedStartDate + " to " + formattedEndDate);
+		        	 reportTitleCell1.setCellValue("TRANSPORTER WISE TEUS REPORT From : " + formattedStartDate + " to " + formattedEndDate);
 		        }
 		       
 
@@ -6698,7 +6698,7 @@ cell.setCellStyle(cellStyle);
 		        }
 		        else 
 		        {
-		        	 reportTitleCell1.setCellValue("Empty Container Report Report From : " + formattedStartDate + " to " + formattedEndDate);
+		        	 reportTitleCell1.setCellValue("Empty Container Report From : " + formattedStartDate + " to " + formattedEndDate);
 		        }
 		       
 
@@ -7324,7 +7324,7 @@ cell.setCellStyle(cellStyle);
 		        }
 		        else 
 		        {
-		        	 reportTitleCell1.setCellValue("Export Carting Report Report From : " + formattedStartDate + " to " + formattedEndDate);
+		        	 reportTitleCell1.setCellValue("Export Carting Report From : " + formattedStartDate + " to " + formattedEndDate);
 		        }
 		       
 

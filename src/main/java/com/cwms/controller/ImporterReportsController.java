@@ -92,6 +92,13 @@ public class ImporterReportsController {
 	            fileName = "Import GateIn Container detailed Report.xlsx";
 	            break;
 	            
+	        case "Import Activity Report":
+	            excelBytes = importReporsService.createExcelReportOfImportActivityReport(
+	                    companyId, branchId, username, type, companyname, branchname,
+	                    startDate, endDate, igmNo, itemNo, shippingLine, accountHolder, cha, selectedReport);
+	            fileName = "Import Activity Report.xlsx";
+	            break;
+	            
 	        case "IMPORT GATE IN":
 	            excelBytes = importReporsService.createExcelReportOfImportGateInContainerDetailedReport(
 	                    companyId, branchId, username, type, companyname, branchname,
