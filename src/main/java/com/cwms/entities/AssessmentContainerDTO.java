@@ -54,6 +54,7 @@ public class AssessmentContainerDTO implements Cloneable {
 	public BigDecimal exRate;
 	public String serviceGroup;
 	public BigDecimal area;
+	public BigDecimal freeDays;
 	
 	public AssessmentContainerDTO() {
 		super();
@@ -66,7 +67,27 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
-	 public BigDecimal getArea() {
+	 public BigDecimal getFreeDays() {
+		return freeDays;
+	}
+
+
+
+
+
+
+
+	public void setFreeDays(BigDecimal freeDays) {
+		this.freeDays = freeDays;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getArea() {
 		return area;
 	}
 
@@ -1002,7 +1023,6 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
-
 	public AssessmentContainerDTO(String containerNo, String containerSize, String containerType, Date gateInDate,
 			Date destuffDate, Date gateoutDate, String examPercentage, String typeOfContainer, String scannerType,
 			String gateOutType, String checkDate, Date invoiceDate, String upTariffNo, String profitcentreId,
@@ -1012,7 +1032,7 @@ public class AssessmentContainerDTO implements Cloneable {
 			BigDecimal discValue, BigDecimal mPercentage, BigDecimal mAmount, String woNo, String woAmndNo,
 			String criteria, BigDecimal rangeFrom, BigDecimal rangeTo, String containerStatus, String gateOutId,
 			String gatePassNo, String taxApp, String acCode, BigDecimal serviceRate, BigDecimal taxPerc, String taxId,
-			BigDecimal exRate, String serviceGroup, BigDecimal area) {
+			BigDecimal exRate, String serviceGroup, BigDecimal area, BigDecimal freeDays) {
 		this.containerNo = containerNo;
 		this.containerSize = containerSize;
 		this.containerType = containerType;
@@ -1060,6 +1080,7 @@ public class AssessmentContainerDTO implements Cloneable {
 		this.exRate = exRate;
 		this.serviceGroup = serviceGroup;
 		this.area = area;
+		this.freeDays = freeDays;
 	}
 
 

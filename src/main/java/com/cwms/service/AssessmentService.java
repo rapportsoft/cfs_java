@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -497,6 +498,17 @@ public class AssessmentService {
 														con.getTypeOfContainer(), assessment.getCommodityCode());
 
 												if (!rangeValues.isEmpty()) {
+													
+													BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+															.filter(r -> ((BigDecimal) r[8])
+																	.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																										// rate is 0
+															.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																							// BigDecimal
+															.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+															.orElse(BigDecimal.ZERO); // Default value if no match found
+													
+													tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 													String unit = String.valueOf(f[1]);
 
@@ -1487,6 +1499,17 @@ public class AssessmentService {
 												assessment.getCommodityCode());
 
 										if (!rangeValues.isEmpty()) {
+											
+											BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+													.filter(r -> ((BigDecimal) r[8])
+															.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																								// rate is 0
+													.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																					// BigDecimal
+													.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+													.orElse(BigDecimal.ZERO); // Default value if no match found
+											
+											tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 											String unit = String.valueOf(f[1]);
 
@@ -2550,7 +2573,7 @@ public class AssessmentService {
 								anx.setRangeType(c.getCriteria());
 								anx.setTaxId(c.getTaxId());
 								anx.setExRate(c.getExRate());
-
+								anx.setFreeDays(c.getFreeDays());
 								if (("Y".equals(newAss.getIgst()))
 										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
 									anx.setTaxPerc(c.getTaxPerc());
@@ -2847,6 +2870,17 @@ public class AssessmentService {
 														con.getTypeOfContainer(), assessment.getCommodityCode());
 
 												if (!rangeValues.isEmpty()) {
+													
+													BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+															.filter(r -> ((BigDecimal) r[8])
+																	.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																										// rate is 0
+															.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																							// BigDecimal
+															.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+															.orElse(BigDecimal.ZERO); // Default value if no match found
+													
+													tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 													String unit = String.valueOf(f[1]);
 
@@ -3239,6 +3273,16 @@ public class AssessmentService {
 													assessment.getCommodityCode());
 
 											if (!rangeValues.isEmpty()) {
+												BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+														.filter(r -> ((BigDecimal) r[8])
+																.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																									// rate is 0
+														.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																						// BigDecimal
+														.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+														.orElse(BigDecimal.ZERO); // Default value if no match found
+												
+												tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 												String unit = String.valueOf(f[1]);
 
@@ -3625,6 +3669,17 @@ public class AssessmentService {
 												assessment.getCommodityCode());
 
 										if (!rangeValues.isEmpty()) {
+											
+											BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+													.filter(r -> ((BigDecimal) r[8])
+															.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																								// rate is 0
+													.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																					// BigDecimal
+													.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+													.orElse(BigDecimal.ZERO); // Default value if no match found
+											
+											tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 											String unit = String.valueOf(f[1]);
 
@@ -4153,7 +4208,7 @@ public class AssessmentService {
 								anx.setRangeType(c.getCriteria());
 								anx.setTaxId(c.getTaxId());
 								anx.setExRate(c.getExRate());
-
+								anx.setFreeDays(c.getFreeDays());
 								if (("Y".equals(newAss.getIgst()))
 										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
 									anx.setTaxPerc(c.getTaxPerc());
@@ -5303,6 +5358,17 @@ public class AssessmentService {
 															assessment.getCommodityCode());
 
 											if (!rangeValues.isEmpty()) {
+												
+												BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+														.filter(r -> ((BigDecimal) r[8])
+																.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																									// rate is 0
+														.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																						// BigDecimal
+														.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+														.orElse(BigDecimal.ZERO); // Default value if no match found
+												
+												tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 												String unit = String.valueOf(f[1]);
 
@@ -6054,6 +6120,17 @@ public class AssessmentService {
 
 									if (!rangeValues.isEmpty()) {
 
+										BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+												.filter(r -> ((BigDecimal) r[8])
+														.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																							// rate is 0
+												.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																				// BigDecimal
+												.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+												.orElse(BigDecimal.ZERO); // Default value if no match found
+										
+										tempAss.setFreeDays(freeDaysForExportContainerStorage);
+										
 										String unit = String.valueOf(f[1]);
 
 										AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
@@ -6907,7 +6984,7 @@ public class AssessmentService {
 							anx.setRangeType(c.getCriteria());
 							anx.setTaxId(c.getTaxId());
 							anx.setExRate(c.getExRate());
-
+							anx.setFreeDays(c.getFreeDays());
 							if (("Y".equals(newAss.getIgst()))
 									|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
 								anx.setTaxPerc(c.getTaxPerc());
@@ -7222,6 +7299,17 @@ public class AssessmentService {
 															assessment.getCommodityCode());
 
 											if (!rangeValues.isEmpty()) {
+												
+												BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+														.filter(r -> ((BigDecimal) r[8])
+																.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																									// rate is 0
+														.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																						// BigDecimal
+														.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+														.orElse(BigDecimal.ZERO); // Default value if no match found
+												
+												tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 												String unit = String.valueOf(f[1]);
 
@@ -7974,6 +8062,17 @@ public class AssessmentService {
 											String.valueOf(f[8]), commodityType, assessment.getCommodityCode());
 
 									if (!rangeValues.isEmpty()) {
+										
+										BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+												.filter(r -> ((BigDecimal) r[8])
+														.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																							// rate is 0
+												.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																				// BigDecimal
+												.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+												.orElse(BigDecimal.ZERO); // Default value if no match found
+										
+										tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 										String unit = String.valueOf(f[1]);
 
@@ -8828,7 +8927,7 @@ public class AssessmentService {
 							anx.setRangeType(c.getCriteria());
 							anx.setTaxId(c.getTaxId());
 							anx.setExRate(c.getExRate());
-
+							anx.setFreeDays(c.getFreeDays());
 							if (("Y".equals(newAss.getIgst()))
 									|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
 								anx.setTaxPerc(c.getTaxPerc());
@@ -9965,6 +10064,17 @@ public class AssessmentService {
 												assessment.getCommodityCode());
 
 										if (!rangeValues.isEmpty()) {
+											
+											BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+													.filter(r -> ((BigDecimal) r[8])
+															.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																								// rate is 0
+													.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																					// BigDecimal
+													.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+													.orElse(BigDecimal.ZERO); // Default value if no match found
+											
+											tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 											String unit = String.valueOf(f[1]);
 
@@ -10698,6 +10808,17 @@ public class AssessmentService {
 										String.valueOf(f[8]), commodityType, assessment.getCommodityCode());
 
 								if (!rangeValues.isEmpty()) {
+									
+									BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+											.filter(r -> ((BigDecimal) r[8])
+													.compareTo(BigDecimal.ZERO) == 0) // Filter where
+																						// rate is 0
+											.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+																			// BigDecimal
+											.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+											.orElse(BigDecimal.ZERO); // Default value if no match found
+									
+									tempAss.setFreeDays(freeDaysForExportContainerStorage);
 
 									String unit = String.valueOf(f[1]);
 
@@ -11555,7 +11676,7 @@ public class AssessmentService {
 						anx.setTaxId(c.getTaxId());
 						anx.setExRate(c.getExRate());
 						anx.setStartDate(c.getLastInvoiceUptoDate());
-
+						anx.setFreeDays(c.getFreeDays());
 						if (("Y".equals(newAss.getIgst()))
 								|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
 							anx.setTaxPerc(c.getTaxPerc());

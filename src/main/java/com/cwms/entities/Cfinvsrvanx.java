@@ -315,11 +315,17 @@ public class Cfinvsrvanx {
 
 	@Column(name = "Srv_Manual_Flag", length = 1)
 	private String srvManualFlag;
+	
+	@Column(name = "Free_Days", nullable = false, columnDefinition = "DECIMAL(8,0) DEFAULT 0")
+	private BigDecimal freeDays = BigDecimal.ZERO;
+
 
 	public Cfinvsrvanx() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+	
 
 	public Cfinvsrvanx(String companyId, String branchId, String processTransId, String serviceId, String taxId,
 			String erpDocRefNo, BigDecimal srlNo, String finPeriod, String docRefNo, String igmLineNo,
@@ -339,8 +345,8 @@ public class Cfinvsrvanx {
 			BigDecimal billAmt, String joServiceId, String joNo, String joAmndNo, String taxApp, String taxIdN,
 			BigDecimal taxPercN, BigDecimal taxAmt, String acCodeN, String hsnCode, BigDecimal dutyRate, String lotNo,
 			String fileNo, BigDecimal tcsRate, BigDecimal tcsAmount, BigDecimal invoiceDaysOld,
-			BigDecimal invoiceAmtOld, BigDecimal addOnRate, BigDecimal prevRate, String cargoSBNo,
-			String srvManualFlag) {
+			BigDecimal invoiceAmtOld, BigDecimal addOnRate, BigDecimal prevRate, String cargoSBNo, String srvManualFlag,
+			BigDecimal freeDays) {
 		this.companyId = companyId;
 		this.branchId = branchId;
 		this.processTransId = processTransId;
@@ -435,7 +441,23 @@ public class Cfinvsrvanx {
 		this.prevRate = prevRate;
 		this.cargoSBNo = cargoSBNo;
 		this.srvManualFlag = srvManualFlag;
+		this.freeDays = freeDays;
 	}
+
+	
+
+
+	public BigDecimal getFreeDays() {
+		return freeDays;
+	}
+
+
+
+	public void setFreeDays(BigDecimal freeDays) {
+		this.freeDays = freeDays;
+	}
+
+
 
 	public String getCompanyId() {
 		return companyId;

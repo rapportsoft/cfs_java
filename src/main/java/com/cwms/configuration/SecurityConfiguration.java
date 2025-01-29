@@ -129,6 +129,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/commonReports/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/financeReports/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/servicemapping/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/receipt/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
