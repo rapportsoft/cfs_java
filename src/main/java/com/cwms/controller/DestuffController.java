@@ -123,7 +123,7 @@ public class DestuffController {
 					c.setYardBlock(destuff.getYardBlock());
 					c.setYardLocation(destuff.getYardLocation());
 					c.setBlockCellNo(destuff.getBlockCellNo());
-
+					c.setStatus("A");
 					c.setApprovedBy(user);
 					c.setApprovedDate(new Date());
 					c.setDeStuffId(HoldNextIdD1);
