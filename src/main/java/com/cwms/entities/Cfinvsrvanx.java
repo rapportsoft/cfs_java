@@ -316,7 +316,7 @@ public class Cfinvsrvanx {
 	@Column(name = "Srv_Manual_Flag", length = 1)
 	private String srvManualFlag;
 	
-	@Column(name = "Free_Days", nullable = false, columnDefinition = "DECIMAL(8,0) DEFAULT 0")
+	@Column(name = "Free_Days",precision = 8,scale = 0)
 	private BigDecimal freeDays = BigDecimal.ZERO;
 
 
