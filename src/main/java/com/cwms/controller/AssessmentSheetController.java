@@ -48,22 +48,39 @@ public class AssessmentSheetController {
 	 @PostMapping("/saveAssessmentData")
 	 public ResponseEntity<?> saveAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
 			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
-		 return assessmentService.saveAssessmentData(cid, bid, user, assessmentData);
+	
+
+			 return assessmentService.saveAssessmentData(cid, bid, user, assessmentData);
+		 
+		 
+		
 	 }
 	 
 	 
 	 @PostMapping("/saveImportInvoiceReceipt")
-	 public ResponseEntity<?> saveImportInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+	 public ResponseEntity<?> saveImportInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("creditStatus") String creditStatus,
 			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
-		 return assessmentService.saveImportInvoiceReceipt(cid, bid, user, assessmentData);
+		 
+		 if("Y".equals(creditStatus)) {
+			 return assessmentService.saveImportInvoiceCreditReceipt(cid, bid, user, assessmentData);
+		 }
+		 else if("P".equals(creditStatus)) {
+			 return assessmentService.saveImportInvoicePdaReceipt(cid, bid, user, assessmentData);
+		 }
+		 else {
+			 
+			 
+			 return assessmentService.saveImportInvoiceReceipt(cid, bid, user, assessmentData);
+
+		 }
 	 }
 	 
 	 @GetMapping("/getTdsPerc")
 	 public ResponseEntity<?> getTdsPerc(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
 			 @RequestParam("val") String val){
-		 String tdsPerc = partyRepo.getTdsById(cid, bid, val);
+		 Object tdsPerc = partyRepo.getTdsById(cid, bid, val);
 		 
-		 if(tdsPerc == null || tdsPerc.isEmpty()) {
+		 if(tdsPerc == null) {
 			 return new ResponseEntity<>("Not found",HttpStatus.CONFLICT);
 		 }
 		 else {

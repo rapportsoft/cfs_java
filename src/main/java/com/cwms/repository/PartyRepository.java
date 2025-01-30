@@ -217,8 +217,11 @@ List<Object[]> getDataForOnAccount(@Param("cid") String cid, @Param("bid") Strin
 @Query(value = "select p.partyName from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
 String getPartyNameById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
 
-@Query(value = "select p.tdsPercentage from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
-String getTdsById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
+//@Query(value = "select p.tdsPercentage from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
+//String getTdsById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
+
+@Query(value = "select p.tdsPercentage,p.tanNoId from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
+Object getTdsById(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
 
 
 @Query(value = "select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo,a.gstNo,a.state from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "

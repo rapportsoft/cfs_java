@@ -11,8 +11,13 @@ import com.cwms.entities.FinTrans;
 public interface FintransRepo extends JpaRepository<FinTrans, String> {
 
 
-	@Query(value="select c from FinTrans c where c.companyId=:cid and c.branchId=:bid and c.oprInvoiceNo=:invNo and c.status = 'A'")
-	List<FinTrans> getDataByInvoiceNo(@Param("cid") String cid,@Param("bid") String bid,@Param("invNo") String invNo);
+//	@Query(value="select c from FinTrans c where c.companyId=:cid and c.branchId=:bid and c.oprInvoiceNo=:invNo and c.status = 'A'")
+//	List<FinTrans> getDataByInvoiceNo(@Param("cid") String cid,@Param("bid") String bid,@Param("invNo") String invNo);
+	
+	
+	@Query(value="select c from FinTrans c where c.companyId=:cid and c.branchId=:bid and c.oprInvoiceNo=:invNo and c.status = 'A' "
+			+ "and c.profitcentreId=:id")
+	List<FinTrans> getDataByInvoiceNo(@Param("cid") String cid,@Param("bid") String bid,@Param("invNo") String invNo,@Param("id") String id);
 	
 	
 	@Query(value = "select t.partyId, t.transId, t.paymentMode, "

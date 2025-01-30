@@ -656,8 +656,8 @@ public class ReceiptService {
 								.add((f.getDocumentAmt()
 										.subtract(f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))));
 
-						totalAmtWtTds1.set(totalAmtWtTds1.get().subtract((f.getDocumentAmt()
-								.subtract(f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))));
+						totalAmtWtTds1.set(totalAmtWtTds1.get().subtract((f.getDocumentAmt().subtract(
+								f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))));
 					}
 
 					fintransrepo.save(f);

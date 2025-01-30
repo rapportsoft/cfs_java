@@ -32,4 +32,12 @@ public interface PadHdrRepo extends JpaRepository<Pdahdr, String> {
 			+ "p.partyId=:id and Date(p.transDate) =:date")
 	int updateData(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("date") Date date,
 			@Param("bal") BigDecimal bal);
+	
+	
+	@Modifying
+	@Transactional
+	@Query(value="Update Pdahdr p SET p.closingBal=:bal where p.companyId=:cid and p.branchId=:bid and p.status='A' and "
+			+ "p.partyId=:id and Date(p.transDate) =:date")
+	int updateData1(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("date") Date date,
+			@Param("bal") BigDecimal bal);
 }
