@@ -3,6 +3,8 @@ package com.cwms.entities;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,6 +12,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="fintrans")
@@ -176,11 +179,43 @@ public class FinTrans {
 
 	    @Column(name = "Customer_Ledger_Flag", length = 1)
 	    private String customerLedgerFlag;
+	    
+	    @Transient
+	    private String partyGst;
+	    
+	    @Transient
+	    private String partyName;
+	    
+	    @Transient
+	    private String partyAddress1;
+	    
+	    @Transient
+	    private String partyAddress2;
+	    
+	    @Transient
+	    private String partyAddress3;
+	    
+	    @Transient
+	    private BigDecimal advanceAmt;
+	    
+	    @Autowired
+	    private BigDecimal advanceClearedAmt;
 
 		public FinTrans() {
 			super();
 			// TODO Auto-generated constructor stub
 		}
+
+	
+		
+		
+
+		
+
+		
+
+
+
 
 		public FinTrans(String companyId, String branchId, String docType, String ledgerType, BigDecimal lineId,
 				String transId, String oprInvoiceNo, Date transDate, String oprAdjTransId, String paymentMode,
@@ -192,7 +227,8 @@ public class FinTrans {
 				Date approvedDate, String billingParty, String importerId, int impSrNo, String status,
 				String assesmentId, String recordType, String oldInvoiceNo, String cnAdjustFlag,
 				String oldOprAdjTransId, Date oldOprAdjTransDate, BigDecimal credAmtAdj, String isOnAccPay,
-				String customerLedgerFlag) {
+				String customerLedgerFlag, String partyGst, String partyName, String partyAddress1,
+				String partyAddress2, String partyAddress3, BigDecimal advanceAmt, BigDecimal advanceClearedAmt) {
 			this.companyId = companyId;
 			this.branchId = branchId;
 			this.docType = docType;
@@ -242,7 +278,141 @@ public class FinTrans {
 			this.credAmtAdj = credAmtAdj;
 			this.isOnAccPay = isOnAccPay;
 			this.customerLedgerFlag = customerLedgerFlag;
+			this.partyGst = partyGst;
+			this.partyName = partyName;
+			this.partyAddress1 = partyAddress1;
+			this.partyAddress2 = partyAddress2;
+			this.partyAddress3 = partyAddress3;
+			this.advanceAmt = advanceAmt;
+			this.advanceClearedAmt = advanceClearedAmt;
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+		public BigDecimal getAdvanceAmt() {
+			return advanceAmt;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+		public void setAdvanceAmt(BigDecimal advanceAmt) {
+			this.advanceAmt = advanceAmt;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+		public BigDecimal getAdvanceClearedAmt() {
+			return advanceClearedAmt;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+		public void setAdvanceClearedAmt(BigDecimal advanceClearedAmt) {
+			this.advanceClearedAmt = advanceClearedAmt;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+		public String getPartyName() {
+			return partyName;
+		}
+
+
+
+
+
+		public void setPartyName(String partyName) {
+			this.partyName = partyName;
+		}
+
+
+
+
+
+		public String getPartyGst() {
+			return partyGst;
+		}
+
+
+		public void setPartyGst(String partyGst) {
+			this.partyGst = partyGst;
+		}
+
+
+		public String getPartyAddress1() {
+			return partyAddress1;
+		}
+
+
+		public void setPartyAddress1(String partyAddress1) {
+			this.partyAddress1 = partyAddress1;
+		}
+
+
+		public String getPartyAddress2() {
+			return partyAddress2;
+		}
+
+
+		public void setPartyAddress2(String partyAddress2) {
+			this.partyAddress2 = partyAddress2;
+		}
+
+
+		public String getPartyAddress3() {
+			return partyAddress3;
+		}
+
+
+		public void setPartyAddress3(String partyAddress3) {
+			this.partyAddress3 = partyAddress3;
+		}
+
 
 		public String getCompanyId() {
 			return companyId;
