@@ -309,7 +309,7 @@ List<Object[]> findLCLContainerDetailsWithGateOutId(@Param("companyId") String c
         "FROM cfgatein a " +
         "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
         "AND a.status = 'A' AND a.Profitcentre_Id = 'N00004' " +
-        "AND a.Gate_In_Type = 'COM' "
+        "AND a.Gate_In_Type = 'EXP' "
         + "AND a.Process_Id = 'P00219' " +
         "AND a.in_Gate_In_Date BETWEEN :startDate AND :endDate " +
         "GROUP BY a.container_no", 
@@ -457,7 +457,8 @@ List<Object[]> findPorts(@Param("companyId") String companyId,
         "AND c.party_id = q.party_id " +
         "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
         "AND c.port_jo != '' " +
-        "AND (a.gate_in_id = '' OR a.gate_in_date > :endDate) " +
+//        "AND (a.gate_in_id = '' OR a.gate_in_date > :endDate) " +
+"AND (a.gate_in_id = '' OR a.gate_in_date < :endDate) " +
         "AND c.Doc_date < :endDate " +
         "AND a.status = 'A' AND c.status = 'A' AND c.shipping_line != '' " +
         "AND c.port = :port " +
@@ -1257,8 +1258,6 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                              "    b.drt, " +
                              "    b.igm_line_no, " +
                              "    d.bl_no, " +
-                          
-                          
                             
                              "    b.Scanner_Type, " +
                              "    d.gross_weight, " +
@@ -1932,7 +1931,7 @@ List<Object[]> findLCLCargoDelivered(@Param("companyId") String companyId,
 "   AND a.branch_id = :branchId " +
 "   AND a.status = 'A' " +
 "   AND a.Profitcentre_Id = 'N00004' " +
-"   AND a.Gate_In_Type = 'COM' " +
+"   AND a.Gate_In_Type = 'EXP' " +
 "   AND a.Process_Id = 'P00219' " +
 "   AND a.in_Gate_In_Date BETWEEN :startDate AND :endDate ", 
 nativeQuery = true)
