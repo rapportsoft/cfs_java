@@ -124,11 +124,20 @@ public class AssessmentSheetController {
 	 
 	 
 	 @PostMapping("/saveBondNocInvoiceReceipt")
-	 public ResponseEntity<?> saveBondNocInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
-		 return assessmentService.saveBondNocInvoiceReceipt(cid, bid, user, assessmentData);
-	 }
-	 
+		public ResponseEntity<?> saveBondNocInvoiceReceipt(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+				@RequestParam("creditStatus") String creditStatus, @RequestParam("user") String user,
+				@RequestBody Map<String, Object> assessmentData) throws JsonMappingException, JsonProcessingException {
+
+			if ("Y".equals(creditStatus)) {
+				return assessmentService.saveBondNocCreditInvoiceReceipt(cid, bid, user, assessmentData);
+			} else if ("P".equals(creditStatus)) {
+				return assessmentService.saveBondNocPdaInvoiceReceipt(cid, bid, user, assessmentData);
+			} else {
+				return assessmentService.saveBondNocInvoiceReceipt(cid, bid, user, assessmentData);
+			}
+
+			
+		}
 	 
 	 @GetMapping("/searchBondNOCInvoiceData")
 	 public ResponseEntity<?> searchBondNOCInvoiceData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
@@ -163,9 +172,19 @@ public class AssessmentSheetController {
 	 }
 	 
 	 @PostMapping("/saveExBondInvoiceReceipt")
-	 public ResponseEntity<?> saveExBondInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
-		 return assessmentService.saveExbondInvoiceReceipt(cid, bid, user, assessmentData);
-	 }
-	 
+		public ResponseEntity<?> saveExBondInvoiceReceipt(@RequestParam("cid") String cid, @RequestParam("bid") String bid,@RequestParam("creditStatus") String creditStatus,
+				@RequestParam("user") String user, @RequestBody Map<String, Object> assessmentData)
+				throws JsonMappingException, JsonProcessingException {
+
+			if ("Y".equals(creditStatus)) {
+				return assessmentService.saveExbondCreditInvoiceReceipt(cid, bid, user, assessmentData);
+			} else if ("P".equals(creditStatus)) {
+				return assessmentService.saveExbondPdaInvoiceReceipt(cid, bid, user, assessmentData);
+			} else {
+				return assessmentService.saveExbondInvoiceReceipt(cid, bid, user, assessmentData);
+			}
+
+			
+		}
+
 }
