@@ -6219,31 +6219,26 @@ public class AssessmentService {
 
 			AtomicReference<BigDecimal> totalAmtWtTds1 = new AtomicReference<>(totalAdvanceAmt);
 			List<FinTrans> advanceRecords = finTransrepo.getAdvanceRecords(cid, bid, assSheet.getPartyId(), "AD");
-System.out.println("totalAmtWtTds1 "+totalAmtWtTds1.get());
+
 			if (!advanceRecords.isEmpty()) {
-				advanceRecords.stream().forEach(f -> {
+			    for (FinTrans f : advanceRecords) {
+			        if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
+			            break; // Stop processing if totalAmtWtTds1 is zero
+			        }
 
-					if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) > 0) {
-						if (totalAmtWtTds1.get().compareTo((f.getDocumentAmt()
-								.subtract(f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))) <= 0) {
-							f.setClearedAmt((f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt())
-									.add(totalAmtWtTds1.get()));
+			        BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
+			        BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
 
-							totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(totalAmtWtTds1.get()));
-						} else if (totalAmtWtTds1.get().compareTo((f.getDocumentAmt()
-								.subtract(f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))) > 0) {
-							f.setClearedAmt((f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt())
-									.add((f.getDocumentAmt().subtract(
-											f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))));
+			        if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
+			            f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
+			            totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
+			        } else {
+			            f.setClearedAmt(clearedAmt.add(remainingAmt));
+			            totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
+			        }
 
-							totalAmtWtTds1.set(totalAmtWtTds1.get().subtract((f.getDocumentAmt().subtract(
-									f.getClearedAmt() == null ? BigDecimal.ZERO : f.getClearedAmt()))));
-						}
-
-						finTransrepo.save(f);
-					}
-
-				});
+			        finTransrepo.save(f);
+			    }
 			}
 
 		}
