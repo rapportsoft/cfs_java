@@ -4635,7 +4635,7 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt((o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP));
+			o.setLocalAmt(o.getActualNoOfPackages());
 
 			if (!"INR".equals(o.getCurrencyId())) {
 
@@ -5186,7 +5186,7 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt((o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP));
+			o.setLocalAmt(o.getActualNoOfPackages());
 
 			if (!"INR".equals(o.getCurrencyId())) {
 
@@ -5888,7 +5888,7 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt((o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP));
+			o.setLocalAmt(o.getActualNoOfPackages());
 
 			if (!"INR".equals(o.getCurrencyId())) {
 
@@ -10680,7 +10680,7 @@ System.out.println("totalAmtWtTds1 "+totalAmtWtTds1.get());
 
 			}
 
-			o.setLocalAmt((o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP));
+			o.setLocalAmt(o.getActualNoOfPackages());
 
 			if (!"INR".equals(o.getCurrencyId())) {
 
@@ -13421,7 +13421,7 @@ System.out.println("totalAmtWtTds1 "+totalAmtWtTds1.get());
 
 			}
 
-			o.setLocalAmt((o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP));
+			o.setLocalAmt(o.getActualNoOfPackages());
 
 			if (!"INR".equals(o.getCurrencyId())) {
 
