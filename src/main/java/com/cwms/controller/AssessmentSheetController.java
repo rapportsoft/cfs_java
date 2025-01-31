@@ -59,7 +59,7 @@ public class AssessmentSheetController {
 	 
 	 @PostMapping("/saveImportInvoiceReceipt")
 	 public ResponseEntity<?> saveImportInvoiceReceipt(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("creditStatus") String creditStatus,
-			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException{
+			 @RequestParam("user") String user, @RequestBody Map<String,Object> assessmentData) throws JsonMappingException, JsonProcessingException, CloneNotSupportedException{
 		 
 		 if("Y".equals(creditStatus)) {
 			 return assessmentService.saveImportInvoiceCreditReceipt(cid, bid, user, assessmentData);

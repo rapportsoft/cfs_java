@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -2465,7 +2466,19 @@ public class AssessmentService {
 
 						}
 
-						List<AssessmentContainerDTO> filteredData = finalConData.stream()
+						List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+							try {
+								return (AssessmentContainerDTO) item.clone(); // Clone first
+							} catch (CloneNotSupportedException e) {
+								e.printStackTrace();
+								return null;
+							}
+						}).filter(Objects::nonNull) // Remove null values from failed clones
+								.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+																									// cloning
+								.collect(Collectors.toList());
+
+						List<AssessmentContainerDTO> filteredData = newAnxData.stream()
 								.filter(c -> "H".equals(c.getServiceGroup())).collect(Collectors.toList());
 
 						BigDecimal totalRates = filteredData.stream().map(AssessmentContainerDTO::getRates)
@@ -2478,7 +2491,7 @@ public class AssessmentService {
 //      																						// it's
 //      																						// absent
 
-						List<AssessmentContainerDTO> filteredData1 = finalConData.stream()
+						List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
 								.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
 
 						String crgDays = "";
@@ -2496,6 +2509,8 @@ public class AssessmentService {
 //      					AssessmentContainerDTO storageData = storageDataOpt.orElse(null); // or handle the case where
 //      																						// it's
 //      																						// absent
+
+						System.out.println("totalRates " + totalRates + " " + totalRates1);
 
 						newAss.setContainerNo(con.getContainerNo());
 						newAss.setContainerSize(con.getContainerSize());
@@ -4103,20 +4118,19 @@ public class AssessmentService {
 
 						}
 
-//						List<AssessmentContainerDTO> filteredData = finalConData.stream()
-//								.filter(c -> "H".equals(c.getServiceGroup())).collect(Collectors.toList());
-//
-//						BigDecimal totalRates = filteredData.stream().map(AssessmentContainerDTO::getRates)
-//								.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP);
+						List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+							try {
+								return (AssessmentContainerDTO) item.clone(); // Clone first
+							} catch (CloneNotSupportedException e) {
+								e.printStackTrace();
+								return null;
+							}
+						}).filter(Objects::nonNull) // Remove null values from failed clones
+								.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+																									// cloning
+								.collect(Collectors.toList());
 
-//      					Optional<AssessmentContainerDTO> handlingDataOpt = finalConData.stream()
-//      							.filter(c -> "S00001".equals(c.getServiceId())).findFirst();
-						//
-//      					AssessmentContainerDTO handlingData = handlingDataOpt.orElse(null); // or handle the case where
-//      																						// it's
-//      																						// absent
-
-						List<AssessmentContainerDTO> filteredData1 = finalConData.stream()
+						List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
 								.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
 
 						String crgDays = "";
@@ -4490,7 +4504,7 @@ public class AssessmentService {
 
 	@Transactional
 	public ResponseEntity<?> saveImportInvoiceReceipt(String cid, String bid, String user, Map<String, Object> data)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException, CloneNotSupportedException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		AssessmentSheet assessment = mapper.readValue(mapper.writeValueAsString(data.get("assessmentData")),
@@ -4635,8 +4649,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -4659,7 +4671,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -5186,8 +5208,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -5210,7 +5230,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -5888,8 +5918,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -5912,7 +5940,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -6221,24 +6259,24 @@ public class AssessmentService {
 			List<FinTrans> advanceRecords = finTransrepo.getAdvanceRecords(cid, bid, assSheet.getPartyId(), "AD");
 
 			if (!advanceRecords.isEmpty()) {
-			    for (FinTrans f : advanceRecords) {
-			        if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
-			            break; // Stop processing if totalAmtWtTds1 is zero
-			        }
+				for (FinTrans f : advanceRecords) {
+					if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
+						break; // Stop processing if totalAmtWtTds1 is zero
+					}
 
-			        BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
-			        BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
+					BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
+					BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
 
-			        if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
-			            f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
-			            totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
-			        } else {
-			            f.setClearedAmt(clearedAmt.add(remainingAmt));
-			            totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
-			        }
+					if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
+						f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
+						totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
+					} else {
+						f.setClearedAmt(clearedAmt.add(remainingAmt));
+						totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
+					}
 
-			        finTransrepo.save(f);
-			    }
+					finTransrepo.save(f);
+				}
 			}
 
 		}
@@ -8313,7 +8351,19 @@ public class AssessmentService {
 
 					newAss.setNoOfPackages(new BigDecimal(con.getExamPercentage()));
 
-					List<AssessmentContainerDTO> filteredData1 = finalConData.stream()
+					List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+						try {
+							return (AssessmentContainerDTO) item.clone(); // Clone first
+						} catch (CloneNotSupportedException e) {
+							e.printStackTrace();
+							return null;
+						}
+					}).filter(Objects::nonNull) // Remove null values from failed clones
+							.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+																								// cloning
+							.collect(Collectors.toList());
+
+					List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
 							.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
 
 					String crgDays = "";
@@ -10258,7 +10308,19 @@ public class AssessmentService {
 
 					newAss.setNoOfPackages(new BigDecimal(con.getExamPercentage()));
 
-					List<AssessmentContainerDTO> filteredData1 = finalConData.stream()
+					List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+						try {
+							return (AssessmentContainerDTO) item.clone(); // Clone first
+						} catch (CloneNotSupportedException e) {
+							e.printStackTrace();
+							return null;
+						}
+					}).filter(Objects::nonNull) // Remove null values from failed clones
+							.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+																								// cloning
+							.collect(Collectors.toList());
+					
+					List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
 							.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
 
 					String crgDays = "";
@@ -10690,8 +10752,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -10714,7 +10774,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -11074,11 +11144,10 @@ public class AssessmentService {
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 
 	}
-	
-	
+
 	@Transactional
-	public ResponseEntity<?> saveBondNocCreditInvoiceReceipt(String cid, String bid, String user, Map<String, Object> data)
-			throws JsonMappingException, JsonProcessingException {
+	public ResponseEntity<?> saveBondNocCreditInvoiceReceipt(String cid, String bid, String user,
+			Map<String, Object> data) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		AssessmentSheet assessment = mapper.readValue(mapper.writeValueAsString(data.get("assessmentData")),
@@ -11223,8 +11292,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -11247,7 +11314,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -11437,7 +11514,7 @@ public class AssessmentService {
 
 		paymentDto.stream().forEach(p -> {
 			FinTrans fin = new FinTrans();
-			
+
 			if (!"CREDIT".equals(p.getPayMode())) {
 				fin.setCompanyId(cid);
 				fin.setBranchId(bid);
@@ -11476,9 +11553,8 @@ public class AssessmentService {
 					fin.setTdsPercentage(new BigDecimal(tdsPerc));
 					fin.setTdsBillAmt(p.getAmount());
 				}
-				
-			}
-			else {
+
+			} else {
 				fin.setCompanyId(cid);
 				fin.setBranchId(bid);
 				fin.setTransId(HoldNextIdD2);
@@ -11521,13 +11597,11 @@ public class AssessmentService {
 				}
 			}
 
-		
-
 			finTransrepo.save(fin);
 
 			srNo1.set(srNo1.get().add(new BigDecimal(1)));
 		});
-		
+
 		if (assessment.getCreditType() == 'Y') {
 
 			BigDecimal totalCreditAmt = paymentDto.stream().filter(c -> "CREDIT".equals(c.getPayMode()))
@@ -11733,7 +11807,7 @@ public class AssessmentService {
 			finalResult.put("tdsDeductee", "");
 			finalResult.put("tdsperc", "");
 			finalResult.put("tanNo", "");
-			
+
 			Party p = partyRepository.getDataById(cid, bid, existingSrv.getPartyId());
 
 			if (p != null) {
@@ -11784,8 +11858,7 @@ public class AssessmentService {
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 
 	}
-	
-	
+
 	@Transactional
 	public ResponseEntity<?> saveBondNocPdaInvoiceReceipt(String cid, String bid, String user, Map<String, Object> data)
 			throws JsonMappingException, JsonProcessingException {
@@ -11933,8 +12006,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -11957,7 +12028,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -12190,7 +12271,7 @@ public class AssessmentService {
 
 			srNo1.set(srNo1.get().add(new BigDecimal(1)));
 		});
-		
+
 		if (assessment.getCreditType() == 'P') {
 
 			BigDecimal totalAdvanceAmt = paymentDto.stream().filter(c -> "ADVANCE".equals(c.getPayMode()))
@@ -12267,29 +12348,27 @@ public class AssessmentService {
 			List<FinTrans> advanceRecords = finTransrepo.getAdvanceRecords(cid, bid, assSheet.getPartyId(), "AD");
 
 			if (!advanceRecords.isEmpty()) {
-			    for (FinTrans f : advanceRecords) {
-			        if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
-			            break; // Stop processing if totalAmtWtTds1 is zero
-			        }
+				for (FinTrans f : advanceRecords) {
+					if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
+						break; // Stop processing if totalAmtWtTds1 is zero
+					}
 
-			        BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
-			        BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
+					BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
+					BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
 
-			        if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
-			            f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
-			            totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
-			        } else {
-			            f.setClearedAmt(clearedAmt.add(remainingAmt));
-			            totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
-			        }
+					if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
+						f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
+						totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
+					} else {
+						f.setClearedAmt(clearedAmt.add(remainingAmt));
+						totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
+					}
 
-			        finTransrepo.save(f);
-			    }
+					finTransrepo.save(f);
+				}
 			}
 
-
 		}
-
 
 //		int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(), assessment.getIgmTransId()
 //				, assessment.getIgmLineNo(), "Y");
@@ -12383,19 +12462,18 @@ public class AssessmentService {
 		finalResult.put("result", result);
 		finalResult.put("existingSrv", existingSrv);
 		finalResult.put("existingSrvFin", existingSrvFin);
-		
+
 		if (assessment.getCreditType() == 'P') {
 			Object advanceData = finTransrepo.advanceReceiptBeforeSaveSearch(cid, bid, existingSrv.getPartyId(), "AD");
 
 			finalResult.put("advanceData", advanceData);
 		}
 
-
 		if (singleTransData == null) {
 			finalResult.put("tdsDeductee", "");
 			finalResult.put("tdsperc", "");
 			finalResult.put("tanNo", "");
-			
+
 			Party p = partyRepository.getDataById(cid, bid, existingSrv.getPartyId());
 
 			if (p != null) {
@@ -12502,13 +12580,11 @@ public class AssessmentService {
 
 			finalResult.put("advanceData", advanceData);
 
-
-
 			if (singleTransData == null) {
 				finalResult.put("tdsDeductee", "");
 				finalResult.put("tdsperc", "");
 				finalResult.put("tanNo", "");
-				
+
 				Party p = partyRepository.getDataById(cid, bid, existingSrv.getPartyId());
 
 				if (p != null) {
@@ -12520,7 +12596,6 @@ public class AssessmentService {
 
 					finalResult.put("creditAllowed", allowedValue);
 				}
-
 
 			} else {
 				finalResult.put("tdsDeductee", singleTransData.getTdsType());
@@ -12595,13 +12670,11 @@ public class AssessmentService {
 
 			finalResult.put("advanceData", advanceData);
 
-
-
 			if (singleTransData == null) {
 				finalResult.put("tdsDeductee", "");
 				finalResult.put("tdsperc", "");
 				finalResult.put("tanNo", "");
-				
+
 				Party p = partyRepository.getDataById(cid, bid, existingSrv.getPartyId());
 
 				if (p != null) {
@@ -14455,7 +14528,19 @@ public class AssessmentService {
 
 				newAss.setNoOfPackages(new BigDecimal(con.getExamPercentage()));
 
-				List<AssessmentContainerDTO> filteredData1 = finalConData.stream()
+				List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+					try {
+						return (AssessmentContainerDTO) item.clone(); // Clone first
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+						return null;
+					}
+				}).filter(Objects::nonNull) // Remove null values from failed clones
+						.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+																							// cloning
+						.collect(Collectors.toList());
+
+				List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
 						.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
 
 				String crgDays = "";
@@ -14875,8 +14960,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -14899,7 +14982,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -15256,12 +15349,10 @@ public class AssessmentService {
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 
 	}
-	
-	
-	
+
 	@Transactional
-	public ResponseEntity<?> saveExbondCreditInvoiceReceipt(String cid, String bid, String user, Map<String, Object> data)
-			throws JsonMappingException, JsonProcessingException {
+	public ResponseEntity<?> saveExbondCreditInvoiceReceipt(String cid, String bid, String user,
+			Map<String, Object> data) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		AssessmentSheet assessment = mapper.readValue(mapper.writeValueAsString(data.get("assessmentData")),
@@ -15406,8 +15497,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -15430,7 +15519,17 @@ public class AssessmentService {
 
 		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
+
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -15620,7 +15719,7 @@ public class AssessmentService {
 
 		paymentDto.stream().forEach(p -> {
 			FinTrans fin = new FinTrans();
-			
+
 			if (!"CREDIT".equals(p.getPayMode())) {
 				fin.setCompanyId(cid);
 				fin.setBranchId(bid);
@@ -15659,8 +15758,7 @@ public class AssessmentService {
 					fin.setTdsPercentage(new BigDecimal(tdsPerc));
 					fin.setTdsBillAmt(p.getAmount());
 				}
-			}
-			else {
+			} else {
 				fin.setCompanyId(cid);
 				fin.setBranchId(bid);
 				fin.setTransId(HoldNextIdD2);
@@ -15703,13 +15801,11 @@ public class AssessmentService {
 				}
 			}
 
-			
-
 			finTransrepo.save(fin);
 
 			srNo1.set(srNo1.get().add(new BigDecimal(1)));
 		});
-		
+
 		if (assessment.getCreditType() == 'Y') {
 
 			BigDecimal totalCreditAmt = paymentDto.stream().filter(c -> "CREDIT".equals(c.getPayMode()))
@@ -15818,7 +15914,6 @@ public class AssessmentService {
 
 		}
 
-
 //		int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(), assessment.getIgmTransId()
 //				, assessment.getIgmLineNo(), "Y");
 
@@ -15913,7 +16008,7 @@ public class AssessmentService {
 			finalResult.put("tdsDeductee", "");
 			finalResult.put("tdsperc", "");
 			finalResult.put("tanNo", "");
-			
+
 			Party p = partyRepository.getDataById(cid, bid, existingSrv.getPartyId());
 
 			if (p != null) {
@@ -15964,8 +16059,7 @@ public class AssessmentService {
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
 
 	}
-	
-	
+
 	@Transactional
 	public ResponseEntity<?> saveExbondPdaInvoiceReceipt(String cid, String bid, String user, Map<String, Object> data)
 			throws JsonMappingException, JsonProcessingException {
@@ -16113,8 +16207,6 @@ public class AssessmentService {
 
 			}
 
-			o.setLocalAmt(o.getActualNoOfPackages());
-
 			if (!"INR".equals(o.getCurrencyId())) {
 
 				BigDecimal local = (o.getActualNoOfPackages().subtract(discAmt)).setScale(3, RoundingMode.HALF_UP);
@@ -16136,8 +16228,17 @@ public class AssessmentService {
 			cfinvsrvanxrepo.save(o);
 
 		});
+		List<Cfinvsrvanx> newAnxData = new ArrayList<>();
+		oldAnxData.stream().forEach(item -> {
+			try {
+				newAnxData.add(item.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Assuming `clone()` is properly overridden
+		});
 
-		Map<String, Cfinvsrvanx> groupedData = oldAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
+		Map<String, Cfinvsrvanx> groupedData = newAnxData.stream().collect(Collectors.toMap(Cfinvsrvanx::getServiceId, // Key:
 																														// serviceId
 				c -> c, // Value: current record (initial)
 				(c1, c2) -> { // Merge function for duplicates
@@ -16447,24 +16548,24 @@ public class AssessmentService {
 			List<FinTrans> advanceRecords = finTransrepo.getAdvanceRecords(cid, bid, assSheet.getPartyId(), "AD");
 
 			if (!advanceRecords.isEmpty()) {
-			    for (FinTrans f : advanceRecords) {
-			        if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
-			            break; // Stop processing if totalAmtWtTds1 is zero
-			        }
+				for (FinTrans f : advanceRecords) {
+					if (totalAmtWtTds1.get().compareTo(BigDecimal.ZERO) <= 0) {
+						break; // Stop processing if totalAmtWtTds1 is zero
+					}
 
-			        BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
-			        BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
+					BigDecimal clearedAmt = (f.getClearedAmt() == null) ? BigDecimal.ZERO : f.getClearedAmt();
+					BigDecimal remainingAmt = f.getDocumentAmt().subtract(clearedAmt);
 
-			        if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
-			            f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
-			            totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
-			        } else {
-			            f.setClearedAmt(clearedAmt.add(remainingAmt));
-			            totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
-			        }
+					if (totalAmtWtTds1.get().compareTo(remainingAmt) <= 0) {
+						f.setClearedAmt(clearedAmt.add(totalAmtWtTds1.get()));
+						totalAmtWtTds1.set(BigDecimal.ZERO); // Fully utilized
+					} else {
+						f.setClearedAmt(clearedAmt.add(remainingAmt));
+						totalAmtWtTds1.set(totalAmtWtTds1.get().subtract(remainingAmt));
+					}
 
-			        finTransrepo.save(f);
-			    }
+					finTransrepo.save(f);
+				}
 			}
 
 		}
@@ -16558,19 +16659,18 @@ public class AssessmentService {
 		finalResult.put("result", result);
 		finalResult.put("existingSrv", existingSrv);
 		finalResult.put("existingSrvFin", existingSrvFin);
-		
+
 		if (assessment.getCreditType() == 'P') {
 			Object advanceData = finTransrepo.advanceReceiptBeforeSaveSearch(cid, bid, existingSrv.getPartyId(), "AD");
 
 			finalResult.put("advanceData", advanceData);
 		}
 
-
 		if (singleTransData == null) {
 			finalResult.put("tdsDeductee", "");
 			finalResult.put("tdsperc", "");
 			finalResult.put("tanNo", "");
-			
+
 			Party p = partyRepository.getDataById(cid, bid, existingSrv.getPartyId());
 
 			if (p != null) {

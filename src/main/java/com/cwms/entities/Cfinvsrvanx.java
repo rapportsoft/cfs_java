@@ -14,7 +14,7 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "cfinvsrvanx")
 @IdClass(CfinvsrvanxId.class)
-public class Cfinvsrvanx {
+public class Cfinvsrvanx implements Cloneable {
 	@Id
 	@Column(name = "Company_Id", length = 6)
 	private String companyId;
@@ -1211,6 +1211,10 @@ public class Cfinvsrvanx {
 		this.srvManualFlag = srvManualFlag;
 	}
 	
-	
+	@Override
+	public Cfinvsrvanx clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (Cfinvsrvanx) super.clone();
+	}
 	
 }
