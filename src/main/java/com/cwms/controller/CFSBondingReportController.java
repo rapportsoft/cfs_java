@@ -166,7 +166,20 @@ public class CFSBondingReportController {
 				}
 			
 			
-			
+				 @GetMapping("/showNocRegister")
+				    public ResponseEntity<List<Object[]>> showNocRegister(
+				    		@RequestParam(name = "companyId") String companyId,
+						       @RequestParam(name = "branchId") String branchId, 
+						       @RequestParam(name = "uname") String username,
+						       @RequestParam(name = "type") String type, 
+						       @RequestParam(name = "cname") String companyname,
+						       @RequestParam(name = "bname") String branchname, 
+						       @RequestParam(name = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+						       @RequestParam(name = "endDate", required = false ) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+						       @RequestParam(name = "boeNo", required = false) String boeNo) 
+						    		   throws DocumentException, ParseException {
+				        return cFSBondingReportService.showNocDepositeRegisterReport(companyId, branchId, username, type, companyname, branchname, startDate, endDate,boeNo);
+				    }
 			
 			
 			

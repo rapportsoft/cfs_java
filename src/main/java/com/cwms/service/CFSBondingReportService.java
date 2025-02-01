@@ -141,7 +141,78 @@ public class CFSBondingReportService {
 	
 	
 	
-	
+	public ResponseEntity<List<Object[]>> showNocDepositeRegisterReport(
+            String companyId,
+            String branchId,
+            String username,
+            String type,
+            String companyname,
+            String branchname,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate,
+            String boeNo
+    ) {
+        Calendar cal = Calendar.getInstance();
+
+        // Set startDate to 00:00 if the time component is not set
+//        if (startDate != null) {
+//            cal.setTime(startDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 0);
+//            cal.set(Calendar.MINUTE, 0);
+//            cal.set(Calendar.SECOND, 0);
+//            cal.set(Calendar.MILLISECOND, 0);
+//            startDate = cal.getTime();
+//        }
+//
+//        // Set endDate to 23:59 if the time component is not set
+//        if (endDate != null) {
+//            cal.setTime(endDate);
+//            cal.set(Calendar.HOUR_OF_DAY, 23);
+//            cal.set(Calendar.MINUTE, 59);
+//            cal.set(Calendar.SECOND, 59);
+//            cal.set(Calendar.MILLISECOND, 999);
+//            endDate = cal.getTime();
+//        }
+        
+        if (startDate != null) {
+            cal.setTime(startDate);
+            // If the time is at the default 00:00:00, reset it to 00:00:00
+            if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0 && cal.get(Calendar.SECOND) == 0 && cal.get(Calendar.MILLISECOND) == 0) {
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                startDate = cal.getTime();
+            }
+        }
+
+        // Check if time component is not set (i.e., time is null or empty)
+        if (endDate != null) {
+            cal.setTime(endDate);
+            // If the time is at the default 23:59:59, reset it to 23:59:59
+            if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) == 59 && cal.get(Calendar.SECOND) == 59 && cal.get(Calendar.MILLISECOND) == 999) {
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                endDate = cal.getTime();
+            }
+        }
+
+//        List<Cfinbondcrg> resultData = cfinbondcrgRepo.getDataForInBondDepositeReport(companyId, branchId, startDate,endDate,boeNo);
+
+        
+        List<Object[]> resultData=null;
+        
+     // Case 1: If both startDate and endDate are null, use getDataForBondDeliveryReportWithoutDates
+            resultData = commonReportRepo.findNocData(companyId, branchId, startDate, endDate);
+        
+        if (resultData.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No records found
+        }
+
+        return new ResponseEntity<>(resultData, HttpStatus.OK); // Records found
+    }
 	
 	public ResponseEntity<List<Cfinbondcrg>> showBondDepositRegister(
             String companyId,
@@ -374,7 +445,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 10));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -387,7 +458,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 10));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -400,7 +471,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 10));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -417,7 +488,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0,10));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
@@ -972,7 +1043,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 10));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -985,7 +1056,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 10));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -998,7 +1069,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 10));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -1015,7 +1086,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 10));
 		        
 		        
 		        Row reportTitleRow1 = sheet.createRow(4);
@@ -2175,7 +2246,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 10));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -2188,7 +2259,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 10));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -2201,7 +2272,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 10));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -2218,7 +2289,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 18));
 		        
 		        
 		        Row reportTitleRow11q = sheet.createRow(4);
@@ -2764,7 +2835,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -2777,7 +2848,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -2790,7 +2861,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -2807,7 +2878,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 7));
 		        
 		        
 		        Row reportTitleRow1 = sheet.createRow(4);
@@ -3144,7 +3215,7 @@ public class CFSBondingReportService {
 		        companyFont1.setFontHeightInPoints((short)18);
 		        companyStyle1.setFont(companyFont1);
 		        companyCell1.setCellStyle(companyStyle1);
-		        sheet2.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader2.length - 1));
+		        sheet2.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow11 = sheet2.createRow(1);
@@ -3157,7 +3228,7 @@ public class CFSBondingReportService {
 		        branchFont11.setFontHeightInPoints((short) 12);
 		        branchStyle11.setFont(branchFont11);
 		        branchCell11.setCellStyle(branchStyle11);
-		        sheet2.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader2.length - 1));
+		        sheet2.addMergedRegion(new CellRangeAddress(1, 1, 0, 7));
 
 		        
 		        Row branchRow111 = sheet2.createRow(2);
@@ -3170,7 +3241,7 @@ public class CFSBondingReportService {
 		        branchFont111.setFontHeightInPoints((short) 12);
 		        branchStyle111.setFont(branchFont111);
 		        branchCell111.setCellStyle(branchStyle111);
-		        sheet2.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader2.length - 1));
+		        sheet2.addMergedRegion(new CellRangeAddress(2, 2, 0, 7));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow11 = sheet2.createRow(3);
@@ -3187,7 +3258,7 @@ public class CFSBondingReportService {
 		        reportTitleFont11.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle11.setFont(reportTitleFont11);
 		        reportTitleCell11.setCellStyle(reportTitleStyle11);
-		        sheet2.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader2.length - 1));
+		        sheet2.addMergedRegion(new CellRangeAddress(3, 3, 0, 7));
 		        
 		        
 		        Row reportTitleRow111 = sheet2.createRow(4);
@@ -3846,7 +3917,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 10));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -3859,7 +3930,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0,10));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -3872,7 +3943,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 10));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -3889,7 +3960,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 10));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
@@ -4354,7 +4425,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 12));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -4367,7 +4438,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 12));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -4380,7 +4451,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 12));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -4397,7 +4468,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 12));
 		        
 		        
 		        
@@ -5125,7 +5196,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -5138,7 +5209,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 9));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -5151,7 +5222,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 9));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -5168,7 +5239,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 9));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
@@ -5779,7 +5850,7 @@ public class CFSBondingReportService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -5792,7 +5863,7 @@ public class CFSBondingReportService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 9));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -5805,7 +5876,7 @@ public class CFSBondingReportService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 9));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -5822,7 +5893,7 @@ public class CFSBondingReportService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0,9));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);
