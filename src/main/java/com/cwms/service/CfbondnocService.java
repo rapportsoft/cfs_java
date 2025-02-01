@@ -174,7 +174,13 @@ public class CfbondnocService {
 //   				    }
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area should be less than :" + addValue, HttpStatus.BAD_REQUEST);
+//						return new ResponseEntity<>("Custome Approved area remains :" + addValue, HttpStatus.BAD_REQUEST);
+						
+						return new ResponseEntity<>(
+							    "⚠️ Custom approved area exceeds the allowed limit.\n"
+							    + "Please enter a value less than or equal to: " + addValue + ".", 
+							    HttpStatus.BAD_REQUEST
+							);
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -242,7 +248,13 @@ public class CfbondnocService {
 
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area should be less than :" + addValue, HttpStatus.BAD_REQUEST);
+//						return new ResponseEntity<>("Area should be less than :" + addValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(
+							    "⚠️ Custom approved area exceeds the allowed limit.\n"
+							    + "Please enter a value less than or equal to: " + addValue + ".", 
+							    HttpStatus.BAD_REQUEST
+							);
+
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -341,7 +353,14 @@ public class CfbondnocService {
 
 					if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Area should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
+//						return new ResponseEntity<>("Area should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(
+							    "⚠️ Custom approved area exceeds the allowed limit.\n"
+							    + "Please enter a value less than or equal to: " + roundValue + ".", 
+							    HttpStatus.BAD_REQUEST
+							);
+
+
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -362,7 +381,13 @@ public class CfbondnocService {
 
 					if (bondnocDtl.getCifValue().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Cif should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
+//						return new ResponseEntity<>("Cif should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(
+								"⚠️ Custom approved CIF value exceeds the allowed limit.\n"
+										+ "Please enter a value less than or equal to: " + roundValue + ".", 
+							    HttpStatus.BAD_REQUEST
+							);
+
 					}
 
 					// Proceed with your logic if cfBondNoc.getArea() is less than or equal to
@@ -381,7 +406,15 @@ public class CfbondnocService {
 
 					if (bondnocDtl.getCargoDuty().compareTo(addValue) > 0) {
 						// If cfBondNoc.getArea() is greater than addValue
-						return new ResponseEntity<>("Crago should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
+//						return new ResponseEntity<>("Crago should be less than :" + roundValue, HttpStatus.BAD_REQUEST);
+						
+						return new ResponseEntity<>(
+							    "⚠️ Custom approved cargo duty exceeds the allowed limit.\n"
+							    + "Please enter a value less than or equal to: " + roundValue + ".", 
+							    HttpStatus.BAD_REQUEST
+							);
+
+
 					}
 				}
 
@@ -563,8 +596,14 @@ public class CfbondnocService {
 
 						if (cfBondNoc.getArea().compareTo(addValue) > 0) {
 							// If cfBondNoc.getArea() is greater than addValue
-							return new ResponseEntity<>("Area should be less than :" + roundValue,
-									HttpStatus.BAD_REQUEST);
+//							return new ResponseEntity<>("Area should be less than :" + roundValue,
+//									HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>(
+								    "⚠️ Custom approved area exceeds the allowed limit.\n"
+								    + "Please enter a value less than or equal to: " + roundValue + ".", 
+								    HttpStatus.BAD_REQUEST
+								);
+
 						}
 					}
 
@@ -576,8 +615,13 @@ public class CfbondnocService {
 
 						if (bondnocDtl.getCifValue().compareTo(addValue) > 0) {
 							// If cfBondNoc.getArea() is greater than addValue
-							return new ResponseEntity<>("Cif should be less than :" + roundValue,
-									HttpStatus.BAD_REQUEST);
+//							return new ResponseEntity<>("Cif should be less than :" + roundValue,
+//									HttpStatus.BAD_REQUEST);
+							return new ResponseEntity<>(
+									"⚠️ Custom approved CIF value exceeds the allowed limit.\n"
+											+ "Please enter a value less than or equal to: " + roundValue + ".", 
+								    HttpStatus.BAD_REQUEST
+								);
 						}
 					}
 
@@ -589,8 +633,15 @@ public class CfbondnocService {
 
 						if (bondnocDtl.getCargoDuty().compareTo(addValue) > 0) {
 							// If cfBondNoc.getArea() is greater than addValue
-							return new ResponseEntity<>("Crago should be less than :" + roundValue,
-									HttpStatus.BAD_REQUEST);
+//							return new ResponseEntity<>("Crago should be less than :" + roundValue,
+//									HttpStatus.BAD_REQUEST);
+							
+							return new ResponseEntity<>(
+								    "⚠️ Custom approved cargo duty exceeds the allowed limit.\n"
+								    + "Please enter a value less than or equal to: " + roundValue + ".", 
+								    HttpStatus.BAD_REQUEST
+								);
+
 						}
 					}
 					CfBondNocDtl bondnocDtl1 = new CfBondNocDtl();

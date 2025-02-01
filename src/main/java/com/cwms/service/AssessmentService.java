@@ -8298,6 +8298,7 @@ public class AssessmentService {
 					newAss.setTransType("Bond Cargo");
 					newAss.setProfitcentreId(con.getProfitcentreId());
 					newAss.setSbNo(noc.getBoeNo());
+					newAss.setSbDate(noc.getBoeDate());
 					newAss.setAssesmentId(HoldNextIdD1);
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
@@ -10255,6 +10256,7 @@ public class AssessmentService {
 					newAss.setTransType("Bond Cargo");
 					newAss.setProfitcentreId(con.getProfitcentreId());
 					newAss.setSbNo(noc.getBoeNo());
+					newAss.setSbDate(noc.getBoeDate());
 					newAss.setAssesmentId(HoldNextIdD1);
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
@@ -14475,6 +14477,7 @@ public class AssessmentService {
 				newAss.setIgmLineNo("");
 				newAss.setViaNo("");
 				newAss.setSbNo(assessment.getIgmLineNo());
+				newAss.setSbDate(crg.getExBondBeDate());
 				newAss.setAssesmentId(HoldNextIdD1);
 
 				if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
