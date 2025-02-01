@@ -3,6 +3,8 @@ package com.cwms.entities;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -198,7 +200,7 @@ public class AssessmentSheet implements Cloneable {
     @Column(name = "party_Sr_no", precision = 8, scale = 0)
     private BigDecimal partySrNo = BigDecimal.ZERO;
 
-    @Column(name = "Type_of_Container", length = 10)
+    @Column(name = "Type_of_Container", length = 30)
     private String typeOfContainer = "";
 
     @Column(name = "Type_of_Cargo", length = 10)
@@ -2373,7 +2375,520 @@ public class AssessmentSheet implements Cloneable {
 		return super.clone();
 	}
     
-    
-    
+//	Export Container Invoice
+	
+	    transient private String profitcentreName;
+	    transient private String cartingTransId;
+	    transient private String cargoSbNo;
+	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	    transient private Date cartingDate;	    
+	    transient private String movementType;    
+	    @Transient
+	    private String expGst;
+	    
+	    @Transient
+	    private String expTanNo;
+	    
+	    @Transient
+	    private String expStateCode;    
+	    
+	  	    
+	    @Transient
+	    private String pendingCredit;
+	    
+	    
+	    
+
+	public String getAccHolderGst2() {
+			return accHolderGst2;
+		}
+
+
+
+
+
+
+		public void setAccHolderGst2(String accHolderGst2) {
+			this.accHolderGst2 = accHolderGst2;
+		}
+
+
+
+
+
+
+		public String getAccHolderState2() {
+			return accHolderState2;
+		}
+
+
+
+
+
+
+		public void setAccHolderState2(String accHolderState2) {
+			this.accHolderState2 = accHolderState2;
+		}
+
+
+
+
+
+
+		public String getAccStateCode2() {
+			return accStateCode2;
+		}
+
+
+
+
+
+
+		public void setAccStateCode2(String accStateCode2) {
+			this.accStateCode2 = accStateCode2;
+		}
+
+
+
+
+
+
+		public String getAccAddress2() {
+			return accAddress2;
+		}
+
+
+
+
+
+
+		public void setAccAddress2(String accAddress2) {
+			this.accAddress2 = accAddress2;
+		}
+
+
+
+
+
+
+	public String getProfitcentreName() {
+			return profitcentreName;
+		}
+
+
+
+
+
+
+		public void setProfitcentreName(String profitcentreName) {
+			this.profitcentreName = profitcentreName;
+		}
+
+
+
+
+
+
+		public String getCartingTransId() {
+			return cartingTransId;
+		}
+
+
+
+
+
+
+		public void setCartingTransId(String cartingTransId) {
+			this.cartingTransId = cartingTransId;
+		}
+
+
+
+
+
+
+		public String getCargoSbNo() {
+			return cargoSbNo;
+		}
+
+
+
+
+
+
+		public void setCargoSbNo(String cargoSbNo) {
+			this.cargoSbNo = cargoSbNo;
+		}
+
+
+
+
+
+
+		public Date getCartingDate() {
+			return cartingDate;
+		}
+
+
+
+
+
+
+		public void setCartingDate(Date cartingDate) {
+			this.cartingDate = cartingDate;
+		}
+
+
+
+
+
+
+		public String getMovementType() {
+			return movementType;
+		}
+
+
+
+
+
+
+		public void setMovementType(String movementType) {
+			this.movementType = movementType;
+		}
+
+
+		@Transient
+	    private String expAddress;
+		 @Transient
+		    private String chaStateCode;
+		 @Transient
+		    private String accAddress;  
+		 @Transient
+		    private String accStateCode;  
+		 @Transient
+		    private String fwdAddress;  
+		 
+		 
+		 @Transient
+		    private String accTanId1; 
+		    
+		    @Transient
+		    private String accTanId2; 
+		    
+		    
+		    
+		    @Transient
+		    private String accHolderGst2;
+		        
+		    @Transient
+		    private String accHolderState2;   
+		    
+		    @Transient
+		    private String accStateCode2;  
+		    
+		    @Transient
+		    private String accAddress2;   
+		    
+
+		public String getAccTanId1() {
+				return accTanId1;
+			}
+
+
+
+
+
+
+			public void setAccTanId1(String accTanId1) {
+				this.accTanId1 = accTanId1;
+			}
+
+
+
+
+
+
+			public String getAccTanId2() {
+				return accTanId2;
+			}
+
+
+
+
+
+
+			public void setAccTanId2(String accTanId2) {
+				this.accTanId2 = accTanId2;
+			}
+
+
+
+
+
+
+		public String getExpGst() {
+			return expGst;
+		}
+
+
+
+
+
+
+		public void setExpGst(String expGst) {
+			this.expGst = expGst;
+		}
+
+
+
+
+
+
+		public String getExpTanNo() {
+			return expTanNo;
+		}
+
+
+
+
+
+
+		public void setExpTanNo(String expTanNo) {
+			this.expTanNo = expTanNo;
+		}
+
+
+
+
+
+
+		public String getExpStateCode() {
+			return expStateCode;
+		}
+
+
+
+
+
+
+		public void setExpStateCode(String expStateCode) {
+			this.expStateCode = expStateCode;
+		}
+
+
+
+
+
+
+		public String getExpAddress() {
+			return expAddress;
+		}
+
+
+
+
+
+
+		public void setExpAddress(String expAddress) {
+			this.expAddress = expAddress;
+		}
+
+
+
+
+
+
+		public String getChaStateCode() {
+			return chaStateCode;
+		}
+
+
+
+
+
+
+		public void setChaStateCode(String chaStateCode) {
+			this.chaStateCode = chaStateCode;
+		}
+
+
+
+
+
+
+		public String getAccAddress() {
+			return accAddress;
+		}
+
+
+
+
+
+
+		public void setAccAddress(String accAddress) {
+			this.accAddress = accAddress;
+		}
+
+
+
+
+
+
+		public String getAccStateCode() {
+			return accStateCode;
+		}
+
+
+
+
+
+
+		public void setAccStateCode(String accStateCode) {
+			this.accStateCode = accStateCode;
+		}
+
+
+
+
+
+
+		public String getFwdAddress() {
+			return fwdAddress;
+		}
+
+
+
+
+
+
+		public void setFwdAddress(String fwdAddress) {
+			this.fwdAddress = fwdAddress;
+		}
+
+
+
+
+
+
+		//getSelectedExportAssesmentSheet
+		public AssessmentSheet(String companyId, String branchId, String assesmentId, String assesmentLineNo,
+	            String transType, Date assesmentDate, String sbNo, String sbTransId, Date sbDate, char status,
+	            String createdBy, String profitcentreId, String profitcentreName, String billingParty, String sl,
+	            String sa, String commodityDescription, Date minCartingTransDate, String importerId,
+	            String exporterName, String expAddress, String expGst, String expStateCode, int impSrNo,
+	            String cha, String chaName, String chaAddress, String chaGst, String chaStateCode, int chaSrNo,
+	            String othPartyId, String accHolderName, String accAddress, String accHolderGst,
+	            String accStateCode, String othSrNo, String onAccountOf, String fwdName, String fwdAddress,
+	            String fwdGst, String fwdState, int accSrNo, String invoiceNo, Date invoiceDate, char taxApplicable,
+	            char sez, String commodityCode, char creditType, String invoiceCategory, String irn,
+	            String receiptNo, String creditAllowed, String pendingCredit, String comments,
+	            String intComments, String partyId) {
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.assesmentId = assesmentId;
+	this.assesmentLineNo = assesmentLineNo;
+	this.transType = transType;
+	this.assesmentDate = assesmentDate;
+	this.sbNo = sbNo;
+	this.sbTransId = sbTransId;
+	this.sbDate = sbDate;
+	this.status = status;
+	this.createdBy = createdBy;
+	this.profitcentreId = profitcentreId;
+	this.profitcentreName = profitcentreName;
+	this.billingParty = billingParty;
+	this.sa = sa;
+	this.sl = sl;
+	this.commodityDescription = commodityDescription;
+	this.minCartingTransDate = minCartingTransDate;
+	this.importerId = importerId;
+	this.exporterName = exporterName;
+	this.expAddress = expAddress;
+	this.expGst = expGst;
+	this.expStateCode = expStateCode;
+	this.impSrNo = impSrNo;
+	this.cha = cha;
+	this.chaName = chaName;
+	this.chaAddress = chaAddress;
+	this.chaGst = chaGst;
+	this.chaStateCode = chaStateCode;
+	this.chaSrNo = chaSrNo;
+	this.othPartyId = othPartyId;
+	this.accHolderName = accHolderName;
+	this.accAddress = accAddress;
+	this.accHolderGst = accHolderGst;
+	this.accStateCode = accStateCode;
+	this.othSrNo = othSrNo;
+	this.onAccountOf = onAccountOf;
+	this.fwdName = fwdName;
+	this.fwdAddress = fwdAddress;
+	this.fwdGst = fwdGst;
+	this.fwdState = fwdState;
+	this.accSrNo = accSrNo;
+	this.invoiceNo = invoiceNo;
+	this.invoiceDate = invoiceDate;
+	this.taxApplicable = taxApplicable;
+	this.sez = sez;
+	this.commodityCode = commodityCode;
+	this.creditType = creditType;
+	this.invoiceCategory = invoiceCategory;
+	this.irn = irn;
+	this.receiptNo = receiptNo;
+	this.creditAllowed = creditAllowed;
+	this.pendingCredit = pendingCredit;
+	this.comments = comments;
+	this.intComments = intComments;
+	this.partyId = partyId;	
+	}
+
+		
+
+	    transient private String gateOutId;
+	    transient private String gatePassNo;
+	    
+	    
+	    
+		public String getPendingCredit() {
+			return pendingCredit;
+		}
+
+		public void setPendingCredit(String pendingCredit) {
+			this.pendingCredit = pendingCredit;
+		}
+
+		public String getGateOutId() {
+			return gateOutId;
+		}
+
+		public void setGateOutId(String gateOutId) {
+			this.gateOutId = gateOutId;
+		}
+
+		public String getGatePassNo() {
+			return gatePassNo;
+		}
+
+		public void setGatePassNo(String gatePassNo) {
+			this.gatePassNo = gatePassNo;
+		}
+
+		public AssessmentSheet(String companyId, String branchId, String assesmentId, String assesmentLineNo,Date assesmentDate, String containerNo, String containerSize, String containerType, Date gateInDate, Date invoiceDate,
+				String gateOutId, String gatePassNo,  String partyId)
+		{
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.assesmentId = assesmentId;
+			this.assesmentLineNo = assesmentLineNo;
+			this.assesmentDate = assesmentDate;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.gateInDate = gateInDate;
+			this.invoiceDate = invoiceDate;
+			this.gateOutId = gateOutId;
+			this.gatePassNo = gatePassNo;
+			this.partyId = partyId;		
+		}
+		
 
 }

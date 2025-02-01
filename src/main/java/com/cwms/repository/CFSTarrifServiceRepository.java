@@ -74,7 +74,7 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			+ "ON s.companyId = se.companyId  AND s.branchId = se.branchId AND se.status <> 'D' AND s.serviceId = se.serviceId "
 			+ "LEFT JOIN JarDetail j "
 			+ "ON s.companyId = j.companyId AND j.status <> 'D' AND j.jarId = 'J00006' AND s.commodityCode = j.jarDtlId "
-			+ "WHERE s.companyId = :companyId AND s.branchId = :branchId AND s.status = 'A' "
+			+ "WHERE s.companyId = :companyId AND s.branchId = :branchId AND s.status = 'A' AND se.status = 'A' "
 			+ "AND s.cfsTariffNo = :tariffNo AND s.cfsAmendNo = :cfsAmendNo")
 	List<CFSTariffService> getForTariffReport(@Param("companyId") String companyId, @Param("branchId") String branchId,
 			@Param("tariffNo") String tariffNo, @Param("cfsAmendNo") String cfsAmendNo);
@@ -87,7 +87,7 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			+ "ON s.companyId = se.companyId  AND s.branchId = se.branchId AND se.status <> 'D' AND s.serviceId = se.serviceId "
 			+ "LEFT JOIN JarDetail j "
 			+ "ON s.companyId = j.companyId AND j.status <> 'D' AND j.jarId = 'J00006' AND s.commodityCode = j.jarDtlId "
-			+ "WHERE s.companyId = :companyId AND s.branchId = :branchId "
+			+ "WHERE s.companyId = :companyId AND s.branchId = :branchId AND se.status <> 'D' "
 			+ "AND s.cfsTariffNo = :tariffNo AND s.status In ('A' , 'C')")
 	List<CFSTariffService> getForTariffAuditTrailReport(@Param("companyId") String companyId, @Param("branchId") String branchId,
 			@Param("tariffNo") String tariffNo);

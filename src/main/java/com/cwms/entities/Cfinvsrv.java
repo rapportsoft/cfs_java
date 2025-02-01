@@ -1041,5 +1041,12 @@ public class Cfinvsrv {
 		}
 	    
 	    
+//		Export Container Invoice
+		public Cfinvsrv(BigDecimal billAmt, BigDecimal invoiceAmt, BigDecimal receiptAmt)
+	    {
+	    	this.billAmt = billAmt;
+	    	this.invoiceAmt = invoiceAmt;
+	    	this.receiptAmt = receiptAmt;
+	    }
 	    
 }

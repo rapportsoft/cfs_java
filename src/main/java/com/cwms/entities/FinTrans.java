@@ -806,6 +806,17 @@ public class FinTrans {
 			this.customerLedgerFlag = customerLedgerFlag;
 		}
 	    
-	    
-	    
+//		Export Container Invoice
+		public FinTrans(String tdsType, BigDecimal tdsPercentage, String paymentMode, String chequeNo, Date chequeDate,String bankName, BigDecimal documentAmt, String status)
+		{
+			this.tdsType = tdsType;
+			this.tdsPercentage = tdsPercentage;
+			this.paymentMode = paymentMode;
+			this.chequeNo = chequeNo;
+			this.chequeDate = chequeDate;
+			this.bankName = bankName;
+			this.documentAmt = documentAmt;
+			this.status = status;
+		}
+		
 }

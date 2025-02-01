@@ -305,6 +305,57 @@ public class ExportInventory {
     @Column(name = "Stufftally_Edited_Date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date stuffTallyEditedDate;
+    
+    
+    @Column(name = "Invoice_Assesed", columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
+    private String invoiceAssessed = "N"; // char(1) NOT NULL DEFAULT 'N'
+
+    @Column(name = "Assesment_Id", length = 20, columnDefinition = "varchar(20) NOT NULL DEFAULT ''")
+    private String assessmentId = ""; // varchar(20) NOT NULL DEFAULT ''
+
+
+    @Column(name = "Invoice_No", length = 20)
+    private String invoiceNo;
+
+    @Column(name = "Invoice_Date")
+    private Date invoiceDate;
+
+    public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	public String getInvoiceAssessed() {
+		return invoiceAssessed;
+	}
+
+	public void setInvoiceAssessed(String invoiceAssessed) {
+		this.invoiceAssessed = invoiceAssessed;
+	}
+
+	public String getAssessmentId() {
+		return assessmentId;
+	}
+
+	public void setAssessmentId(String assessmentId) {
+		this.assessmentId = assessmentId;
+	}
+
+
+    
+    
+    
 
 	public ExportInventory() {
 		super();

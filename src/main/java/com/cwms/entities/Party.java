@@ -2410,6 +2410,10 @@ public class Party {
 					this.address3 = address3;
 				}
 	    
-	    
+				public Party(String tanNoId, String tdsPercentage) {
+					super();
+					this.tanNoId = tanNoId;
+					this.tdsPercentage = tdsPercentage;
+				}
 }
 

@@ -1217,4 +1217,182 @@ public class Cfinvsrvanx implements Cloneable {
 		return (Cfinvsrvanx) super.clone();
 	}
 	
+	
+//	Export Container Invoice
+	 transient private String serviceName;
+	 transient private String containerType;
+	 transient private BigDecimal srNo;
+	 transient private String containerSize;
+	 transient private String value;
+	 transient private String label;
+		
+		
+		
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public void setLabel(String label) {
+			this.label = label;
+		}
+
+	 
+		public String getContainerSize() {
+			return containerSize;
+		}
+
+		public void setContainerSize(String containerSize) {
+			this.containerSize = containerSize;
+		}
+
+		public BigDecimal getSrNo() {
+			return srNo;
+		}
+
+		public void setSrNo(BigDecimal srNo) {
+			this.srNo = srNo;
+		}
+
+		public String getContainerType() {
+			return containerType;
+		}
+
+		public void setContainerType(String containerType) {
+			this.containerType = containerType;
+		}
+
+		public String getServiceName() {
+			return serviceName;
+		}
+
+		public void setServiceName(String serviceName) {
+			this.serviceName = serviceName;
+		}
+		public Cfinvsrvanx(String serviceId, String serviceUnit, String serviceUnitI, String currencyId, String rangeType,
+				BigDecimal rate, String cfsTariffNo, String cfsAmendNo, BigDecimal srNo, String serviceName, String acCode, String taxId, BigDecimal taxPerc) {
+			super();
+			this.serviceUnit = serviceUnit;	
+			this.serviceUnit1 = serviceUnitI;
+			this.rate = rate;
+			this.currencyId = currencyId;	
+			this.serviceId = serviceId;
+			this.woNo = cfsTariffNo;
+			this.woAmndNo = cfsAmendNo;
+			this.rate = rate;
+			this.rangeType = rangeType;
+			this.srNo = srNo;		
+			this.serviceName = serviceName;
+			this.taxId = taxId;
+			this.taxPerc = taxPerc;
+			this.acCode = acCode;
+			this.value = serviceId;
+			this.label = serviceName;
+		}
+		
+		transient private Date stuffTallyDate;
+		transient private Date movReqDate;
+		
+		
+		
+		public Date getStuffTallyDate() {
+			return stuffTallyDate;
+		}
+
+		public void setStuffTallyDate(Date stuffTallyDate) {
+			this.stuffTallyDate = stuffTallyDate;
+		}
+
+		public Date getMovReqDate() {
+			return movReqDate;
+		}
+
+		public void setMovReqDate(Date movReqDate) {
+			this.movReqDate = movReqDate;
+		}
+
+		public Cfinvsrvanx(String companyId, String branchId, String assesmentId, String assesmentLineNo,Date assesmentDate, String containerNo, String containerSize, String containerType, Date gateInDate, Date invoiceDate,
+				String gateOutId, String gatePassNo,  String partyId, Date gateOutDate, Date  movReqDate, Date stuffTallyDate)
+		{
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.processTransId = assesmentId;
+//			this.assesmentLineNo = assesmentLineNo;
+			this.processTransDate = assesmentDate;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.startDate = gateInDate;
+			this.invoiceUptoWeek = invoiceDate;
+			this.gateOutId = gateOutId;
+			this.gatePassNo = gatePassNo;
+			this.partyId = partyId;		
+			this.gateOutDate = gateOutDate;
+			this.invoiceUptoDate = invoiceDate;		
+			this.movReqDate = movReqDate;
+			this.stuffTallyDate = stuffTallyDate;
+		}
+	
+		
+		transient private String alreadySaved;
+		
+		public String getAlreadySaved() {
+			return alreadySaved;
+		}
+
+		public void setAlreadySaved(String alreadySaved) {
+			this.alreadySaved = alreadySaved;
+		}
+
+		
+		public Cfinvsrvanx(String companyId, String branchId, String processTransId, String serviceId, String taxId,
+				String erpDocRefNo, BigDecimal srlNo, String docRefNo, String profitcentreId, String serviceUnit,
+				String executionUnit, String serviceUnit1, String executionUnit1, BigDecimal rate, String currencyId,
+				String partyId, String woNo, String woAmndNo, String criteria, BigDecimal rangeFrom, BigDecimal rangeTo,
+				String rangeType, String containerNo, String containerStatus, String commodityDescription,
+				BigDecimal actualNoOfPackages, Date startDate, String status, String srvManualFlag, String serviceName, String addServices) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.processTransId = processTransId;
+			this.serviceId = serviceId;
+			this.taxId = taxId;
+			this.erpDocRefNo = erpDocRefNo;
+			this.srlNo = srlNo;
+			this.docRefNo = docRefNo;
+			this.profitcentreId = profitcentreId;
+			this.serviceUnit = serviceUnit;
+			this.executionUnit = executionUnit;
+			this.serviceUnit1 = serviceUnit1;
+			this.executionUnit1 = executionUnit1;
+			this.rate = rate;
+			this.currencyId = currencyId;
+			this.partyId = partyId;
+			this.woNo = woNo;
+			this.woAmndNo = woAmndNo;
+			this.criteria = criteria;
+			this.rangeFrom = rangeFrom;
+			this.rangeTo = rangeTo;
+			this.rangeType = rangeType;
+			this.containerNo = containerNo;
+			this.containerStatus = containerStatus;
+			this.commodityDescription = commodityDescription;
+			this.actualNoOfPackages = actualNoOfPackages;
+			this.startDate = startDate;
+			this.status = status;
+			this.srvManualFlag = srvManualFlag;
+			this.serviceName = serviceName;
+			this.alreadySaved = "Y";
+			this.addServices = addServices;
+		}
+		
+		
+		
 }
