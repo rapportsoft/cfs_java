@@ -24,25 +24,48 @@ public interface ExportInvoiceRepo extends JpaRepository<ExportStuffTally, Strin
 	
 	
 	@Query(value = "SELECT c.assesmentId, "
-            + "DATE_FORMAT(c.assesmentDate, '%d %b %Y') AS assesmentDate, "  // Formatting the assesmentDate
+            + "DATE_FORMAT(c.assesmentDate, '%d %b %Y') AS assesmentDate, "
             + "psl.profitcentreDesc, c.sbTransId, c.sbNo, "
             + "DATE_FORMAT(c.sbDate, '%d %b %Y') AS sbDate, " 
             + "j.jarDtlDesc, "
-            + "c.exporterName, c.status, c.invoiceNo, c.transType, c.profitcentreId "
+            + "c.exporterName, c.status, c.invoiceNo, c.transType, c.profitcentreId, c.containerNo "
             + "FROM AssessmentSheet c "
             + "LEFT JOIN Profitcentre psl ON c.companyId = psl.companyId AND c.branchId = psl.branchId "
             + "AND c.profitcentreId = psl.profitcentreId AND psl.status <> 'D' "
-            + "LEFT JOIN JarDetail j ON c.companyId = j.companyId AND j.jarId = 'J00006' AND j.jarDtlId = c.commodityCode AND j.status <> 'D' "
-            + "WHERE c.companyId = :companyId AND c.branchId = :branchId "
+            + "LEFT JOIN JarDetail j ON c.companyId = j.companyId AND j.jarId = 'J00006' "
+            + "AND j.jarDtlId = c.commodityCode AND j.status <> 'D' "
+            + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.transType = 'Export Container' "
+            + "AND (c.invoiceNo IS NOT NULL AND c.invoiceNo != '') "
             + "AND c.status != 'D' AND c.assesmentLineNo = '1' "
             + "AND (:searchValue IS NULL OR :searchValue = '' "
-            + "OR c.invoiceNo LIKE %:searchValue% OR c.assesmentDate LIKE %:searchValue% "
-            + "OR c.assesmentId LIKE %:searchValue% OR c.sbNo LIKE %:searchValue% "
-            + "OR c.transType LIKE %:searchValue%) "
-            + "ORDER BY c.invoiceDate DESC")  // Ordering by invoiceDate in descending order
+            + "OR c.invoiceNo LIKE :searchValue "
+            + "OR c.assesmentId LIKE :searchValue OR c.sbNo LIKE :searchValue "
+            + "OR c.containerNo LIKE :searchValue) "
+            + "ORDER BY c.invoiceDate DESC")
 List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId, 
                                         @Param("branchId") String branchId,
                                         @Param("searchValue") String searchValue);
+	
+//	@Query(value = "SELECT c.assesmentId, "
+//            + "DATE_FORMAT(c.assesmentDate, '%d %b %Y') AS assesmentDate, "  // Formatting the assesmentDate
+//            + "psl.profitcentreDesc, c.sbTransId, c.sbNo, "
+//            + "DATE_FORMAT(c.sbDate, '%d %b %Y') AS sbDate, " 
+//            + "j.jarDtlDesc, "
+//            + "c.exporterName, c.status, c.invoiceNo, c.transType, c.profitcentreId "
+//            + "FROM AssessmentSheet c "
+//            + "LEFT JOIN Profitcentre psl ON c.companyId = psl.companyId AND c.branchId = psl.branchId "
+//            + "AND c.profitcentreId = psl.profitcentreId AND psl.status <> 'D' "
+//            + "LEFT JOIN JarDetail j ON c.companyId = j.companyId AND j.jarId = 'J00006' AND j.jarDtlId = c.commodityCode AND j.status <> 'D' "
+//            + "WHERE c.companyId = :companyId AND c.branchId = :branchId "
+//            + "AND c.status != 'D' AND c.assesmentLineNo = '1' "
+//            + "AND (:searchValue IS NULL OR :searchValue = '' "
+//            + "OR c.invoiceNo LIKE %:searchValue% OR c.assesmentDate LIKE %:searchValue% "
+//            + "OR c.assesmentId LIKE %:searchValue% OR c.sbNo LIKE %:searchValue% "
+//            + "OR c.transType LIKE %:searchValue%) "
+//            + "ORDER BY c.invoiceDate DESC")  // Ordering by invoiceDate in descending order
+//List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId, 
+//                                        @Param("branchId") String branchId,
+//                                        @Param("searchValue") String searchValue);
 
 	
 	
@@ -411,7 +434,7 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 			@Param("code1") String code1);
 
 	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
-			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, tx.taxPerc, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,GROUP_CONCAT(distinct sm.storageType) AS storageTypes "
+			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, COALESCE(tx.taxPerc, 0) AS taxPerc, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,GROUP_CONCAT(distinct sm.storageType) AS storageTypes "
 			+ "FROM CFSTariffService c "
 			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
 			+ "AND c.cfsAmendNo = t.cfsAmndNo "

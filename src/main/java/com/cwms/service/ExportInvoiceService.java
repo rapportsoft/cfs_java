@@ -3517,8 +3517,20 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 				selectedExportAssesmentSheetContainerData.stream().forEach(r -> {
 					System.out.println("r.get" + r.getServiceId() + " " + r.getRates() + " taxPerc " + r.getTaxPerc());
 					
-					BigDecimal rate = new BigDecimal(String.valueOf(r.getRates()));
-					BigDecimal taxPerc = new BigDecimal(String.valueOf(r.getTaxPerc()));
+//					BigDecimal rate = new BigDecimal(String.valueOf(r.getRates()));
+//					BigDecimal taxPerc = new BigDecimal(String.valueOf(r.getTaxPerc()));
+					BigDecimal rate = Optional.ofNullable(r.getRates())
+	                         .map(Object::toString)
+	                         .filter(s -> s.matches("-?\\d+(\\.\\d+)?"))
+	                         .map(BigDecimal::new)
+	                         .orElse(BigDecimal.ZERO);
+
+	BigDecimal taxPerc = Optional.ofNullable(r.getTaxPerc())
+	                             .map(Object::toString)
+	                             .filter(s -> s.matches("-?\\d+(\\.\\d+)?"))
+	                             .map(BigDecimal::new)
+	                             .orElse(BigDecimal.ZERO);
+					
 
 					BigDecimal taxAmt = (rate.multiply(taxPerc)).divide(new BigDecimal(100), RoundingMode.HALF_UP);
 					totalRateWithoutTax.set(totalRateWithoutTax.get().add(rate));
