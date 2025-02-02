@@ -221,6 +221,8 @@ public class PortReturnController {
 			inventory.setApprovedBy(user);
 			inventory.setApprovedDate(new Date());
 			inventory.setStatus("A");
+			inventory.setStuffTallyDate(new Date());
+			inventory.setStuffTallyId(HoldNextIdD1);
 
 			exportInventoryRepo.save(inventory);
 

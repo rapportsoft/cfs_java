@@ -201,7 +201,7 @@ public ResponseEntity<?> searchContainerNoForStuffingConteinerWise(String compan
 			    map.put("voyageNo", "");
 			    map.put("vesselId", "");
 			    map.put("vesselName", "");
-			    map.put("stuffTallyId", "");
+			    map.put("stuffTallyId", row[8]);
 			    map.put("gateInId", row[8]);
 			    map.put("agentSealNo", "");
 			    map.put("customsSealNo", row[9]);
@@ -215,7 +215,7 @@ public ResponseEntity<?> searchContainerNoForStuffingConteinerWise(String compan
 			    map.put("stuffId", "");
 			    map.put("stuffDate", null);
 			    
-			    map.put("stuffTallyDate", null);
+			    map.put("stuffTallyDate", row[13]);
 			    map.put("stuffTallyLineId", "");
 			    
 			    
