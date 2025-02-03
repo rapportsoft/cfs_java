@@ -1412,10 +1412,13 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 				    case "PORTRN" -> "PORT";
 				    default -> "";
 				};
-				List<ExportContainerAssessmentData> finalConData = new ArrayList<>();
-
+				
+				int i = 1;
+				
 				for (ExportContainerAssessmentData con : containerData) {
+					List<ExportContainerAssessmentData> finalConData = new ArrayList<>();
 					
+					System.out.println("con " + i + " " + con.getContainerNo());
 
 					// Service Mapping
 					List<String> serviceMappingData = new ArrayList<>();
@@ -1873,7 +1876,8 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 
 										else {
 											System.out.println("----------7");
-
+											tempAss = (ExportContainerAssessmentData) con.clone();
+											
 											if ("SA".equals(String.valueOf(f[8]))) {
 												tempAss.setServiceGroup(f[14] != null ? String.valueOf(f[14]) : "");
 												tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
@@ -3144,18 +3148,45 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 					
 					
 					
-					List<ExportContainerAssessmentData> newAnxData = finalConData.stream().map(item -> {
-						try {
-							return (ExportContainerAssessmentData) item.clone(); // Clone first
-						} catch (CloneNotSupportedException e) {
-							e.printStackTrace();
-							return null;
-						}
-					}).filter(Objects::nonNull) // Remove null values from failed clones
-							.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
-																								// cloning
-							.collect(Collectors.toList());
+//					List<ExportContainerAssessmentData> newAnxData = finalConData.stream().map(item -> {
+//						try {
+//							return (ExportContainerAssessmentData) item.clone(); // Clone first
+//						} catch (CloneNotSupportedException e) {
+//							e.printStackTrace();
+//							return null;
+//						}
+//					}).filter(Objects::nonNull) // Remove null values from failed clones
+//							.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+//																								// cloning
+//							.collect(Collectors.toList());
+//					
 					
+							for(ExportContainerAssessmentData fnewAnxData : finalConData)
+							{
+								
+								System.out.println("fnewAnxData " + fnewAnxData.getContainerNo() + " " + fnewAnxData.getServiceId() + " " + fnewAnxData.getRates());
+							}
+					
+					
+					
+					List<ExportContainerAssessmentData> newAnxData = finalConData.stream()
+						    .map(item -> {
+						        try {
+						            return (ExportContainerAssessmentData) item.clone(); // Clone first
+						        } catch (CloneNotSupportedException e) {
+						            e.printStackTrace();
+						            return null;
+						        }
+						    })
+						    .filter(Objects::nonNull) // Remove null values from failed clones
+						    .filter(item -> Objects.equals(item.getContainerNo(), con.getContainerNo())) // Safe comparison
+						    .collect(Collectors.toList());
+
+					for(ExportContainerAssessmentData f : newAnxData)
+					{
+						
+						System.out.println(" newAnxData " + f.getContainerNo() + " " + f.getServiceId() + " " + f.getRates());
+					}
 					
 
 					System.out.println("Here Before ---> ENDING LOOP FOR ALL DISTINCT SERVICE IDS");
@@ -3229,11 +3260,6 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 					List<ExportContainerAssessmentData> filteredData = newAnxData.stream()
 							.filter(c -> "H".equals(c.getServiceGroup())).collect(Collectors.toList());
 
-					System.out.println("finalConData : " + finalConData);
-					for (ExportContainerAssessmentData a2 : finalConData) {
-						System.out.println("a2.getRates(); : " + a2.getRates() + " \n service: " + a2.getServiceName()
-								+ " " + a2.getServiceId());
-					}
 
 					BigDecimal totalRates = filteredData.stream().map(ExportContainerAssessmentData::getRates)
 							.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP);
@@ -3247,11 +3273,6 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 					
 					
 					
-					System.out.println("filteredData : " + filteredData1);
-					for (ExportContainerAssessmentData a2 : filteredData1) {
-						System.out.println("a2.getRates(); : " + a2.getRates() + " \n service: " + a2.getServiceName()
-								+ " " + a2.getServiceId());
-					}
 
 					BigDecimal totalRates1 = filteredData1.stream().map(ExportContainerAssessmentData::getRates)
 							.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP);
@@ -3297,7 +3318,7 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 
 					System.out.println("Here Before ---> finalConData.stream().forEach(c -> {");
 
-					finalConData.stream().forEach(c -> {
+					newAnxData.stream().forEach(c -> {
 						
 						if(c.getContainerNo().equals(con.getContainerNo()))
 								{
@@ -3361,6 +3382,7 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 								anx.setRangeType(c.getCriteria());
 								anx.setTaxId(c.getTaxId());
 								anx.setExRate(c.getExRate());
+								anx.setProcessTransLineId(newAss.getAssesmentLineNo());
 
 								if (("Y".equals(newAss.getIgst()))
 										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
@@ -3439,6 +3461,7 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 								anx.setRangeType(c.getCriteria());
 								anx.setTaxId(c.getTaxId());
 								anx.setExRate(c.getExRate());
+								anx.setProcessTransLineId(newAss.getAssesmentLineNo());
 
 								if (("Y".equals(newAss.getIgst()))
 										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
@@ -3509,8 +3532,7 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 			AssessmentSheet selectedExportAssesmentSheet = getSelectedAssesmentData(cid, bid,
 					assessment.getProfitcentreId(), assessment.getAssesmentId());
 
-			System.out.println(
-					"Before ------ selectedExportAssesmentSheetContainerData : \n" + selectedExportAssesmentSheet);
+			
 			List<ExportContainerAssessmentData> selectedExportAssesmentSheetContainerData = exportInvoiceRepo
 					.getSelectedExportAssesmentSheetContainerData(cid, bid, assessment.getProfitcentreId(),
 							assessment.getAssesmentId());
@@ -3522,7 +3544,6 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 					.getCargoStorageOfAssessmentSheetDetails(cid, bid, assessment.getSbTransId(),
 							assessment.getAssesmentId(), cargoStorageServiceId);
 
-			System.out.println(	"Before ------ cargoStorageOfAssessmentSheetDetails \n" + cargoStorageOfAssessmentSheetDetails);
 			
 			
 			
@@ -3536,7 +3557,6 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 				AtomicReference<BigDecimal> totalRateWithTax = new AtomicReference<>(BigDecimal.ZERO);
 
 				selectedExportAssesmentSheetContainerData.stream().forEach(r -> {
-					System.out.println("r.get" + r.getServiceId() + " " + r.getRates() + " taxPerc " + r.getTaxPerc());
 					
 //					BigDecimal rate = new BigDecimal(String.valueOf(r.getRates()));
 //					BigDecimal taxPerc = new BigDecimal(String.valueOf(r.getTaxPerc()));

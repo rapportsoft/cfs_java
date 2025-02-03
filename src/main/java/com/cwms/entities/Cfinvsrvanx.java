@@ -7,6 +7,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,7 +28,13 @@ public class Cfinvsrvanx implements Cloneable {
 	@Id
 	@Column(name = "Process_Trans_Id", length = 10)
 	private String processTransId;
+	
+	@Id
+	@Column(name = "Process_TransLine_Id", length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT '1'")
+	private String processTransLineId;
 
+	
+	
 	@Id
 	@Column(name = "Service_Id", length = 6)
 	private String serviceId;
@@ -325,7 +333,13 @@ public class Cfinvsrvanx implements Cloneable {
 		// TODO Auto-generated constructor stub
 	}
 
-	
+	 	@PrePersist
+	    @PreUpdate
+	    private void validateProcessTransLineId() {
+	        if (this.processTransLineId == null || this.processTransLineId.trim().isEmpty()) {
+	            this.processTransLineId = "1";
+	        }
+	    }
 
 	public Cfinvsrvanx(String companyId, String branchId, String processTransId, String serviceId, String taxId,
 			String erpDocRefNo, BigDecimal srlNo, String finPeriod, String docRefNo, String igmLineNo,
@@ -445,6 +459,19 @@ public class Cfinvsrvanx implements Cloneable {
 	}
 
 	
+
+	
+
+	public String getProcessTransLineId() {
+		return processTransLineId;
+	}
+
+
+
+	public void setProcessTransLineId(String processTransLineId) {
+		this.processTransLineId = processTransLineId;
+	}
+
 
 
 	public BigDecimal getFreeDays() {
@@ -567,6 +594,9 @@ public class Cfinvsrvanx implements Cloneable {
 		return invoiceType;
 	}
 
+	
+	
+	
 	public void setInvoiceType(String invoiceType) {
 		this.invoiceType = invoiceType;
 	}
