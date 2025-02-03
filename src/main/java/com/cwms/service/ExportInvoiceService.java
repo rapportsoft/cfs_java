@@ -2127,10 +2127,25 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 
 													if ("H".equals(serviceGrp)) {
 
-														BigDecimal cargoWt = new BigDecimal(
-																String.valueOf(con.getGrossWt()))
-																.divide(new BigDecimal(1000))
-																.setScale(3, RoundingMode.HALF_UP);
+//														BigDecimal cargoWt = new BigDecimal(
+//																String.valueOf(con.getGrossWt()))
+//																.divide(new BigDecimal(1000))
+//																.setScale(3, RoundingMode.HALF_UP);
+														
+														String grossWtStr = String.valueOf(con.getGrossWt()).trim(); // Remove spaces
+														 BigDecimal cargoWt = BigDecimal.ZERO;
+														
+														// Check if the value is numeric before converting
+														if (grossWtStr != null && grossWtStr.matches("-?\\d+(\\.\\d+)?")) { 
+														     cargoWt = new BigDecimal(grossWtStr)
+														                              .divide(new BigDecimal(1000))
+														                              .setScale(3, RoundingMode.HALF_UP);
+														} else {
+														    cargoWt = BigDecimal.ZERO; // Default value or handle appropriately
+														    System.out.println("Invalid gross weight: " + grossWtStr);
+														}
+
+														
 
 														executionUnit = cargoWt;
 
@@ -2138,9 +2153,15 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 														tempAss.setExecutionUnit1("");
 													} else {
 
-														BigDecimal cargoWt = con.getCargoWeight()
-																.divide(new BigDecimal(1000))
-																.setScale(3, RoundingMode.HALF_UP);
+//														BigDecimal cargoWt = con.getCargoWeight()
+//																.divide(new BigDecimal(1000))
+//																.setScale(3, RoundingMode.HALF_UP);
+														
+														BigDecimal cargoWeight = con.getCargoWeight();
+														BigDecimal cargoWt = (cargoWeight != null) 
+														    ? cargoWeight.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP) 
+														    : BigDecimal.ZERO; // Default to zero if null
+
 
 														executionUnit = cargoWt;
 														tempAss.setExecutionUnit(String.valueOf(executionUnit));
