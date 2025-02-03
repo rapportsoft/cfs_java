@@ -94,15 +94,34 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 	boolean existByCombosOfContractName(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("contractName") String contractName, String cfsTariffNo, String cfsAmndNo);
 	
 	
+//	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
+//	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
+//	        + "AND ( (:consolerId IS NULL OR :consolerId = '' OR e.consolerId = :consolerId) "
+//	        + "AND (:partyId IS NULL OR :partyId = '' OR e.partyId = :partyId ) "
+//	        + "AND (:cha IS NULL OR :cha = '' OR e.cha = :cha )"
+//	        + "AND (:shippingAgent IS NULL OR :shippingAgent = '' OR e.shippingAgent = :shippingAgent )"
+//	        + "AND (:shippingLine IS NULL OR :shippingLine = '' OR e.shippingLine = :shippingLine )"
+//	        + "AND (:forwarderId IS NULL OR :forwarderId = '' OR e.forwarderId = :forwarderId )"
+//	        + "AND (:importerId IS NULL OR :importerId = '' OR e.importerId = :importerId ))"
+//	        + "AND (:cfsTariffNo IS NULL OR e.cfsTariffNo <> :cfsTariffNo) " 
+//		    + "AND (:cfsAmndNo IS NULL OR :cfsAmndNo = '' OR e.cfsAmndNo <> :cfsAmndNo)	"   
+//	        + "AND e.status = 'A'")
+//	boolean existByCombosOfParties(@Param("companyId") String companyId, @Param("branchId") String branchId,
+//	                               @Param("consolerId") String consolerId, @Param("partyId") String partyId, @Param("cha") String cha,
+//	                               @Param("shippingAgent") String shippingAgent, @Param("shippingLine") String shippingLine,
+//	                               @Param("forwarderId") String forwarderId, @Param("importerId") String importerId, String cfsTariffNo, String cfsAmndNo);
+//	
+	
+	
 	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
 	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
-	        + "AND ( (:consolerId IS NULL OR :consolerId = '' OR e.consolerId = :consolerId) "
-	        + "AND (:partyId IS NULL OR :partyId = '' OR e.partyId = :partyId ) "
-	        + "AND (:cha IS NULL OR :cha = '' OR e.cha = :cha )"
-	        + "AND (:shippingAgent IS NULL OR :shippingAgent = '' OR e.shippingAgent = :shippingAgent )"
-	        + "AND (:shippingLine IS NULL OR :shippingLine = '' OR e.shippingLine = :shippingLine )"
-	        + "AND (:forwarderId IS NULL OR :forwarderId = '' OR e.forwarderId = :forwarderId )"
-	        + "AND (:importerId IS NULL OR :importerId = '' OR e.importerId = :importerId ))"
+	        + "AND e.consolerId = :consolerId "
+	        + "AND e.partyId = :partyId "
+	        + "AND e.cha = :cha "
+	        + "AND e.shippingAgent = :shippingAgent "
+	        + "AND e.shippingLine = :shippingLine "
+	        + "AND e.forwarderId = :forwarderId "
+	        + "AND e.importerId = :importerId "
 	        + "AND (:cfsTariffNo IS NULL OR e.cfsTariffNo <> :cfsTariffNo) " 
 		    + "AND (:cfsAmndNo IS NULL OR :cfsAmndNo = '' OR e.cfsAmndNo <> :cfsAmndNo)	"   
 	        + "AND e.status = 'A'")
