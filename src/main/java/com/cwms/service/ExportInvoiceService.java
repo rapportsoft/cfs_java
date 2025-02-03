@@ -2180,7 +2180,7 @@ public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String bran
 																f[14] != null ? String.valueOf(f[14]) : "");
 														tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
 														tempAss.setServiceName(
-																f[22] != null ? String.valueOf(f[18]) : "");
+																f[18] != null ? String.valueOf(f[18]) : "");
 														tempAss.setServiceUnit(
 																f[1] != null ? String.valueOf(f[1]) : "");
 														tempAss.setServiceUnit1(
