@@ -5,12 +5,31 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.cwms.entities.ExportStuffRequest;
 
 public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest, String>
 {	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportStuffRequest e " +
+	       "SET e.ssrTransId=:id " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.status = 'A'")
+	int updateSSRData(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("id") String id);
+	
 	
 	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, g.onAccountOf, g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.gateInId, g.containerHealth "          
 	        + "FROM ExportInventory E "

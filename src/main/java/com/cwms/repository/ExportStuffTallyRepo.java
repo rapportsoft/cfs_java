@@ -15,6 +15,28 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, String> {
+	
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportStuffTally e " +
+	       "SET e.ssrTransId=:id " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.containerNo = :con " +
+	       "  AND e.status = 'A'")
+	int updateSSRData(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("con") String con,
+	        @Param("id") String id);
+	
+	
+	
 
 	@Query(value = "SELECT NEW com.cwms.entities.ExportStuffTally(e.stuffTallyId, e.sbTransId, e.sbNo, e.movementType,"
 			+ "e.stuffTallyDate, e.sbDate, e.agentSealNo, e.vesselId, e.voyageNo,"

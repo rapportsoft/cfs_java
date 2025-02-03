@@ -10,6 +10,14 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffService, String> {
+	
+
+	@Query(value="select s.serviceId, c.serviceShortDesc, c.serviceUnit, s.rate "
+			+ "from CFSTariffService s "
+			+ "LEFT OUTER JOIN Services c ON s.companyId=c.companyId and s.branchId=c.branchId and s.serviceId=c.serviceId "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status = 'A' and c.status = 'A' and s.cfsTariffNo='CFS1000001' "
+			+ "and c.serviceGroup NOT IN ('G','H')  group by s.serviceId")
+	List<Object[]> getGeneralTarrifData1(@Param("cid") String cid,@Param("bid") String bid);
 
 	@Modifying
 	@Transactional

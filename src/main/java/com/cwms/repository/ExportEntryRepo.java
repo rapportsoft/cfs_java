@@ -16,6 +16,21 @@ import jakarta.transaction.Transactional;
 
 public interface ExportEntryRepo extends JpaRepository<ExportSbEntry, String> {
 	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbEntry e " +
+	       "SET e.ssrTransId=:id " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.status = 'A'")
+	int updateSSRData(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("id") String id);
 
 	@Modifying
 	@Transactional

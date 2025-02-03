@@ -12,6 +12,47 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
+	
+	@Query(value="select a.profitcentreId,a.sbTransId,a.sbNo,a.sbDate,b.exporterId,b.exporterName,b.cha,p1.partyName,b.onAccountOf,"
+			+ "p2.partyName,a.commodity,c.shippingLine,p3.partyName,c.shippingAgent,p4.partyName,c.containerNo,c.containerSize,"
+			+ "c.containerType,COALESCE(SUM(c.stuffedQty),0),COALESCE(SUM(c.cargoWeight),0),b.ssrTransId,c.stuffTallyId "
+			+ "from ExportSbCargoEntry a "
+			+ "LEFT OUTER JOIN ExportSbEntry b ON a.companyId=b.companyId and a.branchId=b.branchId and a.sbTransId=b.sbTransId and "
+			+ "a.sbNo=b.sbNo "
+			+ "LEFT OUTER JOIN Party p1 ON b.companyId=p1.companyId and b.branchId=p1.branchId and b.cha=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON b.companyId=p2.companyId and b.branchId=p2.branchId and b.onAccountOf=p2.partyId "
+			+ "LEFT OUTER JOIN ExportStuffTally  c ON a.companyId=c.companyId  and a.branchId=c.branchId and a.sbTransId=c.sbTransId and "
+			+ "a.sbNo=c.sbNo "
+			+ "LEFT OUTER JOIN Party p3 ON c.companyId=p3.companyId and c.branchId=p3.branchId and c.shippingLine=p3.partyId "
+			+ "LEFT OUTER JOIN Party p4 ON c.companyId=p4.companyId and c.branchId=p4.branchId and c.shippingAgent=p4.partyId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.sbNo=:sb and a.status='A' group by c.containerNo,c.stuffTallyId ")
+	List<Object[]> getBeforeSaveDataFromSbNo1(@Param("cid") String cid,@Param("bid") String bid,@Param("sb") String sb);
+
+	
+	@Query(value="select a.profitcentreId,a.sbTransId,a.sbNo,a.sbDate,b.exporterId,b.exporterName,b.cha,p1.partyName,b.onAccountOf,"
+			+ "p2.partyName,a.commodity,c.shippingLine,p3.partyName,c.shippingAgent,p4.partyName,c.containerNo,c.containerSize,"
+			+ "c.containerType,COALESCE(SUM(c.stuffedQty),0),COALESCE(SUM(c.cargoWeight),0),b.ssrTransId,c.stuffTallyId "
+			+ "from ExportSbCargoEntry a "
+			+ "LEFT OUTER JOIN ExportSbEntry b ON a.companyId=b.companyId and a.branchId=b.branchId and a.sbTransId=b.sbTransId and "
+			+ "a.sbNo=b.sbNo "
+			+ "LEFT OUTER JOIN Party p1 ON b.companyId=p1.companyId and b.branchId=p1.branchId and b.cha=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON b.companyId=p2.companyId and b.branchId=p2.branchId and b.onAccountOf=p2.partyId "
+			+ "LEFT OUTER JOIN ExportStuffTally  c ON a.companyId=c.companyId  and a.branchId=c.branchId and a.sbTransId=c.sbTransId and "
+			+ "a.sbNo=c.sbNo "
+			+ "LEFT OUTER JOIN Party p3 ON c.companyId=p3.companyId and c.branchId=p3.branchId and c.shippingLine=p3.partyId "
+			+ "LEFT OUTER JOIN Party p4 ON c.companyId=p4.companyId and c.branchId=p4.branchId and c.shippingAgent=p4.partyId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.sbNo=:sb and a.status='A' "
+			+ "and (b.ssrTransId is null OR b.ssrTransId = '' ) group by c.containerNo,c.stuffTallyId ")
+	List<Object[]> getBeforeSaveDataFromSbNo(@Param("cid") String cid,@Param("bid") String bid,@Param("sb") String sb);
+	
+	
+	@Query(value="select DISTINCT s.transId,s.erpDocRefNo,s.docRefNo,s.igmLineNo,s.blNo,s.beNo from SSRDtl s "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status != 'D' and s.profitcentreId=:profit  and "
+			+ "(:val is null OR :val = '' OR s.transId LIKE CONCAT ('%',:val,'%') OR s.erpDocRefNo LIKE CONCAT ('%',:val,'%') "
+			+ "OR s.docRefNo LIKE CONCAT ('%',:val,'%') OR s.igmLineNo LIKE CONCAT ('%',:val,'%') OR s.blNo LIKE CONCAT ('%',:val,'%') "
+			+ "OR s.beNo LIKE CONCAT ('%',:val,'%')) order by s.transId desc")
+	List<Object[]> searchSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val, @Param("profit") String profit);
+	
 
 	@Query(value = "select distinct s.ssrRefNo from SSRDtl s where s.companyId=:cid and s.branchId=:bid and s.status != 'D' "
 			+ "and s.transId=:id and s.serviceId=:sid")
