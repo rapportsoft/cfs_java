@@ -62,7 +62,7 @@ public class SSRDtl {
     @Temporal(TemporalType.TIMESTAMP)
     private Date docRefDate;
 
-    @Column(name = "IGM_Line_No", length = 7)
+    @Column(name = "IGM_Line_No", length = 15)
     private String igmLineNo;
 
     @Column(name = "BL_No", length = 55)

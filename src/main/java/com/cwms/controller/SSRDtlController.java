@@ -1421,12 +1421,607 @@ public class SSRDtlController {
 	}
 	
 	
-//	@GetMapping("/getDataForNOCSSR")
-//	public ResponseEntity<?> getDataForNOCSSR(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
-//			@RequestParam(name="val",required = false) String val){
-//		
-//		
-//	}
+	@GetMapping("/getDataForNOCSSR")
+	public ResponseEntity<?> getDataForNOCSSR(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("trans") String trans, @RequestParam("boe") String boe) {
+
+		Object data = cfbondnocrepo.getDataForNOCSSR(cid, bid, trans, boe);
+
+		if (data == null) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+
+	@PostMapping("/saveBondNOCSSR")
+	public ResponseEntity<?> saveBondNOCSSR(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestParam("type") String type, @RequestBody Map<String, Object> data)
+			throws JsonMappingException, JsonProcessingException {
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		SSRDtl ssr = mapper.readValue(mapper.writeValueAsString(data.get("ssr")), SSRDtl.class);
+
+		List<SSRDto> service = mapper.readValue(mapper.writeValueAsString(data.get("service")),
+				new TypeReference<List<SSRDto>>() {
+				});
+
+		if (ssr == null) {
+			return new ResponseEntity<>("SSR data not found.", HttpStatus.CONFLICT);
+		}
+
+		if (service.isEmpty()) {
+			return new ResponseEntity<>("Service data not found.", HttpStatus.CONFLICT);
+		}
+
+		if ("NOC".equals(type)) {
+			Object nocData = cfbondnocrepo.getDataForNOCSSR(cid, bid, ssr.getErpDocRefNo(), ssr.getBeNo());
+			if (nocData == null) {
+				return new ResponseEntity<>("NOC data not found.", HttpStatus.CONFLICT);
+			}
+
+			Object[] noc = (Object[]) nocData;
+
+			if (ssr.getTransId() == null || ssr.getTransId().isEmpty()) {
+
+				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05104", "2024");
+
+				int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+				int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+				String HoldNextIdD1 = String.format("BSSR%06d", nextNumericNextID1);
+
+				service.stream().forEach(s -> {
+
+					Services ser = serViceRepositary.getDataById(cid, bid, s.getServiceId());
+
+					if (ser != null) {
+
+						String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05103", "2024");
+
+						String[] parts = lastValue.split("/");
+						String baseId = parts[0];
+						String baseId1 = parts[1];
+						String financialYear = parts[2];
+
+						// Increment the numerical part
+						int newVal = Integer.parseInt(baseId1) + 1;
+
+						// Format newVal to maintain leading zeros (e.g., 0001)
+						String formattedNewVal = String.format("%04d", newVal);
+
+						// Get the current financial year
+						String currentFinancialYear = getCurrentFinancialYear();
+
+						// Construct the new ID
+						String newId = baseId + "/" + formattedNewVal + "/" + currentFinancialYear;
+
+						SSRDtl newSsr = new SSRDtl();
+
+						newSsr.setApprovedBy(user);
+						newSsr.setApprovedDate(new Date());
+						newSsr.setBeDate(ssr.getBeDate());
+						newSsr.setBeNo(ssr.getBeNo());
+						newSsr.setBlDate(null);
+						newSsr.setBlNo("");
+						newSsr.setBranchId(bid);
+						newSsr.setCargoWt(BigDecimal.ZERO);
+						newSsr.setCha(String.valueOf(noc[7]));
+						newSsr.setCommodityDescription(ssr.getCommodityDescription());
+						newSsr.setCompanyId(cid);
+						newSsr.setCreatedBy(user);
+						newSsr.setCreatedDate(new Date());
+						newSsr.setDocRefDate(ssr.getDocRefDate());
+						newSsr.setDocRefNo(ssr.getDocRefNo());
+						newSsr.setErpDocRefNo(ssr.getErpDocRefNo());
+						newSsr.setExecutionUnit(s.getExecutionUnit());
+						newSsr.setSsrModeFor(ssr.getSsrModeFor());
+						newSsr.setIgmLineNo(ssr.getIgmLineNo());
+						newSsr.setNoOfPackages(0);
+						newSsr.setProfitcentreId(ssr.getProfitcentreId());
+						newSsr.setRate(s.getRate());
+						newSsr.setServiceId(s.getServiceId());
+						newSsr.setServiceUnit(s.getServiceUnit());
+						newSsr.setServiceUnit1(ser.getServiceUnit1());
+						newSsr.setSrNo(new BigDecimal(0));
+						newSsr.setSsrModeFor(ssr.getSsrModeFor());
+						newSsr.setSsrType("NOC");
+						newSsr.setSsrRefNo(newId);
+						newSsr.setStatus('A');
+						newSsr.setTotalRate(s.getTotalRate());
+						newSsr.setTransDate(new Date());
+						newSsr.setTransId(HoldNextIdD1);
+						newSsr.setTransLineNo(new BigDecimal(1));
+						newSsr.setAccId(String.valueOf(noc[9]));
+						newSsr.setImpId(ssr.getImpId());
+						newSsr.setInBondId(ssr.getInBondId());
+						newSsr.setInBondDate(ssr.getInBondDate());
+						newSsr.setNocNo(ssr.getNocNo());
+						newSsr.setNocDate(ssr.getNocDate());
+						newSsr.setContainerNo("");
+
+						ssrdtlrepo.save(newSsr);
+
+						processnextidrepo.updateAuditTrail(cid, bid, "P05104", HoldNextIdD1, "2024");
+						processnextidrepo.updateAuditTrail(cid, bid, "P05103", newId, "2024");
+
+						ssr.setTransId(HoldNextIdD1);
+
+					}
+
+				});
+
+				int updateSSr = cfbondnocrepo.updateSSRData(cid, bid, ssr.getErpDocRefNo(), ssr.getNocNo(),
+						HoldNextIdD1);
+
+			} else {
+
+				service.stream().forEach(s -> {
+
+					Services ser = serViceRepositary.getDataById(cid, bid, s.getServiceId());
+
+					if (ser != null) {
+
+						String oldRefNo = ssrdtlrepo.getSSRReferenceNo(cid, bid, ssr.getTransId(), s.getServiceId());
+
+						if (oldRefNo != null && !oldRefNo.isEmpty()) {
+
+							Boolean checkServiceConAlreadyExist = ssrdtlrepo.checkSSRReferenceNo1(cid, bid,
+									ssr.getTransId(), s.getServiceId(), ssr.getNocNo());
+
+							if (!checkServiceConAlreadyExist) {
+
+								SSRDtl newSsr = new SSRDtl();
+
+								newSsr.setApprovedBy(user);
+								newSsr.setApprovedDate(new Date());
+								newSsr.setBeDate(ssr.getBeDate());
+								newSsr.setBeNo(ssr.getBeNo());
+								newSsr.setBlDate(null);
+								newSsr.setBlNo("");
+								newSsr.setBranchId(bid);
+								newSsr.setCargoWt(BigDecimal.ZERO);
+								newSsr.setCha(String.valueOf(noc[7]));
+								newSsr.setCommodityDescription(ssr.getCommodityDescription());
+								newSsr.setCompanyId(cid);
+								newSsr.setCreatedBy(user);
+								newSsr.setCreatedDate(new Date());
+								newSsr.setDocRefDate(ssr.getDocRefDate());
+								newSsr.setDocRefNo(ssr.getDocRefNo());
+								newSsr.setErpDocRefNo(ssr.getErpDocRefNo());
+								newSsr.setExecutionUnit(s.getExecutionUnit());
+								newSsr.setSsrModeFor(ssr.getSsrModeFor());
+								newSsr.setSsrType("NOC");
+								newSsr.setIgmLineNo(ssr.getIgmLineNo());
+								newSsr.setNoOfPackages(0);
+								newSsr.setProfitcentreId(ssr.getProfitcentreId());
+								newSsr.setRate(s.getRate());
+								newSsr.setServiceId(s.getServiceId());
+								newSsr.setServiceUnit(s.getServiceUnit());
+								newSsr.setServiceUnit1(ser.getServiceUnit1());
+								newSsr.setSrNo(new BigDecimal(0));
+								newSsr.setSsrModeFor(ssr.getSsrModeFor());
+								newSsr.setSsrRefNo(oldRefNo);
+								newSsr.setStatus('A');
+								newSsr.setTotalRate(s.getTotalRate());
+								newSsr.setTransDate(new Date());
+								newSsr.setTransId(ssr.getTransId());
+								newSsr.setTransLineNo(new BigDecimal(1));
+								newSsr.setAccId(String.valueOf(noc[9]));
+								newSsr.setImpId(ssr.getImpId());
+								newSsr.setInBondId(ssr.getInBondId());
+								newSsr.setInBondDate(ssr.getInBondDate());
+								newSsr.setNocNo(ssr.getNocNo());
+								newSsr.setNocDate(ssr.getNocDate());
+								newSsr.setContainerNo("");
+
+								ssrdtlrepo.save(newSsr);
+							}
+
+						} else {
+							String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05103", "2024");
+
+							String[] parts = lastValue.split("/");
+							String baseId = parts[0];
+							String baseId1 = parts[1];
+							String financialYear = parts[2];
+
+							// Increment the numerical part
+							int newVal = Integer.parseInt(baseId1) + 1;
+
+							// Format newVal to maintain leading zeros (e.g., 0001)
+							String formattedNewVal = String.format("%04d", newVal);
+
+							// Get the current financial year
+							String currentFinancialYear = getCurrentFinancialYear();
+
+							// Construct the new ID
+							String newId = baseId + "/" + formattedNewVal + "/" + currentFinancialYear;
+
+							SSRDtl newSsr = new SSRDtl();
+
+							newSsr.setApprovedBy(user);
+							newSsr.setApprovedDate(new Date());
+							newSsr.setBeDate(ssr.getBeDate());
+							newSsr.setBeNo(ssr.getBeNo());
+							newSsr.setBlDate(null);
+							newSsr.setBlNo("");
+							newSsr.setBranchId(bid);
+							newSsr.setCargoWt(BigDecimal.ZERO);
+							newSsr.setCha(String.valueOf(noc[7]));
+							newSsr.setCommodityDescription(ssr.getCommodityDescription());
+							newSsr.setCompanyId(cid);
+							newSsr.setCreatedBy(user);
+							newSsr.setCreatedDate(new Date());
+							newSsr.setDocRefDate(ssr.getDocRefDate());
+							newSsr.setDocRefNo(ssr.getDocRefNo());
+							newSsr.setErpDocRefNo(ssr.getErpDocRefNo());
+							newSsr.setExecutionUnit(s.getExecutionUnit());
+							newSsr.setSsrModeFor(ssr.getSsrModeFor());
+							newSsr.setSsrType("NOC");
+							newSsr.setIgmLineNo(ssr.getIgmLineNo());
+							newSsr.setNoOfPackages(0);
+							newSsr.setProfitcentreId(ssr.getProfitcentreId());
+							newSsr.setRate(s.getRate());
+							newSsr.setServiceId(s.getServiceId());
+							newSsr.setServiceUnit(s.getServiceUnit());
+							newSsr.setServiceUnit1(ser.getServiceUnit1());
+							newSsr.setSrNo(new BigDecimal(0));
+							newSsr.setSsrModeFor(ssr.getSsrModeFor());
+							newSsr.setSsrRefNo(newId);
+							newSsr.setStatus('A');
+							newSsr.setTotalRate(s.getTotalRate());
+							newSsr.setTransDate(new Date());
+							newSsr.setTransId(ssr.getTransId());
+							newSsr.setTransLineNo(new BigDecimal(1));
+							newSsr.setAccId(String.valueOf(noc[9]));
+							newSsr.setImpId(ssr.getImpId());
+							newSsr.setInBondId(ssr.getInBondId());
+							newSsr.setInBondDate(ssr.getInBondDate());
+							newSsr.setNocNo(ssr.getNocNo());
+							newSsr.setNocDate(ssr.getNocDate());
+							newSsr.setContainerNo("");
+
+							ssrdtlrepo.save(newSsr);
+
+							processnextidrepo.updateAuditTrail(cid, bid, "P05103", newId, "2024");
+
+						}
+
+					}
+
+				});
+			}
+
+			Map<String, Object> result = new HashMap<>();
+
+			List<SSRDtl> ssrRefNoData = ssrdtlrepo.getRefNoData(cid, bid, ssr.getTransId());
+
+			List<Object[]> ssrData = ssrdtlrepo.getSingleData1(cid, bid, ssr.getTransId());
+
+			result.put("refNoData", ssrRefNoData);
+			result.put("ssr", ssrData.get(0));
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} else {
+			Object nocData = cfbondnocrepo.getDataForExbondSSR(cid, bid, ssr.getExBondBeId());
+			if (nocData == null) {
+				return new ResponseEntity<>("Exbond data not found.", HttpStatus.CONFLICT);
+			}
+
+			Object[] noc = (Object[]) nocData;
+
+			if (ssr.getTransId() == null || ssr.getTransId().isEmpty()) {
+
+				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05104", "2024");
+
+				int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+				int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+				String HoldNextIdD1 = String.format("BSSR%06d", nextNumericNextID1);
+
+				service.stream().forEach(s -> {
+
+					Services ser = serViceRepositary.getDataById(cid, bid, s.getServiceId());
+
+					if (ser != null) {
+
+						String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05103", "2024");
+
+						String[] parts = lastValue.split("/");
+						String baseId = parts[0];
+						String baseId1 = parts[1];
+						String financialYear = parts[2];
+
+						// Increment the numerical part
+						int newVal = Integer.parseInt(baseId1) + 1;
+
+						// Format newVal to maintain leading zeros (e.g., 0001)
+						String formattedNewVal = String.format("%04d", newVal);
+
+						// Get the current financial year
+						String currentFinancialYear = getCurrentFinancialYear();
+
+						// Construct the new ID
+						String newId = baseId + "/" + formattedNewVal + "/" + currentFinancialYear;
+
+						SSRDtl newSsr = new SSRDtl();
+
+						newSsr.setApprovedBy(user);
+						newSsr.setApprovedDate(new Date());
+						newSsr.setBeDate(ssr.getBeDate());
+						newSsr.setBeNo(ssr.getBeNo());
+						newSsr.setBlDate(null);
+						newSsr.setBlNo("");
+						newSsr.setBranchId(bid);
+						newSsr.setCargoWt(BigDecimal.ZERO);
+						newSsr.setCha(String.valueOf(noc[7]));
+						newSsr.setCommodityDescription(ssr.getCommodityDescription());
+						newSsr.setCompanyId(cid);
+						newSsr.setCreatedBy(user);
+						newSsr.setCreatedDate(new Date());
+						newSsr.setDocRefDate(ssr.getDocRefDate());
+						newSsr.setDocRefNo(ssr.getDocRefNo());
+						newSsr.setErpDocRefNo(ssr.getErpDocRefNo());
+						newSsr.setExecutionUnit(s.getExecutionUnit());
+						newSsr.setSsrModeFor(ssr.getSsrModeFor());
+						newSsr.setIgmLineNo(ssr.getIgmLineNo());
+						newSsr.setNoOfPackages(0);
+						newSsr.setProfitcentreId(ssr.getProfitcentreId());
+						newSsr.setRate(s.getRate());
+						newSsr.setServiceId(s.getServiceId());
+						newSsr.setServiceUnit(s.getServiceUnit());
+						newSsr.setServiceUnit1(ser.getServiceUnit1());
+						newSsr.setSrNo(new BigDecimal(0));
+						newSsr.setSsrModeFor(ssr.getSsrModeFor());
+						newSsr.setSsrType("EXBOND");
+						newSsr.setSsrRefNo(newId);
+						newSsr.setStatus('A');
+						newSsr.setTotalRate(s.getTotalRate());
+						newSsr.setTransDate(new Date());
+						newSsr.setTransId(HoldNextIdD1);
+						newSsr.setTransLineNo(new BigDecimal(1));
+						newSsr.setAccId(String.valueOf(noc[9]));
+						newSsr.setImpId(ssr.getImpId());
+						newSsr.setExBondId(ssr.getExBondId());
+						newSsr.setExBondDate(ssr.getExBondDate());
+						newSsr.setExBondBeDate(ssr.getExBondBeDate());
+						newSsr.setExBondBeId(ssr.getExBondBeId());
+						newSsr.setNocNo(ssr.getNocNo());
+						newSsr.setNocDate(ssr.getNocDate());
+						newSsr.setContainerNo("");
+
+						ssrdtlrepo.save(newSsr);
+
+						processnextidrepo.updateAuditTrail(cid, bid, "P05104", HoldNextIdD1, "2024");
+						processnextidrepo.updateAuditTrail(cid, bid, "P05103", newId, "2024");
+
+						ssr.setTransId(HoldNextIdD1);
+
+					}
+
+				});
+
+				int updateSSr = cfbondnocrepo.updateSSRData1(cid, bid, ssr.getErpDocRefNo(), ssr.getNocNo(),ssr.getExBondId(),
+						HoldNextIdD1);
+
+			} else {
+
+				service.stream().forEach(s -> {
+
+					Services ser = serViceRepositary.getDataById(cid, bid, s.getServiceId());
+
+					if (ser != null) {
+
+						String oldRefNo = ssrdtlrepo.getSSRReferenceNo(cid, bid, ssr.getTransId(), s.getServiceId());
+
+						if (oldRefNo != null && !oldRefNo.isEmpty()) {
+
+							Boolean checkServiceConAlreadyExist = ssrdtlrepo.checkSSRReferenceNo1(cid, bid,
+									ssr.getTransId(), s.getServiceId(), ssr.getNocNo());
+
+							if (!checkServiceConAlreadyExist) {
+
+								SSRDtl newSsr = new SSRDtl();
+
+								newSsr.setApprovedBy(user);
+								newSsr.setApprovedDate(new Date());
+								newSsr.setBeDate(ssr.getBeDate());
+								newSsr.setBeNo(ssr.getBeNo());
+								newSsr.setBlDate(null);
+								newSsr.setBlNo("");
+								newSsr.setBranchId(bid);
+								newSsr.setCargoWt(BigDecimal.ZERO);
+								newSsr.setCha(String.valueOf(noc[7]));
+								newSsr.setCommodityDescription(ssr.getCommodityDescription());
+								newSsr.setCompanyId(cid);
+								newSsr.setCreatedBy(user);
+								newSsr.setCreatedDate(new Date());
+								newSsr.setDocRefDate(ssr.getDocRefDate());
+								newSsr.setDocRefNo(ssr.getDocRefNo());
+								newSsr.setErpDocRefNo(ssr.getErpDocRefNo());
+								newSsr.setExecutionUnit(s.getExecutionUnit());
+								newSsr.setSsrModeFor(ssr.getSsrModeFor());
+								newSsr.setSsrType("EXBOND");
+								newSsr.setIgmLineNo(ssr.getIgmLineNo());
+								newSsr.setNoOfPackages(0);
+								newSsr.setProfitcentreId(ssr.getProfitcentreId());
+								newSsr.setRate(s.getRate());
+								newSsr.setServiceId(s.getServiceId());
+								newSsr.setServiceUnit(s.getServiceUnit());
+								newSsr.setServiceUnit1(ser.getServiceUnit1());
+								newSsr.setSrNo(new BigDecimal(0));
+								newSsr.setSsrModeFor(ssr.getSsrModeFor());
+								newSsr.setSsrRefNo(oldRefNo);
+								newSsr.setStatus('A');
+								newSsr.setTotalRate(s.getTotalRate());
+								newSsr.setTransDate(new Date());
+								newSsr.setTransId(ssr.getTransId());
+								newSsr.setTransLineNo(new BigDecimal(1));
+								newSsr.setAccId(String.valueOf(noc[9]));
+								newSsr.setImpId(ssr.getImpId());
+								newSsr.setExBondId(ssr.getExBondId());
+								newSsr.setExBondDate(ssr.getExBondDate());
+								newSsr.setExBondBeDate(ssr.getExBondBeDate());
+								newSsr.setExBondBeId(ssr.getExBondBeId());
+								newSsr.setNocNo(ssr.getNocNo());
+								newSsr.setNocDate(ssr.getNocDate());
+								newSsr.setContainerNo("");
+
+								ssrdtlrepo.save(newSsr);
+							}
+
+						} else {
+							String lastValue = processnextidrepo.findAuditTrail(cid, bid, "P05103", "2024");
+
+							String[] parts = lastValue.split("/");
+							String baseId = parts[0];
+							String baseId1 = parts[1];
+							String financialYear = parts[2];
+
+							// Increment the numerical part
+							int newVal = Integer.parseInt(baseId1) + 1;
+
+							// Format newVal to maintain leading zeros (e.g., 0001)
+							String formattedNewVal = String.format("%04d", newVal);
+
+							// Get the current financial year
+							String currentFinancialYear = getCurrentFinancialYear();
+
+							// Construct the new ID
+							String newId = baseId + "/" + formattedNewVal + "/" + currentFinancialYear;
+
+							SSRDtl newSsr = new SSRDtl();
+
+							newSsr.setApprovedBy(user);
+							newSsr.setApprovedDate(new Date());
+							newSsr.setBeDate(ssr.getBeDate());
+							newSsr.setBeNo(ssr.getBeNo());
+							newSsr.setBlDate(null);
+							newSsr.setBlNo("");
+							newSsr.setBranchId(bid);
+							newSsr.setCargoWt(BigDecimal.ZERO);
+							newSsr.setCha(String.valueOf(noc[7]));
+							newSsr.setCommodityDescription(ssr.getCommodityDescription());
+							newSsr.setCompanyId(cid);
+							newSsr.setCreatedBy(user);
+							newSsr.setCreatedDate(new Date());
+							newSsr.setDocRefDate(ssr.getDocRefDate());
+							newSsr.setDocRefNo(ssr.getDocRefNo());
+							newSsr.setErpDocRefNo(ssr.getErpDocRefNo());
+							newSsr.setExecutionUnit(s.getExecutionUnit());
+							newSsr.setSsrModeFor(ssr.getSsrModeFor());
+							newSsr.setSsrType("EXBOND");
+							newSsr.setIgmLineNo(ssr.getIgmLineNo());
+							newSsr.setNoOfPackages(0);
+							newSsr.setProfitcentreId(ssr.getProfitcentreId());
+							newSsr.setRate(s.getRate());
+							newSsr.setServiceId(s.getServiceId());
+							newSsr.setServiceUnit(s.getServiceUnit());
+							newSsr.setServiceUnit1(ser.getServiceUnit1());
+							newSsr.setSrNo(new BigDecimal(0));
+							newSsr.setSsrModeFor(ssr.getSsrModeFor());
+							newSsr.setSsrRefNo(newId);
+							newSsr.setStatus('A');
+							newSsr.setTotalRate(s.getTotalRate());
+							newSsr.setTransDate(new Date());
+							newSsr.setTransId(ssr.getTransId());
+							newSsr.setTransLineNo(new BigDecimal(1));
+							newSsr.setAccId(String.valueOf(noc[9]));
+							newSsr.setImpId(ssr.getImpId());
+							newSsr.setExBondId(ssr.getExBondId());
+							newSsr.setExBondDate(ssr.getExBondDate());
+							newSsr.setExBondBeDate(ssr.getExBondBeDate());
+							newSsr.setExBondBeId(ssr.getExBondBeId());
+							newSsr.setNocNo(ssr.getNocNo());
+							newSsr.setNocDate(ssr.getNocDate());
+							newSsr.setContainerNo("");
+
+							ssrdtlrepo.save(newSsr);
+
+							processnextidrepo.updateAuditTrail(cid, bid, "P05103", newId, "2024");
+
+						}
+
+					}
+
+				});
+			}
+
+			Map<String, Object> result = new HashMap<>();
+
+			List<SSRDtl> ssrRefNoData = ssrdtlrepo.getRefNoData(cid, bid, ssr.getTransId());
+
+			List<Object[]> ssrData = ssrdtlrepo.getSingleData2(cid, bid, ssr.getTransId());
+
+			result.put("refNoData", ssrRefNoData);
+			result.put("ssr", ssrData.get(0));
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+	}
+
+	@GetMapping("/getDataForExbondSSR")
+	public ResponseEntity<?> getDataForExbondSSR(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("boe") String boe) {
+
+		Object data = cfbondnocrepo.getDataForExbondSSR(cid, bid, boe);
+
+		if (data == null) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/searchBondSSR")
+	public ResponseEntity<?> searchBondSSR(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "val", required = false) String val) {
+
+		List<Object[]> data = ssrdtlrepo.searchBondSSR(cid, bid, val, "N00003");
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found!!", HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/getBondDataByTransId")
+	public ResponseEntity<?> getBondDataByTransId(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("transid") String transid, @RequestParam("type") String type) {
+		
+		if("NOC".equals(type)) {
+			Map<String, Object> result = new HashMap<>();
+
+			List<SSRDtl> ssrRefNoData = ssrdtlrepo.getRefNoData(cid, bid, transid);
+
+			List<Object[]> ssrData = ssrdtlrepo.getSingleData1(cid, bid, transid);
+
+			result.put("refNoData", ssrRefNoData);
+			result.put("ssr", ssrData.get(0));
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+
+		else {
+			Map<String, Object> result = new HashMap<>();
+
+			List<SSRDtl> ssrRefNoData = ssrdtlrepo.getRefNoData(cid, bid, transid);
+
+			List<Object[]> ssrData = ssrdtlrepo.getSingleData2(cid, bid, transid);
+
+			result.put("refNoData", ssrRefNoData);
+			result.put("ssr", ssrData.get(0));
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+	}
 }
 
 

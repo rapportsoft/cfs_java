@@ -117,4 +117,36 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 	@Query(value="UPDATE SSRDtl s SET s.assessmentId=:id where s.companyId=:cid and s.branchId=:bid and s.transId=:trans and "
 			+ "s.status = 'A' and (s.assessmentId is null OR s.assessmentId = '')")
 	int updateAssessmentId1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("id") String id);
+	
+	@Query(value = "select COUNT(s)>0 from SSRDtl s where s.companyId=:cid and s.branchId=:bid and s.status != 'D' "
+			+ "and s.transId=:id and s.serviceId=:sid and s.nocNo=:noc")
+	Boolean checkSSRReferenceNo1(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
+			@Param("sid") String sid, @Param("noc") String noc);
+	
+
+	@Query(value="select s.companyId, s.branchId, s.transId, s.erpDocRefNo, s.docRefNo,s.nocNo,s.nocDate,s.inBondId,s.inBondDate,"
+			+ "s.transDate, s.docRefDate, s.igmLineNo, s.beNo, s.beDate,s.commodityDescription,s.ssrType,"
+			+ "p3.partyName, p4.partyName, s.ssrModeFor, s.status,s.createdBy "
+			+ "from SSRDtl s LEFT OUTER JOIN Party p3 ON s.companyId=p3.companyId and s.branchId=p3.branchId and s.cha=p3.partyId "
+			+ "LEFT OUTER JOIN Party p4 ON s.companyId=p4.companyId and s.branchId=p4.branchId and s.accId=p4.partyId "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status != 'D' and "
+			+ "s.transId=:trans")
+	List<Object[]> getSingleData1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans);
+	
+	@Query(value="select s.companyId, s.branchId, s.transId, s.erpDocRefNo, s.docRefNo,s.nocNo,s.nocDate,s.exBondId,s.exBondDate,"
+			+ "s.transDate, s.docRefDate, s.igmLineNo, s.beNo, s.beDate,s.commodityDescription,s.ssrType,"
+			+ "p3.partyName, p4.partyName, s.ssrModeFor, s.status,s.createdBy,s.exBondBeId,s.exBondBeDate "
+			+ "from SSRDtl s LEFT OUTER JOIN Party p3 ON s.companyId=p3.companyId and s.branchId=p3.branchId and s.cha=p3.partyId "
+			+ "LEFT OUTER JOIN Party p4 ON s.companyId=p4.companyId and s.branchId=p4.branchId and s.accId=p4.partyId "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status != 'D' and "
+			+ "s.transId=:trans")
+	List<Object[]> getSingleData2(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans);
+	
+	@Query(value="select DISTINCT s.transId,s.erpDocRefNo,s.docRefNo,s.nocNo,s.beNo,s.exBondBeId,s.exBondId,s.inBondId,s.ssrType "
+			+ "from SSRDtl s "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status != 'D' and s.profitcentreId=:profit  and "
+			+ "(:val is null OR :val = '' OR s.transId LIKE CONCAT ('%',:val,'%') OR s.nocNo LIKE CONCAT ('%',:val,'%') "
+			+ "OR s.docRefNo LIKE CONCAT ('%',:val,'%') OR s.exBondBeId LIKE CONCAT ('%',:val,'%') OR s.exBondId LIKE CONCAT ('%',:val,'%') "
+			+ "OR s.beNo LIKE CONCAT ('%',:val,'%') OR s.inBondId LIKE CONCAT ('%',:val,'%') OR s.ssrType LIKE CONCAT ('%',:val,'%')) order by s.transId desc")
+	List<Object[]> searchBondSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val, @Param("profit") String profit);
 }

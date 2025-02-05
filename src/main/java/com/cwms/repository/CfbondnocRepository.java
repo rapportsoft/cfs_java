@@ -753,5 +753,60 @@ List<Object[]> getDataBeforeAssessment(@Param("cid") String cid, @Param("bid") S
 	  	    @Param("nocTransId") String nocTransId, 
 	  	    @Param("nocNo") String nocNo,@Param("invNo") String invNo,
 	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
+  
+  @Query(value="select c.nocTransId, c.profitcentreId, c.nocNo, c.nocDate, c.igmNo, c.igmLineNo, c.igmDate,"
+    		+ "c.cha, p1.partyName, c.onAccountOf, p2.partyName,"
+    		+ "GROUP_CONCAT(dtl.commodityDescription),"
+    		+ "i.inBondingId, i.inBondingDate, c.boeNo, c.boeDate "
+    		+ "from Cfbondnoc c "
+    		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
+    		+ "LEFT OUTER JOIN Party p2 ON c.companyId=p2.companyId and c.branchId=p2.branchId and c.onAccountOf=p2.partyId "
+    		+ "LEFT OUTER JOIN CfBondNocDtl dtl ON c.companyId=dtl.companyId and c.branchId=dtl.branchId and c.nocTransId=dtl.nocTransId "
+    		+ "and c.nocNo=dtl.nocNo and dtl.status = 'A' and c.boeNo=dtl.boeNo "
+    		+ "LEFT OUTER JOIN Cfinbondcrg i ON c.companyId=i.companyId and c.branchId=i.branchId and c.nocTransId=i.nocTransId "
+    		+ "and c.boeNo=i.boeNo and i.status='A' "
+    		+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' and "
+    		+ "c.nocTransId=:id and c.boeNo=:boe "
+    		+ "ORDER BY i.createdDate DESC "
+    		+ "LIMIT 1")
+    Object getDataForNOCSSR(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("boe") String boe);
+    
+    @Transactional
+    @Modifying
+    @Query(value="UPDATE Cfbondnoc c SET c.ssrTransId=:ssr "
+    		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+    		+ "AND c.nocNo = :nocNo and c.status = 'A'")
+    int updateSSRData( @Param("companyId") String companyId, 
+  	  	    @Param("branchId") String branchId, 
+  	  	    @Param("nocTransId") String nocTransId, 
+  	  	    @Param("nocNo") String nocNo,@Param("ssr") String ssr);
+    
+    
+    
+    @Transactional
+    @Modifying
+    @Query(value="UPDATE CfExBondCrg c SET c.ssrTransId=:ssr "
+    		+ "where c.companyId = :companyId AND c.branchId = :branchId AND c.nocTransId = :nocTransId "
+    		+ "AND c.nocNo = :nocNo and c.exBondingId=:id and c.status = 'A'")
+    int updateSSRData1( @Param("companyId") String companyId, 
+  	  	    @Param("branchId") String branchId, 
+  	  	    @Param("nocTransId") String nocTransId, 
+  	  	    @Param("nocNo") String nocNo,@Param("id") String id,@Param("ssr") String ssr);
+    
+    
+    @Query(value="select c.nocTransId, c.profitcentreId, c.nocNo, c.nocDate, c.igmNo, c.igmLineNo, c.igmDate,"
+      		+ "c.cha, p1.partyName, c.onAccountOf, p2.partyName,"
+      		+ "GROUP_CONCAT(dtl.commodityDescription),"
+      		+ "e.exBondingId, e.exBondingDate, c.boeNo, c.boeDate, e.exBondBeNo,e.exBondBeDate "
+      		+ "from CfExBondCrg e "
+      		+ "LEFT OUTER JOIN Cfbondnoc c ON e.companyId=c.companyId and e.branchId=c.branchId and e.nocNo=c.nocNo and e.nocTransId=c.nocTransId "
+      		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
+      		+ "LEFT OUTER JOIN Party p2 ON c.companyId=p2.companyId and c.branchId=p2.branchId and c.onAccountOf=p2.partyId "
+      		+ "LEFT OUTER JOIN CfexBondCrgDtl dtl ON e.companyId=dtl.companyId and e.branchId=dtl.branchId and e.nocTransId=dtl.nocTransId "
+      		+ "and e.nocNo=dtl.nocNo and dtl.status = 'A' and e.exBondingId=dtl.exBondingId and e.exBondBeNo=dtl.exBondBeNo "
+      		+ "where e.companyId=:cid and e.branchId=:bid and e.status='A' and "
+      		+ "e.exBondBeNo=:boe "
+      		+ "ORDER BY e.createdDate DESC ")
+      Object getDataForExbondSSR(@Param("cid") String cid,@Param("bid") String bid,@Param("boe") String boe);
 
 }

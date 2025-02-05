@@ -409,12 +409,31 @@ public class CfExBondCrg {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date trnsferBondDate;
     
+	@Column(name = "SSR_TRANS_ID", length = 20, nullable = true)
+	private String ssrTransId;
+    
     public CfExBondCrg() {
     }
 
     
     
    
+
+	public String getSsrTransId() {
+		return ssrTransId;
+	}
+
+
+
+
+
+	public void setSsrTransId(String ssrTransId) {
+		this.ssrTransId = ssrTransId;
+	}
+
+
+
+
 
 	public String getInvoiceAssesed() {
 		return invoiceAssesed;
@@ -1593,7 +1612,9 @@ public class CfExBondCrg {
 	}
 	
 	
-	
+
+
+
 
 
 
@@ -1624,7 +1645,7 @@ public class CfExBondCrg {
 			BigDecimal inbondInsuranceValue, BigDecimal inbondCifValue, BigDecimal inbondCargoDuty,
 			String importerAddress1, String importerAddress2, String importerAddress3, String exBondType, String sbNo,
 			Date sbDate, BigDecimal sbValue, BigDecimal sbDuty, BigDecimal sbQty, String trnsferBondNo,
-			Date trnsferBondDate) {
+			Date trnsferBondDate, String ssrTransId) {
 		this.companyId = companyId;
 		this.branchId = branchId;
 		this.finYear = finYear;
@@ -1744,6 +1765,7 @@ public class CfExBondCrg {
 		this.sbQty = sbQty;
 		this.trnsferBondNo = trnsferBondNo;
 		this.trnsferBondDate = trnsferBondDate;
+		this.ssrTransId = ssrTransId;
 	}
 
 
