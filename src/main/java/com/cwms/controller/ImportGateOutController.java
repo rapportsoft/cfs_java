@@ -256,7 +256,16 @@ public class ImportGateOutController {
 				g.setDeliveryOrderNo(out.getDeliveryOrderNo());
 				g.setDeliveryOrderDate(out.getDeliveryOrderDate());
 				g.setDoValidityDate(out.getDoValidityDate());
-				  g.setTransType(out.getTransType());
+				g.setTransType(out.getTransType());
+				g.setContainerSize(gatePass.getContainerSize());
+				g.setContainerType(gatePass.getContainerType());
+				
+				if ("LCL".equals(out.getTransType())) {
+					g.setContainerStatus("LCL");
+				}
+				else {
+					g.setContainerStatus("FCL");
+				}
 				
 				gateOutRepo.save(g);
 
