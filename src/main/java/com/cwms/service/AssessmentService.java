@@ -212,8 +212,9 @@ public class AssessmentService {
 				return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
 			}
 
+			AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+
 			if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
-				List<AssessmentContainerDTO> finalConData = new ArrayList<>();
 				int sr = 1;
 
 				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05091", "2024");
@@ -225,8 +226,8 @@ public class AssessmentService {
 				String HoldNextIdD1 = String.format("INCO%06d", nextNumericNextID1);
 
 				for (AssessmentContainerDTO con : containerData) {
-					System.out.println("con.getLastInvoiceUptoDate() " + con.getLastInvoiceUptoDate() + " "
-							+ con.getContainerNo());
+					List<AssessmentContainerDTO> finalConData = new ArrayList<>();
+
 					if (con.getLastInvoiceUptoDate() == null) {
 
 						List<String> conSize = new ArrayList<>();
@@ -2540,7 +2541,7 @@ public class AssessmentService {
 						assessmentsheetrepo.save(newAss);
 						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
 
-						AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+//						AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 						AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -4182,7 +4183,7 @@ public class AssessmentService {
 						assessmentsheetrepo.save(newAss);
 						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
 
-						AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+					//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 						AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -6578,9 +6579,11 @@ public class AssessmentService {
 		if (containerData.isEmpty()) {
 			return new ResponseEntity<>("NOC data not found", HttpStatus.CONFLICT);
 		}
+		
+		AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+
 		if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
 
-			List<AssessmentContainerDTO> finalConData = new ArrayList<>();
 			int sr = 1;
 
 			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05095", "2024");
@@ -6592,6 +6595,8 @@ public class AssessmentService {
 			String HoldNextIdD1 = String.format("BINA%06d", nextNumericNextID1);
 
 			for (AssessmentContainerDTO con : containerData) {
+				List<AssessmentContainerDTO> finalConData = new ArrayList<>();
+
 				if (con.getLastInvoiceUptoDate() == null) {
 
 					List<String> serviceMappingData = new ArrayList<>();
@@ -8415,7 +8420,7 @@ public class AssessmentService {
 					assessmentsheetrepo.save(newAss);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05095", HoldNextIdD1, "2024");
 
-					AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+				//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 					AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -10373,7 +10378,7 @@ public class AssessmentService {
 					assessmentsheetrepo.save(newAss);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05095", HoldNextIdD1, "2024");
 
-					AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+				//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 					AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -12776,9 +12781,11 @@ public class AssessmentService {
 		if (containerData.isEmpty()) {
 			return new ResponseEntity<>("NOC data not found", HttpStatus.CONFLICT);
 		}
+		
+		AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+
 		if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
 
-			List<AssessmentContainerDTO> finalConData = new ArrayList<>();
 			int sr = 1;
 
 			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05098", "2024");
@@ -12790,6 +12797,7 @@ public class AssessmentService {
 			String HoldNextIdD1 = String.format("BEXA%06d", nextNumericNextID1);
 
 			for (AssessmentContainerDTO con : containerData) {
+				List<AssessmentContainerDTO> finalConData = new ArrayList<>();
 
 				List<String> serviceMappingData = new ArrayList<>();
 
@@ -14595,7 +14603,7 @@ public class AssessmentService {
 				assessmentsheetrepo.save(newAss);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05098", HoldNextIdD1, "2024");
 
-				AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+			//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 				AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 				AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 				AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
