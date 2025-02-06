@@ -428,6 +428,93 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					List<Object[]> exportEmptyMovementOutBarChart(@Param("companyId") String companyId,
 					                              @Param("branchId") String branchId,
 					                              @Param("startDate") Date startDate);
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					@Query(value = 
+						    "SELECT b.Profitcentre_Desc, COUNT(a.Invoice_No), " + 
+						    "SUM(a.Local_Amt), SUM(a.Invoice_Amt) " + 
+						    "FROM cfinvsrv a " + 
+						    "LEFT OUTER JOIN profitcentre b " + 
+						    "ON a.Company_Id = b.Company_Id " + 
+						    "AND a.Profitcentre_Id = b.Profitcentre_Id " + 
+						    "WHERE a.Status = 'A' " + 
+						    "AND a.Company_Id = :companyId " + 
+						    "AND a.Branch_Id = :branchId " + 
+						    "AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+						    "GROUP BY a.Profitcentre_Id " + 
+						    "ORDER BY b.Profitcentre_Desc", 
+						    nativeQuery = true)
+						List<Object[]> findInvoiceSummary(@Param("companyId") String companyId,
+							    @Param("branchId") String branchId,
+							    @Param("startDate") Date startDate,
+							    @Param("endDate") Date endDate
+							);
+
+						@Query(value = 
+						        "SELECT a.Profitcentre_Id, b.Profitcentre_Desc, COUNT(DISTINCT a.Trans_Id), " + 
+						        "SUM(a.Document_Amt) " + 
+						        "FROM fintrans a " + 
+						        "LEFT OUTER JOIN profitcentre b " + 
+						        "ON a.Company_Id = b.Company_Id " + 
+						        "AND a.Profitcentre_Id = b.Profitcentre_Id " + 
+						        "WHERE a.Status = 'A' " + 
+						        "AND a.Company_Id = :companyId " + 
+						        "AND a.Branch_Id = :branchId " + 
+						        "AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+						        "AND a.Credit_Type = 'N' " + 
+						        "AND a.Payment_Mode NOT IN ('ADVANCE', 'CREDIT') " + 
+						        "AND a.Ledger_Type = 'AR' " + 
+						        "AND a.Doc_Type IN ('AD', 'RE') " + 
+						        "GROUP BY a.Profitcentre_Id " + 
+						        "ORDER BY b.Profitcentre_Desc", 
+						        nativeQuery = true)
+						List<Object[]> findInvoiceTotalCollection(@Param("companyId") String companyId,
+								 @Param("branchId") String branchId,
+								    @Param("startDate") Date startDate,
+								    @Param("endDate") Date endDate);
+						
+						
+						
+						@Query(value = 
+							    "SELECT a.Profitcentre_Id, b.Profitcentre_Desc, COUNT(a.Invoice_No), " +
+							    "SUM(a.Invoice_Amt), (SUM(a.Invoice_Amt) - SUM(a.Receipt_Amt)) AS OutStandings " +
+							    "FROM cfinvsrv a " +
+							    "LEFT OUTER JOIN profitcentre b " +
+							    "ON a.Company_Id = b.Company_Id " +
+							    "AND a.Profitcentre_Id = b.Profitcentre_Id " +
+							    "WHERE a.Status = 'A' " +
+							    "AND a.Company_Id = :companyId " +
+							    "AND a.Branch_Id = :branchId " +
+							    "AND a.Created_Date BETWEEN :startDate AND :endDate " +
+							    "AND a.Credit_Type = 'Y' " +
+							    "GROUP BY a.Profitcentre_Id " +
+							    "HAVING (SUM(a.Invoice_Amt) - SUM(a.Receipt_Amt)) > 0 " +
+							    "ORDER BY b.Profitcentre_Desc", 
+							    nativeQuery = true)
+							List<Object[]> findOutstandingInvoices(
+							    @Param("companyId") String companyId,
+							    @Param("branchId") String branchId,
+							    @Param("startDate") Date startDate,
+							    @Param("endDate") Date endDate
+							);
+
 
 
 }

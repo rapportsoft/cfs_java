@@ -78,6 +78,24 @@ public class DashBoardController {
 	
 	
 	
+	@GetMapping("/getInvoiceDashBoard")
+	public ResponseEntity<Map<String, Map<String, Object>>> getInvoiceDashBoard(
+			@RequestParam ("companyId") String companyId ,
+			@RequestParam ("branchId") String branchId,
+			 @RequestParam(name = "startDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+		        @RequestParam(name = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate
+			
+			) {
+		
+		
+		return  dashBoardService.getDataForInvoiceDashboard(companyId, branchId, startDate, endDate);
+		
+	}
+	
+	
+	
+	
+	
 	@GetMapping("/getExportBarChart")
 	public ResponseEntity<Map<String, Map<String, Object>>> getInventoryLoadedReport(
 			@RequestParam ("companyId") String companyId ,
