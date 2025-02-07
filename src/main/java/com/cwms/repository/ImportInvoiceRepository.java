@@ -15,7 +15,7 @@ public interface ImportInvoiceRepository extends JpaRepository<AssessmentSheet, 
 	@Query(value = "select distinct a.container_no,DATE_FORMAT(a.approved_date,'%d %b %Y %T'),a.party_id,b.party_name,b.pan_no,ba.address_1,ba.address_2,ba.address_3,ba.pin,h.jar_dtl_desc State,"
 			+ "	j.jar_dtl_desc Statecode,ba.gst_no,a.lock_down,u.user_name,v.user_name,a.bill_amt, a.IRN,d.party_name,s.Importer_Name,fa.address_1,fa.address_2,fa.address_3,"
 			+ "	fa.pin,i.jar_dtl_desc,k.jar_dtl_desc,fa.gst_no,sl.party_name,ag.party_name, s.IGST,s.CGST,s.SGST,s.sez,a.Mail_Flag,DATE_FORMAT(a.Invoice_Date,'%d/%m/%Y'),b.FINANCE_MAIL,a.Created_By,"
-			+ "	s.Last_Invoice_No, igmcrg.importer_address1 ,igmcrg.importer_address2,igmcrg.importer_address3 "
+			+ "	s.Last_Invoice_No, igmcrg.importer_address1 ,igmcrg.importer_address2,igmcrg.importer_address3,DATE_FORMAT(s.invoice_upto_date,'%d/%m/%Y %H:%i:%s') "
 			+ "	from cfinvsrv  a left outer join cfassesmentsheet s "
 			+ "	on a.Company_Id = s.Company_Id and a.Branch_Id = s.Branch_Id  and a.Invoice_No = s.Invoice_No and a.Container_no = s.Assesment_Id and a.Profitcentre_Id = s.Profitcentre_Id "
 			+ "	left outer join party b on a.company_id=b.company_id and b.party_id=a.party_id left outer join partyaddress ba on a.company_id=ba.company_id and ba.party_id=a.party_id and ba.sr_no = a.Acc_Sr_no  left outer join jar_detail h on ba.company_id=h.company_id"
@@ -53,15 +53,15 @@ public interface ImportInvoiceRepository extends JpaRepository<AssessmentSheet, 
 	    );
 	
 	@Query(value ="SELECT b.Company_Name, a.Branch_Name, a.Address_1, a.Address_2, a.Address_3, e.Jar_Dtl_Desc, f.Jar_Dtl_Desc,  g.Jar_Dtl_Desc, a.Pin, a.Phone_no,b.GST_No,b.CIN_No, b.pan_no,b.Address_1, b.Address_2, b.Address_3, "
-			+ "b.City_Name,b.PIN "
+			+ "b.City_Name,b.PIN, a.email_id "
 			+ "FROM  branch a LEFT OUTER JOIN company b ON a.Company_Id = b.Company_Id LEFT OUTER JOIN jar_detail e ON a.Company_Id=e.Company_Id AND a.City=e.Jar_Dtl_Id AND e.Jar_Id = 'J00026' LEFT OUTER JOIN jar_detail f "
-			+ "ON a.Company_id=f.Company_id AND a.State=f.Jar_Dtl_Id AND f.Jar_Id = 'J00026' LEFT OUTER JOIN jar_detail g ON a.Company_id=g.Company_id AND a.Country=g.Jar_Dtl_Id AND g.Jar_Id = 'J00002' WHERE  a.Branch_Id='B00001' AND a.Company_Id='C00001' AND a.Status = 'A'",nativeQuery = true)
+			+ "ON a.Company_id=f.Company_id AND a.State=f.Jar_Dtl_Id AND f.Jar_Id = 'J00026' LEFT OUTER JOIN jar_detail g ON a.Company_id=g.Company_id AND a.Country=g.Jar_Dtl_Id AND g.Jar_Id = 'J00002' WHERE  a.Branch_Id=:branchId  AND a.Company_Id=:companyId AND a.Status = 'A'",nativeQuery = true)
 	Object getCompanyAddressDetails(@Param("branchId") String branchId, 
             @Param("companyId") String companyId);
 	
 	
 	@Query(value = "select a.IGM_No , a.igm_line_no , a.BL_No, DATE_FORMAT(a.BL_Date,'%d-%m-%Y'), c.BE_No, DATE_FORMAT(c.BE_Date,'%d-%m-%Y'), a.container_no, a.container_size, a.container_type, DATE_FORMAT(a.Gate_In_Date,'%d-%m-%Y'), IFNULL(ROUND((a.Gross_Weight / 1000 ) , 2 ),0) cargo_wtmton, IFNULL(ROUND((e.Gross_Weight) , 2 ),0) cargo_wt, "
-			+ "c.No_Of_Packages, IFNULL(e.No_Of_Packages,0), c.Type_of_Container, c.Gate_out_Type,ROUND(a.Container_Handling_Amt,2), ROUND(a.Container_Storage_Amt,2), v.Vessel_Name,e.Type_Of_Package, a.Seal_Cutting_Type ,IFNULL( e.Commodity_Description , '' ),DATE_FORMAT(a.Invoice_Date,'%d/%m/%Y'),DATE_FORMAT(a.Invoice_Upto_Date,'%d/%m/%Y'), e.cha_name "
+			+ "c.No_Of_Packages, IFNULL(e.No_Of_Packages,0), c.Type_of_Container, c.Gate_out_Type,ROUND(a.Container_Handling_Amt,2), ROUND(a.Container_Storage_Amt,2), v.Vessel_Name,e.Type_Of_Package, a.Seal_Cutting_Type ,IFNULL( e.Commodity_Description , '' ),DATE_FORMAT(a.Invoice_Date,'%d/%m/%Y'),e.cha_name,a.last_invoice_no,DATE_FORMAT(a.invoice_upto_date,'%d/%m/%Y %H:%i:%s') "
 			+ "from cfassesmentsheet a left outer join cfigmcn c "
 			+ "on a.company_id=c.company_id  and a.branch_id=c.branch_id  and a.container_no=c.container_no and a.IGM_Trans_id=c.IGM_Trans_id and a.igm_No = c.Igm_No "
 			+ "and a.Igm_Line_No = c.Igm_Line_No and a.Profitcentre_Id = c.Profitcentre_Id /*and a.Assesment_Id = c.Assesment_Id*/ left outer join cfigmcrg e on e.company_id=c.company_id  and e.branch_id=c.branch_id  "
@@ -82,7 +82,7 @@ public interface ImportInvoiceRepository extends JpaRepository<AssessmentSheet, 
             @Param("branchId") String branchId);
 	
 	
-	@Query(value ="select a.payment_mode , a.cheque_no , DATE_FORMAT(a.cheque_date,'%d-%b-%Y') , a.Bank_Name , ROUND(a.document_amt,2) , ROUND(a.tds_bill_amt,2 ) "
+	@Query(value ="select a.payment_mode , a.cheque_no , DATE_FORMAT(a.cheque_date,'%d-%b-%Y') , a.Bank_Name , ROUND(a.document_amt,2) , ROUND(a.tds_bill_amt,2 ) ,credit_flag  "
 			+ "from fintrans a where   a.Company_Id=:companyId AND  a.branch_id=:branchId  AND a.OPR_invoice_no=:invoiceNo and a.status='A'",nativeQuery = true)
 	List<Object[]> getPaymentDetails (@Param("companyId") String companyId, 
             @Param("branchId") String branchId,
