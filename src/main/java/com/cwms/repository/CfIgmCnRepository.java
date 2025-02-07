@@ -879,8 +879,8 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 		  
 		  
 		  
-		  @Query(value="select c.sealCutWoTransId,DATE_FORMAT(c.sealCutWoTransDate,'%d/%m/%Y %h:%i'),c.containerNo,c.containerSize,"
-			  		+ "c.containerType,c.containerSealNo,c.customsSealNo,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),c.noOfPackages,"
+		  @Query(value="select c.sealCutWoTransId,DATE_FORMAT(c.sealCutWoTransDate,'%d/%m/%Y %H:%i'),c.containerNo,c.containerSize,"
+			  		+ "c.containerType,c.containerSealNo,c.customsSealNo,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %H:%i'),c.noOfPackages,"
 			  		+ "c.cargoWt,c.gateOutType,c.scanningDoneStatus,c.yardLocation "
 			  		+ "from Cfigmcn c "
 			  		+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmLineNo=:line and c.status != 'D' and "
@@ -889,10 +889,10 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 					  @Param("igm") String igm,@Param("line") String line,@Param("jobid") String jobid);
 			  
 			  
-			  @Query(value="select c.sealCutWoTransId,DATE_FORMAT(c.sealCutWoTransDate,'%d/%m/%Y %h:%i'),crg.chaName,crg.importerName,"
+			  @Query(value="select c.sealCutWoTransId,DATE_FORMAT(c.sealCutWoTransDate,'%d/%m/%Y %H:%i'),crg.chaName,crg.importerName,"
 			  		    + "c.igmNo,p2.partyName,c.customsSealNo,c.grossWt,crg.mobileNo,crg.commodityDescription,c.containerNo,"
 			  		    + "c.containerSize,c.containerType,c.igmLineNo,crg.grossWeight,crg.beNo,crg.noOfPackages,c.gateOutType,"
-			  		    + "DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),DATE_FORMAT(c.sealCutReqDate,'%d/%m/%Y %h:%i'),c.yardLocation "
+			  		    + "DATE_FORMAT(c.gateInDate,'%d/%m/%Y %H:%i'),DATE_FORMAT(c.sealCutReqDate,'%d/%m/%Y %H:%i'),c.yardLocation "
 				  		+ "from Cfigmcn c "
 				  		+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "
 				  		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
@@ -920,9 +920,9 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 //						  @Param("igm") String igm,@Param("line") String line,@Param("jobid") String jobid,@Param("trans") String trans);
 				  
 				  
-				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %h:%i'),c.igmNo,"
+				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %H:%i'),c.igmNo,"
 					  		+ "c.igmLineNo,p1.partyName,crg.importerName,p2.partyName,crg.commodityDescription,c.containerNo,c.containerSize,"
-					  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
+					  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %H:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
 					  		+ "from Cfigmcn c "
 					  		+ "LEFT OUTER JOIN Party p1 ON c.companyId=p1.companyId and c.branchId=p1.branchId and c.cha=p1.partyId "
 					  		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
@@ -937,9 +937,9 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 							  @Param("igm") String igm,@Param("line") String line,@Param("jobid") String jobid,@Param("trans") String trans);
 				  
 				  
-				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %h:%i'),c.igmNo,"
+				  @Query(value="select c.containerExamWoTransId,DATE_FORMAT(c.containerExamWoTransDate,'%d/%m/%Y %H:%i'),c.igmNo,"
 					  		+ "c.igmLineNo,crg.chaName,crg.importerName,p2.partyName,crg.commodityDescription,c.containerNo,c.containerSize,"
-					  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %h:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
+					  		+ "c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %H:%i'),crg.cargoType,GROUP_CONCAT(j.jarDtlDesc),c.examinedPackages,c.igmTransId,c.createdBy "
 					  		+ "from Cfigmcn c "
 					  		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
 					  		+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId and c.igmLineNo=crg.igmLineNo "

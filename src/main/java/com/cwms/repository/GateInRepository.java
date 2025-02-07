@@ -589,7 +589,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
 	
 	
-	@Query(value = "select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %h:%i'),p.portName,DATE_FORMAT(g.portExitDate,'%d/%m/%Y %h:%i'),"
+	@Query(value = "select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),p.portName,DATE_FORMAT(g.portExitDate,'%d/%m/%Y %h:%i'),"
 			+ "g.containerNo,g.containerSize,g.containerType,g.isoCode,g.vehicleNo,g.transporterName,v.vesselName,g.viaNo,crg.blNo,"
 			+ "g.containerSealNo,DATE_FORMAT(crg.blDate,'%d/%m/%Y'),g.actualSealNo,g.docRefNo,g.lineNo,g.scanningStatus,p1.partyName,"
 			+ "crg.importerName,g.comments,g.containerHealth "

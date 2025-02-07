@@ -78,7 +78,7 @@ public interface ImportGateOutRepository extends JpaRepository<GateOut, String> 
 	
 	
 
-	@Query(value="select DISTINCT g.gateOutId,DATE_FORMAT(g.gateOutDate,'%d/%m/%Y %h:%i'),g.containerNo,g.containerSize,"
+	@Query(value="select DISTINCT g.gateOutId,DATE_FORMAT(g.gateOutDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
 			+ "g.containerType,cn.iso,GROUP_CONCAT(veh.vehicleNo),gp.transporterName,v.vesselName,i.viaNo,gp.actualSealNo,gp.blNo,"
 			+ "DATE_FORMAT(gp.blDate,'%d/%m/%Y'),gp.doNo,gp.boe,DATE_FORMAT(gp.beDate,'%d/%m/%Y'),DATE_FORMAT(gp.doValidityDate,'%d/%m/%Y'),"
 			+ "gp.igmNo,gp.igmLineNo,cn.scannerType,p1.partyName,gp.importerName,p2.partyName,g.containerHealth,g.comments "

@@ -251,7 +251,7 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		
 		
 		
-		@Query("select c.igmNo,DATE_FORMAT(igm.igmDate,'%d/%m/%Y %h:%i'),c.igmLineNo,v.vesselName,c.typeOfPackage,c.chaName," +
+		@Query("select c.igmNo,DATE_FORMAT(igm.igmDate,'%d/%m/%Y %H:%i'),c.igmLineNo,v.vesselName,c.typeOfPackage,c.chaName," +
 		           "c.importerName,p1.partyName,c.mobileNo " +
 			       "from Cfigmcrg c " +
 				   "LEFT OUTER JOIN CFIgm igm ON c.companyId=igm.companyId and c.branchId=igm.branchId and c.igmNo=igm.igmNo and c.igmTransId=igm.igmTransId " +

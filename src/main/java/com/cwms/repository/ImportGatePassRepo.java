@@ -151,7 +151,7 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 	
 	
 	
-	@Query(value="select DISTINCT i.gatePassId,DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %h:%i'),i.igmNo,i.igmLineNo,i.blNo,"
+	@Query(value="select DISTINCT i.gatePassId,DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %H:%i'),i.igmNo,i.igmLineNo,i.blNo,"
 			+ "DATE_FORMAT(i.blDate,'%d/%m/%Y'),i.boe,DATE_FORMAT(i.beDate,'%d/%m/%Y'),i.doNo,DATE_FORMAT(i.doValidityDate,'%d/%m/%Y'),"
 			+ "p1.partyName,i.importerName,p2.partyName,v.vesselName,c.viaNo,i.commodity,i.comments,i.containerNo,i.containerSize,"
 			+ "i.containerType,i.vehicleNo,DATE_FORMAT(cn.gateInDate,'%d/%m/%Y'),i.yardLocation "
@@ -166,7 +166,7 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 	List<Object[]> getDataForImportGatePassItemWiseReport(@Param("cid") String cid, @Param("bid") String bid,@Param("gate") String gate);
 	
 	
-	@Query(value="select DISTINCT i.igmNo,i.igmLineNo,i.gatePassId,DATE_FORMAT(c.igmDate,'%d/%m/%Y'),DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %h:%i'),"
+	@Query(value="select DISTINCT i.igmNo,i.igmLineNo,i.gatePassId,DATE_FORMAT(c.igmDate,'%d/%m/%Y'),DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %H:%i'),"
 			+ "i.boe,DATE_FORMAT(i.beDate,'%d/%m/%Y'),i.blNo,v.vesselName,c.voyageNo,d.containerNo,p1.partyName,d.containerSize,"
 			+ "i.importerName,p2.partyName,i.qtyTakenOut,DATE_FORMAT(i.invoiceDate,'%d/%m/%Y'),i.gwTakenOut,i.comments,"
 			+ "veh.vehicleNo,veh.qtyTakenOut,i.commodity "

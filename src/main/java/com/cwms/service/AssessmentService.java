@@ -211,10 +211,12 @@ public class AssessmentService {
 			if (containerData.isEmpty()) {
 				return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
 			}
-
+			
 			AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 
+
 			if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
+				
 				int sr = 1;
 
 				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05091", "2024");
@@ -227,7 +229,6 @@ public class AssessmentService {
 
 				for (AssessmentContainerDTO con : containerData) {
 					List<AssessmentContainerDTO> finalConData = new ArrayList<>();
-
 					if (con.getLastInvoiceUptoDate() == null) {
 
 						List<String> conSize = new ArrayList<>();
@@ -786,7 +787,7 @@ public class AssessmentService {
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea()))
+																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 
@@ -896,7 +897,7 @@ public class AssessmentService {
 																	"totalRate " + totalRate + " " + weeksBetween);
 
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea()))
+																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 															tempAss.setServiceRate(serviceRate.get());
@@ -1768,8 +1769,8 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																RoundingMode.HALF_UP);
+														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
@@ -1868,8 +1869,8 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																RoundingMode.HALF_UP);
+														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
@@ -2541,7 +2542,6 @@ public class AssessmentService {
 						assessmentsheetrepo.save(newAss);
 						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
 
-//						AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 						AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -2621,7 +2621,7 @@ public class AssessmentService {
 
 								// Perform addition
 								totalAmount.set(currentTotal.add(currentRate));
-
+System.out.println("c "+c);
 								cfinvsrvanxrepo.save(anx);
 
 //      						if ("S00007".equals(c.getServiceId())) {
@@ -3138,7 +3138,7 @@ public class AssessmentService {
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea()))
+																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 															System.out.println(
@@ -3219,7 +3219,7 @@ public class AssessmentService {
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea()))
+																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 															System.out.println(
@@ -3534,8 +3534,8 @@ public class AssessmentService {
 
 														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 														if ("SM".equals(String.valueOf(f[7]))) {
-															totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																	RoundingMode.HALF_UP);
+															totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																	.setScale(3, RoundingMode.HALF_UP);
 														}
 														System.out
 																.println("totalRate " + totalRate + " " + weeksBetween);
@@ -3614,8 +3614,8 @@ public class AssessmentService {
 
 														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 														if ("SM".equals(String.valueOf(f[7]))) {
-															totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																	RoundingMode.HALF_UP);
+															totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																	.setScale(3, RoundingMode.HALF_UP);
 														}
 														System.out
 																.println("totalRate " + totalRate + " " + weeksBetween);
@@ -3934,8 +3934,8 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																RoundingMode.HALF_UP);
+														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
@@ -4012,8 +4012,8 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																RoundingMode.HALF_UP);
+														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
@@ -4183,7 +4183,6 @@ public class AssessmentService {
 						assessmentsheetrepo.save(newAss);
 						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
 
-					//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 						AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -4904,7 +4903,7 @@ public class AssessmentService {
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
 			fin.setCreditType("N");
-			fin.setCreditFlag("N");
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
@@ -5464,7 +5463,7 @@ public class AssessmentService {
 				fin.setAssesmentId(assSheet.getAssesmentId());
 				fin.setRecordType("NEW");
 				fin.setCreditType("N");
-				fin.setCreditFlag("N");
+				fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 
 				if ("TDS".equals(p.getPayMode())) {
 					fin.setTdsType(tdsDeductee);
@@ -5481,7 +5480,7 @@ public class AssessmentService {
 				fin.setLedgerType("AR");
 				fin.setDocType("RE");
 				fin.setProfitcentreId(assSheet.getProfitcentreId());
-				fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+				fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 				fin.setPartyId(assSheet.getPayablePartyId());
 				fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 				fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -5489,7 +5488,6 @@ public class AssessmentService {
 				fin.setChequeDate(p.getChequeDate());
 				fin.setBankName(p.getBankDetails());
 				fin.setCreditType("Y");
-				fin.setCreditFlag("Y");
 				fin.setDocumentAmt(BigDecimal.ZERO);
 				fin.setCreditAmount(p.getAmount().negate());
 				fin.setCreatedBy(user);
@@ -6148,7 +6146,6 @@ public class AssessmentService {
 			fin.setLedgerType("AR");
 			fin.setDocType("RE");
 			fin.setProfitcentreId(assSheet.getProfitcentreId());
-			fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
 			fin.setPartyId(assSheet.getPayablePartyId());
 			fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 			fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -6170,9 +6167,8 @@ public class AssessmentService {
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
-			fin.setCreditType("N");
-			fin.setCreditFlag("N");
-
+			fin.setCreditType("P");
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
 				fin.setTdsPercentage(new BigDecimal(tdsPerc));
@@ -6595,6 +6591,7 @@ public class AssessmentService {
 			String HoldNextIdD1 = String.format("BINA%06d", nextNumericNextID1);
 
 			for (AssessmentContainerDTO con : containerData) {
+				
 				List<AssessmentContainerDTO> finalConData = new ArrayList<>();
 
 				if (con.getLastInvoiceUptoDate() == null) {
@@ -7007,8 +7004,8 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																RoundingMode.HALF_UP);
+														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
@@ -7767,8 +7764,8 @@ public class AssessmentService {
 
 											totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 											if ("SM".equals(String.valueOf(f[7]))) {
-												totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-														RoundingMode.HALF_UP);
+												totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														.setScale(3, RoundingMode.HALF_UP);
 											}
 											System.out.println("totalRate " + totalRate + " " + weeksBetween);
 											tempAss.setServiceRate(serviceRate.get());
@@ -8420,7 +8417,7 @@ public class AssessmentService {
 					assessmentsheetrepo.save(newAss);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05095", HoldNextIdD1, "2024");
 
-				//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+//					AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 					AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -8965,8 +8962,8 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-																RoundingMode.HALF_UP);
+														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
@@ -9725,8 +9722,8 @@ public class AssessmentService {
 
 											totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 											if ("SM".equals(String.valueOf(f[7]))) {
-												totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-														RoundingMode.HALF_UP);
+												totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														.setScale(3, RoundingMode.HALF_UP);
 											}
 											System.out.println("totalRate " + totalRate + " " + weeksBetween);
 											tempAss.setServiceRate(serviceRate.get());
@@ -10378,7 +10375,7 @@ public class AssessmentService {
 					assessmentsheetrepo.save(newAss);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05095", HoldNextIdD1, "2024");
 
-				//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+//					AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 					AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -10991,7 +10988,7 @@ public class AssessmentService {
 			fin.setLedgerType("AR");
 			fin.setDocType("RE");
 			fin.setProfitcentreId(assSheet.getProfitcentreId());
-			fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 			fin.setPartyId(assSheet.getPayablePartyId());
 			fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 			fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -11013,6 +11010,7 @@ public class AssessmentService {
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
+			fin.setCreditType("N");
 
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
@@ -11532,7 +11530,7 @@ public class AssessmentService {
 				fin.setLedgerType("AR");
 				fin.setDocType("RE");
 				fin.setProfitcentreId(assSheet.getProfitcentreId());
-				fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+				fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 				fin.setPartyId(assSheet.getPayablePartyId());
 				fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 				fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -11554,12 +11552,13 @@ public class AssessmentService {
 				fin.setApprovedDate(new Date());
 				fin.setAssesmentId(assSheet.getAssesmentId());
 				fin.setRecordType("NEW");
-
+				fin.setCreditType("Y");
 				if ("TDS".equals(p.getPayMode())) {
 					fin.setTdsType(tdsDeductee);
 					fin.setTdsPercentage(new BigDecimal(tdsPerc));
 					fin.setTdsBillAmt(p.getAmount());
 				}
+				
 
 			} else {
 				fin.setCompanyId(cid);
@@ -11579,7 +11578,7 @@ public class AssessmentService {
 				fin.setChequeDate(p.getChequeDate());
 				fin.setBankName(p.getBankDetails());
 				fin.setCreditType("Y");
-				fin.setCreditFlag("Y");
+				fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 				fin.setDocumentAmt(BigDecimal.ZERO);
 				fin.setCreditAmount(p.getAmount().negate());
 				fin.setCreatedBy(user);
@@ -12245,7 +12244,8 @@ public class AssessmentService {
 			fin.setLedgerType("AR");
 			fin.setDocType("RE");
 			fin.setProfitcentreId(assSheet.getProfitcentreId());
-			fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
+			fin.setCreditType("P");
 			fin.setPartyId(assSheet.getPayablePartyId());
 			fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 			fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -13205,8 +13205,8 @@ public class AssessmentService {
 
 												totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 												if ("SM".equals(String.valueOf(f[7]))) {
-													totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-															RoundingMode.HALF_UP);
+													totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+															.setScale(3, RoundingMode.HALF_UP);
 												}
 												System.out.println("totalRate " + totalRate + " " + weeksBetween);
 												tempAss.setServiceRate(serviceRate.get());
@@ -13947,8 +13947,8 @@ public class AssessmentService {
 
 										totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 										if ("SM".equals(String.valueOf(f[7]))) {
-											totalRate = (totalRate.multiply(con.getArea())).setScale(3,
-													RoundingMode.HALF_UP);
+											totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+													.setScale(3, RoundingMode.HALF_UP);
 										}
 										System.out.println("totalRate " + totalRate + " " + weeksBetween);
 										tempAss.setServiceRate(serviceRate.get());
@@ -14603,7 +14603,7 @@ public class AssessmentService {
 				assessmentsheetrepo.save(newAss);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05098", HoldNextIdD1, "2024");
 
-			//	AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+//				AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 				AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
 				AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 				AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
@@ -15203,7 +15203,7 @@ public class AssessmentService {
 			fin.setLedgerType("AR");
 			fin.setDocType("RE");
 			fin.setProfitcentreId(assSheet.getProfitcentreId());
-			fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 			fin.setPartyId(assSheet.getPayablePartyId());
 			fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 			fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -15225,6 +15225,7 @@ public class AssessmentService {
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
+			fin.setCreditType("N");
 
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
@@ -15741,7 +15742,7 @@ public class AssessmentService {
 				fin.setLedgerType("AR");
 				fin.setDocType("RE");
 				fin.setProfitcentreId(assSheet.getProfitcentreId());
-				fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+				fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 				fin.setPartyId(assSheet.getPayablePartyId());
 				fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 				fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -15763,7 +15764,7 @@ public class AssessmentService {
 				fin.setApprovedDate(new Date());
 				fin.setAssesmentId(assSheet.getAssesmentId());
 				fin.setRecordType("NEW");
-
+				fin.setCreditType("Y");
 				if ("TDS".equals(p.getPayMode())) {
 					fin.setTdsType(tdsDeductee);
 					fin.setTdsPercentage(new BigDecimal(tdsPerc));
@@ -15779,7 +15780,7 @@ public class AssessmentService {
 				fin.setLedgerType("AR");
 				fin.setDocType("RE");
 				fin.setCreditType("Y");
-				fin.setCreditFlag("Y");
+				fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 				fin.setProfitcentreId(assSheet.getProfitcentreId());
 				fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
 				fin.setPartyId(assSheet.getPayablePartyId());
@@ -16449,7 +16450,7 @@ public class AssessmentService {
 			fin.setLedgerType("AR");
 			fin.setDocType("RE");
 			fin.setProfitcentreId(assSheet.getProfitcentreId());
-			fin.setCreditFlag(String.valueOf(assSheet.getCreditType()));
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 			fin.setPartyId(assSheet.getPayablePartyId());
 			fin.setAccSrNo(assSheet.getPartySrNo().intValue());
 			fin.setAcCode(consolidatedData.get(0).getAcCode());
@@ -16471,7 +16472,7 @@ public class AssessmentService {
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
-
+			fin.setCreditType("P");
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
 				fin.setTdsPercentage(new BigDecimal(tdsPerc));

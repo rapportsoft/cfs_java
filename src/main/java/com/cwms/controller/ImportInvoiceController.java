@@ -50,7 +50,7 @@ public class ImportInvoiceController {
 			@PathVariable("assesmentId") String assesmentId,@PathVariable("igmTransId") String igmTransId) throws DocumentException{
 		
 		
-		Map<String,String> compdtl = importinvoiceservice.getCompanyAddressDetails(cid, bid);
+		Map<String,String> compdtl = importinvoiceservice.getCompanyAddressDetails(bid, cid);
 		
 
 
@@ -58,6 +58,7 @@ public class ImportInvoiceController {
 		
 		String billingPartyAddress = invdtl.get("billingPartyAddress1")+" "+invdtl.get("billingPartyAddress2")+" "+invdtl.get("billingPartyAddress3");
 		String consigneeAddress =  invdtl.get("consigneeAddress1")+" "+invdtl.get("consigneeAddress2")+" "+invdtl.get("consigneeAddress3");
+		String branchAddress = compdtl.get("baddr1")+" "+compdtl.get("baddr2")+" "+compdtl.get("baddr3");
 		if(consigneeAddress.contains("null"))
 			consigneeAddress="";
 //		System.out.println(invdtl.toString());
@@ -72,12 +73,12 @@ public class ImportInvoiceController {
 		List<Map<String,String>> list1 = new ArrayList<>();
 		DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 		
-		Object opdtl1 = importinvoicerepo.getPrevInvDtl(cid, bid, invoiceNo, assesmentId, igmTransId);
-		
-		Object[] columns = (Object[]) opdtl1;
-		
-		String previnvNo = (String)columns[2];
-		
+//		Object opdtl1 = importinvoicerepo.getPrevInvDtl(cid, bid, invoiceNo, assesmentId, igmTransId);
+//		
+//		Object[] columns = (Object[]) opdtl1;
+//		
+//		String previnvNo = (String)columns[2];
+//		
 		
 		
 		
@@ -98,7 +99,11 @@ public class ImportInvoiceController {
 			    String vessel = (String)row[18];
 			    String typeOfContainer = (String)row[14];
 			    String commodityDesc = (String)row[21];
-			    String chaName = (String)row[24];
+			    
+			    String chaName = (String)row[23];
+			    String lastInvNO = (String)row[24];
+			    
+			    String invUpto = (String)row[25];
 //			   
 			    System.out.println("IGM No: " + igmNo + ", BL No: " + blNo + ", BL Date: " + blDate);
 //			    
@@ -130,8 +135,16 @@ public class ImportInvoiceController {
 			    if(!opdtlmap.containsKey("commodityDesc"))
 			    	opdtlmap.put("commodityDesc", commodityDesc);
 			    
+			
+			    
 			    if(!opdtlmap.containsKey("chaName"))
 			    	opdtlmap.put("chaName", chaName);
+			    
+			    if(!opdtlmap.containsKey("lastInvNO"))
+			    	opdtlmap.put("lastInvNO", lastInvNO);
+			    
+			    if(!opdtlmap.containsKey("invUpto"))
+			    	opdtlmap.put("invUpto", invUpto);
 			    
 			    
 			    
@@ -139,7 +152,8 @@ public class ImportInvoiceController {
 			    map1.put("containerNo",(String)row[6]);
 			    map1.put("containerSize",(String)row[7]);
 			    map1.put("containerType",(String)row[8]);
-			    
+			    map1.put("GateOutType",(String)row[15]);
+			    map1.put("typeOfContainer",(String)row[14]);
 //			    map1.put("conthandlgch", decimalFormat.format((BigDecimal) row[16]));
 			    BigDecimal conthandlgch = (BigDecimal) row[16];
 			    String hndl =String.format("%.2f",conthandlgch);
@@ -173,6 +187,7 @@ public class ImportInvoiceController {
 		context.setVariable("consigneeAddress", consigneeAddress);
 		context.setVariable("invoiceNo",invoiceNo );
 		context.setVariable("invoiceDate", invdtl.get("invoiceDate"));
+		context.setVariable("invoicevalDate", invdtl.get("invoicevalDate"));
 		context.setVariable("shippingLine", invdtl.get("shippingLine"));
 		context.setVariable("shippingAgent", invdtl.get("shippingAgent"));
 		context.setVariable("BillingParty", invdtl.get("BillingParty"));
@@ -190,6 +205,11 @@ public class ImportInvoiceController {
 		context.setVariable("cin", compdtl.get("cin"));
 		context.setVariable("pan", compdtl.get("pan"));
 		context.setVariable("state", compdtl.get("state"));
+		context.setVariable("email", compdtl.get("email"));
+		context.setVariable("branchAddress", branchAddress);
+		context.setVariable("branchPin", compdtl.get("branchPin"));
+		context.setVariable("companyPin", compdtl.get("companyPin"));
+		
 		
 		
 		context.setVariable("igmNo",opdtlmap.get("igmNo") );
@@ -202,7 +222,8 @@ public class ImportInvoiceController {
 		context.setVariable("typeOfContainer",opdtlmap.get("typeOfContainer") );
 		context.setVariable("cargo",opdtlmap.get("commodityDesc") );
 		context.setVariable("cha",opdtlmap.get("chaName") );
-		context.setVariable("previnvNo",previnvNo);
+		context.setVariable("lastInvNO",opdtlmap.get("lastInvNO"));
+		context.setVariable("invUpto",opdtlmap.get("invUpto"));
 		
 		
 		context.setVariable("list1",list1);
@@ -217,6 +238,7 @@ public class ImportInvoiceController {
     	    String bankAddr = (String)fields[3];
     	    
     	    
+    	    
     	    context.setVariable("bankName",bankName);
     		context.setVariable("bankAcc",bankAccNo);
     		context.setVariable("bankIfsc",bankifsc);
@@ -226,6 +248,7 @@ public class ImportInvoiceController {
     	}
 		
 		List<Object[]> paydtl = importinvoicerepo.getPaymentDetails(cid, bid,invoiceNo);
+		String creditFlag ="";
 		List<Map<String,String>> paymap = new ArrayList<>();
 		
 		if(!paydtl.isEmpty()) {
@@ -238,7 +261,10 @@ public class ImportInvoiceController {
 		    	    String bankDetail = (String)row[3];
 		    	    
 		    	    BigDecimal amnt = (BigDecimal) row[4];
-				    String amount =String.format("%.2f",amnt);
+//				    String amount =String.format("%.2f",amnt);
+		    	    String amount = amnt.setScale(2, BigDecimal.ROUND_DOWN).toString(); 
+				    
+				    creditFlag = (row[6] != null) ? row[6].toString() : "N";
 				    
 				    map2.put("paymode",paymode);
 				    map2.put("checqNO",checqNO);
@@ -246,11 +272,16 @@ public class ImportInvoiceController {
 				    map2.put("bankDetail",bankDetail);
 				    map2.put("amount",amount);
 				    
+				    
 				    paymap.add(map2);
 				
 			}
 
     	    context.setVariable("list2",paymap);
+    	    context.setVariable("creditFlag",creditFlag);
+    	    
+    	    
+    	    
     	    
     	    String recievedpayment ="";
     	    BigDecimal sum3 = BigDecimal.ZERO;
@@ -262,7 +293,8 @@ public class ImportInvoiceController {
     	    	
     	    }
     	    
-    	    recievedpayment = String.format("%.2f",sum3);
+//    	    recievedpayment = String.format("%.2f",sum3);
+    	    recievedpayment = sum3.setScale(2, BigDecimal.ROUND_DOWN).toString();
 			
 			 
 			
@@ -359,7 +391,9 @@ public class ImportInvoiceController {
 			
 			System.out.println("sum is "+sum);
 			System.out.println("sacwiseAddition "+bysacTotal.toString()+"sac desc"+sacDesc.toString());
-			String total_Sum =String.format("%.2f",sum);
+//			String total_Sum =String.format("%.2f",sum);
+			
+			String total_Sum =sum.setScale(2, BigDecimal.ROUND_DOWN).toString();
 			context.setVariable("total_Sum",total_Sum);
 			
 //			Map<String ,String> taxamount1 = new HashMap<>();
@@ -367,9 +401,10 @@ public class ImportInvoiceController {
 			for(String sac :bysacTotal.keySet()) {
 				Map<String, String> entry = new HashMap<>();
 				entry.put("sac", sac);
-				entry.put("sacDesc1", sacDesc.getOrDefault(sac, "N/A"));
-				String sact1 =String.format("%.2f",bysacTotal.get(sac));
+				entry.put("sacDesc1", sacDesc.getOrDefault(sac, ""));
+//				String sact1 =String.format("%.2f",bysacTotal.get(sac));
 				
+				String sact1 = bysacTotal.get(sac).setScale(2, BigDecimal.ROUND_DOWN).toString();
 				
 				entry.put("sact1",sact1);
 				
@@ -391,11 +426,17 @@ public class ImportInvoiceController {
 						
 						System.out.println("tax perc"+taxperc);
 						BigDecimal taxAmount = totalAmt.multiply(taxperc); 
+						taxAmount =taxAmount.setScale(2, BigDecimal.ROUND_DOWN);
+						
+						
 												
 						BigDecimal finalamt = totalAmt.add(taxAmount);
 						
-						 String taxAmountI1 =String.format("%.2f",taxAmount);
-						 String finalamtI1 =String.format("%.2f",finalamt);
+//						 String taxAmountI1 =String.format("%.2f",taxAmount);
+						 String taxAmountI1 =taxAmount.toString();
+//						 String finalamtI1 =String.format("%.2f",finalamt);
+						 String finalamtI1= finalamt.setScale(2, BigDecimal.ROUND_DOWN).toString();
+						 
 						 String taxperc1 =String.format("%.2f",taxperc.multiply(BigDecimal.valueOf(100)));
 						 
 						 boolean isMatch = importinvoiceservice.sacNoAndTaxpercMatch(sac,taxperc1.trim() ,itemList );
@@ -432,6 +473,8 @@ public class ImportInvoiceController {
 //						Map<String,String> map2 = new HashMap<>();
 						
 						BigDecimal totalAmt =bysacTotal.get(sac);
+						System.out.println("totalAmt"+totalAmt);
+						
 						
 						BigDecimal taxperc = BigDecimal.valueOf(taxpair.get("CGST")).divide(BigDecimal.valueOf(100)).add( BigDecimal.valueOf(taxpair.get("SGST")).divide(BigDecimal.valueOf(100)));
 						
@@ -440,15 +483,23 @@ public class ImportInvoiceController {
 						BigDecimal halftaxperc = taxperc.divide(new BigDecimal("2.00"), 2, RoundingMode.HALF_UP);
 						
 						BigDecimal taxAmount = totalAmt.multiply(halftaxperc); 
+						taxAmount=taxAmount.setScale(2, BigDecimal.ROUND_DOWN);
+						System.out.println("taxAmount"+taxAmount);
 						
 						BigDecimal totaltaxamt = taxAmount.multiply(BigDecimal.valueOf(2));
+						
+						System.out.println("totaltaxamt"+totaltaxamt);
 												
 						BigDecimal finalamt = totalAmt.add(totaltaxamt);
+						System.out.println("finalamt"+finalamt);
 						
-						System.out.println("finalamt "+finalamt);
-						
-						 String taxAmountI1 =String.format("%.2f",taxAmount);
-						 String finalamtI1 =String.format("%.2f",finalamt);
+//						 String taxAmountI1 =String.format("%.2f",taxAmount);
+						String taxAmountI1 =taxAmount.setScale(2, BigDecimal.ROUND_DOWN).toString();
+//						 String finalamtI1 =String.format("%.2f",finalamt);
+						 String finalamtI1= finalamt.setScale(2, BigDecimal.ROUND_DOWN).toString();
+						 System.out.println("finalamtI1"+finalamtI1);
+						 System.out.println("taxAmountI1"+taxAmountI1);
+						 
 						 String taxperc1 =String.format("%.2f",taxperc.multiply(BigDecimal.valueOf(100)));
 						 
 						 boolean isMatch = importinvoiceservice.sacNoAndTaxpercMatch(sac,taxperc1.trim() ,itemList );
@@ -506,8 +557,12 @@ public class ImportInvoiceController {
 				
 			}
 			
-			 sumint = String.format("%.2f",sum1);
-			 finaltotal = String.format("%.2f",sum2);;
+//			 sumint = String.format("%.2f",sum1);
+			
+			 sumint= sum1.setScale(2, BigDecimal.ROUND_DOWN).toString();
+//			 finaltotal = String.format("%.2f",sum2);
+			 
+			 finaltotal= sum2.setScale(2, BigDecimal.ROUND_DOWN).toString();
 			 
 			 System.out.println("sumint"+sumint+" finaltotal"+finaltotal);
 			 
@@ -638,7 +693,7 @@ public class ImportInvoiceController {
 			@PathVariable("selectedInvoice") String selectedInvoice) throws DocumentException{
 		
 		
-		Map<String,String> compdtl = importinvoiceservice.getCompanyAddressDetails(cid, bid);
+		Map<String,String> compdtl = importinvoiceservice.getCompanyAddressDetails(bid, cid);
 		
 
 

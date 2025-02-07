@@ -1888,7 +1888,9 @@ public class ExcelUploadController {
 
 	        if (!content.isEmpty()) {
 	            content1.forEach(c -> {
+	     
 	                Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
+	      
 	                if (check) {
 	                    Map<String, String> add = new HashMap<>();
 	                    add.put("Container no", c.get(8));
@@ -2237,7 +2239,7 @@ public class ExcelUploadController {
 		}
 
 		// Replace "F " with a new line to indicate record boundaries
-		String processedContent = content.toString().replace("F", "\n");
+		String processedContent = content.toString().replace("FIN", "\n");
 
 		// Split by new line to get each record
 		String[] lines = processedContent.split("\n");
@@ -2294,9 +2296,11 @@ public class ExcelUploadController {
 				}
 			}
 		}
+		
+		String replaceContent = String.valueOf(content).substring(0, 6);
 
 		// Replace "F " with a new line to indicate record boundaries
-		String processedContent = content.toString().replace("F", "\n");
+		String processedContent = content.toString().replace(replaceContent, "\n");
 
 		// Split by new line to get each record
 		String[] lines = processedContent.split("\n");
@@ -2304,6 +2308,8 @@ public class ExcelUploadController {
 		// Process each line
 		for (String record : lines) {
 			// Split by the delimiter " "
+			
+			System.out.println("record "+record);
 			String[] fields = record.split("");
 
 			// Store each field as a list of strings

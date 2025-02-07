@@ -60,9 +60,9 @@ public interface DestuffCrgRepository extends JpaRepository<DestuffCrg, String> 
 	
 	
 	
-	@Query(value = "select DISTINCT cn.destuffWoTransId, DATE_FORMAT(cn.destuffWoDate, '%d/%m/%Y %h:%i'), c.igmLineNo, c.igmNo, crg.beNo, "
-	        + "DATE_FORMAT(crg.beDate, '%d/%m/%Y %h:%i'), crg.chaName, crg.importerName, p1.partyName, crg.commodityDescription, d.containerNo, "
-	        + "d.containerSize, d.containerType, DATE_FORMAT(d.gateInDate, '%d/%m/%Y %h:%i'), GROUP_CONCAT(j.jarDtlDesc), cn.typeOfContainer, d.containerSealNo "
+	@Query(value = "select DISTINCT cn.destuffWoTransId, DATE_FORMAT(cn.destuffWoDate, '%d/%m/%Y %H:%i'), c.igmLineNo, c.igmNo, crg.beNo, "
+	        + "DATE_FORMAT(crg.beDate, '%d/%m/%Y %H:%i'), crg.chaName, crg.importerName, p1.partyName, crg.commodityDescription, d.containerNo, "
+	        + "d.containerSize, d.containerType, DATE_FORMAT(d.gateInDate, '%d/%m/%Y %H:%i'), GROUP_CONCAT(j.jarDtlDesc), cn.typeOfContainer, d.containerSealNo "
 	        + "from DestuffCrg c "
 	        + "LEFT OUTER JOIN Destuff d ON c.companyId = d.companyId and c.branchId = d.branchId and c.igmTransId = d.igmTransId "
 	        + "and c.profitcentreId = d.profitcentreId and c.igmNo = d.igmNo and c.deStuffId = d.deStuffId "
@@ -83,9 +83,9 @@ public interface DestuffCrgRepository extends JpaRepository<DestuffCrg, String> 
 	
 	
 	
-	@Query(value = "select DISTINCT cn.destuffWoTransId, DATE_FORMAT(cn.destuffWoDate, '%d/%m/%Y %h:%i'), c.igmLineNo, c.igmNo, crg.beNo, "
-	        + "DATE_FORMAT(crg.beDate, '%d/%m/%Y %h:%i'), crg.chaName, crg.importerName, p1.partyName, crg.commodityDescription, d.containerNo, "
-	        + "d.containerSize, d.containerType, DATE_FORMAT(d.gateInDate, '%d/%m/%Y %h:%i'), GROUP_CONCAT(j.jarDtlDesc), cn.typeOfContainer, d.containerSealNo "
+	@Query(value = "select DISTINCT cn.destuffWoTransId, DATE_FORMAT(cn.destuffWoDate, '%d/%m/%Y %H:%i'), c.igmLineNo, c.igmNo, crg.beNo, "
+	        + "DATE_FORMAT(crg.beDate, '%d/%m/%Y %H:%i'), crg.chaName, crg.importerName, p1.partyName, crg.commodityDescription, d.containerNo, "
+	        + "d.containerSize, d.containerType, DATE_FORMAT(d.gateInDate, '%d/%m/%Y %H:%i'), GROUP_CONCAT(j.jarDtlDesc), cn.typeOfContainer, d.containerSealNo "
 	        + "from DestuffCrg c "
 	        + "LEFT OUTER JOIN Destuff d ON c.companyId = d.companyId and c.branchId = d.branchId and c.igmTransId = d.igmTransId "
 	        + "and c.profitcentreId = d.profitcentreId and c.igmNo = d.igmNo and c.deStuffId = d.deStuffId "

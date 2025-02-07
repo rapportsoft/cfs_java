@@ -22,7 +22,11 @@
 			tr {
 				page-break-inside: avoid;
 			}
+			
+			
 		}
+		
+		
 
 		.blank-cell {
 			border: none;
@@ -257,23 +261,27 @@
 
 					
 					<span th:text="${cname}" 
-						  style="text-transform: uppercase; font-weight: bold; font-size: 16px; color: rgb(0, 128, 0);">
+						  style="font-weight: bold; font-size: 18px; color: rgb(0, 128, 0);">
 						
 					</span><br />
 					
-					<span th:text="${cadd1}" 
-						  style="font-weight: bold; font-size: 9px; height: 160px;">
+					<span th:text="'CFS :'+${branchAddress}+','+${branchPin}" 
+     						 style="font-weight: bold; font-size: 10px;">
+					</span> <br />
+					
+					<span th:text="|Regd Office: ${cadd1} ${cadd2} ${cadd3}|" 
+						  style="font-weight: bold; font-size: 10px; height: 160px;">
 						  
 					</span> <br />
 					
-					<span th:text="${cadd2}" 
+				<!--	<span th:text="${cadd2}" 
 						  style="font-weight: bold; font-size: 9px; height: 160px;">
 						 
 					</span><br />
 					<span th:text="${cadd3}" 
 						  style="font-weight: bold; font-size: 9px; height: 160px;">
 						 
-					</span><br />
+					</span><br />   -->
 					
 					
 					
@@ -282,7 +290,10 @@
 		    GSTN: <span th:text="${gst}"></span> | 
 		    STATE: <span th:text="${state}"></span>|
 		    CIN: <span th:text="${cin}"></span>
-		</span><br /><br />
+		</span><br />
+		<span style="font-weight: bold; font-size: 10px;">
+    Email: <span th:text="${email}"></span>
+</span>
 					
 
 				</td>
@@ -309,28 +320,28 @@
             <table class="table" style="border-collapse: collapse; font-size: 10px !important; width: 100%; table-layout: fixed;">
                 <thead>
                     <tr>
-                        <th style="height: 12px; width: 26%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0); text-align: left;">&nbsp;<b>Invoice Module</b></th>
-                        <th style="height: 12px; width: 74%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span>CFS Import</span></th>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0); text-align: left;">&nbsp;<b>Invoice Module</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span>CFS Import</span></th>
                     </tr>
                     <tr>
-                        <th style="height: 12px; width: 26%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0); text-align: left;">&nbsp;<b>Invoice No</b></th>
-                        <th style="height: 12px; width: 74%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${invoiceNo}"></span> | <b>Invoice Date :</b>&nbsp;<span th:text="${#dates.format(invoiceDate, 'dd/MMM/yyyy ')}"></span> | <b>Validity Date :</b>&nbsp;<span th:text="${#dates.format(invoiceDate, 'dd/MMM/yyyy ')}"></span></th>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0); text-align: left;">&nbsp;<b>Invoice No</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 11.5px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${invoiceNo}"></span> | <b>Invoice Date :</b>&nbsp;<span th:text="${#dates.format(invoiceDate, 'dd/MMM/yyyy ')}"></span> | <b>Validity Date :</b>&nbsp;<span th:text="${#dates.format(invUpto, 'dd/MMM/yyyy HH:mm')}"></span></th>
                     </tr>
                     <tr>
-                        <th style="height: 12px; width: 26%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Service To</b></th>
-                        <th style="height: 12px; width: 74%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Shipping Line</b>: <span th:text="${shippingLine}"></span> <br /> &nbsp;<b>Shipping Agent</b>: <span th:text="${shippingAgent}"></span></th>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Service To</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Shipping Line</b>: <span th:text="${shippingLine}"></span> <br /> &nbsp;<b>Shipping Agent</b>: <span th:text="${shippingAgent}"></span></th>
                     </tr>
                     <tr>
-                        <th style="height: 12px; width: 26%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Billing Party</b></th>
-                        <th style="height: 12px; width: 74%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${BillingParty}"></span></th>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Billing Party</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${BillingParty}"></span></th>
                     </tr>
                     <tr>
-                        <th style="height: 12px; width: 26%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Billing Party Address</b></th>
-                        <th style="height: 12px; width: 74%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${billingPartyAddress}"></span></th>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Billing Party Address</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${billingPartyAddress}"></span></th>
                     </tr>
                     <tr>
-                        <th style="height: 12px; width: 26%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>GSTIN &amp; PAN No</b></th>
-                        <th style="height: 12px; width: 74%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${GSTIN}"></span> | <b>PAN :</b>&nbsp;<span th:text="${PAN}"></span></th>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>GSTIN &amp; PAN No</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${GSTIN}"></span> | <b>PAN :</b>&nbsp;<span th:text="${PAN}"></span></th>
                     </tr>
                     <tr>
                         <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>State :</b></th>
@@ -346,7 +357,7 @@
                     </tr>
                     <tr>
                         <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>IRN</b></th>
-                        <th style="height: 12px; width: 60%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${IRN != null and IRN != '' ? IRN : 'NO IRN'}"></span></th>
+                        <th style="height: 12px; width: 60%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0); ">&nbsp;<span th:text="${IRN != null and IRN != '' ? IRN : ''}"></span></th>
                     </tr>
                 </thead>
             </table>
@@ -608,7 +619,7 @@
 				<th style="height: 12px; width: 22%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;text-align: left;">
 					<b>Previous Invoice</b>
 				</th>
-				<td style ="border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${previnvNo ?: ''}"></td>
+				<td style ="border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${lastInvNO ?: ''}"></td>
 			</tr>
             </table>
         </td>
@@ -628,7 +639,7 @@
 				
 
 				<th
-					style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					style="height: 12px; width: 13%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
 					<b>Container No</b></th>
 				<th
 					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
@@ -643,7 +654,7 @@
 				
 				
 				<th
-					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					style="height: 12px; width: 7%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
 					<b>Haz Flag</b></th>
 				<th
 					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
@@ -656,7 +667,7 @@
 					<b>Container Handling Charges</b></th>
 
 					<th
-					style="height: 12px; width: 20%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					style="height: 12px; width: 25%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
 					<b>Container Storage Charges</b></th>
 
 
@@ -668,34 +679,34 @@
 				style="height: 12px;  text-align: center; border: 1px solid rgb(0, 0, 0);">
 			
 			
-				<td th:text="${list1?.containerNo != null ? list1.containerNo : 'N/A'}"
-					style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
-				</td>
-			
-				<td th:text="${list1?.containerSize != null ? list1.containerSize : 'N/A'}"
-					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
-				</td>
-				<td th:text="${list1?.containerType != null ? list1.containerType : 'N/A'}"
-					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
-				</td>
-			
-				<td 
-					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
-				</td>
-				<td 
-					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
-				</td>
-				<td th:text="${list1?.weight != null ? list1.weight.toString() : 'N/A'}"
-					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
-				</td>
-				<td th:text="${list1?.arrivalDate != null ? list1.arrivalDate : 'N/A'}"
+				<td th:text="${list1?.containerNo != null ? list1.containerNo : ''}"
 					style="height: 12px; width: 13%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
 				</td>
-				<td th:text="${list1?.conthandlgch != null ? list1.conthandlgch : 'N/A'}"
+			
+				<td th:text="${list1?.containerSize != null ? list1.containerSize : ''}"
+					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.containerType != null ? list1.containerType : ''}"
+					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+			
+				<td th:text="${list1?.GateOutType == 'CON' ? 'L' : (list1?.GateOutType == 'CRG' ? 'D' : '')}"
+					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.typeOfContainer == 'Hazardous' ? 'Yes' : 'No'}"
+					style="height: 12px; width: 7%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.weight != null ? list1.weight.toString() : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.arrivalDate != null ? list1.arrivalDate : ''}"
+					style="height: 12px; width: 13%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.conthandlgch != null ? list1.conthandlgch : ''}"
 					style="height: 12px; width: 22%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
 				</td>
-				<td th:text="${list1?.contstrgch != '' ? list1.contstrgch : 'N/A'}"
-					style="height: 12px; width: 20%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				<td th:text="${list1?.contstrgch != '' ? list1.contstrgch : ''}"
+					style="height: 12px; width: 25%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
 				</td>
 			
 			</tr>
@@ -733,12 +744,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="payment : ${list2}">
-			<td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.paymode != null and payment.paymode != '' ? payment.paymode : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;font-size: 12px !important;" th:text="${payment.checqNO != null and payment.checqNO != '' ? payment.checqNO : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.checqDate != null and payment.checqDate != '' ? payment.checqDate : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.bankDetail != null and payment.bankDetail != '' ? payment.bankDetail : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.amount != null and payment.amount != '' ? payment.amount : 'N/A'}"></td>
+			<tr th:each="payment : ${list2}" th:if="${creditFlag != 'Y'}">
+			<td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.paymode != null and payment.paymode != '' ? payment.paymode : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;font-size: 12px !important;" th:text="${payment.checqNO != null and payment.checqNO != '' ? payment.checqNO : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.checqDate != null and payment.checqDate != '' ? payment.checqDate : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.bankDetail != null and payment.bankDetail != '' ? payment.bankDetail : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.amount != null and payment.amount != '' ? payment.amount : ''}"></td>
 			</tr>
 		</tbody>
 	</table>
@@ -753,9 +764,9 @@
 					style="height: 12px; width: 15%;  border: 1px solid rgb(0, 0, 0);  font-size: 10px !important; text-align: center; ">
 					<b> Total Received Amount In Words: </b></th>
 				<th style="height: 12px; width: 30%;  border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
-					<b><span th:text="${AmountInWords2}"></span></b></th>
+					<b><span th:text="${creditFlag == 'Y' ? '**' : AmountInWords2}"></span></b></th>
 				<th style="height: 12px; width: 20%;  border: 1px solid rgb(0, 0, 0); font-size: 10px !important;"><b>
-						Total Received Amount: <span th:text="${recievedpayment}"></span></b> </th>
+						Total Received Amount: <span th:text="${creditFlag == 'Y' ? '0.00' : recievedpayment}"></span></b> </th>
 			</tr>
 
 
@@ -854,7 +865,21 @@
 	<span style="font-size: 10px !important;"> 4. It is presumed that all consignments (Import/Export) being received at CFS are adequately insured
 		<br />against all possible risk during
 		transportation and storage and the company assumes No Liability in this respect.
-	</span><br />
+	</span><br /><br />
+	
+	<!-- <span style="font-weight: bold;  font-size: 12px !important;">This is a system-generated Tax-Invoice. No signature
+		is required</span><br /> -->
+	
+	
+<!--  <div class="footer1">
+    <span style="font-weight: bold; font-size: 12px !important;">
+        This is a system-generated Tax-Invoice. No signature is required.
+    </span><br />
+    <hr style="background-color: rgb(0, 0, 0); height: 1px; border: none;" />
+</div>  -->
+
+
+	
 
 </body>
 
