@@ -85,7 +85,7 @@ public class CFIgm {
     @Column(name = "Comments", length = 150)
     private String comments;
 
-    @Column(name = "Port_JO", length = 9)
+    @Column(name = "Port_JO", length = 10)
     private String portJo;
 
     @Column(name = "Port_JO_Date")

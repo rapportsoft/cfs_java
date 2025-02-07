@@ -135,6 +135,8 @@ public class CfIgmController {
 				igm.setCreatedDate(new Date());
 				igm.setApprovedBy(user);
 				igm.setApprovedDate(new Date());
+				igm.setPortJo(igm.getIgmNo());
+				igm.setPortJoDate(new Date());
 				cfigmrepo.save(igm);
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05060", HoldNextIdD1, "2024");
@@ -159,6 +161,7 @@ public class CfIgmController {
 
 				igm.setEditedBy(user);
 				igm.setEditedDate(new Date());
+				igm.setPortJo(igm.getIgmNo());
 				cfigmrepo.save(igm);
 
 				return new ResponseEntity<>(igm, HttpStatus.OK);
