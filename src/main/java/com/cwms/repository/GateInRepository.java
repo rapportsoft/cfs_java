@@ -606,7 +606,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
 	
 	
-	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %h:%i'),g.containerNo,g.containerSize,"
+	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
 			+ "g.containerType,g.vehicleNo,g.transporterName,p3.partyName,p1.partyName,p2.partyName,g.containerHealth,g.comments,g.createdBy "
 			+ "from GateIn g "
 			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sl=p1.partyId "
@@ -616,7 +616,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	Object getExportMtyContainerGateInReport(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
 	
 	
-	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %h:%i'),g.containerNo,g.containerSize,"
+	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
 			+ "g.containerType,g.containerSealNo,g.vehicleNo,g.transporterName,g.gateInType,g.importerName,p1.partyName,p2.partyName,"
 			+ "p3.partyName,g.containerHealth,g.commodityDescription,g.remarks "
 			+ "from GateIn g "

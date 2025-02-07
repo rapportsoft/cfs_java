@@ -516,7 +516,7 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 	
 	
 	@Query(value="select DISTINCT e.stuffReqId,DATE_FORMAT(e.stuffReqDate,'%d/%m/%Y'),p1.partyName,p2.partyName,"
-			+ "v.vesselName,e.containerNo,e.containerSize,e.containerType,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y %h:%i'),"
+			+ "v.vesselName,e.containerNo,e.containerSize,e.containerType,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y %H:%i'),"
 			+ "e.exporterName,e.cargoDescription,e.typeOfPackage,e.noOfPackagesStuffed,e.cargoWeight "
 			+ "from ExportStuffRequest e "
 			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent=p1.partyId "
@@ -542,7 +542,7 @@ List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String compan
 	
 	
 	@Query(value="select e.stuffReqId,DATE_FORMAT(e.stuffReqDate,'%d/%m/%Y'),p1.partyName,p2.partyName,"
-			+ "v.vesselName,e.containerNo,e.containerSize,e.containerType,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y %h:%i'),"
+			+ "v.vesselName,e.containerNo,e.containerSize,e.containerType,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y %H:%i'),"
 			+ "e.exporterName,e.cargoDescription,e.typeOfPackage,e.noOfPackagesStuffed,e.cargoWeight "
 			+ "from ExportStuffRequest e "
 			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.shippingAgent=p1.partyId "

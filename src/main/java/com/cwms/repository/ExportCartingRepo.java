@@ -268,7 +268,7 @@ public interface ExportCartingRepo extends JpaRepository<ExportCarting, String>
 	
 	//Reports
 	
-		@Query(value="select e.cartingTransId,DATE_FORMAT(e.cartingTransDate,'%d/%m/%Y %h:%i'),e.vehicleNo,e.sbNo,"
+		@Query(value="select e.cartingTransId,DATE_FORMAT(e.cartingTransDate,'%d/%m/%Y %H:%i'),e.vehicleNo,e.sbNo,"
 				+ "e.gateInPackages,e.actualNoOfPackages "
 				+ "from ExportCarting e "
 				+ "where e.companyId=:cid and e.branchId=:bid and e.status != 'D' and e.cartingTransId=:id")

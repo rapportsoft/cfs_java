@@ -79,7 +79,7 @@ public interface ExportGatePassRepo extends JpaRepository<ExportGatePass, String
 	
 	
 	
-	@Query(value="select e.gatePassId,DATE_FORMAT(e.gatePassDate,'%d/%m/%Y %h:%i'),e.containerNo,e.containerSize,"
+	@Query(value="select e.gatePassId,DATE_FORMAT(e.gatePassDate,'%d/%m/%Y %H:%i'),e.containerNo,e.containerSize,"
 			+ "e.containerType,e.pol,e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),e.pod,e.customsSealNo,e.agentSealNo,"
 			+ "e.grossWt,e.vehicleNo,e.transporterName,v.vesselName,e.voyageNo,p1.partyName,p2.partyName,e.comments "
 			+ "from ExportGatePass e "
@@ -90,7 +90,7 @@ public interface ExportGatePassRepo extends JpaRepository<ExportGatePass, String
 			+ "where e.companyId=:cid and e.branchId=:bid and e.gatePassId=:id and e.status = 'A'")
 	List<Object[]> getGatepassDataForReport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 	
-	@Query(value="select e.gatePassId,DATE_FORMAT(e.gatePassDate,'%d/%m/%Y %h:%i'),e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),"
+	@Query(value="select e.gatePassId,DATE_FORMAT(e.gatePassDate,'%d/%m/%Y %H:%i'),e.sbNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),"
 			+ "e.vehicleNo,e.backToTownPackages,p1.partyName,crg.grossWeight,sb.exporterName,crg.commodity,p2.partyName "
 			+ "from ExportGatePass e "
 			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.cha=p1.partyId "		
