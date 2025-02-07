@@ -242,8 +242,11 @@
 			<tr>
 				<td style="width: 40%;border-right: 2px solid black">
 					<!-- Add the following Thymeleaf code to include the image in your HTML -->
-					<img th:src="@{C:/Container Freight Station/Logos/logo.png}"
+					<img th:src="@{file://C:/CFSNAV/Logos/logo.png}"
 						alt=" Logo" style="display: block;width:250px;" />
+						
+						
+						
 				</td>
 				<td style="width: 60%;">
 
@@ -365,7 +368,7 @@
 
         <!-- Image Column -->
         <td style="width: 30%; text-align: center; vertical-align: middle;">
-            <img th:src="@{C:/Container Freight Station/Logos/sampleQR.jpeg}" style="width: 150px; height: 150px;" alt="QR Code" />
+            <img th:src="@{file://C:/CFSNAV/Logos/sampleQR.jpeg}" style="width: 150px; height: 150px;" alt="QR Code" />
         </td>
     </tr>
 </table>

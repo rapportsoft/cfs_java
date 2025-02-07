@@ -173,6 +173,15 @@ public class ImportInvoiceService {
         	company.put("cin",(String) fields[11]);
         	company.put("pan",(String) fields[12]);
         	company.put("state",(String) fields[6]);
+        	company.put("email",(String) fields[18]);
+        	
+        	company.put("baddr1",(String) fields[2]);
+        	company.put("baddr2",(String) fields[3]);
+        	company.put("baddr3",(String) fields[4]);
+        	company.put("branchPin",(String) fields[8]);
+        	company.put("companyPin",(String) fields[17]);
+        	
+        	
         	
 
 		}
