@@ -13,7 +13,7 @@ public class CfinvsrvanxId implements Serializable {
 	private String taxId;
 	private String erpDocRefNo;
 	private BigDecimal srlNo;
-	private String processTransLineId;
+//	private String processTransLineId;
 	public CfinvsrvanxId() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -21,8 +21,10 @@ public class CfinvsrvanxId implements Serializable {
 	
 	
 	
+
+
 	public CfinvsrvanxId(String companyId, String branchId, String processTransId, String serviceId, String taxId,
-			String erpDocRefNo, BigDecimal srlNo, String processTransLineId) {
+			String erpDocRefNo, BigDecimal srlNo) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -31,8 +33,9 @@ public class CfinvsrvanxId implements Serializable {
 		this.taxId = taxId;
 		this.erpDocRefNo = erpDocRefNo;
 		this.srlNo = srlNo;
-		this.processTransLineId = processTransLineId;
 	}
+
+
 
 
 
@@ -81,11 +84,14 @@ public class CfinvsrvanxId implements Serializable {
 
 
 
+
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(branchId, companyId, erpDocRefNo, processTransId, processTransLineId, serviceId, srlNo,
-				taxId);
+		return Objects.hash(branchId, companyId, erpDocRefNo, processTransId, serviceId, srlNo, taxId);
 	}
+
+
 
 
 
@@ -100,24 +106,12 @@ public class CfinvsrvanxId implements Serializable {
 		CfinvsrvanxId other = (CfinvsrvanxId) obj;
 		return Objects.equals(branchId, other.branchId) && Objects.equals(companyId, other.companyId)
 				&& Objects.equals(erpDocRefNo, other.erpDocRefNo)
-				&& Objects.equals(processTransId, other.processTransId)
-				&& Objects.equals(processTransLineId, other.processTransLineId)
-				&& Objects.equals(serviceId, other.serviceId) && Objects.equals(srlNo, other.srlNo)
-				&& Objects.equals(taxId, other.taxId);
+				&& Objects.equals(processTransId, other.processTransId) && Objects.equals(serviceId, other.serviceId)
+				&& Objects.equals(srlNo, other.srlNo) && Objects.equals(taxId, other.taxId);
 	}
 
 
 
-	public String getProcessTransLineId() {
-		return processTransLineId;
-	}
-
-
-
-	public void setProcessTransLineId(String processTransLineId) {
-		this.processTransLineId = processTransLineId;
-	}
-	
 	
 	
 

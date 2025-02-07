@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http//www.thymeleaf.org">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Export Invoice</title>
+
+	<style>
+		/* Define page size and margins here */
+		@page {
+			margin: 0.7cm;
+			margin-top: 0.5cm;
+			/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+
+		}
+
+		@media print {
+			tbody {
+				display: table-row-group;
+			}
+
+			tr {
+				page-break-inside: avoid;
+			}
+			
+			
+		}
+		
+		
+
+		.blank-cell {
+			border: none;
+			padding: 0;
+			/* Optional: remove any padding/margin */
+		}
+
+		.underline {
+			border-bottom: 1px solid black;
+			/* You can customize the color and style of the underline */
+			display: inline-block;
+			/* Ensures that the underline only spans the width of the text */
+			padding-bottom: 2px;
+			/* Adjust this value to control the distance between the text and the underline */
+		}
+
+		.page-break {
+			page-break-before: always;
+		}
+
+		p {
+			font-size: 12pt;
+			padding: 0;
+			margin: 3px;
+		}
+
+		h1 {
+			font-size: 20pt;
+			margin: 0;
+			padding: 0;
+		}
+
+		th {
+			font-size: 10pt;
+		}
+
+		td {
+			font-size: 9pt;
+		}
+
+		/* Center text horizontally and vertically */
+		.text-center {
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.margin-top {
+			margin-top: 20px;
+		}
+
+		.text-right {
+			text-align: right;
+			display: flex;
+			justify-content: right;
+			align-items: right;
+			margin-top: 40px;
+		}
+
+
+		.text-right1 {
+			text-align: right;
+			display: flex;
+			justify-content: right;
+			align-items: right;
+
+		}
+
+		.text-left1 {
+			text-align: left;
+			display: flex;
+			justify-content: left;
+			align-items: left;
+
+		}
+
+		.invisible-border {
+			border-collapse: collapse;
+			border-color: transparent;
+			/* Set border color to transparent */
+		}
+
+		.invisible-border th,
+		.invisible-border td {
+			border: 1px solid transparent;
+			/* Set border to transparent for table cells */
+		}
+
+
+		/* Style tables */
+		.table {
+			width: 100%;
+			border-collapse: collapse;
+			border-spacing: 0;
+		}
+		
+
+		.table th,
+		.table td {
+			/* text-align: center;
+	justify-content: center; */
+			align-items: center;
+			border: 1px solid grey;
+			color: graytext;
+		}
+
+		.table thead {
+			height: 20px;
+		}
+
+		.table td {
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+
+		.customer {
+			width: 100%;
+			overflow: hidden;
+			/* Clear any floats */
+			margin-top: 1pt;
+		}
+
+		.part-1 {
+			font-size: 10pt;
+			width: 65%;
+			float: left;
+		}
+
+		.part-2 {
+			font-size: 10pt;
+			width: 35%;
+			float: right;
+		}
+
+		.page-break {
+			page-break-before: always;
+		}
+
+		.current-date {
+			font-size: 12pt;
+			padding: 0;
+			margin: 3px;
+			text-align: end;
+		}
+
+		.current-date1 {
+			font-size: 12pt;
+			padding: 0;
+
+			text-align: end;
+		}
+
+
+		.page-break {
+			page-break-before: always;
+		}
+
+		p br {
+			content: " ";
+			/* Add a space character */
+			margin-top: 0.1px;
+			/* Adjust the margin-top value as needed */
+			display: block;
+			/* Ensure the space is displayed */
+		}
+
+		table.table th,
+		table.table td {
+			font-weight: normal;
+			/* Set the font weight to normal */
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<script>
+		// JavaScript code to get the current date and update the span element
+		const currentDateElement = document.getElementById('currentDate');
+		const currentDate = new Date().toLocaleDateString('en-US');
+		currentDateElement.textContent = currentDate;
+	</script>
+
+	<!--
+	 Add the following Thymeleaf code to include the image in your HTML 
+	<img th:src="@{file:///E:/02-12-2023/02-12-22/Java/EYMS/EYMS/src/main/resources/static/image/Karanja_logo%20(1).png}"
+		alt="DGDC LIMITED Logo" style="width: 10%; height: 10%; display: block; margin: 0 auto;" />
+	<br />
+
+
+	<div class="text-center" style="margin-top: 8px; margin-bottom: 8px">
+		Company Name: <span th:text="${cid}"></span>
+	</div>
+
+	<div class="text-center" style="margin-top: 8px; margin-bottom: 8px">
+		Branch Name: <span th:text="${bid}"></span>
+	</div>
+	<p class="text-center" style="margin: 1pt;">
+		Empty Container Gate In Report
+	</p>
+-->
+
+
+
+
+	<table >
+		<thead>
+
+		</thead>
+		<tbody>
+			<tr>
+				<td style="width: 40%;border-right: 2px solid black">
+					<!-- Add the following Thymeleaf code to include the image in your HTML -->
+					<img th:src="@{src/main/resources/static/image/logo.png}"
+						alt=" Logo" style="display: block;width:250px;" />
+				</td>
+				<td style="width: 60%;">
+
+
+<!-- 
+					<span style="font-weight: bold; font-size: 10px; height: 160px;"></span> <br />
+
+					<span th:text="${cid}"
+						style="text-transform: uppercase; font-weight: bold; font-size: 18px; color: rgb(0, 128, 0);"></span><br />
+
+					<span th:text="${caddress}" style="font-weight: bold; font-size: 9px; height: 160px;"></span> <br />
+					<span th:text="${caddress1}" style="font-weight: bold; font-size: 9px; height: 160px;"></span>
+					<br />
+					<br /> -->
+
+					
+					<span th:text="${cname}" 
+						  style="font-weight: bold; font-size: 18px; color: rgb(0, 128, 0);">
+						
+					</span><br />
+					
+					<span th:text="'CFS :'+${branchAddress}+','+${branchPin}" 
+     						 style="font-weight: bold; font-size: 10px;">
+					</span> <br />
+					
+					<span th:text="|Regd Office: ${cadd1} ${cadd2} ${cadd3}|" 
+						  style="font-weight: bold; font-size: 10px; height: 160px;">
+						  
+					</span> <br />
+					
+				<!--	<span th:text="${cadd2}" 
+						  style="font-weight: bold; font-size: 9px; height: 160px;">
+						 
+					</span><br />
+					<span th:text="${cadd3}" 
+						  style="font-weight: bold; font-size: 9px; height: 160px;">
+						 
+					</span><br />   -->
+					
+					
+					
+							<span style="font-weight: bold; font-size: 9px;">	
+		    PAN: <span th:text="${pan}"></span> | 
+		    GSTN: <span th:text="${gst}"></span> | 
+		    STATE: <span th:text="${state}"></span>|
+		    CIN: <span th:text="${cin}"></span>
+		</span><br />
+		<span style="font-weight: bold; font-size: 10px;">
+    Email: <span th:text="${email}"></span>
+</span>
+					
+
+				</td>
+
+			</tr>
+		
+		</tbody>
+	</table>
+	
+	
+	
+	<div style="text-align:center;width:80%">
+						<span style="font-weight: bold; font-size: 16px; color: rgb(0, 0, 0);" 
+						 th:text="${isBOS == 'Y' ? 'BILL OF SUPPLY' : 'TAX INVOICE'}"></span>
+				
+					</div>
+
+	<br />
+	
+
+	<table style="width: 100%; border-collapse: collapse; font-size: 10px !important;">
+    <tr>
+        <!-- Table Column -->
+        <td style="width: 70%; vertical-align: top;">
+            <table class="table" style="border-collapse: collapse; font-size: 10px !important; width: 100%; table-layout: fixed;">
+                <thead>
+                    <tr>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0); text-align: left;">&nbsp;<b>Invoice Module</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span>Shipping Bill Carting</span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0); text-align: left;">&nbsp;<b>Invoice No</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 11.5px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${invoiceNo}"></span> | <b>Invoice Date :</b>&nbsp;<span th:text="${#dates.format(invoiceDate, 'dd/MMM/yyyy')}"> </span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Service To</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Shipping Agent</b>: <span th:text="${shippingAgent}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Billing Party</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${BillingParty}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Billing Party Address</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${billingPartyAddress}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 25%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>GSTIN &amp; PAN No</b></th>
+                        <th style="height: 12px; width: 75%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${GSTIN}"></span> | <b>PAN :</b>&nbsp;<span th:text="${PAN}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>State :</b></th>
+                        <th style="height: 12px; width: 60%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${State}"></span> | <b>Place Of Supply :</b>&nbsp;<span th:text="${State}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Agent</b></th>
+                        <th style="height: 12px; width: 60%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${shippingAgent}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Address</b></th>
+                        <th style="height: 12px; width: 60%; font-size: 11px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${Agaddress}"></span></th>
+                    </tr>
+                    
+                     <tr>
+                        <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>Cha</b></th>
+                        <th style="height: 12px; width: 60%; font-size: 12px !important; border: 1px solid rgb(0, 0, 0);">&nbsp;<span th:text="${cha}"></span></th>
+                    </tr>
+                    <tr>
+                        <th style="height: 12px; width: 15%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0);">&nbsp;<b>IRN</b></th>
+                        <th style="height: 12px; width: 60%; font-size: 12px !important; text-align: left; border: 1px solid rgb(0, 0, 0); ">&nbsp;<span th:text="${IRN != null and IRN != '' ? IRN : ''}"></span></th>
+                    </tr>
+                </thead>
+            </table>
+        </td>
+
+        <!-- Image Column -->
+        <td style="width: 30%; text-align: center; vertical-align: middle;">
+            <img th:src="@{src/main/resources/static/image/sampleQR.jpeg}" style="width: 200px; height: 180px;" alt="QR Code" />
+        </td>
+    </tr>
+</table>
+	
+
+	<br />
+
+	<table class="table" style="border-collapse: collapse; font-size: 10px !important;">
+		<thead>
+			<tr>
+				<th
+					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0);  font-size: 10px !important;">
+					<b>SR</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>SAC</b></th>
+				<th
+					style="height: 12px; width: 30%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>SERVICE DESCRIPTION </b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>AMOUNT</b></th>
+				<th th:if="${not (Key ?: false)}" th:each="taxPair : ${taxRatePairs}"
+					style="height: 12px; width: 12%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b th:text="'CGST @ ' + ${taxPair.CGST} + ' %'"></b></th>
+				<th th:if="${not (Key ?: false)}" th:each="taxPair : ${taxRatePairs}"
+					style="height: 12px; width: 12%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b th:text="'SGST @ ' + ${taxPair.SGST} + ' %'"></b></th>
+				<th th:if="${Key}" th:each="taxPair, s1: ${taxRatePairs}"
+					style="height: 12px; width: 20%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>IGST @ <span th:text="${taxRatePairs[s1.index].CGST + taxRatePairs[s1.index].SGST}"></span> %</b></th>
+				<th
+					style="height: 12px; width: 18%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>TOTAL AMOUNT</b></th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr th:each="sacdata, i1 : ${sacdataList}">
+				<th
+					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${i1.index + 1}">
+					</th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${sacdata.sac}">
+					</th>
+				<th
+					style="height: 12px; width: 30%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${sacdata.sacDesc1}">
+					</th>
+				<th
+					style="height: 12px; width: 10%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${sacdata.sact1 }">
+					</th>
+				<th th:if="${not (Key ?: false)}" th:each="taxPair, j1 : ${taxRatePairs}"
+					style="height: 12px; width: 12%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${gstlist[i1.index][j1.index][taxAmountI1]}"></span> </th>
+				<th th:if="${not (Key ?: false)}" th:each="taxPair,  k1: ${taxRatePairs}" 
+					style="height: 12px; width: 12%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${gstlist[i1.index][k1.index][taxAmountI1]}"></span> </th>
+				<th th:if="${Key}" th:each="taxPair, j : ${taxRatePairs}"
+					style="height: 12px; width: 20%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${sacdata.taxAmountI1 != null ? sacdata.taxAmountI1 : (sacdata.taxAmountI1Alt != null ? sacdata.taxAmountI1Alt : 0)}"></span> </th>
+
+				<th
+					style="height: 12px; width: 18%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${sacdata.finalamtI1 != null ? sacdata.finalamtI1 : 0}"></span></th>
+			</tr>
+
+			<tr>
+				<th
+					style="height: 12px; width: 5%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+				</th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+				</th>
+				<th
+					style="height: 12px; width: 30%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>TOTAL INVOICE AMOUNT</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${total_Sum }"></span></th>
+				<th th:if="${not (Key ?: false)}" th:each="taxPair : ${taxRatePairs}"
+					style="height: 12px; width: 12%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${sumint}"></span> </th>
+				<th th:if="${not (Key ?: false)}" th:each="taxPair : ${taxRatePairs}"
+					style="height: 12px; width: 12%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${sumint}"></span> </th>
+				<th th:if="${Key}" th:each="taxPair, j : ${taxRatePairs}"
+					style="height: 12px; width: 20%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${sumint}"></span> </th>
+				<th
+					style="height: 12px; width: 18%; text-align: right; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${finaltotal}"></span></th>
+			</tr>
+
+
+		</tbody>
+	</table>
+
+
+
+
+	<table class="table" style="border-collapse: collapse; font-size: 10px !important;">
+
+		<tbody>
+
+
+			<tr>
+				<th
+					style="height: 12px; width: 15%;  border: 1px solid rgb(0, 0, 0);  font-size: 10px !important; text-align: center; ">
+					<b> Total Invoice Amount In Words: </b></th>
+				<th style="height: 12px; width: 30%;  border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b><span th:text="${AmountInWords}"></span></b></th>
+				<th style="height: 12px; width: 20%;  border: 1px solid rgb(0, 0, 0); font-size: 12px !important; text-align: right;"><b>
+						Total Invoice Amount: <span th:text="${finaltotal}"></span></b> </th>
+			</tr>
+
+
+		</tbody>
+	</table>
+	<br /> <br />
+
+	<table class="table" style="border-collapse: collapse; font-size: 12px !important;">
+		<thead>
+			<tr>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0);  font-size: 12px !important;">
+					<b>Sr No</b></th>
+				<th
+					style="height: 12px; width: 60%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b> Details Of Bill Item Description</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b> SAC </b></th>
+				<th
+					style="height: 12px; width: 20%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b> Amount in INR</b></th>
+				
+				
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr th:each="item, iterStat : ${itemList}">
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${iterStat.index + 1}">
+					</th>
+				<th
+					style="height: 12px; width: 60%; text-align: left; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${item.serviceDesc}">
+					</th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${item.sac}">
+					</th>
+				<th
+					style="height: 12px; width: 20%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;" th:text="${item.amount1 }">
+					</th>
+				
+			</tr>
+
+			<tr>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</th>
+				<th
+					style="height: 12px; width: 60%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Total</b></th>
+				<th
+					style="height: 12px; width: 20%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<span th:text="${total_Sum }"></span></th>
+				
+			</tr>
+
+
+		</tbody>
+	</table>
+
+	<br />
+
+	<span style="font-weight: bold; font-size: 12px; text-align: center;">Shipping Bill Details </span>
+	
+	
+	<table class="table" style="border-collapse: collapse; font-size: 10px !important;">
+		<thead>
+			<tr>
+				
+
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Ship. Bill No</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Ship. Bill Date</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Cargo Details</b></th>
+
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b> Carting Date
+</b></th>
+				
+				
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 11px !important;">
+					<b>Exporter</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b>Weight</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Amount</b></th>
+				<th
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Area</b></th>
+
+					
+
+
+			</tr>
+		</thead>
+		<tbody>
+
+			<tr th:each="list1 , i: ${cartsblist}" class="text-center"
+				style="height: 12px;  text-align: center; border: 1px solid rgb(0, 0, 0);">
+			
+			
+				<td th:text="${list1?.SBNO != null ? list1.SBNO : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+			
+				<td th:text="${list1?.SBDATE != null ? list1.SBDATE : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.commoditydesc != null ? list1.commoditydesc : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+			
+				<td th:text="${list1?.CartingDate != null ? list1.CartingDate : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.Exportername != null ? list1.Exportername : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 11px !important;">
+				</td>
+				<td th:text="${list1?.SbWeight != null ? list1.SbWeight : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.Amount != null ? list1.Amount : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				<td th:text="${list1?.Area != null ? list1.Area : ''}"
+					style="height: 12px; width: 10%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				</td>
+				
+			
+			</tr>
+
+		</tbody>
+	</table>
+	
+	
+	
+	<!--
+	<div class="page-break"></div> -->
+	
+	<br />
+
+	<span style="font-weight: bold; font-size: 12px; text-align: center;">Receipt </span><br />
+	<span style=" font-size: 12px; text-align: center;"> Received with thanks from or on behalf of : <span th:text="${cname}"> </span> </span><br /><br />
+
+
+	<table class="table" style="border-collapse: collapse; font-size: 10px !important;">
+		<thead>
+			<tr>
+				<th style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+				<b>Pay Mode</b>
+				</th>
+				<th style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+					<b>Cheque No</b>
+					</th>
+				<th style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+						<b>Cheque Date</b>
+					</th>
+					<th style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+						<b>Bank Details</b>
+					</th>
+					<th style="height: 12px; width: 15%; text-align: center; border: 1px solid rgb(0, 0, 0); font-size: 12px !important;">
+						<b>Amount</b>
+					</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="payment : ${list2}" th:if="${creditFlag != 'Y'}">
+			<td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.paymode != null and payment.paymode != '' ? payment.paymode : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;font-size: 12px !important;" th:text="${payment.checqNO != null and payment.checqNO != '' ? payment.checqNO : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.checqDate != null and payment.checqDate != '' ? payment.checqDate : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.bankDetail != null and payment.bankDetail != '' ? payment.bankDetail : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.amount != null and payment.amount != '' ? payment.amount : ''}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="table" style="border-collapse: collapse; font-size: 10px !important;">
+
+		<tbody>
+
+
+			<tr>
+				<th
+					style="height: 12px; width: 15%;  border: 1px solid rgb(0, 0, 0);  font-size: 10px !important; text-align: center; ">
+					<b> Total Received Amount In Words: </b></th>
+				<th style="height: 12px; width: 30%;  border: 1px solid rgb(0, 0, 0); font-size: 10px !important;">
+					<b><span th:text="${creditFlag == 'Y' ? '**' : AmountInWords2}"></span></b></th>
+				<th style="height: 12px; width: 20%;  border: 1px solid rgb(0, 0, 0); font-size: 10px !important;"><b>
+						Total Received Amount: <span th:text="${creditFlag == 'Y' ? '0.00' : recievedpayment}"></span></b> </th>
+			</tr>
+
+
+		</tbody>
+	</table>
+	
+	 
+
+
+	<br />
+	<span style="font-weight: bold; font-size: 12px; text-align: center;">Remarks :</span><br />
+	
+	<span style=" font-size: 12px; text-align: center;"><b>Bank details for remittance:</b> 
+		</span>
+
+	<table class="table" style="border-collapse: collapse; border-color: white;  font-size: 10px !important;">
+		<thead>
+
+			<tr>
+				<th style="height: 12px; width: 18%; font-weight: bold; border: 1px solid white; font-size: 12px !important;text-align: left;">
+					Beneficiary Name </th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;">:<b></b></th>
+				<th style="height: 12px; width: 40%;  border: 1px solid white; font-size: 12px !important;"><span
+						th:text="${cname}"></span></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white; font-size: 12px !important;"><b></b></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;"><b></b></th>
+				<th
+					style="height: 12px; width: 30%;  border: 1px solid white; font-size: 12px !important; text-align: center;">
+					<b>For <span th:text="${cname}"></span></b></th>
+			</tr>
+
+
+
+			<tr>
+				<th style="height: 12px; width: 18%;  border: 1px solid white; font-weight: bold;font-size: 12px !important;text-align: left;">Bank Name
+						and Branch </th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;">:<b></b></th>
+				<th style="height: 12px; width: 40%;  border: 1px solid white; font-size: 12px !important;"><span
+						th:text="${bankName}"></span> <span th:text="${bankAdd}"></span></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white; font-size: 12px !important;"><b></b></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;"><b></b></th>
+				<th style="height: 12px; width: 30%;  border: 1px solid white; font-size: 12px !important;"></th>
+			</tr>
+
+
+
+			<tr>
+				<th style="height: 12px; width: 18%;  border: 1px solid white; font-weight: bold;font-size: 12px !important;text-align: left;">Account
+						No</th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;">:<b></b></th>
+				<th style="height: 12px; width: 20%;  border: 1px solid white; font-size: 12px !important;"><span
+						th:text="${bankAcc}"></span></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white; font-size: 12px !important;"><b></b></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;"><b></b></th>
+				<th
+					style="height: 12px; width: 30%;  border: 1px solid white; font-size: 12px !important;  text-align: center;">
+					Authorised Signatory</th>
+
+			</tr>
+
+
+			<tr>
+				<th style="height: 12px; width: 18%;  border: 1px solid white;font-weight: bold; font-size: 12px !important;text-align: left;">IFSC Code</th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;">:<b></b></th>
+				<th style="height: 12px; width: 30%;  border: 1px solid white; font-size: 12px !important;"th:text="${bankIfsc}"></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white; font-size: 12px !important;"><b></b></th>
+				<th style="height: 12px; width: 15%;  border: 1px solid white;"><b></b></th>
+
+				<th  
+					style="height: 12px; width: 30%;  border: 1px solid white; font-size: 12px !important;  text-align: center;">
+					Prepared By : <span th:text="${uname}"></span></th>
+				<th style="height: 12px; width: 1%;  border: 1px solid white;"><b></b></th>
+			</tr>
+		</thead>
+
+	</table>
+
+	
+
+
+	<br />
+
+
+
+	<span style=" font-size: 12px !important;">IMPORTANT NOTE AND DISCLAIMERS:
+	</span><br />
+
+	<span style="font-size: 10px !important;"> 1. Invoice is valid subject to realisation of cheque/DD/Pay-order.
+	</span><br />
+	<span style="font-size: 10px !important;"> 2. Delivery of container/cargo is subject to documents/confirmation of customs and other statutory.
+	</span><br />
+	<span style="font-size: 10px !important;">  3. Any tax deducted/paid on behalf of Seabird resulting in refund claim and/or TDS certificate should be
+		<br />submitted within one month
+		from the date of invoice/payment as per Income Tax Act.
+	</span><br />
+	<span style="font-size: 10px !important;"> 4. It is presumed that all consignments (Import/Export) being received at CFS are adequately insured
+		<br />against all possible risk during
+		transportation and storage and the company assumes No Liability in this respect.
+	</span><br /><br />
+	
+	<!-- <span style="font-weight: bold;  font-size: 12px !important;">This is a system-generated Tax-Invoice. No signature
+		is required</span><br /> -->
+	
+	
+<!--  <div class="footer1">
+    <span style="font-weight: bold; font-size: 12px !important;">
+        This is a system-generated Tax-Invoice. No signature is required.
+    </span><br />
+    <hr style="background-color: rgb(0, 0, 0); height: 1px; border: none;" />
+</div>  -->
+
+
+	
+
+</body>
+
+</html>

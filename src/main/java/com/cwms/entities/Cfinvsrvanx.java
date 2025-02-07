@@ -29,9 +29,9 @@ public class Cfinvsrvanx implements Cloneable {
 	@Column(name = "Process_Trans_Id", length = 10)
 	private String processTransId;
 	
-	@Id
-	@Column(name = "Process_TransLine_Id", length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT '1'")
-	private String processTransLineId;
+//	@Id
+//	@Column(name = "Process_TransLine_Id", length = 10, nullable = false, columnDefinition = "VARCHAR(10) DEFAULT '1'")
+//	private String processTransLineId;
 
 	
 	
@@ -333,13 +333,7 @@ public class Cfinvsrvanx implements Cloneable {
 		// TODO Auto-generated constructor stub
 	}
 
-	 	@PrePersist
-	    @PreUpdate
-	    private void validateProcessTransLineId() {
-	        if (this.processTransLineId == null || this.processTransLineId.trim().isEmpty()) {
-	            this.processTransLineId = "1";
-	        }
-	    }
+	 
 
 	public Cfinvsrvanx(String companyId, String branchId, String processTransId, String serviceId, String taxId,
 			String erpDocRefNo, BigDecimal srlNo, String finPeriod, String docRefNo, String igmLineNo,
@@ -456,20 +450,6 @@ public class Cfinvsrvanx implements Cloneable {
 		this.cargoSBNo = cargoSBNo;
 		this.srvManualFlag = srvManualFlag;
 		this.freeDays = freeDays;
-	}
-
-	
-
-	
-
-	public String getProcessTransLineId() {
-		return processTransLineId;
-	}
-
-
-
-	public void setProcessTransLineId(String processTransLineId) {
-		this.processTransLineId = processTransLineId;
 	}
 
 
@@ -1354,7 +1334,7 @@ public class Cfinvsrvanx implements Cloneable {
 			this.companyId = companyId;
 			this.branchId = branchId;
 			this.processTransId = assesmentId;
-//			this.assesmentLineNo = assesmentLineNo;
+			this.lineNo = assesmentLineNo;
 			this.processTransDate = assesmentDate;
 			this.containerNo = containerNo;
 			this.containerSize = containerSize;
@@ -1381,6 +1361,51 @@ public class Cfinvsrvanx implements Cloneable {
 			this.alreadySaved = alreadySaved;
 		}
 
+		
+
+		public Cfinvsrvanx(String companyId, String branchId, String processTransId, String serviceId, String taxId,
+				String erpDocRefNo, BigDecimal srlNo, String docRefNo, String profitcentreId, String serviceUnit,
+				String executionUnit, String serviceUnit1, String executionUnit1, BigDecimal rate, String currencyId,
+				String partyId, String woNo, String woAmndNo, String criteria, BigDecimal rangeFrom, BigDecimal rangeTo,
+				String rangeType, String containerNo, String containerStatus, String commodityDescription,
+				BigDecimal actualNoOfPackages, Date startDate, String status, String srvManualFlag, String serviceName, String addServices, String lineNo) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.processTransId = processTransId;
+			this.serviceId = serviceId;
+			this.taxId = taxId;
+			this.erpDocRefNo = erpDocRefNo;
+			this.srlNo = srlNo;
+			this.docRefNo = docRefNo;
+			this.profitcentreId = profitcentreId;
+			this.serviceUnit = serviceUnit;
+			this.executionUnit = executionUnit;
+			this.serviceUnit1 = serviceUnit1;
+			this.executionUnit1 = executionUnit1;
+			this.rate = rate;
+			this.currencyId = currencyId;
+			this.partyId = partyId;
+			this.woNo = woNo;
+			this.woAmndNo = woAmndNo;
+			this.criteria = criteria;
+			this.rangeFrom = rangeFrom;
+			this.rangeTo = rangeTo;
+			this.rangeType = rangeType;
+			this.containerNo = containerNo;
+			this.containerStatus = containerStatus;
+			this.commodityDescription = commodityDescription;
+			this.actualNoOfPackages = actualNoOfPackages;
+			this.startDate = startDate;
+			this.status = status;
+			this.srvManualFlag = srvManualFlag;
+			this.serviceName = serviceName;
+			this.alreadySaved = "Y";
+			this.addServices = addServices;
+			this.lineNo = lineNo;
+		}
+		
+		
 		
 		public Cfinvsrvanx(String companyId, String branchId, String processTransId, String serviceId, String taxId,
 				String erpDocRefNo, BigDecimal srlNo, String docRefNo, String profitcentreId, String serviceUnit,
@@ -1422,6 +1447,103 @@ public class Cfinvsrvanx implements Cloneable {
 			this.alreadySaved = "Y";
 			this.addServices = addServices;
 		}
+		
+		
+		
+		
+		
+
+		transient private BigDecimal grossWeight;
+		transient private BigDecimal areaUsed;
+		transient private Date cartingDate;
+		
+		
+		public Date getCartingDate() {
+			return cartingDate;
+		}
+
+
+		public void setCartingDate(Date cartingDate) {
+			this.cartingDate = cartingDate;
+		}
+
+
+		public BigDecimal getAreaUsed() {
+			return areaUsed;
+		}
+
+
+		public void setAreaUsed(BigDecimal areaUsed) {
+			this.areaUsed = areaUsed;
+		}
+
+
+		public BigDecimal getGrossWeight() {
+			return grossWeight;
+		}
+
+
+		public void setGrossWeight(BigDecimal grossWeight) {
+			this.grossWeight = grossWeight;
+		}
+
+
+		public Cfinvsrvanx(String companyId, String branchId, String assesmentId, String assesmentLineNo, Date assesmentDate, String sbNo, String sbTransId, String commodityDescription,
+				Date cartingDate, BigDecimal grossWeight, BigDecimal areaUsed, Date invoiceDate) {
+			
+			this.commodityDescription = commodityDescription;
+			this.areaUsed = areaUsed;
+			this.cartingDate = cartingDate;
+			this.docRefNo = sbNo;
+			this.erpDocRefNo= sbTransId;
+			this.grossWeight = grossWeight;		
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.processTransId = assesmentId;
+			this.lineNo = assesmentLineNo;
+			this.processTransDate = assesmentDate;
+			this.invoiceUptoWeek = invoiceDate;
+			this.invoiceUptoWeek = invoiceDate;
+		}
+
+
+
+		@Override
+		public String toString() {
+			return "Cfinvsrvanx [companyId=" + companyId + ", branchId=" + branchId + ", processTransId="
+					+ processTransId + ", serviceId=" + serviceId + ", taxId=" + taxId + ", erpDocRefNo=" + erpDocRefNo
+					+ ", srlNo=" + srlNo + ", finPeriod=" + finPeriod + ", docRefNo=" + docRefNo + ", igmLineNo="
+					+ igmLineNo + ", profitcentreId=" + profitcentreId + ", invoiceNo=" + invoiceNo + ", invoiceDate="
+					+ invoiceDate + ", invoiceType=" + invoiceType + ", invoiceSubType=" + invoiceSubType
+					+ ", serviceUnit=" + serviceUnit + ", executionUnit=" + executionUnit + ", serviceUnit1="
+					+ serviceUnit1 + ", executionUnit1=" + executionUnit1 + ", rate=" + rate + ", currencyId="
+					+ currencyId + ", periodFrom=" + periodFrom + ", periodTo=" + periodTo + ", foreignAmt="
+					+ foreignAmt + ", exRate=" + exRate + ", localAmtForeign=" + localAmtForeign + ", localAmt="
+					+ localAmt + ", taxPerc=" + taxPerc + ", discDays=" + discDays + ", discPercentage="
+					+ discPercentage + ", discValue=" + discValue + ", mPercentage=" + mPercentage + ", mAmount="
+					+ mAmount + ", invoiceAmt=" + invoiceAmt + ", contractor=" + contractor + ", acCode=" + acCode
+					+ ", processTransDate=" + processTransDate + ", processId=" + processId + ", partyId=" + partyId
+					+ ", woNo=" + woNo + ", woAmndNo=" + woAmndNo + ", lineNo=" + lineNo + ", beNo=" + beNo
+					+ ", beDate=" + beDate + ", criteria=" + criteria + ", rangeFrom=" + rangeFrom + ", rangeTo="
+					+ rangeTo + ", rangeType=" + rangeType + ", negeotiable=" + negeotiable + ", containerNo="
+					+ containerNo + ", containerStatus=" + containerStatus + ", commodityDescription="
+					+ commodityDescription + ", actualNoOfPackages=" + actualNoOfPackages + ", gateOutId=" + gateOutId
+					+ ", gatePassNo=" + gatePassNo + ", addServices=" + addServices + ", gateOutDate=" + gateOutDate
+					+ ", startDate=" + startDate + ", invoiceUptoDate=" + invoiceUptoDate + ", invoiceUptoWeek="
+					+ invoiceUptoWeek + ", debitNoteExe=" + debitNoteExe + ", debitNoteAmt=" + debitNoteAmt
+					+ ", cfsBaseRate=" + cfsBaseRate + ", partyBaseRate=" + partyBaseRate + ", rebate=" + rebate
+					+ ", profitability=" + profitability + ", status=" + status + ", createdBy=" + createdBy
+					+ ", createdDate=" + createdDate + ", editedBy=" + editedBy + ", editedDate=" + editedDate
+					+ ", approvedBy=" + approvedBy + ", approvedDate=" + approvedDate + ", billAmt=" + billAmt
+					+ ", joServiceId=" + joServiceId + ", joNo=" + joNo + ", joAmndNo=" + joAmndNo + ", taxApp="
+					+ taxApp + ", taxIdN=" + taxIdN + ", taxPercN=" + taxPercN + ", taxAmt=" + taxAmt + ", acCodeN="
+					+ acCodeN + ", hsnCode=" + hsnCode + ", dutyRate=" + dutyRate + ", lotNo=" + lotNo + ", fileNo="
+					+ fileNo + ", tcsRate=" + tcsRate + ", tcsAmount=" + tcsAmount + ", invoiceDaysOld="
+					+ invoiceDaysOld + ", invoiceAmtOld=" + invoiceAmtOld + ", addOnRate=" + addOnRate + ", prevRate="
+					+ prevRate + ", cargoSBNo=" + cargoSBNo + ", srvManualFlag=" + srvManualFlag + ", freeDays="
+					+ freeDays + "]";
+		}
+		
 		
 		
 		

@@ -2890,5 +2890,81 @@ public class AssessmentSheet implements Cloneable {
 			this.partyId = partyId;		
 		}
 		
+		
+		
+		//getSelectedExportAssesmentSheetNew
+				public AssessmentSheet(String companyId, String branchId, String assesmentId, String assesmentLineNo,
+			            String transType, Date assesmentDate, String sbNo, String sbTransId, Date sbDate, char status,
+			            String createdBy, String profitcentreId, String profitcentreName, String billingParty, String sl,
+			            String sa, String commodityDescription, Date minCartingTransDate, String importerId,
+			            String exporterName, String expAddress, String expGst, String expStateCode, int impSrNo,
+			            String cha, String chaName, String chaAddress, String chaGst, String chaStateCode, int chaSrNo,
+			            String othPartyId, String accHolderName, String accAddress, String accHolderGst,
+			            String accStateCode, String othSrNo, String onAccountOf, String fwdName, String fwdAddress,
+			            String fwdGst, String fwdState, int accSrNo, String invoiceNo, Date invoiceDate, char taxApplicable,
+			            char sez, String commodityCode, char creditType, String invoiceCategory, String irn,
+			            String receiptNo, String creditAllowed, String pendingCredit, String comments,
+			            String intComments, String partyId, String cgst, String sgst, String igst) {
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.assesmentId = assesmentId;
+			this.assesmentLineNo = assesmentLineNo;
+			this.transType = transType;
+			this.assesmentDate = assesmentDate;
+			this.sbNo = sbNo;
+			this.sbTransId = sbTransId;
+			this.sbDate = sbDate;
+			this.status = status;
+			this.createdBy = createdBy;
+			this.profitcentreId = profitcentreId;
+			this.profitcentreName = profitcentreName;
+			this.billingParty = billingParty;
+			this.sa = sa;
+			this.sl = sl;
+			this.commodityDescription = commodityDescription;
+			this.minCartingTransDate = minCartingTransDate;
+			this.importerId = importerId;
+			this.exporterName = exporterName;
+			this.expAddress = expAddress;
+			this.expGst = expGst;
+			this.expStateCode = expStateCode;
+			this.impSrNo = impSrNo;
+			this.cha = cha;
+			this.chaName = chaName;
+			this.chaAddress = chaAddress;
+			this.chaGst = chaGst;
+			this.chaStateCode = chaStateCode;
+			this.chaSrNo = chaSrNo;
+			this.othPartyId = othPartyId;
+			this.accHolderName = accHolderName;
+			this.accAddress = accAddress;
+			this.accHolderGst = accHolderGst;
+			this.accStateCode = accStateCode;
+			this.othSrNo = othSrNo;
+			this.onAccountOf = onAccountOf;
+			this.fwdName = fwdName;
+			this.fwdAddress = fwdAddress;
+			this.fwdGst = fwdGst;
+			this.fwdState = fwdState;
+			this.accSrNo = accSrNo;
+			this.invoiceNo = invoiceNo;
+			this.invoiceDate = invoiceDate;
+			this.taxApplicable = taxApplicable;
+			this.sez = sez;
+			this.commodityCode = commodityCode;
+			this.creditType = creditType;
+			this.invoiceCategory = invoiceCategory;
+			this.irn = irn;
+			this.receiptNo = receiptNo;
+			this.creditAllowed = creditAllowed;
+			this.pendingCredit = pendingCredit;
+			this.comments = comments;
+			this.intComments = intComments;
+			this.partyId = partyId;	
+			this.cgst = cgst;
+			this.sgst = sgst;
+			this.igst = igst;
+			}
+
 
 }
