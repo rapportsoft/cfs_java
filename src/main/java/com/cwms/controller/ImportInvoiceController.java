@@ -811,7 +811,7 @@ public class ImportInvoiceController {
 		
 		
 		
-		
+		String branchAddress = compdtl.get("baddr1")+" "+compdtl.get("baddr2")+" "+compdtl.get("baddr3");
 		context.setVariable("billingPartyAddress", billingPartyAddress);
 		context.setVariable("consigneeAddress", consigneeAddress);
 		context.setVariable("invoiceNo",invoiceNo );
@@ -831,7 +831,11 @@ public class ImportInvoiceController {
 		context.setVariable("PAN", invdtl.get("PAN"));
 		context.setVariable("consignee", invdtl.get("consignee"));
 		context.setVariable("IRN", invdtl.get("IRN"));
-		
+		context.setVariable("branchAddress", branchAddress);
+		context.setVariable("branchPin", compdtl.get("branchPin"));
+		context.setVariable("email", compdtl.get("email"));
+
+
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
 		context.setVariable("cadd2", compdtl.get("cadd2"));

@@ -230,7 +230,7 @@
 
 
 
-	<table >
+<table >
 		<thead>
 
 		</thead>
@@ -257,23 +257,27 @@
 
 					
 					<span th:text="${cname}" 
-						  style="text-transform: uppercase; font-weight: bold; font-size: 16px; color: rgb(0, 128, 0);">
+						  style="font-weight: bold; font-size: 18px; color: rgb(0, 128, 0);">
 						
 					</span><br />
 					
-					<span th:text="${cadd1}" 
-						  style="font-weight: bold; font-size: 9px; height: 160px;">
+					<span th:text="'CFS :'+${branchAddress}+','+${branchPin}" 
+     						 style="font-weight: bold; font-size: 10px;">
+					</span> <br />
+					
+					<span th:text="|Regd Office: ${cadd1} ${cadd2} ${cadd3}|" 
+						  style="font-weight: bold; font-size: 10px; height: 160px;">
 						  
 					</span> <br />
 					
-					<span th:text="${cadd2}" 
+				<!--	<span th:text="${cadd2}" 
 						  style="font-weight: bold; font-size: 9px; height: 160px;">
 						 
 					</span><br />
 					<span th:text="${cadd3}" 
 						  style="font-weight: bold; font-size: 9px; height: 160px;">
 						 
-					</span><br />
+					</span><br />   -->
 					
 					
 					
@@ -282,7 +286,10 @@
 		    GSTN: <span th:text="${gst}"></span> | 
 		    STATE: <span th:text="${state}"></span>|
 		    CIN: <span th:text="${cin}"></span>
-		</span><br /><br />
+		</span><br />
+		<span style="font-weight: bold; font-size: 10px;">
+    Email: <span th:text="${email}"></span>
+</span>
 					
 
 				</td>
@@ -355,7 +362,7 @@
 
         <!-- Image Column -->
         <td style="width: 30%; text-align: center; vertical-align: middle;">
-            <img th:src="@{src/main/resources/static/image/sampleQR.jpeg}" style="width: 150px; height: 150px;" alt="QR Code" />
+            <img th:src="@{C:/Container Freight Station/Logos/sampleQR.jpeg}" style="width: 150px; height: 150px;" alt="QR Code" />
         </td>
     </tr>
 </table>
@@ -642,10 +649,10 @@
 		</thead>
 		<tbody>
 			<tr th:each="payment : ${list2}">
-			<td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.paymode != null and payment.paymode != '' ? payment.paymode : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;font-size: 12px !important;" th:text="${payment.checqNO != null and payment.checqNO != '' ? payment.checqNO : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.checqDate != null and payment.checqDate != '' ? payment.checqDate : 'N/A'}"></td>
-            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.bankDetail != null and payment.bankDetail != '' ? payment.bankDetail : 'N/A'}"></td>
+			<td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.paymode != null and payment.paymode != '' ? payment.paymode : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;font-size: 12px !important;" th:text="${payment.checqNO != null and payment.checqNO != '' ? payment.checqNO : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.checqDate != null and payment.checqDate != '' ? payment.checqDate : ''}"></td>
+            <td style="border: 1px solid rgb(0, 0, 0); text-align: center;  font-size: 12px !important;" th:text="${payment.bankDetail != null and payment.bankDetail != '' ? payment.bankDetail : ''}"></td>
             <td style="border: 1px solid rgb(0, 0, 0); text-align: center; font-size: 12px !important;" th:text="${payment.amount != null and payment.amount != '' ? payment.amount : 'N/A'}"></td>
 			</tr>
 		</tbody>

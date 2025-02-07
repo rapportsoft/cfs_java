@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "cfauccn")
-@IdClass(Auction.class)
+@IdClass(AuctionId.class)
 public class Auction {
 
     @Id
