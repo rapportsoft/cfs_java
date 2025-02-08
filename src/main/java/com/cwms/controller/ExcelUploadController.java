@@ -1313,6 +1313,7 @@ public class ExcelUploadController {
 							cn.setContainerNo(containerNo);
 							cn.setNoOfPackages(Integer.parseInt(packages));
 							cn.setCustomsSealNo(sealNo);
+							cn.setContainerSealNo(sealNo);
 							cn.setContainerStatus(conStatus);
 							cn.setIgmTransId(existingIgm.getIgmTransId());
 							cn.setIgmNo(existingIgm.getIgmNo());
@@ -1771,6 +1772,7 @@ public class ExcelUploadController {
 							System.out.println("sealNo " + sealNo);
 							cn.setCustomsSealNo(sealNo);
 							cn.setContainerStatus(conStatus);
+							cn.setContainerSealNo(sealNo);
 							cn.setIgmTransId(igm.getIgmTransId());
 							cn.setIgmNo(igm.getIgmNo());
 							cn.setIgmLineNo(itemNo);
@@ -1906,10 +1908,10 @@ public class ExcelUploadController {
 
 			if (!content.isEmpty()) {
 				content1.forEach(c -> {
-					System.out.println("cndata " + c);
+					
 
 					Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
-
+					System.out.println("cndata " + c+" "+check);
 					if (check) {
 						Map<String, String> add = new HashMap<>();
 						add.put("Container no", c.get(8));
