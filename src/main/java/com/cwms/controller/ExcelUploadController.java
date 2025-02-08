@@ -940,6 +940,7 @@ public class ExcelUploadController {
 					String cargoWt = m.get("Cargo wt");
 					String commodity = m.get("Commodity");
 					String origin = m.get("Origin");
+					String destination = m.get("Destination");
 
 					if (itemNo.isEmpty()) {
 						String mess = " - Item No is required.";
@@ -1171,6 +1172,7 @@ public class ExcelUploadController {
 						crg.setImporterAddress3(impAddress3);
 						crg.setUnitOfWeight("KGS");
 						crg.setOrigin(origin);
+						crg.setDestination(destination);
 						crg.setFinYear(finYear);
 						crg.setNotifyPartyName(notifyParty);
 						crg.setNotifiedAddress1(notifyPartyAddress1);
@@ -1399,6 +1401,8 @@ public class ExcelUploadController {
 					String cargoWt = m.get("Cargo wt");
 					String commodity = m.get("Commodity");
 					String origin = m.get("Origin");
+					String destination = m.get("Destination");
+					
 
 					Boolean check = false;
 
@@ -1631,6 +1635,7 @@ public class ExcelUploadController {
 						crg.setImporterAddress3(impAddress3);
 						crg.setUnitOfWeight("KGS");
 						crg.setOrigin(origin);
+						crg.setDestination(destination);
 						crg.setFinYear(finYear);
 						crg.setNotifyPartyName(notifyParty);
 						crg.setNotifiedAddress1(notifyPartyAddress1);
@@ -1891,6 +1896,7 @@ public class ExcelUploadController {
 					add.put("Bl no", c.get(8));
 					add.put("Bl Date", c.get(9));
 					add.put("Origin", c.get(10));
+					add.put("Destination", c.get(11));
 					add.put("Importer name", c.get(14));
 					add.put("Importer address1", c.get(15));
 					add.put("Importer address2", c.get(16));
