@@ -2,6 +2,8 @@ package com.cwms.service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -873,28 +875,28 @@ public class DashBoardService {
 
         // Print day1 (yesterday) with time 23:59
         Date day11 = calendar11.getTime();
-        System.out.println("Date: " + dateFormat.format(day11) + ", day1: " + dayFormat.format(day11));
+//        System.out.println("Date: " + dateFormat.format(day11) + ", day1: " + dayFormat.format(day11));
 
         // Get the 6 days before yesterday without setting time
         calendar111.add(Calendar.DATE, -1);
         Date day21 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day21) + ", Day: " + dayFormat.format(day21));
+//        System.out.println("Date: " + dateFormat.format(day21) + ", Day: " + dayFormat.format(day21));
 
         calendar111.add(Calendar.DATE, -1);
         Date day31 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day31) + ", Day: " + dayFormat.format(day31));
+//        System.out.println("Date: " + dateFormat.format(day31) + ", Day: " + dayFormat.format(day31));
 
         calendar111.add(Calendar.DATE, -1);
         Date day41 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day41) + ", Day: " + dayFormat.format(day41));
+//        System.out.println("Date: " + dateFormat.format(day41) + ", Day: " + dayFormat.format(day41));
 
         calendar111.add(Calendar.DATE, -1);
         Date day51 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day51) + ", Day: " + dayFormat.format(day51));
+//        System.out.println("Date: " + dateFormat.format(day51) + ", Day: " + dayFormat.format(day51));
 
         calendar111.add(Calendar.DATE, -1);
         Date day61 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day61) + ", day6: " + dayFormat.format(day61));
+//        System.out.println("Date: " + dateFormat.format(day61) + ", day6: " + dayFormat.format(day61));
 
         // Get day7 and reset the time to 00:00
         calendar111.add(Calendar.DATE, -1);
@@ -903,7 +905,7 @@ public class DashBoardService {
         calendar111.set(Calendar.SECOND, 0);
         calendar111.set(Calendar.MILLISECOND, 0);
         Date day71 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat7.format(day71) + ", Day7: " + dayFormat.format(day71));
+//        System.out.println("Date: " + dateFormat7.format(day71) + ", Day7: " + dayFormat.format(day71));
 
         
 	    // Initialize counters for each day (Monday to Saturday)
@@ -2545,28 +2547,28 @@ public class DashBoardService {
 
         // Print day1 (yesterday) with time 23:59
         Date day11 = calendar11.getTime();
-        System.out.println("Date: " + dateFormat.format(day11) + ", day1: " + dayFormat.format(day11));
+//        System.out.println("Date: " + dateFormat.format(day11) + ", day1: " + dayFormat.format(day11));
 
         // Get the 6 days before yesterday without setting time
         calendar111.add(Calendar.DATE, -1);
         Date day21 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day21) + ", Day: " + dayFormat.format(day21));
+//        System.out.println("Date: " + dateFormat.format(day21) + ", Day: " + dayFormat.format(day21));
 
         calendar111.add(Calendar.DATE, -1);
         Date day31 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day31) + ", Day: " + dayFormat.format(day31));
+//        System.out.println("Date: " + dateFormat.format(day31) + ", Day: " + dayFormat.format(day31));
 
         calendar111.add(Calendar.DATE, -1);
         Date day41 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day41) + ", Day: " + dayFormat.format(day41));
+//        System.out.println("Date: " + dateFormat.format(day41) + ", Day: " + dayFormat.format(day41));
 
         calendar111.add(Calendar.DATE, -1);
         Date day51 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day51) + ", Day: " + dayFormat.format(day51));
+//        System.out.println("Date: " + dateFormat.format(day51) + ", Day: " + dayFormat.format(day51));
 
         calendar111.add(Calendar.DATE, -1);
         Date day61 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat.format(day61) + ", day6: " + dayFormat.format(day61));
+//        System.out.println("Date: " + dateFormat.format(day61) + ", day6: " + dayFormat.format(day61));
 
         // Get day7 and reset the time to 00:00
         calendar111.add(Calendar.DATE, -1);
@@ -2575,7 +2577,7 @@ public class DashBoardService {
         calendar111.set(Calendar.SECOND, 0);
         calendar111.set(Calendar.MILLISECOND, 0);
         Date day71 = calendar111.getTime();
-        System.out.println("Date: " + dateFormat7.format(day71) + ", Day7: " + dayFormat.format(day71));
+//        System.out.println("Date: " + dateFormat7.format(day71) + ", Day7: " + dayFormat.format(day71));
 
         
 	    // Initialize counters for each day (Monday to Saturday)
@@ -3718,28 +3720,28 @@ public class DashBoardService {
 
         // Print day1 (yesterday) with time 23:59
         Date day1 = calendar1.getTime();
-        System.out.println("Date: " + dateFormat.format(day1) + ", day1: " + dayFormat.format(day1));
+//        System.out.println("Date: " + dateFormat.format(day1) + ", day1: " + dayFormat.format(day1));
 
         // Get the 6 days before yesterday without setting time
         calendar.add(Calendar.DATE, -1);
         Date day2 = calendar.getTime();
-        System.out.println("Date: " + dateFormat.format(day2) + ", Day: " + dayFormat.format(day2));
+//        System.out.println("Date: " + dateFormat.format(day2) + ", Day: " + dayFormat.format(day2));
 
         calendar.add(Calendar.DATE, -1);
         Date day3 = calendar.getTime();
-        System.out.println("Date: " + dateFormat.format(day3) + ", Day: " + dayFormat.format(day3));
+//        System.out.println("Date: " + dateFormat.format(day3) + ", Day: " + dayFormat.format(day3));
 
         calendar.add(Calendar.DATE, -1);
         Date day4 = calendar.getTime();
-        System.out.println("Date: " + dateFormat.format(day4) + ", Day: " + dayFormat.format(day4));
+//        System.out.println("Date: " + dateFormat.format(day4) + ", Day: " + dayFormat.format(day4));
 
         calendar.add(Calendar.DATE, -1);
         Date day5 = calendar.getTime();
-        System.out.println("Date: " + dateFormat.format(day5) + ", Day: " + dayFormat.format(day5));
+//        System.out.println("Date: " + dateFormat.format(day5) + ", Day: " + dayFormat.format(day5));
 
         calendar.add(Calendar.DATE, -1);
         Date day6 = calendar.getTime();
-        System.out.println("Date: " + dateFormat.format(day6) + ", day6: " + dayFormat.format(day6));
+//        System.out.println("Date: " + dateFormat.format(day6) + ", day6: " + dayFormat.format(day6));
 
         // Get day7 and reset the time to 00:00
         calendar.add(Calendar.DATE, -1);
@@ -3748,7 +3750,7 @@ public class DashBoardService {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         Date day7 = calendar.getTime();
-        System.out.println("Date: " + dateFormat7.format(day7) + ", Day7: " + dayFormat.format(day7));
+//        System.out.println("Date: " + dateFormat7.format(day7) + ", Day7: " + dayFormat.format(day7));
 
 
 	 Map<String, Object> bufferInUser = new HashMap<>();
@@ -4956,372 +4958,131 @@ public class DashBoardService {
 	    List<Object[]> invoiceDetails = dashboardRepository.findInvoiceSummary(companyId, branchId, startDate, endDate);
 	    List<Object[]> totalCollections = dashboardRepository.findInvoiceTotalCollection(companyId, branchId, startDate, endDate);
 	    List<Object[]> outStanding = dashboardRepository.findOutstandingInvoices(companyId, branchId, startDate, endDate);
-	    List<Object[]> exportLDD = commonReportRepo.findExpLDDInventoryContainers(companyId, branchId, endDate);
-	    List<Object[]> emptyGateIn = commonReportRepo.findExportEMptyContainerGateIn(companyId, branchId, startDate, endDate);
-	    List<Object[]> exportInventory = dashboardRepository.getInventoryExportReport(companyId, branchId);
+	    
+	    List<Object[]> advance = dashboardRepository.findInvoiceAdvance(companyId, branchId, startDate, endDate);
+	  
 	    
 	    
-	    List<Object[]> exportBufferLastWeek= dashboardRepository.exportBufferGateInLastWeek(companyId, branchId);
-	    List<Object[]> exportMovementOutLastWeek= dashboardRepository.exportEmptyMovementOutLastWeek(companyId, branchId);
-	    List<Object[]> exportStuffTallyLastWeek= dashboardRepository.findStuffTallyContainersLastWeek(companyId, branchId);
-	    List<Object[]> exportLDDLastWeek= dashboardRepository.findExpLDDInventoryContainersLastWeek(companyId, branchId);
-	    List<Object[]> emptyGateInLastWeek = dashboardRepository.findExportEMptyContainerGateInLastWeek(companyId, branchId);
-	    List<Object[]> exportInventoryLastWeek = dashboardRepository.getInventoryExportReportLastWeek(companyId, branchId);
+	    List<Object[]> lastWeekInvoiceDetails= dashboardRepository.findInvoiceSummaryLastWeek(companyId, branchId);
+	    List<Object[]> totalCollectionsLastWeek= dashboardRepository.findInvoiceTotalCollectionLastWeek(companyId, branchId);
+	    List<Object[]> outStandingLastWeek= dashboardRepository.findOutstandingInvoicesLastWeek(companyId, branchId);
+	    
+	    List<Object []> getDataForPieChart =dashboardRepository.findPaymentSummaryForPieChart(companyId, branchId, startDate, endDate);
+	    
+	    List<Object []> top10OutStanding =dashboardRepository.findTopOutstandingInvoices(companyId, branchId, startDate, endDate);
 	    
 	    
-	    System.out.println("startDate   :" + startDate    +" endDate  :"+endDate);
-	   
 	    
-	    
+	    SimpleDateFormat dateFormatFcl = new SimpleDateFormat("yyyy-MM-dd");
 
 
+	    
+	    Map<String, Object> top10OutStandingChart = new HashMap<>();
+	    Map<String, Object> advanceMap = new HashMap<>();
+	    
+//	    if(!advance.isEmpty() && advance!=null)
+//	    {
+	    	advanceMap.put("advance", advance);
+//	    }
+	    
+//	    if(!top10OutStanding.isEmpty() && top10OutStanding!=null)
+//	    {
+	    	top10OutStandingChart.put("top10OutStanding", top10OutStanding);
+//	    }
+	    
 //	    List<Object[]> lastWeekGateIn = dashboardRepository.findDistinctGateInDataOfLastWeek(companyId, branchId, endDate);
-	    Map<String, Object> lastWeekGateInData = new HashMap<>();
+	   
+//	    Map<String, Object> pieChart = new HashMap<>();
+//	    Map<String, Map<String, Object>> paymentModeData = new HashMap<>();
+//
+//
+//	    // Define Payment Mode Groups
+//	    Map<String, String> paymentModeMapping = new HashMap<>();
+//	    paymentModeMapping.put("ADVANCE", "PDA");
+//	    paymentModeMapping.put("CASH", "CASH");
+//	    paymentModeMapping.put("RTGS", "CASH");
+//	    paymentModeMapping.put("EFT", "CASH");
+//	    paymentModeMapping.put("CHEQUE", "CASH");
+//	    paymentModeMapping.put("CREDIT", "CREDIT");
+//
+//	    // Process import gate-in data
+//	    if (getDataForPieChart != null) {
+//	        for (Object[] row : getDataForPieChart) {
+//	            if (row != null && row.length > 4) { // Ensure row has valid data
+//	                Long count = (Long) row[3]; // Invoice count at index 3
+//	                String paymentMode = (String) row[2]; // Payment mode at index 2
+//	                BigDecimal amount = (BigDecimal) row[4]; // Amount at index 4
+//
+//	                // Determine the grouped payment mode
+//	                String groupedPaymentMode = paymentModeMapping.getOrDefault(paymentMode, "OTHER");
+//
+//
+//	                // Check if payment mode already exists
+//	                if (!paymentModeData.containsKey(groupedPaymentMode)) {
+//	                    // Initialize new payment mode entry
+//	                    Map<String, Object> modeData = new HashMap<>();
+//	                    modeData.put("count", count.intValue());
+//	                    modeData.put("amount", amount);
+//	                    paymentModeData.put(groupedPaymentMode, modeData);
+//	                } else {
+//	                    // Update existing payment mode data
+//	                    Map<String, Object> modeData = paymentModeData.get(groupedPaymentMode);
+//	                    modeData.put("count", (int) modeData.get("count") + count.intValue());
+//	                    modeData.put("amount", ((BigDecimal) modeData.get("amount")).add(amount));
+//	                }
+//	            }
+//	        }
+//	    }
+//
+//	    pieChart.put("paymentModeData", paymentModeData);
+//	    System.out.println("Payment Mode Data: " + paymentModeData);
 
-	    Date endDateNew = new Date();
-
-        // Initialize calendar with the end date
 	    
-	    Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTime(endDateNew);
 
-        calendar1.add(Calendar.DATE, -1);
-        calendar1.set(Calendar.HOUR_OF_DAY, 23);
-        calendar1.set(Calendar.MINUTE, 59);
-        calendar1.set(Calendar.SECOND, 0);
-        calendar1.set(Calendar.MILLISECOND, 0);
-        // Set time to 23:59 for day1
-        
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(endDateNew);
+	    
+	    Map<String, Object> pieChart = new HashMap<>();
+	    Map<String, Map<String, Object>> paymentModeData = new HashMap<>();
 
-        // Exclude the current date by moving back one day
-        calendar.add(Calendar.DATE, -1);
+	    // Define Payment Mode Groups
+	    Map<String, String> paymentModeMapping = new HashMap<>();
+	    paymentModeMapping.put("ADVANCE", "PDA");
+	    paymentModeMapping.put("CASH", "CASH");
+	    paymentModeMapping.put("RTGS", "CASH");
+	    paymentModeMapping.put("EFT", "CASH");
+	    paymentModeMapping.put("CHEQUE", "CASH");
+	    paymentModeMapping.put("CREDIT", "CREDIT");
 
-        // Date formatter
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        SimpleDateFormat dateFormat7 = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+	    // Initialize payment modes with zero values to ensure they exist
+	    List<String> predefinedModes = Arrays.asList("PDA", "CASH", "CREDIT");
 
-        // Print day1 (yesterday) with time 23:59
-        Date day1 = calendar1.getTime();
-//        System.out.println("Date: " + dateFormat.format(day1) + ", day1: " + dayFormat.format(day1));
+	    for (String mode : predefinedModes) {
+	        Map<String, Object> modeData = new HashMap<>();
+	        modeData.put("count", 0);
+	        modeData.put("amount", BigDecimal.ZERO);
+	        paymentModeData.put(mode, modeData);
+	    }
 
-        // Get the 6 days before yesterday without setting time
-        calendar.add(Calendar.DATE, -1);
-        Date day2 = calendar.getTime();
-//        System.out.println("Date: " + dateFormat.format(day2) + ", Day: " + dayFormat.format(day2));
+	    // Process import gate-in data
+	    if (getDataForPieChart != null) {
+	        for (Object[] row : getDataForPieChart) {
+	            if (row != null && row.length > 1) { // Ensure row has valid data
+	                Long count = (Long) row[3]; // Invoice count at index 3
+	                String paymentMode = (String) row[2]; // Payment mode at index 2
+	                BigDecimal amount = (BigDecimal) row[4]; // Amount at index 4
 
-        calendar.add(Calendar.DATE, -1);
-        Date day3 = calendar.getTime();
-//        System.out.println("Date: " + dateFormat.format(day3) + ", Day: " + dayFormat.format(day3));
+	                // Determine the grouped payment mode
+	                String groupedPaymentMode = paymentModeMapping.getOrDefault(paymentMode, "OTHER");
 
-        calendar.add(Calendar.DATE, -1);
-        Date day4 = calendar.getTime();
-//        System.out.println("Date: " + dateFormat.format(day4) + ", Day: " + dayFormat.format(day4));
-
-        calendar.add(Calendar.DATE, -1);
-        Date day5 = calendar.getTime();
-//        System.out.println("Date: " + dateFormat.format(day5) + ", Day: " + dayFormat.format(day5));
-
-        calendar.add(Calendar.DATE, -1);
-        Date day6 = calendar.getTime();
-//        System.out.println("Date: " + dateFormat.format(day6) + ", day6: " + dayFormat.format(day6));
-
-        // Get day7 and reset the time to 00:00
-        calendar.add(Calendar.DATE, -1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Date day7 = calendar.getTime();
-//        System.out.println("Date: " + dateFormat7.format(day7) + ", Day7: " + dayFormat.format(day7));
-
-
-	 Map<String, Object> bufferInUser = new HashMap<>();
-
-	// Initialize counters for each day (Monday to Saturday) for LDD
-	Map<String, Integer> dayCounts20Buffer = new HashMap<>();
-	Map<String, Integer> dayCounts40Buffer = new HashMap<>();
-	Map<String, Integer> dayWiseTuesCountsBuffer = new HashMap<>();
-
-	// Initialize day counts for LDD
-	dayCounts20Buffer.put("Sunday", 0);
-	dayCounts20Buffer.put("Monday", 0);
-	dayCounts20Buffer.put("Tuesday", 0);
-	dayCounts20Buffer.put("Wednesday", 0);
-	dayCounts20Buffer.put("Thursday", 0);
-	dayCounts20Buffer.put("Friday", 0);
-	dayCounts20Buffer.put("Saturday", 0);
-
-	dayCounts40Buffer.put("Sunday", 0);
-	dayCounts40Buffer.put("Monday", 0);
-	dayCounts40Buffer.put("Tuesday", 0);
-	dayCounts40Buffer.put("Wednesday", 0);
-	dayCounts40Buffer.put("Thursday", 0);
-	dayCounts40Buffer.put("Friday", 0);
-	dayCounts40Buffer.put("Saturday", 0);
-
-	dayWiseTuesCountsBuffer.put("Sunday", 0);
-	dayWiseTuesCountsBuffer.put("Monday", 0);
-	dayWiseTuesCountsBuffer.put("Tuesday", 0);
-	dayWiseTuesCountsBuffer.put("Wednesday", 0);
-	dayWiseTuesCountsBuffer.put("Thursday", 0);
-	dayWiseTuesCountsBuffer.put("Friday", 0);
-	dayWiseTuesCountsBuffer.put("Saturday", 0);
-
-	// Loop through Buffer data (similar to lastWeekFclDestuff)
-	SimpleDateFormat dateFormatBuffer = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	if (exportBufferLastWeek != null) {  // Assuming bufferInUserData is the data source you have
-	    for (Object[] row : exportBufferLastWeek) {
-	        if (row != null && row.length > 1) {
-	            String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-	            Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is a String at index [2]
-	            
-	            try {
-//	                Date gateInDate = dateFormatBuffer.parse(gateInDateStr);
-	                Calendar gateInCalendar = Calendar.getInstance();
-	                gateInCalendar.setTime(gateInDate);
-	                int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);  // Sunday = 1, Monday = 2, ...
-
-	                String dayName = "";
-	                switch (dayOfWeek) {
-	                    case Calendar.SUNDAY: dayName = "Sunday"; break;
-	                    case Calendar.MONDAY: dayName = "Monday"; break;
-	                    case Calendar.TUESDAY: dayName = "Tuesday"; break;
-	                    case Calendar.WEDNESDAY: dayName = "Wednesday"; break;
-	                    case Calendar.THURSDAY: dayName = "Thursday"; break;
-	                    case Calendar.FRIDAY: dayName = "Friday"; break;
-	                    case Calendar.SATURDAY: dayName = "Saturday"; break;
-	                    default: break;
-	                }
-
-	                // Check if the gate-in date is within the Sunday to Saturday week
-	                if (dayName != "" && isDateBetween(gateInDate, day7, day1)) {
-	                    // Count based on container size for Buffer
-	                    if ("20".equals(containerSize) || "22".equals(containerSize)) {
-	                        dayCounts20Buffer.put(dayName, dayCounts20Buffer.get(dayName) + 1);
-	                    } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-	                        dayCounts40Buffer.put(dayName, dayCounts40Buffer.get(dayName) + 1);
-	                    }
-	                }
-	            } catch (Exception e) {
-	                System.out.println("Error parsing date: ");
-	                e.printStackTrace();
+	                // Check if payment mode already exists (it will exist due to initialization)
+	                Map<String, Object> modeData = paymentModeData.get(groupedPaymentMode);
+	                modeData.put("count", (int) modeData.get("count") + count.intValue());
+	                modeData.put("amount", ((BigDecimal) modeData.get("amount")).add(amount));
 	            }
 	        }
 	    }
-	}
 
-	// Calculate tuesCountInBuffer for each day using the formula for Buffer
-	for (String day : dayCounts20Buffer.keySet()) {
-	    int countIn20Buffer = dayCounts20Buffer.get(day);
-	    int countIn40Buffer = dayCounts40Buffer.get(day);
-	    int tuesCountInBuffer = (countIn40Buffer * 2) + countIn20Buffer;
-	    dayWiseTuesCountsBuffer.put(day, tuesCountInBuffer);
-	}
-
-	// Store the results in the map
-	bufferInUser.put("Monday", dayWiseTuesCountsBuffer.get("Monday"));
-	bufferInUser.put("Tuesday", dayWiseTuesCountsBuffer.get("Tuesday"));
-	bufferInUser.put("Wednesday", dayWiseTuesCountsBuffer.get("Wednesday"));
-	bufferInUser.put("Thursday", dayWiseTuesCountsBuffer.get("Thursday"));
-	bufferInUser.put("Friday", dayWiseTuesCountsBuffer.get("Friday"));
-	bufferInUser.put("Saturday", dayWiseTuesCountsBuffer.get("Saturday"));
-	bufferInUser.put("Sunday", dayWiseTuesCountsBuffer.get("Sunday"));
-	bufferInUser.put("name", "bufferInUser"); // Correct name for bufferInUser
-
-
-	
-	
-	
-	
-	Map<String, Object> exportMovementOutLastWeekMap = new HashMap<>();
-
-	// Initialize counters for each day (Monday to Saturday) for Export Movement Out
-	Map<String, Integer> dayCounts20Export = new HashMap<>();
-	Map<String, Integer> dayCounts40Export = new HashMap<>();
-	Map<String, Integer> dayWiseTuesCountsExport = new HashMap<>();
-
-	// Initialize day counts for Export Movement Out
-	dayCounts20Export.put("Sunday", 0);
-	dayCounts20Export.put("Monday", 0);
-	dayCounts20Export.put("Tuesday", 0);
-	dayCounts20Export.put("Wednesday", 0);
-	dayCounts20Export.put("Thursday", 0);
-	dayCounts20Export.put("Friday", 0);
-	dayCounts20Export.put("Saturday", 0);
-
-	dayCounts40Export.put("Sunday", 0);
-	dayCounts40Export.put("Monday", 0);
-	dayCounts40Export.put("Tuesday", 0);
-	dayCounts40Export.put("Wednesday", 0);
-	dayCounts40Export.put("Thursday", 0);
-	dayCounts40Export.put("Friday", 0);
-	dayCounts40Export.put("Saturday", 0);
-
-	dayWiseTuesCountsExport.put("Sunday", 0);
-	dayWiseTuesCountsExport.put("Monday", 0);
-	dayWiseTuesCountsExport.put("Tuesday", 0);
-	dayWiseTuesCountsExport.put("Wednesday", 0);
-	dayWiseTuesCountsExport.put("Thursday", 0);
-	dayWiseTuesCountsExport.put("Friday", 0);
-	dayWiseTuesCountsExport.put("Saturday", 0);
-
-	// Loop through Export Movement Out data (similar to the previous ones)
-	SimpleDateFormat dateFormatExport = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	if (exportMovementOutLastWeek != null) {  // Assuming exportMovementOutData is the data source you have
-	    for (Object[] row : exportMovementOutLastWeek) {
-	        if (row != null && row.length > 1) {
-	            String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-	            Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is a String at index [2]
-	            
-	            try {
-//	                Date gateInDate = dateFormatExport.parse(gateInDateStr);
-	                Calendar gateInCalendar = Calendar.getInstance();
-	                gateInCalendar.setTime(gateInDate);
-	                int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);  // Sunday = 1, Monday = 2, ...
-
-	                String dayName = "";
-	                switch (dayOfWeek) {
-	                    case Calendar.SUNDAY: dayName = "Sunday"; break;
-	                    case Calendar.MONDAY: dayName = "Monday"; break;
-	                    case Calendar.TUESDAY: dayName = "Tuesday"; break;
-	                    case Calendar.WEDNESDAY: dayName = "Wednesday"; break;
-	                    case Calendar.THURSDAY: dayName = "Thursday"; break;
-	                    case Calendar.FRIDAY: dayName = "Friday"; break;
-	                    case Calendar.SATURDAY: dayName = "Saturday"; break;
-	                    default: break;
-	                }
-
-	                // Check if the gate-in date is within the Sunday to Saturday week
-	                if (dayName != "" && isDateBetween(gateInDate, day7, day1)) {
-	                    // Count based on container size for Export Movement Out
-	                    if ("20".equals(containerSize) || "22".equals(containerSize)) {
-	                        dayCounts20Export.put(dayName, dayCounts20Export.get(dayName) + 1);
-	                    } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-	                        dayCounts40Export.put(dayName, dayCounts40Export.get(dayName) + 1);
-	                    }
-	                }
-	            } catch (Exception e) {
-	                System.out.println("Error parsing date: ");
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-	}
-
-	// Calculate tuesCountInExport for each day using the formula for Export Movement Out
-	for (String day : dayCounts20Export.keySet()) {
-	    int countIn20Export = dayCounts20Export.get(day);
-	    int countIn40Export = dayCounts40Export.get(day);
-	    int tuesCountInExport = (countIn40Export * 2) + countIn20Export;
-	    dayWiseTuesCountsExport.put(day, tuesCountInExport);
-	}
-
-	// Store the results in the map
-	exportMovementOutLastWeekMap.put("Monday", dayWiseTuesCountsExport.get("Monday"));
-	exportMovementOutLastWeekMap.put("Tuesday", dayWiseTuesCountsExport.get("Tuesday"));
-	exportMovementOutLastWeekMap.put("Wednesday", dayWiseTuesCountsExport.get("Wednesday"));
-	exportMovementOutLastWeekMap.put("Thursday", dayWiseTuesCountsExport.get("Thursday"));
-	exportMovementOutLastWeekMap.put("Friday", dayWiseTuesCountsExport.get("Friday"));
-	exportMovementOutLastWeekMap.put("Saturday", dayWiseTuesCountsExport.get("Saturday"));
-	exportMovementOutLastWeekMap.put("Sunday", dayWiseTuesCountsExport.get("Sunday"));
-	exportMovementOutLastWeekMap.put("name", "exportMovementOutLastWeekMap"); // Correct name for exportMovementOut
-
-	
-	
-	
-	
-	
-	
-	Map<String, Object> exportStuffTallyData = new HashMap<>();
-	Map<String, Integer> exportDayCounts20W = new HashMap<>();
-	Map<String, Integer> exportDayCounts40W = new HashMap<>();
-	Map<String, Integer> exportDayWiseTuesCounts = new HashMap<>();
-
-	exportDayCounts20W.put("Sunday", 0);
-	exportDayCounts20W.put("Monday", 0);
-	exportDayCounts20W.put("Tuesday", 0);
-	exportDayCounts20W.put("Wednesday", 0);
-	exportDayCounts20W.put("Thursday", 0);
-	exportDayCounts20W.put("Friday", 0);
-	exportDayCounts20W.put("Saturday", 0);
-
-	exportDayCounts40W.put("Sunday", 0);
-	exportDayCounts40W.put("Monday", 0);
-	exportDayCounts40W.put("Tuesday", 0);
-	exportDayCounts40W.put("Wednesday", 0);
-	exportDayCounts40W.put("Thursday", 0);
-	exportDayCounts40W.put("Friday", 0);
-	exportDayCounts40W.put("Saturday", 0);
-
-	exportDayWiseTuesCounts.put("Sunday", 0);
-	exportDayWiseTuesCounts.put("Monday", 0);
-	exportDayWiseTuesCounts.put("Tuesday", 0);
-	exportDayWiseTuesCounts.put("Wednesday", 0);
-	exportDayWiseTuesCounts.put("Thursday", 0);
-	exportDayWiseTuesCounts.put("Friday", 0);
-	exportDayWiseTuesCounts.put("Saturday", 0);
-
-	SimpleDateFormat dateFormat1Exp = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	if (exportStuffTallyLastWeek != null) {
-	    for (Object[] row : exportStuffTallyLastWeek) {
-	        if (row != null && row.length > 1) {
-	            String containerSize = (String) row[1]; 
-	            Date gateInDate = (Date) row[2];
-
-	            try {
-//	                Date gateInDate = dateFormat1Exp.parse(gateInDateStr);
-	                Calendar gateInCalendar = Calendar.getInstance();
-	                gateInCalendar.setTime(gateInDate);
-	                int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);
-
-	                String dayName = "";
-	                switch (dayOfWeek) {
-	                    case Calendar.SUNDAY: dayName = "Sunday"; break;
-	                    case Calendar.MONDAY: dayName = "Monday"; break;
-	                    case Calendar.TUESDAY: dayName = "Tuesday"; break;
-	                    case Calendar.WEDNESDAY: dayName = "Wednesday"; break;
-	                    case Calendar.THURSDAY: dayName = "Thursday"; break;
-	                    case Calendar.FRIDAY: dayName = "Friday"; break;
-	                    case Calendar.SATURDAY: dayName = "Saturday"; break;
-	                    default: break;
-	                }
-
-	                if (!dayName.isEmpty() && isDateBetween(gateInDate, day7, day1)) {
-	                    if ("20".equals(containerSize) || "22".equals(containerSize)) {
-	                        exportDayCounts20W.put(dayName, exportDayCounts20W.get(dayName) + 1);
-	                    } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-	                        exportDayCounts40W.put(dayName, exportDayCounts40W.get(dayName) + 1);
-	                    }
-	                }
-	            } catch (Exception e) {
-	                System.out.println("Error parsing date: ");
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-	}
-
-	// Calculate exportDayWiseTuesCounts
-	for (String day : exportDayCounts20W.keySet()) {
-	    int countIn20W = exportDayCounts20W.get(day);
-	    int countIn40W = exportDayCounts40W.get(day);
-	    int tuesCountInW = (countIn40W * 2) + countIn20W;
-	    exportDayWiseTuesCounts.put(day, tuesCountInW);
-	}
-
-	
-	exportStuffTallyData.put("Monday", exportDayWiseTuesCounts.get("Monday"));
-	exportStuffTallyData.put("Tuesday", exportDayWiseTuesCounts.get("Tuesday"));
-	exportStuffTallyData.put("Wednesday", exportDayWiseTuesCounts.get("Wednesday"));
-	exportStuffTallyData.put("Thursday", exportDayWiseTuesCounts.get("Thursday"));
-	exportStuffTallyData.put("Friday", exportDayWiseTuesCounts.get("Friday"));
-	exportStuffTallyData.put("Saturday", exportDayWiseTuesCounts.get("Saturday"));
-	exportStuffTallyData.put("Sunday", exportDayWiseTuesCounts.get("Sunday"));
-	exportStuffTallyData.put("name", "EXPORT STUFF TALLY WEEK");
-
+	    pieChart.put("paymentModeData", paymentModeData);
+	    System.out.println("Payment Mode Data: " + paymentModeData);
 
 	int invoiceCount = 0;
     BigDecimal totalAmount = BigDecimal.ZERO;
@@ -5365,6 +5126,7 @@ public class DashBoardService {
 
 	    collection.put("totalCount", collectionCount);
 	    collection.put("totalCollection", collectionAmount);
+	    collection.put("totalCollections", totalCollections);
 	    
 	    
 	    Map<String, Object> outStandingMap = new HashMap<>();
@@ -5385,382 +5147,278 @@ public class DashBoardService {
 	    outStandingMap.put("totalCoOutStanding", outCount);
 	    outStandingMap.put("totalOutStandingAmount", outAmount);
 
-
 	    
-	    
-	    Map<String, Object> exportLDDMap = new HashMap<>();
-	    int countLDD20 = 0;
-	    int countLDD40 = 0;
+		 
+		 
+		 
+		 
+	    Date endDateNew1 = new Date();
 
-	    if (exportLDD != null) {
-	        for (Object[] row : exportLDD) {
-	          
-	            
-	                String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-	                String countCategory = getContainerSizeCategory(containerSize);
-	                if ("20".equals(containerSize) || "22".equals(containerSize)) {
-	                	countLDD20++;
-	                } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-	                	countLDD40++;
-	                }
-	                
-	                exportLDDMap.put(countCategory, (Integer) exportLDDMap.getOrDefault(countCategory, 0) + 1);
-	        }
-	    }
-
-	    int tuesCountLDD = (countLDD40 * 2) + countLDD20;
-	    int totalCountLDD =countLDD40 + countLDD20;
-	    exportLDDMap.put("total", totalCountLDD);
-	    exportLDDMap.put("Tues", tuesCountLDD);
-	    exportLDDMap.put("name", "EXP LDD PENDENCY");
+        // Initialize calendar with the end date
 	    
-	    
-	    Map<String, Object> ExportcontainerCounts = new HashMap<>();
-	    int count20 = 0;
-	    int count40 = 0;
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat7 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+        
+	    Calendar calendar11 = Calendar.getInstance();
+        calendar11.setTime(endDateNew1);
 
-	    // Process job order data
-	    if (emptyGateIn != null) {
-	        for (Object[] row : emptyGateIn) {
-	            String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-	            String countCategory = getContainerSizeCategory(containerSize);
+        calendar11.add(Calendar.DATE, -1);
+        calendar11.set(Calendar.HOUR_OF_DAY, 7);
+        calendar11.set(Calendar.MINUTE, 59);
+        calendar11.set(Calendar.SECOND, 59);
+        calendar11.set(Calendar.MILLISECOND, 0);
+        // Set time to 23:59 for day1
+        
+        Calendar calendar111 = Calendar.getInstance();
+        calendar111.setTime(endDateNew1);
 
-	            if ("20".equals(containerSize) || "22".equals(containerSize)) {
-	                count20++;
-	            } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-	                count40++;
-	            }
-	            ExportcontainerCounts.put(countCategory, (Integer) ExportcontainerCounts.getOrDefault(countCategory, 0) + 1);
-	        }
-	    }
+        // Exclude the current date by moving back one day
+        calendar111.add(Calendar.DATE, -1);
 
-	    int tuesCount = (count40 * 2) + count20;
-	    int totalCount = count40 + count20;
-	    ExportcontainerCounts.put("total", totalCount);
-	    ExportcontainerCounts.put("Tues", tuesCount);
-	    ExportcontainerCounts.put("name", "EXPORT EMPTY IN"); 
-	    
-	   
-	    Map<String, Object> exp = new HashMap<>();
-	    int countExp20 = 0;
-	    int countExp40 = 0;
+        // Print day1 (yesterday) with time 23:59
+        Date day11 = calendar11.getTime();
+        System.out.println("Date: " + dateFormat.format(day11) + ", day1: " + dayFormat.format(day11));
 
-	    if (exportInventory != null) {
-	        for (Object[] row : exportInventory) {
-	          
-	            	System.out.println("row :"+row);
-	                String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-	                String countCategory = getContainerSizeCategory(containerSize);
-	                if ("20".equals(containerSize) || "22".equals(containerSize)) {
-	                	countExp20++;
-	                } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-	                	countExp40++;
-	                }
-	                
-	                exp.put(countCategory, (Integer) exp.getOrDefault(countCategory, 0) + 1);
-	        }
-	    }
+        // Get the 6 days before yesterday without setting time
+        calendar111.add(Calendar.DATE, -1);
+        Date day21 = calendar111.getTime();
+        System.out.println("Date: " + dateFormat.format(day21) + ", Day: " + dayFormat.format(day21));
 
-	    int tuesCountExp = (countExp40 * 2) + countExp20;
-	    int totalCountExp =countExp40 + countExp20;
-	    
-	    exp.put("total", totalCountExp);
-	    exp.put("Tues", tuesCountExp);
-	    exp.put("name", "Export Empty Inventory");
-	    
-	    
-	    Map<String, Object> exportLaddLastWeekData = new HashMap<>();
+        calendar111.add(Calendar.DATE, -1);
+        Date day31 = calendar111.getTime();
+        System.out.println("Date: " + dateFormat.format(day31) + ", Day: " + dayFormat.format(day31));
+
+        calendar111.add(Calendar.DATE, -1);
+        Date day41 = calendar111.getTime();
+        System.out.println("Date: " + dateFormat.format(day41) + ", Day: " + dayFormat.format(day41));
+
+        calendar111.add(Calendar.DATE, -1);
+        Date day51 = calendar111.getTime();
+        System.out.println("Date: " + dateFormat.format(day51) + ", Day: " + dayFormat.format(day51));
+
+        calendar111.add(Calendar.DATE, -1);
+        Date day61 = calendar111.getTime();
+        System.out.println("Date: " + dateFormat.format(day61) + ", day6: " + dayFormat.format(day61));
+
+        // Get day7 and reset the time to 00:00
+        calendar111.add(Calendar.DATE, -1);
+        calendar111.set(Calendar.HOUR_OF_DAY, 8);
+        calendar111.set(Calendar.MINUTE, 0);
+        calendar111.set(Calendar.SECOND, 0);
+        calendar111.set(Calendar.MILLISECOND, 0);
+        Date day71 = calendar111.getTime();
+        System.out.println("Date: " + dateFormat7.format(day71) + ", Day7: " + dayFormat.format(day71));
+
+        
+     // Initialize maps for each date
+//        Map<String, Object> invoicesDayWise = new HashMap<>();
+//        Map<String, Integer> dayWiseCounts = new HashMap<>();
+//        Map<String, BigDecimal> dayWiseAmounts = new HashMap<>();
+//
+//        // Initialize maps with default values (0 count and 0 amount)
+//        List<Date> days = Arrays.asList(day11, day21, day31, day41, day51, day61, day71);
+//        for (Date day : days) {
+//            String formattedDate = dateFormatFcl.format(day);
+//            dayWiseCounts.put(formattedDate, 0);
+//            dayWiseAmounts.put(formattedDate, BigDecimal.ZERO);
+//        }
+//
+//        // Loop through invoice data
+//        SimpleDateFormat dateFormat111 = new SimpleDateFormat("yyyy-MM-dd");
+//        if (lastWeekInvoiceDetails != null) {
+//            for (Object[] row : lastWeekInvoiceDetails) {
+//                if (row != null && row.length > 1) { // Ensure row has valid data
+//                    try {
+//                        // Handle potential casting issues safely
+//                        Long count = (row[1] != null) ? ((Number) row[1]).longValue() : 0L;
+//                        BigDecimal amount = (row[3] != null) ? new BigDecimal(row[3].toString()) : BigDecimal.ZERO;
+//                        Date createdDate = (Date) row[4]; // Ensure proper date parsing
+//                        String collectionDateString = dateFormat111.format(createdDate);
+//                       
+//                        dayWiseCounts.put(collectionDateString, 
+//                            dayWiseCounts.getOrDefault(collectionDateString, 0) + count.intValue());
+//
+//                        dayWiseAmounts.put(collectionDateString, 
+//                            dayWiseAmounts.getOrDefault(collectionDateString, BigDecimal.ZERO).add(amount));
+//
+//                    } catch (Exception e) {
+//                        System.out.println("Error processing row: " + Arrays.toString(row));
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//
+//        // **Store results in ExpInventoryLast** (Ensure safe data retrieval)
+//        for (Date day : days) {
+//            String formattedDate = dateFormatFcl.format(day);
+//            Map<String, Object> dailyData = new HashMap<>();
+//            dailyData.put("count", dayWiseCounts.getOrDefault(formattedDate, 0)); // Ensure default value
+//            dailyData.put("amount", dayWiseAmounts.getOrDefault(formattedDate, BigDecimal.ZERO)); // Ensure default value
+//            invoicesDayWise.put(formattedDate, dailyData);
+//        }
+//        invoicesDayWise.put("name", "invoicesDayWise");
+        
+        Map<String, Object> invoicesDayWise = new HashMap<>();
+        Map<String, Integer> dayWiseCounts = new HashMap<>();
+        Map<String, BigDecimal> dayWiseAmounts = new HashMap<>();
+
+        // Initialize maps with default values (0 count and 0 amount)
+        List<Date> days = Arrays.asList(day11, day21, day31, day41, day51, day61, day71);
+        for (Date day : days) {
+            String formattedDate = dateFormatFcl.format(day);
+            dayWiseCounts.put(formattedDate, 0);
+            dayWiseAmounts.put(formattedDate, BigDecimal.ZERO);
+        }
+
+        // Loop through invoice data
+        SimpleDateFormat dateFormat111 = new SimpleDateFormat("yyyy-MM-dd");
+        if (lastWeekInvoiceDetails != null) {
+            for (Object[] row : lastWeekInvoiceDetails) {
+                if (row != null && row.length > 1) {
+                	 Long count = (Long) row[1]; // Invoice count at index 1
+                   BigDecimal amount = (BigDecimal) row[3]; // Amount at index 3
+                   Date createdDate = (Date) row[4]; // Date at index 4
+
+                    try {
+    
+                        String createdDateString = dateFormat111.format(createdDate);
+
+                        // Check if createdDate is within the specified week
+                        if (isDateBetween(createdDate, day71, day11)) {
+                            System.out.println("Valid Entry for: " + createdDateString);
+                            dayWiseCounts.put(createdDateString, dayWiseCounts.getOrDefault(createdDateString, 0) + count.intValue());
+                            dayWiseAmounts.put(createdDateString, dayWiseAmounts.getOrDefault(createdDateString, BigDecimal.ZERO).add(amount));
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error processing row: " + Arrays.toString(row));
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // Store results in ExpInventoryLast
+        for (Date day : days) {
+            String formattedDate = dateFormatFcl.format(day);
+            Map<String, Object> dailyData = new HashMap<>();
+            dailyData.put("count", dayWiseCounts.get(formattedDate));
+            dailyData.put("amount", dayWiseAmounts.get(formattedDate));
+            invoicesDayWise.put(formattedDate, dailyData);
+        }
+
+        // Add title
+        invoicesDayWise.put("name", "invoicesDayWise");
+        
+        
+        Map<String, Object> invociceCollection = new HashMap<>();
+        Map<String, Integer> dayWiseColCounts = new HashMap<>();
+        Map<String, BigDecimal> dayWiseColAmounts = new HashMap<>();
+
+        // Initialize maps with default values (0 count and 0 amount)
+        List<Date> collectionDays = Arrays.asList(day11, day21, day31, day41, day51, day61, day71);
+        for (Date day : collectionDays) {
+            String formattedDate = dateFormatFcl.format(day);
+            dayWiseColCounts.put(formattedDate, 0);
+            dayWiseColAmounts.put(formattedDate, BigDecimal.ZERO);
+        }
+
+        if (totalCollectionsLastWeek != null) {
+            for (Object[] row : totalCollectionsLastWeek) {
+                if (row != null && row.length > 1) {
+                	 Long count = (Long) row[2]; // Invoice count at index 1
+	                 BigDecimal amount = (BigDecimal) row[3]; // Amount at index 3
+	                 
+	                 Date createdDate =(Date) row[4];
+
+                    try {
+    
+                        String createdDateString = dateFormat111.format(createdDate);
+
+                        // Check if createdDate is within the specified week
+                        if (isDateBetween(createdDate, day71, day11)) {
+                            System.out.println("Valid Entry for: " + createdDateString);
+                            dayWiseColCounts.put(createdDateString, dayWiseColCounts.getOrDefault(createdDateString, 0) + count.intValue());
+                            dayWiseColAmounts.put(createdDateString, dayWiseColAmounts.getOrDefault(createdDateString, BigDecimal.ZERO).add(amount));
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error processing row: " + Arrays.toString(row));
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // Store results in ExpInventoryLast
+        for (Date day : collectionDays) {
+            String formattedDate = dateFormatFcl.format(day);
+            Map<String, Object> dailyData = new HashMap<>();
+            dailyData.put("count", dayWiseColCounts.get(formattedDate));
+            dailyData.put("amount", dayWiseColAmounts.get(formattedDate));
+            invociceCollection.put(formattedDate, dailyData);
+        }
+
+        // Add title
+        invociceCollection.put("name", "invociceCollection");
+        
+        
+        
+        Map<String, Object> outStandingLastWeekMap = new HashMap<>();
+        Map<String, Integer> outCounts = new HashMap<>();
+        Map<String, BigDecimal>  outAmounts = new HashMap<>();
+
+        // Initialize maps with default values (0 count and 0 amount)
+        List<Date> outStandingDays = Arrays.asList(day11, day21, day31, day41, day51, day61, day71);
+        for (Date day : outStandingDays) {
+            String formattedDate = dateFormatFcl.format(day);
+            outCounts.put(formattedDate, 0);
+            outAmounts.put(formattedDate, BigDecimal.ZERO);
+        }
+
+        if (outStandingLastWeek != null) {
+            for (Object[] row : outStandingLastWeek) {
+                if (row != null && row.length > 1) {
+                	 Long count = (Long) row[2]; // Invoice count at index 1
+                     BigDecimal amount = (BigDecimal) row[4]; // Amount at index 3
+	                 
+	                 Date createdDate =(Date) row[5];
+
+                    try {
+    
+                        String createdDateString = dateFormat111.format(createdDate);
+
+                        // Check if createdDate is within the specified week
+                        if (isDateBetween(createdDate, day71, day11)) {
+                            System.out.println("Valid Entry for: " + createdDateString);
+                            outCounts.put(createdDateString, outCounts.getOrDefault(createdDateString, 0) + count.intValue());
+                            outAmounts.put(createdDateString, outAmounts.getOrDefault(createdDateString, BigDecimal.ZERO).add(amount));
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error processing row: " + Arrays.toString(row));
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // Store results in ExpInventoryLast
+        for (Date day : outStandingDays) {
+            String formattedDate = dateFormatFcl.format(day);
+            Map<String, Object> dailyData = new HashMap<>();
+            dailyData.put("count", outCounts.get(formattedDate));
+            dailyData.put("amount", outAmounts.get(formattedDate));
+            outStandingLastWeekMap.put(formattedDate, dailyData);
+        }
+
+        // Add title
+        outStandingLastWeekMap.put("name", "outStandingLastWeekMap");
+
+		 
+		 
 		
 
-		 Map<String, Integer> dayCounts20 = new HashMap<>();
-		    Map<String, Integer> dayCounts40 = new HashMap<>();
-		    Map<String, Integer> dayWiseTuesCount = new HashMap<>();
-
-		    dayCounts20.put("Sunday", 0);
-		    dayCounts20.put("Monday", 0);
-		    dayCounts20.put("Tuesday", 0);
-		    dayCounts20.put("Wednesday", 0);
-		    dayCounts20.put("Thursday", 0);
-		    dayCounts20.put("Friday", 0);
-		    dayCounts20.put("Saturday", 0);
-
-		    dayCounts40.put("Sunday", 0);
-		    dayCounts40.put("Monday", 0);
-		    dayCounts40.put("Tuesday", 0);
-		    dayCounts40.put("Wednesday", 0);
-		    dayCounts40.put("Thursday", 0);
-		    dayCounts40.put("Friday", 0);
-		    dayCounts40.put("Saturday", 0);
-
-		    dayWiseTuesCount.put("Sunday", 0);
-		    dayWiseTuesCount.put("Monday", 0);
-		    dayWiseTuesCount.put("Tuesday", 0);
-		    dayWiseTuesCount.put("Wednesday", 0);
-		    dayWiseTuesCount.put("Thursday", 0);
-		    dayWiseTuesCount.put("Friday", 0);
-		    dayWiseTuesCount.put("Saturday", 0);
-
-
-		    
-		    if (exportLDDLastWeek != null) {
-		        for (Object[] row : exportLDDLastWeek) {
-		            if (row != null && row.length > 1) { // Null check for row and container size
-		                String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-		                Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is a String at index [2]
-		                
-		                
-//		                System.out.println( " gateInDateStr  :"+gateInDateStr);;
-
-////		                Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is at index [2]  
-		                
-		                try {
-		                    // Get the day of the week for the gate-in date
-//		                	 Date gateInDate = dateFormat.parse(gateInDateStr);
-		                    Calendar gateInCalendar = Calendar.getInstance();
-		                    gateInCalendar.setTime(gateInDate);
-		                    int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);  // Sunday = 1, Monday = 2, ...
-
-		                    // Find the corresponding day name
-		                    String dayName = "";
-		                    switch (dayOfWeek) {
-		                        case Calendar.SUNDAY: dayName = "Sunday"; break;
-		                        case Calendar.MONDAY: dayName = "Monday"; break;
-		                        case Calendar.TUESDAY: dayName = "Tuesday"; break;
-		                        case Calendar.WEDNESDAY: dayName = "Wednesday"; break;
-		                        case Calendar.THURSDAY: dayName = "Thursday"; break;
-		                        case Calendar.FRIDAY: dayName = "Friday"; break;
-		                        case Calendar.SATURDAY: dayName = "Saturday"; break;
-		                        default: break;
-		                    }
-
-		                    // Check if the gate-in date is within the Sunday to Saturday week
-		                    if (dayName != "" && isDateBetween(gateInDate, day7, day1)) {
-		                        // Count based on container size
-		                        if ("20".equals(containerSize) || "22".equals(containerSize)) {
-		                        	dayCounts20.put(dayName, dayCounts20.get(dayName) + 1);
-		                        } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-		                            dayCounts40.put(dayName, dayCounts40.get(dayName) + 1);
-		                        }
-		                    }
-		                } catch (Exception e) {
-		                    System.out.println("Error parsing date: ");
-		                    e.printStackTrace();
-		                }
-		            }
-		        }
-		    }
-
-		    // Calculate tuesCountInW for each day using the formula
-		    for (String day : dayCounts20.keySet()) {
-		        int countIn20LDDD = dayCounts20.get(day);
-		        int countIn40LDDD = dayCounts40.get(day);
-		        int tuesCountInLDDD = (countIn40LDDD * 2) + countIn20LDDD;
-		        dayWiseTuesCount.put(day, tuesCountInLDDD);
-		    }
-
-		    // Store the results
-		    exportLaddLastWeekData.put("Monday", dayWiseTuesCount.get("Monday"));
-		    exportLaddLastWeekData.put("Tuesday", dayWiseTuesCount.get("Tuesday"));
-		    exportLaddLastWeekData.put("Wednesday", dayWiseTuesCount.get("Wednesday"));
-		    exportLaddLastWeekData.put("Thursday", dayWiseTuesCount.get("Thursday"));
-		    exportLaddLastWeekData.put("Friday", dayWiseTuesCount.get("Friday"));
-		    exportLaddLastWeekData.put("Saturday", dayWiseTuesCount.get("Saturday"));
-		    exportLaddLastWeekData.put("Sunday", dayWiseTuesCount.get("Sunday"));
-		    exportLaddLastWeekData.put("name", "exportLaddLastWeekData");    
-	    
-	    
-	    
-		    Map<String, Object> Empty = new HashMap<>();
-
-		 // Initialize counters for each day (Monday to Saturday) for LDD
-		 Map<String, Integer> dayCounts20Empty = new HashMap<>();
-		 Map<String, Integer> dayCounts40Empty = new HashMap<>();
-		 Map<String, Integer> dayWiseTuesCountsEmpty = new HashMap<>();
-
-		 // Initialize day counts for LDD
-		 dayCounts20Empty.put("Sunday", 0);
-		 dayCounts20Empty.put("Monday", 0);
-		 dayCounts20Empty.put("Tuesday", 0);
-		 dayCounts20Empty.put("Wednesday", 0);
-		 dayCounts20Empty.put("Thursday", 0);
-		 dayCounts20Empty.put("Friday", 0);
-		 dayCounts20Empty.put("Saturday", 0);
-
-		 dayCounts40Empty.put("Sunday", 0);
-		 dayCounts40Empty.put("Monday", 0);
-		 dayCounts40Empty.put("Tuesday", 0);
-		 dayCounts40Empty.put("Wednesday", 0);
-		 dayCounts40Empty.put("Thursday", 0);
-		 dayCounts40Empty.put("Friday", 0);
-		 dayCounts40Empty.put("Saturday", 0);
-
-		 dayWiseTuesCountsEmpty.put("Sunday", 0);
-		 dayWiseTuesCountsEmpty.put("Monday", 0);
-		 dayWiseTuesCountsEmpty.put("Tuesday", 0);
-		 dayWiseTuesCountsEmpty.put("Wednesday", 0);
-		 dayWiseTuesCountsEmpty.put("Thursday", 0);
-		 dayWiseTuesCountsEmpty.put("Friday", 0);
-		 dayWiseTuesCountsEmpty.put("Saturday", 0);
-
-		 // Loop through Empty data (similar to lastWeekFclDestuff)
-		 SimpleDateFormat dateFormatEmpty = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		 if (emptyGateInLastWeek != null) {  // Assuming EmptyData is the data source you have
-		     for (Object[] row : emptyGateInLastWeek) {
-		         if (row != null && row.length > 1) {
-		             String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-		             Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is at index [2]
-		             
-		             try {
-		                 Calendar gateInCalendar = Calendar.getInstance();
-		                 gateInCalendar.setTime(gateInDate);
-		                 int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);  // Sunday = 1, Monday = 2, ...
-
-		                 String dayName = "";
-		                 switch (dayOfWeek) {
-		                     case Calendar.SUNDAY: dayName = "Sunday"; break;
-		                     case Calendar.MONDAY: dayName = "Monday"; break;
-		                     case Calendar.TUESDAY: dayName = "Tuesday"; break;
-		                     case Calendar.WEDNESDAY: dayName = "Wednesday"; break;
-		                     case Calendar.THURSDAY: dayName = "Thursday"; break;
-		                     case Calendar.FRIDAY: dayName = "Friday"; break;
-		                     case Calendar.SATURDAY: dayName = "Saturday"; break;
-		                     default: break;
-		                 }
-
-		                 // Check if the gate-in date is within the Sunday to Saturday week
-		                 if (!dayName.isEmpty() && isDateBetween(gateInDate, day7, day1)) {
-		                     // Count based on container size for Empty
-		                     if ("20".equals(containerSize) || "22".equals(containerSize)) {
-		                         dayCounts20Empty.put(dayName, dayCounts20Empty.get(dayName) + 1);
-		                     } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-		                         dayCounts40Empty.put(dayName, dayCounts40Empty.get(dayName) + 1);
-		                     }
-		                 }
-		             } catch (Exception e) {
-		                 System.out.println("Error parsing date: ");
-		                 e.printStackTrace();
-		             }
-		         }
-		     }
-		 }
-
-		 // Calculate tuesCountInEmpty for each day using the formula for Empty
-		 for (String day : dayCounts20Empty.keySet()) {
-		     int countIn20Empty = dayCounts20Empty.get(day);
-		     int countIn40Empty = dayCounts40Empty.get(day);
-		     int tuesCountInEmpty = (countIn40Empty * 2) + countIn20Empty;
-		     dayWiseTuesCountsEmpty.put(day, tuesCountInEmpty);
-		 }
-
-		 // Store the results in the map
-		 Empty.put("Monday", dayWiseTuesCountsEmpty.get("Monday"));
-		 Empty.put("Tuesday", dayWiseTuesCountsEmpty.get("Tuesday"));
-		 Empty.put("Wednesday", dayWiseTuesCountsEmpty.get("Wednesday"));
-		 Empty.put("Thursday", dayWiseTuesCountsEmpty.get("Thursday"));
-		 Empty.put("Friday", dayWiseTuesCountsEmpty.get("Friday"));
-		 Empty.put("Saturday", dayWiseTuesCountsEmpty.get("Saturday"));
-		 Empty.put("Sunday", dayWiseTuesCountsEmpty.get("Sunday"));
-		 Empty.put("name", "Empty"); // Correct name for Empty
-
-	    
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 Map<String, Object> ExpInventoryLast = new HashMap<>();
-
-		// Initialize counters for each day (Monday to Saturday) for LDD
-		Map<String, Integer> dayCounts20ExpInventoryLast = new HashMap<>();
-		Map<String, Integer> dayCounts40ExpInventoryLast = new HashMap<>();
-		Map<String, Integer> dayWiseTuesCountsExpInventoryLast = new HashMap<>();
-
-		// Initialize day counts for LDD
-		dayCounts20ExpInventoryLast.put("Sunday", 0);
-		dayCounts20ExpInventoryLast.put("Monday", 0);
-		dayCounts20ExpInventoryLast.put("Tuesday", 0);
-		dayCounts20ExpInventoryLast.put("Wednesday", 0);
-		dayCounts20ExpInventoryLast.put("Thursday", 0);
-		dayCounts20ExpInventoryLast.put("Friday", 0);
-		dayCounts20ExpInventoryLast.put("Saturday", 0);
-
-		dayCounts40ExpInventoryLast.put("Sunday", 0);
-		dayCounts40ExpInventoryLast.put("Monday", 0);
-		dayCounts40ExpInventoryLast.put("Tuesday", 0);
-		dayCounts40ExpInventoryLast.put("Wednesday", 0);
-		dayCounts40ExpInventoryLast.put("Thursday", 0);
-		dayCounts40ExpInventoryLast.put("Friday", 0);
-		dayCounts40ExpInventoryLast.put("Saturday", 0);
-
-		dayWiseTuesCountsExpInventoryLast.put("Sunday", 0);
-		dayWiseTuesCountsExpInventoryLast.put("Monday", 0);
-		dayWiseTuesCountsExpInventoryLast.put("Tuesday", 0);
-		dayWiseTuesCountsExpInventoryLast.put("Wednesday", 0);
-		dayWiseTuesCountsExpInventoryLast.put("Thursday", 0);
-		dayWiseTuesCountsExpInventoryLast.put("Friday", 0);
-		dayWiseTuesCountsExpInventoryLast.put("Saturday", 0);
-
-		// Loop through ExpInventoryLast data (similar to lastWeekFclDestuff)
-		SimpleDateFormat dateFormatExpInventoryLast = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		if (exportInventoryLastWeek != null) {  // Assuming ExpInventoryLastData is the data source you have
-		    for (Object[] row : exportInventoryLastWeek) {
-		        if (row != null && row.length > 1) {
-		            String containerSize = (String) row[1]; // Assuming Container_Size is at index [1]
-		            Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is at index [2]
-		            
-		            try {
-		                Calendar gateInCalendar = Calendar.getInstance();
-		                gateInCalendar.setTime(gateInDate);
-		                int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);  // Sunday = 1, Monday = 2, ...
-
-		                String dayName = "";
-		                switch (dayOfWeek) {
-		                    case Calendar.SUNDAY: dayName = "Sunday"; break;
-		                    case Calendar.MONDAY: dayName = "Monday"; break;
-		                    case Calendar.TUESDAY: dayName = "Tuesday"; break;
-		                    case Calendar.WEDNESDAY: dayName = "Wednesday"; break;
-		                    case Calendar.THURSDAY: dayName = "Thursday"; break;
-		                    case Calendar.FRIDAY: dayName = "Friday"; break;
-		                    case Calendar.SATURDAY: dayName = "Saturday"; break;
-		                    default: break;
-		                }
-
-		                // Check if the gate-in date is within the Sunday to Saturday week
-		                if (!dayName.isEmpty() && isDateBetween(gateInDate, day7, day1)) {
-		                    // Count based on container size for ExpInventoryLast
-		                    if ("20".equals(containerSize) || "22".equals(containerSize)) {
-		                        dayCounts20ExpInventoryLast.put(dayName, dayCounts20ExpInventoryLast.get(dayName) + 1);
-		                    } else if ("40".equals(containerSize) || "45".equals(containerSize)) {
-		                        dayCounts40ExpInventoryLast.put(dayName, dayCounts40ExpInventoryLast.get(dayName) + 1);
-		                    }
-		                }
-		            } catch (Exception e) {
-		                System.out.println("Error parsing date: ");
-		                e.printStackTrace();
-		            }
-		        }
-		    }
-		}
-
-		// Calculate tuesCountInExpInventoryLast for each day using the formula for ExpInventoryLast
-		for (String day : dayCounts20ExpInventoryLast.keySet()) {
-		    int countIn20ExpInventoryLast = dayCounts20ExpInventoryLast.get(day);
-		    int countIn40ExpInventoryLast = dayCounts40ExpInventoryLast.get(day);
-		    int tuesCountInExpInventoryLast = (countIn40ExpInventoryLast * 2) + countIn20ExpInventoryLast;
-		    dayWiseTuesCountsExpInventoryLast.put(day, tuesCountInExpInventoryLast);
-		}
-
-		// Store the results in the map
-		ExpInventoryLast.put("Monday", dayWiseTuesCountsExpInventoryLast.get("Monday"));
-		ExpInventoryLast.put("Tuesday", dayWiseTuesCountsExpInventoryLast.get("Tuesday"));
-		ExpInventoryLast.put("Wednesday", dayWiseTuesCountsExpInventoryLast.get("Wednesday"));
-		ExpInventoryLast.put("Thursday", dayWiseTuesCountsExpInventoryLast.get("Thursday"));
-		ExpInventoryLast.put("Friday", dayWiseTuesCountsExpInventoryLast.get("Friday"));
-		ExpInventoryLast.put("Saturday", dayWiseTuesCountsExpInventoryLast.get("Saturday"));
-		ExpInventoryLast.put("Sunday", dayWiseTuesCountsExpInventoryLast.get("Sunday"));
-		ExpInventoryLast.put("name", "ExpInventoryLast"); // Correct name for ExpInventoryLast
+		
 
 	   
 		    
@@ -5773,11 +5431,14 @@ public class DashBoardService {
 	    result.put("invocesRecord", invocesRecord);
 	    result.put("collection", collection);
 	    result.put("outStandingMap", outStandingMap);
-//	    result.put("ExportcontainerCounts", ExportcontainerCounts);
-//	    result.put("exp", exp);
+	    result.put("invoicesDayWise", invoicesDayWise);
+	    result.put("invociceCollection",invociceCollection);
+	    result.put("outStandingLastWeekMap", outStandingLastWeekMap);
+	    result.put("pieChart", pieChart);
+	    result.put("top10OutStandingChart", top10OutStandingChart);
 //	    
-//	    result.put("bufferInUser",bufferInUser);
-//	    result.put("exportMovementOutLastWeekMap",exportMovementOutLastWeekMap);
+	
+	    result.put("advanceMap",advanceMap);
 //	    result.put("exportStuffTallyData",exportStuffTallyData);
 //	    result.put("exportLaddLastWeekData",exportLaddLastWeekData);
 //	    result.put("Empty",Empty);
