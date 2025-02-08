@@ -605,16 +605,16 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 			@Param("igm") String igm,@Param("gate") String gate);
 	
 	
-	
-	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
-			+ "g.containerType,g.vehicleNo,g.transporterName,p3.partyName,p1.partyName,p2.partyName,g.containerHealth,g.comments,g.createdBy "
-			+ "from GateIn g "
-			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sl=p1.partyId "
-			+ "LEFT OUTER JOIN Party p2 ON g.companyId=p2.companyId and g.branchId=p2.branchId and g.onAccountOf=p2.partyId "
-			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.sa=p3.partyId "
-			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:id and g.status = 'A'")
-	Object getExportMtyContainerGateInReport(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
-	
+//	
+//	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
+//			+ "g.containerType,g.vehicleNo,g.transporterName,p3.partyName,p1.partyName,p2.partyName,g.containerHealth,g.comments,g.createdBy "
+//			+ "from GateIn g "
+//			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sl=p1.partyId "
+//			+ "LEFT OUTER JOIN Party p2 ON g.companyId=p2.companyId and g.branchId=p2.branchId and g.onAccountOf=p2.partyId "
+//			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.sa=p3.partyId "
+//			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:id and g.status = 'A'")
+//	Object getExportMtyContainerGateInReport(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+//	
 	
 	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
 			+ "g.containerType,g.containerSealNo,g.vehicleNo,g.transporterName,g.gateInType,g.importerName,p1.partyName,p2.partyName,"
@@ -625,4 +625,21 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.sl=p3.partyId "
 			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:id and g.status='A'")
 	Object getBufferContainerGateInReport(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+
+//	New Query
+	@Query(value="select g.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),g.containerNo,g.containerSize,"
+			+ "g.containerType,g.vehicleNo,g.transporterName,p3.partyName,p1.partyName,p2.partyName,g.containerHealth,g.comments,g.createdBy, g.origin, g.deliveryOrderNo, DATE_FORMAT(g.doValidityDate,'%d/%m/%Y') "
+			+ "from GateIn g "
+			+ "LEFT OUTER JOIN Party p1 ON g.companyId=p1.companyId and g.branchId=p1.branchId and g.sl=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON g.companyId=p2.companyId and g.branchId=p2.branchId and g.onAccountOf=p2.partyId "
+			+ "LEFT OUTER JOIN Party p3 ON g.companyId=p3.companyId and g.branchId=p3.branchId and g.sa=p3.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.gateInId=:id and g.status = 'A'")
+	Object getExportMtyContainerGateInReport(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+	
+	
+	
+	
+
+
+
 }

@@ -36,11 +36,22 @@ public class YardBlockCell {
     @Column(name = "yard_trans_id", length = 10, nullable = false)
     private String yardTransId;
 
-    @Column(name = "Cell_Area", precision = 12, scale = 3, nullable = true)
+//    @Column(name = "Cell_Area", precision = 12, scale = 3, nullable = true)
+//    private BigDecimal cellArea;
+//
+//    @Column(name = "Cell_Area_Used", precision = 12, scale = 3, nullable = true)
+//    private BigDecimal cellAreaUsed;
+    
+    
+    @Column(name = "Cell_Area", precision = 12, scale = 3, nullable = true, columnDefinition = "DECIMAL(12,3) DEFAULT 0.000")
     private BigDecimal cellArea;
 
-    @Column(name = "Cell_Area_Used", precision = 12, scale = 3, nullable = true)
+    @Column(name = "Cell_Area_Used", precision = 12, scale = 3, nullable = true, columnDefinition = "DECIMAL(12,3) DEFAULT 0.000")
     private BigDecimal cellAreaUsed;
+
+    
+    
+    
 
     @Column(name = "Location_Category", length = 1, nullable = false)
     private String locationCategory;
@@ -73,6 +84,18 @@ public class YardBlockCell {
 
 	public YardBlockCell() {
 		super();
+	}
+
+	
+	@PrePersist
+	@PreUpdate
+	public void setDefaultValues() {
+	    if (cellArea == null) {
+	        cellArea = BigDecimal.ZERO;
+	    }
+	    if (cellAreaUsed == null) {
+	        cellAreaUsed = BigDecimal.ZERO;
+	    }
 	}
 
 	

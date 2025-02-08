@@ -315,6 +315,9 @@ public class ExportReportController {
 		context.setVariable("condition", singleData[10] != null ? String.valueOf(singleData[10]) : "");
 		context.setVariable("remark", singleData[11] != null ? String.valueOf(singleData[11]) : "");
 		context.setVariable("createdBy", singleData[12] != null ? String.valueOf(singleData[12]) : "");
+		context.setVariable("origin", singleData[13] != null ? String.valueOf(singleData[13]) : "");
+		context.setVariable("doNo", singleData[14] != null ? String.valueOf(singleData[14]) : "");
+		context.setVariable("dovalidityDate", singleData[15] != null ? String.valueOf(singleData[15]) : "");
 
 		String htmlContent = templateEngine.process("CFSExportMtyContReport", context);
 

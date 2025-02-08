@@ -114,6 +114,13 @@ public interface PortRepository extends JpaRepository<Port, String> {
 			 		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.portName LIKE CONCAT(:val,'%') OR p.portCode LIKE CONCAT(:val,'%'))")
 				List<Object[]> getData1(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 			
-			@Query(value="select p.portCode from Port p where p.companyId=:cid and p.branchId=:bid and p.jobOrderPrefix = :prefix and p.status != 'D'")
+//			@Query(value="select p.portCode from Port p where p.companyId=:cid and p.branchId=:bid and p.jobOrderPrefix = :prefix and p.status != 'D'")
+//			List<String> getPortIdList(@Param("cid") String cid, @Param("bid") String bid, @Param("prefix") String prefix);
+			
+			
+			@Query(value="select p.portCode from Port p where p.companyId=:cid and p.branchId=:bid and p.country = :prefix and p.status != 'D'")
 			List<String> getPortIdList(@Param("cid") String cid, @Param("bid") String bid, @Param("prefix") String prefix);
+			
+			
+			
 }

@@ -15,6 +15,13 @@ import com.cwms.entities.VehicleTrack;
 public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, String> {
 	
 
+	@Query(value="select v.vehicleNo,v.gateInId,v.driverName, v.transporterName from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
+			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) and (v.gatePassNo is null OR v.gatePassNo = '') "
+			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) and v.profitcentreId=:profit")
+	List<Object[]> getEmptyVehGateIn2(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("profit") String profit);
+
+	
+	
 	 @Transactional
 	 @Modifying
 	 @Query(value = "UPDATE VehicleTrack e " +
@@ -188,10 +195,10 @@ public interface VehicleTrackRepository extends JpaRepository<VehicleTrack, Stri
 	               @Param("id") String id);
 	
 	
-	@Query(value="select v.vehicleNo,v.gateInId,v.driverName from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
-			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) and (v.gatePassNo is null OR v.gatePassNo = '') "
-			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) and v.profitcentreId=:profit")
-	List<Object[]> getEmptyVehGateIn2(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("profit") String profit);
+//	@Query(value="select v.vehicleNo,v.gateInId,v.driverName from VehicleTrack v where v.companyId=:cid and v.branchId=:bid "
+//			+ "and v.status != 'D' and v.vehicleStatus = 'E' and (v.gateOutId = '' OR v.gateOutId is null) and (v.gatePassNo is null OR v.gatePassNo = '') "
+//			+ "and (:veh is null OR :veh = '' OR v.vehicleNo LIKE CONCAT ('%',:veh,'%')) and v.profitcentreId=:profit")
+//	List<Object[]> getEmptyVehGateIn2(@Param("cid") String cid,@Param("bid") String bid,@Param("veh") String veh,@Param("profit") String profit);
 
 	
 	@Query(value="select v from VehicleTrack v where v.companyId=:cid and v.branchId=:bid and v.vehicleNo=:veh and v.status != 'D' and v.gateInId=:inId")
