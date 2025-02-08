@@ -331,7 +331,7 @@ public class Party {
 	    @Column(name = "BIDDR", length = 1, nullable = false)
 	    private String biddr = "N";
 
-	    @Column(name = "CUSTOMER_TYPE", length = 15, nullable = false)
+	    @Column(name = "CUSTOMER_TYPE", length = 30, nullable = false)
 	    private String customerType = "";
 
 	    @Column(name = "ACCOUNT_TYPE", length = 15)
