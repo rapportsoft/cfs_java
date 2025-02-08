@@ -1080,6 +1080,9 @@ public class AuctionService {
 	    myMap.put("secondNotice", firstExBond);
 	    myMap.put("finalNotice", firstGatePass);
 
+//	    System.out.println("");
 		return new ResponseEntity<>(myMap, HttpStatus.OK);
 	}
+	
+	
 }
