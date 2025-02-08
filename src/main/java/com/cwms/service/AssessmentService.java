@@ -2409,6 +2409,28 @@ public class AssessmentService {
 						newAss.setProfitcentreId(con.getProfitcentreId());
 
 						newAss.setAssesmentId(HoldNextIdD1);
+						
+						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+
+						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+												: assessment.getOthPartyId();
+
+						String billingAdd = "IMP".equals(assessment.getBillingParty())
+								? String.valueOf(assessment.getImpSrNo())
+								: "CHA".equals(assessment.getBillingParty())
+										? String.valueOf(assessment.getChaSrNo())
+										: "FWR".equals(assessment.getBillingParty())
+												? String.valueOf(assessment.getAccSrNo())
+												: assessment.getOthSrNo();
+
+						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+						newAss.setPartyId(billingId);
+						newAss.setPartySrNo(new BigDecimal(billingAdd));
+						newAss.setPayableParty(assessment.getBillingParty());
+						newAss.setPayablePartyId(billingId);
 
 						if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 							newAss.setIgst("Y");
@@ -2422,27 +2444,7 @@ public class AssessmentService {
 
 						else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-							Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
-
-							String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-									: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-											: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-													: assessment.getOthPartyId();
-
-							String billingAdd = "IMP".equals(assessment.getBillingParty())
-									? String.valueOf(assessment.getImpSrNo())
-									: "CHA".equals(assessment.getBillingParty())
-											? String.valueOf(assessment.getChaSrNo())
-											: "FWR".equals(assessment.getBillingParty())
-													? String.valueOf(assessment.getAccSrNo())
-													: assessment.getOthSrNo();
-
-							PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-							newAss.setPartyId(billingId);
-							newAss.setPartySrNo(new BigDecimal(billingAdd));
-							newAss.setPayableParty(assessment.getBillingParty());
-							newAss.setPayablePartyId(billingId);
+					
 
 							if (b.getState().equals(p.getState())) {
 								newAss.setIgst("N");
@@ -4060,6 +4062,29 @@ System.out.println("c "+c);
 						newAss.setProfitcentreId(con.getProfitcentreId());
 
 						newAss.setAssesmentId(HoldNextIdD1);
+						
+						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+
+						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+												: assessment.getOthPartyId();
+
+						String billingAdd = "IMP".equals(assessment.getBillingParty())
+								? String.valueOf(assessment.getImpSrNo())
+								: "CHA".equals(assessment.getBillingParty())
+										? String.valueOf(assessment.getChaSrNo())
+										: "FWR".equals(assessment.getBillingParty())
+												? String.valueOf(assessment.getAccSrNo())
+												: assessment.getOthSrNo();
+
+						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+						newAss.setPartyId(billingId);
+						newAss.setPartySrNo(new BigDecimal(billingAdd));
+						newAss.setPayableParty(assessment.getBillingParty());
+						newAss.setPayablePartyId(billingId);
+
 
 						if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 							newAss.setIgst("Y");
@@ -4073,28 +4098,7 @@ System.out.println("c "+c);
 
 						else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-							Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
-
-							String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-									: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-											: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-													: assessment.getOthPartyId();
-
-							String billingAdd = "IMP".equals(assessment.getBillingParty())
-									? String.valueOf(assessment.getImpSrNo())
-									: "CHA".equals(assessment.getBillingParty())
-											? String.valueOf(assessment.getChaSrNo())
-											: "FWR".equals(assessment.getBillingParty())
-													? String.valueOf(assessment.getAccSrNo())
-													: assessment.getOthSrNo();
-
-							PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-							newAss.setPartyId(billingId);
-							newAss.setPartySrNo(new BigDecimal(billingAdd));
-							newAss.setPayableParty(assessment.getBillingParty());
-							newAss.setPayablePartyId(billingId);
-
+							
 							if (b.getState().equals(p.getState())) {
 								newAss.setIgst("N");
 								newAss.setCgst("Y");
@@ -8302,6 +8306,27 @@ System.out.println("c "+c);
 					newAss.setSbNo(noc.getBoeNo());
 					newAss.setSbDate(noc.getBoeDate());
 					newAss.setAssesmentId(HoldNextIdD1);
+					
+					Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+
+					String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+							: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+									: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+											: assessment.getOthPartyId();
+
+					String billingAdd = "IMP".equals(assessment.getBillingParty())
+							? String.valueOf(assessment.getImpSrNo())
+							: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+									: "FWR".equals(assessment.getBillingParty())
+											? String.valueOf(assessment.getAccSrNo())
+											: assessment.getOthSrNo();
+
+					PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+					newAss.setPartyId(billingId);
+					newAss.setPartySrNo(new BigDecimal(billingAdd));
+					newAss.setPayableParty(assessment.getBillingParty());
+					newAss.setPayablePartyId(billingId);
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 						newAss.setIgst("Y");
@@ -8315,26 +8340,7 @@ System.out.println("c "+c);
 
 					else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
-
-						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-												: assessment.getOthPartyId();
-
-						String billingAdd = "IMP".equals(assessment.getBillingParty())
-								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-										: "FWR".equals(assessment.getBillingParty())
-												? String.valueOf(assessment.getAccSrNo())
-												: assessment.getOthSrNo();
-
-						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-						newAss.setPartyId(billingId);
-						newAss.setPartySrNo(new BigDecimal(billingAdd));
-						newAss.setPayableParty(assessment.getBillingParty());
-						newAss.setPayablePartyId(billingId);
+						
 
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
@@ -10260,6 +10266,27 @@ System.out.println("c "+c);
 					newAss.setSbNo(noc.getBoeNo());
 					newAss.setSbDate(noc.getBoeDate());
 					newAss.setAssesmentId(HoldNextIdD1);
+					
+					Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+
+					String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+							: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+									: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+											: assessment.getOthPartyId();
+
+					String billingAdd = "IMP".equals(assessment.getBillingParty())
+							? String.valueOf(assessment.getImpSrNo())
+							: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+									: "FWR".equals(assessment.getBillingParty())
+											? String.valueOf(assessment.getAccSrNo())
+											: assessment.getOthSrNo();
+
+					PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+					newAss.setPartyId(billingId);
+					newAss.setPartySrNo(new BigDecimal(billingAdd));
+					newAss.setPayableParty(assessment.getBillingParty());
+					newAss.setPayablePartyId(billingId);
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 						newAss.setIgst("Y");
@@ -10273,26 +10300,7 @@ System.out.println("c "+c);
 
 					else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
-
-						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-												: assessment.getOthPartyId();
-
-						String billingAdd = "IMP".equals(assessment.getBillingParty())
-								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-										: "FWR".equals(assessment.getBillingParty())
-												? String.valueOf(assessment.getAccSrNo())
-												: assessment.getOthSrNo();
-
-						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-						newAss.setPartyId(billingId);
-						newAss.setPartySrNo(new BigDecimal(billingAdd));
-						newAss.setPayableParty(assessment.getBillingParty());
-						newAss.setPayablePartyId(billingId);
+						
 
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
@@ -14487,6 +14495,27 @@ System.out.println("c "+c);
 				newAss.setSbNo(assessment.getIgmLineNo());
 				newAss.setSbDate(crg.getExBondBeDate());
 				newAss.setAssesmentId(HoldNextIdD1);
+				Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+
+				String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+						: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+								: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+										: assessment.getOthPartyId();
+
+				String billingAdd = "IMP".equals(assessment.getBillingParty())
+						? String.valueOf(assessment.getImpSrNo())
+						: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+								: "FWR".equals(assessment.getBillingParty())
+										? String.valueOf(assessment.getAccSrNo())
+										: assessment.getOthSrNo();
+
+				PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+				newAss.setPartyId(billingId);
+				newAss.setPartySrNo(new BigDecimal(billingAdd));
+				newAss.setPayableParty(assessment.getBillingParty());
+				newAss.setPayablePartyId(billingId);
+
 
 				if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 					newAss.setIgst("Y");
@@ -14500,27 +14529,7 @@ System.out.println("c "+c);
 
 				else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-					Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
-
-					String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-							: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-									: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-											: assessment.getOthPartyId();
-
-					String billingAdd = "IMP".equals(assessment.getBillingParty())
-							? String.valueOf(assessment.getImpSrNo())
-							: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-									: "FWR".equals(assessment.getBillingParty())
-											? String.valueOf(assessment.getAccSrNo())
-											: assessment.getOthSrNo();
-
-					PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-					newAss.setPartyId(billingId);
-					newAss.setPartySrNo(new BigDecimal(billingAdd));
-					newAss.setPayableParty(assessment.getBillingParty());
-					newAss.setPayablePartyId(billingId);
-
+					
 					if (b.getState().equals(p.getState())) {
 						newAss.setIgst("N");
 						newAss.setCgst("Y");
