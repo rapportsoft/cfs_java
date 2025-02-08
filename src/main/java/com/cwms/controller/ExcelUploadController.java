@@ -349,6 +349,8 @@ public class ExcelUploadController {
 					igm.setShippingAgent(shippingAgent != null ? shippingAgent.getPartyId() : "");
 					igm.setProfitcentreId("N00002");
 					igm.setDocDate(new Date());
+					igm.setPortJo(igmNo);
+					igm.setPortJoDate(new Date());
 
 					if (list.size() > 0) {
 						result.put("message", "error");
@@ -1364,6 +1366,8 @@ public class ExcelUploadController {
 				igm.setCreatedDate(new Date());
 				igm.setApprovedBy(user);
 				igm.setApprovedDate(new Date());
+				igm.setPortJo(igm.getIgmNo());
+				igm.setPortJoDate(new Date());
 				cfigmrepo.save(igm);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05060", HoldNextIdD1, "2024");
 
@@ -1881,6 +1885,8 @@ public class ExcelUploadController {
 	                add.put("Package Type", c.get(27));
 	                add.put("Cargo wt", c.get(28));
 	                add.put("Commodity", c.get(33));
+	                
+	               
 	                itemData.add(add);
 	                itemList.add(c.get(6));
 	            }
@@ -1888,9 +1894,7 @@ public class ExcelUploadController {
 
 	        if (!content.isEmpty()) {
 	            content1.forEach(c -> {
-	     
 	                Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
-	      
 	                if (check) {
 	                    Map<String, String> add = new HashMap<>();
 	                    add.put("Container no", c.get(8));
@@ -2239,7 +2243,7 @@ public class ExcelUploadController {
 		}
 
 		// Replace "F " with a new line to indicate record boundaries
-		String processedContent = content.toString().replace("FIN", "\n");
+		String processedContent = content.toString().replace("F", "\n");
 
 		// Split by new line to get each record
 		String[] lines = processedContent.split("\n");
@@ -2296,11 +2300,9 @@ public class ExcelUploadController {
 				}
 			}
 		}
-		
-		String replaceContent = String.valueOf(content).substring(0, 6);
 
 		// Replace "F " with a new line to indicate record boundaries
-		String processedContent = content.toString().replace(replaceContent, "\n");
+		String processedContent = content.toString().replace("F", "\n");
 
 		// Split by new line to get each record
 		String[] lines = processedContent.split("\n");
@@ -2308,8 +2310,6 @@ public class ExcelUploadController {
 		// Process each line
 		for (String record : lines) {
 			// Split by the delimiter " "
-			
-			System.out.println("record "+record);
 			String[] fields = record.split("");
 
 			// Store each field as a list of strings
