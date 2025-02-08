@@ -110,7 +110,7 @@ public interface PortRepository extends JpaRepository<Port, String> {
 			   );
 		 
 		 
-		 @Query(value="select p.portCode,p.portName from Port p where p.companyId=:cid and p.branchId=:bid and p.country='IN' "
+		 @Query(value="select p.portCode,p.portName from Port p where p.companyId=:cid and p.branchId=:bid and p.country='India' "
 			 		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.portName LIKE CONCAT(:val,'%') OR p.portCode LIKE CONCAT(:val,'%'))")
 				List<Object[]> getData1(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 			
