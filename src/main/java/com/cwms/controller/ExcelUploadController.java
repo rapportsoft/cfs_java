@@ -349,6 +349,8 @@ public class ExcelUploadController {
 					igm.setShippingAgent(shippingAgent != null ? shippingAgent.getPartyId() : "");
 					igm.setProfitcentreId("N00002");
 					igm.setDocDate(new Date());
+					igm.setPortJo(igmNo);
+					igm.setPortJoDate(new Date());
 
 					if (list.size() > 0) {
 						result.put("message", "error");
@@ -1373,6 +1375,8 @@ public class ExcelUploadController {
 				igm.setCreatedDate(new Date());
 				igm.setApprovedBy(user);
 				igm.setApprovedDate(new Date());
+				igm.setPortJo(igm.getIgmNo());
+				igm.setPortJoDate(new Date());
 				cfigmrepo.save(igm);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05060", HoldNextIdD1, "2024");
 
