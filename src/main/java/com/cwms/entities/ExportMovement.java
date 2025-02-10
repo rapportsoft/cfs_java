@@ -243,9 +243,9 @@ public class ExportMovement {
 	    @Column(name = "Invoice_No", length = 16, columnDefinition = "varchar(16) NOT NULL DEFAULT ''")
 	    private String invoiceNo = ""; // varchar(16) NOT NULL DEFAULT ''
 
-	    @Column(name = "Invoice_Date", columnDefinition = "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'")
+	    @Column(name = "Invoice_Date")
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	    private Date invoiceDate = new Date(0); // datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
+	    private Date invoiceDate; // datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 
 	    @Column(name = "Credit_Type", columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
 	    private String creditType = "N"; // char(1) NOT NULL DEFAULT 'N'
