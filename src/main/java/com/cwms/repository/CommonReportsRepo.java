@@ -142,8 +142,8 @@ List<Object[]> getInventoryETYReport(@Param("companyId") String companyId,
         "FROM cfexpinventory a " +
         "WHERE a.company_id = :companyId " +
         "AND a.branch_id = :branchId " +
-        "AND (a.stuff_req_id = '' OR a.stuff_req_date > :endDate) " +
-        "AND a.empty_pass_id = '' " +
+        "AND (a.stuff_req_id = '' OR stuff_req_id IS NULL OR  a.stuff_req_date > :endDate) " +
+        "AND (a.empty_pass_id = '' OR a.empty_pass_id IS NULL ) " +
         "AND a.gate_in_date < :endDate " +
         "AND a.status = 'A' " +
         "AND a.container_status = 'MTY' " +
@@ -457,8 +457,8 @@ List<Object[]> findPorts(@Param("companyId") String companyId,
         "AND c.party_id = q.party_id " +
         "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
         "AND c.port_jo != '' " +
-//        "AND (a.gate_in_id = '' OR a.gate_in_date > :endDate) " +
-"AND (a.gate_in_id = '' OR a.gate_in_date < :endDate) " +
+        "AND (a.gate_in_id = '' OR a.gate_in_date > :endDate) " +
+//"AND (a.gate_in_id = '' OR a.gate_in_date < :endDate) " +
         "AND c.Doc_date < :endDate " +
         "AND a.status = 'A' AND c.status = 'A' AND c.shipping_line != '' " +
         "AND c.port = :port " +
@@ -489,7 +489,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                    "p.Party_Name, " +
                    "c.Container_Exam_Remarks, " +
                    "c.Gate_In_Date, " +
-                   "m.Shipping_Line_Code, " +
+                   "m.party_Name, " +
                    "c.Container_Exam_WO_Trans_Date, " +
                    "c.Examined_Packages, " +
                    "j.Jar_Desc " +
@@ -510,9 +510,11 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                    "LEFT OUTER JOIN party p " +
                    "ON c.cha = p.party_id " +
                    "AND c.Company_Id = p.Company_Id " +
+                   "AND c.branch_id = p.branch_id " +
                    "LEFT OUTER JOIN party m " +
                    "ON d.shipping_line = m.party_id " +
                    "AND d.Company_Id = m.Company_Id " +
+                   "AND d.branch_id = m.branch_id " +
                    "LEFT OUTER JOIN jar j " +
                    "ON j.Company_Id = c.Company_Id " +
                    "WHERE c.Company_Id = :companyId " +
@@ -991,9 +993,11 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                "    cfgatein b " +
             	                "LEFT OUTER JOIN party p " +
             	                "    ON b.company_id = p.company_id " +
+            	                "AND b.branch_id = p.branch_id " +
             	                "    AND b.sl = p.party_id " +
             	                "LEFT OUTER JOIN party q " +
             	                "    ON b.company_id = q.company_id " +
+            	                "AND b.branch_id = q.branch_id " +
             	                "    AND b.sa = q.party_id " +
             	                "WHERE " +
             	                "    b.company_id = :companyId " +
@@ -1286,12 +1290,15 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                              "    AND c.vessel_id = v.vessel_id " +
                              "LEFT OUTER JOIN party p " +
                              "    ON c.company_id = p.company_id " +
+                             "AND c.branch_id = p.branch_id " +
                              "    AND c.shipping_line = p.party_id " +
                              "LEFT OUTER JOIN party q " +
                              "    ON c.company_id = q.company_id " +
+                             "AND c.branch_id = q.branch_id " +
                              "    AND c.shipping_Agent = q.party_id " +
                              "LEFT OUTER JOIN party ch " +
                              "    ON b.company_id = ch.company_id " +
+                             "AND b.branch_id = ch.branch_id " +
                              "    AND b.CHA = ch.party_id " +
                              "LEFT OUTER JOIN jar_detail j " +
                              "    ON d.company_id = j.company_id " +
@@ -1385,12 +1392,15 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                       "    AND c.vessel_id = v.vessel_id " +
                       "LEFT OUTER JOIN party p " +
                       "    ON c.company_id = p.company_id " +
+                      "AND c.branch_id = p.branch_id " +
                       "    AND c.shipping_line = p.party_id " +
                       "LEFT OUTER JOIN party q " +
                       "    ON c.company_id = q.company_id " +
+                      "AND c.branch_id = q.branch_id " +
                       "    AND c.shipping_Agent = q.party_id " +
                       "LEFT OUTER JOIN party ch " +
                       "    ON b.company_id = ch.company_id " +
+                      "AND b.branch_id = ch.branch_id " +
                       "    AND b.CHA = ch.party_id " +
                       "LEFT OUTER JOIN jar_detail j " +
                       "    ON d.company_id = j.company_id " +
@@ -1517,8 +1527,10 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                 "AND e.profitcentre_id = c.profitcentre_id " +
                 "LEFT OUTER JOIN party p ON c.cha = p.party_id " +
                 "AND c.Company_Id = p.Company_Id " +
+                "AND c.branch_id = p.branch_id " +
                 "LEFT OUTER JOIN party m ON d.shipping_line = m.party_id " +
                 "AND d.Company_Id = m.Company_Id " +
+                "AND d.branch_id = m.branch_id " +
                 "LEFT OUTER JOIN vessel v ON v.Company_Id = d.Company_Id " +
                 "AND v.Vessel_Id = d.Vessel_Id " +
                 "WHERE c.company_id = :companyId " +

@@ -252,7 +252,7 @@ public class ImportReportsService {
 		    	System.out.println("endDate_______________________"+endDate);
 		    	
 		    	
-		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy");
+		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 		        String formattedStartDate = startDate != null ? dateFormatService.format(startDate) : "N/A";
 		        String formattedEndDate = endDate != null ? dateFormatService.format(endDate) : "N/A";

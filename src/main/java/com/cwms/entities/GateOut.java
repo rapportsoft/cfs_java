@@ -160,7 +160,7 @@ public class GateOut {
 	    @Column(name = "Transporter_Status", length = 1)
 	    private char transporterStatus;
 
-	    @Column(name = "Transporter", length = 6)
+	    @Column(name = "Transporter", length = 100)
 	    private String transporter;
 
 	    @Column(name = "Transporter_Name", length = 50)
