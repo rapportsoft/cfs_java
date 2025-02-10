@@ -1584,6 +1584,16 @@ List<Cfinvsrvanx> searchServicesForAddService(
 	
 	
 	
+	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId,a.branchId,a.processTransId,a.serviceId,a.taxId,a.erpDocRefNo,a.srlNo,a.docRefNo,a.profitcentreId "
+			+ ",a.serviceUnit,a.executionUnit, a.serviceUnit1, a.executionUnit1, a.rate, a.currencyId, a.partyId, a.woNo, a.woAmndNo, a.criteria, a.rangeFrom, a.rangeTo, a.rangeType, a.containerNo, a.containerStatus, a.commodityDescription, a.actualNoOfPackages, a.startDate, a.status, a.srvManualFlag, s.serviceShortDesc, a.addServices) "
+			+ "from Cfinvsrvanx a "
+	        + "LEFT OUTER JOIN Services s ON a.companyId = s.companyId AND a.branchId = s.branchId AND a.serviceId = s.serviceId "
+	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.processTransId=:assesmentId AND a.profitcentreId = :profiCentreId AND a.containerNo = :containerNo order by a.srlNo DESC")
+	List<Cfinvsrvanx> getAllCfInvSrvAnxListByAssesmentId1(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId, @Param("containerNo") String containerNo);
+	
+	
+	
+	
 	
 	
 	

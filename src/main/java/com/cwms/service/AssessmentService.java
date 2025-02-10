@@ -16943,7 +16943,7 @@ public class AssessmentService {
 
 			cfinvsrvanxrepo.saveAll(saveToData);
 
-			List<Cfinvsrvanx> cfinvSrvList = exportInvoiceRepo.getAllCfInvSrvAnxListByAssesmentId(companyId, branchId,
+			List<Cfinvsrvanx> cfinvSrvList = exportInvoiceRepo.getAllCfInvSrvAnxListByAssesmentId1(companyId, branchId,
 					data.getProfitcentreId(), data.getAssesmentId(), object1.getContainerNo());
 
 			return ResponseEntity.ok(cfinvSrvList);
