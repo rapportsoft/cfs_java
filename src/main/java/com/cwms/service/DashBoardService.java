@@ -4989,11 +4989,11 @@ public class DashBoardService {
 
 	    // Fetch data for job order and seal cutting
 		
-	    List<Object[]> invoiceDetails = dashboardRepository.findInvoiceSummary(companyId, branchId, startDate, endDate);
-	    List<Object[]> totalCollections = dashboardRepository.findInvoiceTotalCollection(companyId, branchId, startDate, endDate);
+	    List<Object[]> invoiceDetails = dashboardRepository.findInvoiceSummary(companyId, branchId, startDate);
+	    List<Object[]> totalCollections = dashboardRepository.findInvoiceTotalCollection(companyId, branchId, startDate);
 	    List<Object[]> outStanding = dashboardRepository.findOutstandingInvoices(companyId, branchId);
 	    
-	    List<Object[]> advance = dashboardRepository.findInvoiceAdvance(companyId, branchId, startDate, endDate);
+	    List<Object[]> advance = dashboardRepository.findInvoiceAdvance(companyId, branchId, startDate);
 	  
 	    
 	    
@@ -5001,7 +5001,7 @@ public class DashBoardService {
 	    List<Object[]> totalCollectionsLastWeek= dashboardRepository.findInvoiceTotalCollectionLastWeek(companyId, branchId);
 	    List<Object[]> outStandingLastWeek= dashboardRepository.findOutstandingInvoicesLastWeek(companyId, branchId);
 	    
-	    List<Object []> getDataForPieChart =dashboardRepository.findPaymentSummaryForPieChart(companyId, branchId, startDate, endDate);
+	    List<Object []> getDataForPieChart =dashboardRepository.findPaymentSummaryForPieChart(companyId, branchId, startDate);
 	    
 //	    List<Object []> top10OutStanding =dashboardRepository.findTopOutstandingInvoices(companyId, branchId, startDate, endDate);
 	    List<Object []> top10OutStanding =dashboardRepository.findTopOutstandingInvoices(companyId, branchId);

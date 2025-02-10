@@ -455,14 +455,13 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 						    "WHERE a.Status = 'A' " + 
 						    "AND a.Company_Id = :companyId " + 
 						    "AND a.Branch_Id = :branchId " + 
-						    "AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+						    "AND a.Created_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " + 
 						    "GROUP BY a.Profitcentre_Id " + 
 						    "ORDER BY b.Profitcentre_Desc", 
 						    nativeQuery = true)
 						List<Object[]> findInvoiceSummary(@Param("companyId") String companyId,
 							    @Param("branchId") String branchId,
-							    @Param("startDate") Date startDate,
-							    @Param("endDate") Date endDate
+							    @Param("startDate") Date startDate
 							);
 						
 						
@@ -522,7 +521,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 						        "WHERE a.Status = 'A' " + 
 						        "AND a.Company_Id = :companyId " + 
 						        "AND a.Branch_Id = :branchId " + 
-						        "AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+						        "AND a.Created_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " + 
 						        "AND a.Credit_Type = 'N' " + 
 						        "AND a.Payment_Mode NOT IN ('ADVANCE', 'CREDIT') " + 
 						        "AND a.Ledger_Type = 'AR' " + 
@@ -532,8 +531,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 						        nativeQuery = true)
 						List<Object[]> findInvoiceTotalCollection(@Param("companyId") String companyId,
 								 @Param("branchId") String branchId,
-								    @Param("startDate") Date startDate,
-								    @Param("endDate") Date endDate);
+								    @Param("startDate") Date startDate);
 						
 						
 						@Query(value = 
@@ -546,7 +544,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 						        "WHERE a.Status = 'A' " + 
 						        "AND a.Company_Id = :companyId " + 
 						        "AND a.Branch_Id = :branchId " + 
-						        "AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+						        "AND a.Created_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " + 
 						        "AND a.Payment_Mode NOT IN ('ADVANCE', 'CREDIT') " + 
 						        "AND a.Ledger_Type = 'AR' " + 
 						        "AND a.Doc_Type IN ('AD') " + 
@@ -555,8 +553,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 						        nativeQuery = true)
 						List<Object[]> findInvoiceAdvance(@Param("companyId") String companyId,
 								 @Param("branchId") String branchId,
-								    @Param("startDate") Date startDate,
-								    @Param("endDate") Date endDate);
+								    @Param("startDate") Date startDate);
 						
 						
 						
@@ -622,7 +619,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								            "WHERE a.Status = 'A' " +
 								            "AND a.Company_Id = :companyId " +
 								            "AND a.Branch_Id = :branchId " +
-								            "AND a.Created_Date BETWEEN :startDate AND :endDate " +
+								            "AND a.Created_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
 								            "AND a.Ledger_Type = 'AR' " +
 								            "AND a.Doc_Type IN ('AD', 'RE') " +
 								            "AND a.Payment_Mode != 'TDS' " +
@@ -632,8 +629,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								    List<Object[]> findPaymentSummaryForPieChart(
 								            @Param("companyId") String companyId,
 								            @Param("branchId") String branchId,
-								            @Param("startDate") Date startDate,
-								            @Param("endDate") Date endDate
+								            @Param("startDate") Date startDate
 								    );
 
 								   
