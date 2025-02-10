@@ -39,10 +39,10 @@
 //	        @RequestParam("assesMentId") String assesMentId,
 //	        @RequestParam("invoiceNo") String invoiceNo, 
 //	        @RequestParam("sbTransId") String sbTransId,
-//	        @RequestParam("profitCenterId") String profitCenterId
+//	        @RequestParam("profitCenterId") String profitCenterId, @RequestParam("transType") String transType
 //	       ) {	    
 //	    try {	    	
-//	    	ResponseEntity<?>  cartingEntries = exportInvoiceService.getSelectedAssesMentSearch(companyId, branchId,  assesMentId, invoiceNo, sbTransId, profitCenterId);
+//	    	ResponseEntity<?>  cartingEntries = exportInvoiceService.getSelectedAssesMentSearch(companyId, branchId,  assesMentId, invoiceNo, sbTransId, profitCenterId, transType);
 //	        return cartingEntries;
 //	    } catch (Exception e) {	       
 //	        // Return an appropriate error response
@@ -56,11 +56,11 @@
 //	@GetMapping("/getAssesMentEntriesToSelect")
 //	public ResponseEntity<?> getAssesMentEntriesToSelect(
 //	        @RequestParam("companyId") String companyId, 
-//	        @RequestParam("branchId") String branchId,	        
+//	        @RequestParam("branchId") String branchId, @RequestParam("transType") String transType,
 //	        @RequestParam(value="searchValue", required = false) String searchValue
 //	       ) {	    
 //	    try {	    	
-//	    	List<Object[]> cartingEntries = exportInvoiceService.getAssesMentEntriesToSelect(companyId, branchId, searchValue);
+//	    	List<Object[]> cartingEntries = exportInvoiceService.getAssesMentEntriesToSelect(companyId, branchId, searchValue, transType);
 //	        return ResponseEntity.ok(cartingEntries);
 //	    } catch (Exception e) {	       
 //	        // Return an appropriate error response
@@ -74,15 +74,39 @@
 //	
 //	@PostMapping("/processExportAssesmentContainer")
 //	 public ResponseEntity<?> saveExportAssesmentApprove(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,
-//			 @RequestParam("userId") String user, @RequestBody Map<String,Object> requestData) throws JsonMappingException, JsonProcessingException{
-//		 return exportInvoiceService.processExportAssesmentContainer(companyId, branchId, user, requestData);
+//			 @RequestParam("userId") String user, @RequestParam("invoiceType") String invoiceType , @RequestBody Map<String,Object> requestData) throws JsonMappingException, JsonProcessingException{
+//		ResponseEntity<?> addExportAssesmentSheet = null;
+//		
+//		if("Export Container".equalsIgnoreCase(invoiceType))
+//		{
+//		addExportAssesmentSheet = exportInvoiceService.processExportAssesmentContainer(companyId, branchId, user, requestData);
+//		}else if("Export Cargo Carting".equalsIgnoreCase(invoiceType)){		
+//		addExportAssesmentSheet = exportInvoiceService.processExportAssesmentCartingAndBackToTown(companyId, branchId, user, requestData, invoiceType);
+//		}else if("Export Cargo".equalsIgnoreCase(invoiceType))
+//		{	
+//			addExportAssesmentSheet = exportInvoiceService.processExportAssesmentBackToTown(companyId, branchId, user, requestData, invoiceType);
+//		}
+//				
+//		return addExportAssesmentSheet;
 //	 }
 //	
 //	@PostMapping("/saveExportAssesmentContainer")
 //	public ResponseEntity<?> saveExportAssesment(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
-//			@RequestBody Map<String, Object> requestData, @RequestParam("userId") String user) throws JsonMappingException, JsonProcessingException
-//		{				
-//			ResponseEntity<?> addExportAssesmentSheet = exportInvoiceService.saveExportAssesment(companyId, branchId, user, requestData);
+//			@RequestBody Map<String, Object> requestData, @RequestParam("userId") String user, @RequestParam("invoiceType") String invoiceType) throws JsonMappingException, JsonProcessingException
+//		{			
+//		ResponseEntity<?> addExportAssesmentSheet = null;
+//		if("Export Container".equalsIgnoreCase(invoiceType))
+//		{		
+//			addExportAssesmentSheet = exportInvoiceService.saveExportAssesment(companyId, branchId, user, requestData, invoiceType);
+//		}else if("Export Cargo Carting".equalsIgnoreCase(invoiceType))
+//		{	
+//			addExportAssesmentSheet = exportInvoiceService.saveExportAssesmentCartingAndBackToTown(companyId, branchId, user, requestData, invoiceType);		
+//		}else if("Export Cargo".equalsIgnoreCase(invoiceType))
+//		{	
+//			addExportAssesmentSheet = exportInvoiceService.saveExportAssesmentBackToTown(companyId, branchId, user, requestData, invoiceType);		
+//		}
+//			
+//			
 //			return addExportAssesmentSheet;
 //		}
 //	
@@ -98,16 +122,16 @@
 //	
 //	@GetMapping("/getAllContainerListOfAssessMentSheet")
 //	public ResponseEntity<?> getAllContainerListOfAssessMentSheet(@RequestParam("companyId") String companyId,
-//			@RequestParam("branchId") String branchId, @RequestParam("assesmentId") String assesmentId, @RequestParam("profiCentreId") String profiCentreId) {
-//		ResponseEntity<?> partyByTypeValue = exportInvoiceService.getAllContainerListOfAssessMentSheet(companyId, branchId, assesmentId, profiCentreId);
+//			@RequestParam("branchId") String branchId, @RequestParam("assesmentId") String assesmentId, @RequestParam("profiCentreId") String profiCentreId, @RequestParam("invoiceType") String invoiceType) {
+//		ResponseEntity<?> partyByTypeValue = exportInvoiceService.getAllContainerListOfAssessMentSheet(companyId, branchId, assesmentId, profiCentreId, invoiceType);
 //		return partyByTypeValue;
 //	}
 //	
 //	
 //	@GetMapping("/getAllContainerDetailsOfAssesmentId")
 //	public ResponseEntity<?> getAllContainerDetailsOfAssesmentId(@RequestParam("companyId") String companyId,
-//			@RequestParam("branchId") String branchId, @RequestParam("assesmentId") String assesmentId, @RequestParam("profiCentreId") String profiCentreId) {
-//		ResponseEntity<?> partyByTypeValue = exportInvoiceService.getAllContainerDetailsOfAssesmentId(companyId, branchId, assesmentId, profiCentreId);
+//			@RequestParam("branchId") String branchId, @RequestParam("assesmentId") String assesmentId, @RequestParam("profiCentreId") String profiCentreId, @RequestParam(value = "invoiceType", required = false) String invoiceType) {
+//		ResponseEntity<?> partyByTypeValue = exportInvoiceService.getAllContainerDetailsOfAssesmentId(companyId, branchId, assesmentId, profiCentreId, invoiceType);
 //		return partyByTypeValue;
 //	}
 //	
@@ -132,8 +156,8 @@
 //	@GetMapping("/getAllCfInvSrvAnxListByAssesmentId")
 //	public ResponseEntity<?> getAllCfInvSrvAnxListByAssesmentId(@RequestParam("companyId") String companyId,
 //			@RequestParam("branchId") String branchId, @RequestParam("assesmentId") String assesmentId, @RequestParam("profiCentreId") String profiCentreId,
-//			@RequestParam("assesmentLineNo") String assesmentLineNo, @RequestParam("containerNo") String containerNo) {
-//		ResponseEntity<?> partyByTypeValue = exportInvoiceService.getAllCfInvSrvAnxListByAssesmentId(companyId, branchId, assesmentId, assesmentLineNo, containerNo, profiCentreId);
+//			@RequestParam("assesmentLineNo") String assesmentLineNo) {
+//		ResponseEntity<?> partyByTypeValue = exportInvoiceService.getAllCfInvSrvAnxListByAssesmentId(companyId, branchId, assesmentId, assesmentLineNo, "", profiCentreId);
 //		return partyByTypeValue;
 //	}
 //	
@@ -146,8 +170,8 @@
 //	@GetMapping("/searchAssesmentBySelectedValue")
 //	public ResponseEntity<?> searchAssesmentBySelectedValue(@RequestParam("companyId") String companyId,
 //			@RequestParam("branchId") String branchId, @RequestParam("profitcentreId") String profitcentreId,
-//			@RequestParam("operation") String operation, @RequestParam("searchValue") String searchValue) throws CloneNotSupportedException {
-//		List<ExportContainerAssessmentData> resultSet= exportInvoiceService.searchAssesmentBySelectedValue(companyId, branchId, profitcentreId, operation, searchValue);
+//			@RequestParam("operation") String operation, @RequestParam("searchValue") String searchValue, @RequestParam("invoiceType") String invoiceType) throws CloneNotSupportedException {
+//		List<ExportContainerAssessmentData> resultSet= exportInvoiceService.searchAssesmentBySelectedValue(companyId, branchId, profitcentreId, operation, searchValue, invoiceType);
 //		return ResponseEntity.ok(resultSet);
 //	}
 //	
@@ -162,15 +186,15 @@
 //	@GetMapping("/getSbListOrContainer")
 //	public ResponseEntity<?> getSbListOrContainer(@RequestParam("companyId") String companyId,
 //			@RequestParam("branchId") String branchId, @RequestParam("searchValue") String searchValue,
-//			@RequestParam("type") String type, @RequestParam("profitCentreId") String profitCentreId) {
-//		List<Map<String, Object>> resultList= exportInvoiceService.getSbListOrContainer(companyId, branchId, searchValue, type, profitCentreId);
+//			@RequestParam("type") String type, @RequestParam("profitCentreId") String profitCentreId, @RequestParam("invoiceType") String invoiceType) {
+//		List<Map<String, Object>> resultList= exportInvoiceService.getSbListOrContainer(companyId, branchId, searchValue, type, profitCentreId, invoiceType);
 //		return ResponseEntity.ok(resultList);
 //	}
 //	
 //
 //}
-
-
+//
+//
 
 
 
@@ -252,17 +276,18 @@ public class ExportInvoiceController {
 	
 	@PostMapping("/processExportAssesmentContainer")
 	 public ResponseEntity<?> saveExportAssesmentApprove(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,
-			 @RequestParam("userId") String user, @RequestParam("invoiceType") String invoiceType , @RequestBody Map<String,Object> requestData) throws JsonMappingException, JsonProcessingException{
+			 @RequestParam("userId") String user, @RequestParam("invoiceType") String invoiceType , @RequestBody Map<String,Object> requestData, @RequestParam("creditStatus") String creditStatus) throws JsonMappingException, JsonProcessingException{
 		ResponseEntity<?> addExportAssesmentSheet = null;
 		
 		if("Export Container".equalsIgnoreCase(invoiceType))
-		{
-		addExportAssesmentSheet = exportInvoiceService.processExportAssesmentContainer(companyId, branchId, user, requestData);
+		{		
+		addExportAssesmentSheet = exportInvoiceService.processExportAssesmentContainer(companyId, branchId, user, requestData, creditStatus);		
+		
 		}else if("Export Cargo Carting".equalsIgnoreCase(invoiceType)){		
-		addExportAssesmentSheet = exportInvoiceService.processExportAssesmentCartingAndBackToTown(companyId, branchId, user, requestData, invoiceType);
+		addExportAssesmentSheet = exportInvoiceService.processExportAssesmentCartingAndBackToTown(companyId, branchId, user, requestData, invoiceType, creditStatus);
 		}else if("Export Cargo".equalsIgnoreCase(invoiceType))
 		{	
-			addExportAssesmentSheet = exportInvoiceService.processExportAssesmentBackToTown(companyId, branchId, user, requestData, invoiceType);
+			addExportAssesmentSheet = exportInvoiceService.processExportAssesmentBackToTown(companyId, branchId, user, requestData, invoiceType, creditStatus);
 		}
 				
 		return addExportAssesmentSheet;

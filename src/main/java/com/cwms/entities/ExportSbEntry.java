@@ -142,7 +142,7 @@ public class ExportSbEntry {
 //    @Column(name = "On_Account_Of_Code", length = 15)
 //    private String onAccountOfCode;
 
-    @Column(name = "Draw_Back_Value", precision = 12, scale = 2, columnDefinition = "decimal(12,2) DEFAULT '0.00'")
+    @Column(name = "Draw_Back_Value", precision = 12, scale = 4, columnDefinition = "decimal(12,4) DEFAULT '0.00'")
     private BigDecimal drawBackValue;
 
     @Column(name = "Status", length = 1, columnDefinition = "char(1) DEFAULT ''")
@@ -875,4 +875,16 @@ public class ExportSbEntry {
 		this.pol = pol;		
 	}
 
+	
+	public ExportSbEntry(String sbTransId, String sbNo, BigDecimal totalPackages, BigDecimal totalGrossWeight, String sbType, Date sbDate) {
+		super();
+		this.sbTransId = sbTransId;
+		this.sbNo = sbNo;
+		this.totalPackages = totalPackages;
+		this.totalGrossWeight = totalGrossWeight;		
+		this.sbType = sbType;
+		this.sbDate = sbDate;
+	}
+	
+	
 }

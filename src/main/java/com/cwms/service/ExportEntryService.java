@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -1143,6 +1144,149 @@ public class ExportEntryService {
 	}
 	
 	
+//	@Transactional
+//	public ResponseEntity<?> addExportSbEntry(String companyId, String branchId, Map<String, Object> requestData, String User)
+//	{
+//		Date currentDate = new Date();
+//		
+//		
+//		List<ExportSbCargoEntry> sbCargoEntry = objectMapper.convertValue(requestData.get("exportSbCargoEntry"),
+//				new TypeReference<List<ExportSbCargoEntry>>() {
+//				});
+//				
+//		
+//		ExportSbEntry sbEntry = objectMapper.convertValue(requestData.get("exportSbEntry"), ExportSbEntry.class);
+//			
+//		
+////		String autoSBTransId = processService.autoSBTransId(companyId, branchId, "P00101");	
+//		// Check if any sbTransId is null, empty, or contains only whitespace
+//		String autoSBTransId = "";
+//		
+//		if(sbEntry.getSbNo() != null && !sbEntry.getSbNo().trim().isEmpty())
+//		{
+//			autoSBTransId = (sbEntry.getSbTransId() != null && !sbEntry.getSbTransId().trim().isEmpty()) 
+//	                ? sbEntry.gethSbTransId() 
+//	                : processService.autoSBTransId(companyId, branchId, "P00101"); 
+//		}
+//		
+////		String autoSBTransId = (sbEntry.getSbNo() != null && !sbEntry.getSbNo().trim().isEmpty() &&
+////                sbEntry.getSbTransId() != null && !sbEntry.getSbTransId().trim().isEmpty())
+////				? sbEntry.gethSbTransId()
+////				: processService.autoSBTransId(companyId, branchId, "P00101");
+//
+//
+//		
+//		String existingTransId = (sbEntry.gethSbTransId() != null && !sbEntry.gethSbTransId().trim().isEmpty()) 
+//                ? sbEntry.gethSbTransId() 
+//                : autoSBTransId;
+//		
+//		String existingSBTransId = (sbEntry.getSbTransId() != null && !sbEntry.getSbTransId().trim().isEmpty()) 
+//                ? sbEntry.getSbTransId() 
+//                : autoSBTransId;
+//		
+//		sbEntry.setSbTransId(existingSBTransId);
+//		sbEntry.sethSbTransId(existingTransId);
+//		
+//		sbEntry.setFinYear(helperMethods.getFinancialYear());
+//		
+//		
+//		System.out.println("helperMethods.getFinancialYear() \n"+helperMethods.getFinancialYear());
+//		if(!sbEntry.getStatus().equals("A"))
+//		{
+//			sbEntry.setStatus("A");
+//			sbEntry.setCreatedBy(User);
+//			sbEntry.setCreatedDate(currentDate);
+//			sbEntry.setApprovedBy(User);
+//			sbEntry.setApprovedDate(currentDate);
+//		}
+//		
+//		
+//		
+//		sbEntry.setEditedBy(User);
+//		sbEntry.setEditedDate(currentDate);
+//		
+//		
+//		
+//		System.out.println(sbEntry);
+//		for(ExportSbCargoEntry cargoEntry : sbCargoEntry)
+//		{
+//			boolean existsBySbNo = entryCargoRepo.existsBySbNo(cargoEntry.getCompanyId(), cargoEntry.getBranchId(), sbEntry.getFinYear(), cargoEntry.getProfitcentreId(),cargoEntry.getSbTransId(),cargoEntry.getSbNo());
+//			
+//			
+//			 if (existsBySbNo) {
+//		            String errorMessage = "Duplicate SB No found for SrNo: " + cargoEntry.getSrno() + " and SB No: " + cargoEntry.getSbNo();
+//		            return ResponseEntity.badRequest().body(errorMessage);
+//		        }
+//			
+//			ExportSbEntry sbEntryNew = entryRepo.getExportSbEntryBySbTransId(cargoEntry.getCompanyId(), cargoEntry.getBranchId(), cargoEntry.getProfitcentreId(), cargoEntry.getSbTransId());
+////			if (sbEntryNew != null && !sbEntryNew.getSbNo().equals(cargoEntry.getSbNo())) {			
+////			    int updateChangeSbNo = entryRepo.updateChangeSbNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
+////			    int updateChangeSbCargoNo = entryCargoRepo.updateChangeSbCargoNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
+////			    System.out.println("updateChangeSbNo: " + updateChangeSbNo + " updateChangeSbCargoNo "+updateChangeSbCargoNo);			    			
+////			}
+//			
+//			if (sbEntryNew != null && 
+//				    (!sbEntryNew.getSbNo().equals(cargoEntry.getSbNo()) || 
+//				     sbEntryNew.getTotalPackages().compareTo(cargoEntry.getNoOfPackages()) != 0 || 
+//				     sbEntryNew.getTotalGrossWeight().compareTo(cargoEntry.getGrossWeight()) != 0)) {
+//				    
+//				    int updateChangeSbNo = entryRepo.updateChangeSbNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate(),cargoEntry.getNoOfPackages(),cargoEntry.getGrossWeight());
+//				    int updateChangeSbCargoNo = entryCargoRepo.updateChangeSbCargoNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
+//				    System.out.println("updateChangeSbNo: " + updateChangeSbNo + " updateChangeSbCargoNo "+updateChangeSbCargoNo);			    			
+//				}
+//
+//			
+//			
+//			
+//			
+//			
+//			System.out.println("Before \n "+cargoEntry);
+//			String existingCargoTransId = (cargoEntry.getSbTransId() != null && !cargoEntry.getSbTransId().trim().isEmpty()) 
+//	                ? cargoEntry.getSbTransId() 
+//	                : autoSBTransId;
+//			
+//			System.out.println("Applied existingCargoTransId : "+existingCargoTransId);
+//			
+//			cargoEntry.setSbTransId(existingCargoTransId);
+//			
+//			
+//			cargoEntry.sethSbTransId(existingTransId);
+//			
+//			
+//			if(!cargoEntry.getStatus().equals("A"))
+//			{
+//				cargoEntry.setFinYear(helperMethods.getFinancialYear());				
+//				cargoEntry.setCreatedBy(User);
+//				cargoEntry.setCreatedDate(currentDate);	
+//				cargoEntry.setApprovedBy(User);
+//				cargoEntry.setApprovedDate(currentDate);
+//				cargoEntry.setStatus("A");
+//			}
+//			
+//				
+//			
+//			System.out.println("After \n"+cargoEntry);
+//			
+//		}
+//		List<ExportSbCargoEntry> cargoEntries = entryCargoRepo.saveAll(sbCargoEntry);
+//		ExportSbEntry sbEntrySaved = (sbEntry.getSbNo() != null && !sbEntry.getSbNo().isEmpty()) ? entryRepo.save(sbEntry) : sbEntry;
+//		
+//		Map<String, Object> response = new HashMap<>();
+//		response.put("cargoEntries", cargoEntries);
+//		response.put("sbEntrySaved", sbEntrySaved);
+//
+//		// Return the map wrapped in a ResponseEntity
+//		return ResponseEntity.ok(response);
+//	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Transactional
 	public ResponseEntity<?> addExportSbEntry(String companyId, String branchId, Map<String, Object> requestData, String User)
 	{
@@ -1156,9 +1300,7 @@ public class ExportEntryService {
 		
 		ExportSbEntry sbEntry = objectMapper.convertValue(requestData.get("exportSbEntry"), ExportSbEntry.class);
 			
-		
-//		String autoSBTransId = processService.autoSBTransId(companyId, branchId, "P00101");	
-		// Check if any sbTransId is null, empty, or contains only whitespace
+
 		String autoSBTransId = "";
 		
 		if(sbEntry.getSbNo() != null && !sbEntry.getSbNo().trim().isEmpty())
@@ -1168,12 +1310,6 @@ public class ExportEntryService {
 	                : processService.autoSBTransId(companyId, branchId, "P00101"); 
 		}
 		
-//		String autoSBTransId = (sbEntry.getSbNo() != null && !sbEntry.getSbNo().trim().isEmpty() &&
-//                sbEntry.getSbTransId() != null && !sbEntry.getSbTransId().trim().isEmpty())
-//				? sbEntry.gethSbTransId()
-//				: processService.autoSBTransId(companyId, branchId, "P00101");
-
-
 		
 		String existingTransId = (sbEntry.gethSbTransId() != null && !sbEntry.gethSbTransId().trim().isEmpty()) 
                 ? sbEntry.gethSbTransId() 
@@ -1190,19 +1326,26 @@ public class ExportEntryService {
 		
 		
 		System.out.println("helperMethods.getFinancialYear() \n"+helperMethods.getFinancialYear());
-		if(!sbEntry.getStatus().equals("A"))
-		{
+		
+		
+		
+		
+		if (!sbEntry.getStatus().equals("A") && sbEntry.getSbNo() != null && !sbEntry.getSbNo().trim().isEmpty()) {
+			
 			sbEntry.setStatus("A");
 			sbEntry.setCreatedBy(User);
 			sbEntry.setCreatedDate(currentDate);
 			sbEntry.setApprovedBy(User);
 			sbEntry.setApprovedDate(currentDate);
+			sbEntry.setEditedBy(User);
+			sbEntry.setEditedDate(currentDate);
+			
+			entryRepo.save(sbEntry);
+			
 		}
 		
 		
 		
-		sbEntry.setEditedBy(User);
-		sbEntry.setEditedDate(currentDate);
 		
 		
 		
@@ -1217,26 +1360,22 @@ public class ExportEntryService {
 		            return ResponseEntity.badRequest().body(errorMessage);
 		        }
 			
-			ExportSbEntry sbEntryNew = entryRepo.getExportSbEntryBySbTransId(cargoEntry.getCompanyId(), cargoEntry.getBranchId(), cargoEntry.getProfitcentreId(), cargoEntry.getSbTransId());
-//			if (sbEntryNew != null && !sbEntryNew.getSbNo().equals(cargoEntry.getSbNo())) {			
-//			    int updateChangeSbNo = entryRepo.updateChangeSbNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
-//			    int updateChangeSbCargoNo = entryCargoRepo.updateChangeSbCargoNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
-//			    System.out.println("updateChangeSbNo: " + updateChangeSbNo + " updateChangeSbCargoNo "+updateChangeSbCargoNo);			    			
-//			}
-			
-			if (sbEntryNew != null && 
-				    (!sbEntryNew.getSbNo().equals(cargoEntry.getSbNo()) || 
-				     sbEntryNew.getTotalPackages().compareTo(cargoEntry.getNoOfPackages()) != 0 || 
-				     sbEntryNew.getTotalGrossWeight().compareTo(cargoEntry.getGrossWeight()) != 0)) {
-				    
-				    int updateChangeSbNo = entryRepo.updateChangeSbNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate(),cargoEntry.getNoOfPackages(),cargoEntry.getGrossWeight());
-				    int updateChangeSbCargoNo = entryCargoRepo.updateChangeSbCargoNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
-				    System.out.println("updateChangeSbNo: " + updateChangeSbNo + " updateChangeSbCargoNo "+updateChangeSbCargoNo);			    			
-				}
+			ExportSbEntry sbEntryNew = entryRepo.getExportSbEntryBySbTransIduUpdate(cargoEntry.getCompanyId(), cargoEntry.getBranchId(), cargoEntry.getProfitcentreId(), cargoEntry.getSbTransId());
 
 			
-			
-			
+			if (sbEntryNew != null && 
+				    (!Objects.equals(sbEntryNew.getSbNo(), cargoEntry.getSbNo()) || 
+				     !Objects.equals(sbEntryNew.getSbType(), cargoEntry.getSbType()) || 
+				     (sbEntryNew.getSbDate() != null && cargoEntry.getSbDate() != null && sbEntryNew.getSbDate().compareTo(cargoEntry.getSbDate()) != 0) || 
+				     sbEntryNew.getTotalPackages().compareTo(cargoEntry.getNoOfPackages()) != 0 || 
+				     sbEntryNew.getTotalGrossWeight().compareTo(cargoEntry.getGrossWeight()) != 0)) {
+
+				    
+				    int updateChangeSbNo = entryRepo.updateChangeSbNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate(),cargoEntry.getNoOfPackages(),cargoEntry.getGrossWeight(), cargoEntry.getSbType());
+				    int updateChangeSbCargoNo = entryCargoRepo.updateChangeSbCargoNo(companyId, branchId, sbEntryNew.getSbNo(), sbEntryNew.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbDate());
+				    System.out.println("updateChangeSbNo: " + updateChangeSbNo + " updateChangeSbCargoNo "+updateChangeSbCargoNo);			    			
+				}		
+
 			
 			
 			System.out.println("Before \n "+cargoEntry);
@@ -1259,7 +1398,16 @@ public class ExportEntryService {
 				cargoEntry.setCreatedDate(currentDate);	
 				cargoEntry.setApprovedBy(User);
 				cargoEntry.setApprovedDate(currentDate);
-				cargoEntry.setStatus("A");
+				cargoEntry.setStatus("A");				
+				
+				entryCargoRepo.save(cargoEntry);
+			}
+			else
+			{				
+				int updateCargoEntry = entryCargoRepo.updateCargoEntry(cargoEntry.getCompanyId(), cargoEntry.getBranchId(), cargoEntry.getProfitcentreId(), cargoEntry.getSbTransId(), cargoEntry.getSbNo(), cargoEntry.getSbType(), cargoEntry.getSbDate(), cargoEntry.getDrawBackValue(), cargoEntry.getCargoType(), cargoEntry.getCommodity(), cargoEntry.getNumberOfMarks(), cargoEntry.getNoOfPackages(), cargoEntry.getTypeOfPackage(), cargoEntry.getGrossWeight(), cargoEntry.getFob(), cargoEntry.getInvoiceNo(), cargoEntry.getInvoiceDate(), cargoEntry.getHaz(), cargoEntry.getUnNo(), cargoEntry.getNewCommodity(), cargoEntry.getSrno());
+			
+			
+				System.out.println("updateCargoEntry ...." + updateCargoEntry + " SB " + cargoEntry.getSbNo());
 			}
 			
 				
@@ -1267,8 +1415,22 @@ public class ExportEntryService {
 			System.out.println("After \n"+cargoEntry);
 			
 		}
-		List<ExportSbCargoEntry> cargoEntries = entryCargoRepo.saveAll(sbCargoEntry);
-		ExportSbEntry sbEntrySaved = (sbEntry.getSbNo() != null && !sbEntry.getSbNo().isEmpty()) ? entryRepo.save(sbEntry) : sbEntry;
+		
+		
+		int updateSBEntry = entryRepo.updateSBEntry(sbEntry.getCompanyId(), sbEntry.getBranchId(), sbEntry.getProfitcentreId(), sbEntry.getSbTransId(), sbEntry.getSbNo(), sbEntry.getSbType(), sbEntry.getSbTransDate(), sbEntry.getSbDate(), sbEntry.getDrawBackValue(), sbEntry.getCargoType(), sbEntry.getCargoLoc(), sbEntry.getExporterId(), sbEntry.getExporterName(), sbEntry.getExporterAddress1(), sbEntry.getExporterAddress2(), sbEntry.getExporterAddress3(), sbEntry.getCha(), sbEntry.getConsigneeName(), sbEntry.getConsigneeAddress1(), sbEntry.getConsigneeAddress2(), sbEntry.getConsigneeAddress3(), sbEntry.getOnAccountOf(), sbEntry.getPol(), sbEntry.getPod(), sbEntry.getDestinationCountry(), sbEntry.getImoCode(), sbEntry.getComments(), sbEntry.getIecCode(), sbEntry.getState(), sbEntry.getGstNo(), sbEntry.getSrNo());
+		
+		
+		
+		System.out.println("updateSBEntry ...." + updateSBEntry);
+//		List<ExportSbCargoEntry> cargoEntries = entryCargoRepo.saveAll(sbCargoEntry);
+//		ExportSbEntry sbEntrySaved = (sbEntry.getSbNo() != null && !sbEntry.getSbNo().isEmpty()) ? entryRepo.save(sbEntry) : sbEntry;
+//		
+		
+		ExportSbEntry sbEntrySaved = entryRepo.getExportSbEntryBySbTransIdAndSbNo(companyId, branchId, sbEntry.getProfitcentreId(), sbEntry.getSbTransId(), sbEntry.gethSbTransId(), sbEntry.getSbNo());		
+		List<ExportSbCargoEntry> cargoEntries = entryCargoRepo.getExportSbCargoEntryBySbTransIdAndSbNo(companyId, branchId, sbEntry.getProfitcentreId(), sbEntry.gethSbTransId());
+		
+		
+		
 		
 		Map<String, Object> response = new HashMap<>();
 		response.put("cargoEntries", cargoEntries);
@@ -1277,7 +1439,6 @@ public class ExportEntryService {
 		// Return the map wrapped in a ResponseEntity
 		return ResponseEntity.ok(response);
 	}
-	
 	
 	
 	

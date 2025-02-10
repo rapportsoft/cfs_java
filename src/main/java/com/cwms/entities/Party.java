@@ -2410,10 +2410,12 @@ public class Party {
 					this.address3 = address3;
 				}
 	    
-				public Party(String tanNoId, String tdsPercentage) {
+				public Party(String tanNoId, String tdsPercentage, BigDecimal crAmtLmt, BigDecimal crAmtLmtUse) {
 					super();
 					this.tanNoId = tanNoId;
 					this.tdsPercentage = tdsPercentage;
+					this.crAmtLmt = crAmtLmt;
+					this.crAmtLmtUse = crAmtLmtUse;
 				}
 }
 

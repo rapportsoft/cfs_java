@@ -807,7 +807,7 @@ public class FinTrans {
 		}
 	    
 //		Export Container Invoice
-		public FinTrans(String tdsType, BigDecimal tdsPercentage, String paymentMode, String chequeNo, Date chequeDate,String bankName, BigDecimal documentAmt, String status)
+		public FinTrans(String tdsType, BigDecimal tdsPercentage, String paymentMode, String chequeNo, Date chequeDate,String bankName, BigDecimal documentAmt, String status, BigDecimal creditAmount)
 		{
 			this.tdsType = tdsType;
 			this.tdsPercentage = tdsPercentage;
@@ -817,6 +817,7 @@ public class FinTrans {
 			this.bankName = bankName;
 			this.documentAmt = documentAmt;
 			this.status = status;
+			this.creditAmount = creditAmount;
 		}
 		
 }

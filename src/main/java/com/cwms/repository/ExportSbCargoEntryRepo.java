@@ -18,6 +18,59 @@ import jakarta.transaction.Transactional;
 public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry, String>
 {
 	
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbCargoEntry e " +
+	       "SET e.sbType = :sbType, " +
+	       "    e.sbNo = :sbNo, " +
+	       "    e.sbDate = :sbDate, " +
+	       "    e.drawBackValue = :drawBackValue, " +
+	       "    e.cargoType = :cargoType, " +
+	       "    e.commodity = :commodity, " +
+	       "    e.numberOfMarks = :numberOfMarks, " +
+	       "    e.noOfPackages = :noOfPackages, " +
+	       "    e.typeOfPackage = :typeOfPackage, " +
+	       "    e.grossWeight = :grossWeight, " +
+	       "    e.fob = :fob, " +
+	       "    e.invoiceNo = :invoiceNo, " +
+	       "    e.invoiceDate = :invoiceDate, " +
+	       "    e.haz = :haz, " +
+	       "    e.unNo = :unNo, " +
+	       "    e.newCommodity = :newCommodity " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.profitcentreId = :profitCentreId " +
+	       "  AND e.srno = :srNo " +
+	       "  AND e.status <> 'D'")
+	int updateCargoEntry(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("profitCentreId") String profitCentreId,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("sbNo") String sbNo,	        
+	        @Param("sbType") String sbType,
+	        @Param("sbDate") Date date,
+	        @Param("drawBackValue") BigDecimal drawBackValue,
+	        @Param("cargoType") String cargoType,
+	        @Param("commodity") String commodity,
+	        @Param("numberOfMarks") String numberOfMarks,
+	        @Param("noOfPackages") BigDecimal noOfPackages,
+	        @Param("typeOfPackage") String typeOfPackage,
+	        @Param("grossWeight") BigDecimal grossWeight,
+	        @Param("fob") BigDecimal fob,
+	        @Param("invoiceNo") String invoiceNo,
+	        @Param("invoiceDate") Date date2,
+	        @Param("haz") String haz,
+	        @Param("unNo") String unNo,
+	        @Param("newCommodity") String newCommodity,
+	        @Param("srNo") Long srNo
+	);
+
+	
+	
+	
 
 	@Query("SELECT NEW com.cwms.entities.ExportSbCargoEntry(e.profitcentreId, e.sbTransId, e.srno, e.sbNo, "
 		     + "e.noOfPackages, e.gateInPackages, e.cartedPackages, e.stuffReqQty, e.stuffedQty, e.bttOutQty, "

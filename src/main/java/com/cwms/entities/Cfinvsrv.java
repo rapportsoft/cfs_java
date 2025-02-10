@@ -1042,11 +1042,12 @@ public class Cfinvsrv {
 	    
 	    
 //		Export Container Invoice
-		public Cfinvsrv(BigDecimal billAmt, BigDecimal invoiceAmt, BigDecimal receiptAmt)
+		public Cfinvsrv(BigDecimal billAmt, BigDecimal invoiceAmt, BigDecimal receiptAmt, String partyId)
 	    {
 	    	this.billAmt = billAmt;
 	    	this.invoiceAmt = invoiceAmt;
 	    	this.receiptAmt = receiptAmt;
+	    	this.partyId = partyId;
 	    }
 	    
 }

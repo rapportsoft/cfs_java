@@ -5,13 +5,11 @@
 //import java.util.List;
 //import java.util.Map;
 //import java.util.Optional;
-//
 //import org.springframework.data.jpa.repository.JpaRepository;
 //import org.springframework.data.jpa.repository.Modifying;
 //import org.springframework.data.jpa.repository.Query;
 //import org.springframework.data.repository.query.Param;
 //import org.springframework.transaction.annotation.Transactional;
-//
 //import com.cwms.entities.Cfinvsrv;
 //import com.cwms.entities.Cfinvsrvanx;
 //import com.cwms.entities.ExportStuffTally;
@@ -21,6 +19,283 @@
 //import com.cwms.helper.ExportContainerAssessmentData;
 //
 //public interface ExportInvoiceRepo extends JpaRepository<ExportStuffTally, String> {
+//	
+//	
+//	
+//	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId, a.branchId, a.assesmentId,a.assesmentLineNo,a.assesmentDate,a.sbNo,a.sbTransId,a.commodityDescription,a.minCartingTransDate "
+//			+ ", a.grossWeight, a.areaUsed, a.invoiceUptoDate) "
+//			+ "from AssessmentSheet a "
+//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Order By a.sbNo")
+//	List<Cfinvsrvanx> getAllContainerListOfAssessMentSheetBackToTown(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
+//	
+//	
+//	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId, a.branchId, a.assesmentId,a.assesmentLineNo,a.assesmentDate,a.containerNo,a.containerSize,a.containerType,a.gateInDate,a.invoiceUptoDate "
+//			+ ",e.gateOutId,e.gatePassNo, a.partyId, e.gateOutDate, a.movReqDate, a.stuffTallyDate) "
+//			+ "from AssessmentSheet a "
+//			+ "LEFT JOIN ExportInventory e on a.companyId = e.companyId AND a.branchId = e.branchId AND a.assesmentId = e.assessmentId AND a.containerNo = e.containerNo AND e.status <> 'D' "
+//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Order By a.containerNo")
+//	List<Cfinvsrvanx> getAllContainerListOfAssessMentSheet(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	@Query(value="select NEW com.cwms.helper.ExportContainerAssessmentData(a.assesmentId, a.assesmentLineNo, a.transType, a.assesmentDate, a.commodityDescription, a.minCartingTransDate, a.grossWeight, a.areaUsed, a.invoiceUptoDate, "
+//			+ "s.serviceShortDesc, SUM(c.actualNoOfPackages), c.taxPerc) "
+//			+ "from AssessmentSheet a "
+//	        + "LEFT OUTER JOIN Cfinvsrvanx c ON a.companyId = c.companyId AND a.branchId = c.branchId AND a.assesmentId = c.processTransId AND a.assesmentLineNo = c.lineNo  "
+//	        + "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Group by c.lineNo, c.serviceId Order By a.containerNo")
+//	List<ExportContainerAssessmentData> getSelectedExportAssesmentSheetBackToTown(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
+//	
+//	
+//	@Query(value="select NEW com.cwms.helper.ExportContainerAssessmentData(a.assesmentId,a.assesmentLineNo,a.transType,a.assesmentDate,a.commodityDescription,a.commodityCode,a.noOfPackages,a.typeOfCargo, "
+//			+ "s.serviceShortDesc, SUM(c.actualNoOfPackages), a.grossWeight, c.taxPerc) "
+//			+ "from AssessmentSheet a "
+//	        + "LEFT OUTER JOIN Cfinvsrvanx c ON a.companyId = c.companyId AND a.branchId = c.branchId AND a.assesmentId = c.processTransId  "
+//	        + "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Group by a.containerNo, c.serviceId Order By a.containerNo")
+//	List<ExportContainerAssessmentData> getSelectedExportAssesmentSheetContainerDataCarting(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
+//	
+//	
+//	
+//	
+//	@Transactional
+//	@Modifying
+//	@Query("UPDATE ExportBackToTown e SET e.assesmentId = :assesmentId "
+//	        + "WHERE e.companyId = :companyId "
+//	        + "AND e.branchId = :branchId "
+//	        + "AND e.backToTownTransId = :backToTownTransId "
+//	        + "AND e.status <> 'D'")
+//	int updateExpBackToTownInvoiceSave(
+//	        @Param("companyId") String companyId,
+//	        @Param("branchId") String branchId,
+//	        @Param("assesmentId") String assesmentId,
+//	        @Param("backToTownTransId") String backToTownTransId
+//	);
+//	
+//	
+//
+//	
+//	@Transactional
+//	@Modifying
+//	@Query("UPDATE ExportBackToTown e SET e.invoiceAssessed = 'Y', e.invoiceNo = :invoiceNo, e.invoiceDate = :invoiceDate, "
+//	        + "e.creditType = :creditType, e.billAmt = :billAmt, e.invoiceAmt = :invoiceAmt "
+//	        + "WHERE e.companyId = :companyId "
+//	        + "AND e.branchId = :branchId "
+//	        + "AND e.status <> 'D' "
+//	        + "AND e.assesmentId = :assessmentId")
+//	int updateExpBackToTownInvoiceProcess(
+//	        @Param("assessmentId") String assessmentId,
+//	        @Param("companyId") String companyId,
+//	        @Param("branchId") String branchId,
+//	        @Param("invoiceNo") String invoiceNo,
+//	        @Param("invoiceDate") Date invoiceDate,
+//	        @Param("creditType") String creditType,
+//	        @Param("billAmt") BigDecimal billAmt,
+//	        @Param("invoiceAmt") BigDecimal invoiceAmt
+//	);
+//	
+//	
+//	
+//	@Query(value = "select NEW com.cwms.entities.SSRDtl(s.containerNo, s.serviceId, s.serviceUnit, s.executionUnit,s.serviceUnit1, s.executionUnit1, s.rate,"
+//			+ "s.totalRate) " + "from SSRDtl s "
+//			+ "where s.companyId=:companyId and s.branchId=:branchId and s.transId=:ssrTransId and s.status = 'A' AND s.erpDocRefNo = :sbTransId AND s.docRefNo = :sbNo AND s.backToTownTransId = :backToTownTransId ")
+//	List<SSRDtl> getServiceIdCargoBackToTown(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("ssrTransId") String ssrTransId,
+//											 @Param("sbNo") String sbNo, @Param("sbTransId") String sbTransId, @Param("backToTownTransId") String backToTownTransId);
+//	
+//	
+//	
+//	
+//	
+//	@Query(value = " " +
+//		    "SELECT DISTINCT NEW com.cwms.helper.ExportContainerAssessmentData( " +
+//		    "    a.sbTransId, a.sbNo, a.sbDate, a.commodity, a.profitcentreId, c.profitcentreDesc, " +
+//		    "    f.typeOfPackage, a.invoiceAssessed, a.assesmentId, a.invoiceNo, " +
+//		    "    a.importerId, i.partyName, " +
+//		    "    e.exporterAddress1, e.exporterAddress2, e.exporterAddress3, e.state, e.gstNo, " +
+//		    "    e.srNo, i.tanNoId, " +
+//		    "    a.onAccountOf, onp.partyName, " +
+//		    "    onAc.address1, onAc.address2, onAc.address3, onAc.state, onAc.gstNo, " +
+//		    "    onAc.srNo, onp.tanNoId, " +
+//		    "    e.cha, ch.partyName, " +
+//		    "    cha.address1, cha.address2, cha.address3, cha.state, cha.gstNo, " +
+//		    "    cha.srNo, ch.tanNoId, " +
+//		    "    d.cartingTransDate, a.backToTownWeight, d.areaOccupied, a.backToTownTransId, " +
+//		    "    f.newCommodity, f.grossWeight, a.typeOfContainer, a.ssrTransId, " +
+//		    "    e.holdStatus, d.gridLocation, f.grossWeight " +
+//		    ") " +
+//		    "FROM ExportBackToTown a " +
+//		    "LEFT OUTER JOIN Profitcentre c " +
+//		    "    ON c.companyId = a.companyId AND c.profitcentreId = a.profitcentreId " +
+//		    "LEFT OUTER JOIN ExportCarting d " +
+//		    "    ON a.companyId = d.companyId AND a.branchId = d.branchId " +
+//		    "    AND a.sbTransId = d.sbTransId AND a.sbNo = d.sbNo " +
+//		    "LEFT OUTER JOIN ExportSbEntry e " +
+//		    "    ON e.companyId = a.companyId AND e.branchId = a.branchId " +
+//		    "    AND e.sbTransId = a.sbTransId AND e.sbNo = a.sbNo " +
+//		    "LEFT OUTER JOIN ExportSbCargoEntry f " +
+//		    "    ON f.companyId = a.companyId AND f.branchId = e.branchId " +
+//		    "    AND f.sbTransId = e.sbTransId AND f.sbNo = e.sbNo " +
+//		    "LEFT OUTER JOIN Party i " +
+//		    "    ON i.companyId = a.companyId AND i.partyId = a.importerId " +
+//		    "    AND a.branchId = i.branchId " +
+//		    "LEFT OUTER JOIN Party onp " +
+//		    "    ON onp.companyId = a.companyId AND onp.partyId = a.onAccountOf " +
+//		    "    AND a.branchId = onp.branchId " +
+//		    "LEFT OUTER JOIN Party ch " +
+//		    "    ON ch.companyId = a.companyId AND ch.partyId = e.cha " +
+//		    "    AND a.branchId = ch.branchId " +
+//		    "LEFT OUTER JOIN PartyAddress onAc " +
+//		    "    ON onAc.companyId = a.companyId AND onAc.partyId = a.onAccountOf " +
+//		    "    AND onAc.defaultChk = 'Y' AND a.branchId = onAc.branchId " +
+//		    "LEFT OUTER JOIN PartyAddress imp " +
+//		    "    ON imp.companyId = a.companyId AND imp.partyId = a.importerId " +
+//		    "    AND imp.defaultChk = 'Y' AND a.branchId = imp.branchId " +
+//		    "LEFT OUTER JOIN PartyAddress cha " +
+//		    "    ON cha.companyId = a.companyId AND cha.partyId = e.cha " +
+//		    "    AND cha.defaultChk = 'Y' AND a.branchId = cha.branchId " +
+//		    "WHERE " +
+//		    "    a.companyId = :companyId " +
+//		    "    AND a.branchId = :branchId " +
+//		    "    AND a.status = 'A' " +
+//		    "    AND a.profitcentreId = :profitcentreId " +
+//		    "    AND (a.invoiceAssessed IS NULL OR a.invoiceAssessed <> 'Y') " +
+//		    "    AND a.sbNo = :sbNo " +
+//		    "GROUP BY a.backToTownTransId"
+//		)
+//		List<ExportContainerAssessmentData> getContainerAssessmentDataBackToTown(
+//		    @Param("companyId") String companyId, 
+//		    @Param("branchId") String branchId, 
+//		    @Param("profitcentreId") String profitcentreId, 
+//		    @Param("sbNo") String sbNo
+//		);
+//
+//		
+//	
+//	@Query("SELECT DISTINCT a.sbNo " +
+//		       "FROM ExportBackToTown a " +
+//		       "WHERE a.companyId = :companyId " +
+//		       "AND a.branchId = :branchId " +
+//		       "AND (a.invoiceAssessed IS NULL OR a.invoiceAssessed <> 'Y') " +
+//		       "AND a.profitcentreId = :profitcentreId " +
+//		       "AND (COALESCE(:searchValue, '') = '' OR a.sbNo LIKE CONCAT(:searchValue, '%')) " +
+//		       "AND a.status = 'A'")
+//		List<String> getDistinctSbNoSearchBackToTownList(
+//		       @Param("companyId") String companyId,
+//		       @Param("branchId") String branchId,
+//		       @Param("profitcentreId") String profitcentreId,
+//		       @Param("searchValue") String searchValue);
+//
+//	
+//	
+//	
+//	
+//	
+//	@Transactional
+//	@Modifying
+//	@Query("UPDATE ExportSbCargoEntry e SET e.crgInvoiceNo = :invoiceNo "
+//	        + "WHERE e.companyId = :companyId "
+//	        + "AND e.branchId = :branchId "
+//	        + "AND e.sbTransId = :sbTransId "
+//	        + "AND e.status <> 'D'")
+//	int updateExpSbCargoEntryCartingInvoiceProcess(
+//	        @Param("companyId") String companyId,
+//	        @Param("branchId") String branchId,
+//	        @Param("invoiceNo") String invoiceNo,
+//	        @Param("sbTransId") String sbTransId
+//	);
+//	
+//	
+//	
+//
+//	
+//	
+//	@Query(value="select c.cfsTariffNo,c.serviceId,c.cfsAmendNo,c.containerSize,c.cargoType,c.commodityCode,c.fromRange,"
+//			+ "c.toRange,c.rate "
+//			+ "from CFSTariffService c "
+//			+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.cfsTariffNo=:tariffNo and c.cfsAmendNo=:amd "
+//			+ "and c.serviceId=:service and :rtype between c.fromRange and c.toRange ")
+//	Object getRangeDataByServiceIdCarting(@Param("cid") String cid, @Param("bid") String bid,@Param("tariffNo") String tariffNo,
+//			@Param("amd") String amd,@Param("service") String service,@Param("rtype") BigDecimal rtype);
+//	
+//	@Query(value="select c.cfsTariffNo,c.serviceId,c.cfsAmendNo,c.containerSize,c.cargoType,c.commodityCode,c.fromRange,"
+//			+ "c.toRange,c.rate "
+//			+ "from CFSTariffService c "
+//			+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.cfsTariffNo=:tariffNo and c.cfsAmendNo=:amd "
+//			+ "and c.serviceId=:service and c.rangeType=:rtype ")
+//	List<Object[]> getDataByServiceIdCarting(@Param("cid") String cid, @Param("bid") String bid,@Param("tariffNo") String tariffNo,
+//											 @Param("amd") String amd,@Param("service") String service,@Param("rtype") String rtype);
+//	
+//	
+//	
+//	
+//	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
+//			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, COALESCE(tx.taxPerc, 0) AS taxPerc, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,GROUP_CONCAT(distinct sm.storageType) AS storageTypes "
+//			+ "FROM CFSTariffService c "
+//			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+//			+ "AND c.cfsAmendNo = t.cfsAmndNo "
+//			+ "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+//			+ "LEFT OUTER JOIN ServiceMapping sm ON c.companyId = sm.companyId AND c.branchId = sm.branchId AND s.serviceId = sm.serviceId "
+//			+ "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
+//			+ "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
+//			+ "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+//			+ "WHERE c.companyId = :cid AND c.branchId = :bid "
+//			+ "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
+//			+ "AND c.cfsTariffNo = :tariffNo "
+//			+ "GROUP BY c.serviceId " + "ORDER BY c.serviceId")
+//	List<Object[]> getServiceRateForCarting(@Param("cid") String cid, @Param("bid") String bid,
+//											@Param("assessDate") Date assessDate, @Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo);
+//
+//	
+//	
+//	
+//	
+//	
+//	@Query(value = "SELECT c.srno, c.commodity, c.newCommodity, c.noOfPackages, c.grossWeight, "
+//            + "c.typeOfPackage, c.cargoType "
+//            + "FROM ExportSbCargoEntry c "          
+//            + "WHERE c.companyId = :companyId AND c.branchId = :branchId "
+//            + "AND c.status != 'D' AND c.sbTransId = :sbTransId")           
+//List<Object[]> getExportDetailsCartingDetailsList(@Param("companyId") String companyId, 
+//                                                  @Param("branchId") String branchId,
+//                                                  @Param("sbTransId") String sbTransId);
+//
+//	
+//
+//@Query("SELECT new com.cwms.helper.ExportContainerAssessmentData( " +
+//	       "a.sbTransId, a.sbNo, a.sbDate, a.cha, d.partyName, da.gstNo, da.address1, da.address2, da.address3, " +
+//	       "da.state, da.srNo, d.tanNoId, a.exporterId, a.exporterName, imp.gstNo, imp.address1, imp.address2, imp.address3, " +
+//	       "imp.state, imp.srNo, i.tanNoId, a.onAccountOf, ch.partyName, cha.gstNo, cha.address1, cha.address2, cha.address3, " +
+//	       "cha.state, cha.srNo, ch.tanNoId, b.commodity, a.profitcentreId, c.profitcentreDesc, b.typeOfPackage, " +
+//	       "b.invoiceAssesed, b.assesmentId, b.crgInvoiceNo, b.grossWeight, b.newCommodity, a.holdStatus) " +
+//	       "FROM ExportSbEntry a " +
+//	       "LEFT JOIN ExportSbCargoEntry b ON a.companyId = b.companyId AND a.branchId = b.branchId AND a.sbNo = b.sbNo AND a.sbTransId = b.sbTransId " +
+//	       "LEFT JOIN Party i ON i.companyId = a.companyId AND i.partyId = a.exporterId AND i.branchId = a.branchId " +
+//	       "LEFT JOIN PartyAddress imp ON imp.companyId = a.companyId AND imp.partyId = a.exporterId AND imp.defaultChk = 'Y' AND imp.branchId = a.branchId " +
+//	       "LEFT JOIN Party ch ON ch.companyId = a.companyId AND ch.partyId = a.onAccountOf AND ch.branchId = a.branchId " +
+//	       "LEFT JOIN PartyAddress cha ON cha.companyId = a.companyId AND cha.partyId = a.onAccountOf AND cha.defaultChk = 'Y' AND cha.branchId = a.branchId " +
+//	       "LEFT JOIN Party d ON d.companyId = a.companyId AND d.partyId = a.cha AND d.branchId = a.branchId " +
+//	       "LEFT JOIN PartyAddress da ON da.companyId = a.companyId AND da.partyId = a.cha AND da.defaultChk = 'Y' AND da.branchId = a.branchId " +
+//	       "LEFT JOIN Profitcentre c ON c.companyId = a.companyId AND c.profitcentreId = a.profitcentreId AND c.branchId = a.branchId " +
+//	       "WHERE a.companyId = :companyId " +
+//	       "AND a.branchId = :branchId " +
+//	       "AND a.status = 'A' " +
+//	       "AND a.sbNo = :sbNo " +
+//	       "AND a.profitcentreId = :profitcentreId " +
+//	       "AND b.status = 'A' " +
+//	       "AND (b.crgInvoiceNo = '' OR b.crgInvoiceNo IS NULL) " +
+//	       "ORDER BY a.sbNo")
+//	List<ExportContainerAssessmentData> getExportDetailsCartingDetails(
+//	    @Param("companyId") String companyId,
+//	    @Param("branchId") String branchId,
+//	    @Param("sbNo") String sbNo,
+//	    @Param("profitcentreId") String profitcentreId);
+//
+//	
+//	
 //	
 //	
 //	@Query(value = "SELECT c.assesmentId, "
@@ -34,7 +309,7 @@
 //            + "AND c.profitcentreId = psl.profitcentreId AND psl.status <> 'D' "
 //            + "LEFT JOIN JarDetail j ON c.companyId = j.companyId AND j.jarId = 'J00006' "
 //            + "AND j.jarDtlId = c.commodityCode AND j.status <> 'D' "
-//            + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.transType = 'Export Container' "
+//            + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.transType = :transType "
 //            + "AND (c.invoiceNo IS NOT NULL AND c.invoiceNo != '') "
 //            + "AND c.status != 'D' AND c.assesmentLineNo = '1' "
 //            + "AND (:searchValue IS NULL OR :searchValue = '' "
@@ -44,28 +319,7 @@
 //            + "ORDER BY c.invoiceDate DESC")
 //List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId, 
 //                                        @Param("branchId") String branchId,
-//                                        @Param("searchValue") String searchValue);
-//	
-////	@Query(value = "SELECT c.assesmentId, "
-////            + "DATE_FORMAT(c.assesmentDate, '%d %b %Y') AS assesmentDate, "  // Formatting the assesmentDate
-////            + "psl.profitcentreDesc, c.sbTransId, c.sbNo, "
-////            + "DATE_FORMAT(c.sbDate, '%d %b %Y') AS sbDate, " 
-////            + "j.jarDtlDesc, "
-////            + "c.exporterName, c.status, c.invoiceNo, c.transType, c.profitcentreId "
-////            + "FROM AssessmentSheet c "
-////            + "LEFT JOIN Profitcentre psl ON c.companyId = psl.companyId AND c.branchId = psl.branchId "
-////            + "AND c.profitcentreId = psl.profitcentreId AND psl.status <> 'D' "
-////            + "LEFT JOIN JarDetail j ON c.companyId = j.companyId AND j.jarId = 'J00006' AND j.jarDtlId = c.commodityCode AND j.status <> 'D' "
-////            + "WHERE c.companyId = :companyId AND c.branchId = :branchId "
-////            + "AND c.status != 'D' AND c.assesmentLineNo = '1' "
-////            + "AND (:searchValue IS NULL OR :searchValue = '' "
-////            + "OR c.invoiceNo LIKE %:searchValue% OR c.assesmentDate LIKE %:searchValue% "
-////            + "OR c.assesmentId LIKE %:searchValue% OR c.sbNo LIKE %:searchValue% "
-////            + "OR c.transType LIKE %:searchValue%) "
-////            + "ORDER BY c.invoiceDate DESC")  // Ordering by invoiceDate in descending order
-////List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId, 
-////                                        @Param("branchId") String branchId,
-////                                        @Param("searchValue") String searchValue);
+//                                        @Param("searchValue") String searchValue, @Param("transType") String transType);
 //
 //	
 //	
@@ -166,36 +420,27 @@
 //		       "WHERE e.companyId = :companyId " +
 //		       "AND e.branchId = :branchId " +
 //		       "AND e.status <> 'D' " +
-//		       "AND e.containerNo = :containerNo " +
 //		       "AND e.profitcentreId = :profitcentreId " +
 //		       "AND e.processTransId = :assesmentId")
 //		Optional<BigDecimal> getHighestSrlNoByContainerNo(
 //		    @Param("companyId") String companyId,
 //		    @Param("branchId") String branchId,		    
 //		    @Param("profitcentreId") String profitcentreId,
-//		    @Param("assesmentId") String assesmentId,
-//		    @Param("containerNo") String containerNo);
+//		    @Param("assesmentId") String assesmentId);
 //
 //	
 //	
-//	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId, a.branchId, a.assesmentId,a.assesmentLineNo,a.assesmentDate,a.containerNo,a.containerSize,a.containerType,a.gateInDate,a.invoiceUptoDate "
-//			+ ",e.gateOutId,e.gatePassNo, a.partyId, e.gateOutDate, a.movReqDate, a.stuffTallyDate) "
-//			+ "from AssessmentSheet a "
-//			+ "LEFT JOIN ExportInventory e on a.companyId = e.companyId AND a.branchId = e.branchId AND a.assesmentId = e.assessmentId AND a.containerNo = e.containerNo AND e.status <> 'D' "
-//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Order By a.containerNo")
-//	List<Cfinvsrvanx> getAllContainerListOfAssessMentSheet(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
-//	
-//	
+//
 //	
 //	
 //	@Transactional
 //	@Modifying
 //	@Query("UPDATE Cfinvsrvanx SET executionUnit = :executionUnit, executionUnit1 = :executionUnit1, rate = :rate, actualNoOfPackages = :actualNoOfPackages, localAmt = :actualNoOfPackages , invoiceAmt = :actualNoOfPackages "
 //			+ "WHERE companyId = :companyId " + "AND branchId = :branchId " + "AND processTransId = :assesmentId "
-//			+ "AND status <> 'D' AND profitcentreId = :profiCentreId AND srlNo = :srlNo AND containerNo = :containerNo")
+//			+ "AND status <> 'D' AND profitcentreId = :profiCentreId AND srlNo = :srlNo ")
 //	int updateCfinvsrvanx(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId,
 //									  @Param("assesmentId") String assesmentId,  @Param("srlNo") BigDecimal srlNo, @Param("executionUnit") String executionUnit,
-//									  @Param("executionUnit1") String executionUnit1, @Param("rate") BigDecimal rate, @Param("actualNoOfPackages") BigDecimal actualNoOfPackages, @Param("containerNo") String containerNo);
+//									  @Param("executionUnit1") String executionUnit1, @Param("rate") BigDecimal rate, @Param("actualNoOfPackages") BigDecimal actualNoOfPackages);
 //	
 //	
 //	
@@ -203,15 +448,17 @@
 //		       "FROM Cfinvsrvanx e " +
 //		       "WHERE e.companyId = :companyId " +
 //		       "AND e.branchId = :branchId " +
-//		       "AND e.srlNo = :srlNo AND e.status <> 'D' AND e.containerNo = :containerNo " +
+//		       "AND e.srlNo = :srlNo AND e.status <> 'D' " +
 //		       "AND e.profitcentreId = :profitcentreId " +
+//		       "AND e.lineNo = :lineNo " +
+//		       "AND e.serviceId = :serviceId " +
 //		       "AND e.processTransId = :assesmentId ")		      
 //		boolean existsByAssesmentIdAndSrlNo(
 //		    @Param("companyId") String companyId,
 //		    @Param("branchId") String branchId,		    
 //		    @Param("profitcentreId") String profitcentreId,
 //		    @Param("assesmentId") String assesmentId,
-//		    @Param("srlNo") BigDecimal srlNo, @Param("containerNo") String containerNo);
+//		    @Param("srlNo") BigDecimal srlNo, @Param("lineNo") String lineNo, @Param("serviceId") String serviceid);
 //	
 ////	Add Servie
 //	@Query(value = "select NEW com.cwms.entities.Cfinvsrvanx(a.serviceId, a.serviceUnit, a.serviceUnitI, a.currencyId, a.rangeType, a.rate, a.cfsTariffNo, a.cfsAmendNo, MAX(a.srNo), s.serviceShortDesc, s.acCode, s.taxId, tx.taxPerc) "
@@ -239,11 +486,11 @@
 //	
 //	
 //	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId,a.branchId,a.processTransId,a.serviceId,a.taxId,a.erpDocRefNo,a.srlNo,a.docRefNo,a.profitcentreId "
-//			+ ",a.serviceUnit,a.executionUnit, a.serviceUnit1, a.executionUnit1, a.rate, a.currencyId, a.partyId, a.woNo, a.woAmndNo, a.criteria, a.rangeFrom, a.rangeTo, a.rangeType, a.containerNo, a.containerStatus, a.commodityDescription, a.actualNoOfPackages, a.startDate, a.status, a.srvManualFlag, s.serviceShortDesc, a.addServices) "
+//			+ ",a.serviceUnit,a.executionUnit, a.serviceUnit1, a.executionUnit1, a.rate, a.currencyId, a.partyId, a.woNo, a.woAmndNo, a.criteria, a.rangeFrom, a.rangeTo, a.rangeType, a.containerNo, a.containerStatus, a.commodityDescription, a.actualNoOfPackages, a.startDate, a.status, a.srvManualFlag, s.serviceShortDesc, a.addServices, a.lineNo) "
 //			+ "from Cfinvsrvanx a "
 //	        + "LEFT OUTER JOIN Services s ON a.companyId = s.companyId AND a.branchId = s.branchId AND a.serviceId = s.serviceId "
-//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.processTransId=:assesmentId AND a.profitcentreId = :profiCentreId AND a.containerNo = :containerNo order by a.srlNo DESC")
-//	List<Cfinvsrvanx> getAllCfInvSrvAnxListByAssesmentId(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId, @Param("containerNo") String containerNo);
+//	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.processTransId=:assesmentId AND a.profitcentreId = :profiCentreId AND a.lineNo = :lineNo order by a.srlNo DESC")
+//	List<Cfinvsrvanx> getAllCfInvSrvAnxListByAssesmentId(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId, @Param("lineNo") String lineNo);
 //	
 //	
 //	
@@ -316,7 +563,7 @@
 //	        + "a.othPartyId, p4.partyName, COALESCE(CONCAT(pa3.address1, '', pa3.address2, '', pa3.address3), '') AS otherAddress, pa3.gstNo, pa3.state, pa3.srNo, "
 //	        + "a.onAccountOf, p5.partyName, COALESCE(CONCAT(pa4.address1, '', pa4.address2, '', pa4.address3), '') AS forwarderAddress, pa4.gstNo, pa4.state, pa4.srNo, "
 //	        + "a.invoiceNo, a.invoiceDate, a.taxApplicable, a.sez, a.commodityCode, a.creditType, a.invoiceCategory, "
-//	        + "a.irn, a.receiptNo, '0000' AS creditAllowed, '0000' AS pendingCredit, a.comments, a.intComments, a.partyId "
+//	        + "a.irn, a.receiptNo, '0000' AS creditAllowed, '0000' AS pendingCredit, a.comments, a.intComments, a.partyId, a.transactionType, a.containerNo, a.cgst, a.sgst, a.igst "
 //	        + "FROM AssessmentSheet a "
 //	        + "LEFT OUTER JOIN Party p2 ON a.companyId = p2.companyId AND a.branchId = p2.branchId AND a.importerId = p2.partyId "
 //	        + "LEFT OUTER JOIN Profitcentre p ON a.companyId = p.companyId AND a.branchId = p.branchId AND a.profitcentreId = p.profitcentreId "
@@ -689,8 +936,8 @@
 //	@Query("SELECT DISTINCT a.sbNo " + "FROM ExportMovement a "
 //			+ "WHERE a.companyId = :companyId " + "AND a.branchId = :branchId "
 //			+ "AND a.invoiceAssessed <> 'Y' " + "AND a.profitcentreId = :profitcentreId "
-//			+ "AND a.containerNo = :containerNo " + "AND a.status = 'A'")
-//	String getDistinctSbNoForContainerNew(@Param("companyId") String companyId, @Param("branchId") String branchId,
+//			+ "AND a.containerNo = :containerNo " + "AND a.status = 'A' Order By a.createdDate DESC")
+//	List<String> getDistinctSbNoForContainerNew(@Param("companyId") String companyId, @Param("branchId") String branchId,
 //										  @Param("profitcentreId") String profitcentreId, @Param("containerNo") String containerNo);
 //	
 //	
@@ -735,6 +982,25 @@
 //	List<String> getDistinctSbNoSearchList(@Param("companyId") String companyId, @Param("branchId") String branchId,
 //			@Param("profitcentreId") String profitcentreId, @Param("searchValue") String searchValue);
 //
+//	
+//	
+//	
+//	
+//	@Query("SELECT DISTINCT a.sbNo " + "FROM ExportSbEntry a "
+//			+ "LEFT OUTER JOIN ExportSbCargoEntry m ON a.companyId = m.companyId " + "AND a.branchId = m.branchId "
+//			+ "AND a.profitcentreId = m.profitcentreId " + "AND a.sbNo = m.sbNo "
+//			+ "AND a.sbTransId = m.sbTransId " + "WHERE a.companyId = :companyId " + "AND a.branchId = :branchId "
+//			+ "AND (m.crgInvoiceNo = '' OR m.crgInvoiceNo = NULL) "
+//			+ "AND a.profitcentreId = :profitcentreId "
+//			+ "AND (:searchValue IS NULL OR :searchValue = '' OR a.sbNo LIKE CONCAT(:searchValue, '%')) "
+//			+ "AND a.status = 'A'")
+//	List<String> getDistinctSbNoSearchCartingList(@Param("companyId") String companyId, @Param("branchId") String branchId,
+//			@Param("profitcentreId") String profitcentreId, @Param("searchValue") String searchValue);
+//	
+//	
+//	
+//	
+//	
 //	@Query(value = "SELECT p.party_id, p.party_name " + "FROM party p " + "WHERE p.company_id = :cid "
 //			+ "AND p.branch_id = :bid " + "AND p.status != 'D' " + "AND (" + "   (:type = 'agent') "
 //			+ "   OR (:type = 'cha' AND p.cha = 'Y') " + "   OR (:type = 'exp' AND p.exp = 'Y') "
@@ -759,14 +1025,12 @@
 //	List<Map<String, Object>> getPartyByTypeWithAddress(@Param("cid") String cid, @Param("bid") String bid,
 //			@Param("val") String val, @Param("type") String type);
 //
+//
+//
+//
+//
 //}
-
-
-
-
-
-
-
+//
 
 
 
@@ -1099,13 +1363,13 @@ List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId,
 	
 	
 	
-	@Query(value="select NEW com.cwms.entities.FinTrans(a.tdsType, a.tdsPercentage, a.paymentMode, a.chequeNo, a.chequeDate, a.bankName, a.documentAmt, a.status) "
+	@Query(value="select NEW com.cwms.entities.FinTrans(a.tdsType, a.tdsPercentage, a.paymentMode, a.chequeNo, a.chequeDate, a.bankName, a.documentAmt, a.status, a.creditAmount) "
 			+ "from FinTrans a "
 	        + "where a.companyId=:companyId and a.branchId=:branchId and a.oprInvoiceNo = :oprInvoiceNo and a.status <> 'D' ")
 	List<FinTrans> getFinTransGenerated(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("oprInvoiceNo") String oprInvoiceNo);
 	
 	
-	@Query(value="select NEW com.cwms.entities.Cfinvsrv(a.billAmt, a.invoiceAmt, a.receiptAmt) "
+	@Query(value="select NEW com.cwms.entities.Cfinvsrv(a.billAmt, a.invoiceAmt, a.receiptAmt, a.partyId) "
 			+ "from Cfinvsrv a "
 	        + "where a.companyId=:companyId and a.branchId=:branchId and a.invoiceNo = :invoiceNo and a.status <> 'D' ")
 	Cfinvsrv getInvoiceGenerated(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("invoiceNo") String invoiceNo);
@@ -1180,7 +1444,7 @@ List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId,
 	
 	
 	
-	@Query(value="select NEW com.cwms.entities.Party(a.tanNoId,a.tdsPercentage) "
+	@Query(value="select NEW com.cwms.entities.Party(a.tanNoId,a.tdsPercentage, a.crAmtLmt, a.crAmtLmtUse) "
 			+ "from Party a "
 	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.partyId=:partyId ")
 	Party getPartyForTanNo(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("partyId") String partyId);
@@ -1801,7 +2065,6 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 
 
 
-
-
 }
+
 

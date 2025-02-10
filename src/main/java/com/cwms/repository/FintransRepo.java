@@ -1,5 +1,6 @@
 package com.cwms.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,18 @@ import com.cwms.entities.FinTrans;
 
 public interface FintransRepo extends JpaRepository<FinTrans, String> {
 
+	
+	@Query(value = "SELECT SUM(CASE WHEN (COALESCE(t.documentAmt, 0) - COALESCE(t.clearedAmt, 0)) < 0 THEN 0 "
+            + "ELSE (COALESCE(t.documentAmt, 0) - COALESCE(t.clearedAmt, 0)) END) "
+            + "FROM FinTrans t "
+            + "WHERE t.companyId = :cid AND t.branchId = :bid AND t.partyId = :id "
+            + "AND t.docType = :type AND t.status = 'A'")
+BigDecimal advanceReceiptAmountNew(@Param("cid") String cid, 
+                                @Param("bid") String bid, 
+                                @Param("id") String id, 
+                                @Param("type") String type);
+
+	
 
 //	@Query(value="select c from FinTrans c where c.companyId=:cid and c.branchId=:bid and c.oprInvoiceNo=:invNo and c.status = 'A'")
 //	List<FinTrans> getDataByInvoiceNo(@Param("cid") String cid,@Param("bid") String bid,@Param("invNo") String invNo);

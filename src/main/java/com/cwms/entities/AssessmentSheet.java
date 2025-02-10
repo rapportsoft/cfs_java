@@ -586,14 +586,68 @@ public class AssessmentSheet implements Cloneable {
     @Transient
     private String accHolderState;
     
-    @Transient
-    private String creditAllowed;
+//    @Transient
+//    private String creditAllowed;
     
     @Transient
     private String saId;
     
     @Transient
     private String slId;
+    
+    
+    @Transient
+    private BigDecimal creditAllowed;    
+    
+    @Transient
+    private BigDecimal usedCredit;
+    
+    @Transient
+    private BigDecimal pendingCredit;
+    
+    @Transient
+    private BigDecimal advanceAmount;
+    
+    
+
+    
+    
+    
+	public BigDecimal getUsedCredit() {
+		return usedCredit;
+	}
+
+
+
+
+
+
+	public void setUsedCredit(BigDecimal usedCredit) {
+		this.usedCredit = usedCredit;
+	}
+
+
+
+
+
+
+	public BigDecimal getAdvanceAmount() {
+		return advanceAmount;
+	}
+
+
+
+
+
+
+	public void setAdvanceAmount(BigDecimal advanceAmount) {
+		this.advanceAmount = advanceAmount;
+	}
+
+
+
+
+
 
 	public AssessmentSheet() {
 		super();
@@ -818,7 +872,7 @@ public class AssessmentSheet implements Cloneable {
 		this.accHolderGst = accHolderGst;
 		this.accHolderName = accHolderName;
 		this.accHolderState = accHolderState;
-		this.creditAllowed = creditAllowed;
+//		this.creditAllowed = creditAllowed;
 		this.saId = saId;
 		this.slId = slId;
 	}
@@ -862,14 +916,14 @@ public class AssessmentSheet implements Cloneable {
 
 
 
-	public String getCreditAllowed() {
+	public BigDecimal getCreditAllowed() {
 		return creditAllowed;
 	}
 
 
 
 
-	public void setCreditAllowed(String creditAllowed) {
+	public void setCreditAllowed(BigDecimal creditAllowed) {
 		this.creditAllowed = creditAllowed;
 	}
 
@@ -2392,11 +2446,6 @@ public class AssessmentSheet implements Cloneable {
 	    @Transient
 	    private String expStateCode;    
 	    
-	  	    
-	    @Transient
-	    private String pendingCredit;
-	    
-	    
 	    
 
 	public String getAccHolderGst2() {
@@ -2781,7 +2830,7 @@ public class AssessmentSheet implements Cloneable {
 	            String accStateCode, String othSrNo, String onAccountOf, String fwdName, String fwdAddress,
 	            String fwdGst, String fwdState, int accSrNo, String invoiceNo, Date invoiceDate, char taxApplicable,
 	            char sez, String commodityCode, char creditType, String invoiceCategory, String irn,
-	            String receiptNo, String creditAllowed, String pendingCredit, String comments,
+	            String receiptNo, BigDecimal creditAllowed, BigDecimal pendingCredit, String comments,
 	            String intComments, String partyId) {
 	this.companyId = companyId;
 	this.branchId = branchId;
@@ -2848,11 +2897,11 @@ public class AssessmentSheet implements Cloneable {
 	    
 	    
 	    
-		public String getPendingCredit() {
+		public BigDecimal getPendingCredit() {
 			return pendingCredit;
 		}
 
-		public void setPendingCredit(String pendingCredit) {
+		public void setPendingCredit(BigDecimal pendingCredit) {
 			this.pendingCredit = pendingCredit;
 		}
 
@@ -2903,7 +2952,7 @@ public class AssessmentSheet implements Cloneable {
 			            String accStateCode, String othSrNo, String onAccountOf, String fwdName, String fwdAddress,
 			            String fwdGst, String fwdState, int accSrNo, String invoiceNo, Date invoiceDate, char taxApplicable,
 			            char sez, String commodityCode, char creditType, String invoiceCategory, String irn,
-			            String receiptNo, String creditAllowed, String pendingCredit, String comments,
+			            String receiptNo, BigDecimal creditAllowed, BigDecimal pendingCredit, String comments,
 			            String intComments, String partyId, String cgst, String sgst, String igst) {
 			this.companyId = companyId;
 			this.branchId = branchId;
