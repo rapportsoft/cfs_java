@@ -12656,7 +12656,7 @@ public class ExportInvoiceService {
 
 					pId = assessment.getCha();
 
-				} else if ("IMP".equals(assessment.getBillingParty())) {
+				} else if ("EXP".equals(assessment.getBillingParty())) {
 					pId = assessment.getImporterId();
 				} else if ("FWR".equals(assessment.getBillingParty())) {
 					pId = assessment.getOnAccountOf();
@@ -14978,7 +14978,7 @@ public class ExportInvoiceService {
 
 					pId = assessment.getCha();
 
-				} else if ("IMP".equals(assessment.getBillingParty())) {
+				} else if ("EXP".equals(assessment.getBillingParty())) {
 					pId = assessment.getImporterId();
 				} else if ("FWR".equals(assessment.getBillingParty())) {
 					pId = assessment.getOnAccountOf();
@@ -21885,7 +21885,7 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 
 				pId = assSheet.getCha();
 
-			} else if ("IMP".equals(singleTransData.getTdsType())) {
+			} else if ("EXP".equals(singleTransData.getTdsType())) {
 				pId = assSheet.getImporterId();
 			} else if ("FWR".equals(singleTransData.getTdsType())) {
 				pId = assSheet.getOnAccountOf();
@@ -25401,7 +25401,7 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 
 				pId = assSheet.getCha();
 
-			} else if ("IMP".equals(singleTransData.getTdsType())) {
+			} else if ("EXP".equals(singleTransData.getTdsType())) {
 				pId = assSheet.getImporterId();
 			} else if ("FWR".equals(singleTransData.getTdsType())) {
 				pId = assSheet.getOnAccountOf();
