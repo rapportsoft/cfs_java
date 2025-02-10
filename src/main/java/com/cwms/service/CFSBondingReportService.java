@@ -6578,7 +6578,7 @@ public class CFSBondingReportService {
     }
     
     
-	public Sheet fillLivebondSheetData(Sheet livebondSheet, Date startDate, Date endDate, String company, String branch,String section49) {
+    public Sheet fillLivebondSheetData(Sheet livebondSheet, Date startDate, Date endDate, String company, String branch,String section49) {
 
         try {
             Date aprilDate = new Date();
@@ -6634,25 +6634,25 @@ public class CFSBondingReportService {
             BigDecimal d12 = new BigDecimal(String.valueOf(d1[1]));
             BigDecimal d13 = new BigDecimal(String.valueOf(d1[2]));
 
-            int d21 = Integer.parseInt(d2[0].toString());
-            BigDecimal d22 = new BigDecimal(String.valueOf(d2[1]));
-            BigDecimal d23 = new BigDecimal(String.valueOf(d2[2]));
+            int d31 = Integer.parseInt(d2[0].toString());
+            BigDecimal d32 = new BigDecimal(String.valueOf(d2[1]));
+            BigDecimal d33 = new BigDecimal(String.valueOf(d2[2]));
 
-            int d31 = Integer.parseInt(d3[0].toString());
-            BigDecimal d32 = new BigDecimal(String.valueOf(d3[1]));
-            BigDecimal d33 = new BigDecimal(String.valueOf(d3[2]));
+            int d21 = Integer.parseInt(d3[0].toString());
+            BigDecimal d22 = new BigDecimal(String.valueOf(d3[1]));
+            BigDecimal d23 = new BigDecimal(String.valueOf(d3[2]));
 
             int totalIn = d21 + d31;
             BigDecimal totalCif = d22.add(d32);
             BigDecimal totalCargo = d23.add(d33);
 
-            int d41 = Integer.parseInt(d4[0].toString());
-            BigDecimal d42 = new BigDecimal(String.valueOf(d4[1]));
-            BigDecimal d43 = new BigDecimal(String.valueOf(d4[2]));
+            int d51 = Integer.parseInt(d4[0].toString());
+            BigDecimal d52 = new BigDecimal(String.valueOf(d4[1]));
+            BigDecimal d53 = new BigDecimal(String.valueOf(d4[2]));
 
-            int d51 = Integer.parseInt(d5[0].toString());
-            BigDecimal d52 = new BigDecimal(String.valueOf(d5[1]));
-            BigDecimal d53 = new BigDecimal(String.valueOf(d5[2]));
+            int d41 = Integer.parseInt(d5[0].toString());
+            BigDecimal d42 = new BigDecimal(String.valueOf(d5[1]));
+            BigDecimal d43 = new BigDecimal(String.valueOf(d5[2]));
 
             int totalEx = d41 + d51;
             BigDecimal totalExCif = d42.add(d52);
@@ -6894,7 +6894,7 @@ public class CFSBondingReportService {
             List<Object[]> receiptsAndDisposalList = InbondCFRepositary.getLiveReceiptsAndDisposal1(company, branch, startDate, endDate, aprilDate, lastDateOfPreviousMonth,section49);
 
             List<Object[]> breckUpList = InbondCFRepositary.getLiveBreckUp1(company, branch, endDate, startDate, endDate, start13, lastDateOfPreviousMonth, start36, end36, start612, end612, start12y, end12y, start23y, end23y, start23y);
-
+ System.out.println("receiptsAndDisposalList "+receiptsAndDisposalList.size());
             Object[] openingBalance = openingBalanceList.get(0);
             Object[] receiptsData1 = receiptsAndDisposalList.get(0);
             Object[] receiptsData2 = receiptsAndDisposalList.get(1);
@@ -6915,25 +6915,25 @@ public class CFSBondingReportService {
             BigDecimal openingBalanceDecimal1 = new BigDecimal(String.valueOf(openingBalance[1]));
             BigDecimal openingBalanceDecimal2 = new BigDecimal(String.valueOf(openingBalance[2]));
 
-            int receiptsDataInt1 = Integer.parseInt(receiptsData1[0].toString());
-            BigDecimal receiptsDataDecimal1 = new BigDecimal(String.valueOf(receiptsData1[1]));
-            BigDecimal receiptsDataDecimal2 = new BigDecimal(String.valueOf(receiptsData1[2]));
+            int receiptsDataInt1 = Integer.parseInt(receiptsData2[0].toString());
+            BigDecimal receiptsDataDecimal1 = new BigDecimal(String.valueOf(receiptsData2[1]));
+            BigDecimal receiptsDataDecimal2 = new BigDecimal(String.valueOf(receiptsData2[2]));
 
-            int receiptsDataInt2 = Integer.parseInt(receiptsData2[0].toString());
-            BigDecimal receiptsDataDecimal3 = new BigDecimal(String.valueOf(receiptsData2[1]));
-            BigDecimal receiptsDataDecimal4 = new BigDecimal(String.valueOf(receiptsData2[2]));
+            int receiptsDataInt2 = Integer.parseInt(receiptsData1[0].toString());
+            BigDecimal receiptsDataDecimal3 = new BigDecimal(String.valueOf(receiptsData1[1]));
+            BigDecimal receiptsDataDecimal4 = new BigDecimal(String.valueOf(receiptsData1[2]));
 
             int totalIn1 = receiptsDataInt1 + receiptsDataInt2;
             BigDecimal totalCif1 = receiptsDataDecimal1.add(receiptsDataDecimal3);
             BigDecimal totalCargo1 = receiptsDataDecimal2.add(receiptsDataDecimal4);
 
-            int receiptsDataInt3 = Integer.parseInt(receiptsData3[0].toString());
-            BigDecimal receiptsDataDecimal5 = new BigDecimal(String.valueOf(receiptsData3[1]));
-            BigDecimal receiptsDataDecimal6 = new BigDecimal(String.valueOf(receiptsData3[2]));
+            int receiptsDataInt3 = Integer.parseInt(receiptsData4[0].toString());
+            BigDecimal receiptsDataDecimal5 = new BigDecimal(String.valueOf(receiptsData4[1]));
+            BigDecimal receiptsDataDecimal6 = new BigDecimal(String.valueOf(receiptsData4[2]));
 
-            int receiptsDataInt4 = Integer.parseInt(receiptsData4[0].toString());
-            BigDecimal receiptsDataDecimal7 = new BigDecimal(String.valueOf(receiptsData4[1]));
-            BigDecimal receiptsDataDecimal8 = new BigDecimal(String.valueOf(receiptsData4[2]));
+            int receiptsDataInt4 = Integer.parseInt(receiptsData3[0].toString());
+            BigDecimal receiptsDataDecimal7 = new BigDecimal(String.valueOf(receiptsData3[1]));
+            BigDecimal receiptsDataDecimal8 = new BigDecimal(String.valueOf(receiptsData3[2]));
 
             int totalEx1 = receiptsDataInt3 + receiptsDataInt4;
             BigDecimal totalExCif1 = receiptsDataDecimal5.add(receiptsDataDecimal7);
