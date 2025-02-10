@@ -155,10 +155,10 @@ public class AssessmentSheet implements Cloneable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date gateOutDate;
 
-    @Column(name = "Gross_Weight", precision = 12, scale = 3)
+    @Column(name = "Gross_Weight", precision = 16, scale = 4)
     private BigDecimal grossWeight = BigDecimal.ZERO;
 
-    @Column(name = "SBWeight", precision = 16, scale = 3)
+    @Column(name = "SBWeight", precision = 16, scale = 4)
     private BigDecimal sbWeight = BigDecimal.ZERO;
 
     @Column(name = "Gate_out_Type", length = 6)
