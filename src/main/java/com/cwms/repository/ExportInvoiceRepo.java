@@ -1465,10 +1465,37 @@ List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId,
 		    @Param("branchId") String branchId,		    
 		    @Param("profitcentreId") String profitcentreId,
 		    @Param("assesmentId") String assesmentId);
+	
+	
+	@Query("SELECT MAX(e.srlNo) " +
+		       "FROM Cfinvsrvanx e " +
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.status <> 'D' " +
+		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND e.processTransId = :assesmentId")
+		Optional<BigDecimal> getHighestSrlNoByContainerNo1(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,		    
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("assesmentId") String assesmentId);
 
 	
 	
-
+	@Query("SELECT MAX(e.srlNo) " +
+		       "FROM Cfinvsrvanx e " +
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.status <> 'D' " +
+		       "AND e.containerNo = :containerNo " +
+		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND e.processTransId = :assesmentId")
+		Optional<BigDecimal> getHighestSrlNoByContainerNo2(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,		    
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("assesmentId") String assesmentId,
+		    @Param("containerNo") String containerNo);
 	
 	
 	@Transactional
@@ -1479,6 +1506,17 @@ List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId,
 	int updateCfinvsrvanx(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId,
 									  @Param("assesmentId") String assesmentId,  @Param("srlNo") BigDecimal srlNo, @Param("executionUnit") String executionUnit,
 									  @Param("executionUnit1") String executionUnit1, @Param("rate") BigDecimal rate, @Param("actualNoOfPackages") BigDecimal actualNoOfPackages);
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Cfinvsrvanx SET executionUnit = :executionUnit, executionUnit1 = :executionUnit1, rate = :rate, actualNoOfPackages = :actualNoOfPackages, localAmt = :actualNoOfPackages , invoiceAmt = :actualNoOfPackages "
+			+ "WHERE companyId = :companyId " + "AND branchId = :branchId " + "AND processTransId = :assesmentId "
+			+ "AND status <> 'D' AND profitcentreId = :profiCentreId AND srlNo = :srlNo AND containerNo = :containerNo")
+	int updateCfinvsrvanx1(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId,
+									  @Param("assesmentId") String assesmentId,  @Param("srlNo") BigDecimal srlNo, @Param("executionUnit") String executionUnit,
+									  @Param("executionUnit1") String executionUnit1, @Param("rate") BigDecimal rate, @Param("actualNoOfPackages") BigDecimal actualNoOfPackages, @Param("containerNo") String containerNo);
 	
 	
 	
@@ -1497,6 +1535,20 @@ List<Object[]> getAssesMentEntriesToSelect(@Param("companyId") String companyId,
 		    @Param("profitcentreId") String profitcentreId,
 		    @Param("assesmentId") String assesmentId,
 		    @Param("srlNo") BigDecimal srlNo, @Param("lineNo") String lineNo, @Param("serviceId") String serviceid);
+	
+	@Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END " +
+		       "FROM Cfinvsrvanx e " +
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.srlNo = :srlNo AND e.status <> 'D' AND e.containerNo = :containerNo " +
+		       "AND e.profitcentreId = :profitcentreId " +
+		       "AND e.processTransId = :assesmentId ")		      
+		boolean existsByAssesmentIdAndSrlNo1(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,		    
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("assesmentId") String assesmentId,
+		    @Param("srlNo") BigDecimal srlNo, @Param("containerNo") String containerNo);
 	
 //	Add Servie
 	@Query(value = "select NEW com.cwms.entities.Cfinvsrvanx(a.serviceId, a.serviceUnit, a.serviceUnitI, a.currencyId, a.rangeType, a.rate, a.cfsTariffNo, a.cfsAmendNo, MAX(a.srNo), s.serviceShortDesc, s.acCode, s.taxId, tx.taxPerc) "
@@ -2064,6 +2116,15 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 			@Param("val") String val, @Param("type") String type);
 
 
+	
+	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId, a.branchId, a.assesmentId,a.assesmentLineNo,a.assesmentDate,a.containerNo,a.containerSize,a.containerType,a.gateInDate,a.invoiceUptoDate "
+			+ ",e.gateOutId,e.gatePassNo, a.partyId, e.gateOutDate, a.destuffDate, a.stuffTallyDate) "
+			+ "from AssessmentSheet a "
+			+ "LEFT JOIN ExportInventory e on a.companyId = e.companyId AND a.branchId = e.branchId AND a.assesmentId = e.assessmentId AND a.containerNo = e.containerNo AND e.status <> 'D' "
+	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Order By a.containerNo")
+	List<Cfinvsrvanx> getAllContainerListOfAssessMentSheet1(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
+	
+	
 
 }
 

@@ -514,5 +514,24 @@ public class VehicleTrack {
 		}
 	    
 	    
-
+		VehicleTrack(String vehicleNo, String profitcentreId, String gateInId, char transporterStatus,
+				String transporterName, String transporter, String driverName, char vehicleStatus, Date gateInDate,
+				String gateNoIn, String shiftIn, String gateOutId, Date gateOutDate, String gateNoOut,
+				String shiftOut) {
+			this.vehicleNo = vehicleNo;
+			this.profitcentreId = profitcentreId;
+			this.gateInId = gateInId;
+			this.transporterStatus = transporterStatus;
+			this.transporterName = transporterName;
+			this.transporter = transporter;
+			this.driverName = driverName;
+			this.vehicleStatus = vehicleStatus;
+			this.gateInDate = gateInDate;
+			this.gateNoIn = gateNoIn;
+			this.shiftIn = shiftIn;
+			this.gateOutId = gateOutId;
+			this.gateOutDate = gateOutDate;
+			this.gateNoOut = gateNoOut;
+			this.shiftOut = shiftOut;
+		}
 }

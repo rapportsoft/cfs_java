@@ -7,6 +7,8 @@ import jakarta.persistence.Column;
 
 public class AssessmentContainerDTO implements Cloneable {
 
+	public String assesmentId;
+	public String assesmentLineNo;
 	public String containerNo;
 	public String containerSize;
 	public String containerType;
@@ -67,7 +69,47 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
-	 public BigDecimal getFreeDays() {
+	 public String getAssesmentId() {
+		return assesmentId;
+	}
+
+
+
+
+
+
+
+	public void setAssesmentId(String assesmentId) {
+		this.assesmentId = assesmentId;
+	}
+
+
+
+
+
+
+
+	public String getAssesmentLineNo() {
+		return assesmentLineNo;
+	}
+
+
+
+
+
+
+
+	public void setAssesmentLineNo(String assesmentLineNo) {
+		this.assesmentLineNo = assesmentLineNo;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getFreeDays() {
 		return freeDays;
 	}
 
@@ -1023,16 +1065,23 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
-	public AssessmentContainerDTO(String containerNo, String containerSize, String containerType, Date gateInDate,
-			Date destuffDate, Date gateoutDate, String examPercentage, String typeOfContainer, String scannerType,
-			String gateOutType, String checkDate, Date invoiceDate, String upTariffNo, String profitcentreId,
-			String serviceId, String serviceName, BigDecimal rates, BigDecimal grossWt, BigDecimal cargoWt,
-			String ssrTransId, Date invoiceUptoDate, Date lastInvoiceUptoDate, String serviceUnit, String executionUnit,
-			String serviceUnit1, String executionUnit1, String currencyId, BigDecimal discPercentage,
-			BigDecimal discValue, BigDecimal mPercentage, BigDecimal mAmount, String woNo, String woAmndNo,
-			String criteria, BigDecimal rangeFrom, BigDecimal rangeTo, String containerStatus, String gateOutId,
-			String gatePassNo, String taxApp, String acCode, BigDecimal serviceRate, BigDecimal taxPerc, String taxId,
-			BigDecimal exRate, String serviceGroup, BigDecimal area, BigDecimal freeDays) {
+
+
+
+
+	public AssessmentContainerDTO(String assesmentId, String assesmentLineNo, String containerNo, String containerSize,
+			String containerType, Date gateInDate, Date destuffDate, Date gateoutDate, String examPercentage,
+			String typeOfContainer, String scannerType, String gateOutType, String checkDate, Date invoiceDate,
+			String upTariffNo, String profitcentreId, String serviceId, String serviceName, BigDecimal rates,
+			BigDecimal grossWt, BigDecimal cargoWt, String ssrTransId, Date invoiceUptoDate, Date lastInvoiceUptoDate,
+			String serviceUnit, String executionUnit, String serviceUnit1, String executionUnit1, String currencyId,
+			BigDecimal discPercentage, BigDecimal discValue, BigDecimal mPercentage, BigDecimal mAmount, String woNo,
+			String woAmndNo, String criteria, BigDecimal rangeFrom, BigDecimal rangeTo, String containerStatus,
+			String gateOutId, String gatePassNo, String taxApp, String acCode, BigDecimal serviceRate,
+			BigDecimal taxPerc, String taxId, BigDecimal exRate, String serviceGroup, BigDecimal area,
+			BigDecimal freeDays) {
+		this.assesmentId = assesmentId;
+		this.assesmentLineNo = assesmentLineNo;
 		this.containerNo = containerNo;
 		this.containerSize = containerSize;
 		this.containerType = containerType;
@@ -1089,49 +1138,35 @@ public class AssessmentContainerDTO implements Cloneable {
 
 
 
+	@Override
+	public String toString() {
+		return "AssessmentContainerDTO [assesmentId=" + assesmentId + ", assesmentLineNo=" + assesmentLineNo
+				+ ", containerNo=" + containerNo + ", containerSize=" + containerSize + ", containerType="
+				+ containerType + ", gateInDate=" + gateInDate + ", destuffDate=" + destuffDate + ", gateoutDate="
+				+ gateoutDate + ", examPercentage=" + examPercentage + ", typeOfContainer=" + typeOfContainer
+				+ ", scannerType=" + scannerType + ", gateOutType=" + gateOutType + ", checkDate=" + checkDate
+				+ ", invoiceDate=" + invoiceDate + ", upTariffNo=" + upTariffNo + ", profitcentreId=" + profitcentreId
+				+ ", serviceId=" + serviceId + ", serviceName=" + serviceName + ", rates=" + rates + ", grossWt="
+				+ grossWt + ", cargoWt=" + cargoWt + ", ssrTransId=" + ssrTransId + ", invoiceUptoDate="
+				+ invoiceUptoDate + ", lastInvoiceUptoDate=" + lastInvoiceUptoDate + ", serviceUnit=" + serviceUnit
+				+ ", executionUnit=" + executionUnit + ", serviceUnit1=" + serviceUnit1 + ", executionUnit1="
+				+ executionUnit1 + ", currencyId=" + currencyId + ", discPercentage=" + discPercentage + ", discValue="
+				+ discValue + ", mPercentage=" + mPercentage + ", mAmount=" + mAmount + ", woNo=" + woNo + ", woAmndNo="
+				+ woAmndNo + ", criteria=" + criteria + ", rangeFrom=" + rangeFrom + ", rangeTo=" + rangeTo
+				+ ", containerStatus=" + containerStatus + ", gateOutId=" + gateOutId + ", gatePassNo=" + gatePassNo
+				+ ", taxApp=" + taxApp + ", acCode=" + acCode + ", serviceRate=" + serviceRate + ", taxPerc=" + taxPerc
+				+ ", taxId=" + taxId + ", exRate=" + exRate + ", serviceGroup=" + serviceGroup + ", area=" + area
+				+ ", freeDays=" + freeDays + "]";
+	}
+
+	
+	
 	// Override clone() method
-		@Override
-		public Object clone() throws CloneNotSupportedException {
-		    return super.clone();
-		}
+			@Override
+			public Object clone() throws CloneNotSupportedException {
+			    return super.clone();
+			}
 
 
 
-
-
-
-
-		@Override
-		public String toString() {
-			return "AssessmentContainerDTO [containerNo=" + containerNo + ", containerSize=" + containerSize
-					+ ", containerType=" + containerType + ", gateInDate=" + gateInDate + ", destuffDate=" + destuffDate
-					+ ", gateoutDate=" + gateoutDate + ", examPercentage=" + examPercentage + ", typeOfContainer="
-					+ typeOfContainer + ", scannerType=" + scannerType + ", gateOutType=" + gateOutType + ", checkDate="
-					+ checkDate + ", invoiceDate=" + invoiceDate + ", upTariffNo=" + upTariffNo + ", profitcentreId="
-					+ profitcentreId + ", serviceId=" + serviceId + ", serviceName=" + serviceName + ", rates=" + rates
-					+ ", grossWt=" + grossWt + ", cargoWt=" + cargoWt + ", ssrTransId=" + ssrTransId
-					+ ", invoiceUptoDate=" + invoiceUptoDate + ", lastInvoiceUptoDate=" + lastInvoiceUptoDate
-					+ ", serviceUnit=" + serviceUnit + ", executionUnit=" + executionUnit + ", serviceUnit1="
-					+ serviceUnit1 + ", executionUnit1=" + executionUnit1 + ", currencyId=" + currencyId
-					+ ", discPercentage=" + discPercentage + ", discValue=" + discValue + ", mPercentage=" + mPercentage
-					+ ", mAmount=" + mAmount + ", woNo=" + woNo + ", woAmndNo=" + woAmndNo + ", criteria=" + criteria
-					+ ", rangeFrom=" + rangeFrom + ", rangeTo=" + rangeTo + ", containerStatus=" + containerStatus
-					+ ", gateOutId=" + gateOutId + ", gatePassNo=" + gatePassNo + ", taxApp=" + taxApp + ", acCode="
-					+ acCode + ", serviceRate=" + serviceRate + ", taxPerc=" + taxPerc + ", taxId=" + taxId
-					+ ", exRate=" + exRate + ", serviceGroup=" + serviceGroup + ", area=" + area + "]";
-		}
-
-
-
-
-
-
-
-   
-
-
-	
-	
-	
-	
 }

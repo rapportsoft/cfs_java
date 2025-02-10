@@ -186,5 +186,59 @@ public class AssessmentSheetController {
 
 			
 		}
+	 
+	 
+	 @GetMapping("/getDataByAfterAssessment")
+	 public ResponseEntity<?> getDataByAfterAssessment(@RequestParam("cid") String cid, @RequestParam("bid") String bid,@RequestParam("id") String id,
+			 @RequestParam("partyId") String partyId,@RequestParam("creditType") String creditType){
+		 
+		 
+		 System.out.println("id "+id);
+		 return assessmentService.getDataByAssessmentId(cid, bid, id, partyId, creditType);
+	 }
 
+	 @PostMapping("/saveAddServiceContainerWise")
+		public ResponseEntity<?> saveAddServiceContainerWise(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+				@RequestBody Map<String, Object> requestData, @RequestParam("userId") String user) throws JsonMappingException, JsonProcessingException
+			{				
+				ResponseEntity<?> addExportAssesmentSheet = assessmentService.saveAddServiceContainerWise(companyId, branchId, user, requestData);
+				return addExportAssesmentSheet;
+			}
+	 
+	 
+	 @GetMapping("/getAllContainerListOfAssessMentSheet")
+		public ResponseEntity<?> getAllContainerListOfAssessMentSheet(@RequestParam("companyId") String companyId,
+				@RequestParam("branchId") String branchId, @RequestParam("assesmentId") String assesmentId, @RequestParam("profiCentreId") String profiCentreId) {
+			ResponseEntity<?> partyByTypeValue = assessmentService.getAllContainerListOfAssessMentSheet(companyId, branchId, assesmentId, profiCentreId);
+			return partyByTypeValue;
+		}
+	 
+	 
+	 
+		
+		@PostMapping("/saveAddServiceServiceWise")
+		public ResponseEntity<?> saveAddServiceServiceWise(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+				@RequestBody Map<String, Object> requestData, @RequestParam("userId") String user) throws JsonMappingException, JsonProcessingException
+			{				
+				ResponseEntity<?> addExportAssesmentSheet = assessmentService.saveAddServiceServiceWise(companyId, branchId, user, requestData);
+				return addExportAssesmentSheet;
+			}
+			
+		
+		
+		@PostMapping("/saveBondAddService")
+		public ResponseEntity<?> saveBondAddService(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+				@RequestBody Map<String, Object> requestData, @RequestParam("userId") String user,@RequestParam("type") String type) throws JsonMappingException, JsonProcessingException
+			{				
+				ResponseEntity<?> addExportAssesmentSheet = assessmentService.saveBondAddService(companyId, branchId, user, requestData,type);
+				return addExportAssesmentSheet;
+			}
+		
+		 @GetMapping("/getDataByAfterAssessmentForBond")
+		 public ResponseEntity<?> getDataByAfterAssessmentForBond(@RequestParam("cid") String cid, @RequestParam("bid") String bid,@RequestParam("id") String id,
+				 @RequestParam("partyId") String partyId,@RequestParam("creditType") String creditType,@RequestParam("type") String type){
+
+			 return assessmentService.getDataByAssessmentId1(cid, bid, id, partyId, creditType, type);
+		 }
+			
 }

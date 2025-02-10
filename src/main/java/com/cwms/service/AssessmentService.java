@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -63,6 +64,7 @@ import com.cwms.repository.CfinvsrvRepo;
 import com.cwms.repository.CfinvsrvanxRepo;
 import com.cwms.repository.CfinvsrvanxbackRepo;
 import com.cwms.repository.CfinvsrvdtlRepo;
+import com.cwms.repository.ExportInvoiceRepo;
 import com.cwms.repository.FintransRepo;
 import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.InvCreditTrackRepo;
@@ -83,6 +85,9 @@ public class AssessmentService {
 
 	@Autowired
 	private AssessmentSheetRepo assessmentsheetrepo;
+
+	@Autowired
+	private ExportInvoiceRepo exportInvoiceRepo;
 
 	@Autowired
 	private CfIgmCnRepository cfigmcnrepo;
@@ -156,6 +161,9 @@ public class AssessmentService {
 	@Autowired
 	private PadHdrRepo pdahdrrepo;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	public ResponseEntity<?> searchImportBeforeSaveAssessmentData(String cid, String bid, String val) {
 		List<Object[]> data = cfigmcnrepo.getBeforeAssessmentData(cid, bid, val);
 
@@ -211,12 +219,11 @@ public class AssessmentService {
 			if (containerData.isEmpty()) {
 				return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
 			}
-			
+
 			AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 
-
 			if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
-				
+
 				int sr = 1;
 
 				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05091", "2024");
@@ -787,7 +794,9 @@ public class AssessmentService {
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																totalRate = (totalRate.multiply(
+																		con.getArea() == null ? new BigDecimal(1)
+																				: con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 
@@ -897,7 +906,9 @@ public class AssessmentService {
 																	"totalRate " + totalRate + " " + weeksBetween);
 
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																totalRate = (totalRate.multiply(
+																		con.getArea() == null ? new BigDecimal(1)
+																				: con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 															tempAss.setServiceRate(serviceRate.get());
@@ -1769,7 +1780,9 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														totalRate = (totalRate
+																.multiply(con.getArea() == null ? new BigDecimal(1)
+																		: con.getArea()))
 																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -1869,7 +1882,9 @@ public class AssessmentService {
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														totalRate = (totalRate
+																.multiply(con.getArea() == null ? new BigDecimal(1)
+																		: con.getArea()))
 																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -2409,7 +2424,7 @@ public class AssessmentService {
 						newAss.setProfitcentreId(con.getProfitcentreId());
 
 						newAss.setAssesmentId(HoldNextIdD1);
-						
+
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
 						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
@@ -2419,8 +2434,7 @@ public class AssessmentService {
 
 						String billingAdd = "IMP".equals(assessment.getBillingParty())
 								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty())
-										? String.valueOf(assessment.getChaSrNo())
+								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
 										: "FWR".equals(assessment.getBillingParty())
 												? String.valueOf(assessment.getAccSrNo())
 												: assessment.getOthSrNo();
@@ -2443,8 +2457,6 @@ public class AssessmentService {
 						}
 
 						else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
-
-					
 
 							if (b.getState().equals(p.getState())) {
 								newAss.setIgst("N");
@@ -2549,6 +2561,8 @@ public class AssessmentService {
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
 
+						AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
+
 						System.out.println("finalConData " + finalConData);
 
 						finalConData.stream().forEach(c -> {
@@ -2556,6 +2570,7 @@ public class AssessmentService {
 								Cfinvsrvanx anx = new Cfinvsrvanx();
 								anx.setCompanyId(cid);
 								anx.setBranchId(bid);
+								anx.setLineNo(String.valueOf(anxSr.get()));
 								anx.setErpDocRefNo(newAss.getIgmTransId());
 								anx.setProcessTransId(HoldNextIdD1);
 								anx.setServiceId(c.getServiceId());
@@ -2623,7 +2638,7 @@ public class AssessmentService {
 
 								// Perform addition
 								totalAmount.set(currentTotal.add(currentRate));
-System.out.println("c "+c);
+								System.out.println("c " + c);
 								cfinvsrvanxrepo.save(anx);
 
 //      						if ("S00007".equals(c.getServiceId())) {
@@ -3140,7 +3155,9 @@ System.out.println("c "+c);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																totalRate = (totalRate.multiply(
+																		con.getArea() == null ? new BigDecimal(1)
+																				: con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 															System.out.println(
@@ -3221,7 +3238,9 @@ System.out.println("c "+c);
 
 															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 															if ("SM".equals(String.valueOf(f[7]))) {
-																totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+																totalRate = (totalRate.multiply(
+																		con.getArea() == null ? new BigDecimal(1)
+																				: con.getArea()))
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 															System.out.println(
@@ -3536,7 +3555,9 @@ System.out.println("c "+c);
 
 														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 														if ("SM".equals(String.valueOf(f[7]))) {
-															totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+															totalRate = (totalRate
+																	.multiply(con.getArea() == null ? new BigDecimal(1)
+																			: con.getArea()))
 																	.setScale(3, RoundingMode.HALF_UP);
 														}
 														System.out
@@ -3616,7 +3637,9 @@ System.out.println("c "+c);
 
 														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 														if ("SM".equals(String.valueOf(f[7]))) {
-															totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+															totalRate = (totalRate
+																	.multiply(con.getArea() == null ? new BigDecimal(1)
+																			: con.getArea()))
 																	.setScale(3, RoundingMode.HALF_UP);
 														}
 														System.out
@@ -3936,7 +3959,9 @@ System.out.println("c "+c);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														totalRate = (totalRate
+																.multiply(con.getArea() == null ? new BigDecimal(1)
+																		: con.getArea()))
 																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -4014,7 +4039,9 @@ System.out.println("c "+c);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														totalRate = (totalRate
+																.multiply(con.getArea() == null ? new BigDecimal(1)
+																		: con.getArea()))
 																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -4062,7 +4089,7 @@ System.out.println("c "+c);
 						newAss.setProfitcentreId(con.getProfitcentreId());
 
 						newAss.setAssesmentId(HoldNextIdD1);
-						
+
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
 						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
@@ -4072,8 +4099,7 @@ System.out.println("c "+c);
 
 						String billingAdd = "IMP".equals(assessment.getBillingParty())
 								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty())
-										? String.valueOf(assessment.getChaSrNo())
+								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
 										: "FWR".equals(assessment.getBillingParty())
 												? String.valueOf(assessment.getAccSrNo())
 												: assessment.getOthSrNo();
@@ -4084,7 +4110,6 @@ System.out.println("c "+c);
 						newAss.setPartySrNo(new BigDecimal(billingAdd));
 						newAss.setPayableParty(assessment.getBillingParty());
 						newAss.setPayablePartyId(billingId);
-
 
 						if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 							newAss.setIgst("Y");
@@ -4098,7 +4123,6 @@ System.out.println("c "+c);
 
 						else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-							
 							if (b.getState().equals(p.getState())) {
 								newAss.setIgst("N");
 								newAss.setCgst("Y");
@@ -4191,6 +4215,7 @@ System.out.println("c "+c);
 						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+						AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
 
 						finalConData.stream().forEach(c -> {
 							if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
@@ -4198,6 +4223,7 @@ System.out.println("c "+c);
 								anx.setCompanyId(cid);
 								anx.setBranchId(bid);
 								anx.setErpDocRefNo(newAss.getIgmTransId());
+								anx.setLineNo(String.valueOf(anxSr.get()));
 								anx.setProcessTransId(HoldNextIdD1);
 								anx.setServiceId(c.getServiceId());
 								anx.setSrlNo(srNo1.get());
@@ -6579,7 +6605,7 @@ System.out.println("c "+c);
 		if (containerData.isEmpty()) {
 			return new ResponseEntity<>("NOC data not found", HttpStatus.CONFLICT);
 		}
-		
+
 		AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 
 		if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
@@ -6595,7 +6621,7 @@ System.out.println("c "+c);
 			String HoldNextIdD1 = String.format("BINA%06d", nextNumericNextID1);
 
 			for (AssessmentContainerDTO con : containerData) {
-				
+
 				List<AssessmentContainerDTO> finalConData = new ArrayList<>();
 
 				if (con.getLastInvoiceUptoDate() == null) {
@@ -7008,7 +7034,9 @@ System.out.println("c "+c);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														totalRate = (totalRate
+																.multiply(con.getArea() == null ? new BigDecimal(1)
+																		: con.getArea()))
 																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -7768,7 +7796,8 @@ System.out.println("c "+c);
 
 											totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 											if ("SM".equals(String.valueOf(f[7]))) {
-												totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+												totalRate = (totalRate.multiply(
+														con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 														.setScale(3, RoundingMode.HALF_UP);
 											}
 											System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -8306,7 +8335,7 @@ System.out.println("c "+c);
 					newAss.setSbNo(noc.getBoeNo());
 					newAss.setSbDate(noc.getBoeDate());
 					newAss.setAssesmentId(HoldNextIdD1);
-					
+
 					Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
 					String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
@@ -8339,8 +8368,6 @@ System.out.println("c "+c);
 					}
 
 					else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
-
-						
 
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
@@ -8428,6 +8455,7 @@ System.out.println("c "+c);
 					AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+					AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
 
 					finalConData.stream().forEach(c -> {
 						if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
@@ -8435,6 +8463,7 @@ System.out.println("c "+c);
 							anx.setCompanyId(cid);
 							anx.setBranchId(bid);
 							anx.setErpDocRefNo(newAss.getIgmTransId());
+							anx.setLineNo(String.valueOf(anxSr.get()));
 							anx.setProcessTransId(HoldNextIdD1);
 							anx.setServiceId(c.getServiceId());
 							anx.setSrlNo(srNo1.get());
@@ -8968,7 +8997,9 @@ System.out.println("c "+c);
 
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													if ("SM".equals(String.valueOf(f[7]))) {
-														totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+														totalRate = (totalRate
+																.multiply(con.getArea() == null ? new BigDecimal(1)
+																		: con.getArea()))
 																.setScale(3, RoundingMode.HALF_UP);
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -9728,7 +9759,8 @@ System.out.println("c "+c);
 
 											totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 											if ("SM".equals(String.valueOf(f[7]))) {
-												totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+												totalRate = (totalRate.multiply(
+														con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 														.setScale(3, RoundingMode.HALF_UP);
 											}
 											System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -10266,7 +10298,7 @@ System.out.println("c "+c);
 					newAss.setSbNo(noc.getBoeNo());
 					newAss.setSbDate(noc.getBoeDate());
 					newAss.setAssesmentId(HoldNextIdD1);
-					
+
 					Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
 					String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
@@ -10300,8 +10332,6 @@ System.out.println("c "+c);
 
 					else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-						
-
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
 							newAss.setCgst("Y");
@@ -10331,7 +10361,7 @@ System.out.println("c "+c);
 							.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
 																								// cloning
 							.collect(Collectors.toList());
-					
+
 					List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
 							.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
 
@@ -10388,6 +10418,7 @@ System.out.println("c "+c);
 					AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 					AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+					AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
 
 					finalConData.stream().forEach(c -> {
 						if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
@@ -10395,6 +10426,7 @@ System.out.println("c "+c);
 							anx.setCompanyId(cid);
 							anx.setBranchId(bid);
 							anx.setErpDocRefNo(newAss.getIgmTransId());
+							anx.setLineNo(String.valueOf(anxSr.get()));
 							anx.setProcessTransId(HoldNextIdD1);
 							anx.setServiceId(c.getServiceId());
 							anx.setSrlNo(srNo1.get());
@@ -11566,7 +11598,6 @@ System.out.println("c "+c);
 					fin.setTdsPercentage(new BigDecimal(tdsPerc));
 					fin.setTdsBillAmt(p.getAmount());
 				}
-				
 
 			} else {
 				fin.setCompanyId(cid);
@@ -12789,7 +12820,7 @@ System.out.println("c "+c);
 		if (containerData.isEmpty()) {
 			return new ResponseEntity<>("NOC data not found", HttpStatus.CONFLICT);
 		}
-		
+
 		AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 
 		if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
@@ -13213,7 +13244,8 @@ System.out.println("c "+c);
 
 												totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 												if ("SM".equals(String.valueOf(f[7]))) {
-													totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+													totalRate = (totalRate.multiply(
+															con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 															.setScale(3, RoundingMode.HALF_UP);
 												}
 												System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -13955,7 +13987,8 @@ System.out.println("c "+c);
 
 										totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 										if ("SM".equals(String.valueOf(f[7]))) {
-											totalRate = (totalRate.multiply(con.getArea() == null ? new BigDecimal(1) : con.getArea()))
+											totalRate = (totalRate.multiply(
+													con.getArea() == null ? new BigDecimal(1) : con.getArea()))
 													.setScale(3, RoundingMode.HALF_UP);
 										}
 										System.out.println("totalRate " + totalRate + " " + weeksBetween);
@@ -14502,11 +14535,9 @@ System.out.println("c "+c);
 								: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
 										: assessment.getOthPartyId();
 
-				String billingAdd = "IMP".equals(assessment.getBillingParty())
-						? String.valueOf(assessment.getImpSrNo())
+				String billingAdd = "IMP".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getImpSrNo())
 						: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-								: "FWR".equals(assessment.getBillingParty())
-										? String.valueOf(assessment.getAccSrNo())
+								: "FWR".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getAccSrNo())
 										: assessment.getOthSrNo();
 
 				PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
@@ -14515,7 +14546,6 @@ System.out.println("c "+c);
 				newAss.setPartySrNo(new BigDecimal(billingAdd));
 				newAss.setPayableParty(assessment.getBillingParty());
 				newAss.setPayablePartyId(billingId);
-
 
 				if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 					newAss.setIgst("Y");
@@ -14529,7 +14559,6 @@ System.out.println("c "+c);
 
 				else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
 
-					
 					if (b.getState().equals(p.getState())) {
 						newAss.setIgst("N");
 						newAss.setCgst("Y");
@@ -14617,6 +14646,7 @@ System.out.println("c "+c);
 				AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
 				AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
 				AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+				AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
 
 				finalConData.stream().forEach(c -> {
 					if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
@@ -14624,6 +14654,7 @@ System.out.println("c "+c);
 						anx.setCompanyId(cid);
 						anx.setBranchId(bid);
 						anx.setErpDocRefNo(newAss.getIgmTransId());
+						anx.setLineNo(String.valueOf(anxSr.get()));
 						anx.setProcessTransId(HoldNextIdD1);
 						anx.setServiceId(c.getServiceId());
 						anx.setSrlNo(srNo1.get());
@@ -16740,6 +16771,549 @@ System.out.println("c "+c);
 		}
 
 		return new ResponseEntity<>(finalResult, HttpStatus.OK);
+
+	}
+
+	public ResponseEntity<?> getDataByAssessmentId(String cid, String bid, String id, String billingPartyId,
+			String creditType) {
+		List<Object[]> result = assessmentsheetrepo.getAssessmentData(cid, bid, id);
+
+		System.out.println("result " + result);
+		if (result.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		} else {
+			AtomicReference<BigDecimal> totalRateWithoutTax = new AtomicReference<>(BigDecimal.ZERO);
+			AtomicReference<BigDecimal> totalRateWithTax = new AtomicReference<>(BigDecimal.ZERO);
+
+			result.stream().forEach(r -> {
+				BigDecimal rate = new BigDecimal(String.valueOf(r[71]));
+				BigDecimal taxPerc = new BigDecimal(String.valueOf(r[74]));
+
+				System.out.println("TaxPerc " + String.valueOf(r[69]) + " " + taxPerc);
+				BigDecimal taxAmt = (rate.multiply(taxPerc)).divide(new BigDecimal(100), RoundingMode.HALF_UP);
+				totalRateWithoutTax.set(totalRateWithoutTax.get().add(rate));
+				totalRateWithTax.set(totalRateWithTax.get().add(rate.add(taxAmt)));
+			});
+
+			// Get the final totals
+			BigDecimal finaltotalRateWithoutTax = BigDecimal.ZERO;
+			BigDecimal finaltotalRateWithTax = BigDecimal.ZERO;
+
+			String invRoundStatus = branchRepo.getInvoiceRoundOffStatus(cid, bid);
+
+			if (invRoundStatus != null && !invRoundStatus.isEmpty() && "N".equals(invRoundStatus)) {
+				finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+				finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+			} else if (invRoundStatus != null && !invRoundStatus.isEmpty() && "Y".equals(invRoundStatus)) {
+				finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(0, RoundingMode.HALF_UP);
+				finaltotalRateWithTax = totalRateWithTax.get().setScale(0, RoundingMode.HALF_UP);
+			} else {
+				finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+				finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+			}
+
+			Party p = partyRepository.getDataById(cid, bid, billingPartyId);
+
+			Map<String, Object> finalResult = new HashMap<>();
+			finalResult.put("result", result);
+			finalResult.put("finaltotalRateWithoutTax", finaltotalRateWithoutTax);
+			finalResult.put("finaltotalRateWithTax", finaltotalRateWithTax);
+
+			if (p != null) {
+
+				if ("P".equals(creditType)) {
+					Object advanceData = finTransrepo.advanceReceiptBeforeSaveSearch(cid, bid, billingPartyId, "AD");
+
+					finalResult.put("advanceData", advanceData);
+				}
+
+				BigDecimal credit1 = p.getCrAmtLmt() == null ? BigDecimal.ZERO : p.getCrAmtLmt();
+				BigDecimal credit2 = p.getCrAmtLmtUse() == null ? BigDecimal.ZERO : p.getCrAmtLmtUse();
+
+				BigDecimal allowedValue = credit1.subtract(credit2).setScale(3, RoundingMode.HALF_UP);
+
+				finalResult.put("tanNo", p.getTanNoId());
+				finalResult.put("tdsPerc", p.getTdsPercentage());
+				finalResult.put("creditAllowed", allowedValue);
+			}
+
+			return new ResponseEntity<>(finalResult, HttpStatus.OK);
+		}
+
+	}
+
+	public ResponseEntity<?> saveAddServiceContainerWise(String companyId, String branchId, String user,
+			Map<String, Object> resultList) {
+
+		try {
+
+			AssessmentSheet assessment = objectMapper.readValue(
+					objectMapper.writeValueAsString(resultList.get("assesmentSheet")), AssessmentSheet.class);
+
+			if (assessment == null) {
+				return new ResponseEntity<>("Assessment data not found", HttpStatus.CONFLICT);
+			}
+
+			List<Cfinvsrvanx> cfInvsrvanxData = objectMapper.readValue(
+					objectMapper.writeValueAsString(resultList.get("Cfinvsrvanx")),
+					new TypeReference<List<Cfinvsrvanx>>() {
+					});
+
+			List<Cfinvsrvanx> filteredData = cfInvsrvanxData.stream()
+					.filter(detail -> "Y".equalsIgnoreCase(detail.getAddServices())).collect(Collectors.toList());
+			BigDecimal zero = BigDecimal.ZERO;
+
+			Cfinvsrvanx object1 = filteredData.get(0);
+
+			List<AssessmentSheet> existingData = assessmentsheetrepo.getDataByAssessmentId(companyId, branchId,
+					assessment.getAssesmentId());
+
+			if (existingData.isEmpty()) {
+				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
+			}
+
+			AssessmentSheet data = existingData.get(0);
+
+			List<Cfinvsrvanx> saveToData = new ArrayList<>();
+			for (Cfinvsrvanx anx : filteredData) {
+
+				boolean existsByAssesmentIdAndSrlNo = exportInvoiceRepo.existsByAssesmentIdAndSrlNo1(companyId, branchId,
+						data.getProfitcentreId(), data.getAssesmentId(), anx.getSrlNo(), anx.getContainerNo());
+
+				if (existsByAssesmentIdAndSrlNo) {
+
+					exportInvoiceRepo.updateCfinvsrvanx1(companyId, branchId, data.getProfitcentreId(),
+							data.getAssesmentId(), anx.getSrlNo(), anx.getExecutionUnit(), anx.getExecutionUnit1(),
+							anx.getRate(), anx.getActualNoOfPackages(), anx.getContainerNo());
+
+				} else {
+
+					anx.setCompanyId(companyId);
+					anx.setBranchId(branchId);
+					anx.setErpDocRefNo(data.getIgmTransId());
+					anx.setProcessTransId(data.getAssesmentId());
+					anx.setAddServices("Y");
+					anx.setDocRefNo(data.getIgmNo());
+					anx.setIgmLineNo(data.getIgmLineNo());
+					anx.setProfitcentreId(data.getProfitcentreId());
+					anx.setInvoiceType("IMP");
+
+//				anx.setActualNoOfPackages(c.getRates());
+					anx.setLocalAmt(anx.getActualNoOfPackages());
+					anx.setInvoiceAmt(anx.getActualNoOfPackages());
+					anx.setCommodityDescription(data.getCommodityDescription());
+					anx.setDiscPercentage(zero);
+					anx.setDiscValue(zero);
+					anx.setmPercentage(zero);
+					anx.setmAmount(zero);
+
+//				anx.setAcCode(c.getAcCode());
+
+					anx.setProcessTransDate(data.getAssesmentDate());
+					anx.setProcessId("P01101");
+					anx.setPartyId(data.getPartyId());
+
+//				anx.setGateOutDate(c.getGateoutDate());
+//				anx.setStartDate(c.getGateInDate());
+//				anx.setInvoiceUptoDate(c.getInvoiceDate());
+//				anx.setInvoiceUptoWeek(c.getInvoiceDate());
+					anx.setStatus("A");
+					anx.setCreatedBy(user);
+					anx.setCreatedDate(new Date());
+
+					anx.setTaxApp(String.valueOf(data.getTaxApplicable()));
+					anx.setSrvManualFlag("N");
+					anx.setCriteria("CNTR");
+					anx.setRangeFrom(zero);
+					anx.setRangeTo(zero);
+//				anx.setGateOutId(c.getGateOutId());
+//				anx.setGatePassNo(c.getGatePassNo());
+					anx.setRangeType("CNTR");
+//				anx.setTaxId(c.getTaxId());
+					anx.setExRate(zero);
+
+					if (("Y".equals(data.getIgst())) || ("Y".equals(data.getCgst()) && "Y".equals(data.getSgst()))) {
+						anx.setTaxPerc(anx.getTaxPerc());
+					} else {
+						anx.setTaxPerc(zero);
+					}
+					saveToData.add(anx);
+				}
+			}
+
+			cfinvsrvanxrepo.saveAll(saveToData);
+
+			List<Cfinvsrvanx> cfinvSrvList = exportInvoiceRepo.getAllCfInvSrvAnxListByAssesmentId(companyId, branchId,
+					data.getProfitcentreId(), data.getAssesmentId(), object1.getContainerNo());
+
+			return ResponseEntity.ok(cfinvSrvList);
+		} catch (Exception e) {
+			System.out.println("Error in Add Service ContainerWise " + e);
+			return null;
+		}
+	}
+
+	public ResponseEntity<?> getAllContainerListOfAssessMentSheet(String companyId, String branchId, String assesmentId,
+			String profiCentreId) {
+		List<Cfinvsrvanx> assessmentSheetList = exportInvoiceRepo.getAllContainerListOfAssessMentSheet1(companyId,
+				branchId, profiCentreId, assesmentId);
+
+		return ResponseEntity.ok(assessmentSheetList);
+	}
+
+	public ResponseEntity<?> getAllContainerListOfAssessMentSheet1(String companyId, String branchId,
+			String assesmentId, String profiCentreId) {
+		List<Cfinvsrvanx> assessmentSheetList = exportInvoiceRepo.getAllContainerListOfAssessMentSheet1(companyId,
+				branchId, profiCentreId, assesmentId);
+
+		return ResponseEntity.ok(assessmentSheetList);
+	}
+
+	public ResponseEntity<?> saveAddServiceServiceWise(String companyId, String branchId, String user,
+			Map<String, Object> resultList) {
+
+		try {
+
+			AssessmentSheet assessment = objectMapper.readValue(
+					objectMapper.writeValueAsString(resultList.get("assesmentSheet")), AssessmentSheet.class);
+
+			if (assessment == null) {
+				return new ResponseEntity<>("Assessment data not found", HttpStatus.CONFLICT);
+			}
+
+			List<Cfinvsrvanx> cfInvsrvanxData = objectMapper.readValue(
+					objectMapper.writeValueAsString(resultList.get("Cfinvsrvanx")),
+					new TypeReference<List<Cfinvsrvanx>>() {
+					});
+
+			BigDecimal zero = BigDecimal.ZERO;
+
+			List<AssessmentSheet> existingData = assessmentsheetrepo.getDataByAssessmentId(companyId, branchId,
+					assessment.getAssesmentId());
+
+			if (existingData.isEmpty()) {
+				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
+			}
+
+			AssessmentSheet data = existingData.get(0);
+
+			for (Cfinvsrvanx anx : cfInvsrvanxData) {
+
+				Optional<BigDecimal> highestSRLNoOptional = exportInvoiceRepo.getHighestSrlNoByContainerNo2(companyId,
+						branchId, data.getProfitcentreId(), data.getAssesmentId(), anx.getContainerNo());
+				BigDecimal highestSRLNo = highestSRLNoOptional.orElse(BigDecimal.ZERO);
+				BigDecimal highestSRLNoNew = highestSRLNo.add(BigDecimal.ONE);
+
+				anx.setCompanyId(companyId);
+				anx.setBranchId(branchId);
+				anx.setErpDocRefNo(data.getIgmTransId());
+				anx.setProcessTransId(data.getAssesmentId());
+				anx.setAddServices("Y");
+				anx.setDocRefNo(data.getIgmNo());
+				anx.setIgmLineNo(data.getIgmLineNo());
+				anx.setProfitcentreId(data.getProfitcentreId());
+				anx.setInvoiceType("IMP");
+				anx.setSrlNo(highestSRLNoNew);
+
+//			anx.setActualNoOfPackages(c.getRates());
+				anx.setLocalAmt(anx.getActualNoOfPackages());
+				anx.setInvoiceAmt(anx.getActualNoOfPackages());
+				anx.setCommodityDescription(data.getCommodityDescription());
+				anx.setDiscPercentage(zero);
+				anx.setDiscValue(zero);
+				anx.setmPercentage(zero);
+				anx.setmAmount(zero);
+
+//			anx.setAcCode(c.getAcCode());
+
+				anx.setProcessTransDate(data.getAssesmentDate());
+				anx.setProcessId("P01101");
+				anx.setPartyId(data.getPartyId());
+
+//			anx.setGateOutDate(c.getGateoutDate());
+//			anx.setStartDate(c.getGateInDate());
+//			anx.setInvoiceUptoDate(c.getInvoiceDate());
+//			anx.setInvoiceUptoWeek(c.getInvoiceDate());
+				anx.setStatus("A");
+				anx.setCreatedBy(user);
+				anx.setCreatedDate(new Date());
+
+				anx.setTaxApp(String.valueOf(data.getTaxApplicable()));
+				anx.setSrvManualFlag("N");
+				anx.setCriteria("CNTR");
+				anx.setRangeFrom(zero);
+				anx.setRangeTo(zero);
+//			anx.setGateOutId(c.getGateOutId());
+//			anx.setGatePassNo(c.getGatePassNo());
+				anx.setRangeType("CNTR");
+//			anx.setTaxId(c.getTaxId());
+				anx.setExRate(zero);
+
+				if (("Y".equals(data.getIgst())) || ("Y".equals(data.getCgst()) && "Y".equals(data.getSgst()))) {
+					anx.setTaxPerc(anx.getTaxPerc());
+				} else {
+					anx.setTaxPerc(zero);
+				}
+
+			}
+
+			cfinvsrvanxrepo.saveAll(cfInvsrvanxData);
+
+			return ResponseEntity.ok(true);
+		} catch (Exception e) {
+			System.out.println("Error in Add Service ContainerWise " + e);
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body("Error in Add Service ContainerWise: " + e.getMessage());
+		}
+	}
+
+	public ResponseEntity<?> saveBondAddService(String companyId, String branchId, String user,
+			Map<String, Object> resultList, String type) {
+
+		try {
+
+			AssessmentSheet assessment = objectMapper.readValue(
+					objectMapper.writeValueAsString(resultList.get("assesmentSheet")), AssessmentSheet.class);
+
+			if (assessment == null) {
+				return new ResponseEntity<>("Assessment data not found", HttpStatus.CONFLICT);
+			}
+
+			Cfinvsrvanx anx = objectMapper.readValue(objectMapper.writeValueAsString(resultList.get("Cfinvsrvanx")),
+					Cfinvsrvanx.class);
+
+			if (anx == null) {
+				return new ResponseEntity<>("Service data not found", HttpStatus.CONFLICT);
+			}
+
+			BigDecimal zero = BigDecimal.ZERO;
+
+			List<AssessmentSheet> existingData = assessmentsheetrepo.getDataByAssessmentId(companyId, branchId,
+					assessment.getAssesmentId());
+
+			if (existingData.isEmpty()) {
+				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
+			}
+
+			AssessmentSheet data = existingData.get(0);
+
+			Optional<BigDecimal> highestSRLNoOptional = exportInvoiceRepo.getHighestSrlNoByContainerNo1(companyId,
+					branchId, data.getProfitcentreId(), data.getAssesmentId());
+			BigDecimal highestSRLNo = highestSRLNoOptional.orElse(BigDecimal.ZERO);
+			BigDecimal highestSRLNoNew = highestSRLNo.add(BigDecimal.ONE);
+
+			anx.setCompanyId(companyId);
+			anx.setBranchId(branchId);
+			anx.setErpDocRefNo(data.getIgmTransId());
+			anx.setProcessTransId(data.getAssesmentId());
+			anx.setAddServices("Y");
+			anx.setDocRefNo(data.getIgmNo());
+			anx.setIgmLineNo("");
+			anx.setProfitcentreId(data.getProfitcentreId());
+			anx.setInvoiceType("BON");
+			anx.setStartDate(data.getNocFromDate());
+			anx.setGateOutDate(data.getNocValidityDate());
+
+			if ("noc".equals(type)) {
+				anx.setInvoiceSubType("NOC");
+			} else {
+				anx.setInvoiceSubType("EXB");
+			}
+
+			anx.setSrlNo(highestSRLNoNew);
+
+//			anx.setActualNoOfPackages(c.getRates());
+			anx.setLocalAmt(anx.getActualNoOfPackages());
+			anx.setInvoiceAmt(anx.getActualNoOfPackages());
+			anx.setCommodityDescription(data.getCommodityDescription());
+			anx.setDiscPercentage(zero);
+			anx.setDiscValue(zero);
+			anx.setmPercentage(zero);
+			anx.setmAmount(zero);
+			anx.setInvoiceUptoDate(data.getInvoiceUptoDate());
+			anx.setInvoiceUptoWeek(data.getInvoiceUptoDate());
+//			anx.setAcCode(c.getAcCode());
+
+			anx.setProcessTransDate(data.getAssesmentDate());
+			anx.setProcessId("P01102");
+			anx.setPartyId(data.getPartyId());
+
+//			anx.setGateOutDate(c.getGateoutDate());
+//			anx.setStartDate(c.getGateInDate());
+//			anx.setInvoiceUptoDate(c.getInvoiceDate());
+//			anx.setInvoiceUptoWeek(c.getInvoiceDate());
+			anx.setStatus("A");
+			anx.setCreatedBy(user);
+			anx.setCreatedDate(new Date());
+
+			anx.setTaxApp(String.valueOf(data.getTaxApplicable()));
+			anx.setSrvManualFlag("N");
+			anx.setCriteria("CNTR");
+			anx.setRangeFrom(zero);
+			anx.setRangeTo(zero);
+//			anx.setGateOutId(c.getGateOutId());
+//			anx.setGatePassNo(c.getGatePassNo());
+			anx.setRangeType("CNTR");
+//			anx.setTaxId(c.getTaxId());
+			anx.setExRate(zero);
+
+			if (("Y".equals(data.getIgst())) || ("Y".equals(data.getCgst()) && "Y".equals(data.getSgst()))) {
+				anx.setTaxPerc(anx.getTaxPerc());
+			} else {
+				anx.setTaxPerc(zero);
+			}
+
+			cfinvsrvanxrepo.save(anx);
+
+			return ResponseEntity.ok(true);
+		} catch (Exception e) {
+			System.out.println("Error in Add Service ContainerWise " + e);
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body("Error in Add Service ContainerWise: " + e.getMessage());
+		}
+	}
+
+	public ResponseEntity<?> getDataByAssessmentId1(String cid, String bid, String id, String billingPartyId,
+			String creditType, String type) {
+
+		List<Object[]> result = new ArrayList<>();
+
+		if ("noc".equals(type)) {
+			result = assessmentsheetrepo.getAssessmentDataForNoc(cid, bid, id);
+
+			if (result.isEmpty()) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			} else {
+				AtomicReference<BigDecimal> totalRateWithoutTax = new AtomicReference<>(BigDecimal.ZERO);
+				AtomicReference<BigDecimal> totalRateWithTax = new AtomicReference<>(BigDecimal.ZERO);
+
+				result.stream().forEach(r -> {
+					BigDecimal rate = new BigDecimal(String.valueOf(r[70]));
+					BigDecimal taxPerc = new BigDecimal(String.valueOf(r[73]));
+
+					System.out.println("TaxPerc " + String.valueOf(r[69]) + " " + taxPerc);
+					BigDecimal taxAmt = (rate.multiply(taxPerc)).divide(new BigDecimal(100), RoundingMode.HALF_UP);
+					totalRateWithoutTax.set(totalRateWithoutTax.get().add(rate));
+					totalRateWithTax.set(totalRateWithTax.get().add(rate.add(taxAmt)));
+				});
+
+				// Get the final totals
+				BigDecimal finaltotalRateWithoutTax = BigDecimal.ZERO;
+				BigDecimal finaltotalRateWithTax = BigDecimal.ZERO;
+
+				String invRoundStatus = branchRepo.getInvoiceRoundOffStatus(cid, bid);
+
+				if (invRoundStatus != null && !invRoundStatus.isEmpty() && "N".equals(invRoundStatus)) {
+					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+					finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+				} else if (invRoundStatus != null && !invRoundStatus.isEmpty() && "Y".equals(invRoundStatus)) {
+					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(0, RoundingMode.HALF_UP);
+					finaltotalRateWithTax = totalRateWithTax.get().setScale(0, RoundingMode.HALF_UP);
+				} else {
+					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+					finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+				}
+
+				
+
+				Party p = partyRepository.getDataById(cid, bid, billingPartyId);
+
+				Map<String, Object> finalResult = new HashMap<>();
+				finalResult.put("result", result);
+				finalResult.put("finaltotalRateWithoutTax", finaltotalRateWithoutTax);
+				finalResult.put("finaltotalRateWithTax", finaltotalRateWithTax);
+
+				if (p != null) {
+					if ("P".equals(creditType)) {
+						Object advanceData = finTransrepo.advanceReceiptBeforeSaveSearch(cid, bid, billingPartyId, "AD");
+
+						finalResult.put("advanceData", advanceData);
+					}
+
+					BigDecimal credit1 = p.getCrAmtLmt() == null ? BigDecimal.ZERO : p.getCrAmtLmt();
+					BigDecimal credit2 = p.getCrAmtLmtUse() == null ? BigDecimal.ZERO : p.getCrAmtLmtUse();
+
+					BigDecimal allowedValue = credit1.subtract(credit2).setScale(3, RoundingMode.HALF_UP);
+
+					System.out.println("allowedValue " + credit1 + " " + credit2 + " " + allowedValue);
+
+					finalResult.put("tanNo", p.getTanNoId());
+					finalResult.put("tdsPerc", p.getTdsPercentage());
+					finalResult.put("creditAllowed", allowedValue);
+
+				} 
+				
+				return new ResponseEntity<>(finalResult, HttpStatus.OK);
+			}
+		}
+		else {
+			result = assessmentsheetrepo.getAssessmentDataForExbond(cid, bid, id);
+			
+			if (result.isEmpty()) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			} else {
+				AtomicReference<BigDecimal> totalRateWithoutTax = new AtomicReference<>(BigDecimal.ZERO);
+				AtomicReference<BigDecimal> totalRateWithTax = new AtomicReference<>(BigDecimal.ZERO);
+
+				result.stream().forEach(r -> {
+					BigDecimal rate = new BigDecimal(String.valueOf(r[70]));
+					BigDecimal taxPerc = new BigDecimal(String.valueOf(r[73]));
+
+					System.out.println("TaxPerc " + String.valueOf(r[69]) + " " + taxPerc);
+					BigDecimal taxAmt = (rate.multiply(taxPerc)).divide(new BigDecimal(100), RoundingMode.HALF_UP);
+					totalRateWithoutTax.set(totalRateWithoutTax.get().add(rate));
+					totalRateWithTax.set(totalRateWithTax.get().add(rate.add(taxAmt)));
+				});
+
+				// Get the final totals
+				BigDecimal finaltotalRateWithoutTax = BigDecimal.ZERO;
+				BigDecimal finaltotalRateWithTax = BigDecimal.ZERO;
+
+				String invRoundStatus = branchRepo.getInvoiceRoundOffStatus(cid, bid);
+
+				if (invRoundStatus != null && !invRoundStatus.isEmpty() && "N".equals(invRoundStatus)) {
+					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+					finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+				} else if (invRoundStatus != null && !invRoundStatus.isEmpty() && "Y".equals(invRoundStatus)) {
+					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(0, RoundingMode.HALF_UP);
+					finaltotalRateWithTax = totalRateWithTax.get().setScale(0, RoundingMode.HALF_UP);
+				} else {
+					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+					finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+				}
+
+				
+
+				Party p = partyRepository.getDataById(cid, bid, billingPartyId);
+
+				Map<String, Object> finalResult = new HashMap<>();
+				finalResult.put("result", result);
+				finalResult.put("finaltotalRateWithoutTax", finaltotalRateWithoutTax);
+				finalResult.put("finaltotalRateWithTax", finaltotalRateWithTax);
+
+				if (p != null) {
+					if ("P".equals(creditType)) {
+						Object advanceData = finTransrepo.advanceReceiptBeforeSaveSearch(cid, bid, billingPartyId, "AD");
+
+						finalResult.put("advanceData", advanceData);
+					}
+
+					BigDecimal credit1 = p.getCrAmtLmt() == null ? BigDecimal.ZERO : p.getCrAmtLmt();
+					BigDecimal credit2 = p.getCrAmtLmtUse() == null ? BigDecimal.ZERO : p.getCrAmtLmtUse();
+
+					BigDecimal allowedValue = credit1.subtract(credit2).setScale(3, RoundingMode.HALF_UP);
+
+					System.out.println("allowedValue " + credit1 + " " + credit2 + " " + allowedValue);
+
+					finalResult.put("tanNo", p.getTanNoId());
+					finalResult.put("tdsPerc", p.getTdsPercentage());
+					finalResult.put("creditAllowed", allowedValue);
+
+				}
+
+				return new ResponseEntity<>(finalResult, HttpStatus.OK);
+			}
+		}
 
 	}
 

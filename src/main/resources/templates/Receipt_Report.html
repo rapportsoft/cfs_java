@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Receipt</title>
+    <style>
+		
+		@page {
+			margin: 0.7cm;
+			margin-top: 0.5cm;
+			/* Adjust the margin values as needed (e.g., 1cm for smaller margins) */
+
+		}
+
+		@media print {
+			tbody {
+				display: table-row-group;
+			}
+
+			tr {
+				page-break-inside: avoid;
+			}
+			
+			
+		}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+			color: blue;
+        }
+		
+        .header h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            
+            padding: 8px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .receipt-details {
+            margin-bottom: 10px;
+        }
+        .receipt-details div {
+            margin-bottom: 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+			
+        }
+    </style>
+</head>
+<body>
+  
+   
+    <table  style="width: 100%; border-collapse: collapse;border: none;margin-top: 0px;">
+		<thead>
+
+		</thead>
+		<tbody>
+			<tr style ="border-collapse: collapse;border: none;" >
+				<td style="width: 25%;border-collapse: collapse;border: none;">
+					<!-- Add the following Thymeleaf code to include the image in your HTML -->
+					<img th:src="@{file://C:/CFSNAV/Logos/logo.png}"
+						alt=" Logo" style="display: block;width:150px;" />
+				</td>
+				<td style="width: 75%;vertical-align: top;border-collapse: collapse;border: none;">
+
+
+
+
+					
+					<span th:text="${cname}" 
+						  style="font-weight: bold; font-size: 18px; color: rgb(0, 128, 0);">
+						
+					</span><br />
+					
+					
+					<span th:text="|Regd Office: ${cadd1} ${cadd2} ${cadd3} ${companyPin}|" 
+						  style="font-weight: bold; font-size: 10px; height: 160px;">
+						  
+					</span> <br />
+					
+					
+							<span style="font-weight: bold; font-size: 10px;">	
+		    Tel: <span th:text="${tel}"></span> | 
+		    Fax: <span th:text="${fax}"></span> | 
+		    Email: <span th:text="${email}"></span>
+		   
+		</span><br />
+		
+					
+
+				</td>
+
+			</tr>
+		
+		</tbody>
+	</table>
+	
+	 <div class="header">
+     	<hr style="border: 1px solid lightgrey;" />
+        <h2>RECEIPT </h2> 
+    </div> 
+
+    <div class="receipt-details">
+        <div style ="font-size: 10px !important;"><b>Receipt Number :</b> <span style = "font-size: 10px !important;font-weight: bold;" th:text="${receiptNo}"></span></div>
+        <div style ="font-size: 10px !important;"><b>Receipt Date :</b> <span style ="font-size: 10px !important;font-weight: bold;" th:text="${receiptDate}"></span></div>
+        <div style ="font-size: 10px !important;"><b> Paying party :</b> <span style ="font-size: 10px !important;font-weight: bold;" th:text="${PayingParty}"></span></div>
+        <div style ="font-size: 10px !important;font-weight: bold;"> Collection received against below voucher(s), basis payment mode</div>
+    </div>
+    
+    <hr style="border: 1px solid black;" />
+
+    <table class="invoice-details" style="border-collapse: collapse; font-size: 12px !important;">
+        <thead>
+            <tr>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Invoice Type</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Invoice No</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Invoice Date</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Invoice Amt</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Received Amt</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style = "border-collapse: collapse"  th:each="invoiceDetail : ${invlist}">
+                <td style="height: 12px; text-align: center;   font-size: 10px !important;border: none;" th:text="${invoiceDetail.invoiceType}"></td>
+                <td style="height: 12px; text-align: center;   font-size: 10px !important;border: none;" th:text="${invoiceDetail.invoiceNo}"></td>
+                <td style="height: 12px; text-align: center;   font-size: 10px !important;border-bottom: 1px solid #D3D3D3;" th:text="${invoiceDetail.invoiceDate}"></td>
+                <td style="height: 12px; text-align: center;   font-size: 10px !important;border-bottom: 1px solid #D3D3D3;" th:text="${invoiceDetail.invoiceAmt}"></td>
+                <td style="height: 12px; text-align: center;   font-size: 10px !important;border-bottom: 1px solid #D3D3D3;" th:text="${invoiceDetail.receiptAmt}"></td>
+            </tr>
+            
+            
+            
+        </tbody>
+        
+        <tfoot th:if="${key1}">
+        <tr style="text-align: right; font-size: 10px !important; border: none; font-weight: bold;">
+            <td colspan="2" style="text-align: right; font-size: 10px !important; border: 1px solid white;"></td>
+            <td style="text-align: center; font-size: 10px !important; border-bottom: 1px solid #D3D3D3" 
+               >Total:</td>
+            <td style="text-align: center; font-size: 10px !important; border-bottom: 1px solid #D3D3D3" 
+                th:text="${sumInv1}"></td>
+            <td style="text-align: center; font-size: 10px !important; border-bottom: 1px solid #D3D3D3" 
+                th:text="${sumRec}"></td>
+        </tr>
+    </tfoot>
+    </table>
+    
+    
+
+    <table class="payment-details">
+        <thead>
+            <tr>
+				<th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Sr No</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Payment Mode</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Bank Name</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Branch Name</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">RTGS/cheque No</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">RTGS/cheque Date</th>
+                <th style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="paymentDetail ,i: ${paymentlist}">
+				<td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" th:text="${i.index +1}"></td>
+                <td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" th:text="${paymentDetail.paymentmode}"></td>
+                <td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" th:text="${paymentDetail.bankName}"></td>
+                <td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" ></td>
+                <td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" th:text="${paymentDetail.checkNoOrRtgsNo}"></td>
+                <td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" th:text="${paymentDetail.checkDateOrRtgsDate}"></td>
+                <td style="height: 12px;  text-align: center;   font-size: 10px !important;border: 1px solid white;" th:text="${paymentDetail.amount}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+ 
+    <div>
+        <span style="font-size: 10px; font-weight: bold; color: black;">Receipt Amount :</span> 
+    	<span style="font-size: 10px; font-weight: bold; color: black;" th:text="'Rs ' + ${payTotal} + '/-'" ></span><br/>
+    	
+    	<span th:if="${tdsAmount}">
+    <span style="font-size: 10px; font-weight: bold; color: black;">TDS Amount :</span> 
+    <span style="font-size: 10px; font-weight: bold; color: black;" th:text="'Rs ' + ${tdsAmount} + '/-'" ></span><br/>
+</span>
+
+    	<span style="font-size: 10px; font-weight: bold; color: black;">Amount In Words :</span> 
+    	<span style="font-size: 10px; font-weight: bold; color: black;" th:text="${AmountInWords}" ></span>
+    </div>
+    
+    <hr style="border: 1px solid black;" />
+    
+    
+    <table style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <td style="padding: 3px; border: 1px solid white; font-size: 10px !important;font-weight: bold; color: black;" > GST No <span style="font-weight: normal;margin-left: 10px;" th:text="${gst}"></span>  </td>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"> For <span th:text="${cname}"></span>  </td>
+    </tr>
+    <tr>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;font-weight: bold; color: black;">PAN No  <span style="font-weight: normal;margin-left: 10px;" th:text="${pan}"></span></td>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"></td>
+    </tr>
+    <tr>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;font-weight: bold; color: black;">CIN <span style="font-weight: normal;margin-left: 20px;" th:text="${cin}"></span></td>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"></td>
+    </tr>
+    <tr>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"></td>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"></td>
+    </tr>
+    <tr>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;">Receipt is Subject to realisation of Cheque/DD/Payorder</td>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;justify-content: center;"> Authorised Signatory</td>
+    </tr>
+    
+     <tr>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"> Printed By <span style="font-weight: normal;margin-left: 10px;" th:text="${createdBy}"></span></td>
+        <td style="padding: 3px;border: 1px solid white; font-size: 10px !important;"></td>
+    </tr>
+    
+</table>
+    
+</body>
+</html>
