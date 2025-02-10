@@ -65,24 +65,22 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 		       "WHERE c.company_Id = :companyId " +
 		       "AND c.branch_Id = :branchId " +
 		       "AND c.status = 'A' " +
-		       "AND c.noc_Trans_Date BETWEEN :startDate AND :endDate",nativeQuery = true)
+		       "AND c.noc_Trans_Date BETWEEN :startDate AND CURRENT_TIMESTAMP",nativeQuery = true)
 		List<Object[]> getCountAndSumOfCargoDuty(
 		    @Param("companyId") String companyId,
 		    @Param("branchId") String branchId,
-		    @Param("startDate") Date startDate,
-		    @Param("endDate") Date endDate
+		    @Param("startDate") Date startDate
 		);
 		
 		@Query(value="SELECT COUNT(c.In_Bonding_Id), COALESCE(SUM(c.cargo_Duty), 0),COALESCE(SUM(c.CIF_Value),0),COALESCE(SUM(c.Area_Occupied),0) FROM cfinbondcrg c " +
 			       "WHERE c.company_Id = :companyId " +
 			       "AND c.branch_Id = :branchId " +
 			       "AND c.status = 'A' " +
-			       "AND c.In_Bonding_Date BETWEEN :startDate AND :endDate",nativeQuery = true)
+			       "AND c.In_Bonding_Date BETWEEN :startDate AND CURRENT_TIMESTAMP ",nativeQuery = true)
 			List<Object[]> getCountAndSumOfInbond(
 			    @Param("companyId") String companyId,
 			    @Param("branchId") String branchId,
-			    @Param("startDate") Date startDate,
-			    @Param("endDate") Date endDate
+			    @Param("startDate") Date startDate
 			);
 
 			
@@ -91,12 +89,11 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 				       "WHERE c.company_Id = :companyId " +
 				       "AND c.branch_Id = :branchId " +
 				       "AND c.status = 'A' " +
-				       "AND c.Ex_Bonding_Date BETWEEN :startDate AND :endDate",nativeQuery = true)
+				       "AND c.Ex_Bonding_Date BETWEEN :startDate AND CURRENT_TIMESTAMP ",nativeQuery = true)
 				List<Object[]> getCountAndSumOfExbond(
 				    @Param("companyId") String companyId,
 				    @Param("branchId") String branchId,
-				    @Param("startDate") Date startDate,
-				    @Param("endDate") Date endDate
+				    @Param("startDate") Date startDate
 				);
 				
 				
@@ -232,10 +229,10 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        "WHERE b.Company_Id = :companyId " +
 					        "AND b.Branch_Id = :branchId " +
 					        "AND b.status = 'A' " +
-					        "AND (b.gate_out_id = '' OR b.gate_out_date > CURRENT_DATE) " +
-					        "AND (b.de_stuff_id = '' OR b.de_stuff_Date > CURRENT_DATE) " +
+					        "AND (b.gate_out_id = '' OR b.gate_out_date > CURRENT_TIMESTAMP) " +
+					        "AND (b.de_stuff_id = '' OR b.de_stuff_Date > CURRENT_TIMESTAMP) " +
 					        "AND b.gate_in_id != '' " +
-					        "AND b.Gate_in_Date < CURRENT_DATE " +
+					        "AND b.Gate_in_Date < CURRENT_TIMESTAMP " +
 					        "GROUP BY b.container_no, b.igm_no " +
 					        "UNION " +
 					        "SELECT DISTINCT a.container_no, a.container_size,'', a.container_type, a.ODC_Status, 'Manual', a.Hazardous " +
@@ -343,8 +340,9 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        " FROM cfexpinventory a " +
 					        " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 					        " AND a.Status = 'A' " +
-					        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_DATE ) " +
-					        " AND (a.Stuff_Req_Date != '0000-00-00 00:00:00' AND a.Stuff_Req_Date < CURRENT_DATE) " +
+					        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_TIMESTAMP ) " +
+//					        " AND (a.stuff_req_id != '' AND a.Stuff_Req_Date < CURRENT_DATE) " +
+"AND (a.stuff_req_id != '' AND a.Stuff_Req_Date < CURRENT_TIMESTAMP) " +
 					        " AND a.Container_Status = 'MTY' " +
 					        " AND a.cycle != 'Hub' " +
 					        " GROUP BY a.container_no) " +
@@ -353,7 +351,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        " FROM cfexpinventory a " +
 					        " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 					        " AND a.Status = 'A' " +
-					        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_DATE) " +
+					        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
 					        " AND a.Container_Status IN ('LDD', 'FCL') " +
 					        " GROUP BY a.container_no)", 
 					nativeQuery = true)
@@ -370,9 +368,9 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        "FROM cfexpinventory a " +
 					        "WHERE a.company_id = :companyId " +
 					        "AND a.branch_id = :branchId " +
-					        "AND (a.stuff_req_id = '' OR a.stuff_req_date > CURRENT_DATE) " +
+					        "AND (a.stuff_req_id = '' OR a.stuff_req_id IS NULL OR a.stuff_req_date > CURRENT_TIMESTAMP) " +
 					        "AND (a.empty_pass_id = '' OR a.empty_pass_id IS NULL ) " +
-					        "AND a.gate_in_date < CURRENT_DATE " +
+					        "AND a.gate_in_date < CURRENT_TIMESTAMP " +
 					        "AND a.status = 'A' " +
 					        "AND a.container_status = 'MTY' " +
 					        "GROUP BY a.container_no", 
@@ -396,8 +394,8 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        "FROM cfexpinventory a " +
 					        "WHERE a.company_id = :companyId " +
 					        "AND a.branch_id = :branchId " +
-					        "AND (a.stuff_req_id = '' OR a.stuff_req_date > CURRENT_DATE) " +
-					        "AND a.empty_pass_id = '' " +
+					        "AND (a.stuff_req_id = '' OR a.stuff_req_id IS NULL OR a.stuff_req_date > CURRENT_DATE) " +
+					        "AND (a.empty_pass_id = '' OR a.empty_pass_id IS NULL ) " +
 //					        "AND a.gate_in_date < CURRENT_DATE " +
 "AND a.gate_in_date  BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE " +
 					        "AND a.status = 'A' " +
@@ -572,7 +570,8 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 							    "WHERE a.Status = 'A' " +
 							    "AND a.Company_Id = :companyId " +
 							    "AND a.Branch_Id = :branchId " +
-							    "AND a.Created_Date BETWEEN :startDate AND :endDate " +
+//							    "AND a.Created_Date BETWEEN :startDate AND :endDate " +
+                                "AND a.Created_Date < CURRENT_TIMESTAMP  " +
 							    "AND a.Credit_Type = 'Y' " +
 							    "GROUP BY a.Profitcentre_Id " +
 							    "HAVING (SUM(a.Invoice_Amt) - SUM(a.Receipt_Amt)) > 0 " +
@@ -580,9 +579,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 							    nativeQuery = true)
 							List<Object[]> findOutstandingInvoices(
 							    @Param("companyId") String companyId,
-							    @Param("branchId") String branchId,
-							    @Param("startDate") Date startDate,
-							    @Param("endDate") Date endDate
+							    @Param("branchId") String branchId
 							);
 							
 							@Query(value = 
@@ -658,7 +655,9 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								               "    a.Status = 'A' " + 
 								               "    AND a.Company_Id = :companyId " + 
 								               "    AND a.Branch_Id = :branchId " + 
-								               "    AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+//								               "    AND a.Created_Date BETWEEN :startDate AND :endDate " + 
+"    AND a.Created_Date < CURRENT_TIMESTAMP " + 
+								               
 								               "    AND a.Credit_Type = 'Y' " + 
 								               "GROUP BY a.Party_Id " + 
 								               "HAVING " + 
@@ -669,10 +668,259 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								       nativeQuery = true)
 								List<Object[]> findTopOutstandingInvoices(
 								    @Param("companyId") String companyId,
-								    @Param("branchId") String branchId,
-								    @Param("startDate") Date startDate,
-								    @Param("endDate") Date endDate
+								    @Param("branchId") String branchId
 								);
+
+
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+								@Query(value = "SELECT DISTINCT a.container_no, a.container_size, a.container_type " +
+								        "FROM cfigmcn a " +
+								        "WHERE a.company_id = :companyId " +
+								        "AND a.branch_id = :branchId " +
+								        "AND a.profitcentre_id IN ('N00002') " +
+								        "AND a.status = 'A' " +
+								        "AND a.container_status = 'FCL' " +
+								        "AND a.de_stuff_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "GROUP BY a.container_no, a.igm_no", 
+								nativeQuery = true)
+								List<Object[]> findDistinctFCLContainers(@Param("companyId") String companyId,
+								                                  @Param("branchId") String branchId,
+								                                  @Param("startDate") Date startDate);
+								
+								
+								
+								
+								
+								@Query(value = "SELECT DISTINCT a.container_no, a.container_size, a.container_type " +
+								        "FROM cfgateout a " +
+								        "LEFT OUTER JOIN cfigmcn b ON a.erp_doc_ref_no = b.igm_trans_id " +
+								        "AND a.doc_ref_no = b.igm_no " +
+								        "AND a.container_no = b.container_no " +
+								        "AND a.profitcentre_id = b.profitcentre_id " +
+								        "AND a.gate_out_id = b.gate_out_id " +
+								        "AND a.company_id = b.company_id " +
+								        "AND a.branch_id = b.branch_id " +
+								        "WHERE a.company_id = :companyId " +
+								        "AND a.branch_id = :branchId " +
+								        "AND a.profitcentre_id IN ('N00002') " +
+								        "AND a.container_status = 'FCL' " +
+								        "AND a.container_no != '' " +
+								        "AND a.status = 'A' " +
+								        "AND b.status = 'A' " +
+								        "AND a.gate_out_date BETWEEN :startDate AND CURRENT_TIMESTAMP ", 
+								nativeQuery = true)
+								List<Object[]> findDistinctFCLGateOutContainers(@Param("companyId") String companyId,
+								                                      @Param("branchId") String branchId,
+								                                      @Param("startDate") Date startDate);
+								
+								
+								@Query(value = "SELECT DISTINCT a.container_no, a.container_size, " +
+								        "DATE_FORMAT(a.in_gate_in_date, '%d %b %Y %T') AS gateindate " +
+								        "FROM cfgatein a " +
+								        "WHERE a.Company_Id = :companyId " +
+								        "AND a.Branch_Id = :branchId " +
+								        "AND a.profitcentre_id IN ('N00002') " +
+								        "AND a.Status = 'A' " +
+								        "AND a.Process_Id = 'P00203' " +
+								        "AND a.Container_No <> '' " +
+								        "AND a.in_gate_in_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "GROUP BY a.Gate_In_Id, a.Container_No " +
+								        "UNION " +
+								        "SELECT DISTINCT a.container_no, a.container_size, " +
+								        "DATE_FORMAT(a.Gate_In_Date, '%d %b %Y %T') AS gateindate " +
+								        "FROM cfmanualgatein a " +
+								        "WHERE a.Company_Id = :companyId " +
+								        "AND a.Branch_Id = :branchId " +
+								        "AND a.profitcentre_id IN ('N00002') " +
+								        "AND a.Status = 'A' " +
+								        "AND a.Process_Id = 'P00212' " +
+								        "AND a.Gate_In_Type = 'IMP' " +
+								        "AND a.Container_No <> '' " +
+								        "AND a.gate_in_date BETWEEN :startDate AND CURRENT_TIMESTAMP ", nativeQuery = true)
+								List<Object[]> findDistinctGateInData(@Param("companyId") String companyId,
+								                               @Param("branchId") String branchId,
+								                               @Param("startDate") Date startDate);
+								
+								@Query(value = "SELECT DISTINCT b.container_no, b.container_size, b.container_type, b.ODC_Status, b.Type_of_container, 'N' " +
+								        "FROM cfigmcn b " +
+								        "LEFT OUTER JOIN cfigmcrg f ON f.Company_Id = b.Company_Id " +
+								        "AND f.Branch_Id = b.Branch_Id " +
+								        "AND f.IGM_Trans_Id = b.IGM_Trans_Id " +
+								        "AND f.Profitcentre_Id = b.Profitcentre_Id " +
+								        "AND f.IGM_No = b.IGM_No " +
+								        "AND f.igm_line_no = b.igm_line_no " +
+								        "WHERE b.Company_Id = :companyId " +
+								        "AND b.Branch_Id = :branchId " +
+								        "AND b.status = 'A' " +
+								        "AND (b.gate_out_id = '' OR b.gate_out_date > CURRENT_TIMESTAMP) " +
+								        "AND (b.de_stuff_id = '' OR b.de_stuff_Date > CURRENT_TIMESTAMP) " +
+								        "AND b.gate_in_id != '' " +
+								        "AND b.Gate_in_Date < CURRENT_TIMESTAMP " +
+								        "GROUP BY b.container_no, b.igm_no " +
+								        "UNION " +
+								        "SELECT DISTINCT a.container_no, a.container_size, a.container_type, a.ODC_Status, 'Manual', a.Hazardous " +
+								        "FROM cfgatein a " +
+								        "WHERE a.Company_Id = :companyId " +
+								        "AND a.Branch_Id = :branchId " +
+								        "AND a.Process_Id = 'P00212' " +
+								        "AND a.status = 'A'", nativeQuery = true)
+								List<Object[]> getLoadedInventoryData(@Param("companyId") String companyId,
+								                                          @Param("branchId") String branchId);
+								
+								
+								@Query(value = "SELECT DISTINCT a.container_no, a.container_size, a.container_type " +
+								        "FROM cfgateout a " +
+								        "LEFT OUTER JOIN cfcommongatepass b ON a.gate_pass_no = b.gate_pass_id " +
+								        "AND a.container_no = b.container_no " +
+								        "AND a.company_id = b.company_id " +
+								        "AND a.branch_id = b.branch_id " +
+								        "WHERE a.company_id = :companyId " +
+								        "AND a.branch_id = :branchId " +
+								        "AND a.status = 'A' " +
+//								        "AND a.profitcentre_id IN ('N00002') " +
+								"  AND a.Profitcentre_Id IN ('N00004','N00002') " +
+								        "AND a.gate_out_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "AND a.container_status = 'MTY'", 
+								nativeQuery = true)
+								List<Object[]> findDistinctMTYContainers(@Param("companyId") String companyId,
+								                                  @Param("branchId") String branchId,
+								                                  @Param("startDate") Date startDate);
+								
+								
+								
+								
+								
+								@Query(value = "SELECT DISTINCT a.container_no, a.container_size, a.container_type " +
+								        "FROM cfigmcn a " +
+								        "LEFT OUTER JOIN cfimportgatepass b ON a.company_id = b.company_id " +
+								        "AND a.branch_id = b.branch_id " +
+								        "AND a.gate_pass_no = b.gate_pass_id " +
+								        "AND a.gate_out_id = b.gate_out_id " +
+								        "AND b.container_no = a.container_no " +
+								        "WHERE a.company_id = :companyId " +
+								        "AND a.branch_id = :branchId " +
+								        "AND a.profitcentre_id IN ('N00002') " +
+								        "AND a.container_status = 'LCL' " +
+								        "AND a.status = 'A' " +
+								        "AND a.de_stuff_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "GROUP BY a.container_no, a.igm_no", 
+								nativeQuery = true)
+								List<Object[]> findDistinctLCLContainers(@Param("companyId") String companyId,
+								                                  @Param("branchId") String branchId,
+								                                  @Param("startDate") Date startDate);
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								////////////////////////////////////////////////////////////////EXPORT///////////////////////////////////////////////////////////////////////////////////////////
+								@Query(value = "SELECT DISTINCT a.Container_No, a.Container_Size, a.Container_Type, a.Gate_In_Type " +
+								        "FROM cfgatein a " +
+								        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
+								        "AND a.status = 'A' AND a.Profitcentre_Id = 'N00004' " +
+//								        "AND a.Gate_In_Type IN ('Buffer', 'ONWH', 'FDS') " +
+								"AND a.Gate_In_Type IN ('Buffer') " +
+								        "AND a.Process_Id = 'P00234' " +
+								        "AND a.in_Gate_In_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "GROUP BY a.Container_No " +
+								        "ORDER BY a.in_Gate_In_Date ASC", 
+								nativeQuery = true)
+								List<Object[]> exportBufferGateIn(@Param("companyId") String companyId,
+								                             @Param("branchId") String branchId,
+								                             @Param("startDate") Date startDate);
+								
+								@Query(value = "SELECT DISTINCT DATE_FORMAT(a.Gate_Out_Date, '%d %b %Y %T') AS gateOutDate, " +
+								        "a.vehicle_no, a.container_no, a.container_size, a.container_type, a.trans_type " +
+								        "FROM cfgateout a " +
+								        "LEFT OUTER JOIN cfexpmovementreq c ON a.company_id = c.company_id " +
+								        "AND a.branch_id = c.branch_id AND a.gate_out_id = c.gate_out_id " +
+								        "AND c.container_no = a.container_no " +
+								        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
+								        "AND a.Status = 'A' AND a.gate_out_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "AND a.trans_type IN ('CONT', 'MOVE', 'BOWC') " +
+								        "AND a.Profitcentre_Id = 'N00004' " +
+								        "GROUP BY a.container_no, a.gate_out_id", 
+								nativeQuery = true)
+								List<Object[]> exportEmptyMovementOut(@Param("companyId") String companyId,
+								                              @Param("branchId") String branchId,
+								                              @Param("startDate") Date startDate);
+								
+								@Query(value = "SELECT DISTINCT a.Container_no, a.container_size " +
+								        "FROM cfstufftally a " +
+								        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
+								        "AND a.Status = 'A' AND a.Profitcentre_Id = 'N00004' " +
+								        "AND a.stuff_tally_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "AND a.MOVEMENT_TYPE = 'CLP' " +
+								        "GROUP BY a.Container_no", 
+								nativeQuery = true)
+								List<Object[]> findStuffTallyContainers(@Param("companyId") String companyId,
+								                                 @Param("branchId") String branchId,
+								                                 @Param("startDate") Date startDate);
+								
+								
+								@Query(value = "(SELECT DISTINCT a.container_no, a.container_size, a.Container_Type " +
+								        " FROM cfexpinventory a " +
+								        " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
+								        " AND a.Status = 'A' " +
+								        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
+								        " AND (a.Stuff_Req_id != '' AND a.Stuff_Req_Date < CURRENT_TIMESTAMP) " +
+								        " AND a.Container_Status = 'MTY' " +
+								        " AND a.cycle != 'Hub' " +
+								        " GROUP BY a.container_no) " +
+								        "UNION " +
+								        "(SELECT DISTINCT a.container_no, a.container_size, a.Container_Type " +
+								        " FROM cfexpinventory a " +
+								        " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
+								        " AND a.Status = 'A' " +
+								        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
+								        " AND a.Container_Status IN ('LDD', 'FCL') " +
+								        " GROUP BY a.container_no)", 
+								nativeQuery = true)
+								List<Object[]> findExpLDDInventoryContainers(@Param("companyId") String companyId,
+								                                   @Param("branchId") String branchId);
+								
+								@Query(value = "SELECT DISTINCT a.container_no, a.container_size, a.container_type " +
+								        "FROM cfgatein a " +
+								        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
+								        "AND a.status = 'A' AND a.Profitcentre_Id = 'N00004' " +
+								        "AND a.Gate_In_Type = 'EXP' "
+								        + "AND a.Process_Id = 'P00219' " +
+								        "AND a.in_Gate_In_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
+								        "GROUP BY a.container_no", 
+								nativeQuery = true)
+								List<Object[]> findExportEMptyContainerGateIn(@Param("companyId") String companyId,
+								        @Param("branchId") String branchId,
+								        @Param("startDate") Date startDate);
+
+								
+								
 
 
 }

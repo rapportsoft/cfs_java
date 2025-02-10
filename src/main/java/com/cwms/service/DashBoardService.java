@@ -45,12 +45,20 @@ public class DashBoardService {
 	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
 
 	    // Fetch data for job order and seal cutting
-		  List<Object[]> fclDestuff = commonReportRepo.findDistinctFCLContainers(companyId, branchId, startDate, endDate);
-		    List<Object[]> fclLoaded = commonReportRepo.findDistinctFCLGateOutContainers(companyId, branchId, startDate, endDate);
-	    List<Object[]> impGateIn = commonReportRepo.findDistinctGateInData(companyId, branchId, startDate, endDate);
+//		  List<Object[]> fclDestuff = commonReportRepo.findDistinctFCLContainers(companyId, branchId, startDate, endDate);
+//		    List<Object[]> fclLoaded = commonReportRepo.findDistinctFCLGateOutContainers(companyId, branchId, startDate, endDate);
+//	    List<Object[]> impGateIn = commonReportRepo.findDistinctGateInData(companyId, branchId, startDate, endDate);
+//	    List<Object[]> loadedInventory = commonReportRepo.getLoadedInventoryData(companyId, branchId, endDate);
+//	    List<Object[]> emptyOutt = commonReportRepo.findDistinctMTYContainers(companyId, branchId, startDate, endDate);
+		
+		  List<Object[]> fclDestuff = dashboardRepository.findDistinctFCLContainers(companyId, branchId, startDate);
+    	  List<Object[]> fclLoaded = dashboardRepository.findDistinctFCLGateOutContainers(companyId, branchId, startDate);
+    	  List<Object[]> impGateIn = dashboardRepository.findDistinctGateInData(companyId, branchId, startDate);
+    	  List<Object[]> loadedInventory = dashboardRepository.getLoadedInventoryData(companyId, branchId);
+	  
 
-	    List<Object[]> loadedInventory = commonReportRepo.getLoadedInventoryData(companyId, branchId, endDate);
-	    List<Object[]> emptyOutt = commonReportRepo.findDistinctMTYContainers(companyId, branchId, startDate, endDate);
+	   
+	    List<Object[]> emptyOutt = dashboardRepository.findDistinctMTYContainers(companyId, branchId, startDate);
 	    
 	    
 	    
@@ -58,17 +66,22 @@ public class DashBoardService {
 	    
 	    
 	    
-	    List<Object[]> exportBuffer = commonReportRepo.exportBufferGateIn(companyId, branchId, startDate, endDate);
-	    List<Object[]> emptyMovementOut = commonReportRepo.exportEmptyMovementOut(companyId, branchId, startDate, endDate);
-	    List<Object[]> stuffTally = commonReportRepo.findStuffTallyContainers(companyId, branchId, startDate, endDate);
-	    List<Object[]> exportLDD = commonReportRepo.findExpLDDInventoryContainers(companyId, branchId, endDate);
+//	    List<Object[]> exportBuffer = commonReportRepo.exportBufferGateIn(companyId, branchId, startDate, endDate);
+//	    List<Object[]> emptyMovementOut = commonReportRepo.exportEmptyMovementOut(companyId, branchId, startDate, endDate);
+//	    List<Object[]> stuffTally = commonReportRepo.findStuffTallyContainers(companyId, branchId, startDate, endDate);
+//	    List<Object[]> exportLDD = commonReportRepo.findExpLDDInventoryContainers(companyId, branchId, endDate);
+	    
+	    List<Object[]> exportBuffer = dashboardRepository.exportBufferGateIn(companyId, branchId, startDate);
+	    List<Object[]> emptyMovementOut = dashboardRepository.exportEmptyMovementOut(companyId, branchId, startDate);
+	    List<Object[]> stuffTally = dashboardRepository.findStuffTallyContainers(companyId, branchId, startDate);
+	    List<Object[]> exportLDD = dashboardRepository.findExpLDDInventoryContainers(companyId, branchId);
 	    
 	    
 	    
 	    
-	    List<Object[]> nocData = dashboardRepository.getCountAndSumOfCargoDuty(companyId, branchId, startDate, endDate);
-	    List<Object[]> inbondData = dashboardRepository.getCountAndSumOfInbond(companyId, branchId, startDate, endDate);
-	    List<Object[]> exBondData = dashboardRepository.getCountAndSumOfExbond(companyId, branchId, startDate, endDate);
+	    List<Object[]> nocData = dashboardRepository.getCountAndSumOfCargoDuty(companyId, branchId, startDate);
+	    List<Object[]> inbondData = dashboardRepository.getCountAndSumOfInbond(companyId, branchId, startDate);
+	    List<Object[]> exBondData = dashboardRepository.getCountAndSumOfExbond(companyId, branchId, startDate);
 	    
 	    List<Cfinbondcrg> getBondInventory =dashboardRepository.getDataForInBondInventoryReport(companyId,branchId);
 	    
@@ -1847,13 +1860,18 @@ public class DashBoardService {
 	                Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is a String at index [2]
 	                
 	                
-//	                System.out.println( " gateInDateStr  :"+gateInDateStr);;
+//	                String gateInDateStr = (String) row[2]; // Assuming Gate_In_Date is a String at index [2]
+	                	
+	                
+	                	
+//	                System.out.println( " gateInDateStr  :"+gateInDateStr);
 
 ////	                Date gateInDate = (Date) row[2]; // Assuming Gate_In_Date is at index [2]  
 	                
 	                try {
 	                    // Get the day of the week for the gate-in date
 //	                	 Date gateInDate = dateFormat1.parse(gateInDateStr);
+//	                	Date gateInDate = dateFormat111.parse(gateInDateStr);
 	                    Calendar gateInCalendar = Calendar.getInstance();
 	                    gateInCalendar.setTime(gateInDate);
 	                    int dayOfWeek = gateInCalendar.get(Calendar.DAY_OF_WEEK);  // Sunday = 1, Monday = 2, ...
@@ -2260,13 +2278,22 @@ public class DashBoardService {
 	        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
 
 	    // Fetch data for job order and seal cutting
-		  List<Object[]> fclDestuff = commonReportRepo.findDistinctFCLContainers(companyId, branchId, startDate, endDate);
-		    List<Object[]> fclLoaded = commonReportRepo.findDistinctFCLGateOutContainers(companyId, branchId, startDate, endDate);
-	    List<Object[]> impGateIn = commonReportRepo.findDistinctGateInData(companyId, branchId, startDate, endDate);
+//		  List<Object[]> fclDestuff = commonReportRepo.findDistinctFCLContainers(companyId, branchId, startDate, endDate);
+//    	 List<Object[]> fclLoaded = commonReportRepo.findDistinctFCLGateOutContainers(companyId, branchId, startDate, endDate);
+ //   	  List<Object[]> impGateIn = commonReportRepo.findDistinctGateInData(companyId, branchId, startDate, endDate);
+  //  	 List<Object[]> loadedInventory = commonReportRepo.getLoadedInventoryData(companyId, branchId, endDate);
+  //  	  List<Object[]> emptyOutt = commonReportRepo.findDistinctMTYContainers(companyId, branchId, startDate, endDate);
+  //        List<Object[]> lclDestuff = commonReportRepo.findDistinctLCLContainers(companyId, branchId, startDate, endDate);
+    	
+    	  List<Object[]> fclDestuff = dashboardRepository.findDistinctFCLContainers(companyId, branchId, startDate);
+    	  List<Object[]> fclLoaded = dashboardRepository.findDistinctFCLGateOutContainers(companyId, branchId, startDate);
+    	  List<Object[]> impGateIn = dashboardRepository.findDistinctGateInData(companyId, branchId, startDate);
+    	  List<Object[]> loadedInventory = dashboardRepository.getLoadedInventoryData(companyId, branchId);
+	  
 
-	    List<Object[]> loadedInventory = commonReportRepo.getLoadedInventoryData(companyId, branchId, endDate);
-	    List<Object[]> emptyOutt = commonReportRepo.findDistinctMTYContainers(companyId, branchId, startDate, endDate);
-	    List<Object[]> lclDestuff = commonReportRepo.findDistinctLCLContainers(companyId, branchId, startDate, endDate);
+	   
+	    List<Object[]> emptyOutt = dashboardRepository.findDistinctMTYContainers(companyId, branchId, startDate);
+	    List<Object[]> lclDestuff = dashboardRepository.findDistinctLCLContainers(companyId, branchId, startDate);
 	    
 	    
 	    
@@ -3668,12 +3695,19 @@ public class DashBoardService {
 
 	    // Fetch data for job order and seal cutting
 		
-	    List<Object[]> exportBuffer = commonReportRepo.exportBufferGateIn(companyId, branchId, startDate, endDate);
-	    List<Object[]> emptyMovementOut = commonReportRepo.exportEmptyMovementOut(companyId, branchId, startDate, endDate);
-	    List<Object[]> stuffTally = commonReportRepo.findStuffTallyContainers(companyId, branchId, startDate, endDate);
-	    List<Object[]> exportLDD = commonReportRepo.findExpLDDInventoryContainers(companyId, branchId, endDate);
-	    List<Object[]> emptyGateIn = commonReportRepo.findExportEMptyContainerGateIn(companyId, branchId, startDate, endDate);
+//	    List<Object[]> exportBuffer = commonReportRepo.exportBufferGateIn(companyId, branchId, startDate, endDate);
+//	    List<Object[]> emptyMovementOut = commonReportRepo.exportEmptyMovementOut(companyId, branchId, startDate, endDate);
+//	    List<Object[]> stuffTally = commonReportRepo.findStuffTallyContainers(companyId, branchId, startDate, endDate);
+//	    List<Object[]> exportLDD = commonReportRepo.findExpLDDInventoryContainers(companyId, branchId, endDate);
+//	    List<Object[]> emptyGateIn = commonReportRepo.findExportEMptyContainerGateIn(companyId, branchId, startDate, endDate);
 	    List<Object[]> exportInventory = dashboardRepository.getInventoryExportReport(companyId, branchId);
+	    
+	    
+	    List<Object[]> exportBuffer = dashboardRepository.exportBufferGateIn(companyId, branchId, startDate);
+	    List<Object[]> emptyMovementOut = dashboardRepository.exportEmptyMovementOut(companyId, branchId, startDate);
+	    List<Object[]> stuffTally = dashboardRepository.findStuffTallyContainers(companyId, branchId, startDate);
+	    List<Object[]> exportLDD = dashboardRepository.findExpLDDInventoryContainers(companyId, branchId);
+	    List<Object[]> emptyGateIn = dashboardRepository.findExportEMptyContainerGateIn(companyId, branchId, startDate);
 	    
 	    
 	    List<Object[]> exportBufferLastWeek= dashboardRepository.exportBufferGateInLastWeek(companyId, branchId);
@@ -4957,7 +4991,7 @@ public class DashBoardService {
 		
 	    List<Object[]> invoiceDetails = dashboardRepository.findInvoiceSummary(companyId, branchId, startDate, endDate);
 	    List<Object[]> totalCollections = dashboardRepository.findInvoiceTotalCollection(companyId, branchId, startDate, endDate);
-	    List<Object[]> outStanding = dashboardRepository.findOutstandingInvoices(companyId, branchId, startDate, endDate);
+	    List<Object[]> outStanding = dashboardRepository.findOutstandingInvoices(companyId, branchId);
 	    
 	    List<Object[]> advance = dashboardRepository.findInvoiceAdvance(companyId, branchId, startDate, endDate);
 	  
@@ -4969,7 +5003,8 @@ public class DashBoardService {
 	    
 	    List<Object []> getDataForPieChart =dashboardRepository.findPaymentSummaryForPieChart(companyId, branchId, startDate, endDate);
 	    
-	    List<Object []> top10OutStanding =dashboardRepository.findTopOutstandingInvoices(companyId, branchId, startDate, endDate);
+//	    List<Object []> top10OutStanding =dashboardRepository.findTopOutstandingInvoices(companyId, branchId, startDate, endDate);
+	    List<Object []> top10OutStanding =dashboardRepository.findTopOutstandingInvoices(companyId, branchId);
 	    
 	    
 	    

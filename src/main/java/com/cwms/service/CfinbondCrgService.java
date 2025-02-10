@@ -326,9 +326,9 @@ System.out.println("item.getInbondCifValue()____________________________________
 						crgDetails.setYardPackages(item.getYardPackages());
 
 						String yardLocationId = item.getEditedBy();
-						String[] parts = yardLocationId.split("-");
+						String[] parts = yardLocationId.split("~");
 
-						if (parts.length == 3) {
+						if (parts.length > 2) {
 							String yardLocation = parts[0]; // EYARD01
 							String blockId = parts[1]; // A
 							String cellNoRow = parts[2]; // 2
@@ -744,9 +744,12 @@ System.out.println("item.getInbondCifValue()____________________________________
 						crgDetails.setYardPackages(item.getYardPackages());
 
 						String yardLocationId = item.getEditedBy();
-						String[] parts = yardLocationId.split("-");
+						String[] parts = yardLocationId.split("~");
 
-						if (parts.length == 3) {
+						
+						System.out.println("yardLocationId_____________________" + yardLocationId);
+						
+						if (parts.length > 2) {
 							String yardLocation = parts[0]; // EYARD01
 							String blockId = parts[1]; // A
 							String cellNoRow = parts[2]; // 2
@@ -760,7 +763,18 @@ System.out.println("item.getInbondCifValue()____________________________________
 							crgDetails.setBlockId(blockId);
 							crgDetails.setCellNoRow(cellNoRow);
 						}
+//						else
+//						{
+//							crgDetails.setYardLocationId(item.getYardLocationId());
+//							crgDetails.setBlockId(item.getBlockId());
+//							crgDetails.setCellNoRow(item.getCellNoRow());
+//						}
 
+//						crgDetails.setYardLocationId(item.getYardLocationId());
+//						crgDetails.setBlockId(item.getBlockId());
+//						crgDetails.setCellNoRow(item.getCellNoRow());
+						
+						
 						CfinbondcrgDtl savedDtl = cfinbondcrgDtlRepo.save(crgDetails);
 
 						if (savedDtl != null) {
@@ -1161,9 +1175,9 @@ System.out.println("item.getInbondCifValue()____________________________________
 							findCfBondCrgData.setCargoDuty(totalCargo);
 							
 							String yardLocationId = item.getEditedBy();
-							String[] parts = yardLocationId.split("-");
+							String[] parts = yardLocationId.split("~");
 
-							if (parts.length == 3) {
+							if (parts.length > 2) {
 								String yardLocation = parts[0]; // EYARD01
 								String blockId = parts[1]; // A
 								String cellNoRow = parts[2]; // 2
@@ -1177,6 +1191,10 @@ System.out.println("item.getInbondCifValue()____________________________________
 								findCfBondCrgDTLData.setBlockId(blockId);
 								findCfBondCrgDTLData.setCellNoRow(cellNoRow);
 							}
+							
+//							findCfBondCrgDTLData.setYardLocationId(item.getYardLocationId());
+//							findCfBondCrgDTLData.setBlockId(item.getBlockId());
+//							findCfBondCrgDTLData.setCellNoRow(item.getCellNoRow());
 
 							findCfBondCrgDTLData.setInBondedPackages(item.getInBondedPackages());
 							findCfBondCrgDTLData.setInbondCargoDuty(item.getInbondCargoDuty());
@@ -1264,9 +1282,9 @@ System.out.println("item.getInbondCifValue()____________________________________
 							crgDetails.setYardPackages(item.getYardPackages());
 
 							String yardLocationId = item.getEditedBy();
-							String[] parts = yardLocationId.split("-");
+							String[] parts = yardLocationId.split("~");
 
-							if (parts.length == 3) {
+							if (parts.length > 2) {
 								String yardLocation = parts[0]; // EYARD01
 								String blockId = parts[1]; // A
 								String cellNoRow = parts[2]; // 2
