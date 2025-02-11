@@ -5488,7 +5488,7 @@ public class ImportReportsService {
 		        companyFont.setFontHeightInPoints((short)18);
 		        companyStyle.setFont(companyFont);
 		        companyCell.setCellStyle(companyStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9));
 
 		        // Add Branch Address (Centered)
 		        Row branchRow = sheet.createRow(1);
@@ -5501,7 +5501,7 @@ public class ImportReportsService {
 		        branchFont.setFontHeightInPoints((short) 12);
 		        branchStyle.setFont(branchFont);
 		        branchCell.setCellStyle(branchStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 9));
 
 		        
 		        Row branchRow1 = sheet.createRow(2);
@@ -5514,7 +5514,7 @@ public class ImportReportsService {
 		        branchFont1.setFontHeightInPoints((short) 12);
 		        branchStyle1.setFont(branchFont1);
 		        branchCell1.setCellStyle(branchStyle1);
-		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 9));
 	
 		        // Add Report Title "Bond cargo Inventory Report"
 		        Row reportTitleRow = sheet.createRow(3);
@@ -5531,7 +5531,7 @@ public class ImportReportsService {
 		        reportTitleFont.setColor(IndexedColors.BLACK.getIndex()); // Set font color to red
 		        reportTitleStyle.setFont(reportTitleFont);
 		        reportTitleCell.setCellStyle(reportTitleStyle);
-		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, columnsHeader.length - 1));
+		        sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 9));
 		        		        
 		        Row reportTitleRow1 = sheet.createRow(4);
 		        Cell reportTitleCell1 = reportTitleRow1.createCell(0);

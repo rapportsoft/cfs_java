@@ -681,8 +681,10 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                 "AND a.sa = g.Party_Id    " +
                 "WHERE a.company_id = :companyId " +
                 "AND a.branch_id = :branchId " +
-                "AND (a.Stuff_req_Id = '' OR a.Stuff_Req_Date > :endDate) " +
-                "AND a.Empty_Pass_Id = '' " +
+//                "AND (a.Stuff_req_Id = '' OR a.Stuff_Req_Date > :endDate) " +
+//                "AND a.Empty_Pass_Id = '' " +
+"AND (a.stuff_req_id = '' OR stuff_req_id IS NULL OR  a.stuff_req_date > :endDate) " +
+"AND (a.empty_pass_id = '' OR a.empty_pass_id IS NULL ) " +
                 "AND a.Gate_In_Date < :endDate " +
                 "AND a.status = 'A' " +
                 "AND a.Container_Status = 'MTY' " +
@@ -2430,7 +2432,7 @@ List<Object[]> findManualConContainerDetails(
 				    "a.importer_name, " + 
 				    "p.party_name, " + 
 				    "a.BOE_No, " + 
-				    "DATE_FORMAT(a.boe_date, '%d-%b-%Y %H:%i') AS boe_date, " + 
+				    "DATE_FORMAT(a.boe_date, '%d-%b-%Y') AS boe_date, " + 
 				    "a.NOC_Packages, " + 
 				    "a.Gross_Weight, " + 
 				    "a.Area, " + 

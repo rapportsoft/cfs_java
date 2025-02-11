@@ -1796,7 +1796,7 @@ public class CommonReportsService {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Shipping Agent Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Shipping Agent Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -2158,6 +2158,8 @@ public class CommonReportsService {
         }
         else 
         {
+        	
+        	System.out.println(" slected reort              :" +selectedReport );
         	 try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
  		    {
  		    	System.out.println("startDate_______________________"+startDate);
@@ -2545,7 +2547,7 @@ public class CommonReportsService {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Shipping Agent Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Shipping Agent Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		

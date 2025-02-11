@@ -885,8 +885,8 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								        " FROM cfexpinventory a " +
 								        " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 								        " AND a.Status = 'A' " +
-								        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
-								        " AND (a.Stuff_Req_id != '' AND a.Stuff_Req_Date < CURRENT_TIMESTAMP) " +
+								        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
+								        " AND (a.Stuff_Req_id != '' OR a.Stuff_Req_id IS NOT NULL AND a.Stuff_Req_Date < CURRENT_TIMESTAMP) " +
 								        " AND a.Container_Status = 'MTY' " +
 								        " AND a.cycle != 'Hub' " +
 								        " GROUP BY a.container_no) " +
@@ -895,7 +895,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								        " FROM cfexpinventory a " +
 								        " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 								        " AND a.Status = 'A' " +
-								        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
+								        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL  OR a.Gate_Out_Date > CURRENT_TIMESTAMP) " +
 								        " AND a.Container_Status IN ('LDD', 'FCL') " +
 								        " GROUP BY a.container_no)", 
 								nativeQuery = true)
