@@ -56,11 +56,14 @@ public class ImportInvoiceController {
 
 		Map<String,String> invdtl = importinvoiceservice.getInvoiceDetails(cid, bid,invoiceNo);
 		
-		String billingPartyAddress = invdtl.get("billingPartyAddress1")+" "+invdtl.get("billingPartyAddress2")+" "+invdtl.get("billingPartyAddress3");
-		String consigneeAddress =  invdtl.get("consigneeAddress1")+" "+invdtl.get("consigneeAddress2")+" "+invdtl.get("consigneeAddress3");
-		String branchAddress = compdtl.get("baddr1")+" "+compdtl.get("baddr2")+" "+compdtl.get("baddr3");
+		String billingPartyAddress = invdtl.getOrDefault("billingPartyAddress1","")+" "+invdtl.getOrDefault("billingPartyAddress2","")+" "+invdtl.getOrDefault("billingPartyAddress3","");
+		String consigneeAddress =  invdtl.getOrDefault("consigneeAddress1","")+" "+invdtl.getOrDefault("consigneeAddress2","")+" "+invdtl.getOrDefault("consigneeAddress3","");
+//		String branchAddress = compdtl.get("baddr1")+" "+compdtl.get("baddr2")+" "+compdtl.get("baddr3");
+		String branchAddress = compdtl.getOrDefault("baddr1","")+" "+compdtl.getOrDefault("baddr2","")+" "+compdtl.getOrDefault("baddr3","");
 		if(consigneeAddress.contains("null"))
 			consigneeAddress="";
+		
+	
 //		System.out.println(invdtl.toString());
 		
 		Map<String,String> opdtlmap = new HashMap<>();
@@ -196,6 +199,10 @@ public class ImportInvoiceController {
 		context.setVariable("PAN", invdtl.get("PAN"));
 		context.setVariable("consignee", invdtl.get("consignee"));
 		context.setVariable("IRN", invdtl.get("IRN"));
+		context.setVariable("createdBy", invdtl.get("createdBy"));
+		
+		String isBos1 =invdtl.get("isBOS");
+		context.setVariable("isBOS", (isBos1 != null) ? isBos1 : "N");
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
@@ -699,11 +706,14 @@ public class ImportInvoiceController {
 
 		Map<String,String> invdtl = importinvoiceservice.getInvoiceDetails1(cid, bid,invoiceNo);
 		
+//		String branchAddress = compdtl.get("baddr1")+" "+compdtl.get("baddr2")+" "+compdtl.get("baddr3");
 		String billingPartyAddress = invdtl.get("billingPartyAddress1")+" "+invdtl.get("billingPartyAddress2")+" "+invdtl.get("billingPartyAddress3");
 		String consigneeAddress =  invdtl.get("consigneeAddress1")+" "+invdtl.get("consigneeAddress2")+" "+invdtl.get("consigneeAddress3");
 		if(consigneeAddress.contains("null"))
 			consigneeAddress="";
 //		System.out.println(invdtl.toString());
+		if(billingPartyAddress.contains("null"))
+			billingPartyAddress="";
 		
 		Map<String,String> opdtlmap = new HashMap<>();
 		
@@ -865,6 +875,11 @@ public class ImportInvoiceController {
 		context.setVariable("area", invdtl.get("area"));
 		context.setVariable("cif", invdtl.get("cif"));
 		context.setVariable("duty", invdtl.get("duty"));
+		
+		String isBos1 =invdtl.get("isBOS");
+		context.setVariable("isBOS", (isBos1 != null) ? isBos1 : "N");
+	
+		context.setVariable("createdBy", invdtl.get("createdBy"));
 		
 		
 		context.setVariable("list1",list1);

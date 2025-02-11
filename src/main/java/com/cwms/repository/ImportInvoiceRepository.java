@@ -15,7 +15,7 @@ public interface ImportInvoiceRepository extends JpaRepository<AssessmentSheet, 
 	@Query(value = "select distinct a.container_no,DATE_FORMAT(a.approved_date,'%d %b %Y %T'),a.party_id,b.party_name,b.pan_no,ba.address_1,ba.address_2,ba.address_3,ba.pin,h.jar_dtl_desc State,"
 			+ "	j.jar_dtl_desc Statecode,ba.gst_no,a.lock_down,u.user_name,v.user_name,a.bill_amt, a.IRN,d.party_name,s.Importer_Name,fa.address_1,fa.address_2,fa.address_3,"
 			+ "	fa.pin,i.jar_dtl_desc,k.jar_dtl_desc,fa.gst_no,sl.party_name,ag.party_name, s.IGST,s.CGST,s.SGST,s.sez,a.Mail_Flag,DATE_FORMAT(a.Invoice_Date,'%d/%m/%Y'),b.FINANCE_MAIL,a.Created_By,"
-			+ "	s.Last_Invoice_No, igmcrg.importer_address1 ,igmcrg.importer_address2,igmcrg.importer_address3,DATE_FORMAT(s.invoice_upto_date,'%d/%m/%Y %H:%i:%s') "
+			+ "	s.Last_Invoice_No, igmcrg.importer_address1 ,igmcrg.importer_address2,igmcrg.importer_address3,DATE_FORMAT(s.invoice_upto_date,'%d/%m/%Y %H:%i:%s'), s.is_bos "
 			+ "	from cfinvsrv  a left outer join cfassesmentsheet s "
 			+ "	on a.Company_Id = s.Company_Id and a.Branch_Id = s.Branch_Id  and a.Invoice_No = s.Invoice_No and a.Container_no = s.Assesment_Id and a.Profitcentre_Id = s.Profitcentre_Id "
 			+ "	left outer join party b on a.company_id=b.company_id and b.party_id=a.party_id left outer join partyaddress ba on a.company_id=ba.company_id and ba.party_id=a.party_id and ba.sr_no = a.Acc_Sr_no  left outer join jar_detail h on ba.company_id=h.company_id"

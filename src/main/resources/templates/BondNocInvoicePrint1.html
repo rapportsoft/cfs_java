@@ -236,12 +236,12 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td style="width: 40%;border-right: 2px solid black">
+				<td style="width: 41%;border-right: 2px solid black">
 					<!-- Add the following Thymeleaf code to include the image in your HTML -->
-					<img th:src="@{file://C:/CFSNAV/Logos/logo.png}"
+					<img th:src="@{src/main/resources/static/image/logo.png}"
 						alt=" Logo" style="display: block;width:250px;" />
 				</td>
-				<td style="width: 60%;">
+				<td style="width: 59%;">
 
 
 <!-- 
@@ -303,7 +303,8 @@
 	
 	
 	<div style="text-align:center;width:80%">
-						<span style="font-weight: bold; font-size: 16px; color: rgb(0, 0, 0);">TAX INVOICE</span>
+						<span style="font-weight: bold; font-size: 16px; color: rgb(0, 0, 0);" 
+						 th:text="${isBOS == 'Y' ? 'BILL OF SUPPLY' : 'TAX INVOICE'}"></span>
 				
 					</div>
 
@@ -363,7 +364,7 @@
 
         <!-- Image Column -->
         <td style="width: 30%; text-align: center; vertical-align: middle;">
-            <img th:src="@{file://C:/CFSNAV/Logos/sampleQR.jpeg}" style="width: 150px; height: 150px;" alt="QR Code" />
+            <img th:src="@{src/main/resources/static/image/sampleQR.jpeg}" style="width: 150px; height: 150px;" alt="QR Code" />
         </td>
     </tr>
 </table>
@@ -742,7 +743,7 @@
 
 				<th  
 					style="height: 12px; width: 30%;  border: 1px solid white; font-size: 12px !important;  text-align: center;">
-					Prepared By : <span th:text="${uname}"></span></th>
+					Prepared By : <span th:text="${createdBy}"></span></th>
 				<th style="height: 12px; width: 1%;  border: 1px solid white;"><b></b></th>
 			</tr>
 		</thead>

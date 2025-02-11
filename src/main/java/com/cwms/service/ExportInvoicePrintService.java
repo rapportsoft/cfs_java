@@ -95,6 +95,7 @@ public class ExportInvoicePrintService {
         	invDtl.put("Sgst",String.valueOf(fields[31]));
 //        	invDtl.put("sez",(String)fields[32]);    how to convert char to String 
         	
+        	invDtl.put("createdBy",(String)fields[44]);
         	invDtl.put("isBOS",String.valueOf(fields[46]));
         	
         	
@@ -322,6 +323,8 @@ public Map<String, String> getcartingInvoiceDetails(String companyId,
     	invDtl.put("AgAddress3",(String)fields[45]);
     	invDtl.put("Agpin",(String)fields[46]);
     	
+    	invDtl.put("createdBy",(String)fields[42]);
+    	
     	
     	
     	
@@ -412,5 +415,117 @@ public boolean sacNoAndTaxpercMatch(String sac ,String taxperc1 ,List<Map<String
 	
 	
 };
+
+//container backttown service 
+public Map<String,List<Map<String,String>>> getContainerAndSbDetailsbackttown(String comapnyId, String branchId,String sbTransID,String assesmentId) {
+	
+	List<Object[]> cnSbdtl = exportinvoiceprintRepo.getContainerAndSbDetailsbackttown(comapnyId, branchId, sbTransID, assesmentId);
+	
+	List<Map<String,String>> conList = new ArrayList<>();
+	List<Map<String,String>> sbList = new ArrayList<>();
+	Set<String> conset = new HashSet<>();
+	Set<String> sbset = new HashSet<>();
+	if(!cnSbdtl.isEmpty()) {
+		System.out.println("not empty");
+
+		for (Object[] row : cnSbdtl) {
+			
+			Map<String ,String> conMap = new HashMap<>();
+			Map<String ,String> sbMap = new HashMap<>();
+			
+			
+			String containerNo = (String)row[0];
+			String containerSize =(String)row[1];
+			String containerType =(String)row[2];
+			String vesselName =(String)row[3];
+			String viaNo =(String)row[4];
+			String GateInDate =(String)row[5];
+			String StufftallyDate = (String) row[6];
+			String containerInvoiceType = (String) row[7];
+			
+			containerInvoiceType= (containerInvoiceType != null && !containerInvoiceType.trim().isEmpty() 
+				                    && containerInvoiceType.toUpperCase().equals("HAZ")) 
+				                    ? "Yes" 
+				                    : "No";
+//			containerInvoiceType =containerInvoiceType.toUpperCase().equals("Haz".toUpperCase()) ?  "Yes" : "No";
+			
+			if(!conset.contains(containerNo)) {
+				conMap.put("containerNo",containerNo);
+				conMap.put("containerSize",containerSize);
+				conMap.put("containerType",containerType);
+				conMap.put("vesselName",vesselName);
+				conMap.put("viaNo",viaNo);
+				conMap.put("GateInDate",GateInDate);
+				conMap.put("StufftallyDate",StufftallyDate);
+				conMap.put("containerInvoiceType",containerInvoiceType);
+				
+			
+				
+				conset.add(containerNo);
+				conList.add(conMap);
+				
+				
+			}
+			
+	
+			
+			
+			String SBNO				= (String)row[8];
+			String SBDATE			= (String)row[9];
+			String CartingDate		= (String)row[10];
+			BigDecimal SbWeight1	= (BigDecimal)row[11];
+			
+			String SbWeight 		= (SbWeight1 != null) ? SbWeight1.toString() : "0";
+			BigDecimal Amount1		= (BigDecimal)row[12];
+			String Amount 			= (Amount1 != null) ? Amount1.toString() : "0";
+			BigDecimal Area1 		= (BigDecimal)row[13];
+			String Area				= (Area1 != null) ? Area1.toString() : "0";
+			String commoditydesc	= (String)row[14];
+			String Gateoutdate    	= (String)row[15];
+			String Exportername     = (String)row[16];
+			
+			
+			if(!sbset.contains(SBNO)) {
+				sbMap.put("SBNO",SBNO);
+				sbMap.put("SBDATE",SBDATE);
+				sbMap.put("CartingDate",CartingDate);
+				sbMap.put("SbWeight",SbWeight);
+				sbMap.put("Amount",Amount);
+				sbMap.put("Area",Area);
+				sbMap.put("commoditydesc",commoditydesc);
+				sbMap.put("Gateoutdate",Gateoutdate);
+				sbMap.put("Exportername",Exportername);
+				
+				sbset.add(SBNO);
+				sbList.add(sbMap);
+				
+				
+			}
+			
+			
+			
+			
+			
+			}
+		
+		
+		
+		
+		
+		}
+	
+
+		Map<String,List<Map<String,String>>> result = new HashMap<>();
+		
+		result.put("conList", conList);
+		
+		result.put("sbList", sbList);
+		
+				
+		return result;
+	
+	
+	
+}
 	
 }

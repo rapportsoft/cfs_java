@@ -66,6 +66,9 @@ public class ImportInvoiceService {
         	invDtl.put("Sgst",String.valueOf(fields[30]));
 //        	invDtl.put("sez",(String)fields[30]);    how to convert char to String 
         	
+        	invDtl.put("isBOS",String.valueOf(fields[41]));
+        	invDtl.put("createdBy",(String)fields[35]);
+        	
         	
         	
 
@@ -140,7 +143,8 @@ public class ImportInvoiceService {
 //        	invDtl.put("sez",(String)fields[30]);    how to convert char to String 
         	
         	
-        	
+        	invDtl.put("isBOS",String.valueOf(fields[41]));
+        	invDtl.put("createdBy",(String)fields[35]);
 
    	
         }

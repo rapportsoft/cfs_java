@@ -87,5 +87,14 @@ public interface ExportInvoicePrintRepository  extends JpaRepository<ExportStuff
 	        @Param("branchId") String branchId,  
 	        @Param("invoiceNo") String invoiceNo);
 	
+	@Query(value = "select distinct a.container_no, a.container_size, a.container_type, '' , '' , DATE_FORMAT(a.Gate_In_Date,'%d-%m-%Y'), DATE_FORMAT(a.Stuff_Tally_Date,'%d-%m-%Y'), '', e.SB_No , DATE_FORMAT( e.SB_Date, '%d %b %Y' ) , DATE_FORMAT(a.Min_Carting_Trans_Date, '%d %b %Y' ), ROUND(g.Gross_Weight, 2 ), ROUND(g.FOB,2 ) Amount , ROUND(SUM(f.Area_Occupied),2) , e.Commodity,IFNULL(DATE_FORMAT(a.invoice_Cal_Date,'%d %b %Y' ),''),a.Exporter_Name  "
+			+ "from cfassesmentsheet a left outer join cfbacktotown e on e.company_id=a.company_id  and e.branch_id=a.branch_id and a.Invoice_No=e.Invoice_No and e.Assesment_Id = a.Assesment_Id and e.Profitcentre_Id = a.Profitcentre_Id and a.sb_no = e.SB_No left outer join cfcrtg f on e.Company_Id=f.Company_Id  and e.Branch_Id=f.Branch_Id and e.Profitcentre_Id = f.Profitcentre_Id and e.SB_Trans_Id = f.SB_Trans_Id and e.SB_No = f.SB_No and e.SB_Line_No = f.SB_Line_No "
+			+ "left outer join cfsbcrg g on e.Company_Id=g.Company_Id  and e.Branch_Id=g.Branch_Id and  e.Profitcentre_Id = g.Profitcentre_Id and e.SB_Trans_Id = g.SB_Trans_Id and e.SB_No = g.SB_No and e.SB_Line_No = g.SB_Line_No where a.Company_Id=:companyId AND  a.branch_id=:branchId and a.status='A' and a.SB_Trans_Id =:sbTransID  and a.assesment_id = :assesmentId group by a.container_no , e.sb_trans_Id, e.sb_No  order by a.container_no ASC",nativeQuery = true)
+	List<Object[]> getContainerAndSbDetailsbackttown(@Param("companyId") String companyId, 
+            @Param("branchId") String branchId,
+            @Param("sbTransID") String sbTransID,
+            @Param("assesmentId") String assesmentId
+            );
+	
 
 }
