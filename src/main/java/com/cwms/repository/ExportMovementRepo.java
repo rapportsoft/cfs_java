@@ -22,7 +22,18 @@ public interface ExportMovementRepo extends JpaRepository<ExportMovement, String
 List<Object[]> getDataForGatePass(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val,@Param("type") String type);
 
 
-	
+@Query(value = "SELECT DISTINCT e.containerNo, e.movementReqId " +
+        "FROM ExportMovement e " +
+        "WHERE e.companyId = :cid " +
+        "AND e.branchId = :bid " +
+        "AND e.status != 'D' " +
+        "AND e.movReqType IN :type " +
+        "AND (e.gateOutId IS NULL OR e.gateOutId = '') " +
+        "AND (e.gatePassNo IS NULL OR e.gatePassNo = '') " +
+        "AND (:val IS NULL OR :val = '' OR e.containerNo LIKE CONCAT('%', :val, '%'))")
+List<Object[]> getDataForGatePass1(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val,@Param("type") List<String> type);
+
+
 	
 	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, st.onAccountOf, st.viaNo, st.voyageNo ,E.vesselId, vs.vesselName, st.stuffTallyId, E.gateInId, st.agentSealNo, st.customsSealNo, st.totalGrossWeight, st.sbNo, st.pod, st.pol, st.sbDate, st.stuffId, st.stuffDate,st.stuffTallyDate, st.stuffTallyLineId "          
 	        + "FROM ExportInventory E "

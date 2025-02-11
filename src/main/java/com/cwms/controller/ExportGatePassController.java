@@ -94,15 +94,33 @@ public class ExportGatePassController {
 	@GetMapping("/getMovementData")
 	public ResponseEntity<?> getMovementData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam(name = "val", required = false) String val,@RequestParam("type") String type) {
+		
+		if("Buffer".equals(type)) {
+			
+			List<String> type1 = new ArrayList<>();
+			type1.add("Buffer");
+			type1.add("ONWH");
+			List<Object[]> data = exportMovementRepo.getDataForGatePass1(cid, bid, val, type1);
 
-		List<Object[]> data = exportMovementRepo.getDataForGatePass(cid, bid, val, type);
+			if (data.isEmpty()) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			}
 
-		if (data.isEmpty()) {
-			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			return new ResponseEntity<>(data, HttpStatus.OK);
+		}
+		else {
+			List<Object[]> data = exportMovementRepo.getDataForGatePass(cid, bid, val, type);
+
+			if (data.isEmpty()) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			}
+
+			return new ResponseEntity<>(data, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<>(data, HttpStatus.OK);
+		
 	}
+
 
 	@GetMapping("/getSelectedMovementData")
 	public ResponseEntity<?> getSelectedMovementData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
