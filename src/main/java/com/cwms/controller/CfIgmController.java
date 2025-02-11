@@ -605,7 +605,7 @@ public class CfIgmController {
 							cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId(), cn.getContainerNo(),
 							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getTypeOfContainer(),
 							cn.getContainerStatus(), cn.getTemperature(), cn.getContainerWeight(), cn.getGrossWt(),
-							cn.getNoOfPackages(), cn.getCustomsSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
+							cn.getNoOfPackages(), cn.getContainerSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
 							cn.getScanningDoneStatus(), cn.getOdcStatus(), cn.getLowBed(), user, new Date(),
 							cn.getHoldRemarks(), cn.getHoldStatus(), new Date(), user, existingRecord1.getReleaseDate(),
 							existingRecord1.getReleaseAgent());
@@ -614,7 +614,7 @@ public class CfIgmController {
 							cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId(), cn.getContainerNo(),
 							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getTypeOfContainer(),
 							cn.getContainerStatus(), cn.getTemperature(), cn.getContainerWeight(), cn.getGrossWt(),
-							cn.getNoOfPackages(), cn.getCustomsSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
+							cn.getNoOfPackages(), cn.getContainerSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
 							cn.getScanningDoneStatus(), cn.getOdcStatus(), cn.getLowBed(), user, new Date(),
 							cn.getHoldRemarks(), cn.getHoldStatus(), existingRecord1.getHoldDate(),
 							existingRecord1.getHoldingAgentName(), new Date(), user);
@@ -623,7 +623,7 @@ public class CfIgmController {
 							cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId(), cn.getContainerNo(),
 							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getTypeOfContainer(),
 							cn.getContainerStatus(), cn.getTemperature(), cn.getContainerWeight(), cn.getGrossWt(),
-							cn.getNoOfPackages(), cn.getCustomsSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
+							cn.getNoOfPackages(), cn.getContainerSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
 							cn.getScanningDoneStatus(), cn.getOdcStatus(), cn.getLowBed(), user, new Date(),
 							existingRecord1.getHoldRemarks(), existingRecord1.getHoldStatus(),
 							existingRecord1.getHoldDate(), existingRecord1.getHoldingAgentName(),

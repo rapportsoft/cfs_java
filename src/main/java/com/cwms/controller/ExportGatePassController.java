@@ -397,7 +397,7 @@ public class ExportGatePassController {
 
 		List<ExportGatePass> result = new ArrayList<>();
 
-		if ("CLP".equals(type) || "PortRn".equals(type) || "Buffer".equals(type)) {
+		if ("CONT".equals(type) || "MOVE".equals(type) || "BOWC".equals(type)) {
 			result = exportgatepassrepo.getDataByGatePassId(cid, bid, val);
 		}
 		else if("CRG".equals(type)) {
@@ -782,7 +782,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 				System.out.println("g :3 "+g);
 				System.out.println("gatePass.getTransType() First : "+gatePass.getTransType());
 
-				if ("CLP".equals(gatePass.getTransType())) {
+				if ("CONT".equals(gatePass.getTransType())) {
 					ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, g.getMovementReqId(),
 							g.getContainerNo());
 
@@ -930,7 +930,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 				
 				
 				
-				else if ("Buffer".equals(gatePass.getTransType())) {
+				else if ("BOWC".equals(gatePass.getTransType())) {
 					ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, g.getMovementReqId(), g.getContainerNo());
 					System.out.println("mov : "+mov);
 					
@@ -1001,7 +1001,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 				
 				
 				
-				else if ("PortRn".equals(gatePass.getTransType())) {
+				else if ("MOVE".equals(gatePass.getTransType())) {
 					ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, g.getMovementReqId(),
 							g.getContainerNo());
 
@@ -1122,14 +1122,14 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 
 			System.out.println("gatePass.getTransType() : "+gatePass.getTransType());
 
-			if ("CLP".equals(gatePass.getTransType()) || "PortRn".equals(gatePass.getTransType())) {
+			if ("CONT".equals(gatePass.getTransType()) || "MOVE".equals(gatePass.getTransType())) {
 				System.out.println("Here CONT");
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, HoldNextIdD1);
 			} else if ("CRG".equals(gatePass.getTransType())) {
 				System.out.println("Here CRG");
 				result = exportgatepassrepo.getDataByGatePassIdFORCRG(cid, bid, HoldNextIdD1);
 			}
-			else if ("Buffer".equals(gatePass.getTransType())) {
+			else if ("BOWC".equals(gatePass.getTransType())) {
 				System.out.println("Here BOWC");
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, HoldNextIdD1);
 			}
@@ -1194,12 +1194,12 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 
 			List<ExportGatePass> result = new ArrayList<>();
 
-			if ("CLP".equals(gatePass.getTransType()) || "PortRn".equals(gatePass.getTransType())) {
+			if ("CONT".equals(gatePass.getTransType()) || "MOVE".equals(gatePass.getTransType())) {
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, gatePass.getGatePassId());
 			} else if ("CRG".equals(gatePass.getTransType())) {
 				result = exportgatepassrepo.getDataByGatePassIdFORCRG(cid, bid, gatePass.getGatePassId());
 			}
-			else if ("Buffer".equals(gatePass.getTransType())) {
+			else if ("BOWC".equals(gatePass.getTransType())) {
 				result = exportgatepassrepo.getDataByGatePassId(cid, bid, gatePass.getGatePassId());
 			}
 
@@ -1261,7 +1261,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 					return new ResponseEntity<>("Gate pass data not found", HttpStatus.CONFLICT);
 				}
 
-                if("CLP".equals(gateOut.getTransType())) {
+                if("CONT".equals(gateOut.getTransType())) {
     				ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, exist.getMovementReqId(),
     						exist.getContainerNo());
 
@@ -1416,7 +1416,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
                 
                 
                 
-                if("Buffer".equals(gateOut.getTransType())) {
+                if("BOWC".equals(gateOut.getTransType())) {
     				ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, exist.getMovementReqId(),
     						exist.getContainerNo());
 
@@ -1498,7 +1498,7 @@ System.out.println("gatePass.getGatePassId() : "+gatePass.getGatePassId());
 
                 
                 
-                if("PortRn".equals(gateOut.getTransType())) {
+                if("MOVE".equals(gateOut.getTransType())) {
     				ExportMovement mov = exportMovementRepo.getSingleDataForGatePass1(cid, bid, exist.getMovementReqId(),
     						exist.getContainerNo());
 

@@ -248,7 +248,7 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 	           "c.containerWeight = :containerWeight, " +
 	           "c.grossWt = :grossWt, " +
 	           "c.noOfPackages = :noOfPackages, " +
-	           "c.customsSealNo = :customsSealNo, " +
+	           "c.containerSealNo = :customsSealNo, " +
 	           "c.upTariffDelMode = :upTariffDelMode, " +
 	           "c.gateOutType = :upTariffDelMode, " +
 	           "c.scannerType = :scannerType, " +
