@@ -1569,12 +1569,12 @@ public class ExportInvoiceService {
 
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+						String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
 								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
 										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
 												: assessment.getOthPartyId();
 
-						String billingAdd = "IMP".equals(assessment.getBillingParty())
+						String billingAdd = "EXP".equals(assessment.getBillingParty())
 								? String.valueOf(assessment.getImpSrNo())
 								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
 										: "FWR".equals(assessment.getBillingParty())
@@ -3770,12 +3770,12 @@ public class ExportInvoiceService {
 
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+						String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
 								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
 										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
 												: assessment.getOthPartyId();
 
-						String billingAdd = "IMP".equals(assessment.getBillingParty())
+						String billingAdd = "EXP".equals(assessment.getBillingParty())
 								? String.valueOf(assessment.getImpSrNo())
 								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
 										: "FWR".equals(assessment.getBillingParty())
@@ -4963,12 +4963,12 @@ public class ExportInvoiceService {
 
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+						String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
 								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
 										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
 												: assessment.getOthPartyId();
 
-						String billingAdd = "IMP".equals(assessment.getBillingParty())
+						String billingAdd = "EXP".equals(assessment.getBillingParty())
 								? String.valueOf(assessment.getImpSrNo())
 								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
 										: "FWR".equals(assessment.getBillingParty())
@@ -12661,7 +12661,7 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			} else {
 
 				o.setTdsDeductee("CHA".equals(tdsDeductee) ? o.getCha()
-						: "IMP".equals(tdsDeductee) ? o.getImporterId()
+						: "EXP".equals(tdsDeductee) ? o.getImporterId()
 								: "FWR".equals(tdsDeductee) ? o.getOnAccountOf() : o.getOthPartyId());
 			}
 			o.setBillAmt(billAmt.get());
