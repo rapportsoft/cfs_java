@@ -417,7 +417,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        "AND a.branch_id = c.branch_id AND a.gate_out_id = c.gate_out_id " +
 					        "AND c.container_no = a.container_no " +
 					        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
-					        "AND a.Status = 'A' AND a.gate_out_date BETWEEN :startDate AND CURRENT_DATE " +
+					        "AND a.Status = 'A' AND a.gate_out_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
 					        "AND a.trans_type IN ('CONT', 'MOVE', 'BOWC') " +
 					        "AND c.mov_req_type IN ('CLP', 'Buffer', 'ONWH') " +
 					        "AND a.Profitcentre_Id = 'N00004' " +
