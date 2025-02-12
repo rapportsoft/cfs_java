@@ -326,6 +326,24 @@ public class Cfinvsrvanx implements Cloneable {
 	
 	@Column(name = "Free_Days",precision = 8,scale = 0)
 	private BigDecimal freeDays = BigDecimal.ZERO;
+	
+	@Column(name = "Chargable_Days",precision = 8,scale = 0)
+	private BigDecimal chargableDays = BigDecimal.ZERO;
+
+	
+	
+
+
+	public BigDecimal getChargableDays() {
+		return chargableDays;
+	}
+
+
+
+	public void setChargableDays(BigDecimal chargableDays) {
+		this.chargableDays = chargableDays;
+	}
+
 
 
 	public Cfinvsrvanx() {
