@@ -198,7 +198,7 @@ public class ExportReportsServiceReports {
 	            importDetails = exportOperationalReportRepo.getEquipmentActivityDetails(companyId, branchId);
 	            break;
 	            
-	        case "TRANSPORTER WISE TEUS REPORT":
+	        case "TRANSPORTER WISE TUES REPORT":
 	            importDetails = exportOperationalReportRepo.getTransporterWiseTuesReport(
 	                    companyId, branchId, startDate, endDate);
 	            break;

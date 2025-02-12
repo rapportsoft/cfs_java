@@ -75,11 +75,11 @@ List<Object[]> getAllAccountHolder(@Param("companyId") String companyId,
             "c.SB_No = b.SB_No AND " +
             "c.SB_Line_No = a.Line_No " +
             "LEFT OUTER JOIN party d ON a.Company_id = d.Company_id AND " +
-            "d.Party_Id = b.CHA " +
+            " d.Party_Id = b.CHA AND a.branch_id =d.branch_id " +
             "LEFT OUTER JOIN port p ON b.company_id = p.company_id AND " +
-            "b.pod = p.port_code " +
+            "b.pod = p.port_code AND b.branch_id =p.branch_id " +
             "LEFT OUTER JOIN party e ON b.Company_id = e.Company_id AND " +
-            "b.On_Account_Of = e.Party_Id " +
+            "b.On_Account_Of = e.Party_Id AND b.branch_id =e.branch_id " +
             "LEFT OUTER JOIN cfcrtg cr ON c.company_id = cr.company_id AND " +
             "c.branch_id = cr.branch_id AND " +
             "c.fin_year = cr.fin_year AND " +
@@ -150,9 +150,9 @@ List<Object[]> getCustomReport(
         "AND a.SB_Trans_Id = c.SB_Trans_Id " +
         "AND a.SB_No = c.SB_No " +
         "LEFT OUTER JOIN party m ON b.Company_Id = m.Company_Id " +
-        "AND b.On_Account_Of = m.Party_Id " +
+        "AND b.On_Account_Of = m.Party_Id AND b.branch_id =m.branch_id " +
         "LEFT OUTER JOIN party n ON b.Company_Id = n.Company_Id " +
-        "AND b.CHA = n.Party_Id " +
+        "AND b.CHA = n.Party_Id AND b.branch_id =n.branch_id " +
         "WHERE a.Company_Id = :companyId " +
         "AND a.Branch_Id = :branchId " +
         "AND a.Carting_Trans_Date BETWEEN :startDate AND :endDate " +
@@ -186,8 +186,8 @@ List<Object[]> findTruckWiseCartingReport(
         "AND a.Profitcentre_Id = b.Profitcentre_Id " +
         "AND a.Container_No = b.Container_No " +
         "AND a.Gate_In_Id = b.Gate_In_Id " +
-        "LEFT OUTER JOIN party m ON a.Company_Id = m.Company_Id AND a.SL = m.Party_Id " +
-        "LEFT OUTER JOIN party n ON a.Company_Id = n.Company_Id AND a.On_Account_Of = n.Party_Id " +
+        "LEFT OUTER JOIN party m ON a.Company_Id = m.Company_Id AND a.SL = m.Party_Id AND a.branch_id = m.branch_id " +
+        "LEFT OUTER JOIN party n ON a.Company_Id = n.Company_Id AND a.On_Account_Of = n.Party_Id AND a.branch_id = n.branch_id " +
         "WHERE a.Company_Id = :companyId " +
         "AND a.Branch_Id = :branchId " +
         "AND a.Container_No != '' " +
@@ -223,8 +223,8 @@ List<Object[]> findContainerDetails(
         "FROM cfgateout a " +
         "LEFT OUTER JOIN cfexpmovementreq c ON a.company_id = c.company_id AND a.branch_id = c.branch_id " +
         "AND a.gate_out_id = c.gate_out_id AND c.Container_no = a.Container_no AND c.Profitcentre_Id = a.Profitcentre_Id " +
-        "LEFT OUTER JOIN party m ON c.Company_Id = m.company_id AND c.On_Account_Of = m.party_id " +
-        "LEFT OUTER JOIN party n ON n.company_id = c.company_id AND c.shipping_line = n.party_id " +
+        "LEFT OUTER JOIN party m ON c.Company_Id = m.company_id AND c.On_Account_Of = m.party_id AND c.branch_id =m.branch_id " +
+        "LEFT OUTER JOIN party n ON n.company_id = c.company_id AND c.shipping_line = n.party_id AND n.branch_id =c.branch_id " +
         "LEFT OUTER JOIN cfstufftally d ON d.company_id = c.company_id AND d.branch_id = c.branch_id " +
         "AND d.movement_req_id = c.movement_req_id AND c.Container_no = d.Container_no AND d.Profitcentre_Id = c.Profitcentre_Id " +
         "LEFT OUTER JOIN vessel v ON a.Company_Id = v.Company_Id AND a.Vessel_Id = v.Vessel_Id " +
@@ -257,8 +257,8 @@ List<Object[]> findEmptyGateOutContainerDetails(
         "IFNULL(a.Gross_Weight, '0.00') AS Gross_Weight, " +
         "sl.Party_Name, a.Container_Search_Type, p.Party_Name, a.On_Account_Of " +
         "FROM cfcrtgcn a " +
-        "LEFT OUTER JOIN Party p ON a.Company_id = p.Company_Id AND a.On_Account_Of = p.Party_Id " +
-        "LEFT OUTER JOIN Party sl ON a.Company_id = sl.Company_Id AND a.shipping_agent = sl.Party_Id " +
+        "LEFT OUTER JOIN Party p ON a.Company_id = p.Company_Id AND a.branch_id =p.branch_id AND a.On_Account_Of = p.Party_Id " +
+        "LEFT OUTER JOIN Party sl ON a.Company_id = sl.Company_Id AND a.branch_id =sl.branch_id AND  a.shipping_agent = sl.Party_Id " +
         "LEFT OUTER JOIN cfcrtg b ON a.Company_Id = b.Company_Id AND a.Branch_Id = b.Branch_Id " +
         "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.Gate_In_Id = b.Gate_In_Id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.status = 'A' "+
@@ -303,10 +303,10 @@ List<Object[]> findReworkingContainerDetails(@Param("companyId") String companyI
 "    AND a.Profitcentre_Id = b.Profitcentre_Id " +
 "LEFT OUTER JOIN party p " +
 "    ON a.company_id = p.company_id " +
-"    AND a.On_Account_Of = p.Party_Id " +
+"    AND a.On_Account_Of = p.Party_Id AND a.branch_id =p.branch_id " +
 "LEFT OUTER JOIN party p1 " +
 "    ON a.company_id = p1.company_id " +
-"    AND a.SL = p1.Party_Id " +
+"    AND a.SL = p1.Party_Id AND a.branch_id =p1.branch_id " +
 "WHERE a.company_id = :companyId " +
 "  AND a.branch_id = :branchId " +
 "  AND a.Profitcentre_Id = 'N00004' " +
@@ -362,8 +362,8 @@ List<Object[]> fetchExporGateInAndGateOutDetails(
         "FROM cfcrtg a " +
         "LEFT OUTER JOIN cfsbcrg c ON c.Company_Id = a.Company_Id AND c.Branch_Id = a.Branch_Id AND c.SB_Trans_Id = a.SB_Trans_Id AND c.SB_Line_No = a.SB_Line_No AND c.SB_No = a.SB_No " +
         "LEFT OUTER JOIN cfsb b ON b.company_id = c.company_id AND b.Branch_Id = c.Branch_Id AND b.SB_Trans_Id = c.SB_Trans_Id AND b.SB_No = c.SB_No " +
-        "LEFT OUTER JOIN party d ON b.company_id = d.company_id AND b.cha = d.party_id " +
-        "LEFT OUTER JOIN party e ON b.company_id = e.company_id AND b.on_account_of = e.party_id " +
+        "LEFT OUTER JOIN party d ON b.company_id = d.company_id AND b.cha = d.party_id AND b.branch_id =d.branch_id " +
+        "LEFT OUTER JOIN party e ON b.company_id = e.company_id AND b.on_account_of = e.party_id AND b.branch_id =e.branch_id " +
         "LEFT OUTER JOIN cfEquipmentActivity cq ON a.company_id = cq.company_id AND a.Carting_Trans_Id = cq.De_Stuff_Id " +
         "WHERE a.company_id =:companyId AND a.branch_id = :branchId AND"
         + " a.Carting_Trans_Date BETWEEN :startDate AND :endDate " +
@@ -411,9 +411,9 @@ List<Object[]> findExportCartingData(@Param("companyId") String companyId,
         "AND mq.Movement_Req_Id = st.Movement_Req_Id AND mq.Stuff_Tally_Id = st.Stuff_Tally_Id " +
         "LEFT OUTER JOIN cfgateout c ON mq.Company_Id = c.Company_Id AND mq.Branch_Id = c.Branch_Id " +
         "AND mq.Profitcentre_Id = c.Profitcentre_Id AND mq.Gate_Out_Id = c.Gate_Out_Id AND mq.Container_No = c.Container_No " +
-        "LEFT OUTER JOIN party m ON b.Company_Id = m.Company_Id AND b.SL = m.Party_Id " +
-        "LEFT OUTER JOIN Party o ON b.Company_Id = o.Company_Id AND b.On_Account_Of = o.Party_Id " +
-        "LEFT OUTER JOIN party n ON b.Company_Id = n.Company_Id AND b.CHA = n.Party_Id " +
+        "LEFT OUTER JOIN party m ON b.Company_Id = m.Company_Id AND b.branch_id =m.branch_id AND b.SL = m.Party_Id " +
+        "LEFT OUTER JOIN Party o ON b.Company_Id = o.Company_Id AND b.branch_id =o.branch_id AND b.On_Account_Of = o.Party_Id " +
+        "LEFT OUTER JOIN party n ON b.Company_Id = n.Company_Id AND b.branch_id =n.branch_id AND b.CHA = n.Party_Id " +
         "LEFT OUTER JOIN vessel vs ON st.company_id = vs.company_id AND st.vessel_id = vs.vessel_id " +
         "WHERE b.company_id = :companyId AND b.branch_id = :branchId AND b.status = 'A' " +
         "AND b.in_gate_in_date BETWEEN :startDate AND :endDate " +
@@ -452,14 +452,14 @@ List<Object[]> exportFactoryStuffGateInReport(
         "LEFT OUTER JOIN cfgatein a ON i.Company_Id = a.Company_Id AND i.Branch_id = a.Branch_id AND i.Container_no = a.Container_no " +
         "AND i.Profitcentre_Id = a.Profitcentre_Id AND DATE_FORMAT(i.Period_From,'%d %b %Y') = DATE_FORMAT(a.in_gate_in_date,'%d %b %Y') " +
         "LEFT OUTER JOIN cfsb b ON a.company_id = b.company_id AND b.SB_Trans_Id = a.erp_doc_ref_no AND a.Branch_Id = b.Branch_Id " +
-        "LEFT OUTER JOIN party p ON p.company_id = a.company_id AND a.sa = p.party_id " +
+        "LEFT OUTER JOIN party p ON p.company_id = a.company_id AND a.sa = p.party_id AND p.branch_id =a.branch_id " +
         "LEFT OUTER JOIN cfigm c ON c.company_id = b.company_id AND c.branch_id = b.branch_id AND a.Profitcentre_Id = c.Profitcentre_Id " +
         "AND a.VIA_NO = c.VIA_NO AND a.Doc_Ref_Date = c.Doc_Date AND a.profitcentre_id = c.profitcentre_id " +
-        "LEFT OUTER JOIN party q ON q.company_id = a.company_id AND a.on_account_of = q.party_id " +
-        "LEFT OUTER JOIN party n ON a.company_id = n.company_id AND a.sl = n.party_id " +
-        "LEFT OUTER JOIN vessel v ON i.company_id = v.company_id AND i.Vessel_Id = v.Vessel_Id " +
-        "LEFT OUTER JOIN party tp ON tp.company_id = a.company_id AND a.Transporter = tp.party_id " +
-        "LEFT OUTER JOIN party pr ON pr.Company_Id = i.Company_Id AND pr.Party_Id = i.On_Account_Of " +
+        "LEFT OUTER JOIN party q ON q.company_id = a.company_id AND a.on_account_of = q.party_id AND q.branch_id =a.branch_id " +
+        "LEFT OUTER JOIN party n ON a.company_id = n.company_id AND a.sl = n.party_id AND a.branch_id =n.branch_id " +
+        "LEFT OUTER JOIN vessel v ON i.company_id = v.company_id AND i.Vessel_Id = v.Vessel_Id  AND i.branch_id =v.branch_id " +
+        "LEFT OUTER JOIN party tp ON tp.company_id = a.company_id AND a.Transporter = tp.party_id AND tp.branch_id =a.branch_id " +
+        "LEFT OUTER JOIN party pr ON pr.Company_Id = i.Company_Id AND pr.Party_Id = i.On_Account_Of  AND pr.branch_id =i.branch_id " +
         "LEFT OUTER JOIN cfequipmentactivity eq ON i.company_id = eq.company_id AND i.branch_id = eq.branch_id " +
         "AND i.stuff_id = eq.de_stuff_id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.Profitcentre_Id ='N00004' " +
@@ -596,7 +596,7 @@ List<Object[]> findExportGateOutBasedData(
 "AND a.Branch_Id = b.Branch_Id " +
 "LEFT OUTER JOIN party p " +
 "ON p.company_id = a.company_id " +
-"AND a.sa = p.party_id " +
+"AND a.sa = p.party_id AND a.branch_id =p.branch_id " +
 "LEFT OUTER JOIN cfigm c " +
 "ON c.company_id = b.company_id " +
 "AND c.branch_id = b.branch_id " +
@@ -606,7 +606,7 @@ List<Object[]> findExportGateOutBasedData(
 "AND a.profitcentre_id = c.profitcentre_id " +
 "LEFT OUTER JOIN party q " +
 "ON q.company_id = a.company_id " +
-"AND a.on_account_of = q.party_id " +
+"AND a.on_account_of = q.party_id AND a.branch_id =q.branch_id " +
 "LEFT OUTER JOIN party n " +
 "ON a.company_id = n.company_id " +
 "AND a.sl = n.party_id " +
@@ -615,10 +615,10 @@ List<Object[]> findExportGateOutBasedData(
 "AND i.Vessel_Id = v.Vessel_Id " +
 "LEFT OUTER JOIN party tp " +
 "ON tp.company_id = a.company_id " +
-"AND a.Transporter = tp.party_id " +
+"AND a.Transporter = tp.party_id AND a.branch_id =tp.branch_id " +
 "LEFT OUTER JOIN party pr " +
 "ON pr.Company_Id = i.Company_Id " +
-"AND pr.Party_Id = i.On_Account_Of " +
+"AND pr.Party_Id = i.On_Account_Of AND pr.branch_id =i.branch_id " +
 "LEFT OUTER JOIN cfequipmentactivity eq " +
 "ON i.company_id = eq.company_id " +
 "AND i.branch_id = eq.branch_id " +
@@ -684,7 +684,7 @@ List<Object[]> findExportContainerONWHBuffer(
 	        "    AND a.profitcentre_id = b.profitcentre_id " +
 	        "LEFT OUTER JOIN party tp " +
 	        "    ON tp.company_id = a.company_id " +
-	        "    AND a.Transporter = tp.party_id " +
+	        "    AND a.Transporter = tp.party_id AND tp.branch_id =a.branch_id " +
 	        "WHERE a.company_id = :companyId " +
 	        "  AND a.branch_id = :branchId " +
 	        "  AND a.status = 'A' " +
@@ -738,15 +738,15 @@ List<Object[]> findExportContainerONWHBuffer(
 	            "AND b.status = 'A' " +
 	            "AND a.SB_no = b.SB_no " +
 	            "LEFT OUTER JOIN party w ON a.Company_Id = w.Company_Id " +
-	            "AND a.sl = w.Party_Id " +
+	            "AND a.sl = w.Party_Id AND a.branch_id =w.branch_id " +
 	            "LEFT OUTER JOIN party y ON a.Company_Id = y.Company_Id " +
-	            "AND a.sa = y.Party_Id " +
+	            "AND a.sa = y.Party_Id AND a.branch_id =y.branch_id " +
 	            "LEFT OUTER JOIN vessel x ON e.Company_Id = x.Company_Id " +
 	            "AND e.Vessel_id = x.Vessel_Id " +
 	            "LEFT OUTER JOIN party p ON a.company_id = p.company_id " +
-	            "AND b.On_Account_Of = p.Party_Id " +
+	            "AND b.On_Account_Of = p.Party_Id AND a.branch_id =p.branch_id " +
 	            "LEFT OUTER JOIN party p1 ON a.company_id = p1.company_id " +
-	            "AND a.SL = p1.Party_Id " +
+	            "AND a.SL = p1.Party_Id AND a.branch_id =p1.branch_id " +
 	            "WHERE a.company_id = :companyId " +
 	            "AND a.branch_id = :branchId " +
 	            "AND a.Profitcentre_Id = 'N00004' " +
@@ -790,15 +790,15 @@ List<Object[]> findExportContainerONWHBuffer(
 	            "AND b.status = 'A' " +
 	            "AND a.SB_no = b.SB_no " +
 	            "LEFT OUTER JOIN party w ON a.Company_Id = w.Company_Id " +
-	            "AND a.sl = w.Party_Id " +
+	            "AND a.sl = w.Party_Id AND a.branch_id =w.branch_id " +
 	            "LEFT OUTER JOIN party y ON a.Company_Id = y.Company_Id " +
-	            "AND a.sa = y.Party_Id " +
+	            "AND a.sa = y.Party_Id AND a.branch_id =y.branch_id  " +
 	            "LEFT OUTER JOIN vessel x ON e.Company_Id = x.Company_Id " +
 	            "AND e.Vessel_id = x.Vessel_Id " +
 	            "LEFT OUTER JOIN party p ON a.company_id = p.company_id " +
-	            "AND b.On_Account_Of = p.Party_Id " +
+	            "AND b.On_Account_Of = p.Party_Id AND a.branch_id =p.branch_id " +
 	            "LEFT OUTER JOIN party p1 ON a.company_id = p1.company_id " +
-	            "AND a.SL = p1.Party_Id " +
+	            "AND a.SL = p1.Party_Id AND a.branch_id =p1.branch_id " +
 	            "WHERE a.company_id = :companyId " +
 	            "AND a.branch_id = :branchId " +
 	            "AND a.Profitcentre_Id = 'N00004' " +
@@ -864,8 +864,8 @@ List<Object[]> findExportContainerONWHBuffer(
 	                "AND a.Line_No = b.SB_Line_No " +
 	                "LEFT OUTER JOIN cfsb c ON b.Company_Id = c.Company_Id AND b.Branch_Id = c.Branch_Id AND b.SB_No = c.SB_No " +
 	                "AND b.SB_Trans_Id = c.SB_Trans_Id AND b.Profitcentre_Id = c.Profitcentre_Id " +
-	                "LEFT OUTER JOIN party p ON c.Company_Id = p.Company_Id AND c.CHA = p.Party_Id " +
-	                "LEFT OUTER JOIN party q ON c.Company_Id = q.Company_Id AND c.On_Account_Of = q.Party_Id " +
+	                "LEFT OUTER JOIN party p ON c.Company_Id = p.Company_Id AND c.CHA = p.Party_Id AND c.branch_id =p.branch_id " +
+	                "LEFT OUTER JOIN party q ON c.Company_Id = q.Company_Id AND c.On_Account_Of = q.Party_Id AND c.branch_id =q.branch_id " +
 	                "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId AND a.profitcentre_id = 'N00004' " +
 	                "AND b.status = 'A' AND a.Process_Id = 'P00217' AND a.Status = 'A' " +
 	                "AND a.Carting_Trans_Id = '' AND a.in_Gate_In_Date <= :endDate " +
@@ -901,11 +901,11 @@ List<Object[]> findExportContainerONWHBuffer(
 	                "AND a.Container_No = g.Container_No " +
 	                "AND a.Stuff_Tally_Id = g.Stuff_Tally_Id " +
 	                "LEFT OUTER JOIN party b ON b.Company_Id = a.Company_Id " +
-	                "AND b.Party_Id = a.Shipping_Line " +
+	                "AND b.Party_Id = a.Shipping_Line AND b.branch_id =a.branch_id " +
 	                "LEFT OUTER JOIN party c ON c.Company_Id = a.Company_Id " +
-	                "AND c.Party_Id = a.Shipping_Agent " +
+	                "AND c.Party_Id = a.Shipping_Agent AND c.branch_id =a.branch_id " +
 	                "LEFT OUTER JOIN party d ON d.Company_Id = g.Company_Id " +
-	                "AND d.Party_Id = g.CHA " +
+	                "AND d.Party_Id = g.CHA AND d.branch_id =g.branch_id " +
 	                "LEFT OUTER JOIN Vessel e ON e.Company_Id = a.Company_Id " +
 	                "AND e.Vessel_Id = a.Vessel_Id " +
 	                "LEFT OUTER JOIN Voyage f ON f.Company_Id = a.Company_Id " +
@@ -947,7 +947,7 @@ List<Object[]> findExportContainerONWHBuffer(
 	                "a.QTY_TAKEN_OUT, a.Gross_Wt " +
 	                "FROM cfexportgatepass a " +
 	                "LEFT OUTER JOIN cfbacktotown b ON a.company_id = b.company_id AND a.branch_id = b.branch_id AND a.SB_No = b.SB_No " +
-	                "LEFT OUTER JOIN party o ON b.company_Id = o.company_id AND b.On_Account_Of = o.Party_Id " +
+	                "LEFT OUTER JOIN party o ON b.company_Id = o.company_id AND b.On_Account_Of = o.Party_Id AND b.branch_id =o.branch_id " +
 	                "WHERE b.company_id = :companyId AND b.branch_id = :branchId " +
 	                "AND b.Back_To_Town_Trans_Date BETWEEN :startDate AND :endDate "+
 	                "AND (:sbNo IS NULL OR :sbNo = '' OR b.SB_No = :sbNo) " +
