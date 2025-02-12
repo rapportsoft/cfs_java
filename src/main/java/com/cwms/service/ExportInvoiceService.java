@@ -10847,6 +10847,11 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
+			fin.setCreditType("N");
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
+			
+			
+			
 
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
@@ -12632,6 +12637,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
+			fin.setCreditType("N");
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
@@ -14405,6 +14412,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			fin.setApprovedDate(new Date());
 			fin.setAssesmentId(assSheet.getAssesmentId());
 			fin.setRecordType("NEW");
+			fin.setCreditType("N");
+			fin.setCreditFlag("CREDIT".equals(p.getPayMode()) ? "Y" : "N");
 
 			if ("TDS".equals(p.getPayMode())) {
 				fin.setTdsType(tdsDeductee);
