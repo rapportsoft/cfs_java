@@ -9205,9 +9205,12 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 				safeString(selectedExportAssesmentSheet[54]), // intComments
 				safeString(selectedExportAssesmentSheet[55]), // partyId,
 				
-				safeString(selectedExportAssesmentSheet[56]), // cgst
-				safeString(selectedExportAssesmentSheet[57]), // sgst
-				safeString(selectedExportAssesmentSheet[58]) // igst,
+				safeString(selectedExportAssesmentSheet[56]), // transactionType,
+				safeString(selectedExportAssesmentSheet[57]), // containerNo,
+				
+				safeString(selectedExportAssesmentSheet[58]), // cgst
+				safeString(selectedExportAssesmentSheet[59]), // sgst
+				safeString(selectedExportAssesmentSheet[60]) // igst,
 				
 				
 				
@@ -9688,8 +9691,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 			srv.setInvoiceType("EXP");
 			srv.setTransType("CONT");
-			srv.setErpDocRefNo(assSheet.getIgmTransId());
-			srv.setDocRefNo(assSheet.getIgmNo());
+			srv.setErpDocRefNo(assSheet.getSbTransId());
+			srv.setDocRefNo(assSheet.getSbNo());
 			srv.setIgmLineNo(assSheet.getIgmLineNo());
 			srv.setForeignAmt(totalForAmt);
 			srv.setExRate(consolidatedData.get(0).getExRate());
@@ -10236,8 +10239,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 			srv.setInvoiceType("EXP");
 			srv.setTransType("CONT");
-			srv.setErpDocRefNo(assSheet.getIgmTransId());
-			srv.setDocRefNo(assSheet.getIgmNo());
+			srv.setErpDocRefNo(assSheet.getSbTransId());
+			srv.setDocRefNo(assSheet.getSbNo());
 			srv.setIgmLineNo(assSheet.getIgmLineNo());
 			srv.setForeignAmt(totalForAmt);
 			srv.setExRate(consolidatedData.get(0).getExRate());
@@ -10776,8 +10779,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 		srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 		srv.setInvoiceType("EXP");
 		srv.setTransType("CONT");
-		srv.setErpDocRefNo(assSheet.getIgmTransId());
-		srv.setDocRefNo(assSheet.getIgmNo());
+		srv.setErpDocRefNo(assSheet.getSbTransId());
+		srv.setDocRefNo(assSheet.getSbNo());
 		srv.setIgmLineNo(assSheet.getIgmLineNo());
 		srv.setForeignAmt(totalForAmt);
 		srv.setExRate(consolidatedData.get(0).getExRate());
@@ -11470,8 +11473,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 			srv.setInvoiceType("EXP");
 			srv.setTransType("CONT");
-			srv.setErpDocRefNo(assSheet.getIgmTransId());
-			srv.setDocRefNo(assSheet.getIgmNo());
+			srv.setErpDocRefNo(assSheet.getSbTransId());
+			srv.setDocRefNo(assSheet.getSbNo());
 			srv.setIgmLineNo(assSheet.getIgmLineNo());
 			srv.setForeignAmt(totalForAmt);
 			srv.setExRate(consolidatedData.get(0).getExRate());
@@ -12018,8 +12021,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 			srv.setInvoiceType("EXP");
 			srv.setTransType("CONT");
-			srv.setErpDocRefNo(assSheet.getIgmTransId());
-			srv.setDocRefNo(assSheet.getIgmNo());
+			srv.setErpDocRefNo(assSheet.getSbTransId());
+			srv.setDocRefNo(assSheet.getSbNo());
 			srv.setIgmLineNo(assSheet.getIgmLineNo());
 			srv.setForeignAmt(totalForAmt);
 			srv.setExRate(consolidatedData.get(0).getExRate());
@@ -12564,8 +12567,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 		srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 		srv.setInvoiceType("EXP");
 		srv.setTransType("CRTG");
-		srv.setErpDocRefNo(assSheet.getIgmTransId());
-		srv.setDocRefNo(assSheet.getIgmNo());
+		srv.setErpDocRefNo(assSheet.getSbTransId());
+		srv.setDocRefNo(assSheet.getSbNo());
 		srv.setIgmLineNo(assSheet.getIgmLineNo());
 		srv.setForeignAmt(totalForAmt);
 		srv.setExRate(consolidatedData.get(0).getExRate());
@@ -13239,8 +13242,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 			srv.setInvoiceType("EXP");
 			srv.setTransType("CONT");
-			srv.setErpDocRefNo(assSheet.getIgmTransId());
-			srv.setDocRefNo(assSheet.getIgmNo());
+			srv.setErpDocRefNo(assSheet.getSbTransId());
+			srv.setDocRefNo(assSheet.getSbNo());
 			srv.setIgmLineNo(assSheet.getIgmLineNo());
 			srv.setForeignAmt(totalForAmt);
 			srv.setExRate(consolidatedData.get(0).getExRate());
@@ -13787,8 +13790,8 @@ else if("Export Cargo".equalsIgnoreCase(invoiceType))
 			srv.setInvoiceDueDate(consolidatedData.get(0).getInvoiceUptoDate());
 			srv.setInvoiceType("EXP");
 			srv.setTransType("CONT");
-			srv.setErpDocRefNo(assSheet.getIgmTransId());
-			srv.setDocRefNo(assSheet.getIgmNo());
+			srv.setErpDocRefNo(assSheet.getSbTransId());
+			srv.setDocRefNo(assSheet.getSbNo());
 			srv.setIgmLineNo(assSheet.getIgmLineNo());
 			srv.setForeignAmt(totalForAmt);
 			srv.setExRate(consolidatedData.get(0).getExRate());

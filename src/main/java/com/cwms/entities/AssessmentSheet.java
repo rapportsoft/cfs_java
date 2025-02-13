@@ -2953,7 +2953,7 @@ public class AssessmentSheet implements Cloneable {
 			            String fwdGst, String fwdState, int accSrNo, String invoiceNo, Date invoiceDate, char taxApplicable,
 			            char sez, String commodityCode, char creditType, String invoiceCategory, String irn,
 			            String receiptNo, BigDecimal creditAllowed, BigDecimal pendingCredit, String comments,
-			            String intComments, String partyId, String cgst, String sgst, String igst) {
+			            String intComments, String partyId, String transactionType, String containerNo, String cgst, String sgst, String igst) {
 			this.companyId = companyId;
 			this.branchId = branchId;
 			this.assesmentId = assesmentId;
@@ -3010,6 +3010,9 @@ public class AssessmentSheet implements Cloneable {
 			this.comments = comments;
 			this.intComments = intComments;
 			this.partyId = partyId;	
+			this.containerNo = containerNo;
+			this.transactionType = 	transactionType;				
+			
 			this.cgst = cgst;
 			this.sgst = sgst;
 			this.igst = igst;
