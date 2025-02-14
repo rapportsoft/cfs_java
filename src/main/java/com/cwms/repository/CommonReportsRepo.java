@@ -128,7 +128,7 @@ List<Object[]> getLoadedInventoryData(@Param("companyId") String companyId,
         "FROM cfimpinventory a " +
         "WHERE a.Company_Id = :companyId " +
         "AND a.Branch_Id = :branchId " +
-        "AND (a.Empty_Out_Id = '' OR a.Empty_Out_Date > :endDate) " +
+        "AND (a.Empty_Out_Id = '' OR a.Empty_Out_Id IS NULL OR a.Empty_Out_Date > :endDate) " +
         "AND (a.De_Stuff_Date != '0000-00-00 00:00:00' AND a.De_Stuff_Date < :endDate) " +
         "AND a.status = 'A' " +
         "GROUP BY a.container_no", 
