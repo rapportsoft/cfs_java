@@ -3018,4 +3018,15 @@ public class AssessmentSheetPro implements Cloneable {
 		}
 
 
+
+
+
+
+				protected AssessmentSheetPro(String tdsDeductee, String tds) {
+					this.tdsDeductee = tdsDeductee;
+					this.tds = tds;
+				}
+
+				
+
 }
