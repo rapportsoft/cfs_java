@@ -626,7 +626,7 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
                 "AND a.SA = w.Party_Id " + 
                 "WHERE a.company_id = :companyId " + 
                 "AND a.branch_id = :branchId " + 
-                "AND (a.Empty_Out_Id = '' OR a.Empty_Out_Date > :endDate) " + 
+                "AND (a.Empty_Out_Id = '' OR a.Empty_Out_Id IS NULL OR a.Empty_Out_Date > :endDate) " + 
                 "AND (a.De_Stuff_Date != '0000-00-00 00:00:00' " + 
                 "AND a.De_Stuff_Date < :endDate) " + 
                 "AND a.status = 'A' " + 
