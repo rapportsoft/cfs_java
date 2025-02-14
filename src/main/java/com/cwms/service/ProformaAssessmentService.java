@@ -5205,7 +5205,7 @@ public class ProformaAssessmentService {
 
 			int sr = 1;
 
-			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05095", "2024");
+			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05109", "2024");
 
 			int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
 
@@ -7041,7 +7041,7 @@ public class ProformaAssessmentService {
 					newAss.setNocFromDate(con.getGateInDate());
 					newAss.setNocValidityDate(con.getGateoutDate());
 					assessmentsheetprorepo.save(newAss);
-					processnextidrepo.updateAuditTrail(cid, bid, "P05095", HoldNextIdD1, "2024");
+					processnextidrepo.updateAuditTrail(cid, bid, "P05109", HoldNextIdD1, "2024");
 
 //					AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 					AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
@@ -8958,7 +8958,7 @@ public class ProformaAssessmentService {
 					newAss.setNocFromDate(con.getGateInDate());
 					newAss.setNocValidityDate(con.getGateoutDate());
 					assessmentsheetprorepo.save(newAss);
-					processnextidrepo.updateAuditTrail(cid, bid, "P05095", HoldNextIdD1, "2024");
+					processnextidrepo.updateAuditTrail(cid, bid, "P05109", HoldNextIdD1, "2024");
 
 //					AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 					AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
@@ -9196,9 +9196,9 @@ public class ProformaAssessmentService {
 		String processNextId = "";
 
 		if (assessment.getTaxApplicable() == 'Y') {
-			processNextId = "P05097";
+			processNextId = "P05111";
 		} else {
-			processNextId = "P05096";
+			processNextId = "P05110";
 		}
 
 		String holdId1 = processnextidrepo.findAuditTrail(cid, bid, processNextId, "2024");
@@ -9390,7 +9390,7 @@ public class ProformaAssessmentService {
 					.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP); // Sums up all the
 		}
 
-		String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05094", "2024");
+		String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05108", "2024");
 
 		String pre1 = holdId2.substring(0, 4);
 
@@ -9447,7 +9447,7 @@ public class ProformaAssessmentService {
 		cfinvsrvprorepo.save(srv);
 
 		processnextidrepo.updateAuditTrail(cid, bid, processNextId, HoldNextIdD1, "2024");
-		processnextidrepo.updateAuditTrail(cid, bid, "P05094", HoldNextIdD2, "2024");
+		processnextidrepo.updateAuditTrail(cid, bid, "P05108", HoldNextIdD2, "2024");
 
 		AtomicReference<BigDecimal> invAmt = new AtomicReference<BigDecimal>();
 
@@ -9555,7 +9555,7 @@ public class ProformaAssessmentService {
 
 			int sr = 1;
 
-			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05098", "2024");
+			String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05112", "2024");
 
 			int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
 
@@ -11362,7 +11362,7 @@ public class ProformaAssessmentService {
 				newAss.setNocValidityDate(con.getGateInDate());
 				newAss.setInvoiceCalDate(finalConData.get(0).getInvoiceDate());
 				assessmentsheetprorepo.save(newAss);
-				processnextidrepo.updateAuditTrail(cid, bid, "P05098", HoldNextIdD1, "2024");
+				processnextidrepo.updateAuditTrail(cid, bid, "P05112", HoldNextIdD1, "2024");
 
 //				AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 				AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
@@ -11600,9 +11600,9 @@ public class ProformaAssessmentService {
 		String processNextId = "";
 
 		if (assessment.getTaxApplicable() == 'Y') {
-			processNextId = "P05097";
+			processNextId = "P05111";
 		} else {
-			processNextId = "P05096";
+			processNextId = "P05110";
 		}
 
 		String holdId1 = processnextidrepo.findAuditTrail(cid, bid, processNextId, "2024");
@@ -11793,7 +11793,7 @@ public class ProformaAssessmentService {
 					.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP); // Sums up all the
 		}
 
-		String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05094", "2024");
+		String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05108", "2024");
 
 		String pre1 = holdId2.substring(0, 4);
 
@@ -11851,7 +11851,7 @@ public class ProformaAssessmentService {
 
 
 		processnextidrepo.updateAuditTrail(cid, bid, processNextId, HoldNextIdD1, "2024");
-		processnextidrepo.updateAuditTrail(cid, bid, "P05094", HoldNextIdD2, "2024");
+		processnextidrepo.updateAuditTrail(cid, bid, "P05108", HoldNextIdD2, "2024");
 
 		AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
 

@@ -2135,7 +2135,13 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 	List<Cfinvsrvanx> getAllContainerListOfAssessMentSheet1(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
 	
 	
-
+	@Query(value="select NEW com.cwms.entities.Cfinvsrvanx(a.companyId, a.branchId, a.assesmentId,a.assesmentLineNo,a.assesmentDate,a.containerNo,a.containerSize,a.containerType,a.gateInDate,a.invoiceUptoDate "
+			+ ",e.gateOutId,e.gatePassNo, a.partyId, e.gateOutDate, a.destuffDate, a.stuffTallyDate) "
+			+ "from AssessmentSheet a "
+			+ "LEFT JOIN ImportInventory e on a.companyId = e.companyId AND a.branchId = e.branchId AND a.assesmentId = e.assessmentId AND a.containerNo = e.containerNo AND e.status <> 'D' "
+	        + "where a.companyId=:companyId and a.branchId=:branchId and a.status <> 'D' and a.assesmentId=:assesmentId AND a.profitcentreId = :profiCentreId Order By a.containerNo")
+	List<Cfinvsrvanx> getAllContainerListOfAssessMentSheet2(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("profiCentreId") String profiCentreId, @Param("assesmentId") String assesmentId);
+	
 }
 
 

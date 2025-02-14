@@ -330,6 +330,7 @@ public class CommonGatePassController {
 				g.setVehicleNo(gateout.getVehicleNo());
 				g.setGateOutId(HoldNextIdD1);
 				g.setGateOutDate(new Date());
+				g.setContainerStatus("MTY");
 
 				gateOutRepo.save(g);
 

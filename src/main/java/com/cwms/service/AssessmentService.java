@@ -16955,7 +16955,7 @@ public class AssessmentService {
 
 	public ResponseEntity<?> getAllContainerListOfAssessMentSheet(String companyId, String branchId, String assesmentId,
 			String profiCentreId) {
-		List<Cfinvsrvanx> assessmentSheetList = exportInvoiceRepo.getAllContainerListOfAssessMentSheet1(companyId,
+		List<Cfinvsrvanx> assessmentSheetList = exportInvoiceRepo.getAllContainerListOfAssessMentSheet2(companyId,
 				branchId, profiCentreId, assesmentId);
 
 		return ResponseEntity.ok(assessmentSheetList);
