@@ -1056,7 +1056,7 @@ public class ImportInvoiceProformaPrintController {
 		String invType = "noc".equals(selectedInvoice) ? "IN BOND INVOICE" : "EX BOND INVOICE";
 		context.setVariable("invType", invType);
 	
-		String htmlContent = templateEngine.process("BondNocInvoicePrint1.html", context);
+		String htmlContent = templateEngine.process("BondNocInvoicePrint1proforma.html", context);
 //
 		ITextRenderer renderer = new ITextRenderer();
 		renderer.setDocumentFromString(htmlContent);

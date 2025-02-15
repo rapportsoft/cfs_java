@@ -1182,15 +1182,8 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		System.out.println("conList"+conSbDtl.get("conList"));
 		
 		
-		
 
-		
-		
-		
-		
-		
-		
-		String htmlContent = templateEngine.process("ExportInvoicePrint.html", context);
+		String htmlContent = templateEngine.process("ExportInvoicePrintproforma.html", context);
 		//
 				ITextRenderer renderer = new ITextRenderer();
 				renderer.setDocumentFromString(htmlContent);
