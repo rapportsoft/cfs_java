@@ -4914,44 +4914,44 @@ public class ProformaAssessmentService {
 
 			CfinvsrvanxPro object1 = filteredData.get(0);
 
-			List<AssessmentSheetPro> existingData = assessmentsheetprorepo.getDataByAssessmentId(companyId, branchId,
-					assessment.getAssesmentId());
+			AssessmentSheetPro existingData = assessmentsheetprorepo.getDataByAssessmentIdAndContNo(companyId, branchId,
+					assessment.getAssesmentId(),object1.getContainerNo());
 
-			if (existingData.isEmpty()) {
+			if (existingData == null) {
 				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
 			}
 
-			AssessmentSheetPro data = existingData.get(0);
 
 			List<CfinvsrvanxPro> saveToData = new ArrayList<>();
 			for (CfinvsrvanxPro anx : filteredData) {
 
 				boolean existsByAssesmentIdAndSrlNo = cfinvsrvanxprorepo.existsByAssesmentIdAndSrlNo1(companyId,
-						branchId, data.getProfitcentreId(), data.getAssesmentId(), anx.getSrlNo(),
+						branchId, existingData.getProfitcentreId(), existingData.getAssesmentId(), anx.getSrlNo(),
 						anx.getContainerNo());
 
 				if (existsByAssesmentIdAndSrlNo) {
 
-					cfinvsrvanxprorepo.updateCfinvsrvanx1(companyId, branchId, data.getProfitcentreId(),
-							data.getAssesmentId(), anx.getSrlNo(), anx.getExecutionUnit(), anx.getExecutionUnit1(),
+					cfinvsrvanxprorepo.updateCfinvsrvanx1(companyId, branchId, existingData.getProfitcentreId(),
+							existingData.getAssesmentId(), anx.getSrlNo(), anx.getExecutionUnit(), anx.getExecutionUnit1(),
 							anx.getRate(), anx.getActualNoOfPackages(), anx.getContainerNo());
 
 				} else {
 
 					anx.setCompanyId(companyId);
 					anx.setBranchId(branchId);
-					anx.setErpDocRefNo(data.getIgmTransId());
-					anx.setProcessTransId(data.getAssesmentId());
+					anx.setErpDocRefNo(existingData.getIgmTransId());
+					anx.setProcessTransId(existingData.getAssesmentId());
 					anx.setAddServices("Y");
-					anx.setDocRefNo(data.getIgmNo());
-					anx.setIgmLineNo(data.getIgmLineNo());
-					anx.setProfitcentreId(data.getProfitcentreId());
+					anx.setDocRefNo(existingData.getIgmNo());
+					anx.setIgmLineNo(existingData.getIgmLineNo());
+					anx.setProfitcentreId(existingData.getProfitcentreId());
 					anx.setInvoiceType("IMP");
+					anx.setLineNo(existingData.getAssesmentLineNo());
 
 //				anx.setActualNoOfPackages(c.getRates());
 					anx.setLocalAmt(anx.getActualNoOfPackages());
 					anx.setInvoiceAmt(anx.getActualNoOfPackages());
-					anx.setCommodityDescription(data.getCommodityDescription());
+					anx.setCommodityDescription(existingData.getCommodityDescription());
 					anx.setDiscPercentage(zero);
 					anx.setDiscValue(zero);
 					anx.setmPercentage(zero);
@@ -4959,9 +4959,9 @@ public class ProformaAssessmentService {
 
 //				anx.setAcCode(c.getAcCode());
 
-					anx.setProcessTransDate(data.getAssesmentDate());
+					anx.setProcessTransDate(existingData.getAssesmentDate());
 					anx.setProcessId("P01106");
-					anx.setPartyId(data.getPartyId());
+					anx.setPartyId(existingData.getPartyId());
 
 //				anx.setGateOutDate(c.getGateoutDate());
 //				anx.setStartDate(c.getGateInDate());
@@ -4971,7 +4971,7 @@ public class ProformaAssessmentService {
 					anx.setCreatedBy(user);
 					anx.setCreatedDate(new Date());
 
-					anx.setTaxApp(String.valueOf(data.getTaxApplicable()));
+					anx.setTaxApp(String.valueOf(existingData.getTaxApplicable()));
 					anx.setSrvManualFlag("N");
 					anx.setCriteria("CNTR");
 					anx.setRangeFrom(zero);
@@ -4982,7 +4982,7 @@ public class ProformaAssessmentService {
 //				anx.setTaxId(c.getTaxId());
 					anx.setExRate(zero);
 
-					if (("Y".equals(data.getIgst())) || ("Y".equals(data.getCgst()) && "Y".equals(data.getSgst()))) {
+					if (("Y".equals(existingData.getIgst())) || ("Y".equals(existingData.getCgst()) && "Y".equals(existingData.getSgst()))) {
 						anx.setTaxPerc(anx.getTaxPerc());
 					} else {
 						anx.setTaxPerc(zero);
@@ -4994,7 +4994,7 @@ public class ProformaAssessmentService {
 			cfinvsrvanxprorepo.saveAll(saveToData);
 
 			List<CfinvsrvanxPro> cfinvSrvList = cfinvsrvanxprorepo.getAllCfInvSrvAnxListByAssesmentId1(companyId,
-					branchId, data.getProfitcentreId(), data.getAssesmentId(), object1.getContainerNo());
+					branchId, existingData.getProfitcentreId(), existingData.getAssesmentId(), object1.getContainerNo());
 
 			return ResponseEntity.ok(cfinvSrvList);
 		} catch (Exception e) {
@@ -5105,9 +5105,13 @@ public class ProformaAssessmentService {
 				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
 			}
 
-			AssessmentSheetPro data = existingData.get(0);
+			
 
 			for (CfinvsrvanxPro anx : cfInvsrvanxData) {
+				 AssessmentSheetPro data = existingData.stream()
+					        .filter(c -> c.getContainerNo().equals(anx.getContainerNo()))
+					        .findFirst()
+					        .orElse(null);
 
 				Optional<BigDecimal> highestSRLNoOptional = cfinvsrvanxprorepo.getHighestSrlNoByContainerNo2(companyId,
 						branchId, data.getProfitcentreId(), data.getAssesmentId(), anx.getContainerNo());
@@ -5124,6 +5128,7 @@ public class ProformaAssessmentService {
 				anx.setProfitcentreId(data.getProfitcentreId());
 				anx.setInvoiceType("IMP");
 				anx.setSrlNo(highestSRLNoNew);
+				anx.setLineNo(data.getAssesmentLineNo());
 
 //			anx.setActualNoOfPackages(c.getRates());
 				anx.setLocalAmt(anx.getActualNoOfPackages());
@@ -5176,7 +5181,6 @@ public class ProformaAssessmentService {
 					.body("Error in Add Service ContainerWise: " + e.getMessage());
 		}
 	}
-
 	@Transactional
 	public ResponseEntity<?> saveBondNOCAssessmentData(String cid, String bid, String user, Map<String, Object> data)
 			throws JsonMappingException, JsonProcessingException, ParseException, CloneNotSupportedException {
@@ -12085,6 +12089,7 @@ public class ProformaAssessmentService {
 			anx.setInvoiceType("BON");
 			anx.setStartDate(data.getNocFromDate());
 			anx.setGateOutDate(data.getNocValidityDate());
+			anx.setLineNo("1");
 
 			if ("noc".equals(type)) {
 				anx.setInvoiceSubType("NOC");

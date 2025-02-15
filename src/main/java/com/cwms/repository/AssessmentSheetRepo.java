@@ -176,4 +176,9 @@ public interface AssessmentSheetRepo extends JpaRepository<AssessmentSheet, Stri
 			+ "pr.profitcentreDesc LIKE CONCAT('%',:val,'%') OR p.partyName LIKE CONCAT('%',:val,'%') OR a.receiptNo LIKE CONCAT('%',:val,'%')) "
 			+ "and (a.invoiceNo is not null AND a.invoiceNo != '') and a.transType='MISC' order by a.assesmentDate desc")
 	List<Object[]> searchMISCInvoiceData1(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	@Query(value="select a from AssessmentSheet a where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.assesmentId=:id "
+			+ "and a.containerNo=:cont")
+	AssessmentSheet getDataByAssessmentIdAndContNo(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("cont") String cont);
+	
 }

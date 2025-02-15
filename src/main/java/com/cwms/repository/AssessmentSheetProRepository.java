@@ -208,4 +208,10 @@ public interface AssessmentSheetProRepository extends JpaRepository<AssessmentSh
 		    @Param("branchId") String branchId,		    
 		    @Param("profitcentreId") String profitcentreId,
 		    @Param("assesmentId") String assesmentId);
+	
+	
+	@Query(value="select a from AssessmentSheetPro a where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.assesmentId=:id "
+			+ "and a.containerNo=:cont")
+	AssessmentSheetPro getDataByAssessmentIdAndContNo(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("cont") String cont);
+	
 }

@@ -16865,43 +16865,42 @@ public class AssessmentService {
 
 			Cfinvsrvanx object1 = filteredData.get(0);
 
-			List<AssessmentSheet> existingData = assessmentsheetrepo.getDataByAssessmentId(companyId, branchId,
-					assessment.getAssesmentId());
+			AssessmentSheet existingData = assessmentsheetrepo.getDataByAssessmentIdAndContNo(companyId, branchId,
+					assessment.getAssesmentId(),object1.getContainerNo());
 
-			if (existingData.isEmpty()) {
+			if (existingData == null) {
 				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
 			}
 
-			AssessmentSheet data = existingData.get(0);
-
+			
 			List<Cfinvsrvanx> saveToData = new ArrayList<>();
 			for (Cfinvsrvanx anx : filteredData) {
 
 				boolean existsByAssesmentIdAndSrlNo = exportInvoiceRepo.existsByAssesmentIdAndSrlNo1(companyId, branchId,
-						data.getProfitcentreId(), data.getAssesmentId(), anx.getSrlNo(), anx.getContainerNo());
+						existingData.getProfitcentreId(), existingData.getAssesmentId(), anx.getSrlNo(), anx.getContainerNo());
 
 				if (existsByAssesmentIdAndSrlNo) {
 
-					exportInvoiceRepo.updateCfinvsrvanx1(companyId, branchId, data.getProfitcentreId(),
-							data.getAssesmentId(), anx.getSrlNo(), anx.getExecutionUnit(), anx.getExecutionUnit1(),
+					exportInvoiceRepo.updateCfinvsrvanx1(companyId, branchId, existingData.getProfitcentreId(),
+							existingData.getAssesmentId(), anx.getSrlNo(), anx.getExecutionUnit(), anx.getExecutionUnit1(),
 							anx.getRate(), anx.getActualNoOfPackages(), anx.getContainerNo());
 
 				} else {
 
 					anx.setCompanyId(companyId);
 					anx.setBranchId(branchId);
-					anx.setErpDocRefNo(data.getIgmTransId());
-					anx.setProcessTransId(data.getAssesmentId());
+					anx.setErpDocRefNo(existingData.getIgmTransId());
+					anx.setProcessTransId(existingData.getAssesmentId());
 					anx.setAddServices("Y");
-					anx.setDocRefNo(data.getIgmNo());
-					anx.setIgmLineNo(data.getIgmLineNo());
-					anx.setProfitcentreId(data.getProfitcentreId());
+					anx.setDocRefNo(existingData.getIgmNo());
+					anx.setIgmLineNo(existingData.getIgmLineNo());
+					anx.setProfitcentreId(existingData.getProfitcentreId());
 					anx.setInvoiceType("IMP");
-
+					anx.setLineNo(existingData.getAssesmentLineNo());
 //				anx.setActualNoOfPackages(c.getRates());
 					anx.setLocalAmt(anx.getActualNoOfPackages());
 					anx.setInvoiceAmt(anx.getActualNoOfPackages());
-					anx.setCommodityDescription(data.getCommodityDescription());
+					anx.setCommodityDescription(existingData.getCommodityDescription());
 					anx.setDiscPercentage(zero);
 					anx.setDiscValue(zero);
 					anx.setmPercentage(zero);
@@ -16909,9 +16908,9 @@ public class AssessmentService {
 
 //				anx.setAcCode(c.getAcCode());
 
-					anx.setProcessTransDate(data.getAssesmentDate());
+					anx.setProcessTransDate(existingData.getAssesmentDate());
 					anx.setProcessId("P01101");
-					anx.setPartyId(data.getPartyId());
+					anx.setPartyId(existingData.getPartyId());
 
 //				anx.setGateOutDate(c.getGateoutDate());
 //				anx.setStartDate(c.getGateInDate());
@@ -16921,7 +16920,7 @@ public class AssessmentService {
 					anx.setCreatedBy(user);
 					anx.setCreatedDate(new Date());
 
-					anx.setTaxApp(String.valueOf(data.getTaxApplicable()));
+					anx.setTaxApp(String.valueOf(existingData.getTaxApplicable()));
 					anx.setSrvManualFlag("N");
 					anx.setCriteria("CNTR");
 					anx.setRangeFrom(zero);
@@ -16932,7 +16931,7 @@ public class AssessmentService {
 //				anx.setTaxId(c.getTaxId());
 					anx.setExRate(zero);
 
-					if (("Y".equals(data.getIgst())) || ("Y".equals(data.getCgst()) && "Y".equals(data.getSgst()))) {
+					if (("Y".equals(existingData.getIgst())) || ("Y".equals(existingData.getCgst()) && "Y".equals(existingData.getSgst()))) {
 						anx.setTaxPerc(anx.getTaxPerc());
 					} else {
 						anx.setTaxPerc(zero);
@@ -16944,7 +16943,7 @@ public class AssessmentService {
 			cfinvsrvanxrepo.saveAll(saveToData);
 
 			List<Cfinvsrvanx> cfinvSrvList = exportInvoiceRepo.getAllCfInvSrvAnxListByAssesmentId1(companyId, branchId,
-					data.getProfitcentreId(), data.getAssesmentId(), object1.getContainerNo());
+					existingData.getProfitcentreId(), existingData.getAssesmentId(), existingData.getContainerNo());
 
 			return ResponseEntity.ok(cfinvSrvList);
 		} catch (Exception e) {
@@ -16952,7 +16951,10 @@ public class AssessmentService {
 			return null;
 		}
 	}
-
+	
+	
+	
+	
 	public ResponseEntity<?> getAllContainerListOfAssessMentSheet(String companyId, String branchId, String assesmentId,
 			String profiCentreId) {
 		List<Cfinvsrvanx> assessmentSheetList = exportInvoiceRepo.getAllContainerListOfAssessMentSheet2(companyId,
@@ -16995,9 +16997,13 @@ public class AssessmentService {
 				return new ResponseEntity<>("Assessment Data not found", HttpStatus.CONFLICT);
 			}
 
-			AssessmentSheet data = existingData.get(0);
 
 			for (Cfinvsrvanx anx : cfInvsrvanxData) {
+				
+				  AssessmentSheet data = existingData.stream()
+					        .filter(c -> c.getContainerNo().equals(anx.getContainerNo()))
+					        .findFirst()
+					        .orElse(null);
 
 				Optional<BigDecimal> highestSRLNoOptional = exportInvoiceRepo.getHighestSrlNoByContainerNo2(companyId,
 						branchId, data.getProfitcentreId(), data.getAssesmentId(), anx.getContainerNo());
@@ -17014,7 +17020,7 @@ public class AssessmentService {
 				anx.setProfitcentreId(data.getProfitcentreId());
 				anx.setInvoiceType("IMP");
 				anx.setSrlNo(highestSRLNoNew);
-
+				anx.setLineNo(data.getAssesmentLineNo());
 //			anx.setActualNoOfPackages(c.getRates());
 				anx.setLocalAmt(anx.getActualNoOfPackages());
 				anx.setInvoiceAmt(anx.getActualNoOfPackages());
@@ -17113,6 +17119,7 @@ public class AssessmentService {
 			anx.setInvoiceType("BON");
 			anx.setStartDate(data.getNocFromDate());
 			anx.setGateOutDate(data.getNocValidityDate());
+			anx.setLineNo("1");;
 
 			if ("noc".equals(type)) {
 				anx.setInvoiceSubType("NOC");
