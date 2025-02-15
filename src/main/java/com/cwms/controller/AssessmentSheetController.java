@@ -1,6 +1,7 @@
 package com.cwms.controller;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cwms.repository.CFSTarrifServiceRepository;
 import com.cwms.repository.PartyRepository;
+import com.cwms.repository.TaxRepository;
 import com.cwms.service.AssessmentService;
+import com.cwms.service.MiscellaneousService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -24,11 +28,20 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @RequestMapping("/assessment")
 public class AssessmentSheetController {
 
-	 @Autowired
-	 private AssessmentService assessmentService;
-	 
-	 @Autowired
-	 private PartyRepository partyRepo;
+	@Autowired
+	private AssessmentService assessmentService;
+
+	@Autowired
+	private CFSTarrifServiceRepository cfstarrifservicerepo;
+
+	@Autowired
+	private PartyRepository partyRepo;
+	
+    @Autowired
+    private TaxRepository taxRepository;
+    
+    @Autowired
+    private MiscellaneousService miscellaneousService;
 	 
 	 @GetMapping("/searchImportBeforeSaveAssessmentData")
 	 public ResponseEntity<?> searchImportBeforeSaveAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
@@ -240,5 +253,66 @@ public class AssessmentSheetController {
 
 			 return assessmentService.getDataByAssessmentId1(cid, bid, id, partyId, creditType, type);
 		 }
+		 
+		 @GetMapping("getServices")
+			public ResponseEntity<?> getAllServices(@RequestParam("cid") String cid, @RequestParam("bid") String bid) {
+
+				List<Object[]> serviceList = cfstarrifservicerepo.getGeneralTarrifData2(cid, bid);
+				if (serviceList.isEmpty()) {
+					return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+				}
+
+				return new ResponseEntity<>(serviceList, HttpStatus.OK);
+			}
+			
+			@GetMapping("getTax")
+			public ResponseEntity<?> getTax(@RequestParam("cid") String cid, @RequestParam("bid") String bid) {
+
+				List<Object[]> serviceList = taxRepository.getTaxData(cid, bid);
+				if (serviceList.isEmpty()) {
+					return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+				}
+
+				return new ResponseEntity<>(serviceList, HttpStatus.OK);
+			}
+			
+			
+			@PostMapping("/saveMISCAssessmentData")
+			public ResponseEntity<?> saveMISCAssessmentData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam("user") String user, @RequestBody Map<String, Object> assessmentData)
+					throws JsonMappingException, JsonProcessingException {
+
+				return miscellaneousService.saveMiscellaneousData(cid, bid, user, assessmentData);
+
+			}
+
+			@PostMapping("/saveMISCInvoiceReceipt")
+			public ResponseEntity<?> saveMISCInvoiceReceipt(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam("creditStatus") String creditStatus, @RequestParam("user") String user,
+					@RequestBody Map<String, Object> assessmentData)
+					throws JsonMappingException, JsonProcessingException, CloneNotSupportedException {
+
+				if ("Y".equals(creditStatus)) {
+					return miscellaneousService.saveImportInvoiceCreditReceipt(cid, bid, user, assessmentData);
+				} else if ("P".equals(creditStatus)) {
+					return miscellaneousService.saveImportInvoicePdaReceipt(cid, bid, user, assessmentData);
+				} else {
+
+					return miscellaneousService.saveMISCInvoiceReceipt(cid, bid, user, assessmentData);
+
+				}
+			}
+			
+			@GetMapping("/searchMISCInvoiceData1")
+			public ResponseEntity<?> searchMISCInvoiceData1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam(name = "val", required = false) String val) {
+				return miscellaneousService.searchMISCInvoiceData1(cid, bid, val);
+			}
+
+			@GetMapping("/getSelectedMISCInvoiceData1")
+			public ResponseEntity<?> getSelectedMISCInvoiceData1(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam("assId") String assId, @RequestParam("invId") String invId) {
+				return miscellaneousService.getSelectedMISCInvoiceData1(cid, bid, assId, invId);
+			}
 			
 }

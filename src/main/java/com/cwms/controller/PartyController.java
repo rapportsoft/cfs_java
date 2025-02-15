@@ -663,4 +663,14 @@ public class PartyController {
 	
 	return ResponseEntity.ok(toSendGetParties);
 	}
+	
+	
+	
+	@GetMapping("/getImpExp")
+	public List<Object[]> getImpExp(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "val", required = false) String val) {
+		List<Object[]> getPort = partyrepo.getDataForImpAndExp(cid, bid, val);
+
+		return getPort;
+	}
 }

@@ -12,4 +12,9 @@ public interface CfinvsrvanxRepo extends JpaRepository<Cfinvsrvanx, String> {
 
 	@Query(value="select a from Cfinvsrvanx a where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.processTransId=:id")
 	List<Cfinvsrvanx> getDataByProcessTransId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	@Query(value="select a from Cfinvsrvanx a where a.companyId=:cid and a.branchId=:bid and a.status = 'A' "
+			+ "and a.processTransId=:id and a.serviceId=:sid")
+	List<Cfinvsrvanx> getDataByProcessTransIdAndServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,
+			@Param("sid") String sid);
 }

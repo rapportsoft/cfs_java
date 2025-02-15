@@ -214,5 +214,13 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 	List<Object[]> getDataByServiceIdForBondNOC(@Param("cid") String cid, @Param("bid") String bid,@Param("tariffNo") String tariffNo,
 			@Param("amd") String amd,@Param("service") String service,@Param("rtype") String rtype,@Param("code") List<String> code,@Param("code1") String code1);
 	
+	
+	
+	@Query(value="select s.serviceId, c.serviceShortDesc, c.serviceUnit, s.rate, s.serviceUnitI,s.cfsTariffNo,s.cfsAmendNo "
+			+ "from CFSTariffService s "
+			+ "LEFT OUTER JOIN Services c ON s.companyId=c.companyId and s.branchId=c.branchId and s.serviceId=c.serviceId "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status = 'A' and c.status = 'A' and s.cfsTariffNo='CFS1000001' "
+			+ "group by s.serviceId")
+	List<Object[]> getGeneralTarrifData2(@Param("cid") String cid,@Param("bid") String bid);
 
 }

@@ -246,4 +246,17 @@ List<Object[]> getCHAWithAdd(@Param("cid") String cid, @Param("bid") String bid,
 		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.partyName LIKE CONCAT (:val,'%'))")
 List<Object[]> getAllWithAdd(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 
+
+@Query(value = "SELECT p.party_Id, p.party_Name, a.address_1, a.address_2, a.address_3, a.sr_No,a.gst_no " +
+        "FROM Party p " +
+        "LEFT OUTER JOIN PartyAddress a ON p.company_Id = a.company_Id " +
+        "AND p.branch_Id = a.branch_Id " +
+        "AND p.party_Id = a.party_Id " +
+        "WHERE p.company_Id = :cid " +
+        "AND p.branch_Id = :bid " +
+        "AND p.status != 'D' " +
+        "AND (p.imp = 'Y' OR p.exp = 'Y') " + // Escape "exp" with double quotes
+        "AND (:val IS NULL OR :val = '' OR p.party_Name LIKE CONCAT(:val, '%'))",nativeQuery = true)
+List<Object[]> getDataForImpAndExp(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
 }
