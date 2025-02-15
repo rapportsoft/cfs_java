@@ -457,7 +457,7 @@ List<String> getExBondBeNo(@Param("cid") String cid,@Param("bid") String bid,@Pa
 	 		+ "noc.cha,p1.partyName,noc.chaSrNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,GROUP_CONCAT(dtl.commodityDescription),"
 	 		+ "c.onAccountOf,p2.partyName,pa3.gstNo,pa3.state,c.accSrNo,c.remainingPackages,c.areaRemaining,"
 	 		+ "c.remainingGw,c.remainingInsurance,c.noOf20Ft,c.noOf40Ft,d.storageValidityDate,"
-	 		+ "(select s.transId from SSRDtl s where s.companyId=:cid and s.branchId=:bid and s.exBondBeId=:boe and s.status='A'),"
+	 		+ "(select s.transId from SSRDtl s where s.companyId=:cid and s.branchId=:bid and s.exBondBeId=:boe and s.status='A' LIMIT 1),"
 	 		+ "c.exBondBeNo,c.exBondingId "
 	  		+ "from CfExBondCrg c "
 	  		+ "LEFT OUTER JOIN Cfbondnoc noc ON c.companyId=noc.companyId and c.branchId=noc.branchId and c.nocNo=noc.nocNo and c.nocTransId=noc.nocTransId "
