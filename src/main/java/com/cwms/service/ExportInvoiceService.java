@@ -6008,7 +6008,7 @@ public class ExportInvoiceService {
 			
 //			System.out.println("object1 \n" + object1);
 
-			List<Cfinvsrvanx> saveToData = new ArrayList<>();
+//			List<Cfinvsrvanx> saveToData = new ArrayList<>();
 			for (Cfinvsrvanx anx : filteredData) {
 
 				boolean existsByAssesmentIdAndSrlNo = exportInvoiceRepo.existsByAssesmentIdAndSrlNo(companyId, branchId,
@@ -6087,11 +6087,12 @@ public class ExportInvoiceService {
 					} else {
 						anx.setTaxPerc(zero);
 					}
-					saveToData.add(anx);
+//					saveToData.add(anx);
+					cfinvsrvanxrepo.save(anx);
 				}
 			}
 
-			cfinvsrvanxrepo.saveAll(saveToData);
+//			cfinvsrvanxrepo.saveAll(saveToData);
 
 			List<Cfinvsrvanx> cfinvSrvList = exportInvoiceRepo.getAllCfInvSrvAnxListByAssesmentId(companyId, branchId,
 					assessment.getProfitcentreId(), assessment.getAssesmentId(), object1.getLineNo());
@@ -6226,6 +6227,12 @@ public class ExportInvoiceService {
 		List<String> conSize1 = new ArrayList<>();
 		conSize1.add("ALL");
 		conSize1.add(("22".equals(containerSize)) ? "20" : containerSize);
+		
+		if("ALL".equalsIgnoreCase(containerSize))
+		{
+			conSize1.add("20");
+			conSize1.add("40");
+		}
 
 		List<String> cargoTypeList = new ArrayList<>();
 		cargoTypeList.add("ALL");
