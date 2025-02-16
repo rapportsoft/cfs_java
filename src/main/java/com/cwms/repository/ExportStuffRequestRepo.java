@@ -396,7 +396,7 @@ public interface ExportStuffRequestRepo extends JpaRepository<ExportStuffRequest
         + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
         + "AND E.sbNo = :sbNo "	  
         + "AND ec.noOfPackages = ec.cartedPackages AND (E.totalPackages - (ec.stuffReqQty * 1.0)) > 0 "
-        + "AND E.status <> 'D'")
+        + "AND E.status <> 'D' AND E.outOfCharge = 'Y'")
 List<Object[]> searchContainerNoForStuffingNew(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
 
 	

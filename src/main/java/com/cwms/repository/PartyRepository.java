@@ -36,26 +36,49 @@ List<Object[]> getPartyByTypeValueTariff(
 );
 	
 	
-	@Query(value = "SELECT p.party_id, p.party_name " +
-            "FROM party p " +
-            "WHERE p.company_id = :cid " +
-            "AND p.branch_id = :bid " +
-            "AND p.status != 'D' " +
-            "AND (" +
-            "   (:type = 'cha' AND p.cha = 'Y') " +
-            "   OR (:type = 'on' AND p.agt = 'Y') " +
-            "   OR (:type = 'exp' AND p.exp = 'Y') " +
-            "   OR (:type = 'sa' AND p.agt = 'Y') " +
-            "   OR (:type = 'sl' AND p.lin = 'Y') " +
-            ") " +
-            "AND (:val IS NULL OR :val = '' OR p.party_name LIKE CONCAT(:val, '%'))", 
-            nativeQuery = true)
-List<Object[]> getPartyByTypeValue(
-    @Param("cid") String cid,
-    @Param("bid") String bid,
-    @Param("val") String val,
-    @Param("type") String type
+//	@Query(value = "SELECT p.party_id, p.party_name " +
+//            "FROM party p " +
+//            "WHERE p.company_id = :cid " +
+//            "AND p.branch_id = :bid " +
+//            "AND p.status != 'D' " +
+//            "AND (" +
+//            "   (:type = 'cha' AND p.cha = 'Y') " +
+//            "   OR (:type = 'on' AND p.agt = 'Y') " +
+//            "   OR (:type = 'exp' AND p.exp = 'Y') " +
+//            "   OR (:type = 'sa' AND p.agt = 'Y') " +
+//            "   OR (:type = 'sl' AND p.lin = 'Y') " +
+//            ") " +
+//            "AND (:val IS NULL OR :val = '' OR p.party_name LIKE CONCAT(:val, '%'))", 
+//            nativeQuery = true)
+//List<Object[]> getPartyByTypeValue(
+//    @Param("cid") String cid,
+//    @Param("bid") String bid,
+//    @Param("val") String val,
+//    @Param("type") String type
+//);
+
+
+@Query(value = "SELECT p.party_id, p.party_name " + 
+        "FROM party p " + 
+        "WHERE p.company_id = :cid " + 
+        "AND p.branch_id = :bid " + 
+        "AND p.status != 'D' " + 
+        "AND (" + 
+        "   (:type = 'on') " + 
+        "   OR (:type = 'cha' AND p.cha = 'Y') " + 
+        "   OR (:type = 'exp' AND p.exp = 'Y') " + 
+        "   OR (:type = 'sa' AND p.agt = 'Y') " + 
+        "   OR (:type = 'sl' AND p.lin = 'Y') " + 
+        ") " + 
+        "AND (:val IS NULL OR :val = '' OR p.party_name LIKE CONCAT(:val, '%'))", 
+        nativeQuery = true)
+List<Object[]> getPartyByTypeValue( 
+@Param("cid") String cid, 
+@Param("bid") String bid, 
+@Param("val") String val, 
+@Param("type") String type
 );
+
 
 	
 	
