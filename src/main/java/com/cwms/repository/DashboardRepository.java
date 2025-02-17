@@ -272,6 +272,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 					        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 					        "AND a.Status = 'A' AND a.gate_out_date BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) AND CURRENT_DATE " +
 					        "AND a.trans_type IN ('CONT', 'MOVE', 'BOWC') " +
+					        "AND c.mov_req_type IN ('CLP', 'Buffer', 'ONWH') " + // ADDED EXTRA LINE AS PER THE CHART QUERY PLEASE CHECK 
 					        "AND a.Profitcentre_Id = 'N00004' " +
 					        "GROUP BY a.container_no, a.gate_out_id", 
 					nativeQuery = true)
@@ -611,7 +612,8 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								 @Query(value = "SELECT a.Profitcentre_Id, " +
 								            "CONCAT(a.Payment_Mode, '-', b.Profitcentre_Desc) AS Paymode, " +
 								            "a.Payment_Mode, COUNT(DISTINCT a.Trans_Id), " +
-								            "SUM(a.Document_Amt) " +
+//								            "SUM(a.Document_Amt) " +
+								            "IF(a.credit_flag = 'Y' , SUM(a.Credit_Amount * -1) , SUM(a.Document_Amt) ) Amount "+
 								            "FROM fintrans a " +
 								            "LEFT OUTER JOIN profitcentre b " +
 								            "ON a.Company_Id = b.Company_Id " +
@@ -841,8 +843,8 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								        "FROM cfgatein a " +
 								        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 								        "AND a.status = 'A' AND a.Profitcentre_Id = 'N00004' " +
-//								        "AND a.Gate_In_Type IN ('Buffer', 'ONWH', 'FDS') " +
-								"AND a.Gate_In_Type IN ('Buffer') " +
+								        "AND a.Gate_In_Type IN ('Buffer', 'ONWH') " +
+//								"AND a.Gate_In_Type IN ('Buffer') " +
 								        "AND a.Process_Id = 'P00234' " +
 								        "AND a.in_Gate_In_Date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
 								        "GROUP BY a.Container_No " +
@@ -861,6 +863,7 @@ public interface DashboardRepository extends JpaRepository<Cfigmcn, String> {
 								        "WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
 								        "AND a.Status = 'A' AND a.gate_out_date BETWEEN :startDate AND CURRENT_TIMESTAMP " +
 								        "AND a.trans_type IN ('CONT', 'MOVE', 'BOWC') " +
+								        "AND c.mov_req_type IN ('CLP', 'Buffer', 'ONWH') " +// ADDED EXTRA LINE AS PER THE CHART QUERY PLEASE CHECK 
 								        "AND a.Profitcentre_Id = 'N00004' " +
 								        "GROUP BY a.container_no, a.gate_out_id", 
 								nativeQuery = true)
