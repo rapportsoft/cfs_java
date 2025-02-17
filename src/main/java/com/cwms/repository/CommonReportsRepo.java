@@ -1603,6 +1603,13 @@ List<Object[]> findFCLDestuffContainerDetails( @Param("companyId") String compan
         + " DATE_FORMAT(c.igm_Date,'%d %b %Y') AS IgmDate, b.drt,  d.bl_no, "
         + "b.container_status, b.block_cell_no  "
         + "FROM cfigmcn b "
+        + "LEFT OUTER JOIN cfgateout z ON z.erp_doc_ref_no = b.igm_trans_id " +
+        "AND z.doc_ref_no = b.igm_no " +
+        "AND z.container_no = b.container_no " +
+        "AND z.profitcentre_id = b.profitcentre_id " +
+        "AND z.gate_out_id = b.gate_out_id " +
+        "AND z.company_id = b.company_id " +
+        "AND z.branch_id = b.branch_id " 
         + "LEFT OUTER JOIN cfigm c ON b.igm_trans_id = c.igm_trans_id AND b.igm_no = c.igm_no "
         + "AND c.company_id = b.company_id AND c.branch_id = b.branch_id AND c.profitcentre_id = b.profitcentre_id "
         + "LEFT OUTER JOIN cfigmcrg d ON b.igm_trans_id = d.igm_trans_id AND b.igm_no = d.igm_no "
@@ -1619,16 +1626,19 @@ List<Object[]> findFCLDestuffContainerDetails( @Param("companyId") String compan
         + "LEFT OUTER JOIN jar_detail j ON d.company_id = j.company_id AND d.origin = j.jar_dtl_id "
         + "AND j.jar_id = 'ORIGIN' "
         + "LEFT OUTER JOIN cfgatein g ON g.Gate_In_Id = b.Gate_In_Id AND g.company_id = b.company_id "
-        + "AND g.branch_id = b.branch_id AND g.profitcentre_id = b.profitcentre_id "
+        + "AND g.branch_id = b.branch_id AND g.Container_No = b.Container_No and g.Profitcentre_Id = b.Profitcentre_Id  "
         + "LEFT OUTER JOIN party k ON k.company_id = c.company_id AND c.shipping_line = k.party_id "
         + "WHERE b.company_id = :companyId AND b.branch_id = :branchId AND"
         + " b.container_status = 'FCL' "
         + "AND b.profitcentre_id = 'N00002' "
-        + "AND (b.de_stuff_id = '' OR b.de_stuff_id IS NULL OR b.de_stuff_Date > :date) "
-        + "AND b.status = 'A' AND b.gate_in_id != '' OR b.gate_in_id IS NOT NULL  "
-        + "AND b.gate_in_date < :date "
-        + "AND b.Gate_Out_date BETWEEN :startDate AND :date "
-        + " AND b.container_no != '' " 
+//        + "AND (b.de_stuff_id = '' OR b.de_stuff_id IS NULL OR b.de_stuff_Date > :date) "
+        + "AND b.status = 'A' "
+        + " AND b.gate_in_id != '' "
+        + " AND b.Gate_Out_Id != '' "
+//        + "AND b.gate_in_date < :date "
+        + "AND z.Gate_Out_date BETWEEN :startDate AND :date "
+//        + " AND b.container_no != '' OR  b.container_no IS NOT NULL " 
++ " AND b.container_no != '' " 
         + "GROUP BY b.container_no "
         + "ORDER BY b.Gate_in_Date", nativeQuery = true)
 List<Object[]> findFCLLoadedContainerInfo(@Param("companyId") String companyId, 
