@@ -219,7 +219,7 @@ List<Object[]> findContainerDetails(
         "m.party_Name, n.Party_Name, v.vessel_Name, d.POL, d.Customs_Seal_No, d.Agent_Seal_No, d.VIA_No, " +
         "IFNULL(d.Stuffed_Qty, '0.00'), IFNULL(d.Cargo_weight, '0.00'), IFNULL(d.Tare_Weight, '0.00'), " +
         "a.Transporter_Name, '', a.Vehicle_No, DATE_FORMAT(d.Period_From, '%d-%m-%Y %H:%i'), a.Location, " +
-        "d.MOVEMENT_TYPE, a.Comments, a.Invoice_No, d.On_Account_Of, a.SL " +
+        "d.MOVEMENT_TYPE, a.Comments, c.Invoice_No, d.On_Account_Of, a.SL " +
         "FROM cfgateout a " +
         "LEFT OUTER JOIN cfexpmovementreq c ON a.company_id = c.company_id AND a.branch_id = c.branch_id " +
         "AND a.gate_out_id = c.gate_out_id AND c.Container_no = a.Container_no AND c.Profitcentre_Id = a.Profitcentre_Id " +
@@ -414,10 +414,13 @@ List<Object[]> findExportCartingData(@Param("companyId") String companyId,
         "LEFT OUTER JOIN party m ON b.Company_Id = m.Company_Id AND b.branch_id =m.branch_id AND b.SL = m.Party_Id " +
         "LEFT OUTER JOIN Party o ON b.Company_Id = o.Company_Id AND b.branch_id =o.branch_id AND b.On_Account_Of = o.Party_Id " +
         "LEFT OUTER JOIN party n ON b.Company_Id = n.Company_Id AND b.branch_id =n.branch_id AND b.CHA = n.Party_Id " +
-        "LEFT OUTER JOIN vessel vs ON st.company_id = vs.company_id AND st.vessel_id = vs.vessel_id " +
-        "WHERE b.company_id = :companyId AND b.branch_id = :branchId AND b.status = 'A' " +
+        "LEFT OUTER JOIN vessel vs ON st.company_id = vs.company_id AND st.vessel_id = vs.vessel_id AND st.branch_id = vs.branch_id " +
+        "WHERE b.company_id = :companyId AND b.branch_id = :branchId AND "
+        + "b.status = 'A' " +
         "AND b.in_gate_in_date BETWEEN :startDate AND :endDate " +
-        "AND b.Gate_In_Type IN ('Buffer', 'ONWH', 'FDS') AND b.Process_Id = 'P00223' AND b.Profitcentre_Id = 'N00004' " +
+        "AND b.Gate_In_Type IN ('Buffer', 'ONWH', 'FDS') "
+//        + "AND b.Process_Id = 'P00223' "
+        + "AND b.Profitcentre_Id = 'N00004' " +
         "AND (:sbNo IS NULL OR :sbNo = '' OR d.SB_No = :sbNo) " +
         "AND (:bookingNo IS NULL OR :bookingNo = '' OR b.Delivery_Order_No = :bookingNo) " +
         "AND (:exporterName IS NULL OR :exporterName = '' OR d.exporter_id = :exporterName) " +
@@ -453,8 +456,8 @@ List<Object[]> exportFactoryStuffGateInReport(
         "AND i.Profitcentre_Id = a.Profitcentre_Id AND DATE_FORMAT(i.Period_From,'%d %b %Y') = DATE_FORMAT(a.in_gate_in_date,'%d %b %Y') " +
         "LEFT OUTER JOIN cfsb b ON a.company_id = b.company_id AND b.SB_Trans_Id = a.erp_doc_ref_no AND a.Branch_Id = b.Branch_Id " +
         "LEFT OUTER JOIN party p ON p.company_id = a.company_id AND a.sa = p.party_id AND p.branch_id =a.branch_id " +
-        "LEFT OUTER JOIN cfigm c ON c.company_id = b.company_id AND c.branch_id = b.branch_id AND a.Profitcentre_Id = c.Profitcentre_Id " +
-        "AND a.VIA_NO = c.VIA_NO AND a.Doc_Ref_Date = c.Doc_Date AND a.profitcentre_id = c.profitcentre_id " +
+//        "LEFT OUTER JOIN cfigm c ON c.company_id = b.company_id AND c.branch_id = b.branch_id AND a.Profitcentre_Id = c.Profitcentre_Id " +
+//        "AND a.VIA_NO = c.VIA_NO AND a.Doc_Ref_Date = c.Doc_Date AND a.profitcentre_id = c.profitcentre_id " +
         "LEFT OUTER JOIN party q ON q.company_id = a.company_id AND a.on_account_of = q.party_id AND q.branch_id =a.branch_id " +
         "LEFT OUTER JOIN party n ON a.company_id = n.company_id AND a.sl = n.party_id AND a.branch_id =n.branch_id " +
         "LEFT OUTER JOIN vessel v ON i.company_id = v.company_id AND i.Vessel_Id = v.Vessel_Id  AND i.branch_id =v.branch_id " +
@@ -626,7 +629,8 @@ List<Object[]> findExportGateOutBasedData(
 "WHERE a.company_id = :companyId " +
 "AND a.branch_id = :branchId " +
 "AND a.Profitcentre_Id = 'N00004' " +
-"AND i.MOVEMENT_TYPE = 'ONWH' " +
+//"AND i.MOVEMENT_TYPE = 'ONWH' " +
+"AND i.MOVEMENT_TYPE IN ('ONWH','Buffer') " +
 "AND i.Stuff_Tally_Date BETWEEN :startDate AND :endDate " +
 "AND (:sbNo IS NULL OR :sbNo = '' OR b.SB_No = :sbNo) " +
 "AND (:bookingNo IS NULL OR :bookingNo = '' OR a.delivery_order_no = :bookingNo) " +
@@ -751,7 +755,7 @@ List<Object[]> findExportContainerONWHBuffer(
 	            "AND a.branch_id = :branchId " +
 	            "AND a.Profitcentre_Id = 'N00004' " +
 	            "AND a.status = 'A' " +
-	            "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) " +
+	            "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL OR a.Gate_Out_Date > :endDate) " +
 	            "AND (a.Stuff_Req_Date != '0000-00-00 00:00:00' " +
 	            "AND a.Stuff_Req_Date < :endDate) " +
 	            "AND a.Container_Status = 'MTY' " +
@@ -803,7 +807,7 @@ List<Object[]> findExportContainerONWHBuffer(
 	            "AND a.branch_id = :branchId " +
 	            "AND a.Profitcentre_Id = 'N00004' " +
 	            "AND a.status = 'A' " +
-	            "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) " +
+	            "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL OR a.Gate_Out_Date > :endDate) " +
 	            "AND a.Container_Status IN ('LDD', 'FCL') " +
 	            "AND (:sbNo IS NULL OR :sbNo = '' OR b.SB_No = :sbNo) " +
 	            "AND (:bookingNo IS NULL OR :bookingNo = '' OR c.delivery_order_no = :bookingNo) " +
@@ -914,12 +918,12 @@ List<Object[]> findExportContainerONWHBuffer(
 	                "WHERE a.Company_Id = :companyId " +
 	                "AND a.Branch_Id = :branchId " +
 	                "AND a.Profitcentre_Id = 'N00004' " +
-	                "AND a.Movement_Req_Id != '' " +
+	                "AND a.Movement_Req_Id != '' OR a.Movement_Req_Id IS NULL " +
 	                "AND a.status = 'A' " +
 	                "AND a.Movement_Req_Date >= :endDate " +
 	                "AND a.ProfitCentre_Id = 'N00004' " +
 	                "AND a.status = 'A' " +
-	                "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) " +
+	                "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL OR a.Gate_Out_Date > :endDate) " +
 	                "AND (:sbNo IS NULL OR :sbNo = '' OR g.SB_No = :sbNo) " +
 //	                "AND (:bookingNo IS NULL OR :bookingNo = '' OR a.delivery_order_no = :bookingNo) " +
 //	                "AND (:exporterName IS NULL OR :exporterName = '' OR c.Exporter_Id = :exporterName) " +

@@ -399,8 +399,10 @@ List<Object[]> exportFcl(@Param("companyId") String companyId,
         " FROM cfexpinventory a " +
         " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
         " AND a.Status = 'A' " +
-        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) " +
-        " AND (a.Stuff_Req_Date != '0000-00-00 00:00:00' AND a.Stuff_Req_Date < :endDate) " +
+//        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) " +
+//        " AND (a.Stuff_Req_Date != '0000-00-00 00:00:00' AND a.Stuff_Req_Date < :endDate) " +
+" AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL OR a.Gate_Out_Date > :endDate) " +
+" AND (a.Stuff_Req_id != '' OR a.Stuff_Req_id IS NOT NULL AND a.Stuff_Req_Date < :endDate) " +
         " AND a.Container_Status = 'MTY' " +
         " AND a.cycle != 'Hub' " +
         " GROUP BY a.container_no) " +
@@ -409,7 +411,7 @@ List<Object[]> exportFcl(@Param("companyId") String companyId,
         " FROM cfexpinventory a " +
         " WHERE a.Company_Id = :companyId AND a.Branch_Id = :branchId " +
         " AND a.Status = 'A' " +
-        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) " +
+        " AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL OR  a.Gate_Out_Date > :endDate) " +
         " AND a.Container_Status IN ('LDD', 'FCL') " +
         " GROUP BY a.container_no)", 
 nativeQuery = true)
@@ -962,11 +964,12 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                "WHERE " +
             	                "    b.company_id = :companyId " +
             	                "    AND b.branch_id = :branchId " +
-            	                "    AND b.container_type IN ('RF', 'HRF', 'HR') " +
+//            	                "    AND b.container_type IN ('RF', 'HRF', 'HR')  OR b.Type_of_container ='Reefer' " +
+"    AND b.Type_of_container ='Reefer' " +
             	                "    AND b.status = 'A' " +
             	                "    AND b.Gate_In_Date < :date " +
-            	                "    AND (b.gate_out_id = '' OR b.gate_out_date > :date) " +
-            	                "    AND (b.de_stuff_id = '' OR b.de_stuff_Date > :date) " +
+            	                "    AND (b.gate_out_id = '' OR b.gate_out_id IS NULL OR b.gate_out_date > :date) " +
+            	                "    AND (b.de_stuff_id = '' OR b.de_stuff_id IS NULL OR b.de_stuff_Date > :date) " +
             	                "    AND b.gate_in_id != '' " +
             	                "    AND b.profitcentre_id = 'N00002' " +
             	                "GROUP BY " +
@@ -1005,7 +1008,8 @@ List<Object[]> findPortContainerDetails(@Param("companyId") String companyId,
             	                "    b.company_id = :companyId " +
             	                "    AND b.branch_id = :branchId " +
             	                "    AND b.Process_Id = 'P00212' " +
-            	                "    AND b.container_type IN ('RF', 'HRF', 'HR') " +
+//            	                "    AND b.container_type IN ('RF', 'HRF', 'HR') OR b.Type_of_container IN ('Reefer') " +
+"    AND b.container_type IN ('RF', 'HRF', 'HR') " +
             	                ")",
             	                nativeQuery = true)
             	            List<Object[]> findReeferContainers(
@@ -1617,11 +1621,11 @@ List<Object[]> findFCLDestuffContainerDetails( @Param("companyId") String compan
         + "LEFT OUTER JOIN cfgatein g ON g.Gate_In_Id = b.Gate_In_Id AND g.company_id = b.company_id "
         + "AND g.branch_id = b.branch_id AND g.profitcentre_id = b.profitcentre_id "
         + "LEFT OUTER JOIN party k ON k.company_id = c.company_id AND c.shipping_line = k.party_id "
-        + "WHERE b.company_id = :companyId AND b.branch_id = :branchId AND b.container_status = 'FCL' "
+        + "WHERE b.company_id = :companyId AND b.branch_id = :branchId AND"
+        + " b.container_status = 'FCL' "
         + "AND b.profitcentre_id = 'N00002' "
-        + "AND (b.de_stuff_id = '' OR b.de_stuff_Date > :date) "
-        + "AND b.status = 'A' AND b.gate_in_id != '' "
-        + "AND b.status = 'A' AND b.gate_in_id != '' "
+        + "AND (b.de_stuff_id = '' OR b.de_stuff_id IS NULL OR b.de_stuff_Date > :date) "
+        + "AND b.status = 'A' AND b.gate_in_id != '' OR b.gate_in_id IS NOT NULL  "
         + "AND b.gate_in_date < :date "
         + "AND b.Gate_Out_date BETWEEN :startDate AND :date "
         + " AND b.container_no != '' " 

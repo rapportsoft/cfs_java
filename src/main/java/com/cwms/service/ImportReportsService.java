@@ -21279,7 +21279,7 @@ cell.setCellStyle(cellStyle);
 		        	    "Out Date",             // DATE_FORMAT(c.Gate_Out_Date, '%d %b %Y %H:%i')
 		        	    "Out Date1",            // Alternate Out date
 		        	    "Voy",                  // b.Via_No
-		        	    "Equipement",           // Equipment details
+		        	    "Equipment",           // Equipment details
 		        	    "Truckno",              // Truck number
 		        	    "Remark",               // Remarks
 		        	    "BOE",                  // Bill of Entry (BOE number)
@@ -21614,7 +21614,7 @@ cell.setCellStyle(cellStyle);
 		                    cell.setCellValue(resultData1[19] != null ? resultData1[19].toString() : ""); // Voyage Number
 		                    break;
 
-		                case "Equipement":
+		                case "Equipment":
 		                    cell.setCellValue(resultData1[20] != null ? resultData1[20].toString() : ""); // Equipment
 		                    break;
 
