@@ -81,13 +81,13 @@ public class CreditNoteHdr {
 	    @Column(name = "old_Invoice_Amt", precision = 12, scale = 2, nullable = false)
 	    private BigDecimal oldInvoiceAmt;
 
-	    @Column(name = "Invoice_Type", length = 3, nullable = false)
+	    @Column(name = "Invoice_Type", length = 3)
 	    private String invoiceType;
 
-	    @Column(name = "Invoice_Sub_Type", length = 10, nullable = false)
+	    @Column(name = "Invoice_Sub_Type", length = 10)
 	    private String invoiceSubType;
 
-	    @Column(name = "Trans_Type", length = 10, nullable = false)
+	    @Column(name = "Trans_Type", length = 10)
 	    private String transType;
 
 	    @Column(name = "ERP_Doc_Ref_No", length = 10)
