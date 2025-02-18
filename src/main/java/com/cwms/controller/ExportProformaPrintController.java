@@ -96,6 +96,24 @@ public class ExportProformaPrintController {
 		context.setVariable("createdBy", invdtl.get("createdBy"));
 		
 
+		Object bankdtl = exportproformaprintrepository.getBankDetails(cid, bid);
+		if (bankdtl != null) {
+    	    Object[] fields = (Object[]) bankdtl;
+    	    
+    	    String bankName = (String)fields[0];   	   
+    	    String bankAccNo = (String)fields[1];
+    	    String bankifsc = (String)fields[2];
+    	    String bankAddr = (String)fields[3];
+    	    
+    	    
+    	    
+    	    context.setVariable("bankName",bankName);
+    		context.setVariable("bankAcc",bankAccNo);
+    		context.setVariable("bankIfsc",bankifsc);
+    		context.setVariable("bankAdd",bankAddr);
+    	    
+    	   
+    	}
 		
 		List<Map<String,String>> itemList = exportproformaprintservice.getDetailsOfBill(cid, bid, invoiceNo);
 		if(!itemList.isEmpty()) {
@@ -481,6 +499,26 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		
 		//detils of services 
 		
+
+		Object bankdtl = exportproformaprintrepository.getBankDetails(cid, bid);
+		if (bankdtl != null) {
+    	    Object[] fields = (Object[]) bankdtl;
+    	    
+    	    String bankName = (String)fields[0];   	   
+    	    String bankAccNo = (String)fields[1];
+    	    String bankifsc = (String)fields[2];
+    	    String bankAddr = (String)fields[3];
+    	    
+    	    
+    	    
+    	    context.setVariable("bankName",bankName);
+    		context.setVariable("bankAcc",bankAccNo);
+    		context.setVariable("bankIfsc",bankifsc);
+    		context.setVariable("bankAdd",bankAddr);
+    	    
+    	   
+    	}
+		
 		List<Map<String,String>> itemList = exportproformaprintservice.getDetailsOfBill(cid, bid, invoiceNo);
 		if(!itemList.isEmpty()) {
 			
@@ -865,6 +903,26 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		String isBos1 =invdtl.get("isBOS");
 		context.setVariable("isBOS", (isBos1 != null) ? isBos1 : "N");
 		context.setVariable("createdBy", invdtl.get("createdBy"));
+		
+
+		Object bankdtl = exportproformaprintrepository.getBankDetails(cid, bid);
+		if (bankdtl != null) {
+    	    Object[] fields = (Object[]) bankdtl;
+    	    
+    	    String bankName = (String)fields[0];   	   
+    	    String bankAccNo = (String)fields[1];
+    	    String bankifsc = (String)fields[2];
+    	    String bankAddr = (String)fields[3];
+    	    
+    	    
+    	    
+    	    context.setVariable("bankName",bankName);
+    		context.setVariable("bankAcc",bankAccNo);
+    		context.setVariable("bankIfsc",bankifsc);
+    		context.setVariable("bankAdd",bankAddr);
+    	    
+    	   
+    	}
 		
 	
 		List<Map<String,String>> itemList = exportproformaprintservice.getDetailsOfBill(cid, bid, invoiceNo);

@@ -453,7 +453,9 @@ List<Object[]> exportFactoryStuffGateInReport(
         "DATE_FORMAT(i.Period_From,'%d %b %Y %H:%i') AS periodFrom, i.On_Account_Of " +
         "FROM cfstufftally i " +
         "LEFT OUTER JOIN cfgatein a ON i.Company_Id = a.Company_Id AND i.Branch_id = a.Branch_id AND i.Container_no = a.Container_no " +
-        "AND i.Profitcentre_Id = a.Profitcentre_Id AND DATE_FORMAT(i.Period_From,'%d %b %Y') = DATE_FORMAT(a.in_gate_in_date,'%d %b %Y') " +
+        "AND i.Profitcentre_Id = a.Profitcentre_Id " +
+//        + "AND DATE_FORMAT(i.Period_From,'%d %b %Y') = DATE_FORMAT(a.in_gate_in_date,'%d %b %Y') " +
+        "AND i.gate_in_id = a.gate_in_id  " +
         "LEFT OUTER JOIN cfsb b ON a.company_id = b.company_id AND b.SB_Trans_Id = a.erp_doc_ref_no AND a.Branch_Id = b.Branch_Id " +
         "LEFT OUTER JOIN party p ON p.company_id = a.company_id AND a.sa = p.party_id AND p.branch_id =a.branch_id " +
 //        "LEFT OUTER JOIN cfigm c ON c.company_id = b.company_id AND c.branch_id = b.branch_id AND a.Profitcentre_Id = c.Profitcentre_Id " +
@@ -466,7 +468,8 @@ List<Object[]> exportFactoryStuffGateInReport(
         "LEFT OUTER JOIN cfequipmentactivity eq ON i.company_id = eq.company_id AND i.branch_id = eq.branch_id " +
         "AND i.stuff_id = eq.de_stuff_id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.Profitcentre_Id ='N00004' " +
-        "AND i.MOVEMENT_TYPE ='CLP' "
+        "AND i.MOVEMENT_TYPE IN ('CLP') " +
+        "AND i.container_no != '' "
         + "AND i.Stuff_Tally_Date BETWEEN :startDate AND :endDate " +
         "AND (:sbNo IS NULL OR :sbNo = '' OR b.SB_No = :sbNo) " +
         "AND (:bookingNo IS NULL OR :bookingNo = '' OR a.Delivery_Order_No = :bookingNo) " +

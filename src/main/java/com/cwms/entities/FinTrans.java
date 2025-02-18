@@ -819,5 +819,26 @@ public class FinTrans {
 			this.status = status;
 			this.creditAmount = creditAmount;
 		}
+		 public FinTrans(String transId, String oprInvoiceNo, String oprAdjTransId, 
+                 String paymentMode, String partyId, int accSrNo, 
+                 String acCode, BigDecimal documentAmt, BigDecimal creditAmount, 
+                 String creditFlag, Date transDate, String billingParty, 
+                 BigDecimal credAmtAdj, BigDecimal lineId) {
+     this.transId = transId;
+     this.oprInvoiceNo = oprInvoiceNo;
+     this.oprAdjTransId = oprAdjTransId;
+     this.paymentMode = paymentMode;
+     this.partyId = partyId;
+     this.accSrNo = accSrNo;
+     this.acCode = acCode;
+     this.documentAmt = documentAmt;
+     this.creditAmount = creditAmount;
+     this.creditFlag = creditFlag;
+     this.transDate = transDate;
+     this.billingParty = billingParty;
+     this.credAmtAdj = credAmtAdj;
+     this.lineId = lineId;
+ }
+		
 		
 }

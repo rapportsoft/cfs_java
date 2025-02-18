@@ -2898,21 +2898,52 @@ public class ExportReportsServiceReports {
 		                    }
 		                    break;
 
+//		                case "No Of Packages":
+//		                    if (resultData1[19] != null) {
+//		                        cell.setCellValue(Integer.parseInt(resultData1[19].toString()));
+//		                    } else {
+//		                        cell.setCellValue("");
+//		                    }
+//		                    break;
+		                    
+//			                case "Weight":
+//		                    if (resultData1[20] != null) {
+//		                        cell.setCellValue(Double.parseDouble(resultData1[20].toString()));
+//		                    } else {
+//		                        cell.setCellValue("");
+//		                    }
+//		                    break;
+		                    
 		                case "No Of Packages":
+		                    // Parsing logic for Dec Pkgs as Double
+		                    Double decPkgs = 0.00;
 		                    if (resultData1[19] != null) {
-		                        cell.setCellValue(Integer.parseInt(resultData1[19].toString()));
-		                    } else {
-		                        cell.setCellValue("");
+		                        try {
+		                            decPkgs = Double.parseDouble(resultData1[19].toString());
+		                        } catch (NumberFormatException e) {
+		                            decPkgs = 0.00;
+		                        }
 		                    }
+		                    cell.setCellValue(decPkgs);
+		                    cell.setCellStyle(numberCellStyle);
+		                    break;
+		                    
+		                case "Weight":
+		                    // Parsing logic for Dec Pkgs as Double
+		                    Double decPkgs1 = 0.00;
+		                    if (resultData1[20] != null) {
+		                        try {
+		                            decPkgs1 = Double.parseDouble(resultData1[20].toString());
+		                        } catch (NumberFormatException e) {
+		                            decPkgs1 = 0.00;
+		                        }
+		                    }
+		                    cell.setCellValue(decPkgs1);
+		                    cell.setCellStyle(numberCellStyle);
 		                    break;
 
-		                case "Weight":
-		                    if (resultData1[20] != null) {
-		                        cell.setCellValue(Double.parseDouble(resultData1[20].toString()));
-		                    } else {
-		                        cell.setCellValue("");
-		                    }
-		                    break;
+
+
 
 		                case "Vessel":
 		                    cell.setCellValue(resultData1[21] != null ? resultData1[21].toString() : "");

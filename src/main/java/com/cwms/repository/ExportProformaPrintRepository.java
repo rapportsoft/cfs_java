@@ -33,15 +33,28 @@ public interface ExportProformaPrintRepository extends JpaRepository<ExportStuff
             @Param("companyId") String companyId);
 	
 	
+//	@Query(value = "select distinct a.container_no, a.container_size, a.container_type, v.Vessel_Name , e.VIA_No , DATE_FORMAT(a.Gate_In_Date,'%d-%m-%Y'), DATE_FORMAT(a.Stuff_Tally_Date,'%d-%m-%Y'), e.Container_Invoice_Type, e.SB_No , DATE_FORMAT( e.SB_Date, '%d %b %Y' ) , DATE_FORMAT(MIN(f.Carting_Trans_Date), '%d %b %Y' ), ROUND(g.Gross_Weight, 2 ), ROUND(SUM(DISTINCT anx.Invoice_Amt),2) Amount , ROUND(SUM(DISTINCT  f.Area_Occupied),2) , e.Commodity,IFNULL(DATE_FORMAT(c.Gate_Out_Date,'%d %b %Y' ),''), e.Exporter_Name  "
+//			+ "from cfassesmentsheetpro a left outer join cfexpmovementreq c on a.company_id=c.company_id  and a.branch_id=c.branch_id  and a.container_no=c.container_no and a.Movement_Req_Id=c.Movement_Req_Id and a.Profitcentre_Id = c.Profitcentre_Id and a.Assesment_Id = c.Assesment_Id left outer join cfstufftally e on e.company_id=c.company_id  and e.branch_id=c.branch_id  and e.Movement_Req_Id=c.Movement_Req_Id and e.Stuff_Tally_Id = c.Stuff_Tally_Id and e.Profitcentre_Id = c.Profitcentre_Id and e.container_no = c.container_No "
+//			+ "left outer join cfcrtg f on e.Company_Id=f.Company_Id  and e.Branch_Id=f.Branch_Id and e.Carting_Trans_Id=f.Carting_Trans_Id and e.Carting_Line_Id=f.Carting_Line_Id and e.Profitcentre_Id = f.Profitcentre_Id and e.SB_Trans_Id = f.SB_Trans_Id and e.SB_No = f.SB_No and e.SB_Line_Id = f.SB_Line_No left outer join cfsbcrg g on e.Company_Id=g.Company_Id  and e.Branch_Id=g.Branch_Id and  e.Profitcentre_Id = g.Profitcentre_Id and e.SB_Trans_Id = g.SB_Trans_Id and e.SB_No = g.SB_No and e.SB_Line_Id = g.SB_Line_No left outer join vessel v on e.Company_Id = v.Company_Id and e.Vessel_Id = v.Vessel_Id "
+//			+ "left outer join cfinvsrvanxpro anx on a.company_id=anx.company_id  and a.branch_id=anx.branch_id and a.container_no=anx.container_no and a.Profitcentre_Id = anx.Profitcentre_Id and a.Assesment_Id = anx.Process_Trans_Id and a.invoice_no=anx.Invoice_No and a.container_no=anx.container_no and anx.Service_Id='S00008' and e.sb_no=anx.cargosbno where a.Company_Id=:companyId AND  a.branch_id=:branchId and a.status='A' and a.SB_Trans_Id =:sbTransID and a.assesment_id =:assesmentId group by a.container_no , e.sb_trans_Id, e.sb_No  order by a.container_no ASC",nativeQuery = true)
+//	List<Object[]> getContainerAndSbDetails(@Param("companyId") String companyId, 
+//            @Param("branchId") String branchId,
+//            @Param("sbTransID") String sbTransID,
+//            @Param("assesmentId") String assesmentId
+//            );
+	
 	@Query(value = "select distinct a.container_no, a.container_size, a.container_type, v.Vessel_Name , e.VIA_No , DATE_FORMAT(a.Gate_In_Date,'%d-%m-%Y'), DATE_FORMAT(a.Stuff_Tally_Date,'%d-%m-%Y'), e.Container_Invoice_Type, e.SB_No , DATE_FORMAT( e.SB_Date, '%d %b %Y' ) , DATE_FORMAT(MIN(f.Carting_Trans_Date), '%d %b %Y' ), ROUND(g.Gross_Weight, 2 ), ROUND(SUM(DISTINCT anx.Invoice_Amt),2) Amount , ROUND(SUM(DISTINCT  f.Area_Occupied),2) , e.Commodity,IFNULL(DATE_FORMAT(c.Gate_Out_Date,'%d %b %Y' ),''), e.Exporter_Name  "
-			+ "from cfassesmentsheetpro a left outer join cfexpmovementreq c on a.company_id=c.company_id  and a.branch_id=c.branch_id  and a.container_no=c.container_no and a.Movement_Req_Id=c.Movement_Req_Id and a.Profitcentre_Id = c.Profitcentre_Id and a.Assesment_Id = c.Assesment_Id left outer join cfstufftally e on e.company_id=c.company_id  and e.branch_id=c.branch_id  and e.Movement_Req_Id=c.Movement_Req_Id and e.Stuff_Tally_Id = c.Stuff_Tally_Id and e.Profitcentre_Id = c.Profitcentre_Id and e.container_no = c.container_No "
-			+ "left outer join cfcrtg f on e.Company_Id=f.Company_Id  and e.Branch_Id=f.Branch_Id and e.Carting_Trans_Id=f.Carting_Trans_Id and e.Carting_Line_Id=f.Carting_Line_Id and e.Profitcentre_Id = f.Profitcentre_Id and e.SB_Trans_Id = f.SB_Trans_Id and e.SB_No = f.SB_No and e.SB_Line_Id = f.SB_Line_No left outer join cfsbcrg g on e.Company_Id=g.Company_Id  and e.Branch_Id=g.Branch_Id and  e.Profitcentre_Id = g.Profitcentre_Id and e.SB_Trans_Id = g.SB_Trans_Id and e.SB_No = g.SB_No and e.SB_Line_Id = g.SB_Line_No left outer join vessel v on e.Company_Id = v.Company_Id and e.Vessel_Id = v.Vessel_Id "
-			+ "left outer join cfinvsrvanxpro anx on a.company_id=anx.company_id  and a.branch_id=anx.branch_id and a.container_no=anx.container_no and a.Profitcentre_Id = anx.Profitcentre_Id and a.Assesment_Id = anx.Process_Trans_Id and a.invoice_no=anx.Invoice_No and a.container_no=anx.container_no and anx.Service_Id='S00008' and e.sb_no=anx.cargosbno where a.Company_Id=:companyId AND  a.branch_id=:branchId and a.status='A' and a.SB_Trans_Id =:sbTransID and a.assesment_id =:assesmentId group by a.container_no , e.sb_trans_Id, e.sb_No  order by a.container_no ASC",nativeQuery = true)
-	List<Object[]> getContainerAndSbDetails(@Param("companyId") String companyId, 
-            @Param("branchId") String branchId,
-            @Param("sbTransID") String sbTransID,
-            @Param("assesmentId") String assesmentId
-            );
+			+ "	from cfassesmentsheetpro a left outer join cfexpmovementreq c on a.company_id=c.company_id  and a.branch_id=c.branch_id  and a.container_no=c.container_no and a.Movement_Req_Id=c.Movement_Req_Id and a.Profitcentre_Id = c.Profitcentre_Id  left outer join cfstufftally e on e.company_id=c.company_id  and e.branch_id=c.branch_id  and e.Movement_Req_Id=c.Movement_Req_Id and e.Stuff_Tally_Id = c.Stuff_Tally_Id and e.Profitcentre_Id = c.Profitcentre_Id and e.container_no = c.container_No "
+			+ "	left outer join cfcrtg f on e.Company_Id=f.Company_Id  and e.Branch_Id=f.Branch_Id  and e.Carting_Trans_Id=f.Carting_Trans_Id and e.Carting_Line_Id=f.Carting_Line_Id and e.Profitcentre_Id = f.Profitcentre_Id and e.SB_Trans_Id = f.SB_Trans_Id and e.SB_No = f.SB_No and e.SB_Line_Id = f.SB_Line_No left outer join cfsbcrg g on e.Company_Id=g.Company_Id  and e.Branch_Id=g.Branch_Id  and e.Profitcentre_Id = g.Profitcentre_Id and e.SB_Trans_Id = g.SB_Trans_Id and e.SB_No = g.SB_No and e.SB_Line_Id = g.SB_Line_No "
+			+ "	left outer join vessel v on e.Company_Id = v.Company_Id and e.Vessel_Id = v.Vessel_Id left outer join cfinvsrvanxpro anx on a.company_id=anx.company_id  and a.branch_id=anx.branch_id  and a.container_no=anx.container_no and a.Profitcentre_Id = anx.Profitcentre_Id and a.Assesment_Id = anx.Process_Trans_Id and a.invoice_no=anx.Invoice_No and a.container_no=anx.container_no and anx.Service_Id='S00008' and e.sb_no=anx.CargoSBNo "
+			+ "	where a.Company_Id=:companyId  AND a.branch_id=:branchId and a.status='A' and a.SB_Trans_Id =:sbTransID and a.assesment_id =:assesmentId group by a.container_no , e.sb_trans_Id, e.sb_No  order by a.container_no ASC",nativeQuery = true)
+List<Object[]> getContainerAndSbDetails(@Param("companyId") String companyId, 
+    @Param("branchId") String branchId,
+    @Param("sbTransID") String sbTransID,
+    @Param("assesmentId") String assesmentId
+    );
+	
+	
 	
 	
 	@Query(value=" select a.service_id,c.service_long_desc,count(a.service_id),sum(a.execution_unit),a.service_unit,sum(a.local_amt),IFNULL(ROUND( ((sum(b.invoice_Amt)/count(a.service_id))), 3 ), 0) UNITAMT,max(a.rate),DATE_FORMAT(a.approved_date,'%d %b %Y %T'),c.range_type,sum(a.execution_unit1),"
@@ -68,7 +81,7 @@ public interface ExportProformaPrintRepository extends JpaRepository<ExportStuff
 			+ "left outer join jar_detail h on ba.company_id=h.company_id and ba.state=h.jar_dtl_id and h.jar_id='J00026' left outer join jar_detail j on ba.company_id=j.company_id and ba.state=j.jar_dtl_id and j.jar_id='J00014' left outer join party sl on s.company_id=sl.company_id and s.sl=sl.party_id  "
 			+ "left outer join party ag on s.company_id=ag.company_id and s.Oth_Party_id=ag.party_id left outer join party f on s.company_id=f.company_id and s.importer_id=f.party_id left outer join party d on s.company_id=d.company_id and s.CHA=d.party_id   left outer join partyaddress fa on s.company_id=fa.company_id and s.CHA=fa.party_id and s.CHA_sr_no = fa.sr_no  left outer join jar_detail i on fa.company_id=i.company_id and fa.state=i.jar_dtl_id and i.jar_id='J00026' "
 			+ "left outer join jar_detail k on fa.company_id=k.company_id and fa.state=k.jar_dtl_id and k.jar_id='J00014' left outer join userinfo u on a.company_id=u.company_id and a.post_by=u.user_id  left outer join userinfo v on a.company_id=v.company_id and a.approved_by=v.user_id  "
-			+ "left outer join partyaddress aa on s.company_id=aa.company_id and s.Oth_Party_id=aa.party_id and s.Oth_Sr_no = aa.sr_no  where a.Company_Id=\"C00001\"  AND a.branch_id=\"B00001\" and a.status='A'  and a.invoice_no =\"TJ25X00007\"  and a.Profitcentre_Id = 'N00004'",nativeQuery = true)
+			+ "left outer join partyaddress aa on s.company_id=aa.company_id and s.Oth_Party_id=aa.party_id and s.Oth_Sr_no = aa.sr_no  where a.Company_Id=:companyId  AND a.branch_id=:branchId and a.status='A'  and a.invoice_no =:invoiceNo  and a.Profitcentre_Id = 'N00004'",nativeQuery = true)
 	Object getInvoiceDetailscarting(@Param("companyId") String companyId, 
 	        @Param("branchId") String branchId,  
 	        @Param("invoiceNo") String invoiceNo);
@@ -81,5 +94,10 @@ public interface ExportProformaPrintRepository extends JpaRepository<ExportStuff
             @Param("sbTransID") String sbTransID,
             @Param("assesmentId") String assesmentId
             );
+	
+	@Query(value ="select bank_name,bank_account_no,bank_ifsc_code,bank_address from branch a where a.Company_Id=:companyId and a.Branch_Id=:branchId"
+			,nativeQuery = true)
+	Object getBankDetails(@Param("companyId") String companyId, 
+            @Param("branchId") String branchId);
 
 }
