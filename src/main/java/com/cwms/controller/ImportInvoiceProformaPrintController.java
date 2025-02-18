@@ -237,7 +237,24 @@ public class ImportInvoiceProformaPrintController {
 		context.setVariable("list1",list1);
 		
 	
-		
+		Object bankdtl = importinvoicerepo.getBankDetails(cid, bid);
+		if (bankdtl != null) {
+    	    Object[] fields = (Object[]) bankdtl;
+    	    
+    	    String bankName = (String)fields[0];   	   
+    	    String bankAccNo = (String)fields[1];
+    	    String bankifsc = (String)fields[2];
+    	    String bankAddr = (String)fields[3];
+    	    
+    	    
+    	    
+    	    context.setVariable("bankName",bankName);
+    		context.setVariable("bankAcc",bankAccNo);
+    		context.setVariable("bankIfsc",bankifsc);
+    		context.setVariable("bankAdd",bankAddr);
+    	    
+    	   
+    	}
 		
 	
 		
@@ -802,6 +819,24 @@ public class ImportInvoiceProformaPrintController {
 		
 		context.setVariable("list1",list1);
 		
+		Object bankdtl = importinvoicerepo.getBankDetails(cid, bid);
+		if (bankdtl != null) {
+    	    Object[] fields = (Object[]) bankdtl;
+    	    
+    	    String bankName = (String)fields[0];   	   
+    	    String bankAccNo = (String)fields[1];
+    	    String bankifsc = (String)fields[2];
+    	    String bankAddr = (String)fields[3];
+    	    
+    	    
+    	    
+    	    context.setVariable("bankName",bankName);
+    		context.setVariable("bankAcc",bankAccNo);
+    		context.setVariable("bankIfsc",bankifsc);
+    		context.setVariable("bankAdd",bankAddr);
+    	    
+    	   
+    	}
 
 		
 		List<Map<String,String>> itemList = importinvoiceservice.getDetailsOfBill(cid, bid, invoiceNo);

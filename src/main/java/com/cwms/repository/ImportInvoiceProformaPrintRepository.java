@@ -43,7 +43,7 @@ public interface ImportInvoiceProformaPrintRepository extends JpaRepository<Asse
 			+ "	left outer join jar_detail i on fa.company_id=i.company_id and fa.state=i.jar_dtl_id and i.jar_id='J00026'  left outer join jar_detail k on fa.company_id=k.company_id and fa.state=k.jar_dtl_id and k.jar_id='J00014' left outer join userinfo u on a.company_id=u.company_id and a.post_by=u.user_id "
 			+ "	left outer join userinfo v on a.company_id=v.company_id and a.approved_by=v.user_id left outer join cfigmcrg igmcrg on s.Company_Id = igmcrg.Company_Id and s.Branch_Id = igmcrg.Branch_Id and  s.IGM_Trans_Id = igmcrg.IGM_Trans_Id"
 			+ " left outer join cfbondnoc noc ON s.company_id=noc.company_id and s.branch_id=noc.branch_id and s.igm_no=noc.noc_no and s.igm_trans_id=noc.noc_trans_id "
-			+ "	and s.Igm_No = igmcrg.Igm_No and s.igm_line_no = igmcrg.igm_line_no  where a.Company_Id=:companyId AND  a.branch_id=:branchId and a.status='A'  and a.invoice_no = :invoiceNo ",nativeQuery = true)
+			+ "	where a.Company_Id=:companyId AND  a.branch_id=:branchId and a.status='A'  and a.invoice_no = :invoiceNo ",nativeQuery = true)
 	Object getInvoiceDetails1(
 	        @Param("companyId") String companyId, 
 	        @Param("branchId") String branchId,  
@@ -81,6 +81,12 @@ public interface ImportInvoiceProformaPrintRepository extends JpaRepository<Asse
 	        @Param("branchId") String branchId,
 	        @Param("igmTransId") String igmTransId,
 	        @Param("assessmentId") String assessmentId);
+	
+	
+	@Query(value ="select bank_name,bank_account_no,bank_ifsc_code,bank_address from branch a where a.Company_Id=:companyId and a.Branch_Id=:branchId"
+			,nativeQuery = true)
+	Object getBankDetails(@Param("companyId") String companyId, 
+            @Param("branchId") String branchId);
 	
 	
 

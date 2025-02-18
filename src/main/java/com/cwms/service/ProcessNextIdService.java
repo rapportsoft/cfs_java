@@ -1562,4 +1562,30 @@ public class ProcessNextIdService {
 
 				    return formattedNextId;
 				}
+
+				@Transactional
+				public synchronized String autoCreditNoteNo(String companyId, String branchId, String processId) {
+				    // Find the next ID from the database
+				    String nextholi = processNextIdRepository.findNextIdByCompositeKey(companyId, branchId, processId);
+
+				    // Extract the first 6 characters (prefix)
+				    String firstSixCharacters = nextholi.substring(0, 6);
+
+				    // Extract the numeric portion (last 4 or 5 digits depending on actual structure)
+				    String lastDigits = nextholi.substring(6); // Everything after the first 6 characters
+
+				    // Convert to integer and increment
+				    int incrementedNumber = Integer.parseInt(lastDigits) + 1;
+
+				    // Format the incremented number to ensure it has 4 digits
+				    String formattedIncrementedNumber = String.format("%04d", incrementedNumber);
+
+				    // Concatenate the prefix and the new number
+				    String nextIdDholi = firstSixCharacters + formattedIncrementedNumber;
+
+				    // Update the Next_Id directly in the database
+				    processNextIdRepository.updateNextIdByCompositeKey(companyId, branchId, processId, nextIdDholi);
+
+				    return nextIdDholi;
+				}
 }

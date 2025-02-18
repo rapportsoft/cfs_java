@@ -132,6 +132,18 @@ public class Cfinvsrvdtl {
 
 	    @Column(name = "Ac_Code_N", length = 20)
 	    private String acCodeN;
+	    
+	    @Column(name = "CreditNote_Amt", precision = 16, scale = 4, nullable = false, columnDefinition = "DECIMAL(16,4) DEFAULT 0.0000")
+	    private BigDecimal creditNoteAmt = BigDecimal.ZERO;
+	    	    
+
+		public BigDecimal getCreditNoteAmt() {
+			return creditNoteAmt;
+		}
+
+		public void setCreditNoteAmt(BigDecimal creditNoteAmt) {
+			this.creditNoteAmt = creditNoteAmt;
+		}
 
 		public Cfinvsrvdtl() {
 			super();
