@@ -105,7 +105,8 @@ public class ServiceController {
 				services.setStatus("A");
 				services.setCreatedBy(user);
 				services.setCreatedDate(new Date());
-
+				services.setCriteriaType(services.getContainerType());
+				services.setRangeType(services.getContainerType());
 				services.setApprovedBy(user);
 				services.setApprovedDate(new Date());
 
@@ -125,7 +126,8 @@ public class ServiceController {
 
 				services.setEditedBy(user);
 				services.setEditedDate(new Date());
-				
+				services.setCriteriaType(services.getContainerType());
+				services.setRangeType(services.getContainerType());
 				serViceRepositary.save(services);
 
 				return new ResponseEntity<>(services, HttpStatus.OK);
