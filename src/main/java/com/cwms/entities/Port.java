@@ -111,6 +111,9 @@ public class Port {
 
 	@Column(name = "Approved_Date")
 	private Date approvedDate;
+	
+	@Column(name = "Local_Port", length = 10)
+	private String localPort;
 
 	public Port() {
 		super();
@@ -118,13 +121,12 @@ public class Port {
 	}
 
 	
-
-	public Port(String companyId, String branchId, String portTransId, String portCode, String isoPortCode,
+	protected Port(String companyId, String branchId, String portTransId, String portCode, String isoPortCode,
 			String portName, String portType, String jobOrderPrefix, String jobOrderNextNo, String jobOrderFormat,
 			String agentCode, String address1, String address2, String address3, String city, String pin, String state,
 			String phoneNo, String faxNo, String contactPerson, String contactDesignation, String contactPhone,
 			String contactFaxNo, String contactEmail, String country, String status, String createdBy, Date createdDate,
-			String editedBy, Date editedDate, String approvedBy, Date approvedDate) {
+			String editedBy, Date editedDate, String approvedBy, Date approvedDate, String localPort) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -158,8 +160,19 @@ public class Port {
 		this.editedDate = editedDate;
 		this.approvedBy = approvedBy;
 		this.approvedDate = approvedDate;
+		this.localPort = localPort;
 	}
 
+	
+
+	public String getLocalPort() {
+		return localPort;
+	}
+
+
+	public void setLocalPort(String localPort) {
+		this.localPort = localPort;
+	}
 
 
 	public String getCompanyId() {

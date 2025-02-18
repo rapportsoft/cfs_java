@@ -525,6 +525,21 @@ public class Party {
 	    
 	    @Column(name="Tds_Percentage",length = 3)
 	    private String tdsPercentage;
+	    
+	    @Column(name="Account_Name",length = 50)
+	    private String accountName;
+	    
+	    @Column(name="Bank_Name",length = 50)
+	    private String bankName;
+	    
+	    @Column(name="Bank_Address",length = 150)
+	    private String bankAddress;
+	    
+	    @Column(name="IFSC_Code",length = 15)
+	    private String ifscCode;
+	    
+	    @Column(name="Account_No",length = 20)
+	    private String accountNo;
 
 		public Party() {
 			super();
@@ -533,7 +548,10 @@ public class Party {
 
 		
 
-		public Party(String companyId, String branchId, String partyId, String masterPartyId, String partyName,
+		
+
+
+		protected Party(String companyId, String branchId, String partyId, String masterPartyId, String partyName,
 				String partyType, String address1, String address2, String address3, String city, String pin,
 				String state, String country, String movementBlock, BigDecimal creditLimit, String phoneNo,
 				String faxNo, String partyAcCode, String partyTermId, String bankId, String panNo,
@@ -568,7 +586,9 @@ public class Party {
 				String fmgtN, String scnopr, String stuflb, String subctr, String survey, String trns, String valer,
 				String resendFlag, String uiFlag, String doSubmitReqFlag, String nvoccTariff, String offdocTariff,
 				String leschaco, BigDecimal crAmtLmtUse, String monthlyAgentReportFlag, String weeklyLclAgentReportFlag,
-				String invoiceFromMail, String cycle, String dmrInterval, String tdsPercentage) {
+				String invoiceFromMail, String cycle, String dmrInterval, String tdsPercentage, String accountName,
+				String bankName, String bankAddress, String ifscCode, String accountNo) {
+			super();
 			this.companyId = companyId;
 			this.branchId = branchId;
 			this.partyId = partyId;
@@ -734,7 +754,105 @@ public class Party {
 			this.cycle = cycle;
 			this.dmrInterval = dmrInterval;
 			this.tdsPercentage = tdsPercentage;
+			this.accountName = accountName;
+			this.bankName = bankName;
+			this.bankAddress = bankAddress;
+			this.ifscCode = ifscCode;
+			this.accountNo = accountNo;
 		}
+
+
+
+
+
+
+		public String getAccountName() {
+			return accountName;
+		}
+
+
+
+
+
+
+		public void setAccountName(String accountName) {
+			this.accountName = accountName;
+		}
+
+
+
+
+
+
+		public String getBankName() {
+			return bankName;
+		}
+
+
+
+
+
+
+		public void setBankName(String bankName) {
+			this.bankName = bankName;
+		}
+
+
+
+
+
+
+		public String getBankAddress() {
+			return bankAddress;
+		}
+
+
+
+
+
+
+		public void setBankAddress(String bankAddress) {
+			this.bankAddress = bankAddress;
+		}
+
+
+
+
+
+
+		public String getIfscCode() {
+			return ifscCode;
+		}
+
+
+
+
+
+
+		public void setIfscCode(String ifscCode) {
+			this.ifscCode = ifscCode;
+		}
+
+
+
+
+
+
+		public String getAccountNo() {
+			return accountNo;
+		}
+
+
+
+
+
+
+		public void setAccountNo(String accountNo) {
+			this.accountNo = accountNo;
+		}
+
+
+
 
 
 
