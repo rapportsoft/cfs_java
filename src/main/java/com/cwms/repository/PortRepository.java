@@ -118,7 +118,7 @@ public interface PortRepository extends JpaRepository<Port, String> {
 //			List<String> getPortIdList(@Param("cid") String cid, @Param("bid") String bid, @Param("prefix") String prefix);
 			
 			
-			@Query(value="select p.portCode from Port p where p.companyId=:cid and p.branchId=:bid and p.country = :prefix and p.status != 'D'")
+			@Query(value="select p.portCode from Port p where p.companyId=:cid and p.branchId=:bid and p.localPort = :prefix and p.status != 'D'")
 			List<String> getPortIdList(@Param("cid") String cid, @Param("bid") String bid, @Param("prefix") String prefix);
 			
 			

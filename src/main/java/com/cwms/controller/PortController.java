@@ -101,7 +101,7 @@ public class PortController {
 	}
 	@GetMapping("/getPortListToSelect")
 	public ResponseEntity<?> getPortListToSelect(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,@RequestParam("jobPrefix") String jobPrefix) {
-		 List<Map<String, String>> portList = portService.getPortToSelect(companyId, branchId, jobPrefix); 
+		 List<Map<String, String>> portList = portService.getPortToSelect(companyId, branchId, "Local"); 
 	   
 	    return ResponseEntity.ok(portList);
 	}
