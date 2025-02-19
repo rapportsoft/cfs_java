@@ -359,8 +359,9 @@ public class CreditNoteService {
 
 			BigDecimal localAmt = zero;
 			BigDecimal taxAmt = zero;
-			FinTrans finTransDataOfInvoice = crHdrRepo.getFinTransDataOfInvoice(companyId, branchId, creditNoteHdr.getOldInvoiceNo());
+			List<FinTrans> finTransDataOfInvoiceList = crHdrRepo.getFinTransDataOfInvoice(companyId, branchId, creditNoteHdr.getOldInvoiceNo());
 			
+			FinTrans finTransDataOfInvoice = finTransDataOfInvoiceList.get(0);
 			
 			for (CreditNoteDtl dtl : creditNoteDtlData) {
 				

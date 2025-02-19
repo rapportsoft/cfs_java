@@ -68,7 +68,7 @@ List<Object[]> getCreditNoteToSelect(@Param("companyId") String companyId,
              "a.acCode, a.documentAmt, a.creditAmount, a.creditFlag, a.transDate, a.billingParty, a.credAmtAdj, a.lineId) " +
              "FROM FinTrans a " +           
              "WHERE a.companyId = :companyId AND a.branchId = :branchId AND a.oprInvoiceNo = :invoiceNo")            
-	 FinTrans getFinTransDataOfInvoice(@Param("companyId") String companyId, 
+	 List<FinTrans> getFinTransDataOfInvoice(@Param("companyId") String companyId, 
                                 @Param("branchId") String branchId, 
                                 @Param("invoiceNo") String invoiceNo);
 	
