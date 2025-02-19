@@ -24,6 +24,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.CreditNotePrintRepository;
 import com.cwms.service.CreditnoteprintService;
 import com.itextpdf.io.source.ByteArrayOutputStream;
@@ -43,7 +44,8 @@ public class CreditnotePrintController {
 	@Autowired
 	private TemplateEngine templateEngine;
 	
-	
+	@Autowired
+	private HelperMethods helperMethods;
 
 	@PostMapping("/creditnotPrintpdf/{cid}/{bid}/{invoiceNo}/{ProfitcentreId}")
 	public ResponseEntity<?> generateInvoicePdf(@PathVariable("cid") String cid, @PathVariable("bid") String bid ,@PathVariable("invoiceNo") String invoiceNo
@@ -58,6 +60,9 @@ public class CreditnotePrintController {
 		System.out.println(compdtl.toString());
 		String branchAddress = compdtl.get("baddr1")+" "+compdtl.get("baddr2")+" "+compdtl.get("baddr3");
 		Context context = new Context();
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
@@ -432,7 +437,7 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		}
 		
 		
-		String htmlContent = templateEngine.process("MiscellaneousinvoicePrint.html", context);
+		String htmlContent = templateEngine.process("CreditNotePrint.html", context);
 //
 		ITextRenderer renderer = new ITextRenderer();
 		renderer.setDocumentFromString(htmlContent);
