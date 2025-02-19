@@ -783,6 +783,35 @@
 	<br />
 	<span style="font-weight: bold; font-size: 12px; text-align: center;">Remarks :</span><br />
 	
+	<!--<p style="text-align: center;">1. LUT number : <span th:text="${lotNo}"></span>, Dated <span th:text="${lotDate}"> </span> </p><br />
+	<p 	style="text-align: center;">2. SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT OF INTEFRATED TAX</p>
+	
+	
+	<p style="text-align: center;">1. LUT number : <span th:text="${lotNo}"></span>, Dated <span th:text="${lotDate}"> </span> </p><br />
+	<p 	style="text-align: center;">2. 	SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTERGRATED TAX</p>
+		-->
+		
+		
+		<div th:if="${sez == 'Y'}">
+		    <span style="text-align: left; 			font-size: 12px;">
+		        1. LUT number: <span th:text="${lotNo}"></span>, Dated <span th:text="${lotDate}"></span>
+		    </span>
+		    <br />
+		
+		    <span style="text-align: left; 			font-size: 12px;" th:if="${taxApplicable == 'Y'}">
+		        2. SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX
+		    </span>
+		
+		    <span style="text-align: left; 			font-size: 12px;" th:if="${taxApplicable == 'N'}">
+		        2. SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT INTEGRATED TAX
+		    </span>
+		</div>
+
+	
+	
+	
+	
+	
 	<span style=" font-size: 12px; text-align: center;"><b>Bank details for remittance:</b> 
 		</span>
 
@@ -871,16 +900,13 @@
 		transportation and storage and the company assumes No Liability in this respect.
 	</span><br /><br />
 	
-	<!-- <span style="font-weight: bold;  font-size: 12px !important;">This is a system-generated Tax-Invoice. No signature
-		is required</span><br /> -->
+	
+	<img th:src="${upiqrImage}" alt="QR Code" style="display: block; width:250px;" />
+
 	
 	
-<!--  <div class="footer1">
-    <span style="font-weight: bold; font-size: 12px !important;">
-        This is a system-generated Tax-Invoice. No signature is required.
-    </span><br />
-    <hr style="background-color: rgb(0, 0, 0); height: 1px; border: none;" />
-</div>  -->
+
+	
 
 
 	

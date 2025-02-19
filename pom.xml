@@ -150,7 +150,7 @@
     <version>5.1.0</version>
 </dependency>
 <!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf -->
-<dependency>
+<!--<dependency>
     <groupId>org.xhtmlrenderer</groupId>
     <artifactId>flying-saucer-pdf</artifactId>
     <version>9.1.5</version>
@@ -161,12 +161,72 @@
     <artifactId>itextpdf</artifactId>
     <version>5.5.13.2</version>
 </dependency>
-<!-- https://mvnrepository.com/artifact/com.itextpdf/html2pdf -->
+ https://mvnrepository.com/artifact/com.itextpdf/html2pdf 
 <dependency>
     <groupId>com.itextpdf</groupId>
     <artifactId>html2pdf</artifactId>
     <version>5.0.0</version>
+</dependency>-->
+
+
+
+
+
+<dependency>
+    <groupId>org.xhtmlrenderer</groupId>
+    <artifactId>flying-saucer-pdf</artifactId>
+    <version>9.1.5</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk14</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk14</artifactId>
+        </exclusion>
+    </exclusions>
 </dependency>
+
+
+
+
+    <!-- iText Core -->
+    <!-- https://mvnrepository.com/artifact/com.itextpdf/itext7-core -->
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>itext7-core</artifactId>
+    <version>7.2.5</version>
+    <type>pom</type>
+</dependency>
+
+
+    <!-- iText Signing (for digital signature support) -->
+  <!-- https://mvnrepository.com/artifact/com.itextpdf/sign -->
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>sign</artifactId>
+    <version>7.2.5</version>
+</dependency>
+
+
+   <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk18on</artifactId>
+    <version>1.80</version>
+</dependency>
+
+
+<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcpkix-jdk18on</artifactId>
+    <version>1.80</version>
+</dependency>
+
+
+
 
 
 

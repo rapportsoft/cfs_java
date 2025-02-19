@@ -143,6 +143,39 @@ public class Branch {
     private String invoiceRoundOff;
     
     
+    @Column(name="Lot_No",length = 30)
+    private String lotNo;
+    
+    @Column(name="Lot_Date")
+    private Date lotDate;
+    
+        
+    public String getLotNo() {
+		return lotNo;
+	}
+
+
+
+
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	}
+
+
+
+
+	public Date getLotDate() {
+		return lotDate;
+	}
+
+
+
+
+	public void setLotDate(Date lotDate) {
+		this.lotDate = lotDate;
+	}
+    
+    
     transient private String companyName;
     
     
