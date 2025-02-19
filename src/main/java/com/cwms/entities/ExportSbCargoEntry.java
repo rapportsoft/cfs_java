@@ -117,7 +117,7 @@ public class ExportSbCargoEntry {
     @Column(name = "sb_type", nullable = false, length = 20)
     private String sbType = "Normal";
 
-    @Column(name = "Cargo_Type", length = 6)
+    @Column(name = "Cargo_Type", length = 30)
     private String cargoType = "NAGRO";
 
     @Column(name = "Draw_Back_Value", precision = 12, scale = 4)
