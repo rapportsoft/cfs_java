@@ -135,6 +135,9 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/receiptprint/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/proforma/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/changeMangement/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/vendorInvoice/**")).authenticated()
+
+                        .requestMatchers(mvcMatcherBuilder.pattern("/apservices/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

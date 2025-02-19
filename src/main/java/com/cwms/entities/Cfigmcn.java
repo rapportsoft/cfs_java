@@ -1030,6 +1030,19 @@ public class Cfigmcn {
 	
 	@Column(name = "Seal_Cutting_Status", length = 1)
 	private String sealCuttingStatus = "N"; // Default value
+	
+    @Column(name = "LENGTH_ODC", precision = 16, scale = 3)
+    private BigDecimal length;
+    
+    @Column(name = "HEIGHT_ODC", precision = 16, scale = 3)
+    private BigDecimal height;
+    
+    @Column(name = "WEIGHT_ODC", precision = 16, scale = 3)
+    private BigDecimal weight;
+    
+    @Column(name="ODC_TYPE",length = 30)
+    private String odcType;
+    
 
 	public Cfigmcn() {
 		super();
@@ -1040,6 +1053,55 @@ public class Cfigmcn {
 
 	public BigDecimal getGainOrLossPkgs() {
 		return gainOrLossPkgs;
+	}
+
+
+	
+
+	public BigDecimal getLength() {
+		return length;
+	}
+
+
+
+	public void setLength(BigDecimal length) {
+		this.length = length;
+	}
+
+
+
+	public BigDecimal getHeight() {
+		return height;
+	}
+
+
+
+	public void setHeight(BigDecimal height) {
+		this.height = height;
+	}
+
+
+
+	public BigDecimal getWeight() {
+		return weight;
+	}
+
+
+
+	public void setWeight(BigDecimal weight) {
+		this.weight = weight;
+	}
+
+
+
+	public String getOdcType() {
+		return odcType;
+	}
+
+
+
+	public void setOdcType(String odcType) {
+		this.odcType = odcType;
 	}
 
 

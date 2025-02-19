@@ -203,11 +203,22 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 		@Query(value="select c from Cfigmcrg c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:line and c.status != 'D'")
 		Cfigmcrg getDataByIgmAndLine(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String igmtrans, @Param("igm") String igm,@Param("line") String line);
 
+//		@Query(value="select c.igmNo,c.igmTransId,c.igmLineNo,i.shippingLine,i.shippingAgent,p.partyName,c.chaName,c.importerName,c.importerAddress1,"
+//				+ "c.importerAddress2,c.importerAddress3,c.commodityDescription,i.viaNo,i.igmDate,c.marksOfNumbers,c.grossWeight,"
+//				+ "c.typeOfPackage,c.noOfPackages,c.yardLocation,c.yardBlock,c.blockCellNo,c.cargoType,c.cargoMovement from Cfigmcrg c "
+//				+ "LEFT JOIN CFIgm i ON c.companyId = i.companyId AND c.branchId = i.branchId AND c.igmNo = i.igmNo AND c.igmTransId = i.igmTransId "
+//				+ "LEFT JOIN Party p ON i.companyId = p.companyId AND i.branchId = p.branchId AND i.shippingLine = p.partyId "
+//				+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmLineNo=:line "
+//				+ "and c.status != 'D'")
+//		Object[] getDataByIgmAndLineForDestuff(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,@Param("line") String line);
+		
 		@Query(value="select c.igmNo,c.igmTransId,c.igmLineNo,i.shippingLine,i.shippingAgent,p.partyName,c.chaName,c.importerName,c.importerAddress1,"
 				+ "c.importerAddress2,c.importerAddress3,c.commodityDescription,i.viaNo,i.igmDate,c.marksOfNumbers,c.grossWeight,"
-				+ "c.typeOfPackage,c.noOfPackages,c.yardLocation,c.yardBlock,c.blockCellNo,c.cargoType,c.cargoMovement from Cfigmcrg c "
+				+ "c.typeOfPackage,c.noOfPackages,c.yardLocation,c.yardBlock,c.blockCellNo,c.cargoType,c.cargoMovement,"
+				+ "crg.typeOfCargo,crg.odcType,crg.length,crg.height,crg.weight from Cfigmcrg c "
 				+ "LEFT JOIN CFIgm i ON c.companyId = i.companyId AND c.branchId = i.branchId AND c.igmNo = i.igmNo AND c.igmTransId = i.igmTransId "
 				+ "LEFT JOIN Party p ON i.companyId = p.companyId AND i.branchId = p.branchId AND i.shippingLine = p.partyId "
+				+ "LEFT OUTER JOIN DestuffCrg crg ON c.companyId = crg.companyId AND c.branchId = crg.branchId AND c.igmNo = crg.igmNo AND c.igmTransId = crg.igmTransId and c.igmLineNo = crg.igmLineNo "
 				+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmLineNo=:line "
 				+ "and c.status != 'D'")
 		Object[] getDataByIgmAndLineForDestuff(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,@Param("line") String line);

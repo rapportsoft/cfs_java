@@ -228,6 +228,21 @@ public class DestuffCrg {
 
 	    @Column(name = "Force_Entry_Flag_INV", length = 1)
 	    private String forceEntryFlagInv;
+	    
+	    @Column(name = "LENGTH_ODC", precision = 16, scale = 3)
+	    private BigDecimal length;
+	    
+	    @Column(name = "HEIGHT_ODC", precision = 16, scale = 3)
+	    private BigDecimal height;
+	    
+	    @Column(name = "WEIGHT_ODC", precision = 16, scale = 3)
+	    private BigDecimal weight;
+	    
+	    @Column(name="ODC_TYPE",length = 30)
+	    private String odcType;
+	    
+		@Column(name = "Type_Of_Cargo", length = 15)
+		private String typeOfCargo = ""; // Default value
 
 		public DestuffCrg() {
 			super();
@@ -237,11 +252,7 @@ public class DestuffCrg {
 		
 
 		
-
-
-		
-
-		public DestuffCrg(String companyId, String branchId, String finYear, String deStuffId, String deStuffLineId,
+		protected DestuffCrg(String companyId, String branchId, String finYear, String deStuffId, String deStuffLineId,
 				Date deStuffDate, String igmTransId, String igmNo, String profitcentreId, String igmLineNo,
 				String commodityDescription, String comments, String marksOfNumbers, BigDecimal grossWeight,
 				String typeOfPackages, Integer noOfPackages, Integer actualNoOfPackages, Integer oldActualNoOfPackages,
@@ -257,7 +268,8 @@ public class DestuffCrg {
 				Date lclZeroEntryValidityDate, String lclZeroEntryCreatedBy, String lclZeroEntryApproval,
 				String lclZeroEntryRemarks, BigDecimal actualWeight, BigDecimal oldActualWeight, String cargoType,
 				String warehouseLocation, String movementType, BigDecimal excessPackages, BigDecimal shortagePackages,
-				String forceEntryFlagInv) {
+				String forceEntryFlagInv, BigDecimal length, BigDecimal height, BigDecimal weight, String odcType,
+				String typeOfCargo) {
 			super();
 			this.companyId = companyId;
 			this.branchId = branchId;
@@ -326,16 +338,84 @@ public class DestuffCrg {
 			this.excessPackages = excessPackages;
 			this.shortagePackages = shortagePackages;
 			this.forceEntryFlagInv = forceEntryFlagInv;
+			this.length = length;
+			this.height = height;
+			this.weight = weight;
+			this.odcType = odcType;
+			this.typeOfCargo = typeOfCargo;
+		}
+
+		
+		
+
+
+
+		public BigDecimal getLength() {
+			return length;
 		}
 
 
 
 
-       
+		public void setLength(BigDecimal length) {
+			this.length = length;
+		}
 
 
 
-		
+
+		public BigDecimal getHeight() {
+			return height;
+		}
+
+
+
+
+		public void setHeight(BigDecimal height) {
+			this.height = height;
+		}
+
+
+
+
+		public BigDecimal getWeight() {
+			return weight;
+		}
+
+
+
+
+		public void setWeight(BigDecimal weight) {
+			this.weight = weight;
+		}
+
+
+
+
+		public String getOdcType() {
+			return odcType;
+		}
+
+
+
+
+		public void setOdcType(String odcType) {
+			this.odcType = odcType;
+		}
+
+
+
+
+		public String getTypeOfCargo() {
+			return typeOfCargo;
+		}
+
+
+
+
+		public void setTypeOfCargo(String typeOfCargo) {
+			this.typeOfCargo = typeOfCargo;
+		}
 
 
 

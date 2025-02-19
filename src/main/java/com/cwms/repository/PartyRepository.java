@@ -282,4 +282,12 @@ List<Object[]> getAllWithAdd(@Param("cid") String cid, @Param("bid") String bid,
         "AND (:val IS NULL OR :val = '' OR p.party_Name LIKE CONCAT(:val, '%'))",nativeQuery = true)
 List<Object[]> getDataForImpAndExp(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 
+
+@Query(value = "select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo,a.gstNo,a.state,"
+		+ "COALESCE(p.accountName,''),COALESCE(p.bankName,''),COALESCE(p.bankAddress,''),COALESCE(p.ifscCode,''),COALESCE(p.accountNo,'') "
+		+ "from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "
+		+ "p.branchId=a.branchId and p.partyId=a.partyId  where p.companyId=:cid and p.branchId=:bid "
+		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.partyName LIKE CONCAT (:val,'%'))")
+List<Object[]> getAllWithAddAndAccDtls(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
 }

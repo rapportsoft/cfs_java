@@ -191,4 +191,126 @@ public List<Map<String,String>> getDetailsOfBill(String companyId,String branchI
 		
 	};
 
+	
+	
+	// Vendor Invoice
+	
+	
+	public Map<String, String> getInvoiceDetails1(String companyId, 
+            String branchId,    
+            String invoiceNo ) {
+		
+		Map<String, String> invDtl = new HashMap<>();
+		
+        Object result = miscellaneousInvPrintRepository.getInvoiceDetails1(companyId,branchId, invoiceNo);
+        
+        if(result!=null) {
+        	Object[] fields  = (Object[]) result;
+        	
+
+        	
+
+        	invDtl.put("invoiceDate",(String)fields[1] );
+//        	invDtl.put("invoicevalDate",(String)fields[40]);
+//        	invDtl.put("shippingLine",(String)fields[27]);
+//        	invDtl.put("shippingAgent",(String)fields[28]);
+        	
+        	
+        	invDtl.put("BillingParty",(String)fields[3]);
+        	
+        	invDtl.put("partyId",(String)fields[2]);
+        	invDtl.put("billingPartyAddress1",(String)fields[5]);
+        	invDtl.put("billingPartyAddress2",(String)fields[6]);
+        	invDtl.put("billingPartyAddress3",(String)fields[7]);
+        	invDtl.put("pin",(String)fields[8]);
+        	
+        	
+        	invDtl.put("GSTIN",(String)fields[11]);
+        	invDtl.put("PAN",(String)fields[4]);
+        	invDtl.put("State",(String)fields[9]);
+        	
+//        	invDtl.put("cha",(String)fields[19]);
+//        	invDtl.put("chaAddress1",(String)fields[20]);
+//        	invDtl.put("chaAddress2",(String)fields[21]);
+//        	invDtl.put("chaAddress2",(String)fields[22]);
+//        	invDtl.put("IRN",(String)fields[16]);
+        	invDtl.put("Igst",String.valueOf(fields[20])); 
+        	invDtl.put("Cgst",String.valueOf(fields[21]));
+        	invDtl.put("Sgst",String.valueOf(fields[22]));
+//        	invDtl.put("sez",(String)fields[32]);    how to convert char to String 
+        	
+        	invDtl.put("createdBy",(String)fields[26]);
+        	invDtl.put("isBOS",String.valueOf(fields[27]));
+        	
+        	invDtl.put("lastInvoiceNo",String.valueOf(fields[28]));
+        	invDtl.put("lastInvoiceDate",String.valueOf(fields[29]));
+
+        	invDtl.put("accountName",String.valueOf(fields[30]));
+        	invDtl.put("bankName",String.valueOf(fields[31]));
+        	invDtl.put("bankAddress",String.valueOf(fields[32]));
+        	invDtl.put("ifsc",String.valueOf(fields[33]));
+        	invDtl.put("accNo",String.valueOf(fields[34]));
+
+   	
+        }
+        
+        
+        return invDtl;
+        
+
+	}
+	
+	
+	
+public List<Map<String,String>> getDetailsOfBill1(String companyId,String branchId, String invoiceNo) {
+		
+		List<Map<String,String>> result = new ArrayList<>();
+		
+		List<Object[]> billdtl = miscellaneousInvPrintRepository.getDetailsOfBill1(companyId, branchId, invoiceNo);
+		
+		
+		
+		if(!billdtl.isEmpty()) {
+			System.out.println("not empty");
+			
+			for (Object[] row : billdtl) {
+				
+				
+				Map<String,String> map1 = new HashMap<>();
+				
+				map1.put("serviceDesc",(String)row[1]);
+				map1.put("sac",(String)row[12] );
+				
+				BigDecimal amnt = (BigDecimal) row[5];
+				
+				
+//				String amount1 =String.format("%.2f",amnt);
+				String amount1 =amnt.setScale(2, BigDecimal.ROUND_DOWN).toString();
+				
+				map1.put("amount1", amount1);
+				
+				map1.put("sacDesc", (String)row[13]);
+				
+				BigDecimal taxperc = (BigDecimal) row[14];	
+				
+				
+				
+				
+//				String taxperc1 =String.format("%.2f",taxperc);
+				String taxperc1 = taxperc.setScale(2, BigDecimal.ROUND_DOWN).toString();
+				
+				map1.put("taxPerc",taxperc1);
+				result.add(map1);
+				
+			}
+			
+			
+			
+			
+		}
+		return result;
+		
+		
+	}
+	
 }

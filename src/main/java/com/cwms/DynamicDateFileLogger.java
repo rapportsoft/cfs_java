@@ -13,8 +13,8 @@ import com.p6spy.engine.spy.appender.FileLogger;
 public class DynamicDateFileLogger extends FileLogger {
 
 	
-	private static final String LOG_FILE_PATH = "C:/Container Freight Station/Daily_Logs/cfs-logs-"; // Base path
-	//private static final String LOG_FILE_PATH = "E:/CFS/Backup/03-12-2024/New/cfs-logs-"; // Base path
+	//private static final String LOG_FILE_PATH = "C:/Container Freight Station/Daily_Logs/cfs-logs-"; // Base path
+	private static final String LOG_FILE_PATH = "E:/CFS/Backup/03-12-2024/New/cfs-logs-"; // Base path
 
     private static final String FILE_EXTENSION = ".log";
 

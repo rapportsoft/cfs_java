@@ -1588,4 +1588,38 @@ public class ProcessNextIdService {
 
 				    return nextIdDholi;
 				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				//New code
+				
+				
+				@Transactional
+				public synchronized String autoIncrementAPServiceNextId(String compnayId,String branchId) {
+					
+					String serviceId = processNextIdRepository.findNextReceiptTransId(compnayId,branchId,"P05057","2233");
+
+			        int lastNextNumericId = Integer.parseInt(serviceId.substring(1));
+
+			        int nextNumericNextID = lastNextNumericId + 1;
+
+			        String serviceNextIdD = String.format("S%05d", nextNumericNextID);
+
+			        // Update the Next_Id directly in the database using the repository
+			        processNextIdRepository.updateNetReceiptTransId(serviceNextIdD,compnayId,branchId,"P05057","2233");
+
+			        return serviceNextIdD;
+
+				}
 }
