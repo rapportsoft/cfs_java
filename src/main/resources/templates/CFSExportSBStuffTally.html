@@ -320,7 +320,7 @@ table.table th, table.table td {
 		<tr>
 			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">Cargo Description</td>
 			<td class="content" style="width: 3%; text-align: center;">:</td>
-			<td class="content" style="width: 20%; text-align: left;" th:text="${commodity}"></td>
+			<td class="content" style="width: 20%; text-align: left;" th:text="${commodity} + '(' +${hsnCode}+')'"></td>
 
 			<td class="content" style="width: 10%; text-align: left; font-weight: bold;">CLP Date</td>
 			<td class="content" style="width: 3%; text-align: center;">:</td>
