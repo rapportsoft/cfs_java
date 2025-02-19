@@ -4,39 +4,27 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import com.cwms.entities.CfsTarrif;
+import com.cwms.entities.CfsTarrifQuatation;
 
-public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
+public interface CFSRepositaryQuatation extends JpaRepository<CfsTarrifQuatation, String>
 {
 	
-	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
-	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
-	        + "AND e.consolerId = :consolerId "
-	        + "AND e.partyId = :partyId "
-	        + "AND e.cha = :cha "
-	        + "AND e.shippingAgent = :shippingAgent "
-	        + "AND e.shippingLine = :shippingLine "
-	        + "AND e.forwarderId = :forwarderId "
-	        + "AND e.importerId = :importerId "	          
-	        + "AND e.status = 'A'")
-	boolean existByCombosOfPartiesMain(@Param("companyId") String companyId, @Param("branchId") String branchId,
-	                               @Param("consolerId") String consolerId, @Param("partyId") String partyId, @Param("cha") String cha,
-	                               @Param("shippingAgent") String shippingAgent, @Param("shippingLine") String shippingLine,
-	                               @Param("forwarderId") String forwarderId, @Param("importerId") String importerId);
 	
-	
-	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
-	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
-	        + "AND e.contractName = :contractName "	        
-	        + "AND e.status = 'A'")
-	boolean existByCombosOfContractNameMain(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("contractName") String contractName);
+	@Query("SELECT c " +
+		       "FROM CfsTarrifQuatation c " + 
+		       "WHERE c.companyId = :companyId " + 
+		       "AND c.branchId = :branchId " +
+		       "AND c.cfsTariffNo = :cfsTariffNo " +
+		       "AND c.cfsAmndNo = :cfsAmndNo " +
+		       "AND c.status = 'A'")
+		CfsTarrifQuatation getSavedTariffToTransfer(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
+
 	
 	
 	
-	
-	@Query("SELECT new com.cwms.entities.CfsTarrif( " +
+	@Query("SELECT new com.cwms.entities.CfsTarrifQuatation( " +
 		       "c.cfsTariffNo, c.cfsAmndNo,c.contractName, pa.partyName, agent.partyName,line.partyName, ch.partyName, imp.partyName, fo.partyName) " +
-		        "FROM CfsTarrif c " 
+		        "FROM CfsTarrifQuatation c " 
 		       + "LEFT JOIN Party agent ON c.companyId = agent.companyId AND c.branchId = agent.branchId AND c.shippingAgent = agent.partyId AND agent.status != 'D' AND c.shippingAgent IS NOT NULL AND c.shippingAgent <> '' "
 		       + "LEFT JOIN Party line ON c.companyId = line.companyId AND c.branchId = line.branchId AND c.shippingLine = line.partyId AND line.status != 'D' AND c.shippingLine IS NOT NULL AND c.shippingLine <> '' "
 		       + "LEFT JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.partyId = pa.partyId AND pa.status != 'D' AND c.partyId IS NOT NULL AND c.partyId <> '' "
@@ -48,24 +36,24 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 		       "AND c.cfsTariffNo = :cfsTariffNo " +
 		       "AND c.cfsAmndNo = :cfsAmndNo " +
 		       "AND c.status = 'A'")
-		CfsTarrif getSavedTariffAuditTrailReport(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
+		CfsTarrifQuatation getSavedTariffAuditTrailReport(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
 
 	
 	
-	@Query("SELECT NEW com.cwms.entities.CfsTarrif(i.partyId, i.status, i.contractName, i.shippingLine,i.cha, i.importerId, i.exporterId, i.shippingAgent, i.forwarderId,i.consolerId, i.cfsTariffDate, i.cfsFromDate, i.cfsValidateDate) " +
-		       "FROM CfsTarrif i " +
+	@Query("SELECT NEW com.cwms.entities.CfsTarrifQuatation(i.partyId, i.status, i.contractName, i.shippingLine,i.cha, i.importerId, i.exporterId, i.shippingAgent, i.forwarderId,i.consolerId, i.cfsTariffDate, i.cfsFromDate, i.cfsValidateDate) " +
+		       "FROM CfsTarrifQuatation i " +
 		       "WHERE " +
 		       "i.companyId = :companyId " +
 		       "AND i.cfsTariffNo = :cfsTariffNo AND i.cfsAmndNo = :cfsAmndNo " +
 		       "AND i.branchId = :branchId " +
 		       "AND i.ammendStatus = 'N' " +
 		       "AND i.status = 'A' " )		     
-		CfsTarrif getSavedTariffSubmit(@Param("companyId") String companyId, @Param("branchId") String branchId, String cfsTariffNo, String cfsAmndNo);
+		CfsTarrifQuatation getSavedTariffSubmit(@Param("companyId") String companyId, @Param("branchId") String branchId, String cfsTariffNo, String cfsAmndNo);
 
 	
 	
 	
-	@Query("SELECT new com.cwms.entities.CfsTarrif( " +
+	@Query("SELECT new com.cwms.entities.CfsTarrifQuatation( " +
 		       "c.companyId, c.branchId, c.finYear, c.profitCentreId, c.cfsTariffNo, c.cfsAmndNo, " +
 		       "c.partyId, c.status, c.contractName, c.shippingLine, c.cha, " +
 		       "c.importerId, c.exporterId, c.shippingAgent, c.forwarderId, c.consolerId, " +
@@ -74,7 +62,7 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 		       "c.approvedDate, c.ammendStatus, c.nvoccTariff, c.offdocTariff, c.tariffType, " +
 		       "c.refTariffId, c.refTariffAmndId, pa.partyName, agent.partyName, " +
 		       "line.partyName, ch.partyName, imp.partyName, fo.partyName) " +
-		       "FROM CfsTarrif c " 
+		       "FROM CfsTarrifQuatation c " 
 		       + "LEFT JOIN Party agent ON c.companyId = agent.companyId AND c.branchId = agent.branchId AND c.shippingAgent = agent.partyId AND agent.status != 'D' AND c.shippingAgent IS NOT NULL AND c.shippingAgent <> '' "
 		       + "LEFT JOIN Party line ON c.companyId = line.companyId AND c.branchId = line.branchId AND c.shippingLine = line.partyId AND line.status != 'D' AND c.shippingLine IS NOT NULL AND c.shippingLine <> '' "
 		       + "LEFT JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.partyId = pa.partyId AND pa.status != 'D' AND c.partyId IS NOT NULL AND c.partyId <> '' "
@@ -86,31 +74,31 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 		       "AND c.cfsTariffNo = :cfsTariffNo " +
 		       "AND c.cfsAmndNo = :cfsAmndNo " +
 		       "AND c.status = 'A'")
-		CfsTarrif getSavedTariff(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
+		CfsTarrifQuatation getSavedTariff(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
 
 	
-	@Query("SELECT NEW com.cwms.entities.CfsTarrif(i.cfsTariffNo, i.cfsAmndNo, i.status, i.ammendStatus) " +
-		       "FROM CfsTarrif i " +
+	@Query("SELECT NEW com.cwms.entities.CfsTarrifQuatation(i.cfsTariffNo, i.cfsAmndNo, i.status, i.ammendStatus) " +
+		       "FROM CfsTarrifQuatation i " +
 		       "WHERE " +
 		       "i.companyId = :companyId " +
 		       "AND i.cfsTariffNo = :cfsTariffNo AND i.cfsAmndNo = :cfsAmndNo " +
 		       "AND i.branchId = :branchId " +
 		       "AND i.status = 'A' " )		     
-		CfsTarrif getSavedTariffValidateUpdatable(@Param("companyId") String companyId, @Param("branchId") String branchId, String cfsTariffNo, String cfsAmndNo);
+		CfsTarrifQuatation getSavedTariffValidateUpdatable(@Param("companyId") String companyId, @Param("branchId") String branchId, String cfsTariffNo, String cfsAmndNo);
 
-	@Query("SELECT NEW com.cwms.entities.CfsTarrif(i.cfsTariffNo, i.cfsAmndNo, i.status, i.ammendStatus) " +
-		       "FROM CfsTarrif i " +
+	@Query("SELECT NEW com.cwms.entities.CfsTarrifQuatation(i.cfsTariffNo, i.cfsAmndNo, i.status, i.ammendStatus) " +
+		       "FROM CfsTarrifQuatation i " +
 		       "WHERE " +
 		       "i.companyId = :companyId " +
 		       "AND i.cfsTariffNo = :cfsTariffNo AND i.cfsAmndNo = :cfsAmndNo " +
 		       "AND i.branchId = :branchId " +
 		       "AND i.ammendStatus = 'N' " +
 		       "AND i.status = 'A' " )		     
-		CfsTarrif getSavedTariffValidateAmmendable(@Param("companyId") String companyId, @Param("branchId") String branchId, String cfsTariffNo, String cfsAmndNo);
+		CfsTarrifQuatation getSavedTariffValidateAmmendable(@Param("companyId") String companyId, @Param("branchId") String branchId, String cfsTariffNo, String cfsAmndNo);
 
 	
 	
-	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
+	@Query("SELECT COUNT(e) > 0 FROM CfsTarrifQuatation e "
 	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
 	        + "AND e.contractName = :contractName "
 	        + "AND (:cfsTariffNo IS NULL OR e.cfsTariffNo <> :cfsTariffNo) " 
@@ -119,7 +107,7 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 	boolean existByCombosOfContractName(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("contractName") String contractName, String cfsTariffNo, String cfsAmndNo);
 	
 	
-//	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
+//	@Query("SELECT COUNT(e) > 0 FROM CfsTarrifQuatation e "
 //	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
 //	        + "AND ( (:consolerId IS NULL OR :consolerId = '' OR e.consolerId = :consolerId) "
 //	        + "AND (:partyId IS NULL OR :partyId = '' OR e.partyId = :partyId ) "
@@ -138,7 +126,7 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 //	
 	
 	
-	@Query("SELECT COUNT(e) > 0 FROM CfsTarrif e "
+	@Query("SELECT COUNT(e) > 0 FROM CfsTarrifQuatation e "
 	        + "WHERE e.companyId = :companyId AND e.branchId = :branchId "
 	        + "AND e.consolerId = :consolerId "
 	        + "AND e.partyId = :partyId "
@@ -159,8 +147,8 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 	
 	
 	
-	@Query("SELECT NEW com.cwms.entities.CfsTarrif(i.cfsTariffNo, i.cfsAmndNo, i.contractName) " +
-		       "FROM CfsTarrif i " +
+	@Query("SELECT NEW com.cwms.entities.CfsTarrifQuatation(i.cfsTariffNo, i.cfsAmndNo, i.contractName) " +
+		       "FROM CfsTarrifQuatation i " +
 		       "WHERE " +
 		       "i.companyId = :companyId " +		      
 		       "AND i.branchId = :branchId " +
@@ -171,7 +159,7 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 		       "   OR (:type = 'E' AND DATE(i.cfsValidateDate) < CURRENT_DATE)" +
 		       ") " +
 		       "ORDER BY i.contractName DESC")
-		List<CfsTarrif> getSavedTariffSearch(
+		List<CfsTarrifQuatation> getSavedTariffSearch(
 		    @Param("companyId") String companyId,
 		    @Param("branchId") String branchId,
 		    @Param("type") String type
@@ -181,27 +169,27 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 	
 
 	 @Query("SELECT c " +
-		        "FROM CfsTarrif c " +
+		        "FROM CfsTarrifQuatation c " +
 		        "WHERE " +		       
 		        "c.companyId = :companyId " +
 		        "AND c.branchId = :branchId AND c.cfsTariffNo = :cfsTariffNo AND c.cfsAmndNo = :cfsAmndNo AND status = 'A' ")		        		       
-	    CfsTarrif getSavedTariffNotJoin(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
+	    CfsTarrifQuatation getSavedTariffNotJoin(String companyId, String branchId, String cfsTariffNo, String cfsAmndNo);
 	
 	
 
 	 
-	 List<CfsTarrif> findByCompanyIdAndBranchId(String companyId, String branchId);
+	 List<CfsTarrifQuatation> findByCompanyIdAndBranchId(String companyId, String branchId);
 	 
 	 @Query(value = "SELECT * FROM cfstdtrf WHERE cfs_tariff_no = ?1 AND company_id = ?2 AND branch_id = ?3", nativeQuery = true)
-	    CfsTarrif findByCfsTariffNoAndCompanyIdAndBranchId(String cfsTariffNo, String companyId, String branchId);
+	    CfsTarrifQuatation findByCfsTariffNoAndCompanyIdAndBranchId(String cfsTariffNo, String companyId, String branchId);
 	 
-	 CfsTarrif findByCompanyIdAndBranchIdAndPartyId(String companyId, String branchId,String partyId);
+	 CfsTarrifQuatation findByCompanyIdAndBranchIdAndPartyId(String companyId, String branchId,String partyId);
 	 
 	 
 	 
 
 	 @Query(value="select c.cfsTariffNo "
-	 		+ "from CfsTarrif c "
+	 		+ "from CfsTarrifQuatation c "
 	 		+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and c.partyId IN :partyid and "
 	 		+ "c.importerId IN :importer and c.cha IN :cha and c.forwarderId IN :forwarder and c.nvoccTariff='N' "
 	 		+ "and c.offdocTariff='N' and c.tariffType = 'Standard' order by FIELD(c.partyId,:partyid1,''),FIELD(c.importerId,:importer1,''),"
@@ -213,7 +201,7 @@ public interface CFSRepositary extends JpaRepository<CfsTarrif, String>
 	 
 	 @Query(value="select c.serviceId "
 	 		+ "from CFSTariffService c "
-	 		+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId=t.companyId and c.branchId=t.branchId and c.cfsTariffNo=t.cfsTariffNo "
+	 		+ "LEFT OUTER JOIN CfsTarrifQuatation t ON c.companyId=t.companyId and c.branchId=t.branchId and c.cfsTariffNo=t.cfsTariffNo "
 	 		+ "and c.cfsAmendNo=t.cfsAmndNo where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and t.status='A' and "
 	 		+ "c.cfsTariffNo=:tarrifNo and c.defaultChk='Y' group by c.serviceId order by c.serviceId")
 	 List<String> getDefaultServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("tarrifNo") String tarrifNo);

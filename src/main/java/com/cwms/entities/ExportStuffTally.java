@@ -3,6 +3,8 @@
 //import java.math.BigDecimal;
 //import java.util.Date;
 //
+//import com.fasterxml.jackson.annotation.JsonFormat;
+//
 //import jakarta.persistence.Column;
 //import jakarta.persistence.Entity;
 //import jakarta.persistence.Id;
@@ -65,6 +67,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Stuff_Tally_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date stuffTallyDate;
 //
 //	    @Column(name = "Stuff_Id", length = 10)
@@ -72,10 +75,12 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Stuff_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date stuffDate;
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "SB_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date sbDate;
 //
 //	    @Column(name = "Shift", length = 6)
@@ -95,18 +100,19 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name="Rotation_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date rotationDate;
 //	    
 //	    @Column(name = "POL", length = 100)
 //	    private String pol;
 //
-//	    @Column(name = "Terminal", length = 10)
+//	    @Column(name = "Terminal", length = 50)
 //	    private String terminal;
 //
 //	    @Column(name = "pod", length = 140)
 //	    private String pod;
 //
-//	    @Column(name = "Final_POD", length = 40)
+//	    @Column(name = "Final_POD", length = 50)
 //	    private String finalPod;
 //
 //	    @Column(name = "Container_No", length = 11)
@@ -123,6 +129,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Period_From")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date periodFrom;
 //	    
 //	    @Column(name = "GATE_IN_ID", length = 10)
@@ -188,10 +195,10 @@
 //	    @Column(name = "Balance_Qty", precision = 8, scale = 0)
 //	    private BigDecimal balanceQty;
 //
-//	    @Column(name = "Cargo_weight", precision = 10, scale = 4)
+//	    @Column(name = "Cargo_weight", precision = 16, scale = 4)
 //	    private BigDecimal cargoWeight;
 //
-//	    @Column(name = "Total_Cargo_Wt", precision = 10, scale = 3)
+//	    @Column(name = "Total_Cargo_Wt", precision = 16, scale = 4)
 //	    private BigDecimal totalCargoWeight;
 //
 //	    @Column(name = "Total_GW", precision = 16, scale = 4)
@@ -208,6 +215,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Weighment_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date weighmentDate;
 //
 //	    @Column(name = "Weighment_weight", precision = 16, scale = 3)
@@ -254,6 +262,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Carting_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date cartingDate;
 //
 //	    @Column(name = "ICD_Hub", length = 35)
@@ -273,6 +282,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Cover_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date coverDate;
 //
 //	    @Column(name = "Holding_Agent", length = 1)
@@ -283,10 +293,12 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Hold_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date holdDate;
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Release_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date releaseDate;
 //
 //	    @Column(name = "Hold_Remarks", length = 150)
@@ -300,6 +312,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "CLP_Created_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date clpCreatedDate;
 //
 //	    @Column(name = "CLP_Approved_By", length = 10)
@@ -307,6 +320,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "CLP_Approved_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date clpApprovedDate;
 //
 //	    @Column(name = "Gate_Pass_No", length = 10)
@@ -317,14 +331,17 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Gate_Out_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date gateOutDate;
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Berthing_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date berthingDate;
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Gate_Open_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date gateOpenDate;
 //
 //	    @Column(name = "Seal_Type", length = 5)
@@ -347,6 +364,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Created_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date createdDate;
 //
 //	    @Column(name = "Edited_By", length = 10)
@@ -354,6 +372,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Edited_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date editedDate;
 //
 //	    @Column(name = "Approved_By", length = 10)
@@ -361,6 +380,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Approved_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date approvedDate;
 //
 //	    @Column(name = "CLP_Confirm_Status", length = 1)
@@ -371,6 +391,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "CLP_Confirm_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date clpConfirmDate;
 //
 //	    @Column(name = "CLP_PCS_Status", length = 1)
@@ -381,10 +402,12 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "CLP_PCS_MSG_CRE_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date clpPcsMsgCreDate;
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "CLP_PCS_MSG_AMD_CRE_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date clpPcsMsgAmdCreDate;
 //
 //	    @Column(name = "Document_Number", precision = 16, scale = 0)
@@ -404,6 +427,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "SF_Job_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date sfJobDate;
 //
 //	    @Column(name = "ASR_Job_No", length = 10)
@@ -411,6 +435,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "ASR_Job_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date asrJobDate;
 //	    
 //	    
@@ -419,6 +444,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "CIM_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date cimDate;
 //
 //	    @Column(name = "Bond_No", length = 10)
@@ -429,6 +455,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "DP_Job_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date dpJobDate;
 //
 //	    @Column(name = "DT_Job_No", length = 10)
@@ -436,6 +463,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "DT_Job_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date dtJobDate;
 //
 //	    @Column(name = "From_Pkg")
@@ -473,10 +501,12 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "SF_Cancel_Created_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date sfCancelCreatedDate;
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "SF_Cancel_Ack_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date sfCancelAckDate;
 //
 //	    @Column(name = "Is_SF_Cancel_Desc", length = 20)
@@ -496,6 +526,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Invoice_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date invoiceDate;
 //
 //	    @Column(name = "Credit_Type", length = 1)
@@ -521,6 +552,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "STUFFTALLY_CUT_WO_TRANS_DATE")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date stuffTallyCutWoTransDate;
 //
 //	    @Column(name = "SSR_TRANS_ID", length = 10)
@@ -540,6 +572,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Rework_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date reworkDate;
 //
 //	    @Column(name = "PAY_LOAD", precision = 16, scale = 3)
@@ -556,6 +589,7 @@
 //
 //	    @Temporal(TemporalType.TIMESTAMP)
 //	    @Column(name = "Form_Thirteen_Entry_Date")
+//	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 //	    private Date formThirteenEntryDate;
 //
 //	    @Column(name = "Form_Thirteen_Entry_user", length = 10)
@@ -617,46 +651,6 @@
 //	    
 //	    
 //	    
-//	    
-//	    
-//	    
-//	    
-//	    
-//	    
-//
-//		public String getShippingLineName() {
-//			return shippingLineName;
-//		}
-//
-//
-//
-//
-//
-//
-//
-//		public void setShippingLineName(String shippingLineName) {
-//			this.shippingLineName = shippingLineName;
-//		}
-//
-//
-//
-//
-//
-//
-//
-//		public String getShippingAgentName() {
-//			return shippingAgentName;
-//		}
-//
-//
-//
-//
-//
-//
-//
-//		public void setShippingAgentName(String shippingAgentName) {
-//			this.shippingAgentName = shippingAgentName;
-//		}
 //
 //
 //
@@ -696,6 +690,46 @@
 //
 //		public void setFinalPodName(String finalPodName) {
 //			this.finalPodName = finalPodName;
+//		}
+//
+//
+//
+//
+//
+//
+//
+//		public String getShippingLineName() {
+//			return shippingLineName;
+//		}
+//
+//
+//
+//
+//
+//
+//
+//		public void setShippingLineName(String shippingLineName) {
+//			this.shippingLineName = shippingLineName;
+//		}
+//
+//
+//
+//
+//
+//
+//
+//		public String getShippingAgentName() {
+//			return shippingAgentName;
+//		}
+//
+//
+//
+//
+//
+//
+//
+//		public void setShippingAgentName(String shippingAgentName) {
+//			this.shippingAgentName = shippingAgentName;
 //		}
 //
 //
@@ -2836,7 +2870,7 @@
 //				String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
 //				String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
 //				String stuffMode, String vesselName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
-//				Date gateInDate, String cargoType, Date berthingDate) {
+//				Date gateInDate, String cargoType, Date berthingDate, String reworkFlag) {
 //			this.stuffTallyId = stuffTallyId;
 //			this.sbTransId = sbTransId;
 //			this.sbNo = sbNo;
@@ -2884,6 +2918,7 @@
 //			this.gateInDate = gateInDate;
 //			this.cargoType = cargoType;
 //			this.berthingDate = berthingDate;
+//			this.reworkFlag = reworkFlag;
 //		}
 //
 //
@@ -2969,7 +3004,10 @@
 //		    return super.clone();
 //		}
 //
-//		
+//
+//
+//
+//	
 //		
 //		
 ////		BufferTally
@@ -3068,11 +3106,129 @@
 //		
 //		
 //
-//	
+//
+//		// Export Main Search
+//
+//				public ExportStuffTally(String stuffTallyId, String containerNo, String gateInId, String reworkId) {
+//					super();
+//					this.stuffTallyId = stuffTallyId;
+//					this.containerNo = containerNo;
+//					this.gateInId = gateInId;
+//					this.reworkId = reworkId;
+//					}
+//
+//
+//
+//
+//
+//
+//
+//				public ExportStuffTally(String stuffTallyId, String sbTransId, int stuffTallyLineId, String sbLineId,
+//						String sbNo, String containerNo, String gateInId, String reworkId) {
+//					super();
+//					this.stuffTallyId = stuffTallyId;
+//					this.sbTransId = sbTransId;
+//					this.stuffTallyLineId = stuffTallyLineId;
+//					this.sbLineId = sbLineId;
+//					this.sbNo = sbNo;
+//					this.containerNo = containerNo;
+//					this.gateInId = gateInId;
+//					this.reworkId = reworkId;
+//				}
+//
+//				
+//		
+//				
+////				Stuff created By
+//					
+//
+//					public ExportStuffTally(String stuffTallyId, String sbTransId, String sbNo, String movementType,
+//							Date stuffTallyDate, Date sbDate, String agentSealNo, String vesselId, String voyageNo,
+//							String rotationNo, Date rotationDate, String terminal, String pod, String finalPod, String containerNo,String stuffId,
+//							String gateInId, String containerSize, String containerType, String onAccountOf, String cha,
+//							BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal balanceQty,BigDecimal cargoWeight, BigDecimal totalCargoWeight,
+//							BigDecimal tareWeight, String shippingAgent, String shippingLine, String commodity,
+//							String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
+//							String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
+//							String stuffMode, String vesselName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
+//							Date gateInDate, String cargoType, Date berthingDate, String reworkFlag, String createdBy) {
+//						this.stuffTallyId = stuffTallyId;
+//						this.sbTransId = sbTransId;
+//						this.sbNo = sbNo;
+//						this.movementType = movementType;
+//						this.stuffTallyDate = stuffTallyDate;
+//						this.sbDate = sbDate;
+//						this.agentSealNo = agentSealNo;
+//						this.vesselId = vesselId;
+//						this.voyageNo = voyageNo;
+//						this.rotationNo = rotationNo;
+//						this.rotationDate = rotationDate;
+//						this.terminal = terminal;
+//						this.pod = pod;
+//						this.finalPod = finalPod;
+//						this.containerNo = containerNo;
+//						this.stuffId = stuffId;
+//						this.gateInId = gateInId;
+//						this.containerSize = containerSize;
+//						this.containerType = containerType;
+//						this.onAccountOf = onAccountOf;
+//						this.cha = cha;
+//						this.stuffRequestQty = stuffRequestQty;
+//						this.stuffedQty = stuffedQty;
+//						this.balanceQty = balanceQty;
+//						this.cargoWeight = cargoWeight;
+//						this.totalCargoWeight = totalCargoWeight;
+//						this.tareWeight = tareWeight;
+//						this.shippingAgent = shippingAgent;
+//						this.shippingLine = shippingLine;
+//						this.commodity = commodity;
+//						this.customsSealNo = customsSealNo;
+//						this.viaNo = viaNo;
+//						this.exporterName = exporterName;
+//						this.consignee = consignee;
+//						this.fob = fob;
+//						this.status = status;
+//						this.stuffTallyWoTransId = stuffTallyWoTransId;
+//						this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+//						this.deliveryOrderNo = deliveryOrderNo;
+//						this.stuffMode = stuffMode;
+//						this.vesselName = vesselName;
+//						this.sbPackages = sbPackages;
+//						this.stuffedQuantity = stuffedQuantity;
+//						this.sbWt = sbWt;
+//						this.gateInDate = gateInDate;
+//						this.cargoType = cargoType;
+//						this.berthingDate = berthingDate;
+//						this.reworkFlag = reworkFlag;
+//						this.createdBy = createdBy;
+//					}
+//
+//
+//
+//					
+//			
+//		    
 //		
 //		
 //	    
+//}
 //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3686,7 +3842,98 @@ public class ExportStuffTally implements Cloneable {
 	    @Column(name="Type_Of_Package",length = 6)
 	    private String typeOfPackage;
 	    
-	    @Transient
+	    
+	    @Column(name = "LENGTH_ODC", precision = 16, scale = 3)
+	    private BigDecimal length;
+	    
+	    @Column(name = "HEIGHT_ODC", precision = 16, scale = 3)
+	    private BigDecimal height;
+	    
+	    @Column(name = "WEIGHT_ODC", precision = 16, scale = 3)
+	    private BigDecimal weight;
+	    
+	    @Column(name="ODC_TYPE",length = 50)
+	    private String odcType;
+	    
+	    
+	    public BigDecimal getLength() {
+			return length;
+		}
+
+
+
+
+
+
+
+		public void setLength(BigDecimal length) {
+			this.length = length;
+		}
+
+
+
+
+
+
+
+		public BigDecimal getHeight() {
+			return height;
+		}
+
+
+
+
+
+
+
+		public void setHeight(BigDecimal height) {
+			this.height = height;
+		}
+
+
+
+
+
+
+
+		public BigDecimal getWeight() {
+			return weight;
+		}
+
+
+
+
+
+
+
+		public void setWeight(BigDecimal weight) {
+			this.weight = weight;
+		}
+
+
+
+
+
+
+
+		public String getOdcType() {
+			return odcType;
+		}
+
+
+
+
+
+
+
+		public void setOdcType(String odcType) {
+			this.odcType = odcType;
+		}
+
+
+
+
+		@Transient
 	    private String vesselName;
 	    
 	    @Transient
@@ -6281,14 +6528,170 @@ public class ExportStuffTally implements Cloneable {
 						this.reworkFlag = reworkFlag;
 						this.createdBy = createdBy;
 					}
-
-
-
 					
+					
+					
+					
+//					New select tag
+					
+					public ExportStuffTally(String stuffTallyId, String sbTransId, String sbNo, String movementType,
+							Date stuffTallyDate, Date sbDate, String agentSealNo, String vesselId, String voyageNo,
+							String rotationNo, Date rotationDate, String terminal, String pod, String finalPod, String containerNo,String stuffId,
+							String gateInId, String containerSize, String containerType, String onAccountOf, String cha,
+							BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal balanceQty,BigDecimal cargoWeight, BigDecimal totalCargoWeight,
+							BigDecimal tareWeight, String shippingAgent, String shippingLine, String commodity,
+							String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
+							String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
+							String stuffMode, String vesselName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
+							Date gateInDate, String cargoType, Date berthingDate, String reworkFlag, String createdBy, String approvedBy, BigDecimal length, BigDecimal height, BigDecimal weight, String odcType) {
+						this.stuffTallyId = stuffTallyId;
+						this.sbTransId = sbTransId;
+						this.sbNo = sbNo;
+						this.movementType = movementType;
+						this.stuffTallyDate = stuffTallyDate;
+						this.sbDate = sbDate;
+						this.agentSealNo = agentSealNo;
+						this.vesselId = vesselId;
+						this.voyageNo = voyageNo;
+						this.rotationNo = rotationNo;
+						this.rotationDate = rotationDate;
+						this.terminal = terminal;
+						this.pod = pod;
+						this.finalPod = finalPod;
+						this.containerNo = containerNo;
+						this.stuffId = stuffId;
+						this.gateInId = gateInId;
+						this.containerSize = containerSize;
+						this.containerType = containerType;
+						this.onAccountOf = onAccountOf;
+						this.cha = cha;
+						this.stuffRequestQty = stuffRequestQty;
+						this.stuffedQty = stuffedQty;
+						this.balanceQty = balanceQty;
+						this.cargoWeight = cargoWeight;
+						this.totalCargoWeight = totalCargoWeight;
+						this.tareWeight = tareWeight;
+						this.shippingAgent = shippingAgent;
+						this.shippingLine = shippingLine;
+						this.commodity = commodity;
+						this.customsSealNo = customsSealNo;
+						this.viaNo = viaNo;
+						this.exporterName = exporterName;
+						this.consignee = consignee;
+						this.fob = fob;
+						this.status = status;
+						this.stuffTallyWoTransId = stuffTallyWoTransId;
+						this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+						this.deliveryOrderNo = deliveryOrderNo;
+						this.stuffMode = stuffMode;
+						this.vesselName = vesselName;
+						this.sbPackages = sbPackages;
+						this.stuffedQuantity = stuffedQuantity;
+						this.sbWt = sbWt;
+						this.gateInDate = gateInDate;
+						this.cargoType = cargoType;
+						this.berthingDate = berthingDate;
+						this.reworkFlag = reworkFlag;
+						this.createdBy = createdBy;
+						this.approvedBy = approvedBy;
+						this.length = length;
+						this.height = height;
+						this.weight = weight;
+						this.odcType = odcType;
+ 					}
+
+
+
+//					ContainerWise tally
+					public ExportStuffTally(String companyId, String branchId, String stuffTallyId, String sbTransId,
+							int stuffTallyLineId, String profitcentreId, String sbLineId, String sbNo, Date stuffTallyDate,
+							String stuffId, Date stuffDate, Date sbDate, String shift, String agentSealNo, String vesselId,
+							String voyageNo, String rotationNo, Date rotationDate, String pol, String terminal, String pod,
+							String finalPod, String containerNo, String containerStatus, Date periodFrom, String containerSize,
+							String containerType, String containerCondition, BigDecimal yardPackages, BigDecimal cellAreaAllocated,
+							String onAccountOf, String cha, BigDecimal stuffRequestQty, BigDecimal stuffedQty,
+							BigDecimal balanceQty,BigDecimal balQty, BigDecimal cargoWeight, BigDecimal totalGrossWeight, BigDecimal tareWeight,
+							BigDecimal areaReleased, String genSetRequired, String haz, String shippingAgent, String shippingLine,
+							String commodity, String customsSealNo, String viaNo, String exporterName, String consignee,
+							BigDecimal fob, Date berthingDate, Date gateOpenDate, String sealType, String docType, String docNo,
+							String status, String createdBy, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate,
+							String deliveryOrderNo, String stuffMode, String typeOfPackage, String vesselName, String chaName, BigDecimal totalCargoWeight
+							,String approvedBy, BigDecimal length, BigDecimal height, BigDecimal weight, String odcType, String cargoType) {
+						this.companyId = companyId;
+						this.branchId = branchId;
+						this.stuffTallyId = stuffTallyId;
+						this.sbTransId = sbTransId;
+						this.stuffTallyLineId = stuffTallyLineId;
+						this.profitcentreId = profitcentreId;
+						this.sbLineId = sbLineId;
+						this.sbNo = sbNo;
+						this.stuffTallyDate = stuffTallyDate;
+						this.stuffId = stuffId;
+						this.stuffDate = stuffDate;
+						this.sbDate = sbDate;
+						this.shift = shift;
+						this.agentSealNo = agentSealNo;
+						this.vesselId = vesselId;
+						this.voyageNo = voyageNo;
+						this.rotationNo = rotationNo;
+						this.rotationDate = rotationDate;
+						this.pol = pol;
+						this.terminal = terminal;
+						this.pod = pod;
+						this.finalPod = finalPod;
+						this.containerNo = containerNo;
+						this.containerStatus = containerStatus;
+						this.periodFrom = periodFrom;
+						this.containerSize = containerSize;
+						this.containerType = containerType;
+						this.containerCondition = containerCondition;
+						this.yardPackages = yardPackages;
+						this.cellAreaAllocated = cellAreaAllocated;
+						this.onAccountOf = onAccountOf;
+						this.cha = cha;
+						this.stuffRequestQty = stuffRequestQty;
+						this.stuffedQty = stuffedQty;
+						this.balanceQty = balanceQty;
+						this.balQty = balQty;
+						this.cargoWeight = cargoWeight;
+						this.totalGrossWeight = totalGrossWeight;
+						this.tareWeight = tareWeight;
+						this.areaReleased = areaReleased;
+						this.genSetRequired = genSetRequired;
+						this.haz = haz;
+						this.shippingAgent = shippingAgent;
+						this.shippingLine = shippingLine;
+						this.commodity = commodity;
+						this.customsSealNo = customsSealNo;
+						this.viaNo = viaNo;
+						this.exporterName = exporterName;
+						this.consignee = consignee;
+						this.fob = fob;
+						this.berthingDate = berthingDate;
+						this.gateOpenDate = gateOpenDate;
+						this.sealType = sealType;
+						this.docType = docType;
+						this.docNo = docNo;
+						this.status = status;
+						this.createdBy = createdBy;
+						this.stuffTallyWoTransId = stuffTallyWoTransId;
+						this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+						this.deliveryOrderNo = deliveryOrderNo;
+						this.stuffMode = stuffMode;
+						this.typeOfPackage = typeOfPackage;
+						this.vesselName = vesselName;
+						this.chaName = chaName;
+						this.totalCargoWeight = totalCargoWeight;
+						this.approvedBy = approvedBy;
+						this.length = length;
+						this.height = height;
+						this.weight = weight;
+						this.odcType = odcType;
+						this.cargoType = cargoType;
+					}
 			
 		    
 		
 		
 	    
 }
-
