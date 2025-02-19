@@ -2535,5 +2535,14 @@ public class Party {
 					this.crAmtLmt = crAmtLmt;
 					this.crAmtLmtUse = crAmtLmtUse;
 				}
+				
+				public Party(String companyId, String branchId, String partyId, String partyName) {
+					super();
+					this.companyId = companyId;
+					this.branchId = branchId;
+					this.partyId = partyId;
+					this.partyName = partyName;
+
+				}
 }
 

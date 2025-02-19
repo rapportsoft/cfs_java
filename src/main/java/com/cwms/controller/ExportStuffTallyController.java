@@ -5436,6 +5436,7 @@ public class ExportStuffTallyController {
 					newTally.setLength(singleTally.getLength());
 					newTally.setHeight(singleTally.getHeight());
 					newTally.setWeight(singleTally.getWeight());
+					newTally.setHsnCode(e.getHsnCode());
 
 					exportstufftallyrepo.save(newTally);
 					sr++;
@@ -5704,6 +5705,7 @@ public class ExportStuffTallyController {
 							exist.setLength(singleTally.getLength());
 							exist.setHeight(singleTally.getHeight());
 							exist.setWeight(singleTally.getWeight());
+							exist.setHsnCode(t.getHsnCode());
 							
 							exportstufftallyrepo.save(exist);
 						} else {
@@ -5868,6 +5870,8 @@ public class ExportStuffTallyController {
 								exist.setLength(singleTally.getLength());
 								exist.setHeight(singleTally.getHeight());
 								exist.setWeight(singleTally.getWeight());
+								exist.setHsnCode(t.getHsnCode());
+
 								
 								
 								exportstufftallyrepo.save(exist);
@@ -6030,6 +6034,8 @@ public class ExportStuffTallyController {
 									exist.setLength(singleTally.getLength());
 									exist.setHeight(singleTally.getHeight());
 									exist.setWeight(singleTally.getWeight());
+									exist.setHsnCode(t.getHsnCode());
+
 									
 									exportstufftallyrepo.save(exist);
 								}
@@ -6077,6 +6083,8 @@ public class ExportStuffTallyController {
 								exist.setLength(singleTally.getLength());
 								exist.setHeight(singleTally.getHeight());
 								exist.setWeight(singleTally.getWeight());
+								exist.setHsnCode(t.getHsnCode());
+
 								
 								exportstufftallyrepo.save(exist);
 							} else {
@@ -6238,6 +6246,8 @@ public class ExportStuffTallyController {
 									exist.setLength(singleTally.getLength());
 									exist.setHeight(singleTally.getHeight());
 									exist.setWeight(singleTally.getWeight());
+									exist.setHsnCode(t.getHsnCode());
+
 									exportstufftallyrepo.save(exist);
 								} else {
 									BigDecimal qty = BigDecimal.ZERO;
@@ -6406,6 +6416,8 @@ public class ExportStuffTallyController {
 										exist.setLength(singleTally.getLength());
 										exist.setHeight(singleTally.getHeight());
 										exist.setWeight(singleTally.getWeight());
+										exist.setHsnCode(t.getHsnCode());
+
 										
 										exportstufftallyrepo.save(exist);
 									}
@@ -6447,6 +6459,8 @@ public class ExportStuffTallyController {
 						exist.setLength(singleTally.getLength());
 						exist.setHeight(singleTally.getHeight());
 						exist.setWeight(singleTally.getWeight());
+						exist.setHsnCode(t.getHsnCode());
+
 						exportstufftallyrepo.save(exist);
 					}
 					exist.setStuffMode(singleTally.getStuffMode());
@@ -6481,6 +6495,8 @@ public class ExportStuffTallyController {
 					exist.setLength(singleTally.getLength());
 					exist.setHeight(singleTally.getHeight());
 					exist.setWeight(singleTally.getWeight());
+					exist.setHsnCode(t.getHsnCode());
+
 					exportstufftallyrepo.save(exist);
 				}
 
@@ -6596,6 +6612,8 @@ public class ExportStuffTallyController {
 									exist1.setLength(singleTally.getLength());
 									exist1.setHeight(singleTally.getHeight());
 									exist1.setWeight(singleTally.getWeight());
+									exist1.setHsnCode(t.getHsnCode());
+
 									
 									exportstufftallyrepo.save(exist1);
 									stuffReq.setStuffedQty(stuffReq.getStuffedQty() == null ? BigDecimal.ZERO
@@ -6795,7 +6813,8 @@ public class ExportStuffTallyController {
 									newTally.setLength(singleTally.getLength());
 									newTally.setHeight(singleTally.getHeight());
 									newTally.setWeight(singleTally.getWeight());
-									
+									newTally.setHsnCode(t.getHsnCode());
+
 									
 
 									exportstufftallyrepo.save(newTally);
@@ -7002,7 +7021,8 @@ public class ExportStuffTallyController {
 									exist1.setLength(singleTally.getLength());
 									exist1.setHeight(singleTally.getHeight());
 									exist1.setWeight(singleTally.getWeight());
-									
+									exist1.setHsnCode(t.getHsnCode());
+
 
 									exportstufftallyrepo.save(exist1);
 
@@ -7230,7 +7250,8 @@ public class ExportStuffTallyController {
 										newTally.setLength(singleTally.getLength());
 										newTally.setHeight(singleTally.getHeight());
 										newTally.setWeight(singleTally.getWeight());
-										
+										newTally.setHsnCode(t.getHsnCode());
+
 										
 										
 										
@@ -7496,7 +7517,8 @@ public class ExportStuffTallyController {
 									newTally.setLength(singleTally.getLength());
 									newTally.setHeight(singleTally.getHeight());
 									newTally.setWeight(singleTally.getWeight());
-									
+									newTally.setHsnCode(t.getHsnCode());
+
 									
 
 									exportstufftallyrepo.save(newTally);
@@ -7613,6 +7635,8 @@ public class ExportStuffTallyController {
 						exist.setLength(singleTally.getLength());
 						exist.setHeight(singleTally.getHeight());
 						exist.setWeight(singleTally.getWeight());
+						exist.setHsnCode(t.getHsnCode());
+
 						
 						exportstufftallyrepo.save(exist);
 					}
@@ -8159,7 +8183,7 @@ public class ExportStuffTallyController {
 					newTally.setHeight(e.getHeight());
 					newTally.setWeight(e.getWeight());
 					
-					
+					newTally.setHsnCode(singleTally.getHsnCode());
 					
 					
 					
@@ -8340,7 +8364,8 @@ public class ExportStuffTallyController {
 						exist.setLength(e.getLength());
 						exist.setHeight(e.getHeight());
 						exist.setWeight(e.getWeight());
-						
+						exist.setHsnCode(singleTally.getHsnCode());
+
 						
 
 						if (totalStuffedQty.compareTo(e.getStuffedQty()) < 0) {
@@ -8673,6 +8698,8 @@ public class ExportStuffTallyController {
 												exist1.setCargoType(e.getCargoType());
 												exist1.setTotalGrossWeight(e.getCargoWeight());
 												exist1.setCargoWeight(e.getCargoWeight());
+												exist1.setHsnCode(singleTally.getHsnCode());
+
 
 												exportstufftallyrepo.save(exist1);
 												stuffReq.setStuffedQty(
@@ -8892,6 +8919,8 @@ public class ExportStuffTallyController {
 												newTally.setLength(e.getLength());
 												newTally.setHeight(e.getHeight());
 												newTally.setWeight(e.getWeight());
+												newTally.setHsnCode(singleTally.getHsnCode());
+
 
 												exportstufftallyrepo.save(newTally);
 
@@ -9093,6 +9122,8 @@ public class ExportStuffTallyController {
 												exist1.setLength(e.getLength());
 												exist1.setHeight(e.getHeight());
 												exist1.setWeight(e.getWeight());
+												exist1.setHsnCode(singleTally.getHsnCode());
+
 												
 
 												exportstufftallyrepo.save(exist1);
@@ -9340,7 +9371,8 @@ public class ExportStuffTallyController {
 													newTally.setLength(e.getLength());
 													newTally.setHeight(e.getHeight());
 													newTally.setWeight(e.getWeight());
-													
+													newTally.setHsnCode(singleTally.getHsnCode());
+
 													
 
 													exportstufftallyrepo.save(newTally);
@@ -9606,7 +9638,8 @@ public class ExportStuffTallyController {
 													newTally.setHeight(e.getHeight());
 													newTally.setWeight(e.getWeight());
 													
-													
+													newTally.setHsnCode(singleTally.getHsnCode());
+
 													
 													
 													

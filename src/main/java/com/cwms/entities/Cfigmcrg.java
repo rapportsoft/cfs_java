@@ -463,6 +463,9 @@ public class Cfigmcrg {
 	    @Column(name="Bl_Type",length = 15)
 	    private String blType;
 	    
+	    @Column(name="Hsn_Code",length = 15)
+	    private String hsnCode;
+	    
 	    @Transient
 	    private Date igmDate;
 	    
@@ -499,6 +502,219 @@ public class Cfigmcrg {
 		
 		
 		
+
+
+
+		public String getHsnCode() {
+			return hsnCode;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public void setHsnCode(String hsnCode) {
+			this.hsnCode = hsnCode;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		protected Cfigmcrg(String companyId, String branchId, String finYear, String igmTransId, String igmCrgTransId,
+				String profitcentreId, String igmLineNo, String igmNo, String cycle, String viaNo, String blNo,
+				Date blDate, String cargoMovement, int sampleQty, String importerId, String importerName,
+				String importerSr, String importerAddress1, String importerAddress2, String importerAddress3,
+				String importerType, String notifyPartyId, String notifySr, String notifyPartyName,
+				String notifiedAddress1, String notifiedAddress2, String notifiedAddress3, String oldImporterName,
+				String oldImporterAddress1, String oldImporterAddress2, String oldImporterAddress3, String origin,
+				String destination, String commodityDescription, String commodityCode, BigDecimal areaUsed,
+				BigDecimal noOfPackages, BigDecimal qtyTakenOut, BigDecimal qtyTakenOutWeight, BigDecimal grossWeight,
+				BigDecimal actualGrossWeight, BigDecimal actualCargoWeight, BigDecimal weighmentWeight,
+				String unitOfWeight, String typeOfPackage, String cargoType, String imoCode, String unNo,
+				String dataInputStatus, String entryStatus, BigDecimal actualNoOfPackages,
+				BigDecimal damagedNoOfPackages, String gainLossPackage, String yardLocation, String yardBlock,
+				String blockCellNo, int noOfDestuffContainers, int noOfContainers, String examTallyId,
+				Date examTallyDate, String blTariffNo, String destuffId, BigDecimal destuffCharges, Date destuffDate,
+				BigDecimal cargoValue, BigDecimal cargoDuty, String gateOutNo, Date gateOutDate, String marksOfNumbers,
+				String holdingAgent, String holdingAgentName, Date holdDate, Date releaseDate, String holdRemarks,
+				String holdStatus, String releaseAgent, String releaseRemarks, String noticeId, String noticeType,
+				Date noticeDate, String auctionStatus, String status, String customerId, String blUpdaterUser,
+				String blUpdaterFlag, Date blUpdaterDate, String blReportUser, String blReportFlag, Date blReportDate,
+				String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+				Date approvedDate, String hazReeferRemarks, String crgAllowFlag, String othPartyId, String mergeStatus,
+				Date mergeCreatedDate, String mergeCreatedBy, String mergeApprovedBy, Date mergeApprovedDate,
+				String oldLineNo, String riskStatus, String riskStatusBy, Date riskStatusDate, String smtpFlag,
+				String smtpStatusBy, Date smtpStatusDate, String newFwdId, String primaryItem, String igmSendStatus,
+				Date igmSendDate, String partDeStuffId, Date partDeStuffDate, String igmImporterName,
+				String igmImporterAddress1, String igmImporterAddress2, String igmImporterAddress3,
+				String accountHolderId, String accountHolderName, String beNo, Date beDate, String chaCode,
+				String chaName, String mobileNo, String sealCuttingType, BigDecimal beWt, String sealCuttingRemarks,
+				String examinationRemarks, String blType, String hsnCode, Date igmDate, String sa, String sl,
+				String length, String height, String weight, String odcType, String typeOfCargo) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.finYear = finYear;
+			this.igmTransId = igmTransId;
+			this.igmCrgTransId = igmCrgTransId;
+			this.profitcentreId = profitcentreId;
+			this.igmLineNo = igmLineNo;
+			this.igmNo = igmNo;
+			this.cycle = cycle;
+			this.viaNo = viaNo;
+			this.blNo = blNo;
+			this.blDate = blDate;
+			this.cargoMovement = cargoMovement;
+			this.sampleQty = sampleQty;
+			this.importerId = importerId;
+			this.importerName = importerName;
+			this.importerSr = importerSr;
+			this.importerAddress1 = importerAddress1;
+			this.importerAddress2 = importerAddress2;
+			this.importerAddress3 = importerAddress3;
+			this.importerType = importerType;
+			this.notifyPartyId = notifyPartyId;
+			this.notifySr = notifySr;
+			this.notifyPartyName = notifyPartyName;
+			this.notifiedAddress1 = notifiedAddress1;
+			this.notifiedAddress2 = notifiedAddress2;
+			this.notifiedAddress3 = notifiedAddress3;
+			this.oldImporterName = oldImporterName;
+			this.oldImporterAddress1 = oldImporterAddress1;
+			this.oldImporterAddress2 = oldImporterAddress2;
+			this.oldImporterAddress3 = oldImporterAddress3;
+			this.origin = origin;
+			this.destination = destination;
+			this.commodityDescription = commodityDescription;
+			this.commodityCode = commodityCode;
+			this.areaUsed = areaUsed;
+			this.noOfPackages = noOfPackages;
+			this.qtyTakenOut = qtyTakenOut;
+			this.qtyTakenOutWeight = qtyTakenOutWeight;
+			this.grossWeight = grossWeight;
+			this.actualGrossWeight = actualGrossWeight;
+			this.actualCargoWeight = actualCargoWeight;
+			this.weighmentWeight = weighmentWeight;
+			this.unitOfWeight = unitOfWeight;
+			this.typeOfPackage = typeOfPackage;
+			this.cargoType = cargoType;
+			this.imoCode = imoCode;
+			this.unNo = unNo;
+			this.dataInputStatus = dataInputStatus;
+			this.entryStatus = entryStatus;
+			this.actualNoOfPackages = actualNoOfPackages;
+			this.damagedNoOfPackages = damagedNoOfPackages;
+			this.gainLossPackage = gainLossPackage;
+			this.yardLocation = yardLocation;
+			this.yardBlock = yardBlock;
+			this.blockCellNo = blockCellNo;
+			this.noOfDestuffContainers = noOfDestuffContainers;
+			this.noOfContainers = noOfContainers;
+			this.examTallyId = examTallyId;
+			this.examTallyDate = examTallyDate;
+			this.blTariffNo = blTariffNo;
+			this.destuffId = destuffId;
+			this.destuffCharges = destuffCharges;
+			this.destuffDate = destuffDate;
+			this.cargoValue = cargoValue;
+			this.cargoDuty = cargoDuty;
+			this.gateOutNo = gateOutNo;
+			this.gateOutDate = gateOutDate;
+			this.marksOfNumbers = marksOfNumbers;
+			this.holdingAgent = holdingAgent;
+			this.holdingAgentName = holdingAgentName;
+			this.holdDate = holdDate;
+			this.releaseDate = releaseDate;
+			this.holdRemarks = holdRemarks;
+			this.holdStatus = holdStatus;
+			this.releaseAgent = releaseAgent;
+			this.releaseRemarks = releaseRemarks;
+			this.noticeId = noticeId;
+			this.noticeType = noticeType;
+			this.noticeDate = noticeDate;
+			this.auctionStatus = auctionStatus;
+			this.status = status;
+			this.customerId = customerId;
+			this.blUpdaterUser = blUpdaterUser;
+			this.blUpdaterFlag = blUpdaterFlag;
+			this.blUpdaterDate = blUpdaterDate;
+			this.blReportUser = blReportUser;
+			this.blReportFlag = blReportFlag;
+			this.blReportDate = blReportDate;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.hazReeferRemarks = hazReeferRemarks;
+			this.crgAllowFlag = crgAllowFlag;
+			this.othPartyId = othPartyId;
+			this.mergeStatus = mergeStatus;
+			this.mergeCreatedDate = mergeCreatedDate;
+			this.mergeCreatedBy = mergeCreatedBy;
+			this.mergeApprovedBy = mergeApprovedBy;
+			this.mergeApprovedDate = mergeApprovedDate;
+			this.oldLineNo = oldLineNo;
+			this.riskStatus = riskStatus;
+			this.riskStatusBy = riskStatusBy;
+			this.riskStatusDate = riskStatusDate;
+			this.smtpFlag = smtpFlag;
+			this.smtpStatusBy = smtpStatusBy;
+			this.smtpStatusDate = smtpStatusDate;
+			this.newFwdId = newFwdId;
+			this.primaryItem = primaryItem;
+			this.igmSendStatus = igmSendStatus;
+			this.igmSendDate = igmSendDate;
+			this.partDeStuffId = partDeStuffId;
+			this.partDeStuffDate = partDeStuffDate;
+			this.igmImporterName = igmImporterName;
+			this.igmImporterAddress1 = igmImporterAddress1;
+			this.igmImporterAddress2 = igmImporterAddress2;
+			this.igmImporterAddress3 = igmImporterAddress3;
+			this.accountHolderId = accountHolderId;
+			this.accountHolderName = accountHolderName;
+			this.beNo = beNo;
+			this.beDate = beDate;
+			this.chaCode = chaCode;
+			this.chaName = chaName;
+			this.mobileNo = mobileNo;
+			this.sealCuttingType = sealCuttingType;
+			this.beWt = beWt;
+			this.sealCuttingRemarks = sealCuttingRemarks;
+			this.examinationRemarks = examinationRemarks;
+			this.blType = blType;
+			this.hsnCode = hsnCode;
+			this.igmDate = igmDate;
+			this.sa = sa;
+			this.sl = sl;
+			this.length = length;
+			this.height = height;
+			this.weight = weight;
+			this.odcType = odcType;
+			this.typeOfCargo = typeOfCargo;
+		}
+
+
+
+
+
+
+
+
 
 
 

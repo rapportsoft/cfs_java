@@ -1,5 +1,6 @@
 package com.cwms.repository;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -148,7 +149,7 @@ List<Object[]> getInvoiceSalesRegisterData(
         "LEFT OUTER JOIN jar_detail jr ON a.company_id = jr.company_id AND x.Sac_Code = jr.jar_dtl_id AND jr.jar_id='J00024' " +
         "LEFT OUTER JOIN cfimpinventory i ON a.Company_Id = i.Company_Id AND a.Branch_Id = i.Branch_Id AND a.Container_no = i.Container_no AND a.IGM_Trans_Id = i.IGM_Trans_Id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND b.company_id = :companyId AND b.branch_id = :branchId AND c.company_id = :companyId AND c.branch_id = :branchId " +
-        "AND a.status = 'A' AND b.status = 'A' AND c.status = 'A'and c.container_no !='' AND b.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND a.status = 'A' AND a.trans_type != 'MISC' AND b.status = 'A' AND c.status = 'A'and c.container_no !='' AND b.Created_Date BETWEEN :startDate AND :endDate " +
         " AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty)  " +
         "GROUP BY a.assesment_id, a.Container_no, b.invoice_no " +
         "UNION " +
@@ -219,7 +220,7 @@ List<Object[]> getInvoiceSalesRegisterData(
         "    AND aj.IGM_Trans_Id = i.IGM_Trans_Id   " +
         "LEFT OUTER JOIN jar_detail jr ON cj.company_id = jr.company_id AND xj.Sac_Code = jr.jar_dtl_id AND jr.jar_id='J00024' " +
         "WHERE aj.company_id = :companyId AND aj.branch_id = :branchId AND cj.company_id = :companyId AND cj.branch_id = :branchId " +
-        "AND aj.status = 'A' AND cj.status = 'A' AND bj.status = 'A' AND cj.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND aj.status = 'A' AND aj.trans_type != 'MISC' AND cj.status = 'A' AND bj.status = 'A' AND cj.Created_Date BETWEEN :startDate AND :endDate " +
         "GROUP BY aj.assesment_id, aj.Container_no, cj.invoice_no", nativeQuery = true)
 List<Object[]> getInvoiceDetailsContainerWise( @Param("companyId") String companyId,
         @Param("branchId") String branchId,
@@ -233,10 +234,11 @@ List<Object[]> getInvoiceDetailsContainerWise( @Param("companyId") String compan
         "GROUP_CONCAT(CONCAT(c.service_id, '~', c.Local_Amt, '~', c.Tax_Perc_N, '~', c.invoice_Amt, '~', x.Service_short_desc, '~', c.Execution_Unit, '~', c.Free_Days, '~', c.Chargable_Days, '~', x.Service_Group)) AS tot_services " +
         "FROM cfinvsrv a " +
         "LEFT OUTER JOIN cfinvsrvanx c ON a.Company_Id = c.Company_Id AND a.Branch_Id = c.Branch_Id AND a.Invoice_No = c.Invoice_No AND a.Container_No = c.Process_Trans_Id " +
-        "AND a.Profitcentre_Id = c.Profitcentre_Id " +
+        "AND a.Profitcentre_Id = c.Profitcentre_Id and c.invoice_type NOT IN ('PD') " +
         "LEFT OUTER JOIN services x ON c.Company_Id = x.Company_Id AND c.service_id = x.service_id AND c.branch_id = x.branch_id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND c.company_id = :companyId AND c.branch_id = :branchId " +
-        "AND c.status = 'A' AND a.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND c.status = 'A' AND  a.status ='A' and a.invoice_type NOT IN ('MISC') AND c.process_id!='P01109' " +
+        "AND a.Created_Date BETWEEN :startDate AND :endDate " +
         "GROUP BY a.Container_No, c.Container_no, a.invoice_no " +
         "UNION " +
         "SELECT cj.Invoice_No, cj.Container_no, cj.ERP_Doc_Ref_No, " +
@@ -246,13 +248,64 @@ List<Object[]> getInvoiceDetailsContainerWise( @Param("companyId") String compan
         "AND bj.profitcentre_id = cj.profitcentre_id AND bj.party_Id = cj.party_id " +
         "LEFT OUTER JOIN services xj ON bj.Company_Id = xj.Company_Id AND bj.service_id = xj.service_id AND bj.branch_id = xj.branch_id " +
         "WHERE cj.company_id = :companyId AND cj.Branch_Id = :branchId AND bj.company_id = :companyId AND bj.Branch_Id = :branchId " +
-        "AND cj.status = 'A' AND bj.status = 'A' AND cj.status = 'A' AND cj.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND cj.status = 'A' AND cj.invoice_type NOT IN ('MISC')  AND bj.status = 'A' AND cj.status = 'A' AND cj.Created_Date BETWEEN :startDate AND :endDate " +
         "GROUP BY cj.Container_no, cj.invoice_no " +
-        "ORDER BY 1", nativeQuery = true)
+        "ORDER BY 1"
+        ,
+        nativeQuery = true)
 List<Object[]> findInvoiceServices( @Param("companyId") String companyId,
         @Param("branchId") String branchId,
         @Param("startDate") Date startDate,
         @Param("endDate") Date endDate);
+
+
+//@Query(value = "SELECT a.Invoice_No, c.Container_no, c.Process_Trans_Id, " +
+//        "GROUP_CONCAT(CONCAT(c.service_id, '~', c.Local_Amt, '~', c.Tax_Perc_N, '~', c.invoice_Amt, '~', " +
+//        "x.Service_short_desc, '~', c.Execution_Unit, '~', c.Free_Days, '~', c.Chargable_Days, '~', x.Service_Group)) AS tot_services " +
+//        "FROM cfinvsrv a " +
+//        "LEFT OUTER JOIN cfinvsrvanx c ON a.Company_Id = c.Company_Id " +
+//        "    AND a.Branch_Id = c.Branch_Id " +
+//        "    AND a.Invoice_No = c.Invoice_No " +
+//        "    AND a.Container_No = c.Process_Trans_Id " +
+//        "    AND a.Profitcentre_Id = c.Profitcentre_Id " +
+//        "LEFT OUTER JOIN services x ON c.Company_Id = x.Company_Id " +
+//        "    AND c.service_id = x.service_id " +
+//        "    AND c.branch_id = x.branch_id " +
+//        "WHERE a.company_id = :companyId " +
+//        "  AND a.branch_id = :branchId " +
+//        "  AND c.company_id = :companyId " +
+//        "  AND c.branch_id = :branchId " +
+//        "  AND c.status = 'A' " +
+//        "  AND a.Created_Date BETWEEN :startDate AND :endDate " +
+//        "GROUP BY a.Container_No, c.Container_no, a.invoice_no " +
+//        "UNION ALL " +
+//        "SELECT cj.Invoice_No, cj.Container_no, cj.ERP_Doc_Ref_No, " +
+//        "GROUP_CONCAT(CONCAT(bj.service_id, '~', bj.Local_Amt, '~', bj.Tax_Perc_N, '~', bj.invoice_Amt, '~', " +
+//        "xj.Service_short_desc, '~', '0', '~', '0', '~', '0', '~', xj.Service_Group)) AS tot_services " +
+//        "FROM cfinvsrvcn cj " +
+//        "LEFT OUTER JOIN cfinvsrvcndtl bj ON cj.Company_Id = bj.Company_Id " + // Corrected join condition
+//        "    AND cj.Branch_Id = bj.Branch_Id " +
+//        "    AND cj.invoice_no = bj.invoice_no " +
+//        "    AND bj.profitcentre_id = cj.profitcentre_id " +
+//        "    AND bj.party_Id = cj.party_id " +
+//        "LEFT OUTER JOIN services xj ON bj.Company_Id = xj.Company_Id " +
+//        "    AND bj.service_id = xj.service_id " +
+//        "    AND bj.branch_id = xj.branch_id " +
+//        "WHERE cj.company_id = :companyId " +
+//        "  AND cj.Branch_Id = :branchId " +
+//        "  AND bj.company_id = :companyId " +
+//        "  AND bj.Branch_Id = :branchId " +
+//        "  AND cj.status = 'A' " +
+//        "  AND bj.status = 'A' " +
+//        "  AND cj.Created_Date BETWEEN :startDate AND :endDate " +
+//        "GROUP BY cj.Container_no, cj.invoice_no " +
+//        "ORDER BY 1", nativeQuery = true)
+//List<Object[]> findInvoiceServices(
+//        @Param("companyId") String companyId,
+//        @Param("branchId") String branchId,
+//        @Param("startDate") Date startDate,
+//        @Param("endDate") Date endDate);
+
 
 //@Repository
 //public interface YourRepository extends JpaRepository<YourEntity, Long> {
@@ -498,7 +551,7 @@ List<Object[]> findInvoiceDetailsFCLTeusOnly(@Param("companyId") String companyI
         "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id " +
         "AND b.SL = pp.Party_Id AND b.branch_id = pp.branch_id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId " +
-        "AND a.Profitcentre_Id = 'N00004' AND c.Mov_Req_Type = 'CLP' " +
+        "AND a.Profitcentre_Id = 'N00004' AND c.Mov_Req_Type IN ('CLP') " +
         "AND a.Created_Date BETWEEN :startDate AND :endDate " +
         "AND a.Status = 'A' " +
         " AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty)  " +
@@ -521,7 +574,7 @@ List<Object[]>  findExportCLPInvoiceReceiptOnly(@Param("companyId") String compa
         "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id AND b.SL = pp.Party_Id " +
         "AND b.branch_id = pp.branch_id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId " +
-        "AND a.Profitcentre_Id = 'N00004' AND c.Mov_Req_Type = 'CLP' " +
+        "AND a.Profitcentre_Id = 'N00004' AND c.Mov_Req_Type IN ('CLP') " +
         "AND a.Created_Date BETWEEN :startDate AND :endDate " +
         "AND a.Status = 'A' " +
         "AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty) " +

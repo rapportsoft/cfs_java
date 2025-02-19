@@ -2193,10 +2193,6 @@ List<Object[]> findExportMovementGateOutData(
     @Param("endDate") Date endDate);
 
 
-
-
-
-
 @Query(value = "SELECT DISTINCT a.Container_no, a.Container_Size, a.Container_type, "
         + "DATE_FORMAT(a.Gate_In_Date, '%d %b %Y %H:%i'), y.party_name, w.CUSTOMER_CODE, "
         + "y.CUSTOMER_CODE, DATE_FORMAT(e.Stuff_Tally_Date, '%d %b %Y %H:%i'), "
@@ -2247,13 +2243,73 @@ List<Object[]> findExportMovementGateOutData(
         + "AND e.Vessel_id = x.Vessel_Id AND e.branch_id = x.branch_id "
         + "WHERE a.company_id = :companyId AND a.branch_id = :branchId "
         + "AND a.ProfitCentre_Id = 'N00004' AND a.status = 'A' "
-        + "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) "
+        + "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Id IS NULL  OR a.Gate_Out_Date > :endDate) "
         + "AND a.Container_Status IN ('LDD', 'FCL') "
         + "GROUP BY a.container_no", nativeQuery = true)
 List<Object[]> findExportLDDPendencyContainerDetails(
 		@Param("companyId") String companyId,
 	    @Param("branchId") String branchId,
 	    @Param("endDate") Date endDate);
+
+
+
+//@Query(value = "SELECT DISTINCT a.Container_no, a.Container_Size, a.Container_type, "
+//        + "DATE_FORMAT(a.Gate_In_Date, '%d %b %Y %H:%i'), y.party_name, w.CUSTOMER_CODE, "
+//        + "y.CUSTOMER_CODE, DATE_FORMAT(e.Stuff_Tally_Date, '%d %b %Y %H:%i'), "
+//        + "DATE_FORMAT(a.Movement_req_Date, '%d %b %Y %H:%i'),'','', e.pol, "
+//        + "b.sb_type, x.Vessel_Name , e.Hold_Remarks "
+//        + "FROM cfexpinventory a "
+//        + "LEFT OUTER JOIN cfstufftally e ON a.Company_Id = e.Company_Id "
+//        + "AND a.Branch_id = e.Branch_id AND a.Container_No = e.Container_No "
+//        + "AND a.profitcentre_id = e.profitcentre_id AND e.status = 'A' "
+//        + "AND a.Stuff_Tally_Id = e.stuff_tally_id AND a.Stuff_req_Id = e.stuff_id "
+//        + "LEFT OUTER JOIN cfsb b ON a.Company_Id = b.Company_Id "
+//        + "AND a.Branch_id = b.Branch_id AND a.SB_Trans_Id = b.SB_Trans_Id "
+//        + "AND a.profitcentre_id = b.profitcentre_id AND b.status = 'A' "
+//        + "AND a.SB_no = b.SB_no "
+//        + "LEFT OUTER JOIN party w ON a.Company_Id = w.Company_Id "
+//        + "AND a.sl = w.Party_Id AND a.branch_id = w.branch_id "
+//        + "LEFT OUTER JOIN party y ON a.Company_Id = y.Company_Id "
+//        + "AND a.sa = y.Party_Id AND a.branch_id = y.branch_id "
+//        + "LEFT OUTER JOIN vessel x ON e.Company_Id = x.Company_Id "
+//        + "AND e.Vessel_id = x.Vessel_Id AND e.branch_id = x.branch_id "
+//        + "WHERE a.company_id = :companyId AND a.branch_id = :branchId "
+//        + "AND a.ProfitCentre_Id = 'N00004' AND a.status = 'A' "
+//        + "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) "
+//        + "AND (a.Stuff_Req_Date != '0000-00-00 00:00:00' "
+//        + "AND a.Stuff_Req_Date < :endDate) AND a.Container_Status = 'MTY' "
+//        + "AND a.cycle != 'Hub' "
+//        + "GROUP BY a.container_no "
+//        + "UNION "
+//        + "SELECT DISTINCT a.Container_no, a.Container_Size, a.Container_type, "
+//        + "DATE_FORMAT(a.Gate_In_Date, '%d %b %Y %H:%i'), y.party_name, w.CUSTOMER_CODE, "
+//        + "y.CUSTOMER_CODE, DATE_FORMAT(e.Stuff_Tally_Date, '%d %b %Y %H:%i'), "
+//        + "DATE_FORMAT(a.Movement_req_Date, '%d %b %Y %H:%i'),'','',  e.pol, "
+//        + "a.cycle, x.Vessel_Name,e.Hold_Remarks "
+//        + "FROM cfexpinventory a "
+//        + "LEFT OUTER JOIN cfstufftally e ON a.Company_Id = e.Company_Id "
+//        + "AND a.Branch_id = e.Branch_id AND a.Container_No = e.Container_No "
+//        + "AND a.profitcentre_id = e.profitcentre_id AND e.status = 'A' "
+//        + "AND a.Stuff_Tally_Id = e.stuff_tally_id AND a.Stuff_req_Id = e.stuff_id "
+//        + "LEFT OUTER JOIN cfsb b ON a.Company_Id = b.Company_Id "
+//        + "AND a.Branch_id = b.Branch_id AND a.SB_Trans_Id = b.SB_Trans_Id "
+//        + "AND a.profitcentre_id = b.profitcentre_id AND b.status = 'A' "
+//        + "AND a.SB_no = b.SB_no "
+//        + "LEFT OUTER JOIN party w ON a.Company_Id = w.Company_Id "
+//        + "AND a.sl = w.Party_Id AND a.branch_id = w.branch_id "
+//        + "LEFT OUTER JOIN party y ON a.Company_Id = y.Company_Id "
+//        + "AND a.sa = y.Party_Id AND a.branch_id = y.branch_id "
+//        + "LEFT OUTER JOIN vessel x ON e.Company_Id = x.Company_Id "
+//        + "AND e.Vessel_id = x.Vessel_Id AND e.branch_id = x.branch_id "
+//        + "WHERE a.company_id = :companyId AND a.branch_id = :branchId "
+//        + "AND a.ProfitCentre_Id = 'N00004' AND a.status = 'A' "
+//        + "AND (a.Gate_Out_Id = '' OR a.Gate_Out_Date > :endDate) "
+//        + "AND a.Container_Status IN ('LDD', 'FCL') "
+//        + "GROUP BY a.container_no", nativeQuery = true)
+//List<Object[]> findExportLDDPendencyContainerDetails(
+//		@Param("companyId") String companyId,
+//	    @Param("branchId") String branchId,
+//	    @Param("endDate") Date endDate);
 
 
 

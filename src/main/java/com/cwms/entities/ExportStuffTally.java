@@ -3976,7 +3976,269 @@ public class ExportStuffTally implements Cloneable {
 	    
 	    
 	    
+	    @Column(name="Hsn_Code",length = 15)
+	    private String hsnCode;
+
+
 	    
+
+
+
+
+
+		public String getHsnCode() {
+			return hsnCode;
+		}
+
+
+
+
+
+
+
+		public void setHsnCode(String hsnCode) {
+			this.hsnCode = hsnCode;
+		}
+
+
+
+
+
+
+
+		protected ExportStuffTally(String companyId, String branchId, String stuffTallyId, String sbTransId,
+				int stuffTallyLineId, String profitcentreId, String cartingTransId, String sbLineId,
+				String cartingLineId, String sbNo, String movementReqId, String movementType, Date stuffTallyDate,
+				String stuffId, Date stuffDate, Date sbDate, String shift, String agentSealNo, String vesselId,
+				String voyageNo, String rotationNo, Date rotationDate, String pol, String terminal, String pod,
+				String finalPod, String containerNo, String containerStatus, String asrContainerStatus,
+				String currentLocation, Date periodFrom, String gateInId, String containerSize, String containerType,
+				String containerCondition, String crgYardLocation, String crgYardBlock, String crgBlockCellNo,
+				String yardLocation, String yardBlock, String blockCellNo, String yardLocation1, String yardBlock1,
+				String blockCellNo1, BigDecimal yardPackages, BigDecimal cellAreaAllocated, String onAccountOf,
+				String cha, BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal prvStuffedQty,
+				BigDecimal balanceQty, BigDecimal cargoWeight, BigDecimal totalCargoWeight, BigDecimal totalGrossWeight,
+				BigDecimal grossWeight, String weighmentFlag, String weighmentDone, Date weighmentDate,
+				BigDecimal weighmentWeight, String weighmentPassNo, BigDecimal tareWeight, BigDecimal areaReleased,
+				String genSetRequired, String haz, String imoCode, String containerInvoiceType, String item,
+				String shippingAgent, String shippingLine, String commodity, String customsSealNo, String viaNo,
+				Date cartingDate, String icdHub, String exporterName, String consignee, BigDecimal fob,
+				String coverDetails, Date coverDate, String holdingAgent, String holdingAgentName, Date holdDate,
+				Date releaseDate, String holdRemarks, String clpStatus, String clpCreatedBy, Date clpCreatedDate,
+				String clpApprovedBy, Date clpApprovedDate, String gatePassNo, String gateOutId, Date gateOutDate,
+				Date berthingDate, Date gateOpenDate, String sealType, String sealDev, String docType, String docNo,
+				String status, String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy,
+				Date approvedDate, String clpConfirmStatus, String clpConfirmBy, Date clpConfirmDate,
+				String clpPcsStatus, String clpPcsMsgCreStatus, Date clpPcsMsgCreDate, Date clpPcsMsgAmdCreDate,
+				BigDecimal documentNumber, BigDecimal commonReferenceNumber, BigDecimal amdDocumentNumber,
+				BigDecimal amdCommonReferenceNumber, String sfJobNo, Date sfJobDate, String asrJobNo, Date asrJobDate,
+				String cimNo, Date cimDate, String bondNo, String dpJobNo, Date dpJobDate, String dtJobNo,
+				Date dtJobDate, int fromPkg, int toPkg, String isSfAck, String ackSfStatus, String isAsrAck,
+				String ackAsrStatus, String isDpAck, String ackDpStatus, String isDtAck, String ackDtStatus,
+				String isSfCancelStatus, Date sfCancelCreatedDate, Date sfCancelAckDate, String isSfCancelDesc,
+				String othPartyId, String invoiceAssesed, String assesmentId, String invoiceNo, Date invoiceDate,
+				String creditType, String invoiceCategory, BigDecimal billAmt, BigDecimal invoiceAmt,
+				String backToTownRemark, String stuffTallyFlag, String stuffTallyWoTransId,
+				Date stuffTallyCutWoTransDate, String ssrTransId, BigDecimal nopGrossWeight, String deliveryOrderNo,
+				String reworkFlag, String reworkId, Date reworkDate, BigDecimal payLoad, String stuffMode,
+				String formThirteenEntryFlag, String formThirteenEntryRemarks, Date formThirteenEntryDate,
+				String formThirteenEntryUser, BigDecimal calGrossWt, int stuffLineId, String eqActivityFlag,
+				String typeOfPackage, BigDecimal length, BigDecimal height, BigDecimal weight, String odcType,
+				String vesselName, String chaName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
+				Date gateInDate, String cargoType, BigDecimal contStuffPackages, BigDecimal balQty,
+				String shippingLineName, String shippingAgentName, String terminalName, String finalPodName,
+				String hsnCode) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.stuffTallyId = stuffTallyId;
+			this.sbTransId = sbTransId;
+			this.stuffTallyLineId = stuffTallyLineId;
+			this.profitcentreId = profitcentreId;
+			this.cartingTransId = cartingTransId;
+			this.sbLineId = sbLineId;
+			this.cartingLineId = cartingLineId;
+			this.sbNo = sbNo;
+			this.movementReqId = movementReqId;
+			this.movementType = movementType;
+			this.stuffTallyDate = stuffTallyDate;
+			this.stuffId = stuffId;
+			this.stuffDate = stuffDate;
+			this.sbDate = sbDate;
+			this.shift = shift;
+			this.agentSealNo = agentSealNo;
+			this.vesselId = vesselId;
+			this.voyageNo = voyageNo;
+			this.rotationNo = rotationNo;
+			this.rotationDate = rotationDate;
+			this.pol = pol;
+			this.terminal = terminal;
+			this.pod = pod;
+			this.finalPod = finalPod;
+			this.containerNo = containerNo;
+			this.containerStatus = containerStatus;
+			this.asrContainerStatus = asrContainerStatus;
+			this.currentLocation = currentLocation;
+			this.periodFrom = periodFrom;
+			this.gateInId = gateInId;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.containerCondition = containerCondition;
+			this.crgYardLocation = crgYardLocation;
+			this.crgYardBlock = crgYardBlock;
+			this.crgBlockCellNo = crgBlockCellNo;
+			this.yardLocation = yardLocation;
+			this.yardBlock = yardBlock;
+			this.blockCellNo = blockCellNo;
+			this.yardLocation1 = yardLocation1;
+			this.yardBlock1 = yardBlock1;
+			this.blockCellNo1 = blockCellNo1;
+			this.yardPackages = yardPackages;
+			this.cellAreaAllocated = cellAreaAllocated;
+			this.onAccountOf = onAccountOf;
+			this.cha = cha;
+			this.stuffRequestQty = stuffRequestQty;
+			this.stuffedQty = stuffedQty;
+			this.prvStuffedQty = prvStuffedQty;
+			this.balanceQty = balanceQty;
+			this.cargoWeight = cargoWeight;
+			this.totalCargoWeight = totalCargoWeight;
+			this.totalGrossWeight = totalGrossWeight;
+			this.grossWeight = grossWeight;
+			this.weighmentFlag = weighmentFlag;
+			this.weighmentDone = weighmentDone;
+			this.weighmentDate = weighmentDate;
+			this.weighmentWeight = weighmentWeight;
+			this.weighmentPassNo = weighmentPassNo;
+			this.tareWeight = tareWeight;
+			this.areaReleased = areaReleased;
+			this.genSetRequired = genSetRequired;
+			this.haz = haz;
+			this.imoCode = imoCode;
+			this.containerInvoiceType = containerInvoiceType;
+			this.item = item;
+			this.shippingAgent = shippingAgent;
+			this.shippingLine = shippingLine;
+			this.commodity = commodity;
+			this.customsSealNo = customsSealNo;
+			this.viaNo = viaNo;
+			this.cartingDate = cartingDate;
+			this.icdHub = icdHub;
+			this.exporterName = exporterName;
+			this.consignee = consignee;
+			this.fob = fob;
+			this.coverDetails = coverDetails;
+			this.coverDate = coverDate;
+			this.holdingAgent = holdingAgent;
+			this.holdingAgentName = holdingAgentName;
+			this.holdDate = holdDate;
+			this.releaseDate = releaseDate;
+			this.holdRemarks = holdRemarks;
+			this.clpStatus = clpStatus;
+			this.clpCreatedBy = clpCreatedBy;
+			this.clpCreatedDate = clpCreatedDate;
+			this.clpApprovedBy = clpApprovedBy;
+			this.clpApprovedDate = clpApprovedDate;
+			this.gatePassNo = gatePassNo;
+			this.gateOutId = gateOutId;
+			this.gateOutDate = gateOutDate;
+			this.berthingDate = berthingDate;
+			this.gateOpenDate = gateOpenDate;
+			this.sealType = sealType;
+			this.sealDev = sealDev;
+			this.docType = docType;
+			this.docNo = docNo;
+			this.status = status;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.clpConfirmStatus = clpConfirmStatus;
+			this.clpConfirmBy = clpConfirmBy;
+			this.clpConfirmDate = clpConfirmDate;
+			this.clpPcsStatus = clpPcsStatus;
+			this.clpPcsMsgCreStatus = clpPcsMsgCreStatus;
+			this.clpPcsMsgCreDate = clpPcsMsgCreDate;
+			this.clpPcsMsgAmdCreDate = clpPcsMsgAmdCreDate;
+			this.documentNumber = documentNumber;
+			this.commonReferenceNumber = commonReferenceNumber;
+			this.amdDocumentNumber = amdDocumentNumber;
+			this.amdCommonReferenceNumber = amdCommonReferenceNumber;
+			this.sfJobNo = sfJobNo;
+			this.sfJobDate = sfJobDate;
+			this.asrJobNo = asrJobNo;
+			this.asrJobDate = asrJobDate;
+			this.cimNo = cimNo;
+			this.cimDate = cimDate;
+			this.bondNo = bondNo;
+			this.dpJobNo = dpJobNo;
+			this.dpJobDate = dpJobDate;
+			this.dtJobNo = dtJobNo;
+			this.dtJobDate = dtJobDate;
+			this.fromPkg = fromPkg;
+			this.toPkg = toPkg;
+			this.isSfAck = isSfAck;
+			this.ackSfStatus = ackSfStatus;
+			this.isAsrAck = isAsrAck;
+			this.ackAsrStatus = ackAsrStatus;
+			this.isDpAck = isDpAck;
+			this.ackDpStatus = ackDpStatus;
+			this.isDtAck = isDtAck;
+			this.ackDtStatus = ackDtStatus;
+			this.isSfCancelStatus = isSfCancelStatus;
+			this.sfCancelCreatedDate = sfCancelCreatedDate;
+			this.sfCancelAckDate = sfCancelAckDate;
+			this.isSfCancelDesc = isSfCancelDesc;
+			this.othPartyId = othPartyId;
+			this.invoiceAssesed = invoiceAssesed;
+			this.assesmentId = assesmentId;
+			this.invoiceNo = invoiceNo;
+			this.invoiceDate = invoiceDate;
+			this.creditType = creditType;
+			this.invoiceCategory = invoiceCategory;
+			this.billAmt = billAmt;
+			this.invoiceAmt = invoiceAmt;
+			this.backToTownRemark = backToTownRemark;
+			this.stuffTallyFlag = stuffTallyFlag;
+			this.stuffTallyWoTransId = stuffTallyWoTransId;
+			this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+			this.ssrTransId = ssrTransId;
+			this.nopGrossWeight = nopGrossWeight;
+			this.deliveryOrderNo = deliveryOrderNo;
+			this.reworkFlag = reworkFlag;
+			this.reworkId = reworkId;
+			this.reworkDate = reworkDate;
+			this.payLoad = payLoad;
+			this.stuffMode = stuffMode;
+			this.formThirteenEntryFlag = formThirteenEntryFlag;
+			this.formThirteenEntryRemarks = formThirteenEntryRemarks;
+			this.formThirteenEntryDate = formThirteenEntryDate;
+			this.formThirteenEntryUser = formThirteenEntryUser;
+			this.calGrossWt = calGrossWt;
+			this.stuffLineId = stuffLineId;
+			this.eqActivityFlag = eqActivityFlag;
+			this.typeOfPackage = typeOfPackage;
+			this.length = length;
+			this.height = height;
+			this.weight = weight;
+			this.odcType = odcType;
+			this.vesselName = vesselName;
+			this.chaName = chaName;
+			this.sbPackages = sbPackages;
+			this.stuffedQuantity = stuffedQuantity;
+			this.sbWt = sbWt;
+			this.gateInDate = gateInDate;
+			this.cargoType = cargoType;
+			this.contStuffPackages = contStuffPackages;
+			this.balQty = balQty;
+			this.shippingLineName = shippingLineName;
+			this.shippingAgentName = shippingAgentName;
+			this.terminalName = terminalName;
+			this.finalPodName = finalPodName;
+			this.hsnCode = hsnCode;
+		}
 
 
 
@@ -6690,8 +6952,167 @@ public class ExportStuffTally implements Cloneable {
 						this.cargoType = cargoType;
 					}
 			
+					
+					
+					public ExportStuffTally(String companyId, String branchId, String stuffTallyId, String sbTransId,
+							int stuffTallyLineId, String profitcentreId, String sbLineId, String sbNo, Date stuffTallyDate,
+							String stuffId, Date stuffDate, Date sbDate, String shift, String agentSealNo, String vesselId,
+							String voyageNo, String rotationNo, Date rotationDate, String pol, String terminal, String pod,
+							String finalPod, String containerNo, String containerStatus, Date periodFrom, String containerSize,
+							String containerType, String containerCondition, BigDecimal yardPackages, BigDecimal cellAreaAllocated,
+							String onAccountOf, String cha, BigDecimal stuffRequestQty, BigDecimal stuffedQty,
+							BigDecimal balanceQty,BigDecimal balQty, BigDecimal cargoWeight, BigDecimal totalGrossWeight, BigDecimal tareWeight,
+							BigDecimal areaReleased, String genSetRequired, String haz, String shippingAgent, String shippingLine,
+							String commodity, String customsSealNo, String viaNo, String exporterName, String consignee,
+							BigDecimal fob, Date berthingDate, Date gateOpenDate, String sealType, String docType, String docNo,
+							String status, String createdBy, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate,
+							String deliveryOrderNo, String stuffMode, String typeOfPackage, String vesselName, String chaName, BigDecimal totalCargoWeight
+							,String approvedBy, BigDecimal length, BigDecimal height, BigDecimal weight, String odcType, String cargoType,
+							String hsnCode) {
+						this.companyId = companyId;
+						this.branchId = branchId;
+						this.stuffTallyId = stuffTallyId;
+						this.sbTransId = sbTransId;
+						this.stuffTallyLineId = stuffTallyLineId;
+						this.profitcentreId = profitcentreId;
+						this.sbLineId = sbLineId;
+						this.sbNo = sbNo;
+						this.stuffTallyDate = stuffTallyDate;
+						this.stuffId = stuffId;
+						this.stuffDate = stuffDate;
+						this.sbDate = sbDate;
+						this.shift = shift;
+						this.agentSealNo = agentSealNo;
+						this.vesselId = vesselId;
+						this.voyageNo = voyageNo;
+						this.rotationNo = rotationNo;
+						this.rotationDate = rotationDate;
+						this.pol = pol;
+						this.terminal = terminal;
+						this.pod = pod;
+						this.finalPod = finalPod;
+						this.containerNo = containerNo;
+						this.containerStatus = containerStatus;
+						this.periodFrom = periodFrom;
+						this.containerSize = containerSize;
+						this.containerType = containerType;
+						this.containerCondition = containerCondition;
+						this.yardPackages = yardPackages;
+						this.cellAreaAllocated = cellAreaAllocated;
+						this.onAccountOf = onAccountOf;
+						this.cha = cha;
+						this.stuffRequestQty = stuffRequestQty;
+						this.stuffedQty = stuffedQty;
+						this.balanceQty = balanceQty;
+						this.balQty = balQty;
+						this.cargoWeight = cargoWeight;
+						this.totalGrossWeight = totalGrossWeight;
+						this.tareWeight = tareWeight;
+						this.areaReleased = areaReleased;
+						this.genSetRequired = genSetRequired;
+						this.haz = haz;
+						this.shippingAgent = shippingAgent;
+						this.shippingLine = shippingLine;
+						this.commodity = commodity;
+						this.customsSealNo = customsSealNo;
+						this.viaNo = viaNo;
+						this.exporterName = exporterName;
+						this.consignee = consignee;
+						this.fob = fob;
+						this.berthingDate = berthingDate;
+						this.gateOpenDate = gateOpenDate;
+						this.sealType = sealType;
+						this.docType = docType;
+						this.docNo = docNo;
+						this.status = status;
+						this.createdBy = createdBy;
+						this.stuffTallyWoTransId = stuffTallyWoTransId;
+						this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+						this.deliveryOrderNo = deliveryOrderNo;
+						this.stuffMode = stuffMode;
+						this.typeOfPackage = typeOfPackage;
+						this.vesselName = vesselName;
+						this.chaName = chaName;
+						this.totalCargoWeight = totalCargoWeight;
+						this.approvedBy = approvedBy;
+						this.length = length;
+						this.height = height;
+						this.weight = weight;
+						this.odcType = odcType;
+						this.cargoType = cargoType;
+						this.hsnCode = hsnCode;
+					}
+			
 		    
 		
-		
+					
+					public ExportStuffTally(String stuffTallyId, String sbTransId, String sbNo, String movementType,
+							Date stuffTallyDate, Date sbDate, String agentSealNo, String vesselId, String voyageNo,
+							String rotationNo, Date rotationDate, String terminal, String pod, String finalPod, String containerNo,String stuffId,
+							String gateInId, String containerSize, String containerType, String onAccountOf, String cha,
+							BigDecimal stuffRequestQty, BigDecimal stuffedQty, BigDecimal balanceQty,BigDecimal cargoWeight, BigDecimal totalCargoWeight,
+							BigDecimal tareWeight, String shippingAgent, String shippingLine, String commodity,
+							String customsSealNo, String viaNo, String exporterName, String consignee, BigDecimal fob,
+							String status, String stuffTallyWoTransId, Date stuffTallyCutWoTransDate, String deliveryOrderNo,
+							String stuffMode, String vesselName, BigDecimal sbPackages, BigDecimal stuffedQuantity, BigDecimal sbWt,
+							Date gateInDate, String cargoType, Date berthingDate, String reworkFlag, String createdBy, 
+							String approvedBy, BigDecimal length, BigDecimal height, BigDecimal weight, String odcType,String hsnCode) {
+						this.stuffTallyId = stuffTallyId;
+						this.sbTransId = sbTransId;
+						this.sbNo = sbNo;
+						this.movementType = movementType;
+						this.stuffTallyDate = stuffTallyDate;
+						this.sbDate = sbDate;
+						this.agentSealNo = agentSealNo;
+						this.vesselId = vesselId;
+						this.voyageNo = voyageNo;
+						this.rotationNo = rotationNo;
+						this.rotationDate = rotationDate;
+						this.terminal = terminal;
+						this.pod = pod;
+						this.finalPod = finalPod;
+						this.containerNo = containerNo;
+						this.stuffId = stuffId;
+						this.gateInId = gateInId;
+						this.containerSize = containerSize;
+						this.containerType = containerType;
+						this.onAccountOf = onAccountOf;
+						this.cha = cha;
+						this.stuffRequestQty = stuffRequestQty;
+						this.stuffedQty = stuffedQty;
+						this.balanceQty = balanceQty;
+						this.cargoWeight = cargoWeight;
+						this.totalCargoWeight = totalCargoWeight;
+						this.tareWeight = tareWeight;
+						this.shippingAgent = shippingAgent;
+						this.shippingLine = shippingLine;
+						this.commodity = commodity;
+						this.customsSealNo = customsSealNo;
+						this.viaNo = viaNo;
+						this.exporterName = exporterName;
+						this.consignee = consignee;
+						this.fob = fob;
+						this.status = status;
+						this.stuffTallyWoTransId = stuffTallyWoTransId;
+						this.stuffTallyCutWoTransDate = stuffTallyCutWoTransDate;
+						this.deliveryOrderNo = deliveryOrderNo;
+						this.stuffMode = stuffMode;
+						this.vesselName = vesselName;
+						this.sbPackages = sbPackages;
+						this.stuffedQuantity = stuffedQuantity;
+						this.sbWt = sbWt;
+						this.gateInDate = gateInDate;
+						this.cargoType = cargoType;
+						this.berthingDate = berthingDate;
+						this.reworkFlag = reworkFlag;
+						this.createdBy = createdBy;
+						this.approvedBy = approvedBy;
+						this.length = length;
+						this.height = height;
+						this.weight = weight;
+						this.odcType = odcType;
+						this.hsnCode = hsnCode;
+ 					}
+
 	    
 }

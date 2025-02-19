@@ -264,7 +264,7 @@ public class CfIgmController {
 							i.getImporterAddress3(), i.getNotifyPartyId(), i.getNotifyPartyName(),
 							i.getNotifiedAddress1(), i.getNotifiedAddress2(), i.getNotifiedAddress3(),
 							i.getDestination(), i.getCargoType(), i.getImoCode(), i.getUnNo(), i.getHazReeferRemarks(),
-							user, new Date());
+							user, new Date(),i.getHsnCode());
 
 					Cfigmcrg existingData = cfigmcrgrepo.getData(cid, bid, igmTransId, i.getIgmNo(),
 							i.getIgmCrgTransId());

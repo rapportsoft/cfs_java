@@ -131,6 +131,31 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 
 	
 	
+//	@Transactional
+//	@Modifying
+//	@Query(value="update Cfigmcrg c set c.cycle=:cycle,c.igmLineNo=:igmlineno,c.blNo=:blno,c.blDate=:bldate,c.commodityDescription=:commodity,"
+//			+ "c.cargoMovement=:cargomovement,c.grossWeight=:gross,c.unitOfWeight=:unitOfwt,c.noOfPackages=:nop,c.typeOfPackage=:top,"
+//			+ "c.accountHolderId=:holdingagent,c.accountHolderName=:holdingAgentName,c.marksOfNumbers=:marksOfNumbers,c.importerId=:importerId,"
+//			+ "c.importerName=:importerName,c.importerAddress1=:importerAddress1,c.importerAddress2=:importerAddress2,c.importerAddress3=:importerAddress3,"
+//			+ "c.notifyPartyId=:notifyPartyId,c.notifyPartyName=:notifyPartyName,c.notifiedAddress1=:notifiedAddress1,c.notifiedAddress2=:notifiedAddress2,"
+//			+ "c.notifiedAddress3=:notifiedAddress3,c.destination=:destination,c.cargoType=:cargoType,c.imoCode=:imoCode,c.unNo=:unNo,c.hazReeferRemarks=:hazReeferRemarks,"
+//			+ "c.editedBy=:editedBy,c.editedDate=:editedDate "
+//			+ "where c.companyId=:cid and c.branchId=:bid and c.igmTransId =:igmtrans and "
+//			+ "c.igmNo=:igm and c.igmCrgTransId=:crgtrans and c.status != 'D'")
+//	int updateData(@Param("cid") String cid, @Param("bid") String bid, @Param("igmtrans") String igmtrans, @Param("igm") String igm, @Param("crgtrans") String crgtrans,
+//            @Param("cycle") String cycle, @Param("igmlineno") String igmlineno, @Param("blno") String blNo, @Param("bldate") Date blDate,
+//            @Param("commodity") String commodity, @Param("cargomovement") String cargoMovement, @Param("gross") BigDecimal grossWeight,
+//            @Param("unitOfwt") String unitOfWeight, @Param("nop") BigDecimal noOfPackages, @Param("top") String typeOfPackage,
+//            @Param("holdingagent") String holdingAgen, @Param("holdingAgentName") String holdingAgentName,
+//            @Param("marksOfNumbers") String marksOfNumbers, @Param("importerId") String importerId, @Param("importerName") String importerName,
+//            @Param("importerAddress1") String importerAddress1, @Param("importerAddress2") String importerAddress2, @Param("importerAddress3") String importerAddress3,
+//            @Param("notifyPartyId") String notifyPartyId, @Param("notifyPartyName") String notifyPartyName, @Param("notifiedAddress1") String notifiedAddress1,
+//            @Param("notifiedAddress2") String notifiedAddress2, @Param("notifiedAddress3") String notifiedAddress3, @Param("destination") String destination,
+//            @Param("cargoType") String cargoType, @Param("imoCode") String imoCode, @Param("unNo") String unNo, @Param("hazReeferRemarks") String hazReeferRemarks,
+//            @Param("editedBy") String editedby,@Param("editedDate") Date editedDate);
+	
+	
+	
 	@Transactional
 	@Modifying
 	@Query(value="update Cfigmcrg c set c.cycle=:cycle,c.igmLineNo=:igmlineno,c.blNo=:blno,c.blDate=:bldate,c.commodityDescription=:commodity,"
@@ -139,7 +164,7 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
 			+ "c.importerName=:importerName,c.importerAddress1=:importerAddress1,c.importerAddress2=:importerAddress2,c.importerAddress3=:importerAddress3,"
 			+ "c.notifyPartyId=:notifyPartyId,c.notifyPartyName=:notifyPartyName,c.notifiedAddress1=:notifiedAddress1,c.notifiedAddress2=:notifiedAddress2,"
 			+ "c.notifiedAddress3=:notifiedAddress3,c.destination=:destination,c.cargoType=:cargoType,c.imoCode=:imoCode,c.unNo=:unNo,c.hazReeferRemarks=:hazReeferRemarks,"
-			+ "c.editedBy=:editedBy,c.editedDate=:editedDate "
+			+ "c.editedBy=:editedBy,c.editedDate=:editedDate,c.hsnCode=:hsn "
 			+ "where c.companyId=:cid and c.branchId=:bid and c.igmTransId =:igmtrans and "
 			+ "c.igmNo=:igm and c.igmCrgTransId=:crgtrans and c.status != 'D'")
 	int updateData(@Param("cid") String cid, @Param("bid") String bid, @Param("igmtrans") String igmtrans, @Param("igm") String igm, @Param("crgtrans") String crgtrans,
@@ -152,7 +177,7 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
             @Param("notifyPartyId") String notifyPartyId, @Param("notifyPartyName") String notifyPartyName, @Param("notifiedAddress1") String notifiedAddress1,
             @Param("notifiedAddress2") String notifiedAddress2, @Param("notifiedAddress3") String notifiedAddress3, @Param("destination") String destination,
             @Param("cargoType") String cargoType, @Param("imoCode") String imoCode, @Param("unNo") String unNo, @Param("hazReeferRemarks") String hazReeferRemarks,
-            @Param("editedBy") String editedby,@Param("editedDate") Date editedDate);
+            @Param("editedBy") String editedby,@Param("editedDate") Date editedDate,@Param("hsn") String hsn);
 
 
 	 @Query(value="select c from Cfigmcrg c where c.companyId=:cid and c.branchId=:bid and c.igmTransId=:trans and c.igmNo=:igm and c.status != 'D'")

@@ -2,6 +2,7 @@ package com.cwms.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1277,6 +1278,12 @@ public class FinanceReportServices {
 		        	};
 
 		        
+		        Timestamp sqlStartDate = new Timestamp(startDate.getTime());
+		        Timestamp sqlEndDate = new Timestamp(endDate.getTime());
+		        
+		        System.out.println("sqlStartDate "+sqlStartDate);
+		        System.out.println("sqlEndDate "+sqlEndDate);
+		        
 		        List<Object[]> importDetails = financeReportsRepo.getInvoiceDetailsContainerWise(companyId, branchId,startDate,endDate,
 		        		billParty);
 		        
@@ -1284,12 +1291,12 @@ public class FinanceReportServices {
 		        
 		        List<Object[]> services  = financeReportsRepo.findInvoiceServices(companyId, branchId,startDate,endDate);
 		        
-//		        if (services!=null)
-//		        {
-//		        	services.forEach(i ->{
-//		        		System.out.println("i :" +i[3]);
-//		        	});
-//		        }
+		        if (services!=null)
+		        {
+		        	services.forEach(i ->{
+		        		System.out.println("i :" +i[3]);
+		        	});
+		        }
 		        
 //		      String invoiceNo = null;
 //    	        
@@ -1348,47 +1355,79 @@ public class FinanceReportServices {
 		        Map<String, BigDecimal[]> totalsByHeadKey = new TreeMap<>();
 
 		        
+//		        for (Object[] resultData1 : services) {
+//		            if (resultData1.length > 0) {
+//		                String tot_services = resultData1[3].toString();
+//		                String invoiceNo = resultData1[0].toString();
+//		                String  container = resultData1[1].toString();
+//
+//
+//		                StringTokenizer stas = new StringTokenizer(tot_services, ",");
+//		                
+//		                while (stas.hasMoreTokens()) {
+//	                        String serv = stas.nextToken();
+//	                        
+//			                String[] fields = serv.split("~");
+//
+//			                // Check if the split array has at least 5 elements
+//			                if (fields.length > 4) {
+//			                    // Extract the fifth element (index 4)
+//			                    String serviceShortDesc = fields[4].trim();
+//			                    String id = fields[0].trim();
+//
+////			                    String mainValue =extractedField+"~"+id ;
+//			                    
+//			                    String mainValue =serviceShortDesc+"~"+id ;
+//
+//			                    // Count occurrences of each mainValue
+//			                   // containerValueCount.put(mainValue, containerValueCount.getOrDefault(mainValue, 0) + 1);
+//
+//			                    // Add the extracted field to the dynamic list if it's not already present
+//			                    if (!serviceVct.contains(serviceShortDesc)) {
+//			                    	serviceVct.add(serviceShortDesc);
+//			                    }
+//			                    
+//			                } else {
+//			                    // Handle the case where tot_services doesn't have enough elements
+//			                    System.out.println("Error: tot_services does not contain enough elements.");
+//			                }
+//		                
+//		                }
+//		            }
+//		        }
+		        
 		        for (Object[] resultData1 : services) {
 		            if (resultData1.length > 0) {
-		                String tot_services = resultData1[3].toString();
-		                String invoiceNo = resultData1[0].toString();
-		                String  container = resultData1[1].toString();
+		                String tot_services = resultData1[3] != null ? resultData1[3].toString().trim() : "";
+//		                String invoiceNo = resultData1[0].toString();
+//		                String container = resultData1[1].toString();
 
+		                // Process only if tot_services is NOT null or empty
+		                if (!tot_services.isEmpty()) {
+		                    StringTokenizer stas = new StringTokenizer(tot_services, ",");
 
-		                StringTokenizer stas = new StringTokenizer(tot_services, ",");
-		                
-		                while (stas.hasMoreTokens()) {
-	                        String serv = stas.nextToken();
-	                        
-			                String[] fields = serv.split("~");
+		                    while (stas.hasMoreTokens()) {
+		                        String serv = stas.nextToken();
+		                        String[] fields = serv.split("~");
 
-			                // Check if the split array has at least 5 elements
-			                if (fields.length > 4) {
-			                    // Extract the fifth element (index 4)
-			                    String serviceShortDesc = fields[4].trim();
-			                    String id = fields[0].trim();
+		                        // Ensure the split array has at least 5 elements
+		                        if (fields.length > 4) {
+		                            String serviceShortDesc = fields[4].trim();
+		                            String id = fields[0].trim();
+		                            String mainValue = serviceShortDesc + "~" + id;
 
-//			                    String mainValue =extractedField+"~"+id ;
-			                    
-			                    String mainValue =serviceShortDesc+"~"+id ;
-
-			                    // Count occurrences of each mainValue
-			                   // containerValueCount.put(mainValue, containerValueCount.getOrDefault(mainValue, 0) + 1);
-
-			                    // Add the extracted field to the dynamic list if it's not already present
-			                    if (!serviceVct.contains(serviceShortDesc)) {
-			                    	serviceVct.add(serviceShortDesc);
-			                    }
-			                    
-			                } else {
-			                    // Handle the case where tot_services doesn't have enough elements
-			                    System.out.println("Error: tot_services does not contain enough elements.");
-			                }
-		                
+		                            // Add the extracted field to the dynamic list if it's not already present
+		                            if (!serviceVct.contains(serviceShortDesc)) {
+		                                serviceVct.add(serviceShortDesc);
+		                            }
+		                        } else {
+		                            System.out.println("Error: tot_services does not contain enough elements.");
+		                        }
+		                    }
 		                }
 		            }
 		        }
-		        
+
 //		        for (Object[] resultData1 : services) {
 		        	
 		        
@@ -1402,15 +1441,19 @@ public class FinanceReportServices {
 		            Object[] resultData1 = (Object[]) services.get(i); // Access each element in the list
 		            if (resultData1.length > 0) 
 		            {
-		                String tot_services = resultData1[3].toString();
-		                String invoiceNo = resultData1[0].toString();
-		                String  container = resultData1[1].toString();
+//		                String tot_services = resultData1[3].toString();
+//		                String invoiceNo = resultData1[0].toString();
+//		                String  container = resultData1[1].toString();
 		                
+		                
+		                String tot_services = resultData1[3] != null ? resultData1[3].toString().trim() : "";
+		                String invoiceNo = resultData1[0] != null ? resultData1[0].toString().trim() : "";
+		                String container = resultData1[1] != null ? resultData1[1].toString().trim() : "";
 		                String headkey = invoiceNo + "~" + container;
 		                
 		                
 		               
-
+		                if (!tot_services.isEmpty() && !invoiceNo.isEmpty() && !container.isEmpty()) {
 		                if (invServiceMap.containsKey(headkey)) 
 		                {
 		                	
@@ -1459,7 +1502,8 @@ public class FinanceReportServices {
 		                        if (serviceMap.containsKey(key)) {
 		                            Vector<Object> amtvct = serviceMap.get(key);
 		                             
-		                            String shortDesc = (String) amtvct.get(4);
+//		                            String shortDesc = (String) amtvct.get(4);
+		                            String shortDesc = String.valueOf(amtvct.get(4)); // ✅ Safe conversion
 		                            double localAmt = (double) amtvct.get(0), invAmt = (double) amtvct.get(1);
 		                            double exe_days = (double) amtvct.get(2), free_days = (double) amtvct.get(3), chargable_days = (double) amtvct.get(4);
 
@@ -1545,7 +1589,9 @@ public class FinanceReportServices {
 		                        // Check if service key already exists
 		                        if (serviceMap.containsKey(key)) {
 		                            Vector<Object> amtvct = serviceMap.get(key);
-		                            String shortDesc = (String) amtvct.get(4);
+//		                            String shortDesc = (String) amtvct.get(4);
+		                            String shortDesc = String.valueOf(amtvct.get(4)); // ✅ Safe conversion
+
 		                            double localAmt = (double) amtvct.get(0), invAmt = (double) amtvct.get(1);
 		                            double exe_days = (double) amtvct.get(2), free_days = (double) amtvct.get(3), chargable_days = (double) amtvct.get(4);
 
@@ -1580,6 +1626,7 @@ public class FinanceReportServices {
 		                    }
 
 		                    invServiceMap.put(headkey, serviceMap);
+		                }
 		                }
 		            }
 		        }
@@ -1766,7 +1813,8 @@ public class FinanceReportServices {
 		        	String   invoiceNo1 = resultData1[17].toString();
 		        	
 		        	 String  container1 = resultData1[6].toString(); // Get the container value from i[0]
-		        	String tot_services =resultData1[23].toString(); // Get the container value from i[0]
+//		        	String tot_services =resultData1[23].toString(); // Get the container value from i[0]
+		        	  String tot_services = resultData1[3] != null ? resultData1[3].toString().trim() : "";
 
 		        	 String key =invoiceNo1+"~"+container1;
 
@@ -1945,7 +1993,7 @@ public class FinanceReportServices {
 		                    System.out.println("tot_services: " + tot_services);
 
 		                    double totalExecutionDays = 0.0; // Initialize the total for execution days
-		                  
+		                  if(!tot_services.isEmpty()) {
 		                    while (st.hasMoreTokens()) { // Iterate through all tokens
 		                        String serv = st.nextToken();
 		                        String[] servicearr = serv.split("~");
@@ -1979,7 +2027,7 @@ public class FinanceReportServices {
 
 		                      
 		                    }
-
+		                }
 		                    // Set the total execution days value in the cell
 		                    cell.setCellValue(totalExecutionDays);
 		                    cell.setCellStyle(numberCellStyle);
@@ -1995,7 +2043,7 @@ public class FinanceReportServices {
 			                    System.out.println("tot_services: " + tot_services);
 
 			                    double totalFreeDays = 0.0; // Initialize the total for execution days
-			                  
+			                    if(!tot_services.isEmpty()) {
 			                    while (st1.hasMoreTokens()) { // Iterate through all tokens
 			                        String serv = st1.nextToken();
 			                        String[] servicearr = serv.split("~");
@@ -2025,6 +2073,7 @@ public class FinanceReportServices {
 			                        }
 
 			                    }
+			                    }
 
 			                    // Set the total execution days value in the cell
 			                    cell.setCellValue(totalFreeDays);
@@ -2037,7 +2086,7 @@ public class FinanceReportServices {
 
 			                    double totalFreeDays1 = 0.0; // Initialize the total for execution days
 			                    double totalExecutionDays1 = 0.0; // Initialize the total for execution days
-			                    
+			                    if(!tot_services.isEmpty()) {
 			                    while (st11.hasMoreTokens()) { // Iterate through all tokens
 			                        String serv = st11.nextToken();
 			                        String[] servicearr = serv.split("~");
@@ -2071,6 +2120,8 @@ public class FinanceReportServices {
 			                            totalExecutionDays1 += execdays; // Add to the total
 			                        }
 			                      
+			                    }
+			                    
 			                    }
 
 			                    cell.setCellValue((totalExecutionDays1)-(totalFreeDays1));
