@@ -24,6 +24,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.ExportProformaPrintRepository;
 import com.cwms.service.ExportProformaPrintService;
 import com.itextpdf.io.source.ByteArrayOutputStream;
@@ -42,6 +43,10 @@ public class ExportProformaPrintController {
 	
 	@Autowired
 	private ExportProformaPrintRepository exportproformaprintrepository;
+	
+	@Autowired
+	private HelperMethods helperMethods;
+	
 	
 	@PostMapping("/printinvoicepdf/{cid}/{bid}/{invoiceNo}/{assesmentId}/{sbTransID}")
 	public ResponseEntity<?> generateInvoicePdf(@PathVariable("cid") String cid, @PathVariable("bid") String bid ,@PathVariable("invoiceNo") String invoiceNo,
@@ -63,6 +68,8 @@ public class ExportProformaPrintController {
 		
 		
 		Context context = new Context();
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
@@ -464,7 +471,8 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		
 		
 		Context context = new Context();
-		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
@@ -872,6 +880,9 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		
 		
 		Context context = new Context();
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));

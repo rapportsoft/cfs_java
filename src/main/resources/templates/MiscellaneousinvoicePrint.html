@@ -242,7 +242,7 @@
 			<tr>
 				<td style="width: 41%;border-right: 2px solid black">
 					<!-- Add the following Thymeleaf code to include the image in your HTML -->
-					<img th:src="@{src/main/resources/static/image/logo.png}"
+					<img th:src="${logo}"
 						alt=" Logo" style="display: block;width:250px;" />
 						
 						
@@ -360,7 +360,7 @@
 
         <!-- Image Column -->
         <td style="width: 30%; text-align: center; vertical-align: middle;">
-            <img th:src="@{src/main/resources/static/image/sampleQR.jpeg}" style="width: 150px; height:120px;" alt="QR Code" />
+            <img th:src="${QR}" style="width: 150px; height:120px;" alt="QR Code" />
         </td>
     </tr>
 </table>

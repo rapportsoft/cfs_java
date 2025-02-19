@@ -1304,7 +1304,7 @@ public class ImportInvoiceController {
 		
 		Map<String,String> compdtl = importinvoiceservice.getCompanyAddressDetails(bid, cid);
 		
-
+		
 
 		Map<String,String> invdtl = importinvoiceservice.getInvoiceDetails(cid, bid,invoiceNo);
 		
@@ -1330,6 +1330,12 @@ public class ImportInvoiceController {
 		
 
 		Context context = new Context();
+		
+		
+		
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		if(!opdtls.isEmpty()) {
 			for (Object[] row : opdtls) {
@@ -2002,6 +2008,11 @@ public class ImportInvoiceController {
 		
 
 		Context context = new Context();
+		
+		
+
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		if(!opdtls.isEmpty()) {
 			for (Object[] row : opdtls) {

@@ -24,6 +24,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.ImportInvoiceProformaPrintRepository;
 
 import com.cwms.service.ImportInvoiceProformaPrintService;
@@ -45,6 +46,8 @@ public class ImportInvoiceProformaPrintController {
 	@Autowired
 	ImportInvoiceProformaPrintRepository importinvoicerepo;
 	
+	@Autowired
+	private HelperMethods helperMethods;
 	
 	@PostMapping("/printinvoicepdf/{cid}/{bid}/{invoiceNo}/{assesmentId}/{igmTransId}")
 	public ResponseEntity<?> generateInvoicePdf(@PathVariable("cid") String cid, @PathVariable("bid") String bid ,@PathVariable("invoiceNo") String invoiceNo,
@@ -88,6 +91,9 @@ public class ImportInvoiceProformaPrintController {
 		
 
 		Context context = new Context();
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		if(!opdtls.isEmpty()) {
 			for (Object[] row : opdtls) {
@@ -671,6 +677,9 @@ public class ImportInvoiceProformaPrintController {
 		
 
 		Context context = new Context();
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		if(!opdtls.isEmpty()) {
 			for (Object[] row : opdtls) {

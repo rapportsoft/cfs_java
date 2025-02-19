@@ -16,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.RecieptPrintRepository;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.lowagie.text.DocumentException;
@@ -32,7 +33,8 @@ public class RecieptPrintController {
 	private RecieptPrintRepository recieptprintRepo;
 	
 	
-	
+	@Autowired
+	private HelperMethods helperMethods;
 	
 	@PostMapping("/advreceipt/{cid}/{bid}/{transId}/{docType}")
 	public ResponseEntity<?> generateInvoicePdf(@PathVariable("cid") String cid, @PathVariable("bid") String bid ,@PathVariable("transId") String transId ,@PathVariable("docType") String docType ) throws DocumentException{
@@ -74,7 +76,8 @@ public class RecieptPrintController {
 //		String branchAddress = company.get("baddr1")+" "+company.get("baddr2")+" "+company.get("baddr3");
 		
 		Context context = new Context();
-
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+//		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", company.get("cname"));
 		context.setVariable("cadd1", company.get("cadd1"));

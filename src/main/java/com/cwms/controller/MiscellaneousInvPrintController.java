@@ -24,6 +24,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.MiscellaneousInvPrintRepository;
 import com.cwms.service.MiscellaneousInvPrintService;
 import com.itextpdf.io.source.ByteArrayOutputStream;
@@ -44,7 +45,8 @@ public class MiscellaneousInvPrintController {
 	private TemplateEngine templateEngine;
 	
 	
-	
+	@Autowired
+	private HelperMethods helperMethods;
 	
 	@PostMapping("/miscellaneousInvPrintpdf/{cid}/{bid}/{invoiceNo}")
 	public ResponseEntity<?> generateInvoicePdf(@PathVariable("cid") String cid, @PathVariable("bid") String bid ,@PathVariable("invoiceNo") String invoiceNo
@@ -66,7 +68,8 @@ public class MiscellaneousInvPrintController {
 		Context context = new Context();
 		
 		
-		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
@@ -607,7 +610,8 @@ public class MiscellaneousInvPrintController {
 		
 		Context context = new Context();
 		
-		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		
 		context.setVariable("cname", compdtl.get("cname"));

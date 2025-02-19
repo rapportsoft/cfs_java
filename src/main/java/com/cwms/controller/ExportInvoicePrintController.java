@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.TemplateEngine;
 
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.ExportInvoicePrintRepository;
 import com.cwms.service.ExportInvoicePrintService;
 import com.lowagie.text.DocumentException;
@@ -36,6 +37,10 @@ public class ExportInvoicePrintController {
 	
 	@Autowired
 	ExportInvoicePrintRepository exportinvoiceprintRepo;
+	
+	@Autowired
+	private HelperMethods helperMethods;
+	
 	
 	@Autowired
 	private TemplateEngine templateEngine;
@@ -60,6 +65,9 @@ public class ExportInvoicePrintController {
 		
 		
 		Context context = new Context();
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));
@@ -994,6 +1002,9 @@ List<BigDecimal> distinctTaxList  = new ArrayList<>(distinctTaxper);
 		
 		
 		Context context = new Context();
+		
+		context.setVariable("logo", helperMethods.getImageByPath("logo"));
+		context.setVariable("QR", helperMethods.getImageByPath("QR"));
 		
 		context.setVariable("cname", compdtl.get("cname"));
 		context.setVariable("cadd1", compdtl.get("cadd1"));

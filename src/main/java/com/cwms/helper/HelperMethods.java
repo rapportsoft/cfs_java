@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
@@ -56,10 +60,58 @@ public class HelperMethods {
 		
 		@Value("${pfxPassword}")
 	    private String PFX_PASSWORD;
+		
+		@Value("${appLogoPath}")
+	    private String logoPath;
 	    
 	    
 	@Autowired
 	private TemplateEngine templateEngine;
+	
+	
+	
+	public String getImageByPath(String type) {
+	    String dataURL = "";
+	    String fileName = "";
+	    
+	    if("logo".equals(type))
+	    {
+	    	fileName = "logo.png";
+	    }else if("QR".equals(type))
+	    {
+	    	fileName = "sampleQR.jpeg";
+	    }else
+	    {
+	    	fileName = "s";
+	    }
+	    String path = logoPath + fileName;
+	    try {
+	       
+	        Path filePath = Paths.get(path);
+	       
+
+	        // Check if the file exists
+	        if (Files.exists(filePath)) {
+	            byte[] imageBytes = Files.readAllBytes(filePath);
+
+	            // Encode the image bytes to base64
+	            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+	            // Construct a data URL for the image
+	            dataURL = "data:image/jpeg;base64," + base64Image;
+	        }
+	    } catch (IOException e) {
+	        // Log the error or handle it as needed
+	        System.err.println("Error reading image file: " + e.getMessage());
+	    }
+	    return dataURL;
+	}
+
+	
+	
+	
+	
+	
 	
 	
 	public String getFinancialYear() {
