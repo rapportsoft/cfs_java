@@ -1116,5 +1116,47 @@ public class VendorInvoiceController {
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@GetMapping("/getAfterSaveData")
+	public ResponseEntity<?> searchAfterSaveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "val", required = false) String val) {
+		List<Object[]> result = new ArrayList<>();
+
+		List<Object[]> data = fintransrepo.getAfterSaveData(cid, bid, val);
+
+		if (!data.isEmpty()) {
+			result.addAll(data);
+		}
+
+		if (result.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(result, HttpStatus.OK);
+
+		}
+
+		
+	}
+
+	@GetMapping("/getReceiptSelectedData")
+	public ResponseEntity<?> getReceiptSelectedData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("val") String val, @RequestParam("id") String id, @RequestParam("type") String type) {
+		Map<String, Object> result = new HashMap<>();
+
+		List<Object[]> finData = fintransrepo.getDataByTransId(cid, bid, val);
+
+		if (finData.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		}
+
+		result.put("finTransData", finData);
+
+		List<Object[]> finInvData = finTransInvRepo.getAfterSaveDataByTransId(cid, bid, val);
+
+		result.put("finTransInvData", finInvData);
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 
 }

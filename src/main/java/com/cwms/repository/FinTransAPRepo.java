@@ -21,4 +21,15 @@ public interface FinTransAPRepo extends JpaRepository<FinTransAP, String> {
 	List<Object[]> getDataByTransId(@Param("cid") String cid, 
             @Param("bid") String bid, 
             @Param("id") String id);
+	
+	
+	@Query(value="select distinct f.docType,f.transId,DATE_FORMAT(f.transDate,'%d/%m/%Y %H:%i'),f.partyId,p.partyName,f.transDate "
+			+ "from FinTransAP f "
+			+ "LEFT OUTER JOIN Party p ON f.companyId=p.companyId and f.branchId=p.branchId and f.partyId=p.partyId "
+			+ "where f.companyId=:cid and f.branchId=:bid and f.status = 'A' and "
+			+ "(:val is null OR :val = '' OR f.docType LIKE CONCAT(:val,'%') OR f.transId LIKE CONCAT(:val,'%') OR "
+			+ "p.partyName LIKE CONCAT(:val,'%')) and f.profitcentreId='N00001' and f.docType != 'AJ' order by f.transDate desc ")
+	List<Object[]> getAfterSaveData(@Param("cid") String cid, 
+            @Param("bid") String bid, 
+            @Param("val") String val);
 }
