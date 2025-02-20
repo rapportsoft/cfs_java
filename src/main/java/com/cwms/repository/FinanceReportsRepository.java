@@ -149,7 +149,11 @@ List<Object[]> getInvoiceSalesRegisterData(
         "LEFT OUTER JOIN jar_detail jr ON a.company_id = jr.company_id AND x.Sac_Code = jr.jar_dtl_id AND jr.jar_id='J00024' " +
         "LEFT OUTER JOIN cfimpinventory i ON a.Company_Id = i.Company_Id AND a.Branch_Id = i.Branch_Id AND a.Container_no = i.Container_no AND a.IGM_Trans_Id = i.IGM_Trans_Id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND b.company_id = :companyId AND b.branch_id = :branchId AND c.company_id = :companyId AND c.branch_id = :branchId " +
-        "AND a.status = 'A' AND a.trans_type != 'MISC' AND b.status = 'A' AND c.status = 'A'and c.container_no !='' AND b.Created_Date BETWEEN :startDate AND :endDate " +
+        "AND a.status = 'A' AND a.trans_type != 'MISC' AND b.status = 'A' AND c.status = 'A'"
+//        + "and c.container_no !='' "
+//        + "AND c.container_no IS NOT NULL "
++ "AND (c.container_no !='' AND c.container_no IS NOT NULL) "
+        + "AND b.Created_Date BETWEEN :startDate AND :endDate " +
         " AND (:billParty IS NULL OR :billParty = '' OR a.party_id = :billParty)  " +
         "GROUP BY a.assesment_id, a.Container_no, b.invoice_no " +
         "UNION " +

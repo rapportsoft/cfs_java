@@ -1812,11 +1812,20 @@ public class FinanceReportServices {
 		        	 
 		        	String   invoiceNo1 = resultData1[17].toString();
 		        	
-		        	 String  container1 = resultData1[6].toString(); // Get the container value from i[0]
+		        	String container1 = resultData1[6] != null ? resultData1[6].toString().trim() : "";
+		        	
+//		        	 String  container1 = resultData1[6].toString(); // Get the container value from i[0]
 //		        	String tot_services =resultData1[23].toString(); // Get the container value from i[0]
 		        	  String tot_services = resultData1[3] != null ? resultData1[3].toString().trim() : "";
 
-		        	 String key =invoiceNo1+"~"+container1;
+//		        	  String key=null;
+//		        	  
+//		        	  if(!container1.isEmpty())
+//		        	  {
+		        			 String key =invoiceNo1+"~"+container1;
+//		        		   key =invoiceNo1+"~"+container1;
+//		        	  }
+//		        
 
 		            String  serviceid = resultData1[24].toString(); // Get the container value from i[0]
 
@@ -2407,7 +2416,12 @@ public class FinanceReportServices {
  		       int srNo = 1;
  		       for (Object[] i : importDetails) {
  		           String importerName = i[0] != null ? i[0].toString() : "Unknown"; // Importer Name at index 4
- 		           double amount = i[43] != null ? Double.parseDouble(i[43].toString()) : 0; // Taxable Amount at index 16
+// 		           double amount = i[43] != null ? Double.parseDouble(i[43].toString()) : 0; // Taxable Amount at index 16
+ 		           
+ 		          double amount = (i[43] != null && !i[43].toString().trim().isEmpty()) 
+ 		                 ? Double.parseDouble(i[43].toString()) 
+ 		                 : 0.0;
+
  		          if("Y".equals(i[21].toString())) {
  		        	  
  		        	 Double amount1 = parseDoubleOrDefault(i[43], 0.00) / 2;
