@@ -719,7 +719,7 @@ public class FinanceReportServices {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Importer Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Importer Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -2351,7 +2351,7 @@ public class FinanceReportServices {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Importer Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Importer Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -3201,7 +3201,7 @@ public class FinanceReportServices {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Importer Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Importer Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -4017,7 +4017,7 @@ public class FinanceReportServices {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Importer Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Importer Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -4830,7 +4830,7 @@ public class FinanceReportServices {
  		        
 
  		        Row empty = sheet.createRow(rowNum++);
- 		        empty.createCell(0).setCellValue("Summery Importer Wise"); // You can set a value or keep it blank
+ 		        empty.createCell(0).setCellValue("Summary Importer Wise"); // You can set a value or keep it blank
  		        
  		        		
  		        		
@@ -6780,10 +6780,7 @@ public class FinanceReportServices {
 		    Workbook workbook = sheet.getWorkbook();
 		    try ( ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
 		    {
-		    	System.out.println("startDate_______________________"+startDate);
-		    	
-		    	
-		    	System.out.println("endDate_______________________"+endDate);
+		    
 		    	
 		    	
 		    	SimpleDateFormat dateFormatService = new SimpleDateFormat("dd/MM/yyyy");

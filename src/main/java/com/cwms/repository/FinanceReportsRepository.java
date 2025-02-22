@@ -549,7 +549,7 @@ List<Object[]> findInvoiceDetailsFCLTeusOnly(@Param("companyId") String companyI
         "AND a.Branch_Id = b.Branch_Id AND a.Profitcentre_Id = b.Profitcentre_Id " +
         "AND a.Invoice_No = b.Invoice_No AND a.Container_no = b.Assesment_Id " +
         "LEFT OUTER JOIN cfexpmovementreq c ON b.Company_Id = c.Company_Id " +
-        "AND b.Branch_Id = c.Branch_Id AND b.SB_Trans_Id = c.SB_Trans_Id " +
+        "AND b.Branch_Id = c.Branch_Id " +
         "AND b.SB_No = c.SB_No AND b.Movement_Req_Id = c.Movement_Req_Id " +
         "AND b.Container_No = c.Container_no " +
         "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id " +
@@ -573,7 +573,7 @@ List<Object[]>  findExportCLPInvoiceReceiptOnly(@Param("companyId") String compa
         "LEFT OUTER JOIN cfassesmentsheet b ON a.Company_Id = b.Company_Id AND a.Branch_Id = b.Branch_Id " +
         "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.Invoice_No = b.Invoice_No AND a.Container_no = b.Assesment_Id " +
         "LEFT OUTER JOIN cfexpmovementreq c ON b.Company_Id = c.Company_Id AND b.Branch_Id = c.Branch_Id " +
-        "AND b.SB_Trans_Id = c.SB_Trans_Id AND b.SB_No = c.SB_No AND b.Movement_Req_Id = c.Movement_Req_Id " +
+        "AND b.SB_No = c.SB_No AND b.Movement_Req_Id = c.Movement_Req_Id " +
         "AND b.Container_No = c.Container_no " +
         "LEFT OUTER JOIN party pp ON b.Company_Id = pp.Company_Id AND b.SL = pp.Party_Id " +
         "AND b.branch_id = pp.branch_id " +
