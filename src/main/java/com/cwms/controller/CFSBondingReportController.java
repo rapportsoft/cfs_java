@@ -480,7 +480,7 @@ public class CFSBondingReportController {
 							branchAdd,
 							"Mobile Number: " + branch.getPhoneNo() + " | E-mail: " + branch.getEmailId(),
 							"Form-A",
-							"Form to be maintained by the warehouse licensee of the receipt, handling, storing and removal of the warehouse goods.",
+							"Form to be maintained by the warehouse license of the receipt, handling, storing and removal of the warehouse goods.",
 							"(in terms of Circular No. 25 / 2016 - Customs dated 08.06.2016)" };
 
 					// Set the starting row and column index
