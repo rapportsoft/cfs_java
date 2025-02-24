@@ -17060,10 +17060,12 @@ public class AssessmentService {
 				} else {
 					anx.setTaxPerc(zero);
 				}
+				
+				cfinvsrvanxrepo.save(anx);
 
 			}
 
-			cfinvsrvanxrepo.saveAll(cfInvsrvanxData);
+			
 
 			return ResponseEntity.ok(true);
 		} catch (Exception e) {

@@ -5169,10 +5169,12 @@ public class ProformaAssessmentService {
 				} else {
 					anx.setTaxPerc(zero);
 				}
+				
+				cfinvsrvanxprorepo.save(anx);
 
 			}
 
-			cfinvsrvanxprorepo.saveAll(cfInvsrvanxData);
+			
 
 			return ResponseEntity.ok(true);
 		} catch (Exception e) {
