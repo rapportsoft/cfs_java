@@ -217,7 +217,7 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 		       "E.transporter, E.vehicleNo, E.driverName, E.comments, E.status, E.approvedBy, " +
 		       "E.backToTown, E.backToTownRemark, E.backToTownDate, E.unNo, E.commodity, " +
 		       "E.inGateInDate, E.commodityCode, E.bufferCode, E.gateNo, E.remarks, " +
-		       "sa.partyName, sl.partyName, c.partyName, o.partyName) " +
+		       "sa.partyName, sl.partyName, c.partyName, o.partyName, E.createdBy) " +
 		       "FROM GateIn E " +
 		       "LEFT JOIN Party c ON E.companyId = c.companyId AND E.branchId = c.branchId AND E.cha = c.partyId AND c.status != 'D' " +
 		       "LEFT JOIN Party o ON E.companyId = o.companyId AND E.branchId = o.branchId AND E.onAccountOf = o.partyId AND o.status != 'D' " +

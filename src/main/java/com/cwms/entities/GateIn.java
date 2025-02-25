@@ -4318,4 +4318,84 @@ public GateIn(String gateInId, String erpDocRefNo, String docRefNo, int srNo, St
 	}
 
 
+public GateIn(String companyId, String branchId, String gateInId, String finYear, String lineNo, int srNo,
+		String invoiceNo, Date invoiceDate, String gateInType, String profitcentreId, String processId,
+		String containerNo, String containerSize, String containerType, String containerStatus, String containerSealNo,
+		String customsSealNo, String actualSealNo, String sealMismatch, String isoCode, BigDecimal grossWeight,
+		BigDecimal tareWeight, String weighmentDone, String overDimension, String hazardous, String hazClass, String sa,
+		String sl, String onAccountOf, String cha, String importerName, String commodityDescription,
+		String deliveryOrderNo, Date deliveryOrderDate, Date doValidityDate, String shift, String terminal,
+		String origin, String refer, String containerHealth, String transporterStatus, String transporterName,
+		String transporter, String vehicleNo, String driverName, String comments, String status, String approvedBy,
+		String backToTown, String backToTownRemark, Date backToTownDate, String unNo, String commodity,
+		Date inGateInDate, String commodityCode, int bufferCode, String gateNo, String remarks,
+		String shippingAgentName, String shippingLineName, String chaName, String onAccountName, String createdBy) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.gateInId = gateInId;
+	this.finYear = finYear;
+	this.lineNo = lineNo;
+	this.srNo = srNo;
+	this.invoiceNo = invoiceNo;
+	this.invoiceDate = invoiceDate;
+	this.gateInType = gateInType;
+	this.profitcentreId = profitcentreId;
+	this.processId = processId;
+	this.containerNo = containerNo;
+	this.containerSize = containerSize;
+	this.containerType = containerType;
+	this.containerStatus = containerStatus;
+	this.containerSealNo = containerSealNo;
+	this.customsSealNo = customsSealNo;
+	this.actualSealNo = actualSealNo;
+	this.sealMismatch = sealMismatch;
+	this.isoCode = isoCode;
+	this.grossWeight = grossWeight;
+	this.tareWeight = tareWeight;
+	this.weighmentDone = weighmentDone;
+	this.overDimension = overDimension;
+	this.hazardous = hazardous;
+	this.hazClass = hazClass;
+	this.sa = sa;
+	this.sl = sl;
+	this.onAccountOf = onAccountOf;
+	this.cha = cha;
+	this.importerName = importerName;
+	this.commodityDescription = commodityDescription;
+	this.deliveryOrderNo = deliveryOrderNo;
+	this.deliveryOrderDate = deliveryOrderDate;
+	this.doValidityDate = doValidityDate;
+	this.shift = shift;
+	this.terminal = terminal;
+	this.origin = origin;
+	this.refer = refer;
+	this.containerHealth = containerHealth;
+	this.transporterStatus = transporterStatus;
+	this.transporterName = transporterName;
+	this.transporter = transporter;
+	this.vehicleNo = vehicleNo;
+	this.driverName = driverName;
+	this.comments = comments;
+	this.status = status;
+	this.approvedBy = approvedBy;
+	this.backToTown = backToTown;
+	this.backToTownRemark = backToTownRemark;
+	this.backToTownDate = backToTownDate;
+	this.unNo = unNo;
+	this.commodity = commodity;
+	this.inGateInDate = inGateInDate;
+	this.commodityCode = commodityCode;
+	this.bufferCode = bufferCode;
+	this.gateNo = gateNo;
+	this.remarks = remarks;
+	this.shippingAgentName = shippingAgentName;
+	this.shippingLineName = shippingLineName;
+	this.chaName = chaName;
+	this.onAccountName = onAccountName;
+	this.createdBy = createdBy;
+}
+
+
+
 }
