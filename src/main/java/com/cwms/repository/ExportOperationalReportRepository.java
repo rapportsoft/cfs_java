@@ -250,29 +250,50 @@ List<Object[]> findEmptyGateOutContainerDetails(
         @Param("accountHolderId") String accountHolderId,
         @Param("cha") String cha );
 
+//@Query(value = "SELECT DISTINCT a.Container_No, a.Container_Size, a.Container_Type, " +
+//        "DATE_FORMAT(a.Gate_In_Date, '%d/%m/%Y %H:%i'), " +
+//        "DATE_FORMAT(a.De_Stuff_Date, '%d/%b/%Y %H:%i') AS Carting_Trans_Date, " +
+//        "IFNULL(a.Yard_Packages, '0.00') AS Yard_Packages, " +
+//        "IFNULL(a.Gross_Weight, '0.00') AS Gross_Weight, " +
+//        "sl.Party_Name, a.Container_Search_Type, p.Party_Name, a.On_Account_Of " +
+//        "FROM cfcrtgcn a " +
+//        "LEFT OUTER JOIN Party p ON a.Company_id = p.Company_Id AND a.branch_id =p.branch_id AND a.On_Account_Of = p.Party_Id " +
+//        "LEFT OUTER JOIN Party sl ON a.Company_id = sl.Company_Id AND a.branch_id =sl.branch_id AND  a.shipping_agent = sl.Party_Id " +
+//        "LEFT OUTER JOIN cfcrtg b ON a.Company_Id = b.Company_Id AND a.Branch_Id = b.Branch_Id " +
+//        "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.Gate_In_Id = b.Gate_In_Id " +
+//        "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.status = 'A' "+
+//         "AND a.Gate_In_Date BETWEEN :startDate AND :endDate " +
+//         "AND (:sbNo IS NULL OR :sbNo = '' OR b.SB_No = :sbNo) " + 
+//         "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR a.On_Account_Of = :accountHolderId) " , 
+//        nativeQuery = true)
+//List<Object[]> findReworkingContainerDetails(@Param("companyId") String companyId, 
+//                                    @Param("branchId") String branchId, @Param("startDate") Date startDate,
+//                                    @Param("endDate") Date endDate, 
+//                                    @Param("sbNo") String sbNo,
+//                                    @Param("accountHolderId") String accountHolderId);
+
+
 @Query(value = "SELECT DISTINCT a.Container_No, a.Container_Size, a.Container_Type, " +
         "DATE_FORMAT(a.Gate_In_Date, '%d/%m/%Y %H:%i'), " +
         "DATE_FORMAT(a.De_Stuff_Date, '%d/%b/%Y %H:%i') AS Carting_Trans_Date, " +
-        "IFNULL(a.Yard_Packages, '0.00') AS Yard_Packages, " +
-        "IFNULL(a.Gross_Weight, '0.00') AS Gross_Weight, " +
+        "IFNULL(SUM(b.actual_no_of_packages), '0.00') AS Yard_Packages, " +
+        "IFNULL(SUM(b.actual_no_of_weight), '0.00') AS Gross_Weight, " +
         "sl.Party_Name, a.Container_Search_Type, p.Party_Name, a.On_Account_Of " +
         "FROM cfcrtgcn a " +
         "LEFT OUTER JOIN Party p ON a.Company_id = p.Company_Id AND a.branch_id =p.branch_id AND a.On_Account_Of = p.Party_Id " +
         "LEFT OUTER JOIN Party sl ON a.Company_id = sl.Company_Id AND a.branch_id =sl.branch_id AND  a.shipping_agent = sl.Party_Id " +
         "LEFT OUTER JOIN cfcrtg b ON a.Company_Id = b.Company_Id AND a.Branch_Id = b.Branch_Id " +
-        "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.Gate_In_Id = b.Gate_In_Id " +
+        "AND a.Profitcentre_Id = b.Profitcentre_Id AND a.de_stuff_id = b.carting_trans_id " +
         "WHERE a.company_id = :companyId AND a.branch_id = :branchId AND a.status = 'A' "+
          "AND a.Gate_In_Date BETWEEN :startDate AND :endDate " +
          "AND (:sbNo IS NULL OR :sbNo = '' OR b.SB_No = :sbNo) " + 
-         "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR a.On_Account_Of = :accountHolderId) " , 
+         "AND (:accountHolderId IS NULL OR :accountHolderId = '' OR a.On_Account_Of = :accountHolderId) group by a.Container_No  " , 
         nativeQuery = true)
 List<Object[]> findReworkingContainerDetails(@Param("companyId") String companyId, 
                                     @Param("branchId") String branchId, @Param("startDate") Date startDate,
                                     @Param("endDate") Date endDate, 
                                     @Param("sbNo") String sbNo,
                                     @Param("accountHolderId") String accountHolderId);
-
-
 
 
 
