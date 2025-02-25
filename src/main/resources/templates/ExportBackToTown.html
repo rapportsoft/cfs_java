@@ -24,7 +24,7 @@ body {
 
 @page {
     size: Wpx 1px;
-    margin-top: 263px;
+    margin-top: 215px;
 }
 
 
@@ -178,16 +178,7 @@ body {
 						    <td class="content"  style="padding: 1px; text-align: left;">							: <span class="value" th:text="${workOrderDate}"></span>	</td>
 						  </tr>
 						  
-						  <tr>
-						    <td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold;	text-align: left;"><span class="label">CHA Name</span></td>
-						    <td class="content"  style="padding: 1px;  text-align: left;">				: <span class="value" th:text="${cha}"></span>		</td>
-						  </tr>
 						  
-						  <tr>
-						  						    <td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold; text-align: left;"><span class="label">Liner Agent Name</span></td>
-						  						    <td class="content"  style="padding: 1px;  text-align: left;">: <span class="value" th:text="${lineAgent}"></span>		</td>
-						  						  </tr>					  
-						 
 						</table>
 						
 						
@@ -195,13 +186,19 @@ body {
 						
 						
 						
-						<td style="width: 30%; padding-left: 10px; vertical-align: top;">
+						<td style="width: 45%; padding-left: 10px; vertical-align: top;">
 							
 							<table style="border-collapse: collapse; ">
-													  <tr>
-													    <td class="content"  style="padding: 1px;font-weight: bold; padding-right: 20px; font-size: 10pt;text-align: left;"><span class="label">Truck No</span></td>
-													    <td class="content"  style="padding: 1px; font-size: 10pt; text-align: left;">  : <span class="value" th:text="${truckNo}"></span></td>
-													  </tr>
+													 <tr>
+						    <td class="content"  style="padding: 1px; padding-right: 20px;font-weight: bold;	text-align: left;"><span class="label">CHA Name</span></td>
+						    <td class="content"  style="padding: 1px;  text-align: left;">				: <span class="value" th:text="${cha}"></span>		</td>
+						  </tr>
+						  
+						  <tr>
+						  						    <td class="content"  style="padding: 1px; padding-right: 20px; font-weight: bold; text-align: left;"><span class="label">Account Holder</span></td>
+						  						    <td class="content"  style="padding: 1px;  text-align: left;">: <span class="value" th:text="${lineAgent}"></span>		</td>
+						  						  </tr>					  
+						 
 							</table>
 							
 							
