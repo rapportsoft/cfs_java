@@ -212,7 +212,7 @@ List<Object[]> getCreditNoteToSelect(@Param("companyId") String companyId,
 		    + "a.assesmentId, c.partyId, c.partyType, c.invoiceType, c.invoiceSubType, c.transType, " + ""
 		    + "c.erpDocRefNo, c.docRefNo, c.igst, c.cgst, c.sgst, a.sbTransId, a.sbNo, " + ""
 		    + "a.sbDate, a.exporterName, c.invoiceAmt, " + ""		   
-		    + "a.payingParty, a.othPartyId, po.partyName, pf.partyName, c.billAmt, cr.comments, cr.invoiceNo, cr.invoiceDate) " + ""
+		    + "a.payingParty, a.othPartyId, po.partyName, pf.partyName, c.billAmt, cr.comments, cr.invoiceNo, cr.invoiceDate, cr.status,cr.createdBy) " + ""
 		    + "FROM AssessmentSheet a " + ""
 		    + "LEFT OUTER JOIN Cfinvsrv c " + ""
 		    + "ON c.companyId = a.companyId " + ""

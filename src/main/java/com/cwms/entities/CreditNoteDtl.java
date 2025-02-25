@@ -647,6 +647,8 @@ public class CreditNoteDtl {
 			this.acCode = acCode;
 			this.acCodeN = acCodeN;
 			this.creditNoteAmt = creditNoteAmt;
+			this.localAmt = BigDecimal.ZERO;
+
 		}
 		
 		public CreditNoteDtl(String serviceId, String serviceName, String taxIdN, String taxDesc, BigDecimal oldTaxPerc,

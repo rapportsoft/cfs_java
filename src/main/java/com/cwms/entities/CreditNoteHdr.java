@@ -1628,4 +1628,99 @@ public class CreditNoteHdr {
 		
 	
 
+		public CreditNoteHdr(
+			    String invoiceNo, Date invoiceDate, String igmTransId, String profitcentreId, String profitcentreDesc,
+			    String igmNo, Date igmDate, String igmLineNo, String viaNo, String blNo, Date blDate,
+			    String importerName, String commodityDescription, BigDecimal noOfPackages, String sa, String partyName1,
+			    String sl, String partyName2, char status, String userName1, String userName2, BigDecimal insuranceValue,
+			    BigDecimal dutyValue, String specialDelivery, char onlineStampDuty, String agroProductStatus,
+			    String facilitationCharge, String facilitationUnit, String facilitationRate, String importerId,
+			    String billingParty, String gstNo, int discountAmt, char addMovFlag, int addMovementAmt,
+			    String partyId, String partyName3, char taxApplicable, char dpdTariff, char discountStatus,
+			    char sez, int impSrNo, int chaSrNo, String cha, String partyName4, BigDecimal partySrNo, String address1,
+			    String address2, String invoiceNo2, 
+			    String assesmentId, String billingParty2, String partyType, String invoiceType, String invoiceSubType,
+			    String transType, String erpDocRefNo, String docRefNo, String igst, String cgst, String sgst,
+			    String sbTransId, String sbNo, Date sbDate, String exporterName, BigDecimal invoiceAmt, 
+			    String payingParty, String othPartyId, String onAccountOfName, String fwdName, BigDecimal billAmt, 
+			    String comments, String invoiceNoNew, Date invoiceDateNew,String status1,String createdBy
+			) { 
+		        this.oldInvoiceNo = invoiceNo;
+		        this.oldInvoiceDate = invoiceDate;
+		        this.igmTransId = igmTransId;
+		        this.profitcentreId = profitcentreId;
+		        this.profitcentreName = profitcentreDesc;
+		        this.igmNo = igmNo;
+		        this.igmDate = igmDate;
+		        this.igmLineNo = igmLineNo;
+		        this.viaNo = viaNo;
+		        this.blNo = blNo;
+		        this.blDate = blDate;
+		        this.importerName = importerName;
+		        this.commodityDescription = commodityDescription;
+		        this.noOfPackages = noOfPackages;
+		        this.sa = sa;
+		        this.shipingAgentName = partyName1;
+		        this.sl = sl;
+		        this.shippingLineName = partyName2;
+//		        this.createdBy = userName1;
+//		        this.approvedBy = userName2;
+		        this.insuranceValue = insuranceValue;
+		        this.dutyValue = dutyValue;
+		        this.specialDelivery = specialDelivery;
+		        this.onlineStampDuty = onlineStampDuty;
+		        this.agroProductStatus = agroProductStatus;
+		        this.facilitationCharge = facilitationCharge;
+		        this.facilitationUnit = facilitationUnit;
+		        this.facilitationRate = facilitationRate;
+		        this.importerId = importerId;
+		        this.billingParty = billingParty;
+		        this.expGst = gstNo;
+		        this.discountAmt = discountAmt;
+		        this.addMovFlag = addMovFlag;
+		        this.addMovementAmt = addMovementAmt;
+		        this.partyId = partyId;
+		        this.billingPartyName = partyName3;
+		        this.taxApplicable = taxApplicable;
+		        this.dpdTariff = dpdTariff;
+		        this.discountStatus = discountStatus;
+		        this.sez = sez;
+		        this.impSrNo = impSrNo == 0 ? null : BigDecimal.valueOf(impSrNo);
+		        this.chaSrNo = chaSrNo == 0 ? null : BigDecimal.valueOf(chaSrNo);
+		        this.cha = cha;
+		        this.chaName = partyName4;
+		        this.partySrNo = partySrNo;
+		        this.chaAddress = address1;
+		        this.chaAddress2 = address2;
+		        this.assesmentId = assesmentId;
+		        this.partyType = partyType;
+		        this.invType = invoiceType;
+		        this.invoiceType = invoiceType;
+		        this.invoiceSubType = invoiceSubType;
+		        this.transType = transType;
+		        this.erpDocRefNo = erpDocRefNo;
+		        this.docRefNo = docRefNo;
+		        this.igst = igst;
+		        this.cgst = cgst;
+		        this.sgst = sgst;
+		        this.sbTransId = sbTransId;
+		        this.sbNo = sbNo;
+		        this.sbDate = sbDate;
+		        this.exporterName = exporterName;
+		        this.oldInvoiceAmt = invoiceAmt;				        
+		        this.payingParty = payingParty;
+		        this.othPartyId = othPartyId;
+		        this.oldBillAmt = billAmt;
+		        this.billingParty2 = billingParty2;
+		        this.accHolderName = onAccountOfName;
+		        this.fwdName = fwdName;
+		        this.comments = comments;
+		        this.partyType = billingParty;
+		        this.invoiceNo = invoiceNoNew;
+		        this.invoiceDate = invoiceDateNew;
+		        this.containerNo = assesmentId;	
+		        this.status = status1;
+		        this.createdBy = createdBy;
+		    }
+		
 }
