@@ -805,12 +805,30 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			@Param("con") String con);
 	
 	
+//	@Query(value="select e.sbNo,e.viaNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),p4.partyName,v.vesselName,sb.noOfPackages,"
+//			+ "p3.partyName,e.voyageNo,sb.grossWeight,e.consignee,e.pod,sb.cargoType,p1.partyName,e.terminal,e.commodity,"
+//			+ "DATE_FORMAT(e.stuffTallyDate,'%d/%m/%Y %H:%i'),e.rotationNo,e.typeOfPackage,e.yardLocation,e.yardBlock,e.blockCellNo,"
+//			+ "e.stuffTallyWoTransId,DATE_FORMAT(e.stuffTallyCutWoTransDate,'%d/%m/%Y %H:%i'),e.containerNo,e.containerSize,"
+//			+ "e.containerType,e.agentSealNo,e.customsSealNo,COALESCE(SUM(e.stuffedQty),0),e.cargoWeight,e.tareWeight,e.exporterName,"
+//			+ "ROUND(e.cargoWeight+e.tareWeight,0),e.hsnCode "
+//			+ "from ExportStuffTally e "
+//			+ "LEFT OUTER JOIN ExportSbCargoEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo "
+//			+ "and e.sbTransId=sb.sbTransId "
+//			+ "LEFT OUTER JOIN Vessel v ON e.companyId=v.companyId and e.branchId=v.branchId and e.vesselId=v.vesselId "
+//			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.cha=p1.partyId "
+//			+ "LEFT OUTER JOIN Party p3 ON e.companyId=p3.companyId and e.branchId=p3.branchId and e.shippingLine=p3.partyId "
+//			+ "LEFT OUTER JOIN Party p4 ON e.companyId=p4.companyId and e.branchId=p4.branchId and e.onAccountOf=p4.partyId "
+//			+ "where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:id and e.sbNo=:sb and e.status = 'A' and "
+//			+ "(e.reworkId is null OR e.reworkId = '') group by e.containerNo")
+//	List<Object[]> getDataForSBWiseReport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,
+//			@Param("sb") String sb);
+	
 	@Query(value="select e.sbNo,e.viaNo,DATE_FORMAT(e.sbDate,'%d/%m/%Y'),p4.partyName,v.vesselName,sb.noOfPackages,"
 			+ "p3.partyName,e.voyageNo,sb.grossWeight,e.consignee,e.pod,sb.cargoType,p1.partyName,e.terminal,e.commodity,"
 			+ "DATE_FORMAT(e.stuffTallyDate,'%d/%m/%Y %H:%i'),e.rotationNo,e.typeOfPackage,e.yardLocation,e.yardBlock,e.blockCellNo,"
 			+ "e.stuffTallyWoTransId,DATE_FORMAT(e.stuffTallyCutWoTransDate,'%d/%m/%Y %H:%i'),e.containerNo,e.containerSize,"
 			+ "e.containerType,e.agentSealNo,e.customsSealNo,COALESCE(SUM(e.stuffedQty),0),e.cargoWeight,e.tareWeight,e.exporterName,"
-			+ "ROUND(e.cargoWeight+e.tareWeight,0),e.hsnCode "
+			+ "ROUND(e.cargoWeight+e.tareWeight,0),e.hsnCode,g.origin "
 			+ "from ExportStuffTally e "
 			+ "LEFT OUTER JOIN ExportSbCargoEntry sb ON e.companyId=sb.companyId and e.branchId=sb.branchId and e.sbNo=sb.sbNo "
 			+ "and e.sbTransId=sb.sbTransId "
@@ -818,12 +836,11 @@ public interface ExportStuffTallyRepo extends JpaRepository<ExportStuffTally, St
 			+ "LEFT OUTER JOIN Party p1 ON e.companyId=p1.companyId and e.branchId=p1.branchId and e.cha=p1.partyId "
 			+ "LEFT OUTER JOIN Party p3 ON e.companyId=p3.companyId and e.branchId=p3.branchId and e.shippingLine=p3.partyId "
 			+ "LEFT OUTER JOIN Party p4 ON e.companyId=p4.companyId and e.branchId=p4.branchId and e.onAccountOf=p4.partyId "
+			+ "LEFT OUTER JOIN GateIn g ON e.companyId=g.companyId and e.branchId=g.branchId and e.gateInId=g.gateInId "
 			+ "where e.companyId=:cid and e.branchId=:bid and e.sbTransId=:id and e.sbNo=:sb and e.status = 'A' and "
 			+ "(e.reworkId is null OR e.reworkId = '') group by e.containerNo")
 	List<Object[]> getDataForSBWiseReport(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,
 			@Param("sb") String sb);
-	
-	
 	
 	
 	@Query(value="select e.stuffTallyId,DATE_FORMAT(e.stuffTallyDate,'%d/%m/%Y'),e.containerNo,e.containerSize,e.containerType,"

@@ -665,6 +665,8 @@ public class ExportReportController {
 		context.setVariable("exporter", singleData[31] != null ? String.valueOf(singleData[31]) : "");
 		context.setVariable("countOdConSize", countOdConSize != null ? countOdConSize : "");
 		context.setVariable("hsnCode", singleData[33] != null ? String.valueOf(singleData[33]) : "");
+		context.setVariable("pickUpYard", singleData[34] != null ? String.valueOf(singleData[34]) : "");
+
 		context.setVariable("stuffData", data);
 
 		String htmlContent = templateEngine.process("CFSExportSBStuffTally", context);
