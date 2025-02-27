@@ -295,5 +295,18 @@ public class PartyAddress {
 	}
 	
 	
-
+	protected PartyAddress(String partyId, String srNo, String address1, String address2, String address3, String city,
+			String pin, String state, String gstNo, String status) {
+		super();
+		this.partyId = partyId;
+		this.srNo = srNo;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.address3 = address3;
+		this.city = city;
+		this.pin = pin;
+		this.state = state;
+		this.gstNo = gstNo;
+		this.status = status;
+	}
 }
