@@ -15,6 +15,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @IdClass(PartyId.class)
@@ -22,33 +23,33 @@ import jakarta.persistence.TemporalType;
 public class Party {
 
 	   @Id
-	    @Column(name = "Company_Id", length = 6, nullable = false)
+	    @Column(name = "Company_Id", length = 6)
 	    private String companyId = "";
 	   
 	   @Id
-	    @Column(name = "branch_Id", length = 6, nullable = false)
+	    @Column(name = "branch_Id", length = 6)
 	    private String branchId = "";
 
 	    @Id
-	    @Column(name = "Party_Id", length = 6, nullable = false)
+	    @Column(name = "Party_Id", length = 6)
 	    private String partyId = "";
 
-	    @Column(name = "Master_Party_Id", length = 6, nullable = false)
+	    @Column(name = "Master_Party_Id", length = 6)
 	    private String masterPartyId = "";
 
 	    @Column(name = "Party_Name", length = 100)
 	    private String partyName = "";
 
-	    @Column(name = "Party_Type", length = 6, nullable = false)
+	    @Column(name = "Party_Type", length = 6)
 	    private String partyType = "CHA";
 
-	    @Column(name = "address_1", length = 100, nullable = false)
+	    @Column(name = "address_1", length = 100)
 	    private String address1 = "";
 
-	    @Column(name = "address_2", length = 100, nullable = false)
+	    @Column(name = "address_2", length = 100)
 	    private String address2 = "";
 
-	    @Column(name = "address_3", length = 100, nullable = false)
+	    @Column(name = "address_3", length = 100)
 	    private String address3 = "";
 
 	    @Column(name = "City", length = 15)
@@ -63,10 +64,10 @@ public class Party {
 	    @Column(name = "Country", length = 15)
 	    private String country;
 
-	    @Column(name = "Movement_Block", length = 3, nullable = false)
+	    @Column(name = "Movement_Block", length = 3)
 	    private String movementBlock = "ACT";
 
-	    @Column(name = "Credit_Limit", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "Credit_Limit", precision = 16, scale = 3)
 	    private BigDecimal creditLimit = BigDecimal.ZERO;
 
 	    @Column(name = "Phone_No", length = 15)
@@ -96,13 +97,13 @@ public class Party {
 	    @Column(name = "Currency", length = 6)
 	    private String currency;
 
-	    @Column(name = "Tariff_Type", length = 3, nullable = false)
+	    @Column(name = "Tariff_Type", length = 3)
 	    private String tariffType = "";
 
-	    @Column(name = "Discount_days", length = 2, nullable = false)
+	    @Column(name = "Discount_days", length = 2)
 	    private String discountDays = "0";
 
-	    @Column(name = "Free_Days", length = 2, nullable = false)
+	    @Column(name = "Free_Days", length = 2)
 	    private String freeDays = "0";
 
 	    @Column(name = "Service_Tax_Applicable", length = 1)
@@ -135,7 +136,7 @@ public class Party {
 	    @Column(name = "Default_Branch", length = 6)
 	    private String defaultBranch;
 
-	    @Column(name = "Shipping_Line_Code", length = 100, nullable = false)
+	    @Column(name = "Shipping_Line_Code", length = 100)
 	    private String shippingLineCode = "";
 
 	    @Column(name = "Customs_Exporter_Id", length = 10)
@@ -144,7 +145,7 @@ public class Party {
 	    @Column(name = "STD_Code", length = 5)
 	    private String stdCode;
 
-	    @Column(name = "hide", length = 1, nullable = false)
+	    @Column(name = "hide", length = 1)
 	    private String hide = "N";
 
 	    @Column(name = "Marketing_Person", length = 20)
@@ -153,70 +154,70 @@ public class Party {
 	    @Column(name = "Movement_Type", length = 6)
 	    private String movementType;
 
-	    @Column(name = "Facilitation_Charge", length = 1, nullable = false)
+	    @Column(name = "Facilitation_Charge", length = 1)
 	    private String facilitationCharge = "N";
 
-	    @Column(name = "Facilitation_Unit", length = 4, nullable = false)
+	    @Column(name = "Facilitation_Unit", length = 4)
 	    private String facilitationUnit = "";
 
-	    @Column(name = "Facilitation_Rate", length = 4, nullable = false)
+	    @Column(name = "Facilitation_Rate", length = 4)
 	    private String facilitationRate = "0";
 
-	    @Column(name = "Facilitation_Rate1", length = 4, nullable = false)
+	    @Column(name = "Facilitation_Rate1", length = 4)
 	    private String facilitationRate1 = "0";
 
-	    @Column(name = "Internal_Shifting", length = 1, nullable = false)
+	    @Column(name = "Internal_Shifting", length = 1)
 	    private String internalShifting = "N";
 
-	    @Column(name = "Internal_Shifting_Unit", length = 4, nullable = false)
+	    @Column(name = "Internal_Shifting_Unit", length = 4)
 	    private String internalShiftingUnit = "";
 
-	    @Column(name = "Internal_Shifting_Rate", length = 4, nullable = false)
+	    @Column(name = "Internal_Shifting_Rate", length = 4)
 	    private String internalShiftingRate = "0";
 
-	    @Column(name = "Internal_Shifting_Rate1", length = 4, nullable = false)
+	    @Column(name = "Internal_Shifting_Rate1", length = 4)
 	    private String internalShiftingRate1 = "0";
 
-	    @Column(name = "Additional_Remarks", length = 250, nullable = false)
+	    @Column(name = "Additional_Remarks", length = 250)
 	    private String additionalRemarks = "";
 
-	    @Column(name = "Free_Days_Tariff", length = 10, nullable = false)
+	    @Column(name = "Free_Days_Tariff", length = 10)
 	    private String freeDaysTariff = "";
 
-	    @Column(name = "Extra_Services", length = 50, nullable = false)
+	    @Column(name = "Extra_Services", length = 50)
 	    private String extraServices = "";
 
-	    @Column(name = "Tariff_Active_Flag", length = 1, nullable = false)
+	    @Column(name = "Tariff_Active_Flag", length = 1)
 	    private String tariffActiveFlag = "Y";
 
-	    @Column(name = "Online_Flag", length = 1, nullable = false)
+	    @Column(name = "Online_Flag", length = 1)
 	    private String onlineFlag = "Y";
 
-	    @Column(name = "Movement_Charge", length = 1, nullable = false)
+	    @Column(name = "Movement_Charge", length = 1)
 	    private String movementCharge = "N";
 
-	    @Column(name = "Truck_Handling", length = 1, nullable = false)
+	    @Column(name = "Truck_Handling", length = 1)
 	    private String truckHandling = "Y";
 
-	    @Column(name = "CFS_Tariff_No", length = 10, nullable = false)
+	    @Column(name = "CFS_Tariff_No", length = 10)
 	    private String cfsTariffNo = "";
 
-	    @Column(name = "GST_No", length = 30, nullable = false)
+	    @Column(name = "GST_No", length = 30)
 	    private String gstNo = "UNREGISTER";
 
-	    @Column(name = "IEC_CODE", length = 20, nullable = false)
+	    @Column(name = "IEC_CODE", length = 20)
 	    private String iecCode = "";
 
-	    @Column(name = "Monthly_Report", length = 1, nullable = false)
+	    @Column(name = "Monthly_Report", length = 1)
 	    private String monthlyReport = "N";
 
-	    @Column(name = "BL_UserId", length = 25, nullable = false)
+	    @Column(name = "BL_UserId", length = 25)
 	    private String blUserId = "";
 
-	    @Column(name = "Created_By", length = 10, nullable = false)
+	    @Column(name = "Created_By", length = 10)
 	    private String createdBy = "";
 
-	    @Column(name = "Created_Date", nullable = false)
+	    @Column(name = "Created_Date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	    private Date createdDate;
@@ -237,31 +238,31 @@ public class Party {
 	    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	    private Date approvedDate;
 
-	    @Column(name = "DPD_Daily_Report", length = 1, nullable = false)
+	    @Column(name = "DPD_Daily_Report", length = 1)
 	    private String dpdDailyReport = "N";
 
-	    @Column(name = "Daily_Report", length = 1, nullable = false)
+	    @Column(name = "Daily_Report", length = 1)
 	    private String dailyReport = "N";
 
-	    @Column(name = "DSRPRTType", length = 20, nullable = false)
+	    @Column(name = "DSRPRTType", length = 20)
 	    private String dsrprtType = "LIN";
 
-	    @Column(name = "LIN_Daily_Report", length = 1, nullable = false)
+	    @Column(name = "LIN_Daily_Report", length = 1)
 	    private String linDailyReport = "N";
 
-	    @Column(name = "AGT_Daily_Report", length = 1, nullable = false)
+	    @Column(name = "AGT_Daily_Report", length = 1)
 	    private String agtDailyReport = "N";
 
-	    @Column(name = "CHA_Daily_Report", length = 1, nullable = false)
+	    @Column(name = "CHA_Daily_Report", length = 1)
 	    private String chaDailyReport = "N";
 
-	    @Column(name = "IMP_Daily_Report", length = 1, nullable = false)
+	    @Column(name = "IMP_Daily_Report", length = 1)
 	    private String impDailyReport = "N";
 
-	    @Column(name = "FRW_Daily_Report", length = 1, nullable = false)
+	    @Column(name = "FRW_Daily_Report", length = 1)
 	    private String frwDailyReport = "N";
 
-	    @Column(name = "DSRXLSType", length = 20, nullable = false)
+	    @Column(name = "DSRXLSType", length = 20)
 	    private String dsrxlsType = "Standard";
 
 	    @Column(name = "Excel_To_Mail", length = 600)
@@ -270,23 +271,23 @@ public class Party {
 	    @Column(name = "Excel_Cc_Mail", length = 600)
 	    private String excelCcMail;
 
-	    @Column(name = "Sent_Status", length = 1, nullable = false)
+	    @Column(name = "Sent_Status", length = 1)
 	    private String sentStatus = "N";
 
-	    @Column(name = "Report_Time", nullable = false)
+	    @Column(name = "Report_Time")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    private Date reportTime;
 
-	    @Column(name = "Activation_Remarks", length = 150, nullable = false)
+	    @Column(name = "Activation_Remarks", length = 150)
 	    private String activationRemarks = "";
 
-	    @Column(name = "Deactivation_Remarks", length = 150, nullable = false)
+	    @Column(name = "Deactivation_Remarks", length = 150)
 	    private String deactivationRemarks = "";
 
-	    @Column(name = "Status", length = 1, nullable = false)
+	    @Column(name = "Status", length = 1)
 	    private String status = "";
 
-	    @Column(name = "Export_marketing_person", length = 20, nullable = false)
+	    @Column(name = "Export_marketing_person", length = 20)
 	    private String exportMarketingPerson = "";
 
 	    @Column(name = "Export_To_Mail", length = 600)
@@ -307,31 +308,31 @@ public class Party {
 	    @Column(name = "CODACO_To_Mail", length = 600)
 	    private String codacoToMail;
 
-	    @Column(name = "EDI_flag", length = 1, nullable = false)
+	    @Column(name = "EDI_flag", length = 1)
 	    private String ediFlag = "N";
 
-	    @Column(name = "AGT", length = 1, nullable = false)
+	    @Column(name = "AGT", length = 1)
 	    private String agt = "N";
 
-	    @Column(name = "CHA", length = 1, nullable = false)
+	    @Column(name = "CHA", length = 1)
 	    private String cha = "N";
 
-	    @Column(name = "FRW", length = 1, nullable = false)
+	    @Column(name = "FRW", length = 1)
 	    private String frw = "N";
 
-	    @Column(name = "IMP", length = 1, nullable = false)
+	    @Column(name = "IMP", length = 1)
 	    private String imp = "N";
 
-	    @Column(name = "LIN", length = 1, nullable = false)
+	    @Column(name = "LIN", length = 1)
 	    private String lin = "N";
 
-	    @Column(name = "exp", length = 1, nullable = false)
+	    @Column(name = "exp", length = 1)
 	    private String exp = "N";
 
-	    @Column(name = "BIDDR", length = 1, nullable = false)
+	    @Column(name = "BIDDR", length = 1)
 	    private String biddr = "N";
 
-	    @Column(name = "CUSTOMER_TYPE", length = 30, nullable = false)
+	    @Column(name = "CUSTOMER_TYPE", length = 30)
 	    private String customerType = "";
 
 	    @Column(name = "ACCOUNT_TYPE", length = 15)
@@ -343,148 +344,148 @@ public class Party {
 	    @Column(name = "OPERATIONAL_MAIL", length = 600)
 	    private String operationalMail;
 
-	    @Column(name = "LIN_OPERATIONAL_MAIL_TO", length = 600, nullable = false)
+	    @Column(name = "LIN_OPERATIONAL_MAIL_TO", length = 600)
 	    private String linOperationalMailTo = "";
 
-	    @Column(name = "AGT_OPERATIONAL_MAIL_TO", length = 600, nullable = false)
+	    @Column(name = "AGT_OPERATIONAL_MAIL_TO", length = 600)
 	    private String agtOperationalMailTo = "";
 
-	    @Column(name = "CHA_OPERATIONAL_MAIL_TO", length = 600, nullable = false)
+	    @Column(name = "CHA_OPERATIONAL_MAIL_TO", length = 600)
 	    private String chaOperationalMailTo = "";
 
-	    @Column(name = "IMP_OPERATIONAL_MAIL_TO", length = 600, nullable = false)
+	    @Column(name = "IMP_OPERATIONAL_MAIL_TO", length = 600)
 	    private String impOperationalMailTo = "";
 
-	    @Column(name = "FRW_OPERATIONAL_MAIL_TO", length = 600, nullable = false)
+	    @Column(name = "FRW_OPERATIONAL_MAIL_TO", length = 600)
 	    private String frwOperationalMailTo;
 
-	    @Column(name = "OPERATIONAL_MAIL_CC", length = 600, nullable = false)
+	    @Column(name = "OPERATIONAL_MAIL_CC", length = 600)
 	    private String operationalMailCc = "";
 
-	    @Column(name = "OPERATIONAL_MAIL_BCC", length = 600, nullable = false)
+	    @Column(name = "OPERATIONAL_MAIL_BCC", length = 600)
 	    private String operationalMailBcc = "";
 
-	    @Column(name = "FINANCE_MAIL", length = 250, nullable = false)
+	    @Column(name = "FINANCE_MAIL", length = 250)
 	    private String financeMail = "";
 
-	    @Column(name = "CODECO_MAIL", length = 250, nullable = false)
+	    @Column(name = "CODECO_MAIL", length = 250)
 	    private String codecoMail = "";
 
-	    @Column(name = "IMP_GRDRENT_FRM", length = 25, nullable = false)
+	    @Column(name = "IMP_GRDRENT_FRM", length = 25)
 	    private String impGrdrentFrm = "";
 
-	    @Column(name = "IMP_MTGRDRENT_FRM", length = 25, nullable = false)
+	    @Column(name = "IMP_MTGRDRENT_FRM", length = 25)
 	    private String impMtgrdrentFrm = "";
 
-	    @Column(name = "IMP_CRG_STORAGE", length = 15, nullable = false)
+	    @Column(name = "IMP_CRG_STORAGE", length = 15)
 	    private String impCrgStorage = "";
 
-	    @Column(name = "EXP_CRG_STORAGE", length = 15, nullable = false)
+	    @Column(name = "EXP_CRG_STORAGE", length = 15)
 	    private String expCrgStorage = "";
 
-	    @Column(name = "EXP_CRG_STO_FACTOR", length = 15, nullable = false)
+	    @Column(name = "EXP_CRG_STO_FACTOR", length = 15)
 	    private String expCrgStoFactor = "";
 
-	    @Column(name = "EXP_CRG_FR_DAYS", length = 15, nullable = false)
+	    @Column(name = "EXP_CRG_FR_DAYS", length = 15)
 	    private String expCrgFrDays = "";
 
-	    @Column(name = "IMPORTER_MAIL", length = 250, nullable = false)
+	    @Column(name = "IMPORTER_MAIL", length = 250)
 	    private String importerMail = "";
 
-	    @Column(name = "SHIPPING_TYPE_LINE", length = 15, nullable = false)
+	    @Column(name = "SHIPPING_TYPE_LINE", length = 15)
 	    private String shippingTypeLine = "";
 
-	    @Column(name = "INBOND_INVOICE_CHECK", length = 1, nullable = false)
+	    @Column(name = "INBOND_INVOICE_CHECK", length = 1)
 	    private String inbondInvoiceCheck = "N";
 
-	    @Column(name = "BONDNOC_WEEK", length = 2, nullable = false)
+	    @Column(name = "BONDNOC_WEEK", length = 2)
 	    private String bondnocWeek = "0";
 
-	    @Column(name = "Carting_Invoice", length = 1, nullable = false)
+	    @Column(name = "Carting_Invoice", length = 1)
 	    private String cartingInvoice = "N";
 
 	    @Column(name = "Cust_ledgerCode", length = 25)
 	    private String custLedgerCode;
 
-	    @Column(name = "Check_Deposite", length = 1, nullable = false)
+	    @Column(name = "Check_Deposite", length = 1)
 	    private String checkDeposite = "N";
 
-	    @Column(name = "Cr_AmtLmt", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "Cr_AmtLmt", precision = 16, scale = 3)
 	    private BigDecimal crAmtLmt = BigDecimal.ZERO;
 
-	    @Column(name = "Cr_Period", precision = 6, scale = 3, nullable = false)
+	    @Column(name = "Cr_Period", precision = 6, scale = 3)
 	    private BigDecimal crPeriod = BigDecimal.ZERO;
 
-	    @Column(name = "Current_Bal", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "Current_Bal", precision = 16, scale = 3)
 	    private BigDecimal currentBal = BigDecimal.ZERO;
 
-	    @Column(name = "LCL_spaceOccupied", length = 12, nullable = false)
+	    @Column(name = "LCL_spaceOccupied", length = 12)
 	    private String lclSpaceOccupied = "";
 
-	    @Column(name = "IMP_HubOccupied", length = 12, nullable = false)
+	    @Column(name = "IMP_HubOccupied", length = 12)
 	    private String impHubOccupied = "";
 
-	    @Column(name = "EXP_HubOccupied", length = 12, nullable = false)
+	    @Column(name = "EXP_HubOccupied", length = 12)
 	    private String expHubOccupied = "";
 
-	    @Column(name = "BOND_HubOccupied", length = 12, nullable = false)
+	    @Column(name = "BOND_HubOccupied", length = 12)
 	    private String bondHubOccupied = "";
 
-	    @Column(name = "LCL_AreaOccupied", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "LCL_AreaOccupied", precision = 16, scale = 3)
 	    private BigDecimal lclAreaOccupied = BigDecimal.ZERO;
 
-	    @Column(name = "IMPhAreaOccupied", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "IMPhAreaOccupied", precision = 16, scale = 3)
 	    private BigDecimal imphAreaOccupied = BigDecimal.ZERO;
 
-	    @Column(name = "EXPhAreaOccupied", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "EXPhAreaOccupied", precision = 16, scale = 3)
 	    private BigDecimal exphAreaOccupied = BigDecimal.ZERO;
 
-	    @Column(name = "BONDhAreaOccupied", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "BONDhAreaOccupied", precision = 16, scale = 3)
 	    private BigDecimal bondhAreaOccupied = BigDecimal.ZERO;
 
-	    @Column(name = "sl_Type", length = 1, nullable = false)
+	    @Column(name = "sl_Type", length = 1)
 	    private String slType = "N";
 
-	    @Column(name = "up_Dock_Type", length = 1, nullable = false)
+	    @Column(name = "up_Dock_Type", length = 1)
 	    private String upDockType = "N";
 
-	    @Column(name = "VND", length = 1, nullable = false)
+	    @Column(name = "VND", length = 1)
 	    private String vnd = "N";
 
-	    @Column(name = "ACTON", length = 1, nullable = false)
+	    @Column(name = "ACTON", length = 1)
 	    private String acton = "N";
 
-	    @Column(name = "CRTLBR", length = 1, nullable = false)
+	    @Column(name = "CRTLBR", length = 1)
 	    private String crtlbr = "N";
 
-	    @Column(name = "DSTLBR", length = 1, nullable = false)
+	    @Column(name = "DSTLBR", length = 1)
 	    private String dstlbr = "N";
 
-	    @Column(name = "DSTRCT", length = 1, nullable = false)
+	    @Column(name = "DSTRCT", length = 1)
 	    private String dstrct = "N";
 
-	    @Column(name = "EQPMSP", length = 1, nullable = false)
+	    @Column(name = "EQPMSP", length = 1)
 	    private String eqpmsp = "N";
 
-	    @Column(name = "FMGTN", length = 1, nullable = false)
+	    @Column(name = "FMGTN", length = 1)
 	    private String fmgtN = "N";
 
-	    @Column(name = "SCNOPR", length = 1, nullable = false)
+	    @Column(name = "SCNOPR", length = 1)
 	    private String scnopr = "N";
 
-	    @Column(name = "STUFLB", length = 1, nullable = false)
+	    @Column(name = "STUFLB", length = 1)
 	    private String stuflb = "N";
 
-	    @Column(name = "SUBCTR", length = 1, nullable = false)
+	    @Column(name = "SUBCTR", length = 1)
 	    private String subctr = "N";
 
-	    @Column(name = "SURVEY", length = 1, nullable = false)
+	    @Column(name = "SURVEY", length = 1)
 	    private String survey = "N";
 
-	    @Column(name = "TRNS", length = 1, nullable = false)
+	    @Column(name = "TRNS", length = 1)
 	    private String trns = "N";
 
-	    @Column(name = "VALER", length = 1, nullable = false)
+	    @Column(name = "VALER", length = 1)
 	    private String valer = "N";
 
 	    @Column(name = "resend_flag", length = 1)
@@ -505,22 +506,22 @@ public class Party {
 	    @Column(name = "leschaco", length = 1)
 	    private String leschaco = "N";
 
-	    @Column(name = "Cr_AmtLmt_use", precision = 16, scale = 3, nullable = false)
+	    @Column(name = "Cr_AmtLmt_use", precision = 16, scale = 3)
 	    private BigDecimal crAmtLmtUse = BigDecimal.ZERO;
 
-	    @Column(name = "Monthly_agent_report_Flag", length = 1, nullable = false)
+	    @Column(name = "Monthly_agent_report_Flag", length = 1)
 	    private String monthlyAgentReportFlag = "N";
 
-	    @Column(name = "Weekly_LCL_Agent_report_Flag", length = 1, nullable = false)
+	    @Column(name = "Weekly_LCL_Agent_report_Flag", length = 1)
 	    private String weeklyLclAgentReportFlag = "N";
 
 	    @Column(name = "Invoice_From_Mail", length = 50)
 	    private String invoiceFromMail = "cs.belsare91@gmail.com";
 
-	    @Column(name = "Cycle", length = 10, nullable = false)
+	    @Column(name = "Cycle", length = 10)
 	    private String cycle = "";
 
-	    @Column(name = "Dmr_interval", length = 1, nullable = false)
+	    @Column(name = "Dmr_interval", length = 1)
 	    private String dmrInterval = "Y";
 	    
 	    @Column(name="Tds_Percentage",length = 3)
@@ -540,6 +541,38 @@ public class Party {
 	    
 	    @Column(name="Account_No",length = 20)
 	    private String accountNo;
+	    
+	    @Column(name = "Pending_Approval", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
+	  		private String pendingApproval = "N";
+	  	    
+	  		
+	  		transient private String arnUploadPath;
+	  			
+	  		
+	  		
+	  		@Column(name = "Approval_Remarks", length = 300)
+	  		private String approvalRemarks;	
+	  		
+	  		@Column(name = "GST_Upload_Path", length = 300)
+	  		private String gstUploadPath;
+	  		
+	  		@Column(name = "Pan_Upload_Path", length = 300)
+	  		private String panUploadPath;
+	  				
+	  		@Column(name = "Address_Upload_Path", length = 300)
+	  		private String addressUploadPath;
+	  		
+	  		@Column(name="Party_Login_Type",length = 5)
+	  		private String partyLoginType;
+	  		
+	  		@Column(name = "Regi_Track_Id", length = 15)
+	  		public String regiTrackId;
+	  		
+	  		@Transient
+	  		private String loginId;
+	  		
+	  		@Transient
+	  		private String loginPassword;
 
 		public Party() {
 			super();
@@ -547,8 +580,438 @@ public class Party {
 		}
 
 		
+		
 
 		
+
+
+		public String getPendingApproval() {
+			return pendingApproval;
+		}
+
+
+
+
+
+
+
+		public void setPendingApproval(String pendingApproval) {
+			this.pendingApproval = pendingApproval;
+		}
+
+
+
+
+
+
+
+		public String getArnUploadPath() {
+			return arnUploadPath;
+		}
+
+
+
+
+
+
+
+		public void setArnUploadPath(String arnUploadPath) {
+			this.arnUploadPath = arnUploadPath;
+		}
+
+
+
+
+
+
+
+		public String getApprovalRemarks() {
+			return approvalRemarks;
+		}
+
+
+
+
+
+
+
+		public void setApprovalRemarks(String approvalRemarks) {
+			this.approvalRemarks = approvalRemarks;
+		}
+
+
+
+
+
+
+
+		public String getGstUploadPath() {
+			return gstUploadPath;
+		}
+
+
+
+
+
+
+
+		public void setGstUploadPath(String gstUploadPath) {
+			this.gstUploadPath = gstUploadPath;
+		}
+
+
+
+
+
+
+
+		public String getPanUploadPath() {
+			return panUploadPath;
+		}
+
+
+
+
+
+
+
+		public void setPanUploadPath(String panUploadPath) {
+			this.panUploadPath = panUploadPath;
+		}
+
+
+
+
+
+
+
+		public String getAddressUploadPath() {
+			return addressUploadPath;
+		}
+
+
+
+
+
+
+
+		public void setAddressUploadPath(String addressUploadPath) {
+			this.addressUploadPath = addressUploadPath;
+		}
+
+
+
+
+
+
+
+		public String getPartyLoginType() {
+			return partyLoginType;
+		}
+
+
+
+
+
+
+
+		public void setPartyLoginType(String partyLoginType) {
+			this.partyLoginType = partyLoginType;
+		}
+
+
+
+
+
+
+
+		public String getRegiTrackId() {
+			return regiTrackId;
+		}
+
+
+
+
+
+
+
+		public void setRegiTrackId(String regiTrackId) {
+			this.regiTrackId = regiTrackId;
+		}
+
+
+
+
+
+
+
+		public String getLoginId() {
+			return loginId;
+		}
+
+
+
+
+
+
+
+		public void setLoginId(String loginId) {
+			this.loginId = loginId;
+		}
+
+
+
+
+
+
+
+		public String getLoginPassword() {
+			return loginPassword;
+		}
+
+
+
+
+
+
+
+		public void setLoginPassword(String loginPassword) {
+			this.loginPassword = loginPassword;
+		}
+
+
+
+
+
+
+
+		protected Party(String companyId, String branchId, String partyId, String masterPartyId, String partyName,
+				String partyType, String address1, String address2, String address3, String city, String pin,
+				String state, String country, String movementBlock, BigDecimal creditLimit, String phoneNo,
+				String faxNo, String partyAcCode, String partyTermId, String bankId, String panNo,
+				String panAppliedRefNo, String tdsApplicable, String currency, String tariffType, String discountDays,
+				String freeDays, String serviceTaxApplicable, String contactPerson, String contactDesignation,
+				String contactPhone, String contactFaxNo, String contactEmail, String portPartyId, String tanNoId,
+				String tdsRange, String defaultBranch, String shippingLineCode, String customsExporterId,
+				String stdCode, String hide, String marketingPerson, String movementType, String facilitationCharge,
+				String facilitationUnit, String facilitationRate, String facilitationRate1, String internalShifting,
+				String internalShiftingUnit, String internalShiftingRate, String internalShiftingRate1,
+				String additionalRemarks, String freeDaysTariff, String extraServices, String tariffActiveFlag,
+				String onlineFlag, String movementCharge, String truckHandling, String cfsTariffNo, String gstNo,
+				String iecCode, String monthlyReport, String blUserId, String createdBy, Date createdDate,
+				String editedBy, Date editedDate, String approvedBy, Date approvedDate, String dpdDailyReport,
+				String dailyReport, String dsrprtType, String linDailyReport, String agtDailyReport,
+				String chaDailyReport, String impDailyReport, String frwDailyReport, String dsrxlsType,
+				String excelToMail, String excelCcMail, String sentStatus, Date reportTime, String activationRemarks,
+				String deactivationRemarks, String status, String exportMarketingPerson, String exportToMail,
+				String exportCcMail, String importToMail, String importCcMail, String codacoCcMail, String codacoToMail,
+				String ediFlag, String agt, String cha, String frw, String imp, String lin, String exp, String biddr,
+				String customerType, String accountType, String customerCode, String operationalMail,
+				String linOperationalMailTo, String agtOperationalMailTo, String chaOperationalMailTo,
+				String impOperationalMailTo, String frwOperationalMailTo, String operationalMailCc,
+				String operationalMailBcc, String financeMail, String codecoMail, String impGrdrentFrm,
+				String impMtgrdrentFrm, String impCrgStorage, String expCrgStorage, String expCrgStoFactor,
+				String expCrgFrDays, String importerMail, String shippingTypeLine, String inbondInvoiceCheck,
+				String bondnocWeek, String cartingInvoice, String custLedgerCode, String checkDeposite,
+				BigDecimal crAmtLmt, BigDecimal crPeriod, BigDecimal currentBal, String lclSpaceOccupied,
+				String impHubOccupied, String expHubOccupied, String bondHubOccupied, BigDecimal lclAreaOccupied,
+				BigDecimal imphAreaOccupied, BigDecimal exphAreaOccupied, BigDecimal bondhAreaOccupied, String slType,
+				String upDockType, String vnd, String acton, String crtlbr, String dstlbr, String dstrct, String eqpmsp,
+				String fmgtN, String scnopr, String stuflb, String subctr, String survey, String trns, String valer,
+				String resendFlag, String uiFlag, String doSubmitReqFlag, String nvoccTariff, String offdocTariff,
+				String leschaco, BigDecimal crAmtLmtUse, String monthlyAgentReportFlag, String weeklyLclAgentReportFlag,
+				String invoiceFromMail, String cycle, String dmrInterval, String tdsPercentage, String accountName,
+				String bankName, String bankAddress, String ifscCode, String accountNo, String pendingApproval,
+				String arnUploadPath, String approvalRemarks, String gstUploadPath, String panUploadPath,
+				String addressUploadPath, String partyLoginType, String regiTrackId, String loginId,
+				String loginPassword) {
+			super();
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.partyId = partyId;
+			this.masterPartyId = masterPartyId;
+			this.partyName = partyName;
+			this.partyType = partyType;
+			this.address1 = address1;
+			this.address2 = address2;
+			this.address3 = address3;
+			this.city = city;
+			this.pin = pin;
+			this.state = state;
+			this.country = country;
+			this.movementBlock = movementBlock;
+			this.creditLimit = creditLimit;
+			this.phoneNo = phoneNo;
+			this.faxNo = faxNo;
+			this.partyAcCode = partyAcCode;
+			this.partyTermId = partyTermId;
+			this.bankId = bankId;
+			this.panNo = panNo;
+			this.panAppliedRefNo = panAppliedRefNo;
+			this.tdsApplicable = tdsApplicable;
+			this.currency = currency;
+			this.tariffType = tariffType;
+			this.discountDays = discountDays;
+			this.freeDays = freeDays;
+			this.serviceTaxApplicable = serviceTaxApplicable;
+			this.contactPerson = contactPerson;
+			this.contactDesignation = contactDesignation;
+			this.contactPhone = contactPhone;
+			this.contactFaxNo = contactFaxNo;
+			this.contactEmail = contactEmail;
+			this.portPartyId = portPartyId;
+			this.tanNoId = tanNoId;
+			this.tdsRange = tdsRange;
+			this.defaultBranch = defaultBranch;
+			this.shippingLineCode = shippingLineCode;
+			this.customsExporterId = customsExporterId;
+			this.stdCode = stdCode;
+			this.hide = hide;
+			this.marketingPerson = marketingPerson;
+			this.movementType = movementType;
+			this.facilitationCharge = facilitationCharge;
+			this.facilitationUnit = facilitationUnit;
+			this.facilitationRate = facilitationRate;
+			this.facilitationRate1 = facilitationRate1;
+			this.internalShifting = internalShifting;
+			this.internalShiftingUnit = internalShiftingUnit;
+			this.internalShiftingRate = internalShiftingRate;
+			this.internalShiftingRate1 = internalShiftingRate1;
+			this.additionalRemarks = additionalRemarks;
+			this.freeDaysTariff = freeDaysTariff;
+			this.extraServices = extraServices;
+			this.tariffActiveFlag = tariffActiveFlag;
+			this.onlineFlag = onlineFlag;
+			this.movementCharge = movementCharge;
+			this.truckHandling = truckHandling;
+			this.cfsTariffNo = cfsTariffNo;
+			this.gstNo = gstNo;
+			this.iecCode = iecCode;
+			this.monthlyReport = monthlyReport;
+			this.blUserId = blUserId;
+			this.createdBy = createdBy;
+			this.createdDate = createdDate;
+			this.editedBy = editedBy;
+			this.editedDate = editedDate;
+			this.approvedBy = approvedBy;
+			this.approvedDate = approvedDate;
+			this.dpdDailyReport = dpdDailyReport;
+			this.dailyReport = dailyReport;
+			this.dsrprtType = dsrprtType;
+			this.linDailyReport = linDailyReport;
+			this.agtDailyReport = agtDailyReport;
+			this.chaDailyReport = chaDailyReport;
+			this.impDailyReport = impDailyReport;
+			this.frwDailyReport = frwDailyReport;
+			this.dsrxlsType = dsrxlsType;
+			this.excelToMail = excelToMail;
+			this.excelCcMail = excelCcMail;
+			this.sentStatus = sentStatus;
+			this.reportTime = reportTime;
+			this.activationRemarks = activationRemarks;
+			this.deactivationRemarks = deactivationRemarks;
+			this.status = status;
+			this.exportMarketingPerson = exportMarketingPerson;
+			this.exportToMail = exportToMail;
+			this.exportCcMail = exportCcMail;
+			this.importToMail = importToMail;
+			this.importCcMail = importCcMail;
+			this.codacoCcMail = codacoCcMail;
+			this.codacoToMail = codacoToMail;
+			this.ediFlag = ediFlag;
+			this.agt = agt;
+			this.cha = cha;
+			this.frw = frw;
+			this.imp = imp;
+			this.lin = lin;
+			this.exp = exp;
+			this.biddr = biddr;
+			this.customerType = customerType;
+			this.accountType = accountType;
+			this.customerCode = customerCode;
+			this.operationalMail = operationalMail;
+			this.linOperationalMailTo = linOperationalMailTo;
+			this.agtOperationalMailTo = agtOperationalMailTo;
+			this.chaOperationalMailTo = chaOperationalMailTo;
+			this.impOperationalMailTo = impOperationalMailTo;
+			this.frwOperationalMailTo = frwOperationalMailTo;
+			this.operationalMailCc = operationalMailCc;
+			this.operationalMailBcc = operationalMailBcc;
+			this.financeMail = financeMail;
+			this.codecoMail = codecoMail;
+			this.impGrdrentFrm = impGrdrentFrm;
+			this.impMtgrdrentFrm = impMtgrdrentFrm;
+			this.impCrgStorage = impCrgStorage;
+			this.expCrgStorage = expCrgStorage;
+			this.expCrgStoFactor = expCrgStoFactor;
+			this.expCrgFrDays = expCrgFrDays;
+			this.importerMail = importerMail;
+			this.shippingTypeLine = shippingTypeLine;
+			this.inbondInvoiceCheck = inbondInvoiceCheck;
+			this.bondnocWeek = bondnocWeek;
+			this.cartingInvoice = cartingInvoice;
+			this.custLedgerCode = custLedgerCode;
+			this.checkDeposite = checkDeposite;
+			this.crAmtLmt = crAmtLmt;
+			this.crPeriod = crPeriod;
+			this.currentBal = currentBal;
+			this.lclSpaceOccupied = lclSpaceOccupied;
+			this.impHubOccupied = impHubOccupied;
+			this.expHubOccupied = expHubOccupied;
+			this.bondHubOccupied = bondHubOccupied;
+			this.lclAreaOccupied = lclAreaOccupied;
+			this.imphAreaOccupied = imphAreaOccupied;
+			this.exphAreaOccupied = exphAreaOccupied;
+			this.bondhAreaOccupied = bondhAreaOccupied;
+			this.slType = slType;
+			this.upDockType = upDockType;
+			this.vnd = vnd;
+			this.acton = acton;
+			this.crtlbr = crtlbr;
+			this.dstlbr = dstlbr;
+			this.dstrct = dstrct;
+			this.eqpmsp = eqpmsp;
+			this.fmgtN = fmgtN;
+			this.scnopr = scnopr;
+			this.stuflb = stuflb;
+			this.subctr = subctr;
+			this.survey = survey;
+			this.trns = trns;
+			this.valer = valer;
+			this.resendFlag = resendFlag;
+			this.uiFlag = uiFlag;
+			this.doSubmitReqFlag = doSubmitReqFlag;
+			this.nvoccTariff = nvoccTariff;
+			this.offdocTariff = offdocTariff;
+			this.leschaco = leschaco;
+			this.crAmtLmtUse = crAmtLmtUse;
+			this.monthlyAgentReportFlag = monthlyAgentReportFlag;
+			this.weeklyLclAgentReportFlag = weeklyLclAgentReportFlag;
+			this.invoiceFromMail = invoiceFromMail;
+			this.cycle = cycle;
+			this.dmrInterval = dmrInterval;
+			this.tdsPercentage = tdsPercentage;
+			this.accountName = accountName;
+			this.bankName = bankName;
+			this.bankAddress = bankAddress;
+			this.ifscCode = ifscCode;
+			this.accountNo = accountNo;
+			this.pendingApproval = pendingApproval;
+			this.arnUploadPath = arnUploadPath;
+			this.approvalRemarks = approvalRemarks;
+			this.gstUploadPath = gstUploadPath;
+			this.panUploadPath = panUploadPath;
+			this.addressUploadPath = addressUploadPath;
+			this.partyLoginType = partyLoginType;
+			this.regiTrackId = regiTrackId;
+			this.loginId = loginId;
+			this.loginPassword = loginPassword;
+		}
+
+
+
+
+
 
 
 		protected Party(String companyId, String branchId, String partyId, String masterPartyId, String partyName,

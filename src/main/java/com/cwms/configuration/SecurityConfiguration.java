@@ -138,6 +138,8 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/vendorInvoice/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/dmrReport/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/apservices/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/customerPortal/**")).authenticated()
+
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

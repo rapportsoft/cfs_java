@@ -99,11 +99,11 @@ public class PartyController {
 					}
 				}
 
-				Boolean existGST = partyaddressrepo.isGSTExist(cid, bid, dtls.getGstNo());
-
-				if (existGST) {
-					return new ResponseEntity<>("Duplicate GST No.", HttpStatus.BAD_REQUEST);
-				}
+//				Boolean existGST = partyaddressrepo.isGSTExist(cid, bid, dtls.getGstNo());
+//
+//				if (existGST) {
+//					return new ResponseEntity<>("Duplicate GST No.", HttpStatus.BAD_REQUEST);
+//				}
 
 				String holdId1 = processrepo.findAuditTrail(cid, bid, "P05057", "2024");
 
@@ -120,7 +120,7 @@ public class PartyController {
 				party.setStatus("A");
 				party.setCreatedBy(user);
 				party.setCreatedDate(new Date());
-
+                party.setPartyLoginType("NAV");
 				party.setApprovedBy(user);
 				party.setApprovedDate(new Date());
 
@@ -181,12 +181,12 @@ public class PartyController {
 
 				if (address != null) {
 
-					Boolean existGST = partyaddressrepo.isGSTExist1(cid, bid, dtls.getGstNo(), party.getPartyId(),
-							String.valueOf(dtls.getSrNo()));
-
-					if (existGST) {
-						return new ResponseEntity<>("Duplicate GST No.", HttpStatus.BAD_REQUEST);
-					}
+//					Boolean existGST = partyaddressrepo.isGSTExist1(cid, bid, dtls.getGstNo(), party.getPartyId(),
+//							String.valueOf(dtls.getSrNo()));
+//
+//					if (existGST) {
+//						return new ResponseEntity<>("Duplicate GST No.", HttpStatus.BAD_REQUEST);
+//					}
 
 					address.setPartyType(dtls.getCustomerType());
 					address.setAddress1(dtls.getAddress1());
@@ -203,11 +203,11 @@ public class PartyController {
 
 					partyaddressrepo.save(address);
 				} else {
-					Boolean existGST = partyaddressrepo.isGSTExist(cid, bid, dtls.getGstNo());
-
-					if (existGST) {
-						return new ResponseEntity<>("Duplicate GST No.", HttpStatus.BAD_REQUEST);
-					}
+//					Boolean existGST = partyaddressrepo.isGSTExist(cid, bid, dtls.getGstNo());
+//
+//					if (existGST) {
+//						return new ResponseEntity<>("Duplicate GST No.", HttpStatus.BAD_REQUEST);
+//					}
 
 					PartyAddress address1 = new PartyAddress();
 					address1.setCompanyId(cid);

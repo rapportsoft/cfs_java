@@ -24,8 +24,10 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 
@@ -352,5 +354,42 @@ public class EmailService {
 	    return success;
 	}
 
+	
+	@Async
+	public CompletableFuture<Boolean> sendRegistrationMail(String user_Email, String compayName, String toName, String userId,String user_Password,String link,String otp) {
+
+		String subject = "Welcome to "+compayName+" - Your Registration is Successful";
+
+		String ccEmail = "sanketghodake316@gmail.com";
+
+		 String htmlContent = "<html><body>" +
+	                "<div>Dear Sir/Madam,</div>"+
+	                "<br/>"+
+	                "<div>          We are delighted to inform you that <strong>"+toName+"</strong> has been successfully registered with <strong>"+compayName+"</strong>. Please find your account details below to access our platform.</div>" +
+	                "<br/>"+       
+	                "<div style=\"font-size:12px; float:left; width:30%; text-align:left;\">Website Link</div>"+
+	                "<div style=\"font-weight:bold; font-size:12px; float:left; width:70%; \">: <strong>"+link+"</strong></div>"+
+	                "<br style=\"clear:both;\"/>"+
+	                "<div style=\"font-size:12px; float:left; width:30%; text-align:left;\">Username</div>"+
+	                "<div style=\"font-weight:bold; font-size:12px; float:left; width:70%; \">: "+userId+"</div>"+
+	                "<br style=\"clear:both;\"/>"+
+	                "<div style=\"font-size:12px; float:left; width:30%; text-align:left;\">Password</div>"+
+	                "<div style=\"font-weight:bold; font-size:12px; float:left; width:70%; \">: "+user_Password+"</div>"+
+	                "<br style=\"clear:both;\"/>"+
+	                "<div style=\"font-size:12px; float:left; width:30%; text-align:left;\">Temporary OTP</div>"+
+	                "<div style=\"font-weight:bold; font-size:12px; float:left; width:70%; \">: "+otp+"</div>"+
+	                "<br style=\"clear:both;\"/>"+
+	                "<br/>"+    
+	                "<div style=\"font-size:12px; float:left; width:100%; text-align:left;\">Thanks & Regards</div>"+
+	                "<br/>"+    
+	                "<div style=\"font-size:12px; float:left; width:100%; text-align:left;\">"+compayName+"</div>"+
+	                "<div>&nbsp;</div>"+
+	                "</body></html>"; 
+
+		boolean result = sendEmailWithHtmlContent(subject, htmlContent, user_Email, from, ccEmail);
+
+		return CompletableFuture.completedFuture(result);
+
+	}
 	
 	}

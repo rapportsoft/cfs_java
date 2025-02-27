@@ -290,4 +290,19 @@ List<Object[]> getDataForImpAndExp(@Param("cid") String cid, @Param("bid") Strin
 		+ "and p.status != 'D' and (:val is null OR :val = '' OR p.partyName LIKE CONCAT (:val,'%'))")
 List<Object[]> getAllWithAddAndAccDtls(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 
+@Query(value="select p.regiTrackId,p.partyName,p.status,p.createdDate,p.partyId from Party p where p.companyId=:cid and p.branchId=:bid "
+		+ "and p.status='A' and p.partyLoginType='CRM' order by p.createdDate desc")
+List<Object[]> getApprovedData(@Param("cid") String cid, @Param("bid") String bid);
+
+
+@Query(value="select p.regiTrackId,p.partyName,p.status,p.createdDate,p.partyId from Party p where p.companyId=:cid and p.branchId=:bid "
+		+ "and p.status='N' and p.partyLoginType='CRM' order by p.createdDate desc")
+List<Object[]> getPendingData(@Param("cid") String cid, @Param("bid") String bid);
+
+@Query(value="select u.user_id,u.user_password from userinfo_crm u where u.company_id=:cid and u.branch_id=:bid and u.status='A' and u.login_type_id=:id",nativeQuery = true)
+List<Object[]> getDataByUserId(@Param("cid") String cid, @Param("bid") String bid,@Param("id") String id);
+
+@Query(value = "select p.partyLoginType from Party p where p.companyId=:cid and p.branchId=:bid and p.partyId=:pid and p.status != 'D'")
+String getPartyLoginType(@Param("cid") String cid, @Param("bid") String bid, @Param("pid") String pid);
+
 }
