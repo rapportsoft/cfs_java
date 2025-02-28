@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                 		.requestMatchers(mvcMatcherBuilder.pattern("/combineRepresentative/**")).permitAll()
                 		.requestMatchers(mvcMatcherBuilder.pattern("/dashboard/**")).permitAll()
                 		.requestMatchers(mvcMatcherBuilder.pattern("/payment/**")).permitAll()
+                		.requestMatchers(mvcMatcherBuilder.pattern("/admin/**")).permitAll()      
                 		.requestMatchers(mvcMatcherBuilder.pattern("/auth/**")).permitAll()
                 		.requestMatchers(mvcMatcherBuilder.pattern("/predictable/**")).permitAll()
                 		.requestMatchers(mvcMatcherBuilder.pattern("/rights")).permitAll()
