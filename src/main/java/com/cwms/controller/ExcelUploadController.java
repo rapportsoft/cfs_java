@@ -1402,7 +1402,6 @@ public class ExcelUploadController {
 					String commodity = m.get("Commodity");
 					String origin = m.get("Origin");
 					String destination = m.get("Destination");
-					
 
 					Boolean check = false;
 
@@ -1840,10 +1839,945 @@ public class ExcelUploadController {
 
 	}
 
+	public ResponseEntity<?> saveIgm1(String cid, String bid, String user, String finYear,
+			List<Map<String, String>> itemData, List<Map<String, String>> conData, CFIgm igm) {
+
+		if (itemData.size() > 0) {
+			CFIgm existingIgm = cfigmrepo.getDataByIgmNoAndSl(cid, bid, igm.getIgmNo(), igm.getShippingLine());
+
+			Map<String, Object> result = new HashMap<>();
+			List<String> list = new ArrayList<>();
+			List<String> itemList = new ArrayList<>();
+
+			if (existingIgm != null) {
+				for (Map<String, String> m : itemData) {
+					Boolean check = false;
+					String itemNo = m.get("Item no");
+					String blNo = m.get("Bl no");
+					String blDate = m.get("Bl Date");
+					String importer = m.get("Importer name");
+					String impAddress1 = m.get("Importer address1");
+					String impAddress2 = m.get("Importer address2");
+					String impAddress3 = m.get("Importer address3");
+					String notifyParty = m.get("Notify Party");
+					String notifyPartyAddress1 = m.get("Notify Party address1");
+					String notifyPartyAddress2 = m.get("Notify Party address2");
+					String notifyPartyAddress3 = m.get("Notify Party address3");
+					String cargotype = m.get("Cargo type");
+					String cfsCode = m.get("Cfs code");
+					String packages = m.get("Packages");
+					String packageType = m.get("Package Type");
+					String cargoWt = m.get("Cargo wt");
+					String commodity = m.get("Commodity");
+					String origin = m.get("Origin");
+					String destination = m.get("Destination");
+					String marks = m.get("Marks");
+
+					if (itemNo.isEmpty()) {
+						String mess = " - Item No is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (itemNo.length() > 7) {
+							String mess = "For Item no " + itemNo + " - Item No length should not exceed 7 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (blNo.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - BL No is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (blNo.length() > 20) {
+							String mess = "For Item no " + itemNo + " - BL No length should not exceed 20 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (blDate.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - BL date is required.";
+						list.add(mess);
+						check = true;
+					}
+
+					if (importer.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Importer is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (importer.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+					if (impAddress1.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Importer address1 is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (impAddress1.length() > 250) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer address1 length should not exceed 250 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!impAddress2.isEmpty()) {
+						if (impAddress2.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer address2 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!impAddress3.isEmpty()) {
+						if (impAddress3.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer address3 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyParty.isEmpty()) {
+						if (notifyParty.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyPartyAddress1.isEmpty()) {
+						if (notifyPartyAddress1.length() > 250) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party address1 length should not exceed 250 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyPartyAddress2.isEmpty()) {
+						if (notifyPartyAddress2.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party address2 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyPartyAddress3.isEmpty()) {
+						if (notifyPartyAddress3.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party address3 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (packages.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Packages is required.";
+						list.add(mess);
+						check = true;
+					}
+
+					if (packageType.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Package type is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (packageType.length() > 3) {
+							String mess = "For Item no " + itemNo
+									+ " - Pakage type length should not exceed 3 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (cargoWt.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Cargo wt is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (cargoWt.length() > 12) {
+							String mess = "For Item no " + itemNo
+									+ " - Cargo wt length should not exceed 12 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (commodity.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Commodity is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (commodity.length() > 250) {
+							String mess = "For Item no " + itemNo
+									+ " - Commodity length should not exceed 250 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (origin.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Origin is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (origin.length() > 50) {
+							String mess = "For Item no " + itemNo + " - Origin length should not exceed 50 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+					Date blDate1 = null;
+					try {
+						blDate1 = format.parse(blDate);
+
+						if (blDate1 == null) {
+
+							String mess = "For Item no " + itemNo + " - Invalid BL Date.";
+							list.add(mess);
+							check = true;
+
+						}
+
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						String mess = "For Item no " + itemNo + " - Invalid BL date format.";
+						list.add(mess);
+						check = true;
+
+					}
+
+					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, itemNo, existingIgm.getIgmNo());
+
+					if (!exist1) {
+						Cfigmcrg crg = new Cfigmcrg();
+						String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05061", "2024");
+
+						int lastNextNumericId2 = Integer.parseInt(holdId2.substring(4));
+
+						int nextNumericNextID2 = lastNextNumericId2 + 1;
+
+						String HoldNextIdD2 = String.format("ICR%07d", nextNumericNextID2);
+
+						crg.setIgmCrgTransId(HoldNextIdD2);
+						crg.setCompanyId(cid);
+						crg.setProfitcentreId("N00002");
+						crg.setBranchId(bid);
+						crg.setMarksOfNumbers(marks);
+						crg.setIgmNo(existingIgm.getIgmNo());
+						crg.setIgmTransId(existingIgm.getIgmTransId());
+						crg.setCreatedBy(user);
+						crg.setCreatedDate(new Date());
+						crg.setViaNo(existingIgm.getViaNo());
+						crg.setApprovedBy(user);
+						crg.setCargoMovement(cargotype);
+						crg.setApprovedDate(new Date());
+						crg.setStatus("A");
+						if (cargoWt != null && !cargoWt.isEmpty()) {
+							crg.setGrossWeight(new BigDecimal(cargoWt).setScale(3, RoundingMode.HALF_UP));
+						} else {
+							crg.setGrossWeight(BigDecimal.ZERO);
+						}
+
+						crg.setTypeOfPackage(packageType);
+						crg.setCargoType(cargotype);
+						crg.setIgmLineNo(itemNo);
+						crg.setBlNo(blNo);
+						crg.setBlDate(blDate1);
+						crg.setCommodityDescription(commodity);
+						crg.setImporterName(importer);
+						crg.setImporterAddress1(impAddress1);
+						crg.setImporterAddress2(impAddress2);
+						crg.setImporterAddress3(impAddress3);
+						crg.setUnitOfWeight("KGS");
+						crg.setOrigin(origin);
+						crg.setDestination(destination);
+						crg.setFinYear(finYear);
+						crg.setNotifyPartyName(notifyParty);
+						crg.setNotifiedAddress1(notifyPartyAddress1);
+						crg.setNotifiedAddress2(notifyPartyAddress2);
+						crg.setNotifiedAddress3(notifyPartyAddress3);
+						crg.setNoOfPackages(
+								BigDecimal.ZERO.add(new BigDecimal(packages).setScale(3, RoundingMode.HALF_UP)));
+
+						if (!check) {
+							cfigmcrgrepo.save(crg);
+							processnextidrepo.updateAuditTrail(cid, bid, "P05061", HoldNextIdD2, "2024");
+						}
+
+						if (check) {
+							if (!itemNo.isEmpty()) {
+								itemList.add(itemNo);
+							}
+
+						}
+
+					}
+
+				}
+
+				if (conData.size() > 0) {
+					for (Map<String, String> c : conData) {
+
+						String containerNo = c.get("Container no");
+						String itemNo = c.get("Item no");
+						String sealNo = c.get("Seal No");
+						String conStatus = c.get("Container Status");
+						String packages = c.get("Packages");
+						String cargoWt = c.get("Cargo Wt.");
+						String iso = c.get("ISO");
+
+						Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(itemNo));
+						Boolean check1 = false;
+
+						if (!check) {
+
+							if (containerNo.isEmpty()) {
+								String mess = "For Item no " + itemNo + " - Container no is required.";
+								list.add(mess);
+								check1 = true;
+							} else {
+								if (containerNo.length() > 11) {
+									String mess = "For Container no " + containerNo
+											+ " - Container No length should not exceed 11 characters.";
+									list.add(mess);
+									check1 = true;
+
+								}
+							}
+
+							if (itemNo.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - Item no is required.";
+								list.add(mess);
+								check1 = true;
+							} else {
+								if (itemNo.length() > 7) {
+									String mess = "For Container no " + containerNo
+											+ " - Item no length should not exceed 11 characters.";
+									list.add(mess);
+									check1 = true;
+
+								}
+							}
+
+							if (conStatus.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - Container status is required.";
+								list.add(mess);
+								check1 = true;
+							} else {
+								if (!"FCL".equals(conStatus) && !"LCL".equals(conStatus)) {
+									String mess = "For Container no " + containerNo
+											+ " - Container status should be 'FCL' OR 'LCL'.";
+									list.add(mess);
+									check1 = true;
+
+								}
+							}
+
+							if (packages.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - Packages is required.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							if (iso.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - ISO is required.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							Boolean isExist3 = cfigmcnrepo.isExistContainer(cid, bid, existingIgm.getIgmTransId(),
+									existingIgm.getIgmNo(), itemNo, containerNo);
+
+							if (isExist3) {
+								// return new ResponseEntity<>("Duplicate container no", HttpStatus.CONFLICT);
+								String mess = "For Container no " + containerNo + " - Duplicate container no.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, existingIgm.getIgmTransId(), igm.getIgmNo(),
+									itemNo);
+
+							if (crg == null) {
+								// return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
+								String mess = "For Container no " + containerNo + " - Item data not found.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							Cfigmcn cn = new Cfigmcn();
+
+							String holdId3 = processnextidrepo.findAuditTrail(cid, bid, "P05062", "2024");
+
+							int lastNextNumericId3 = Integer.parseInt(holdId3.substring(1));
+
+							int nextNumericNextID3 = lastNextNumericId3 + 1;
+
+							String HoldNextIdD3 = String.format("C%09d", nextNumericNextID3);
+
+							IsoContainer isoData = isoContainerRepository.getDataByIsoCode(cid, iso);
+
+							if (isoData == null) {
+								// return new ResponseEntity<>("ISO data not found", HttpStatus.CONFLICT);
+								String mess = "For Container no " + containerNo + " - ISO data not found.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							cn.setContainerTransId(HoldNextIdD3);
+							cn.setCompanyId(cid);
+							cn.setBranchId(bid);
+							cn.setStatus('A');
+							cn.setCreatedBy(user);
+							cn.setCreatedDate(new Date());
+							cn.setApprovedBy(user);
+							cn.setApprovedDate(new Date());
+							cn.setContainerNo(containerNo);
+							cn.setNoOfPackages(Integer.parseInt(packages));
+							cn.setCustomsSealNo(sealNo);
+							cn.setContainerSealNo(sealNo);
+							cn.setContainerStatus(conStatus);
+							cn.setIgmTransId(existingIgm.getIgmTransId());
+							cn.setIgmNo(existingIgm.getIgmNo());
+							cn.setIgmLineNo(itemNo);
+							cn.setProfitcentreId("N00002");
+							cn.setIso(iso);
+							cn.setFinYear(finYear);
+							BigDecimal gw = (new BigDecimal(cargoWt).multiply(new BigDecimal(1000))).setScale(3,
+									RoundingMode.HALF_UP);
+
+							cn.setGrossWt(gw);
+							if (isoData != null) {
+								cn.setContainerSize(isoData.getContainerSize());
+								cn.setContainerType(isoData.getContainerType());
+								cn.setContainerWeight(isoData.getTareWeight());
+
+								BigDecimal cwt = (gw.subtract(isoData.getTareWeight())).setScale(3,
+										RoundingMode.HALF_UP);
+								cn.setCargoWt(cwt);
+							}
+							if ("LCL".equals(conStatus)) {
+								cn.setGateOutType("CRG");
+								cn.setUpTariffDelMode("CRG");
+							}
+
+							if (!check1) {
+								cfigmcnrepo.save(cn);
+								int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(),
+										cn.getContainerNo());
+								processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD3, "2024");
+							}
+
+						} else {
+							String mess = "For Container no " + containerNo + " - Error for Item no " + itemNo;
+							list.add(mess);
+							check = true;
+						}
+
+					}
+				}
+
+			} else {
+
+				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05060", "2024");
+
+				int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+				int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+				String HoldNextIdD1 = String.format("CIAR%06d", nextNumericNextID1);
+
+				igm.setCompanyId(cid);
+				igm.setIgmTransId(HoldNextIdD1);
+				igm.setBranchId(bid);
+				igm.setStatus('A');
+				igm.setCreatedBy(user);
+				igm.setCreatedDate(new Date());
+				igm.setApprovedBy(user);
+				igm.setApprovedDate(new Date());
+				igm.setPortJo(igm.getIgmNo());
+				igm.setPortJoDate(new Date());
+				cfigmrepo.save(igm);
+				processnextidrepo.updateAuditTrail(cid, bid, "P05060", HoldNextIdD1, "2024");
+
+				for (Map<String, String> m : itemData) {
+					String itemNo = m.get("Item no");
+					String blNo = m.get("Bl no");
+					String blDate = m.get("Bl Date");
+					String importer = m.get("Importer name");
+					String impAddress1 = m.get("Importer address1");
+					String impAddress2 = m.get("Importer address2");
+					String impAddress3 = m.get("Importer address3");
+					String notifyParty = m.get("Notify Party");
+					String notifyPartyAddress1 = m.get("Notify Party address1");
+					String notifyPartyAddress2 = m.get("Notify Party address2");
+					String notifyPartyAddress3 = m.get("Notify Party address3");
+					String cargotype = m.get("Cargo type");
+					String cfsCode = m.get("Cfs code");
+					String packages = m.get("Packages");
+					String packageType = m.get("Package Type");
+					String cargoWt = m.get("Cargo wt");
+					String commodity = m.get("Commodity");
+					String origin = m.get("Origin");
+					String destination = m.get("Destination");
+					String marks = m.get("Marks");
+
+					Boolean check = false;
+
+					if (itemNo.isEmpty()) {
+						String mess = " - Item No is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (itemNo.length() > 7) {
+							String mess = "For Item no " + itemNo + " - Item No length should not exceed 7 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (blNo.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - BL No is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (blNo.length() > 20) {
+							String mess = "For Item no " + itemNo + " - BL No length should not exceed 20 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (blDate.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - BL date is required.";
+						list.add(mess);
+						check = true;
+					}
+
+					if (importer.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Importer is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (importer.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+					if (impAddress1.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Importer address1 is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (impAddress1.length() > 250) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer address1 length should not exceed 250 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!impAddress2.isEmpty()) {
+						if (impAddress2.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer address2 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!impAddress3.isEmpty()) {
+						if (impAddress3.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Importer address3 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyParty.isEmpty()) {
+						if (notifyParty.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyPartyAddress1.isEmpty()) {
+						if (notifyPartyAddress1.length() > 250) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party address1 length should not exceed 250 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyPartyAddress2.isEmpty()) {
+						if (notifyPartyAddress2.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party address2 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (!notifyPartyAddress3.isEmpty()) {
+						if (notifyPartyAddress3.length() > 100) {
+							String mess = "For Item no " + itemNo
+									+ " - Notify party address3 length should not exceed 100 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (packages.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Packages is required.";
+						list.add(mess);
+						check = true;
+					}
+
+					if (packageType.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Package type is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (packageType.length() > 3) {
+							String mess = "For Item no " + itemNo
+									+ " - Pakage type length should not exceed 3 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (cargoWt.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Cargo wt is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (cargoWt.length() > 12) {
+							String mess = "For Item no " + itemNo
+									+ " - Cargo wt length should not exceed 12 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (commodity.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Commodity is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (commodity.length() > 250) {
+							String mess = "For Item no " + itemNo
+									+ " - Commodity length should not exceed 250 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					if (origin.isEmpty()) {
+						String mess = "For Item no " + itemNo + " - Origin is required.";
+						list.add(mess);
+						check = true;
+					} else {
+						if (origin.length() > 50) {
+							String mess = "For Item no " + itemNo + " - Origin length should not exceed 50 characters.";
+							list.add(mess);
+							check = true;
+						}
+					}
+
+					SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+					Date blDate1 = null;
+					try {
+						blDate1 = format.parse(blDate);
+
+						if (blDate1 == null) {
+
+							String mess = "For Item no " + itemNo + " - Invalid BL Date.";
+							list.add(mess);
+							check = true;
+
+						}
+
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						String mess = "For Item no " + itemNo + " - Invalid BL date format.";
+						list.add(mess);
+						check = true;
+
+					}
+
+					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, itemNo, igm.getIgmNo());
+
+					if (!exist1) {
+						Cfigmcrg crg = new Cfigmcrg();
+						String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05061", "2024");
+
+						int lastNextNumericId2 = Integer.parseInt(holdId2.substring(3));
+
+						int nextNumericNextID2 = lastNextNumericId2 + 1;
+
+						String HoldNextIdD2 = String.format("ICR%07d", nextNumericNextID2);
+
+						crg.setIgmCrgTransId(HoldNextIdD2);
+						crg.setCompanyId(cid);
+						crg.setProfitcentreId("N00002");
+						crg.setBranchId(bid);
+						crg.setIgmNo(igm.getIgmNo());
+						crg.setIgmTransId(HoldNextIdD1);
+						crg.setMarksOfNumbers(marks);
+						crg.setCreatedBy(user);
+						crg.setCreatedDate(new Date());
+						crg.setViaNo(igm.getViaNo());
+						crg.setApprovedBy(user);
+						crg.setApprovedDate(new Date());
+						crg.setStatus("A");
+						if (cargoWt != null && !cargoWt.isEmpty()) {
+							crg.setGrossWeight(new BigDecimal(cargoWt).setScale(3, RoundingMode.HALF_UP));
+						} else {
+							crg.setGrossWeight(BigDecimal.ZERO);
+						}
+						crg.setCargoMovement(cargotype);
+						crg.setTypeOfPackage(packageType);
+						crg.setCargoType(cargotype);
+						crg.setIgmLineNo(itemNo);
+						crg.setBlNo(blNo);
+						crg.setBlDate(blDate1);
+						crg.setCommodityDescription(commodity);
+						crg.setImporterName(importer);
+						crg.setImporterAddress1(impAddress1);
+						crg.setImporterAddress2(impAddress2);
+						crg.setImporterAddress3(impAddress3);
+						crg.setUnitOfWeight("KGS");
+						crg.setOrigin(origin);
+						crg.setDestination(destination);
+						crg.setFinYear(finYear);
+						crg.setNotifyPartyName(notifyParty);
+						crg.setNotifiedAddress1(notifyPartyAddress1);
+						crg.setNotifiedAddress2(notifyPartyAddress2);
+						crg.setNotifiedAddress3(notifyPartyAddress3);
+						crg.setNoOfPackages(
+								BigDecimal.ZERO.add(new BigDecimal(packages).setScale(3, RoundingMode.HALF_UP)));
+
+						if (!check) {
+							cfigmcrgrepo.save(crg);
+							processnextidrepo.updateAuditTrail(cid, bid, "P05061", HoldNextIdD2, "2024");
+						}
+
+						if (check) {
+							if (!itemNo.isEmpty()) {
+								itemList.add(itemNo);
+							}
+
+						}
+
+					}
+
+				}
+
+				if (conData.size() > 0) {
+					for (Map<String, String> c : conData) {
+
+						String containerNo = c.get("Container no");
+						String itemNo = c.get("Item no");
+						String sealNo = c.get("Seal No");
+						String conStatus = c.get("Container Status");
+						String packages = c.get("Packages");
+						String cargoWt = c.get("Cargo Wt.");
+						String iso = c.get("ISO");
+
+						Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(itemNo));
+						Boolean check1 = false;
+
+						if (!check) {
+
+							if (containerNo.isEmpty()) {
+								String mess = "For Item no " + itemNo + " - Container no is required.";
+								list.add(mess);
+								check1 = true;
+							} else {
+								if (containerNo.length() > 11) {
+									String mess = "For Container no " + containerNo
+											+ " - Container No length should not exceed 11 characters.";
+									list.add(mess);
+									check1 = true;
+
+								}
+							}
+
+							if (itemNo.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - Item no is required.";
+								list.add(mess);
+								check1 = true;
+							} else {
+								if (itemNo.length() > 7) {
+									String mess = "For Container no " + containerNo
+											+ " - Item no length should not exceed 11 characters.";
+									list.add(mess);
+									check1 = true;
+
+								}
+							}
+
+							if (conStatus.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - Container status is required.";
+								list.add(mess);
+								check1 = true;
+							} else {
+								if (!"FCL".equals(conStatus) && !"LCL".equals(conStatus)) {
+									String mess = "For Container no " + containerNo
+											+ " - Container status should be 'FCL' OR 'LCL'.";
+									list.add(mess);
+									check1 = true;
+
+								}
+							}
+
+							if (packages.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - Packages is required.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							if (iso.isEmpty()) {
+								String mess = "For Container no " + containerNo + " - ISO is required.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							Boolean isExist3 = cfigmcnrepo.isExistContainer(cid, bid, igm.getIgmTransId(),
+									igm.getIgmNo(), itemNo, containerNo);
+
+							if (isExist3) {
+								// return new ResponseEntity<>("Duplicate container no", HttpStatus.CONFLICT);
+								String mess = "For Container no " + containerNo + " - Duplicate container no.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, igm.getIgmTransId(), igm.getIgmNo(), itemNo);
+
+							if (crg == null) {
+								// return new ResponseEntity<>("Item data not found", HttpStatus.CONFLICT);
+								String mess = "For Container no " + containerNo + " - Item data not found.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							Cfigmcn cn = new Cfigmcn();
+
+							String holdId3 = processnextidrepo.findAuditTrail(cid, bid, "P05062", "2024");
+
+							int lastNextNumericId3 = Integer.parseInt(holdId3.substring(1));
+
+							int nextNumericNextID3 = lastNextNumericId3 + 1;
+
+							String HoldNextIdD3 = String.format("C%09d", nextNumericNextID3);
+
+							IsoContainer isoData = isoContainerRepository.getDataByIsoCode(cid, iso);
+
+							if (isoData == null) {
+								// return new ResponseEntity<>("ISO data not found", HttpStatus.CONFLICT);
+								String mess = "For Container no " + containerNo + " - ISO data not found.";
+								list.add(mess);
+								check1 = true;
+							}
+
+							cn.setContainerTransId(HoldNextIdD3);
+							cn.setCompanyId(cid);
+							cn.setBranchId(bid);
+							cn.setStatus('A');
+							cn.setCreatedBy(user);
+							cn.setCreatedDate(new Date());
+							cn.setApprovedBy(user);
+							cn.setApprovedDate(new Date());
+							cn.setContainerNo(containerNo);
+							cn.setNoOfPackages(Integer.parseInt(packages));
+							System.out.println("sealNo " + sealNo);
+							cn.setCustomsSealNo(sealNo);
+							cn.setContainerStatus(conStatus);
+							cn.setContainerSealNo(sealNo);
+							cn.setIgmTransId(igm.getIgmTransId());
+							cn.setIgmNo(igm.getIgmNo());
+							cn.setIgmLineNo(itemNo);
+							cn.setProfitcentreId("N00002");
+							cn.setIso(iso);
+							cn.setFinYear(finYear);
+							BigDecimal gw = (new BigDecimal(cargoWt).multiply(new BigDecimal(1000))).setScale(3,
+									RoundingMode.HALF_UP);
+
+							cn.setGrossWt(gw);
+							if (isoData != null) {
+								cn.setContainerSize(isoData.getContainerSize());
+								cn.setContainerType(isoData.getContainerType());
+								cn.setContainerWeight(isoData.getTareWeight());
+
+								BigDecimal cwt = (gw.subtract(isoData.getTareWeight())).setScale(3,
+										RoundingMode.HALF_UP);
+								cn.setCargoWt(cwt);
+							}
+
+							if ("LCL".equals(conStatus)) {
+								cn.setGateOutType("CRG");
+								cn.setUpTariffDelMode("CRG");
+							}
+
+							if (!check1) {
+								cfigmcnrepo.save(cn);
+								int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(),
+										cn.getContainerNo());
+								processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD3, "2024");
+							}
+
+						} else {
+							String mess = "For Container no " + containerNo + " - Error for Item no " + itemNo;
+							list.add(mess);
+							check = true;
+						}
+					}
+				}
+			}
+
+			if (list.size() > 0) {
+				result.put("message", "error");
+				result.put("result", list);
+
+				return new ResponseEntity<>(result, HttpStatus.OK);
+			} else {
+				result.put("message", "success");
+				result.put("result", "File uploaded and processed successfully");
+
+				return new ResponseEntity<>(result, HttpStatus.OK);
+			}
+		} else {
+			return new ResponseEntity<>("Data for cfs code not found", HttpStatus.CONFLICT);
+		}
+
+	}
+
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadIgmFile(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("user") String user, @RequestParam("finYear") String finYear,
-			@RequestParam("file") MultipartFile file, @RequestParam("igm") String igmData) {
+			@RequestParam("file") MultipartFile file, @RequestParam("igm") String igmData,
+			@RequestParam("type") String type) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			CFIgm igm = objectMapper.readValue(igmData, CFIgm.class); // Deserialize igm data
@@ -1875,68 +2809,136 @@ public class ExcelUploadController {
 			File newFile = newFilePath.toFile();
 
 			// Call the service to process the new file
-			List<List<String>> content = readAndParseCargoSection(newFile);
-			List<List<String>> content1 = readAndParseContainerSection(newFile);
+			if ("IMPORT IGM".equals(type)) {
+				List<List<String>> content = readAndParseCargoSection(newFile);
+				List<List<String>> content1 = readAndParseContainerSection(newFile);
 
-			List<Map<String, String>> itemData = new ArrayList<>();
-			List<Map<String, String>> conData = new ArrayList<>();
-			Branch b = branchrepo.findByBranchIdWithCompanyId(cid, bid);
-			List<String> itemList = new ArrayList<>();
+				List<Map<String, String>> itemData = new ArrayList<>();
+				List<Map<String, String>> conData = new ArrayList<>();
+				Branch b = branchrepo.findByBranchIdWithCompanyId(cid, bid);
+				List<String> itemList = new ArrayList<>();
 
-			System.out.println(content.size());
+				System.out.println(content.size());
 
-			content.forEach(c -> {
-				System.out.println("crgdata " + c);
-				System.out.println("cfscode " + b.getCfsCode() + " " + c.get(25).toString());
+				content.forEach(c -> {
+					System.out.println("crgdata " + c);
+					System.out.println("cfscode " + b.getCfsCode() + " " + c.get(25).toString());
 
-				if (b.getCfsCode().equals(c.get(25).toString())) {
+					if (b.getCfsCode().equals(c.get(25).toString())) {
 
-					Map<String, String> add = new HashMap<>();
-					add.put("Item no", c.get(6));
-					add.put("Bl no", c.get(8));
-					add.put("Bl Date", c.get(9));
-					add.put("Origin", c.get(10));
-					add.put("Destination", c.get(11));
-					add.put("Importer name", c.get(14));
-					add.put("Importer address1", c.get(15));
-					add.put("Importer address2", c.get(16));
-					add.put("Importer address3", c.get(17));
-					add.put("Notify Party", c.get(18));
-					add.put("Notify Party address1", c.get(19));
-					add.put("Notify Party address2", c.get(20));
-					add.put("Notify Party address3", c.get(21));
-					add.put("Cargo type", c.get(24));
-					add.put("Cfs code", c.get(25));
-					add.put("Packages", c.get(26));
-					add.put("Package Type", c.get(27));
-					add.put("Cargo wt", c.get(28));
-					add.put("Commodity", c.get(33));
-					itemData.add(add);
-					itemList.add(c.get(6));
-				}
-			});
-
-			if (!content.isEmpty()) {
-				content1.forEach(c -> {
-					
-
-					Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
-					System.out.println("cndata " + c+" "+check);
-					if (check) {
 						Map<String, String> add = new HashMap<>();
-						add.put("Container no", c.get(8));
 						add.put("Item no", c.get(6));
-						add.put("Seal No", c.get(9));
-						add.put("Container Status", c.get(11));
-						add.put("Packages", c.get(12));
-						add.put("Cargo Wt.", c.get(13));
-						add.put("ISO", c.get(14));
-						conData.add(add);
+						add.put("Bl no", c.get(8));
+						add.put("Bl Date", c.get(9));
+						add.put("Origin", c.get(10));
+						add.put("Destination", c.get(11));
+						add.put("Importer name", c.get(14));
+						add.put("Importer address1", c.get(15));
+						add.put("Importer address2", c.get(16));
+						add.put("Importer address3", c.get(17));
+						add.put("Notify Party", c.get(18));
+						add.put("Notify Party address1", c.get(19));
+						add.put("Notify Party address2", c.get(20));
+						add.put("Notify Party address3", c.get(21));
+						add.put("Cargo type", c.get(24));
+						add.put("Cfs code", c.get(25));
+						add.put("Packages", c.get(26));
+						add.put("Package Type", c.get(27));
+						add.put("Cargo wt", c.get(28));
+						add.put("Commodity", c.get(33));
+						itemData.add(add);
+						itemList.add(c.get(6));
 					}
 				});
-			}
 
-			return saveIgm(cid, bid, user, finYear, itemData, conData, igm);
+				if (!content.isEmpty()) {
+					content1.forEach(c -> {
+
+						Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(c.get(6).toString()));
+						System.out.println("cndata " + c + " " + check);
+						if (check) {
+							Map<String, String> add = new HashMap<>();
+							add.put("Container no", c.get(8));
+							add.put("Item no", c.get(6));
+							add.put("Seal No", c.get(9));
+							add.put("Container Status", c.get(11));
+							add.put("Packages", c.get(12));
+							add.put("Cargo Wt.", c.get(13));
+							add.put("ISO", c.get(14));
+							conData.add(add);
+						}
+					});
+				}
+
+				return saveIgm(cid, bid, user, finYear, itemData, conData, igm);
+			} else {
+				List<List<String>> content = readAndParseCargoSection1(newFile);
+				List<List<String>> content1 = readAndParseContainerSection1(newFile);
+
+				List<Map<String, String>> itemData = new ArrayList<>();
+				List<Map<String, String>> conData = new ArrayList<>();
+				Branch b = branchrepo.findByBranchIdWithCompanyId(cid, bid);
+				List<String> itemList = new ArrayList<>();
+
+				System.out.println(content.size());
+
+				content.forEach(c -> {
+
+					if (b.getCfsCode().equals(c.get(26).toString())) {
+
+						Map<String, String> add = new HashMap<>();
+						add.put("Item no", c.get(7) + "/" + c.get(8));
+						add.put("Bl no", c.get(13));
+						add.put("Bl Date", c.get(14));
+						add.put("Origin", c.get(11));
+						add.put("Destination", c.get(12));
+						add.put("Importer name", c.get(15));
+						add.put("Importer address1", c.get(16));
+						add.put("Importer address2", c.get(17));
+						add.put("Importer address3", c.get(18));
+						add.put("Notify Party", c.get(19));
+						add.put("Notify Party address1", c.get(20));
+						add.put("Notify Party address2", c.get(21));
+						add.put("Notify Party address3", c.get(22));
+						add.put("Cargo type", c.get(25));
+						add.put("Cfs code", c.get(26));
+						add.put("Packages", c.get(27));
+						add.put("Package Type", c.get(28));
+						add.put("Cargo wt", c.get(29));
+						add.put("Commodity", c.get(34));
+						add.put("Marks", c.get(33));
+						itemData.add(add);
+						itemList.add(c.get(7) + "/" + c.get(8));
+					}
+				});
+
+				if (!content.isEmpty()) {
+					content1.forEach(c -> {
+                        String itemNo = c.get(7) + "/" + c.get(8);
+						Boolean check = itemList.stream().anyMatch(c1 -> c1.equals(itemNo));
+						if (check) {
+							Map<String, String> add = new HashMap<>();
+							add.put("Container no", c.get(9));
+							add.put("Item no", c.get(7) + "/" + c.get(8));
+							add.put("Seal No", c.get(10));
+							add.put("Container Status", c.get(12));
+							add.put("Packages", c.get(13));
+							add.put("Cargo Wt.", c.get(14));
+							add.put("ISO", c.get(15));
+							conData.add(add);
+						}
+					});
+				}
+
+                return saveIgm1(cid, bid, user, finYear, itemData, conData, igm);
+
+//    			Map<String,Object> dataa = new HashMap<>();
+//    			dataa.put("content", content);
+//    			dataa.put("content1", content1);
+//    			
+//    			
+//    			return new ResponseEntity<>(dataa,HttpStatus.OK);
+			}
 
 		} catch (IOException e) {
 			return ResponseEntity.status(500).body("Failed to read the file.");
@@ -2289,6 +3291,69 @@ public class ExcelUploadController {
 		return records;
 	}
 
+	public List<List<String>> readAndParseCargoSection1(File file) throws IOException {
+		List<List<String>> records = new ArrayList<>();
+		StringBuilder content = new StringBuilder();
+		boolean isCargoSection = false;
+
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+
+				String cleanedLine = line.chars().filter(c -> c > 0) // Filter out characters with ASCII value 0
+						.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+
+// Append the cleaned line to content
+
+				// Check if we are inside the <cargo> section
+				if (cleanedLine.contains("<conscargo>")) {
+					isCargoSection = true;
+					continue; // Skip the <cargo> line itself
+				}
+
+				// Only process lines within <cargo> and <END-cargo>
+				if (isCargoSection) {
+					// Remove zero ASCII value characters (and any other control characters if
+					// needed)
+
+					content.append(cleanedLine);
+
+				}
+
+				if (cleanedLine.contains("<END-conscargo>")) {
+					isCargoSection = false;
+					break; // Stop reading further
+				}
+
+			}
+		}
+
+		// Replace "F " with a new line to indicate record boundaries
+		String processedContent = content.toString().replace("FIN", "\n");
+
+		// Split by new line to get each record
+		String[] lines = processedContent.split("\n");
+
+		// Process each line
+		for (String record : lines) {
+			// Split by the delimiter " "
+			String[] fields = record.split("");
+
+			// Store each field as a list of strings
+			List<String> recordFields = new ArrayList<>();
+			for (String field : fields) {
+				recordFields.add(field.trim()); // Optional: trim to remove excess spaces
+			}
+
+			if (!recordFields.isEmpty() && recordFields.stream().anyMatch(field -> !field.isEmpty())) {
+				records.add(recordFields); // Only add if it has meaningful content
+			}
+
+		}
+
+		return records;
+	}
+
 	public List<List<String>> readAndParseContainerSection(File file) throws IOException {
 		List<List<String>> records = new ArrayList<>();
 		StringBuilder content = new StringBuilder();
@@ -2309,6 +3374,67 @@ public class ExcelUploadController {
 
 				// If we hit <END-cargo>, stop processing
 				if (cleanedLine.contains("<END-contain>")) {
+					isCargoSection = false;
+					break; // Stop reading further
+				}
+
+				// Only process lines within <cargo> and <END-cargo>
+				if (isCargoSection) {
+					content.append(cleanedLine);
+				}
+			}
+		}
+
+		String replaceContent = String.valueOf(content).substring(0, 6);
+
+		// Replace "F " with a new line to indicate record boundaries
+		String processedContent = content.toString().replace(replaceContent, "\n");
+
+		// Split by new line to get each record
+		String[] lines = processedContent.split("\n");
+
+		// Process each line
+		for (String record : lines) {
+			// Split by the delimiter " "
+
+			System.out.println("record " + record);
+			String[] fields = record.split("");
+
+			// Store each field as a list of strings
+			List<String> recordFields = new ArrayList<>();
+			for (String field : fields) {
+				recordFields.add(field.trim()); // Optional: trim to remove excess spaces
+			}
+
+			if (!recordFields.isEmpty() && recordFields.stream().anyMatch(field -> !field.isEmpty())) {
+				records.add(recordFields); // Only add if it has meaningful content
+			}
+
+		}
+
+		return records;
+	}
+
+	public List<List<String>> readAndParseContainerSection1(File file) throws IOException {
+		List<List<String>> records = new ArrayList<>();
+		StringBuilder content = new StringBuilder();
+		boolean isCargoSection = false;
+
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+
+				String cleanedLine = line.chars().filter(c -> c > 0) // Filter out characters with ASCII value 0
+						.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+
+				// Check if we are inside the <cargo> section
+				if (cleanedLine.contains("<conscont>")) {
+					isCargoSection = true;
+					continue; // Skip the <cargo> line itself
+				}
+
+				// If we hit <END-cargo>, stop processing
+				if (cleanedLine.contains("<END-conscont>")) {
 					isCargoSection = false;
 					break; // Stop reading further
 				}
