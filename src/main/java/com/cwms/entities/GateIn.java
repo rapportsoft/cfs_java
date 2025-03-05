@@ -4397,5 +4397,59 @@ public GateIn(String companyId, String branchId, String gateInId, String finYear
 }
 
 
+transient private BigDecimal gateInWt  =  BigDecimal.ZERO ;
+
+//HUB Gate In
+public BigDecimal getGateInWt() {
+	return gateInWt;
+}
+
+public void setGateInWt(BigDecimal gateInWt) {
+	this.gateInWt = gateInWt;
+}
+
+public GateIn(String companyId, String branchId, String gateInId, String finYear, String erpDocRefNo,
+		String docRefNo, String lineNo, int srNo, Date docRefDate, String gateNo,
+		BigDecimal gateInPackages, String gateInType, String profitcentreId, String processId,
+		BigDecimal grossWeight, String shippingLineName, BigDecimal qtyTakenIn, String shift,
+		String status, String createdBy, String approvedBy, String transporterStatus, String transporterName,
+		String vehicleNo, String driverName, BigDecimal cargoWeight, String commodityDescription, BigDecimal actualNoOfPackages, 
+		Date inGateInDate, BigDecimal weightTakenIn, BigDecimal gateInWt, String cargoType, String importerName, String area) {
+	super();
+	this.companyId = companyId;
+	this.branchId = branchId;
+	this.gateInId = gateInId;
+	this.finYear = finYear;
+	this.erpDocRefNo = erpDocRefNo;
+	this.docRefNo = docRefNo;
+	this.lineNo = lineNo;
+	this.srNo = srNo;
+	this.docRefDate = docRefDate;
+	this.gateNo = gateNo;
+	this.gateInPackages = gateInPackages;
+	this.gateInType = gateInType;
+	this.profitcentreId = profitcentreId;
+	this.processId = processId;
+	this.grossWeight = grossWeight;
+	this.shippingLineName = shippingLineName;
+	this.qtyTakenIn = qtyTakenIn;
+	this.shift = shift;
+	this.status = status;
+	this.createdBy = createdBy;
+	this.approvedBy = approvedBy;
+	this.transporterStatus = transporterStatus;
+	this.transporterName = transporterName;
+	this.vehicleNo = vehicleNo;
+	this.driverName = driverName;
+	this.cargoWeight = cargoWeight;
+	this.commodityDescription = commodityDescription;
+	this.actualNoOfPackages = actualNoOfPackages;
+	this.inGateInDate = inGateInDate;
+	this.weightTakenIn = weightTakenIn;
+	this.gateInWt = gateInWt;
+	this.cargoType = cargoType;
+	this.importerName = importerName;
+	this.area = area;
+}
 
 }
