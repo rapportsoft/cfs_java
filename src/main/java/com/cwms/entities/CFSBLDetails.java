@@ -86,6 +86,9 @@ public class CFSBLDetails {
 	@Column(name = "Party_Id", length = 10)
 	public String partyId;
 	
+	@Column(name = "File_Upload_Path", length = 300)
+	public String fileUploadPath;
+	
 	@Column(name = "Created_By", length = 10)
 	public String createdBy;
 	
@@ -101,13 +104,14 @@ public class CFSBLDetails {
 	
 	
 
-	
+
+
 
 	protected CFSBLDetails(String companyId, String branchId, String blTransId, String igmLineNo, String igmNo,
 			String containerNo, int srNo, String upTariffNo, String upTariffAmndNo, String containerSize,
 			String containerType, String cycle, String deliveryMode, String specialDelivery, String actDeliveryMode,
 			String serviceId, String serviceDesc, BigDecimal serviceAmt, String status, String profitcentreId,
-			String partyId, String createdBy, Date createdDate) {
+			String partyId, String fileUploadPath, String createdBy, Date createdDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -130,9 +134,31 @@ public class CFSBLDetails {
 		this.status = status;
 		this.profitcentreId = profitcentreId;
 		this.partyId = partyId;
+		this.fileUploadPath = fileUploadPath;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 	}
+
+
+
+
+
+
+
+	public String getFileUploadPath() {
+		return fileUploadPath;
+	}
+
+
+
+
+
+
+
+	public void setFileUploadPath(String fileUploadPath) {
+		this.fileUploadPath = fileUploadPath;
+	}
+
 
 
 

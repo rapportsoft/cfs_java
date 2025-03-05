@@ -2,11 +2,16 @@ package com.cwms.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -68,6 +73,9 @@ public class BLTariffUploadController {
 	@Value("${file.blTariffFormat}")
 	private String blTemplateDownloadPath;
 
+	@Value("${file.blTariffUpload}")
+	private String blTariffUploadPath;
+
 	@Autowired
 	private SerViceRepositary serviceRepo;
 
@@ -94,7 +102,7 @@ public class BLTariffUploadController {
 
 	@Autowired
 	private ProcessNextIdService processService;
-	
+
 	@Autowired
 	private Tarrifservice tariffService;
 
@@ -128,7 +136,32 @@ public class BLTariffUploadController {
 	@PostMapping("/blTariffUpload")
 	public ResponseEntity<?> handleFileUploadParty(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("user") String user, @RequestParam("id") String id, @RequestParam("file") MultipartFile file)
-			throws ParseException {
+			throws ParseException, IOException {
+		
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().body("File is empty.");
+		}
+		String fileName = file.getOriginalFilename();
+		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String newFileName = fileName + "_" + timestamp + ".xlsx";
+
+		// Define the path where the new file will be saved
+		Path newFilePath = Paths.get(blTariffUploadPath, newFileName);
+
+		// Use try-with-resources to handle streams and ensure proper encoding
+		try (InputStream inputStream = file.getInputStream();
+				OutputStream outputStream = Files.newOutputStream(newFilePath, StandardOpenOption.CREATE)) {
+
+			// Transfer file content while preserving special characters
+			byte[] buffer = new byte[8192];
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+		}
+
+		// Now, create a new File object for the newly created file
+		File newFile = newFilePath.toFile();
 
 		try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
 			Sheet sheet = workbook.getSheetAt(0);
@@ -205,24 +238,26 @@ public class BLTariffUploadController {
 
 					int totalColumns = headerMap.size(); // Total number of columns based on headers
 					for (int colIndex = 0; colIndex < totalColumns; colIndex++) {
-					    Cell cell = row.getCell(colIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK); // Get cell, even if empty
-					    
-					    String columnName = headerMap.get(colIndex); // Get header name
-					    String cellValue = (valIndex == colIndex) ? String.valueOf(getCellValue(cell, evaluator)) : ""; // Extract value
+						Cell cell = row.getCell(colIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK); // Get cell, even
+																										// if empty
 
-					    rowData.put(columnName, cellValue);
-					    data1.add(cellValue);
+						String columnName = headerMap.get(colIndex); // Get header name
+						String cellValue = (valIndex == colIndex) ? String.valueOf(getCellValue(cell, evaluator)) : ""; // Extract
+																														// value
 
-					    // If column index >= 7 (service columns), get serviceId from serviceList
-					    if (colIndex >= 7) {
-					        if (serviceIndex < serviceList.size()) {
-					            String serviceId = serviceList.get(serviceIndex); // Get serviceId from serviceList
-					            serviceData.put(serviceId, cellValue); // Map serviceId to cell value
-					            serviceIndex++; // Move to the next serviceId
-					        }
-					    }
+						rowData.put(columnName, cellValue);
+						data1.add(cellValue);
 
-					    valIndex++;
+						// If column index >= 7 (service columns), get serviceId from serviceList
+						if (colIndex >= 7) {
+							if (serviceIndex < serviceList.size()) {
+								String serviceId = serviceList.get(serviceIndex); // Get serviceId from serviceList
+								serviceData.put(serviceId, cellValue); // Map serviceId to cell value
+								serviceIndex++; // Move to the next serviceId
+							}
+						}
+
+						valIndex++;
 					}
 
 					allData.add(data1);
@@ -278,7 +313,6 @@ public class BLTariffUploadController {
 
 				Map<String, String> existingData = serviceDataList.get(in.get());
 
-								
 				List<Cfigmcn> conData = cfigmcnrepo.conList(cid, bid, i.get(0), i.get(1), i.get(2));
 
 				List<String> distinctContainerSizes = conData.stream().map(Cfigmcn::getContainerSize) // Extract
@@ -432,24 +466,24 @@ public class BLTariffUploadController {
 										BigDecimal fromRange = new BigDecimal(String.valueOf(r[17]));
 										BigDecimal toRange = new BigDecimal(String.valueOf(r[21]));
 										BigDecimal currentRate = new BigDecimal(String.valueOf(r[3]));
-							
 
 										if (rate.compareTo(toRange) == 0 || rate.compareTo(toRange) > 0) {
 											// If rate is exactly equal to 'toRange', set rate to zero
 											CFSTariffService service = createCFSTariffService(cid, bid, autoCFSTariffNo,
-													c, user, fromRange, toRange, BigDecimal.ZERO, rangeIndex.get(),"000");
+													c, user, fromRange, toRange, BigDecimal.ZERO, rangeIndex.get(),
+													"000");
 
 											cfsstdtrfsrvrepo.save(service);
 											rangeIndex.incrementAndGet();
 										} else if (rate.compareTo(fromRange) >= 0 && rate.compareTo(toRange) < 0) {
 											// If rate falls within the range, split into two slabs
 											CFSTariffService service1 = createCFSTariffService(cid, bid,
-													autoCFSTariffNo, c, user, fromRange, rate,
-													BigDecimal.ZERO, rangeIndex.get(),"000");
+													autoCFSTariffNo, c, user, fromRange, rate, BigDecimal.ZERO,
+													rangeIndex.get(), "000");
 
 											CFSTariffService service2 = createCFSTariffService(cid, bid,
-													autoCFSTariffNo, c, user, rate.add(BigDecimal.ONE), toRange, currentRate,
-													rangeIndex.incrementAndGet(),"000");
+													autoCFSTariffNo, c, user, rate.add(BigDecimal.ONE), toRange,
+													currentRate, rangeIndex.incrementAndGet(), "000");
 
 											cfsstdtrfsrvrepo.save(service1);
 											cfsstdtrfsrvrepo.save(service2);
@@ -457,7 +491,7 @@ public class BLTariffUploadController {
 										} else {
 											// Default case, save as is
 											CFSTariffService service = createCFSTariffService(cid, bid, autoCFSTariffNo,
-													c, user, fromRange, toRange, currentRate, rangeIndex.get(),"000");
+													c, user, fromRange, toRange, currentRate, rangeIndex.get(), "000");
 
 											cfsstdtrfsrvrepo.save(service);
 											rangeIndex.incrementAndGet();
@@ -472,11 +506,11 @@ public class BLTariffUploadController {
 						CfsTarrif tariff = new CfsTarrif();
 
 						String autoCFSTariffNo = conData.get(0).getUpTariffNo();
-						
+
 						int amd = Integer.parseInt(conData.get(0).getUpTariffAmndNo());
-						
+
 						amd = amd + 1;
-						
+
 						String amdNo = String.format("%03d", amd);
 
 						cfsTariffNo.set(autoCFSTariffNo);
@@ -602,24 +636,24 @@ public class BLTariffUploadController {
 										BigDecimal fromRange = new BigDecimal(String.valueOf(r[17]));
 										BigDecimal toRange = new BigDecimal(String.valueOf(r[21]));
 										BigDecimal currentRate = new BigDecimal(String.valueOf(r[3]));
-							
 
 										if (rate.compareTo(toRange) == 0 || rate.compareTo(toRange) > 0) {
 											// If rate is exactly equal to 'toRange', set rate to zero
 											CFSTariffService service = createCFSTariffService(cid, bid, autoCFSTariffNo,
-													c, user, fromRange, toRange, BigDecimal.ZERO, rangeIndex.get(),amdNo);
+													c, user, fromRange, toRange, BigDecimal.ZERO, rangeIndex.get(),
+													amdNo);
 
 											cfsstdtrfsrvrepo.save(service);
 											rangeIndex.incrementAndGet();
 										} else if (rate.compareTo(fromRange) >= 0 && rate.compareTo(toRange) < 0) {
 											// If rate falls within the range, split into two slabs
 											CFSTariffService service1 = createCFSTariffService(cid, bid,
-													autoCFSTariffNo, c, user, fromRange, rate,
-													BigDecimal.ZERO, rangeIndex.get(),amdNo);
+													autoCFSTariffNo, c, user, fromRange, rate, BigDecimal.ZERO,
+													rangeIndex.get(), amdNo);
 
 											CFSTariffService service2 = createCFSTariffService(cid, bid,
-													autoCFSTariffNo, c, user, rate.add(BigDecimal.ONE), toRange, currentRate,
-													rangeIndex.incrementAndGet(),amdNo);
+													autoCFSTariffNo, c, user, rate.add(BigDecimal.ONE), toRange,
+													currentRate, rangeIndex.incrementAndGet(), amdNo);
 
 											cfsstdtrfsrvrepo.save(service1);
 											cfsstdtrfsrvrepo.save(service2);
@@ -627,7 +661,7 @@ public class BLTariffUploadController {
 										} else {
 											// Default case, save as is
 											CFSTariffService service = createCFSTariffService(cid, bid, autoCFSTariffNo,
-													c, user, fromRange, toRange, currentRate, rangeIndex.get(),amdNo);
+													c, user, fromRange, toRange, currentRate, rangeIndex.get(), amdNo);
 
 											cfsstdtrfsrvrepo.save(service);
 											rangeIndex.incrementAndGet();
@@ -652,7 +686,6 @@ public class BLTariffUploadController {
 				int nextNumericNextID1 = lastNextNumericId1 + 1;
 
 				String HoldNextIdD1 = String.format("BILU%06d", nextNumericNextID1);
-				
 
 				serviceNameList.stream().forEach(s -> {
 
@@ -681,6 +714,7 @@ public class BLTariffUploadController {
 							(i.get(valIndex.get()) == null || i.get(valIndex.get()).isEmpty()) ? BigDecimal.ZERO
 									: new BigDecimal(i.get(valIndex.get())));
 					blDtls.setPartyId(id);
+					blDtls.setFileUploadPath(blTariffUploadPath+newFileName);
 
 					cfsBlDetailsrepo.save(blDtls);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05123", HoldNextIdD1, "2024");
@@ -688,20 +722,23 @@ public class BLTariffUploadController {
 					valIndex.incrementAndGet();
 					index1.incrementAndGet();
 				});
-				
-				conData.stream().forEach(con->{
-					int updateConList = cfigmcnrepo.updateConList(cid, bid, con.getIgmNo(), con.getIgmTransId(), con.getContainerNo(), HoldNextIdD1, cfsTariffNo.get(), cfsAmndNo.get());
+
+				conData.stream().forEach(con -> {
+					int updateConList = cfigmcnrepo.updateConList(cid, bid, con.getIgmNo(), con.getIgmTransId(),
+							con.getContainerNo(), HoldNextIdD1, cfsTariffNo.get(), cfsAmndNo.get());
 
 				});
-				
+
 				if (conData.get(0).getUpTariffFwd() != null && !conData.get(0).getUpTariffFwd().isEmpty()) {
-					 tariffService.ammendBLWiseTariff(cid, bid, cfsTariffNo.get(), conData.get(0).getUpTariffAmndNo(), cfsAmndNo.get(), user);
+					tariffService.ammendBLWiseTariff(cid, bid, cfsTariffNo.get(), conData.get(0).getUpTariffAmndNo(),
+							cfsAmndNo.get(), user);
 				}
-				
-				
+
 				in.incrementAndGet();
 			});
-			
+
+			// Create timestamp for the new file name
+
 			
 
 			result.put("message", "success");
@@ -830,32 +867,30 @@ public class BLTariffUploadController {
 		}
 		return null;
 	}
-	
-	
+
 	@GetMapping("/search")
-	public ResponseEntity<?> searchData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam(name="transId",required = false) String transId) {
-		
+	public ResponseEntity<?> searchData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam(name = "transId", required = false) String transId) {
+
 		List<Object[]> data = cfsBlDetailsrepo.getData(cid, bid, transId);
-		
-		if(data.isEmpty()) {
-			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(data,HttpStatus.OK);			
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(data, HttpStatus.OK);
 		}
 	}
-	
-	
+
 	@GetMapping("/getDataByTransId")
-	public ResponseEntity<?> getDataByTransId(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("transId") String transId) {
-		
+	public ResponseEntity<?> getDataByTransId(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("transId") String transId) {
+
 		List<Object[]> data = cfsBlDetailsrepo.getDataByTransId(cid, bid, transId);
-		
-		if(data.isEmpty()) {
-			return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
-		}
-		else {
-			return new ResponseEntity<>(data,HttpStatus.OK);			
+
+		if (data.isEmpty()) {
+			return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(data, HttpStatus.OK);
 		}
 	}
 }
