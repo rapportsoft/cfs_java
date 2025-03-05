@@ -1173,5 +1173,29 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 						BigDecimal getRateByServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
 								@Param("igm") String igm,@Param("line") String line,@Param("con") String con);
 					  
+						
+						@Query(value = "select COUNT(c) > 0 from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.status='A' and "
+								+ "(:igm is null OR :igm = '' OR c.igmNo=:igm) and (:item is null OR :item = '' OR c.igmLineNo=:item) and "
+								+ "c.containerNo=:con and (c.gateOutId is null OR c.gateOutId = '')")
+						boolean checkContainer(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+								@Param("item") String item, @Param("con") String con);
+
+						@Query(value = "select NEW com.cwms.entities.Cfigmcn(c.igmTransId, c.profitcentreId, c.igmNo, c.igmLineNo, c.containerNo,"
+								+ "c.containerSize, c.containerType, c.haz, c.containerStatus, c.upTariffFwd,"
+								+ "c.upTariffNo, c.upTariffAmndNo, c.typeOfContainer) "
+								+ "from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and c.status='A' and "
+								+ "(:igm is null OR :igm = '' OR c.igmNo=:igm) and (:item is null OR :item = '' OR c.igmLineNo=:item) and "
+								+ "(:con is null OR :con = '' OR c.containerNo=:con) and (c.gateOutId is null OR c.gateOutId = '')")
+						List<Cfigmcn> conList(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+								@Param("item") String item, @Param("con") String con);
+
+						@Modifying
+						@Transactional
+						@Query(value = "Update Cfigmcn c SET c.upTariffFwd=:fwdId,c.upTariffNo=:tarrifNo,c.upTariffAmndNo=:amdNo "
+								+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' and c.igmNo=:igm and c.igmTransId=:trans and "
+								+ "c.containerNo=:con and (c.gateOutId is null OR c.gateOutId = '')")
+						int updateConList(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+								@Param("trans") String trans, @Param("con") String con, @Param("fwdId") String fwdId,@Param("tarrifNo") String tariffNo,
+								@Param("amdNo") String amdNo);
 }
 

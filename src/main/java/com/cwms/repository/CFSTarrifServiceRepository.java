@@ -222,5 +222,34 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			+ "where s.companyId=:cid and s.branchId=:bid and s.status = 'A' and c.status = 'A' and s.cfsTariffNo='CFS1000001' "
 			+ "group by s.serviceId")
 	List<Object[]> getGeneralTarrifData2(@Param("cid") String cid,@Param("bid") String bid);
+	
+	
+	@Query(value = "SELECT c.serviceId, c.serviceUnit, s.taxApplicable,c.rate, c.currencyId, c.srNo,c.rangeType,'0.00','0','0.00','N',"
+			+ "c.commodityCode,c.cargoType,c.containerSize,'FCL','','N',c.fromRange,c.rangeType,c.serviceUnitI,c.minimumRate,c.toRange, "
+			+ "s.serviceGroup, s.serviceShortDesc "
+			+ "FROM CFSTariffService c "
+			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+			+ "AND c.cfsAmendNo = t.cfsAmndNo AND c.profitCentreId = t.profitCentreId "
+			+ "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+			+ "WHERE c.companyId = :cid AND c.branchId = :bid AND t.partyId IN ('','') AND t.shippingLine IN ('','') AND t.importerId IN ('','') "
+			+ "AND c.commodityCode IN ('','ALL') AND c.status = 'A' AND c.serviceId IN :serviceList "
+			+ "AND c.cfsTariffNo = :tariffNo AND c.containerSize IN :consize AND c.cargoType IN :type "
+			+ "GROUP BY c.serviceId " + "ORDER BY c.serviceId")
+	List<Object[]> getServiceDtlForBLWiseUpload(@Param("cid") String cid, @Param("bid") String bid,@Param("serviceList") List<String> serviceList,
+			@Param("tariffNo") String tariffNo, @Param("consize") List<String> consize,@Param("type") List<String> type);
+	
+	
+	@Query(value = "SELECT c.serviceId, c.serviceUnit, s.taxApplicable,c.rate, c.currencyId, c.srNo,c.rangeType,'0.00','0','0.00','N',"
+			+ "c.commodityCode,c.cargoType,c.containerSize,'FCL','','N',c.fromRange,c.rangeType,c.serviceUnitI,c.minimumRate,c.toRange, "
+			+ "s.serviceGroup, s.serviceShortDesc "
+			+ "FROM CFSTariffService c "
+			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+			+ "AND c.cfsAmendNo = t.cfsAmndNo AND c.profitCentreId = t.profitCentreId "
+			+ "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+			+ "WHERE c.companyId = :cid AND c.branchId = :bid AND t.partyId IN ('','') AND t.shippingLine IN ('','') AND t.importerId IN ('','') "
+			+ "AND c.commodityCode IN ('','ALL') AND c.status = 'A' AND c.serviceId = :service "
+			+ "AND c.cfsTariffNo = :tariffNo AND c.containerSize IN :consize AND c.cargoType IN :type ")
+	List<Object[]> getRangeServiceDtlForBLWiseUpload(@Param("cid") String cid, @Param("bid") String bid,@Param("service") String service,
+			@Param("tariffNo") String tariffNo, @Param("consize") List<String> consize,@Param("type") List<String> type);
 
 }

@@ -4102,6 +4102,25 @@ public class Cfigmcn {
 		this.cargoWt = cargoWt;
  	}
 
+	protected Cfigmcn(String igmTransId, String profitcentreId, String igmNo, String igmLineNo, String containerNo,
+			String containerSize, String containerType, String haz, String containerStatus, String upTariffFwd,
+			String upTariffNo, String upTariffAmndNo, String typeOfContainer) {
+		super();
+		this.igmTransId = igmTransId;
+		this.profitcentreId = profitcentreId;
+		this.igmNo = igmNo;
+		this.igmLineNo = igmLineNo;
+		this.containerNo = containerNo;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.haz = haz;
+		this.containerStatus = containerStatus;
+		this.upTariffFwd = upTariffFwd;
+		this.upTariffNo = upTariffNo;
+		this.upTariffAmndNo = upTariffAmndNo;
+		this.typeOfContainer = typeOfContainer;
+	}
+
 	
 
 }

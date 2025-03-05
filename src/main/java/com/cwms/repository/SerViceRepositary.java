@@ -94,4 +94,7 @@ Services getActiveService(String companyId, String branchId, String serviceId);
 	 @Query(value="select s.serviceId,s.serviceShortDesc from Services s where s.companyId=:cid and s.branchId=:bid "
 				+ "and (:val is null OR :val = '' OR s.serviceShortDesc like CONCAT(:val,'%')) and s.status = 'A'")
 		List<Object[]> getServiceDataforMapping(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+		
+		@Query(value="select s.serviceId from Services s where s.companyId=:cid and s.branchId=:bid and s.serviceShortDesc=:desc and s.status='A'")
+		String isExistServiceId(@Param("cid") String cid,@Param("bid") String bid,@Param("desc") String desc);
 }

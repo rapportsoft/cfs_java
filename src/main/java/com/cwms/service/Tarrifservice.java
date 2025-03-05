@@ -2032,6 +2032,28 @@ public class Tarrifservice {
 				.executeUpdate();		
 	}
 
-	
+	@Transactional
+	public void ammendBLWiseTariff(String companyId, String branchId, String tariffNo, String oldAmendNo, String newAmendNo,
+			String user) {
+
+		String updateQueryTariff = "UPDATE CfsTarrif t "
+				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP "
+				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmndNo = :oldAmendNo";
+
+		entityManager.createQuery(updateQueryTariff).setParameter("tariffNo", tariffNo)
+				.setParameter("oldAmendNo", oldAmendNo).setParameter("companyId", companyId).setParameter("user", user)
+				.setParameter("branchId", branchId).executeUpdate();
+
+		String updateQuery = "UPDATE CFSTariffService t "
+				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP  "
+				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmendNo = :oldAmendNo";
+
+		entityManager.createQuery(updateQuery).setParameter("tariffNo", tariffNo).setParameter("oldAmendNo", oldAmendNo)
+				.setParameter("user", user).setParameter("companyId", companyId).setParameter("branchId", branchId)
+				.executeUpdate();
+
+
+	}
+
 	
 }
