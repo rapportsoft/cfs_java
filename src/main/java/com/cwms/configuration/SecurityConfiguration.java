@@ -141,6 +141,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/apservices/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/customerPortal/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/blTariffUpload/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/waiver/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

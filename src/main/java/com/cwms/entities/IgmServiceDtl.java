@@ -10,6 +10,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "cfigmservicedtl")
@@ -106,17 +107,24 @@ public class IgmServiceDtl {
 	
 	@Column(name="Status",length = 1)
 	private String status;
+	
+	@Transient
+	private String serviceDesc;
 
 	public IgmServiceDtl() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public IgmServiceDtl(String companyId, String branchId, String igmTransId, String igmNo, String igmLineNo,
+
+
+	protected IgmServiceDtl(String companyId, String branchId, String igmTransId, String igmNo, String igmLineNo,
 			String containerNo, String serviceId, String beNo, String blNo, String containerSize, String containerType,
 			String cfsTariffNo, String cfsAmndNo, BigDecimal percentage, BigDecimal amount, String remark,
 			BigDecimal mPercentage, BigDecimal mAmount, String mRemark, String assessmentId, String createdBy,
-			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate, String status) {
+			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate, String status,
+			String serviceDesc) {
+		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
 		this.igmTransId = igmTransId;
@@ -144,7 +152,23 @@ public class IgmServiceDtl {
 		this.approvedBy = approvedBy;
 		this.approvedDate = approvedDate;
 		this.status = status;
+		this.serviceDesc = serviceDesc;
 	}
+
+	
+
+
+	public String getServiceDesc() {
+		return serviceDesc;
+	}
+
+
+
+	public void setServiceDesc(String serviceDesc) {
+		this.serviceDesc = serviceDesc;
+	}
+
+
 
 	public String getCompanyId() {
 		return companyId;

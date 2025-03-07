@@ -419,6 +419,50 @@ public class AssessmentService {
 											Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
 													day.getStartTime(), day.getEndTime());
 
+											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+											if (cPerc != null && !cPerc.isEmpty()) {
+												BigDecimal disPerc = new BigDecimal(cPerc);
+												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+												BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+														.divide(new BigDecimal(100));
+
+												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(amt);
+
+											} else if (cAmt != null && !cAmt.isEmpty()) {
+
+												BigDecimal disAmt = (rate1.getTotalRate()
+														.subtract(new BigDecimal(cAmt)))
+														.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(disAmt);
+
+											} else if (mPerc != null && !mPerc.isEmpty()) {
+												BigDecimal disPerc = new BigDecimal(mPerc);
+												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+												BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+														.divide(new BigDecimal(100));
+
+												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(amt);
+											} else if (mAmt != null && !mAmt.isEmpty()) {
+												BigDecimal disAmt = (rate1.getTotalRate()
+														.subtract(new BigDecimal(cAmt)))
+														.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(disAmt);
+											} else {
+												tempAss.setRates(rate1.getTotalRate());
+											}
+
 											tempAss.setInvoiceDate(invDate);
 											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
 											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
@@ -446,7 +490,7 @@ public class AssessmentService {
 											tempAss.setContainerStatus(con.getContainerStatus());
 											tempAss.setGateOutId(con.getGateOutId());
 											tempAss.setGatePassNo(con.getGatePassNo());
-											tempAss.setRates(rate1.getTotalRate());
+											// tempAss.setRates(rate1.getTotalRate());
 											tempAss.setServiceRate(rate1.getRate());
 											tempAss.setTaxPerc(
 													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
@@ -593,6 +637,8 @@ public class AssessmentService {
 															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
 															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
 
+															System.out.println("cPerc cPerc " + cPerc);
+
 															if (cPerc != null && !cPerc.isEmpty()) {
 																BigDecimal disPerc = new BigDecimal(cPerc);
 																BigDecimal finalPerc = new BigDecimal(100)
@@ -603,10 +649,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 
 															} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -626,10 +669,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 															} else if (mAmt != null && !mAmt.isEmpty()) {
 																BigDecimal disAmt = (totalRate
 																		.subtract(new BigDecimal(cAmt)))
@@ -694,6 +734,8 @@ public class AssessmentService {
 															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
 															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
 
+															System.out.println("cPerc cPerc " + cPerc);
+
 															if (cPerc != null && !cPerc.isEmpty()) {
 																BigDecimal disPerc = new BigDecimal(cPerc);
 																BigDecimal finalPerc = new BigDecimal(100)
@@ -704,10 +746,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 
 															} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -727,10 +766,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 															} else if (mAmt != null && !mAmt.isEmpty()) {
 																BigDecimal disAmt = (totalRate
 																		.subtract(new BigDecimal(cAmt)))
@@ -818,10 +854,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 
 															} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -841,10 +874,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 															} else if (mAmt != null && !mAmt.isEmpty()) {
 																BigDecimal disAmt = (totalRate
 																		.subtract(new BigDecimal(cAmt)))
@@ -927,10 +957,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 
 															} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -950,10 +977,7 @@ public class AssessmentService {
 
 																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-																BigDecimal disAmt = (totalRate.subtract(amt))
-																		.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-																tempAss.setRates(disAmt);
+																tempAss.setRates(amt);
 															} else if (mAmt != null && !mAmt.isEmpty()) {
 																BigDecimal disAmt = (totalRate
 																		.subtract(new BigDecimal(cAmt)))
@@ -1079,10 +1103,7 @@ public class AssessmentService {
 
 															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																	BigDecimal.ROUND_HALF_UP);
-
-															tempAss.setRates(disAmt);
+															tempAss.setRates(amt);
 
 														} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1102,10 +1123,7 @@ public class AssessmentService {
 
 															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																	BigDecimal.ROUND_HALF_UP);
-
-															tempAss.setRates(disAmt);
+															tempAss.setRates(amt);
 														} else if (mAmt != null && !mAmt.isEmpty()) {
 															BigDecimal disAmt = (totalRate
 																	.subtract(new BigDecimal(cAmt)))
@@ -1238,10 +1256,7 @@ public class AssessmentService {
 
 															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																	BigDecimal.ROUND_HALF_UP);
-
-															tempAss.setRates(disAmt);
+															tempAss.setRates(amt);
 
 														} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1261,10 +1276,7 @@ public class AssessmentService {
 
 															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																	BigDecimal.ROUND_HALF_UP);
-
-															tempAss.setRates(disAmt);
+															tempAss.setRates(amt);
 														} else if (mAmt != null && !mAmt.isEmpty()) {
 															BigDecimal disAmt = (totalRate
 																	.subtract(new BigDecimal(cAmt)))
@@ -1334,10 +1346,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1355,10 +1364,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 													} else if (mAmt != null && !mAmt.isEmpty()) {
 														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -1416,6 +1422,8 @@ public class AssessmentService {
 												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
 												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
 
+												System.out.println("cPerc cPerc " + cPerc);
+
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
 													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
@@ -1425,10 +1433,7 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1446,10 +1451,7 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 												} else if (mAmt != null && !mAmt.isEmpty()) {
 													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -1596,6 +1598,8 @@ public class AssessmentService {
 													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
 													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
 
+													System.out.println("cPerc cPerc " + cPerc);
+
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
 														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
@@ -1605,10 +1609,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1626,10 +1627,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 													} else if (mAmt != null && !mAmt.isEmpty()) {
 														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -1686,6 +1684,8 @@ public class AssessmentService {
 													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
 													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
 
+													System.out.println("cPerc cPerc " + cPerc);
+
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
 														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
@@ -1695,10 +1695,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1716,10 +1713,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 													} else if (mAmt != null && !mAmt.isEmpty()) {
 														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -1800,11 +1794,7 @@ public class AssessmentService {
 																.divide(new BigDecimal(100));
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1822,10 +1812,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 													} else if (mAmt != null && !mAmt.isEmpty()) {
 														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -1903,10 +1890,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -1924,10 +1908,7 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 													} else if (mAmt != null && !mAmt.isEmpty()) {
 														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -2039,10 +2020,7 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -2060,10 +2038,7 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 												} else if (mAmt != null && !mAmt.isEmpty()) {
 													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -2186,10 +2161,7 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -2207,10 +2179,7 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 												} else if (mAmt != null && !mAmt.isEmpty()) {
 													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -2276,10 +2245,7 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -2297,10 +2263,7 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 											} else if (mAmt != null && !mAmt.isEmpty()) {
 												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -2362,10 +2325,7 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
@@ -2383,10 +2343,7 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 										} else if (mAmt != null && !mAmt.isEmpty()) {
 											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
 													BigDecimal.ROUND_HALF_UP);
@@ -2819,6 +2776,51 @@ public class AssessmentService {
 											Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
 													day.getStartTime(), day.getEndTime());
 
+											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+											System.out.println("cPerc cPerc " + cPerc);
+
+											if (cPerc != null && !cPerc.isEmpty()) {
+												BigDecimal disPerc = new BigDecimal(cPerc);
+												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+												BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+														.divide(new BigDecimal(100));
+
+												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(amt);
+
+											} else if (cAmt != null && !cAmt.isEmpty()) {
+
+												BigDecimal disAmt = (rate1.getTotalRate()
+														.subtract(new BigDecimal(cAmt)))
+														.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(disAmt);
+
+											} else if (mPerc != null && !mPerc.isEmpty()) {
+												BigDecimal disPerc = new BigDecimal(mPerc);
+												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+												BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+														.divide(new BigDecimal(100));
+
+												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(amt);
+											} else if (mAmt != null && !mAmt.isEmpty()) {
+												BigDecimal disAmt = (rate1.getTotalRate()
+														.subtract(new BigDecimal(cAmt)))
+														.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(disAmt);
+											} else {
+												tempAss.setRates(rate1.getTotalRate());
+											}
 											tempAss.setInvoiceDate(invDate);
 											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
 											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
@@ -2846,7 +2848,7 @@ public class AssessmentService {
 											tempAss.setContainerStatus(con.getContainerStatus());
 											tempAss.setGateOutId(con.getGateOutId());
 											tempAss.setGatePassNo(con.getGatePassNo());
-											tempAss.setRates(rate1.getTotalRate());
+											// tempAss.setRates(rate1.getTotalRate());
 											tempAss.setServiceRate(rate1.getRate());
 											tempAss.setTaxPerc(
 													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
@@ -3008,7 +3010,53 @@ public class AssessmentService {
 															totalRate = totalRate.subtract(oldVal).setScale(3,
 																	RoundingMode.HALF_UP);
 
-															tempAss.setRates(totalRate);
+															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+															System.out.println("cPerc cPerc " + cPerc);
+
+															if (cPerc != null && !cPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(cPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+
+															} else if (cAmt != null && !cAmt.isEmpty()) {
+
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+
+															} else if (mPerc != null && !mPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(mPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+															} else if (mAmt != null && !mAmt.isEmpty()) {
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+															} else {
+																tempAss.setRates(totalRate);
+															}
 
 														} else {
 
@@ -3083,7 +3131,53 @@ public class AssessmentService {
 															totalRate = totalRate.subtract(oldVal).setScale(3,
 																	RoundingMode.HALF_UP);
 
-															tempAss.setRates(totalRate);
+															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+															System.out.println("cPerc cPerc " + cPerc);
+
+															if (cPerc != null && !cPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(cPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+
+															} else if (cAmt != null && !cAmt.isEmpty()) {
+
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+
+															} else if (mPerc != null && !mPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(mPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+															} else if (mAmt != null && !mAmt.isEmpty()) {
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+															} else {
+																tempAss.setRates(totalRate);
+															}
 
 														}
 													}
@@ -3171,7 +3265,53 @@ public class AssessmentService {
 															totalRate = totalRate.subtract(oldVal).setScale(3,
 																	RoundingMode.HALF_UP);
 
-															tempAss.setRates(totalRate);
+															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+															System.out.println("cPerc cPerc " + cPerc);
+
+															if (cPerc != null && !cPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(cPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+
+															} else if (cAmt != null && !cAmt.isEmpty()) {
+
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+
+															} else if (mPerc != null && !mPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(mPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+															} else if (mAmt != null && !mAmt.isEmpty()) {
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+															} else {
+																tempAss.setRates(totalRate);
+															}
 														} else {
 															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
 																	convertToLocalDateTime(con.getGateInDate()),
@@ -3253,7 +3393,53 @@ public class AssessmentService {
 															totalRate = totalRate.subtract(oldVal).setScale(3,
 																	RoundingMode.HALF_UP);
 
-															tempAss.setRates(totalRate);
+															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+															System.out.println("cPerc cPerc " + cPerc);
+
+															if (cPerc != null && !cPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(cPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+
+															} else if (cAmt != null && !cAmt.isEmpty()) {
+
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+
+															} else if (mPerc != null && !mPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(mPerc);
+																BigDecimal finalPerc = new BigDecimal(100)
+																		.subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+															} else if (mAmt != null && !mAmt.isEmpty()) {
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+															} else {
+																tempAss.setRates(totalRate);
+															}
 														}
 
 													}
@@ -3411,7 +3597,53 @@ public class AssessmentService {
 														totalRate = totalRate.subtract(oldVal).setScale(3,
 																RoundingMode.HALF_UP);
 
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+														String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+														String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+														String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+														System.out.println("cPerc cPerc " + cPerc);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														} else if (mPerc != null && !mPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(mPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+														} else if (mAmt != null && !mAmt.isEmpty()) {
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+														} else {
+															tempAss.setRates(totalRate);
+														}
 
 													} else {
 
@@ -3484,7 +3716,53 @@ public class AssessmentService {
 														totalRate = totalRate.subtract(oldVal).setScale(3,
 																RoundingMode.HALF_UP);
 
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+														String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+														String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+														String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+														System.out.println("cPerc cPerc " + cPerc);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														} else if (mPerc != null && !mPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(mPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+														} else if (mAmt != null && !mAmt.isEmpty()) {
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+														} else {
+															tempAss.setRates(totalRate);
+														}
 
 													}
 												}
@@ -3571,7 +3849,53 @@ public class AssessmentService {
 														totalRate = totalRate.subtract(oldVal).setScale(3,
 																RoundingMode.HALF_UP);
 
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+														String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+														String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+														String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+														System.out.println("cPerc cPerc " + cPerc);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														} else if (mPerc != null && !mPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(mPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+														} else if (mAmt != null && !mAmt.isEmpty()) {
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+														} else {
+															tempAss.setRates(totalRate);
+														}
 													} else {
 														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
 																convertToLocalDateTime(con.getGateInDate()),
@@ -3652,7 +3976,53 @@ public class AssessmentService {
 														totalRate = totalRate.subtract(oldVal).setScale(3,
 																RoundingMode.HALF_UP);
 
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+														String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+														String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+														String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+														System.out.println("cPerc cPerc " + cPerc);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														} else if (mPerc != null && !mPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(mPerc);
+															BigDecimal finalPerc = new BigDecimal(100)
+																	.subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+														} else if (mAmt != null && !mAmt.isEmpty()) {
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+														} else {
+															tempAss.setRates(totalRate);
+														}
 													}
 
 												}
@@ -3816,7 +4186,49 @@ public class AssessmentService {
 													totalRate = totalRate.subtract(oldVal).setScale(3,
 															RoundingMode.HALF_UP);
 
-													tempAss.setRates(totalRate);
+													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+													System.out.println("cPerc cPerc " + cPerc);
+
+													if (cPerc != null && !cPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(cPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+
+													} else if (cAmt != null && !cAmt.isEmpty()) {
+
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+
+													} else if (mPerc != null && !mPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(mPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+													} else if (mAmt != null && !mAmt.isEmpty()) {
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+													} else {
+														tempAss.setRates(totalRate);
+													}
 
 												} else {
 
@@ -3889,7 +4301,49 @@ public class AssessmentService {
 													totalRate = totalRate.subtract(oldVal).setScale(3,
 															RoundingMode.HALF_UP);
 
-													tempAss.setRates(totalRate);
+													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+													System.out.println("cPerc cPerc " + cPerc);
+
+													if (cPerc != null && !cPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(cPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+
+													} else if (cAmt != null && !cAmt.isEmpty()) {
+
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+
+													} else if (mPerc != null && !mPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(mPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+													} else if (mAmt != null && !mAmt.isEmpty()) {
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+													} else {
+														tempAss.setRates(totalRate);
+													}
 
 												}
 											}
@@ -3974,7 +4428,49 @@ public class AssessmentService {
 													totalRate = totalRate.subtract(oldVal).setScale(3,
 															RoundingMode.HALF_UP);
 
-													tempAss.setRates(totalRate);
+													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+													System.out.println("cPerc cPerc " + cPerc);
+
+													if (cPerc != null && !cPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(cPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+
+													} else if (cAmt != null && !cAmt.isEmpty()) {
+
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+
+													} else if (mPerc != null && !mPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(mPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+													} else if (mAmt != null && !mAmt.isEmpty()) {
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+													} else {
+														tempAss.setRates(totalRate);
+													}
 												} else {
 													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
 															convertToLocalDateTime(con.getGateInDate()),
@@ -4053,7 +4549,49 @@ public class AssessmentService {
 													totalRate = totalRate.subtract(oldVal).setScale(3,
 															RoundingMode.HALF_UP);
 
-													tempAss.setRates(totalRate);
+													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+
+													System.out.println("cPerc cPerc " + cPerc);
+
+													if (cPerc != null && !cPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(cPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+
+													} else if (cAmt != null && !cAmt.isEmpty()) {
+
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+
+													} else if (mPerc != null && !mPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(mPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+													} else if (mAmt != null && !mAmt.isEmpty()) {
+														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+													} else {
+														tempAss.setRates(totalRate);
+													}
 												}
 
 											}
@@ -4433,6 +4971,4244 @@ public class AssessmentService {
 			return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	
+	
+//	@Transactional
+//	public ResponseEntity<?> saveAssessmentData(String cid, String bid, String user, Map<String, Object> data)
+//			throws JsonMappingException, JsonProcessingException {
+//		try {
+//			ObjectMapper mapper = new ObjectMapper();
+//
+//			AssessmentSheet assessment = mapper.readValue(mapper.writeValueAsString(data.get("assessmentData")),
+//					AssessmentSheet.class);
+//
+//			if (assessment == null) {
+//				return new ResponseEntity<>("Assessment data not found", HttpStatus.CONFLICT);
+//			}
+//
+//			List<AssessmentContainerDTO> containerData = mapper.readValue(
+//					mapper.writeValueAsString(data.get("containerData")),
+//					new TypeReference<List<AssessmentContainerDTO>>() {
+//					});
+//
+//			if (containerData.isEmpty()) {
+//				return new ResponseEntity<>("Container data not found", HttpStatus.CONFLICT);
+//			}
+//
+//			AtomicReference<BigDecimal> srNo1 = new AtomicReference<>(new BigDecimal(1));
+//
+//			if (assessment.getAssesmentId() == null || assessment.getAssesmentId().isEmpty()) {
+//
+//				int sr = 1;
+//
+//				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05091", "2024");
+//
+//				int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+//
+//				int nextNumericNextID1 = lastNextNumericId1 + 1;
+//
+//				String HoldNextIdD1 = String.format("INCO%06d", nextNumericNextID1);
+//
+//				for (AssessmentContainerDTO con : containerData) {
+//					List<AssessmentContainerDTO> finalConData = new ArrayList<>();
+//					if (con.getLastInvoiceUptoDate() == null) {
+//
+//						List<String> conSize = new ArrayList<>();
+//						conSize.add("");
+//						conSize.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//						List<String> conTypeOfCon = new ArrayList<>();
+//						conTypeOfCon.add("");
+//						conTypeOfCon.add(con.getTypeOfContainer());
+//
+//						List<String> scanType = new ArrayList<>();
+//						scanType.add("");
+//						scanType.add(con.getScannerType());
+//
+//						List<String> examType = new ArrayList<>();
+//						examType.add("");
+//						examType.add((con.getExamPercentage().isEmpty() || "0".equals(con.getExamPercentage())) ? ""
+//								: Integer.parseInt(con.getExamPercentage()) > 25 ? "100" : con.getExamPercentage());
+//
+//						String conStatus = "FCL".equals(con.getContainerStatus()) ? "IMP" : "IMPCRG";
+//
+//						// Service Mapping
+//						List<String> serviceMappingData = new ArrayList<>();
+//
+//						if ("SINGLE".equals(assessment.getInvoiceCategory())) {
+//							serviceMappingData = serviceMappingRepo.getServicesForImportInvoice1(cid, bid,
+//									con.getProfitcentreId(), conStatus, con.getGateOutType(), conSize, conTypeOfCon,
+//									scanType, examType);
+//						} else {
+//
+//							String group = "STORAGE".equals(assessment.getInvoiceCategory()) ? "G" : "H";
+//							serviceMappingData = serviceMappingRepo.getServicesForImportInvoice2(cid, bid,
+//									con.getProfitcentreId(), conStatus, con.getGateOutType(), conSize, conTypeOfCon,
+//									scanType, examType, group);
+//						}
+//
+//						if (serviceMappingData.isEmpty()) {
+//							return new ResponseEntity<>(
+//									"Service mapping not found for container no " + con.getContainerNo(),
+//									HttpStatus.CONFLICT);
+//						}
+//
+//						Set<String> combinedService = new HashSet<>();
+//						combinedService.addAll(serviceMappingData);
+//
+//						List<String> partyIdList = new ArrayList<>();
+//						partyIdList.add(assessment.getOthPartyId());
+//						partyIdList.add("");
+//
+//						List<String> impIdList = new ArrayList<>();
+//						impIdList.add(assessment.getImporterId());
+//						impIdList.add("");
+//
+//						List<String> chaIdList = new ArrayList<>();
+//						chaIdList.add(assessment.getCha());
+//						chaIdList.add("");
+//
+//						List<String> fwIdList = new ArrayList<>();
+//						fwIdList.add(assessment.getOnAccountOf());
+//						fwIdList.add("");
+//
+//						if (con.getUpTariffNo() == null || con.getUpTariffNo().isEmpty()) {
+//							String tariffNo = cfstarrifrepo.getTarrifNo(cid, bid, partyIdList, impIdList, chaIdList,
+//									fwIdList, assessment.getOthPartyId(), assessment.getImporterId(),
+//									assessment.getCha(), assessment.getOnAccountOf());
+//
+//							con.setUpTariffNo(tariffNo);
+//						}
+//
+//						if (con.getUpTariffNo() == null || con.getUpTariffNo().isEmpty()) {
+//							return new ResponseEntity<>("Tariff no not found.", HttpStatus.CONFLICT);
+//						}
+//
+//						// Find default service
+//						List<String> defaultService = cfstarrifrepo.getDefaultServiceId(cid, bid, con.getUpTariffNo());
+//
+//						if (!defaultService.isEmpty()) {
+//							combinedService.addAll(defaultService);
+//						}
+//
+//						// SSR service
+//
+//						List<SSRDtl> ssrServices = new ArrayList<>();
+//
+//						if (con.getSsrTransId() != null && !con.getSsrTransId().isEmpty()) {
+//							ssrServices = ssrRepo.getServiceId(cid, bid, con.getSsrTransId(), con.getContainerNo());
+//
+//							if (!ssrServices.isEmpty()) {
+//								List<String> ssrServiceId = ssrServices.stream().map(SSRDtl::getServiceId) // Extract
+//																											// serviceId
+//										.collect(Collectors.toList()); // Collect into a list
+//
+//								combinedService.addAll(ssrServiceId);
+//							}
+//
+//						}
+//
+//						List<SSRDtl> finalSsrServices = ssrServices;
+//
+//						List<String> finalServices = new ArrayList<>(combinedService);
+//
+//						List<Object[]> finalPricing = new ArrayList<>();
+//						List<String> notInPricing = new ArrayList<>();
+//
+//						List<String> conSize1 = new ArrayList<>();
+//						conSize1.add("ALL");
+//						conSize1.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//						List<String> conTypeOfCon1 = new ArrayList<>();
+//						conTypeOfCon1.add("ALL");
+//						conTypeOfCon1.add(con.getTypeOfContainer());
+//
+//						Date assData = assessment.getAssesmentDate(); // Original date
+//						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//						String formattedDate = formatter.format(assData);
+//						Date parsedDate = formatter.parse(formattedDate);
+//
+//						List<Object[]> pricingData = cfstariffservicerepo.getServiceRate(cid, bid, parsedDate,
+//								con.getContainerNo(), assessment.getIgmTransId(), assessment.getIgmNo(),
+//								assessment.getIgmLineNo(), finalServices, con.getUpTariffNo(), conSize1, conTypeOfCon1);
+//
+//						if (!pricingData.isEmpty()) {
+//							List<Object[]> remainingPricing = pricingData.stream()
+//									.filter(data1 -> finalServices.contains(data1[0].toString()))
+//									.collect(Collectors.toList());
+//
+//							notInPricing = finalServices.stream()
+//									.filter(service -> pricingData.stream()
+//											.noneMatch(data1 -> service.equals(data1[0].toString())))
+//									.collect(Collectors.toList());
+//
+//							finalPricing.addAll(remainingPricing);
+//						} else {
+//							notInPricing.addAll(finalServices);
+//						}
+//
+//						if (!notInPricing.isEmpty()) {
+//							List<String> tempPricing = notInPricing;
+//							List<String> conSize2 = new ArrayList<>();
+//							conSize2.add("ALL");
+//							conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//							List<String> conTypeOfCon2 = new ArrayList<>();
+//							conTypeOfCon2.add("ALL");
+//							conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//							List<Object[]> pricingData1 = cfstariffservicerepo.getServiceRate(cid, bid, parsedDate,
+//									con.getContainerNo(), assessment.getIgmTransId(), assessment.getIgmNo(),
+//									assessment.getIgmLineNo(), notInPricing, "CFS1000001", conSize2, conTypeOfCon2);
+//
+//							if (!pricingData1.isEmpty()) {
+//								List<Object[]> remainingPricing = pricingData1.stream()
+//										.filter(data1 -> tempPricing.contains(data1[0].toString()))
+//										.collect(Collectors.toList());
+//
+//								finalPricing.addAll(remainingPricing);
+//							}
+//						}
+//
+////					   if(finalPricing != null || !finalPricing.isEmpty()) {
+////							return new ResponseEntity<>(finalPricing,HttpStatus.CONFLICT);
+////					   }
+//
+//						finalPricing.stream().forEach(f -> {
+//							AssessmentContainerDTO tempAss = new AssessmentContainerDTO();
+//							CFSDay day = cfsdayrepo.getData(cid, bid);
+//
+//							if (con.getSsrTransId() != null && !con.getSsrTransId().isEmpty()) {
+//
+//								if (!finalSsrServices.isEmpty()) {
+//
+//									SSRDtl rate1 = finalSsrServices.stream()
+//											.filter(s -> s.getServiceId().equals(String.valueOf(f[0]))).findFirst()
+//											.orElse(null); // Return null if no match is found
+//
+//									if (rate1 != null) {
+//
+//										try {
+//											tempAss = (AssessmentContainerDTO) con.clone();
+//
+//											Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
+//													day.getStartTime(), day.getEndTime());
+//
+//											tempAss.setInvoiceDate(invDate);
+//											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//											tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//											tempAss.setDiscPercentage(
+//													f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//															: BigDecimal.ZERO);
+//											tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//													: BigDecimal.ZERO);
+//											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//											tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//													: BigDecimal.ZERO);
+//											tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//													: BigDecimal.ZERO);
+//											tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//											tempAss.setContainerStatus(con.getContainerStatus());
+//											tempAss.setGateOutId(con.getGateOutId());
+//											tempAss.setGatePassNo(con.getGatePassNo());
+//											tempAss.setRates(rate1.getTotalRate());
+//											tempAss.setServiceRate(rate1.getRate());
+//											tempAss.setTaxPerc(
+//													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//															: new BigDecimal(String.valueOf(f[12])));
+//											tempAss.setTaxId(String.valueOf(f[11]));
+//											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//											finalConData.add(tempAss);
+//										} catch (CloneNotSupportedException e) {
+//											// TODO Auto-generated catch block
+//											e.printStackTrace();
+//										}
+//
+//									} else {
+//										try {
+//											tempAss = (AssessmentContainerDTO) con.clone();
+//											Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
+//													day.getStartTime(), day.getEndTime());
+//
+//											tempAss.setInvoiceDate(invDate);
+//											if ("SA".equals(String.valueOf(f[8]))) {
+//												tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//												tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//												tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//												tempAss.setDiscPercentage(
+//														f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																: BigDecimal.ZERO);
+//												tempAss.setDiscValue(
+//														f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmPercentage(
+//														f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//														: BigDecimal.ZERO);
+//												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//												tempAss.setRangeFrom(
+//														f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																: BigDecimal.ZERO);
+//												tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//														: BigDecimal.ZERO);
+//												tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//												tempAss.setContainerStatus(con.getContainerStatus());
+//												tempAss.setGateOutId(con.getGateOutId());
+//												tempAss.setGatePassNo(con.getGatePassNo());
+//												tempAss.setTaxPerc((f[12] == null || String.valueOf(f[12]).isEmpty())
+//														? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//												tempAss.setTaxId(String.valueOf(f[11]));
+//												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//												List<String> conSize2 = new ArrayList<>();
+//												conSize2.add("ALL");
+//												conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+//														: con.getContainerSize());
+//
+//												List<String> conTypeOfCon2 = new ArrayList<>();
+//												conTypeOfCon2.add("ALL");
+//												conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//												List<String> commodityType = new ArrayList<>();
+//												commodityType.add("ALL");
+//												commodityType.add(assessment.getCommodityCode());
+//
+//												List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(
+//														cid, bid, String.valueOf(f[3]), String.valueOf(f[4]),
+//														String.valueOf(f[0]), String.valueOf(f[8]), conSize2,
+//														conTypeOfCon2, commodityType, con.getContainerSize(),
+//														con.getTypeOfContainer(), assessment.getCommodityCode());
+//
+//												if (!rangeValues.isEmpty()) {
+//
+//													BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+//															.filter(r -> ((BigDecimal) r[8])
+//																	.compareTo(BigDecimal.ZERO) == 0) // Filter where
+//																										// rate is 0
+//															.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+//																							// BigDecimal
+//															.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+//															.orElse(BigDecimal.ZERO); // Default value if no match found
+//
+//													tempAss.setFreeDays(freeDaysForExportContainerStorage);
+//
+//													String unit = String.valueOf(f[1]);
+//
+//													AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
+//															BigDecimal.ZERO);
+//													if ("DAY".equals(unit)) {
+//
+//														if (con.getDestuffDate() != null) {
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getGateInDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getDestuffDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//
+//															tempAss.setExecutionUnit(String.valueOf(daysBetween1));
+//															tempAss.setExecutionUnit1("");
+//
+//															System.out.println("daysBetween " + daysBetween1);
+//
+//															BigDecimal totalRate = rangeValues.stream().map(r -> {
+//
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//
+//																BigDecimal rate = (BigDecimal) r[8];
+//
+//																if (daysBetween1 >= fromRange
+//																		&& daysBetween1 <= toRange) {
+//																	serviceRate.set(rate); // Set the rate for the
+//																							// matching
+//																							// slab
+//																}
+//
+//																long daysInSlab = Math.min(toRange, daysBetween1)
+//																		- Math.max(fromRange, 1) + 1;
+//
+//																daysInSlab = Math.max(daysInSlab, 0);
+//
+//																serviceRate.set(rate);
+//																return rate.multiply(new BigDecimal(daysInSlab));
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															tempAss.setServiceRate(serviceRate.get());
+//
+//															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//															if (cPerc != null && !cPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(cPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (mPerc != null && !mPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(mPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else if (mAmt != null && !mAmt.isEmpty()) {
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else {
+//																tempAss.setRates(totalRate);
+//															}
+//
+//														} else {
+//
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getGateInDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//
+//															tempAss.setExecutionUnit(String.valueOf(daysBetween1));
+//															tempAss.setExecutionUnit1("");
+//
+//															System.out.println("daysBetween " + daysBetween1);
+//
+//															BigDecimal totalRate = rangeValues.stream().map(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue(); // Start
+//																												// of
+//																												// the
+//																												// slab
+//																int toRange = ((BigDecimal) r[7]).intValue(); // End of
+//																												// the
+//																												// slab
+//																BigDecimal rate = (BigDecimal) r[8]; // Rate per day in
+//																										// the
+//																										// slab
+//																if (daysBetween1 >= fromRange
+//																		&& daysBetween1 <= toRange) {
+//																	serviceRate.set(rate); // Set the rate for the
+//																							// matching
+//																							// slab
+//																}
+//																// Calculate days in the current slab
+//																long daysInSlab = Math.min(toRange, daysBetween1)
+//																		- Math.max(fromRange, 1) + 1;
+//
+//																daysInSlab = Math.max(daysInSlab, 0);
+//																return rate.multiply(new BigDecimal(daysInSlab));
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															tempAss.setServiceRate(serviceRate.get());
+//															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//															if (cPerc != null && !cPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(cPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (mPerc != null && !mPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(mPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else if (mAmt != null && !mAmt.isEmpty()) {
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else {
+//																tempAss.setRates(totalRate);
+//															}
+//
+//														}
+//													}
+//
+//													if ("WEEK".equals(unit)) {
+//														if (con.getDestuffDate() != null) {
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getDestuffDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//															tempAss.setExecutionUnit(String.valueOf(weeksBetween));
+//															tempAss.setExecutionUnit1("");
+//
+//															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																// Include slabs that overlap with weeksBetween
+//																return weeksBetween >= fromRange;
+//															}).map(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																BigDecimal rate = (BigDecimal) r[8];
+//
+//																// Adjust the fromRange to exclude week 0
+//																int adjustedFromRange = Math.max(fromRange, 1);
+//
+//																// Determine actual weeks in this slab that contribute
+//																// to the total
+//																long weeksInSlab = Math.max(0,
+//																		Math.min(toRange, weeksBetween)
+//																				- adjustedFromRange + 1);
+//
+//																// Exclude slabs where weeksInSlab is 0
+//																return weeksInSlab > 0
+//																		? rate.multiply(new BigDecimal(weeksInSlab))
+//																		: BigDecimal.ZERO;
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															if ("SM".equals(String.valueOf(f[7]))) {
+//																totalRate = (totalRate.multiply(
+//																		con.getArea() == null ? new BigDecimal(1)
+//																				: con.getArea()))
+//																		.setScale(3, RoundingMode.HALF_UP);
+//															}
+//
+//															System.out.println(
+//																	"totalRate " + totalRate + " " + weeksBetween);
+//															tempAss.setServiceRate(serviceRate.get());
+//															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//															if (cPerc != null && !cPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(cPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (mPerc != null && !mPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(mPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else if (mAmt != null && !mAmt.isEmpty()) {
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else {
+//																tempAss.setRates(totalRate);
+//															}
+//
+//														} else {
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getGateInDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//															tempAss.setExecutionUnit(String.valueOf(weeksBetween));
+//															tempAss.setExecutionUnit1("");
+//
+//															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																// Include slabs that overlap with weeksBetween
+//																return weeksBetween >= fromRange;
+//															}).map(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																BigDecimal rate = (BigDecimal) r[8];
+//
+//																// Adjust the fromRange to exclude week 0
+//																int adjustedFromRange = Math.max(fromRange, 1);
+//
+//																// Determine actual weeks in this slab that contribute
+//																// to the total
+//																long weeksInSlab = Math.max(0,
+//																		Math.min(toRange, weeksBetween)
+//																				- adjustedFromRange + 1);
+//
+//																// Exclude slabs where weeksInSlab is 0
+//																return weeksInSlab > 0
+//																		? rate.multiply(new BigDecimal(weeksInSlab))
+//																		: BigDecimal.ZERO;
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															System.out.println(
+//																	"totalRate " + totalRate + " " + weeksBetween);
+//
+//															if ("SM".equals(String.valueOf(f[7]))) {
+//																totalRate = (totalRate.multiply(
+//																		con.getArea() == null ? new BigDecimal(1)
+//																				: con.getArea()))
+//																		.setScale(3, RoundingMode.HALF_UP);
+//															}
+//															tempAss.setServiceRate(serviceRate.get());
+//															String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//															String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//															String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//															String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//															if (cPerc != null && !cPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(cPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//
+//															} else if (mPerc != null && !mPerc.isEmpty()) {
+//																BigDecimal disPerc = new BigDecimal(mPerc);
+//																BigDecimal finalPerc = new BigDecimal(100)
+//																		.subtract(disPerc);
+//
+//																BigDecimal amt = (totalRate.multiply(finalPerc))
+//																		.divide(new BigDecimal(100));
+//
+//																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																BigDecimal disAmt = (totalRate.subtract(amt))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else if (mAmt != null && !mAmt.isEmpty()) {
+//																BigDecimal disAmt = (totalRate
+//																		.subtract(new BigDecimal(cAmt)))
+//																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//																tempAss.setRates(disAmt);
+//															} else {
+//																tempAss.setRates(totalRate);
+//															}
+//														}
+//
+//													}
+//
+//												}
+//
+//											} else if ("RA".equals(String.valueOf(f[8]))) {
+//
+//												String unit = String.valueOf(f[1]);
+//												BigDecimal executionUnit = BigDecimal.ZERO;
+//												List<String> conSize2 = new ArrayList<>();
+//												conSize2.add("ALL");
+//												conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+//														: con.getContainerSize());
+//
+//												List<String> conTypeOfCon2 = new ArrayList<>();
+//												conTypeOfCon2.add("ALL");
+//												conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//												List<String> commodityType = new ArrayList<>();
+//												commodityType.add("ALL");
+//												commodityType.add(assessment.getCommodityCode());
+//
+//												if ("MTON".equals(unit)) {
+//													String serviceGrp = String.valueOf(f[18]);
+//
+//													if ("H".equals(serviceGrp)) {
+//
+//														BigDecimal cargoWt = new BigDecimal(
+//																String.valueOf(con.getGrossWt()))
+//																.divide(new BigDecimal(1000))
+//																.setScale(3, RoundingMode.HALF_UP);
+//
+//														executionUnit = cargoWt;
+//
+//														tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//														tempAss.setExecutionUnit1("");
+//													} else {
+//														BigDecimal cargoWt = con.getCargoWt()
+//																.divide(new BigDecimal(1000))
+//																.setScale(3, RoundingMode.HALF_UP);
+//
+//														executionUnit = cargoWt;
+//														tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//														tempAss.setExecutionUnit1("");
+//													}
+//
+//													Object rangeValue = cfstariffservicerepo.getRangeDataByServiceId(
+//															cid, bid, String.valueOf(f[3]), String.valueOf(f[4]),
+//															String.valueOf(f[0]), executionUnit, conSize2,
+//															conTypeOfCon2, commodityType, con.getContainerSize(),
+//															con.getTypeOfContainer(), assessment.getCommodityCode());
+//
+//													if (rangeValue != null) {
+//														Object[] finalRangeValue = (Object[]) rangeValue;
+//														tempAss.setServiceGroup(
+//																f[18] != null ? String.valueOf(f[18]) : "");
+//														tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//														tempAss.setServiceName(
+//																f[22] != null ? String.valueOf(f[22]) : "");
+//														tempAss.setServiceUnit(
+//																f[1] != null ? String.valueOf(f[1]) : "");
+//														tempAss.setServiceUnit1(
+//																f[7] != null ? String.valueOf(f[7]) : "");
+//														tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//														tempAss.setDiscPercentage(
+//																f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setDiscValue(
+//																f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setmPercentage(
+//																f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setmAmount(
+//																f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//														tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//														tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//														tempAss.setRangeFrom(
+//																f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setRangeTo(
+//																f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//														tempAss.setContainerStatus(con.getContainerStatus());
+//														tempAss.setGateOutId(con.getGateOutId());
+//														tempAss.setGatePassNo(con.getGatePassNo());
+//														tempAss.setTaxPerc(
+//																(f[12] == null || String.valueOf(f[12]).isEmpty())
+//																		? BigDecimal.ZERO
+//																		: new BigDecimal(String.valueOf(f[12])));
+//														tempAss.setTaxId(String.valueOf(f[11]));
+//														BigDecimal totalRate = new BigDecimal(
+//																String.valueOf(finalRangeValue[8]));
+//
+//														tempAss.setServiceRate(totalRate);
+//														tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//														String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//														String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//														String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//														String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//														if (cPerc != null && !cPerc.isEmpty()) {
+//															BigDecimal disPerc = new BigDecimal(cPerc);
+//															BigDecimal finalPerc = new BigDecimal(100)
+//																	.subtract(disPerc);
+//
+//															BigDecimal amt = (totalRate.multiply(finalPerc))
+//																	.divide(new BigDecimal(100));
+//
+//															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																	BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//
+//														} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//															BigDecimal disAmt = (totalRate
+//																	.subtract(new BigDecimal(cAmt)))
+//																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//
+//														} else if (mPerc != null && !mPerc.isEmpty()) {
+//															BigDecimal disPerc = new BigDecimal(mPerc);
+//															BigDecimal finalPerc = new BigDecimal(100)
+//																	.subtract(disPerc);
+//
+//															BigDecimal amt = (totalRate.multiply(finalPerc))
+//																	.divide(new BigDecimal(100));
+//
+//															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																	BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//														} else if (mAmt != null && !mAmt.isEmpty()) {
+//															BigDecimal disAmt = (totalRate
+//																	.subtract(new BigDecimal(cAmt)))
+//																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//														} else {
+//															tempAss.setRates(
+//																	new BigDecimal(String.valueOf(finalRangeValue[8])));
+//														}
+//
+//													}
+//
+//												} else if ("TEU".equals(unit) || "SM".equals(unit)
+//														|| "CNTR".equals(unit) || "PBL".equals(unit)
+//														|| "ACT".equals(unit) || "PCK".equals(unit)
+//														|| "SHFT".equals(unit) || "KG".equals(unit)) {
+//
+//													if ("SM".equals(unit) || "CNTR".equals(unit) || "PBL".equals(unit)
+//															|| "ACT".equals(unit) || "PCK".equals(unit)
+//															|| "SHFT".equals(unit)) {
+//														executionUnit = new BigDecimal("1");
+//														tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//														tempAss.setExecutionUnit1("");
+//													}
+//
+//													if ("TEU".equals(unit)) {
+//														if ("20".equals(con.getContainerSize())
+//																|| "22".equals(con.getContainerSize())) {
+//															executionUnit = new BigDecimal("1");
+//															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//															tempAss.setExecutionUnit1("");
+//														} else if ("40".equals(con.getContainerSize())) {
+//															executionUnit = new BigDecimal("2");
+//															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//															tempAss.setExecutionUnit1("");
+//														} else if ("45".equals(con.getContainerSize())) {
+//															executionUnit = new BigDecimal("2.5");
+//															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//															tempAss.setExecutionUnit1("");
+//														}
+//													}
+//
+//													if ("KG".equals(unit)) {
+//														String serviceGrp = String.valueOf(f[18]);
+//														if ("H".equals(serviceGrp)) {
+//
+//															BigDecimal cargoWt = new BigDecimal(
+//																	String.valueOf(con.getGrossWt()));
+//
+//															executionUnit = cargoWt;
+//
+//															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//															tempAss.setExecutionUnit1("");
+//														} else {
+//															BigDecimal cargoWt = con.getCargoWt();
+//
+//															executionUnit = cargoWt;
+//															tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//															tempAss.setExecutionUnit1("");
+//														}
+//													}
+//
+//													Object rangeValue = cfstariffservicerepo.getRangeDataByServiceId(
+//															cid, bid, String.valueOf(f[3]), String.valueOf(f[4]),
+//															String.valueOf(f[0]), executionUnit, conSize2,
+//															conTypeOfCon2, commodityType, con.getContainerSize(),
+//															con.getTypeOfContainer(), assessment.getCommodityCode());
+//
+//													if (rangeValue != null) {
+//														Object[] finalRangeValue = (Object[]) rangeValue;
+//														tempAss.setServiceGroup(
+//																f[18] != null ? String.valueOf(f[18]) : "");
+//														tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//														tempAss.setServiceName(
+//																f[22] != null ? String.valueOf(f[22]) : "");
+//														tempAss.setServiceUnit(
+//																f[1] != null ? String.valueOf(f[1]) : "");
+//														tempAss.setServiceUnit1(
+//																f[7] != null ? String.valueOf(f[7]) : "");
+//														tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//														tempAss.setDiscPercentage(
+//																f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setDiscValue(
+//																f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setmPercentage(
+//																f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setmAmount(
+//																f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//														tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//														tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//														tempAss.setRangeFrom(
+//																f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setRangeTo(
+//																f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//																		: BigDecimal.ZERO);
+//														tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//														tempAss.setContainerStatus(con.getContainerStatus());
+//														tempAss.setGateOutId(con.getGateOutId());
+//														tempAss.setGatePassNo(con.getGatePassNo());
+//														tempAss.setTaxPerc(
+//																(f[12] == null || String.valueOf(f[12]).isEmpty())
+//																		? BigDecimal.ZERO
+//																		: new BigDecimal(String.valueOf(f[12])));
+//														tempAss.setTaxId(String.valueOf(f[11]));
+//														tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//														BigDecimal totalRate = new BigDecimal(
+//																String.valueOf(finalRangeValue[8]));
+//
+//														tempAss.setServiceRate(totalRate);
+//
+//														String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//														String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//														String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//														String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//														if (cPerc != null && !cPerc.isEmpty()) {
+//															BigDecimal disPerc = new BigDecimal(cPerc);
+//															BigDecimal finalPerc = new BigDecimal(100)
+//																	.subtract(disPerc);
+//
+//															BigDecimal amt = (totalRate.multiply(finalPerc))
+//																	.divide(new BigDecimal(100));
+//
+//															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																	BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//
+//														} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//															BigDecimal disAmt = (totalRate
+//																	.subtract(new BigDecimal(cAmt)))
+//																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//
+//														} else if (mPerc != null && !mPerc.isEmpty()) {
+//															BigDecimal disPerc = new BigDecimal(mPerc);
+//															BigDecimal finalPerc = new BigDecimal(100)
+//																	.subtract(disPerc);
+//
+//															BigDecimal amt = (totalRate.multiply(finalPerc))
+//																	.divide(new BigDecimal(100));
+//
+//															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																	BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//														} else if (mAmt != null && !mAmt.isEmpty()) {
+//															BigDecimal disAmt = (totalRate
+//																	.subtract(new BigDecimal(cAmt)))
+//																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//															tempAss.setRates(disAmt);
+//														} else {
+//															tempAss.setRates(
+//																	new BigDecimal(String.valueOf(finalRangeValue[8])));
+//														}
+//													}
+//
+//												}
+//
+//												else {
+//													tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//													tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//													tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//													tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//													tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//													tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//													tempAss.setDiscPercentage(
+//															f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																	: BigDecimal.ZERO);
+//													tempAss.setDiscValue(
+//															f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																	: BigDecimal.ZERO);
+//													tempAss.setmPercentage(
+//															f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																	: BigDecimal.ZERO);
+//													tempAss.setmAmount(
+//															f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//																	: BigDecimal.ZERO);
+//													tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//													tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//													tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//													tempAss.setRangeFrom(
+//															f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																	: BigDecimal.ZERO);
+//													tempAss.setRangeTo(
+//															f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//																	: BigDecimal.ZERO);
+//													tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//													tempAss.setContainerStatus(con.getContainerStatus());
+//													tempAss.setGateOutId(con.getGateOutId());
+//													tempAss.setGatePassNo(con.getGatePassNo());
+//													tempAss.setTaxPerc(
+//															(f[12] == null || String.valueOf(f[12]).isEmpty())
+//																	? BigDecimal.ZERO
+//																	: new BigDecimal(String.valueOf(f[12])));
+//													tempAss.setTaxId(String.valueOf(f[11]));
+//													tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//													BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
+//													tempAss.setServiceRate(totalRate);
+//
+//													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//													if (cPerc != null && !cPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(cPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (mPerc != null && !mPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(mPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else if (mAmt != null && !mAmt.isEmpty()) {
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else {
+//														tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+//													}
+//
+//												}
+//
+//											} else {
+//												tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//												tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//												tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//												tempAss.setDiscPercentage(
+//														f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																: BigDecimal.ZERO);
+//												tempAss.setDiscValue(
+//														f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmPercentage(
+//														f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//														: BigDecimal.ZERO);
+//												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//												tempAss.setRangeFrom(
+//														f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																: BigDecimal.ZERO);
+//												tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//														: BigDecimal.ZERO);
+//												tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//												tempAss.setContainerStatus(con.getContainerStatus());
+//												tempAss.setGateOutId(con.getGateOutId());
+//												tempAss.setGatePassNo(con.getGatePassNo());
+//												tempAss.setTaxPerc((f[12] == null || String.valueOf(f[12]).isEmpty())
+//														? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//												tempAss.setExecutionUnit(String.valueOf(1));
+//												tempAss.setExecutionUnit1("");
+//												tempAss.setTaxId(String.valueOf(f[11]));
+//												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//												BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
+//
+//												tempAss.setServiceRate(totalRate);
+//
+//												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//												if (cPerc != null && !cPerc.isEmpty()) {
+//													BigDecimal disPerc = new BigDecimal(cPerc);
+//													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//													BigDecimal amt = (totalRate.multiply(finalPerc))
+//															.divide(new BigDecimal(100));
+//
+//													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//															BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//
+//												} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//															.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//
+//												} else if (mPerc != null && !mPerc.isEmpty()) {
+//													BigDecimal disPerc = new BigDecimal(mPerc);
+//													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//													BigDecimal amt = (totalRate.multiply(finalPerc))
+//															.divide(new BigDecimal(100));
+//
+//													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//															BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//												} else if (mAmt != null && !mAmt.isEmpty()) {
+//													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//															.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//												} else {
+//													tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+//												}
+//											}
+//
+//											finalConData.add(tempAss);
+//
+//										} catch (CloneNotSupportedException e) {
+//											// TODO Auto-generated catch block
+//											e.printStackTrace();
+//										}
+//									}
+//								}
+//
+//							} else {
+//
+//								try {
+//									tempAss = (AssessmentContainerDTO) con.clone();
+//									Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(), day.getStartTime(),
+//											day.getEndTime());
+//
+//									tempAss.setInvoiceDate(invDate);
+//									if ("SA".equals(String.valueOf(f[8]))) {
+//										tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//										tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//										tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//										tempAss.setDiscPercentage(f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//												: BigDecimal.ZERO);
+//										tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//												: BigDecimal.ZERO);
+//										tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//												: BigDecimal.ZERO);
+//										tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//												: BigDecimal.ZERO);
+//										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//										tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//												: BigDecimal.ZERO);
+//										tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//												: BigDecimal.ZERO);
+//										tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//										tempAss.setContainerStatus(con.getContainerStatus());
+//										tempAss.setGateOutId(con.getGateOutId());
+//										tempAss.setGatePassNo(con.getGatePassNo());
+//										tempAss.setTaxPerc(
+//												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//										tempAss.setTaxId(String.valueOf(f[11]));
+//										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//										List<String> conSize2 = new ArrayList<>();
+//										conSize2.add("ALL");
+//										conSize2.add(
+//												("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//										List<String> conTypeOfCon2 = new ArrayList<>();
+//										conTypeOfCon2.add("ALL");
+//										conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//										List<String> commodityType = new ArrayList<>();
+//										commodityType.add("ALL");
+//										commodityType.add(assessment.getCommodityCode());
+//
+//										List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(cid, bid,
+//												String.valueOf(f[3]), String.valueOf(f[4]), String.valueOf(f[0]),
+//												String.valueOf(f[8]), conSize2, conTypeOfCon2, commodityType,
+//												con.getContainerSize(), con.getTypeOfContainer(),
+//												assessment.getCommodityCode());
+//
+//										if (!rangeValues.isEmpty()) {
+//
+//											BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+//													.filter(r -> ((BigDecimal) r[8]).compareTo(BigDecimal.ZERO) == 0) // Filter
+//																														// where
+//																														// rate
+//																														// is
+//																														// 0
+//													.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+//																					// BigDecimal
+//													.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+//													.orElse(BigDecimal.ZERO); // Default value if no match found
+//
+//											tempAss.setFreeDays(freeDaysForExportContainerStorage);
+//
+//											String unit = String.valueOf(f[1]);
+//
+//											AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
+//													BigDecimal.ZERO);
+//
+//											if ("DAY".equals(unit)) {
+//
+//												if (con.getDestuffDate() != null) {
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getGateInDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getDestuffDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//
+//													tempAss.setExecutionUnit(String.valueOf(daysBetween1));
+//													tempAss.setExecutionUnit1("");
+//
+//													System.out.println("daysBetween " + daysBetween1);
+//
+//													BigDecimal totalRate = rangeValues.stream().map(r -> {
+//
+//														int fromRange = ((BigDecimal) r[6]).intValue(); // Start of
+//																										// the slab
+//														int toRange = ((BigDecimal) r[7]).intValue(); // End of the
+//																										// slab
+//
+//														BigDecimal rate = (BigDecimal) r[8]; // Rate per day in the
+//																								// slab
+//														if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+//															serviceRate.set(rate); // Set the rate for the matching slab
+//														}
+//														long daysInSlab = Math.min(toRange, daysBetween1)
+//																- Math.max(fromRange, 1) + 1;
+//
+//														daysInSlab = Math.max(daysInSlab, 0);
+//														return rate.multiply(new BigDecimal(daysInSlab));
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													tempAss.setServiceRate(serviceRate.get());
+//													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//													if (cPerc != null && !cPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(cPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (mPerc != null && !mPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(mPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else if (mAmt != null && !mAmt.isEmpty()) {
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else {
+//														tempAss.setRates(totalRate);
+//													}
+//
+//												} else {
+//
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getGateInDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//
+//													tempAss.setExecutionUnit(String.valueOf(daysBetween1));
+//													tempAss.setExecutionUnit1("");
+//
+//													System.out.println("daysBetween " + daysBetween1);
+//
+//													BigDecimal totalRate = rangeValues.stream().map(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue(); // Start of
+//																										// the slab
+//														int toRange = ((BigDecimal) r[7]).intValue(); // End of the
+//																										// slab
+//														BigDecimal rate = (BigDecimal) r[8]; // Rate per day in the
+//																								// slab
+//														if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+//															serviceRate.set(rate); // Set the rate for the matching slab
+//														}
+//														// Calculate days in the current slab
+//														long daysInSlab = Math.min(toRange, daysBetween1)
+//																- Math.max(fromRange, 1) + 1;
+//
+//														daysInSlab = Math.max(daysInSlab, 0);
+//														return rate.multiply(new BigDecimal(daysInSlab));
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													tempAss.setServiceRate(serviceRate.get());
+//													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//													if (cPerc != null && !cPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(cPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (mPerc != null && !mPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(mPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else if (mAmt != null && !mAmt.isEmpty()) {
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else {
+//														tempAss.setRates(totalRate);
+//													}
+//
+//												}
+//											}
+//
+//											if ("WEEK".equals(unit)) {
+//												if (con.getDestuffDate() != null) {
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getDestuffDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//													long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//													tempAss.setExecutionUnit(String.valueOf(weeksBetween));
+//													tempAss.setExecutionUnit1("");
+//
+//													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														// Include slabs that overlap with weeksBetween
+//														return weeksBetween >= fromRange;
+//													}).map(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														BigDecimal rate = (BigDecimal) r[8];
+//
+//														// Adjust the fromRange to exclude week 0
+//														int adjustedFromRange = Math.max(fromRange, 1);
+//
+//														// Determine actual weeks in this slab that contribute to the
+//														// total
+//														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+//																- adjustedFromRange + 1);
+//
+//														// Exclude slabs where weeksInSlab is 0
+//														return weeksInSlab > 0
+//																? rate.multiply(new BigDecimal(weeksInSlab))
+//																: BigDecimal.ZERO;
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													if ("SM".equals(String.valueOf(f[7]))) {
+//														totalRate = (totalRate
+//																.multiply(con.getArea() == null ? new BigDecimal(1)
+//																		: con.getArea()))
+//																.setScale(3, RoundingMode.HALF_UP);
+//													}
+//													System.out.println("totalRate " + totalRate + " " + weeksBetween);
+//													tempAss.setServiceRate(serviceRate.get());
+//													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//													if (cPerc != null && !cPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(cPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (mPerc != null && !mPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(mPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else if (mAmt != null && !mAmt.isEmpty()) {
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else {
+//														tempAss.setRates(totalRate);
+//													}
+//
+//												} else {
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getGateInDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//													long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//													tempAss.setExecutionUnit(String.valueOf(weeksBetween));
+//													tempAss.setExecutionUnit1("");
+//
+//													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														// Include slabs that overlap with weeksBetween
+//														return weeksBetween >= fromRange;
+//													}).map(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														BigDecimal rate = (BigDecimal) r[8];
+//
+//														// Adjust the fromRange to exclude week 0
+//														int adjustedFromRange = Math.max(fromRange, 1);
+//
+//														// Determine actual weeks in this slab that contribute to the
+//														// total
+//														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+//																- adjustedFromRange + 1);
+//
+//														// Exclude slabs where weeksInSlab is 0
+//														return weeksInSlab > 0
+//																? rate.multiply(new BigDecimal(weeksInSlab))
+//																: BigDecimal.ZERO;
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													if ("SM".equals(String.valueOf(f[7]))) {
+//														totalRate = (totalRate
+//																.multiply(con.getArea() == null ? new BigDecimal(1)
+//																		: con.getArea()))
+//																.setScale(3, RoundingMode.HALF_UP);
+//													}
+//													System.out.println("totalRate " + totalRate + " " + weeksBetween);
+//													tempAss.setServiceRate(serviceRate.get());
+//													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//													if (cPerc != null && !cPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(cPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//
+//													} else if (mPerc != null && !mPerc.isEmpty()) {
+//														BigDecimal disPerc = new BigDecimal(mPerc);
+//														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//														BigDecimal amt = (totalRate.multiply(finalPerc))
+//																.divide(new BigDecimal(100));
+//
+//														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//																BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else if (mAmt != null && !mAmt.isEmpty()) {
+//														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//																.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//														tempAss.setRates(disAmt);
+//													} else {
+//														tempAss.setRates(totalRate);
+//													}
+//												}
+//
+//											}
+//
+//										}
+//
+//									} else if ("RA".equals(String.valueOf(f[8]))) {
+//
+//										String unit = String.valueOf(f[1]);
+//										BigDecimal executionUnit = BigDecimal.ZERO;
+//										List<String> conSize2 = new ArrayList<>();
+//										conSize2.add("ALL");
+//										conSize2.add(
+//												("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//										List<String> conTypeOfCon2 = new ArrayList<>();
+//										conTypeOfCon2.add("ALL");
+//										conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//										List<String> commodityType = new ArrayList<>();
+//										commodityType.add("ALL");
+//										commodityType.add(assessment.getCommodityCode());
+//
+//										if ("MTON".equals(unit)) {
+//											String serviceGrp = String.valueOf(f[18]);
+//
+//											if ("H".equals(serviceGrp)) {
+//												BigDecimal cargoWt = new BigDecimal(String.valueOf(con.getGrossWt()))
+//														.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+//
+//												executionUnit = cargoWt;
+//
+//												tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//												tempAss.setExecutionUnit1("");
+//											} else {
+//												BigDecimal cargoWt = con.getCargoWt().divide(new BigDecimal(1000))
+//														.setScale(3, RoundingMode.HALF_UP);
+//
+//												executionUnit = cargoWt;
+//												tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//												tempAss.setExecutionUnit1("");
+//											}
+//
+//											Object rangeValue = cfstariffservicerepo.getRangeDataByServiceId(cid, bid,
+//													String.valueOf(f[3]), String.valueOf(f[4]), String.valueOf(f[0]),
+//													executionUnit, conSize2, conTypeOfCon2, commodityType,
+//													con.getContainerSize(), con.getTypeOfContainer(),
+//													assessment.getCommodityCode());
+//
+//											if (rangeValue != null) {
+//												Object[] finalRangeValue = (Object[]) rangeValue;
+//												tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//												tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//												tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//												tempAss.setDiscPercentage(
+//														f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																: BigDecimal.ZERO);
+//												tempAss.setDiscValue(
+//														f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmPercentage(
+//														f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//														: BigDecimal.ZERO);
+//												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//												tempAss.setRangeFrom(
+//														f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																: BigDecimal.ZERO);
+//												tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//														: BigDecimal.ZERO);
+//												tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//												tempAss.setContainerStatus(con.getContainerStatus());
+//												tempAss.setGateOutId(con.getGateOutId());
+//												tempAss.setGatePassNo(con.getGatePassNo());
+//												tempAss.setTaxPerc((f[12] == null || String.valueOf(f[12]).isEmpty())
+//														? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//												tempAss.setTaxId(String.valueOf(f[11]));
+//												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//												BigDecimal totalRate = new BigDecimal(
+//														String.valueOf(finalRangeValue[8]));
+//												tempAss.setServiceRate(totalRate);
+//
+//												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//												if (cPerc != null && !cPerc.isEmpty()) {
+//													BigDecimal disPerc = new BigDecimal(cPerc);
+//													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//													BigDecimal amt = (totalRate.multiply(finalPerc))
+//															.divide(new BigDecimal(100));
+//
+//													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//															BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//
+//												} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//															.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//
+//												} else if (mPerc != null && !mPerc.isEmpty()) {
+//													BigDecimal disPerc = new BigDecimal(mPerc);
+//													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//													BigDecimal amt = (totalRate.multiply(finalPerc))
+//															.divide(new BigDecimal(100));
+//
+//													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//															BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//												} else if (mAmt != null && !mAmt.isEmpty()) {
+//													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//															.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//												} else {
+//													tempAss.setRates(
+//															new BigDecimal(String.valueOf(finalRangeValue[8])));
+//												}
+//
+//											}
+//
+//										} else if ("TEU".equals(unit) || "SM".equals(unit) || "CNTR".equals(unit)
+//												|| "PBL".equals(unit) || "ACT".equals(unit) || "PCK".equals(unit)
+//												|| "SHFT".equals(unit) || "KG".equals(unit)) {
+//
+//											if ("SM".equals(unit) || "CNTR".equals(unit) || "PBL".equals(unit)
+//													|| "ACT".equals(unit) || "PCK".equals(unit)
+//													|| "SHFT".equals(unit)) {
+//												executionUnit = new BigDecimal("1");
+//												tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//												tempAss.setExecutionUnit1("");
+//											}
+//
+//											if ("TEU".equals(unit)) {
+//												if ("20".equals(con.getContainerSize())
+//														|| "22".equals(con.getContainerSize())) {
+//													executionUnit = new BigDecimal("1");
+//													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//													tempAss.setExecutionUnit1("");
+//												} else if ("40".equals(con.getContainerSize())) {
+//													executionUnit = new BigDecimal("2");
+//													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//													tempAss.setExecutionUnit1("");
+//												} else if ("45".equals(con.getContainerSize())) {
+//													executionUnit = new BigDecimal("2.5");
+//													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//													tempAss.setExecutionUnit1("");
+//												}
+//											}
+//
+//											if ("KG".equals(unit)) {
+//												String serviceGrp = String.valueOf(f[18]);
+//												if ("H".equals(serviceGrp)) {
+//
+//													BigDecimal cargoWt = new BigDecimal(
+//															String.valueOf(con.getGrossWt()));
+//
+//													executionUnit = cargoWt;
+//
+//													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//													tempAss.setExecutionUnit1("");
+//												} else {
+//													BigDecimal cargoWt = con.getCargoWt();
+//
+//													executionUnit = cargoWt;
+//													tempAss.setExecutionUnit(String.valueOf(executionUnit));
+//													tempAss.setExecutionUnit1("");
+//												}
+//											}
+//
+//											Object rangeValue = cfstariffservicerepo.getRangeDataByServiceId(cid, bid,
+//													String.valueOf(f[3]), String.valueOf(f[4]), String.valueOf(f[0]),
+//													executionUnit, conSize2, conTypeOfCon2, commodityType,
+//													con.getContainerSize(), con.getTypeOfContainer(),
+//													assessment.getCommodityCode());
+//
+//											if (rangeValue != null) {
+//												Object[] finalRangeValue = (Object[]) rangeValue;
+//												tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//												tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//												tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//												tempAss.setDiscPercentage(
+//														f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																: BigDecimal.ZERO);
+//												tempAss.setDiscValue(
+//														f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmPercentage(
+//														f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//														: BigDecimal.ZERO);
+//												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//												tempAss.setRangeFrom(
+//														f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																: BigDecimal.ZERO);
+//												tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//														: BigDecimal.ZERO);
+//												tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//												tempAss.setContainerStatus(con.getContainerStatus());
+//												tempAss.setGateOutId(con.getGateOutId());
+//												tempAss.setGatePassNo(con.getGatePassNo());
+//												tempAss.setTaxPerc((f[12] == null || String.valueOf(f[12]).isEmpty())
+//														? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//												tempAss.setTaxId(String.valueOf(f[11]));
+//												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//												BigDecimal totalRate = new BigDecimal(
+//														String.valueOf(finalRangeValue[8]));
+//
+//												tempAss.setServiceRate(totalRate);
+//
+//												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//												if (cPerc != null && !cPerc.isEmpty()) {
+//													BigDecimal disPerc = new BigDecimal(cPerc);
+//													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//													BigDecimal amt = (totalRate.multiply(finalPerc))
+//															.divide(new BigDecimal(100));
+//
+//													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//															BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//
+//												} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//															.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//
+//												} else if (mPerc != null && !mPerc.isEmpty()) {
+//													BigDecimal disPerc = new BigDecimal(mPerc);
+//													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//													BigDecimal amt = (totalRate.multiply(finalPerc))
+//															.divide(new BigDecimal(100));
+//
+//													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//															BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//												} else if (mAmt != null && !mAmt.isEmpty()) {
+//													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//															.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//													tempAss.setRates(disAmt);
+//												} else {
+//													tempAss.setRates(
+//															new BigDecimal(String.valueOf(finalRangeValue[8])));
+//												}
+//											}
+//
+//										}
+//
+//										else {
+//											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//											tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//											tempAss.setDiscPercentage(
+//													f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//															: BigDecimal.ZERO);
+//											tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//													: BigDecimal.ZERO);
+//											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//											tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//													: BigDecimal.ZERO);
+//											tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//													: BigDecimal.ZERO);
+//											tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//											tempAss.setContainerStatus(con.getContainerStatus());
+//											tempAss.setGateOutId(con.getGateOutId());
+//											tempAss.setGatePassNo(con.getGatePassNo());
+//											tempAss.setExecutionUnit(String.valueOf(1));
+//											tempAss.setExecutionUnit1("");
+//											tempAss.setTaxPerc(
+//													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//															: new BigDecimal(String.valueOf(f[12])));
+//											tempAss.setTaxId(String.valueOf(f[11]));
+//											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//											BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
+//
+//											tempAss.setServiceRate(totalRate);
+//
+//											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//											if (cPerc != null && !cPerc.isEmpty()) {
+//												BigDecimal disPerc = new BigDecimal(cPerc);
+//												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//												BigDecimal amt = (totalRate.multiply(finalPerc))
+//														.divide(new BigDecimal(100));
+//
+//												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//														BigDecimal.ROUND_HALF_UP);
+//
+//												tempAss.setRates(disAmt);
+//
+//											} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//														.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//												tempAss.setRates(disAmt);
+//
+//											} else if (mPerc != null && !mPerc.isEmpty()) {
+//												BigDecimal disPerc = new BigDecimal(mPerc);
+//												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//												BigDecimal amt = (totalRate.multiply(finalPerc))
+//														.divide(new BigDecimal(100));
+//
+//												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//														BigDecimal.ROUND_HALF_UP);
+//
+//												tempAss.setRates(disAmt);
+//											} else if (mAmt != null && !mAmt.isEmpty()) {
+//												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+//														.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//												tempAss.setRates(disAmt);
+//											} else {
+//												tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+//											}
+//
+//										}
+//
+//									} else {
+//										tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//										tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//										tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//										tempAss.setDiscPercentage(f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//												: BigDecimal.ZERO);
+//										tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//												: BigDecimal.ZERO);
+//										tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//												: BigDecimal.ZERO);
+//										tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//												: BigDecimal.ZERO);
+//										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//										tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//												: BigDecimal.ZERO);
+//										tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//												: BigDecimal.ZERO);
+//										tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//										tempAss.setContainerStatus(con.getContainerStatus());
+//										tempAss.setGateOutId(con.getGateOutId());
+//										tempAss.setGatePassNo(con.getGatePassNo());
+//										tempAss.setExecutionUnit(String.valueOf(1));
+//										tempAss.setExecutionUnit1("");
+//										tempAss.setTaxPerc(
+//												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//										tempAss.setTaxId(String.valueOf(f[11]));
+//										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//										BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
+//										tempAss.setServiceRate(totalRate);
+//
+//										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
+//										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
+//										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
+//										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+//
+//										if (cPerc != null && !cPerc.isEmpty()) {
+//											BigDecimal disPerc = new BigDecimal(cPerc);
+//											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//											BigDecimal amt = (totalRate.multiply(finalPerc))
+//													.divide(new BigDecimal(100));
+//
+//											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//													BigDecimal.ROUND_HALF_UP);
+//
+//											tempAss.setRates(disAmt);
+//
+//										} else if (cAmt != null && !cAmt.isEmpty()) {
+//
+//											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
+//													BigDecimal.ROUND_HALF_UP);
+//
+//											tempAss.setRates(disAmt);
+//
+//										} else if (mPerc != null && !mPerc.isEmpty()) {
+//											BigDecimal disPerc = new BigDecimal(mPerc);
+//											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+//
+//											BigDecimal amt = (totalRate.multiply(finalPerc))
+//													.divide(new BigDecimal(100));
+//
+//											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+//
+//											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
+//													BigDecimal.ROUND_HALF_UP);
+//
+//											tempAss.setRates(disAmt);
+//										} else if (mAmt != null && !mAmt.isEmpty()) {
+//											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
+//													BigDecimal.ROUND_HALF_UP);
+//
+//											tempAss.setRates(disAmt);
+//										} else {
+//											tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+//										}
+//									}
+//
+//									finalConData.add(tempAss);
+//
+//								} catch (CloneNotSupportedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//							}
+//
+//						});
+//
+//						AssessmentSheet tempAssessment = (AssessmentSheet) assessment.clone();
+//
+//						AssessmentSheet newAss = tempAssessment;
+//
+//						newAss.setCompanyId(cid);
+//						newAss.setBranchId(bid);
+//						newAss.setAssesmentLineNo(String.valueOf(sr));
+//						newAss.setStatus('A');
+//						newAss.setCreatedBy(user);
+//						newAss.setCreatedDate(new Date());
+//						newAss.setApprovedBy(user);
+//						newAss.setApprovedDate(new Date());
+//						newAss.setAssesmentDate(new Date());
+//						newAss.setTransType("Import Container");
+//						newAss.setProfitcentreId(con.getProfitcentreId());
+//
+//						newAss.setAssesmentId(HoldNextIdD1);
+//
+//						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+//
+//						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+//								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+//										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+//												: assessment.getOthPartyId();
+//
+//						String billingAdd = "IMP".equals(assessment.getBillingParty())
+//								? String.valueOf(assessment.getImpSrNo())
+//								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+//										: "FWR".equals(assessment.getBillingParty())
+//												? String.valueOf(assessment.getAccSrNo())
+//												: assessment.getOthSrNo();
+//
+//						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+//
+//						newAss.setPartyId(billingId);
+//						newAss.setPartySrNo(new BigDecimal(billingAdd));
+//						newAss.setPayableParty(assessment.getBillingParty());
+//						newAss.setPayablePartyId(billingId);
+//
+//						if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
+//							newAss.setIgst("Y");
+//							newAss.setCgst("N");
+//							newAss.setSgst("N");
+//						} else if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'N') {
+//							newAss.setIgst("E");
+//							newAss.setCgst("N");
+//							newAss.setSgst("N");
+//						}
+//
+//						else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
+//
+//							if (b.getState().equals(p.getState())) {
+//								newAss.setIgst("N");
+//								newAss.setCgst("Y");
+//								newAss.setSgst("Y");
+//							} else {
+//								newAss.setIgst("Y");
+//								newAss.setCgst("N");
+//								newAss.setSgst("N");
+//							}
+//
+//						} else {
+//							newAss.setIgst("N");
+//							newAss.setCgst("N");
+//							newAss.setSgst("N");
+//						}
+//
+//						Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), assessment.getIgmLineNo());
+//
+//						if (crg != null) {
+//							newAss.setNoOfPackages(crg.getNoOfPackages());
+//
+//						}
+//
+//						List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+//							try {
+//								return (AssessmentContainerDTO) item.clone(); // Clone first
+//							} catch (CloneNotSupportedException e) {
+//								e.printStackTrace();
+//								return null;
+//							}
+//						}).filter(Objects::nonNull) // Remove null values from failed clones
+//								.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+//																									// cloning
+//								.collect(Collectors.toList());
+//
+//						List<AssessmentContainerDTO> filteredData = newAnxData.stream()
+//								.filter(c -> "H".equals(c.getServiceGroup())).collect(Collectors.toList());
+//
+//						BigDecimal totalRates = filteredData.stream().map(AssessmentContainerDTO::getRates)
+//								.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP);
+//
+////      					Optional<AssessmentContainerDTO> handlingDataOpt = finalConData.stream()
+////      							.filter(c -> "S00001".equals(c.getServiceId())).findFirst();
+//						//
+////      					AssessmentContainerDTO handlingData = handlingDataOpt.orElse(null); // or handle the case where
+////      																						// it's
+////      																						// absent
+//
+//						List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
+//								.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
+//
+//						String crgDays = "";
+//
+//						if (!filteredData1.isEmpty()) {
+//							crgDays = filteredData1.get(0).getExecutionUnit();
+//						}
+//
+//						BigDecimal totalRates1 = filteredData1.stream().map(AssessmentContainerDTO::getRates)
+//								.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP);
+//						//
+////      					Optional<AssessmentContainerDTO> storageDataOpt = finalConData.stream()
+////      							.filter(c -> "S00003".equals(c.getServiceId())).findFirst();
+//						//
+////      					AssessmentContainerDTO storageData = storageDataOpt.orElse(null); // or handle the case where
+////      																						// it's
+////      																						// absent
+//
+//						System.out.println("totalRates " + totalRates + " " + totalRates1);
+//
+//						newAss.setContainerNo(con.getContainerNo());
+//						newAss.setContainerSize(con.getContainerSize());
+//						newAss.setContainerType(con.getContainerType());
+//						newAss.setGateInDate(con.getGateInDate());
+//						newAss.setGateOutDate(con.getGateoutDate() == null ? null : con.getGateoutDate());
+//						newAss.setGrossWeight(con.getGrossWt());
+//						newAss.setGateOutType(con.getGateOutType());
+//						newAss.setAgroProductStatus("AGRO".equals(assessment.getCommodityCode()) ? "Y" : "N");
+//						newAss.setTypeOfContainer(con.getTypeOfContainer());
+//						newAss.setScanerType(con.getScannerType());
+//						newAss.setExaminedPercentage(new BigDecimal(con.getExamPercentage()));
+//						newAss.setWeighmentFlag("N");
+//						newAss.setCargoWeight(con.getCargoWt());
+//						newAss.setDestuffDate(con.getDestuffDate() == null ? null : con.getDestuffDate());
+//						newAss.setCalculateInvoice('N');
+//						newAss.setInvoiceUptoDate(finalConData.get(0).getInvoiceDate());
+//						newAss.setContainerHandlingAmt(totalRates);
+//						newAss.setContainerStorageAmt(totalRates1);
+//						newAss.setInvoiceCategory(assessment.getInvoiceCategory());
+//						newAss.setInvType("First");
+//						newAss.setSa(tempAssessment.getSaId());
+//						newAss.setSl(tempAssessment.getSlId());
+//						newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
+//						newAss.setSsrTransId(con.getSsrTransId());
+//
+//						assessmentsheetrepo.save(newAss);
+//						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
+//
+//						AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+//
+//						AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
+//
+//						System.out.println("finalConData " + finalConData);
+//
+//						finalConData.stream().forEach(c -> {
+//							if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
+//								Cfinvsrvanx anx = new Cfinvsrvanx();
+//								anx.setCompanyId(cid);
+//								anx.setBranchId(bid);
+//								anx.setLineNo(String.valueOf(anxSr.get()));
+//								anx.setErpDocRefNo(newAss.getIgmTransId());
+//								anx.setProcessTransId(HoldNextIdD1);
+//								anx.setServiceId(c.getServiceId());
+//								anx.setSrlNo(srNo1.get());
+//								anx.setDocRefNo(newAss.getIgmNo());
+//								anx.setIgmLineNo(newAss.getIgmLineNo());
+//								anx.setProfitcentreId(newAss.getProfitcentreId());
+//								anx.setInvoiceType("IMP");
+//								anx.setServiceUnit(c.getServiceUnit());
+//								anx.setExecutionUnit(c.getExecutionUnit());
+//								anx.setServiceUnit1(c.getServiceUnit1());
+//								anx.setExecutionUnit1(c.getExecutionUnit1());
+//								anx.setRate(c.getServiceRate());
+//								anx.setActualNoOfPackages(c.getRates());
+//								anx.setCurrencyId("INR");
+//								anx.setLocalAmt(c.getRates());
+//								anx.setInvoiceAmt(c.getRates());
+//								anx.setCommodityDescription(newAss.getCommodityDescription());
+//								anx.setDiscPercentage(c.getDiscPercentage());
+//								anx.setDiscValue(c.getDiscValue());
+//								anx.setmPercentage(c.getmPercentage());
+//								anx.setmAmount(c.getmAmount());
+//								anx.setAcCode(c.getAcCode());
+//								anx.setProcessTransDate(newAss.getAssesmentDate());
+//								anx.setProcessId("P01101");
+//								anx.setPartyId(newAss.getPartyId());
+//								anx.setWoNo(c.getWoNo());
+//								anx.setWoAmndNo(c.getWoAmndNo());
+//								anx.setContainerNo(c.getContainerNo());
+//								anx.setContainerStatus(con.getContainerStatus());
+//								anx.setGateOutDate(c.getGateoutDate());
+//								anx.setAddServices("N");
+//								anx.setStartDate(c.getGateInDate());
+//								anx.setInvoiceUptoDate(c.getInvoiceDate());
+//								anx.setInvoiceUptoWeek(c.getInvoiceDate());
+//								anx.setStatus("A");
+//								anx.setCreatedBy(user);
+//								anx.setCreatedDate(new Date());
+////      						anx.setApprovedBy(user);
+////      						anx.setApprovedDate(new Date());
+//								anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
+//								anx.setSrvManualFlag("N");
+//								anx.setCriteria("SA".equals(c.getCriteria()) ? "DW"
+//										: "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
+//								anx.setRangeFrom(c.getRangeFrom());
+//								anx.setRangeTo(c.getRangeTo());
+//								anx.setRangeType(c.getContainerStatus());
+//								anx.setGateOutId(c.getGateOutId());
+//								anx.setGatePassNo(c.getGatePassNo());
+//								anx.setRangeType(c.getCriteria());
+//								anx.setTaxId(c.getTaxId());
+//								anx.setExRate(c.getExRate());
+//								anx.setFreeDays(c.getFreeDays());
+//
+//								if (("Y".equals(newAss.getIgst()))
+//										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
+//									anx.setTaxPerc(c.getTaxPerc());
+//								} else {
+//									anx.setTaxPerc(BigDecimal.ZERO);
+//								}
+//
+//								BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
+//								BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get()
+//										: BigDecimal.ZERO;
+//
+//								// Perform addition
+//								totalAmount.set(currentTotal.add(currentRate));
+//								System.out.println("c " + c);
+//								cfinvsrvanxrepo.save(anx);
+//
+////      						if ("S00007".equals(c.getServiceId())) {
+////      							crgStorageDay.set(new BigDecimal(c.getExecutionUnit()));
+////      							crgStorageAmt.set(c.getRates());
+//								//
+////      						}
+//								//
+////      						if ("S00003".equals(c.getServiceId())) {
+////      							invDay.set(new BigDecimal(c.executionUnit));
+////      						}
+//
+//								srNo1.set(srNo1.get().add(new BigDecimal(1)));
+//							}
+//						});
+//						totalAmount.updateAndGet(amount -> amount.setScale(3, RoundingMode.HALF_UP));
+//
+////      					int updateIgmCn = cfigmcnrepo.updateInvoiceData(cid, bid, assessment.getIgmTransId(),
+////      							assessment.getIgmNo(), con.getContainerNo(), totalAmount.get(), assessment.getDutyValue(),
+////      							HoldNextIdD1, crgStorageDay.get(), assessment.getInsuranceValue(), invDay.get(),
+////      							con.getInvoiceDate(), newAss.getAssesmentDate(), crgStorageAmt.get());
+//
+//						int updateIgmCn = cfigmcnrepo.updateInvoiceData1(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), con.getContainerNo(), assessment.getDutyValue(), HoldNextIdD1,
+//								crgDays.isEmpty() ? BigDecimal.ZERO : new BigDecimal(crgDays),
+//								assessment.getInsuranceValue(), newAss.getAssesmentDate(), totalRates1);
+//
+//						int updateInventory = impInventoryRepo.updateInvData(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), con.getContainerNo(), HoldNextIdD1);
+//
+//						assessment.setAssesmentId(HoldNextIdD1);
+//
+//						sr++;
+//					} else {
+//
+//						List<String> conSize = new ArrayList<>();
+//						conSize.add("");
+//						conSize.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//						List<String> conTypeOfCon = new ArrayList<>();
+//						conTypeOfCon.add("");
+//						conTypeOfCon.add(con.getTypeOfContainer());
+//
+//						String conStatus = "FCL".equals(con.getContainerStatus()) ? "IMPSEN" : "IMPCRGSEN";
+//
+//						List<String> serviceMappingData = serviceMappingRepo.getServicesForImportInvoice3(cid, bid,
+//								con.getProfitcentreId(), conStatus, con.getGateOutType(), conSize, conTypeOfCon);
+//
+//						if (serviceMappingData.isEmpty()) {
+//							return new ResponseEntity<>(
+//									"Service mapping not found for container no " + con.getContainerNo(),
+//									HttpStatus.CONFLICT);
+//						}
+//
+//						Set<String> combinedService = new HashSet<>();
+//						combinedService.addAll(serviceMappingData);
+//
+//						List<String> partyIdList = new ArrayList<>();
+//						partyIdList.add(assessment.getOthPartyId());
+//						partyIdList.add("");
+//
+//						List<String> impIdList = new ArrayList<>();
+//						impIdList.add(assessment.getImporterId());
+//						impIdList.add("");
+//
+//						List<String> chaIdList = new ArrayList<>();
+//						chaIdList.add(assessment.getCha());
+//						chaIdList.add("");
+//
+//						List<String> fwIdList = new ArrayList<>();
+//						fwIdList.add(assessment.getOnAccountOf());
+//						fwIdList.add("");
+//
+//						String tariffNo = cfstarrifrepo.getTarrifNo(cid, bid, partyIdList, impIdList, chaIdList,
+//								fwIdList, assessment.getOthPartyId(), assessment.getImporterId(), assessment.getCha(),
+//								assessment.getOnAccountOf());
+//
+//						if (tariffNo == null || tariffNo.isEmpty()) {
+//							return new ResponseEntity<>("Tariff no not found.", HttpStatus.CONFLICT);
+//						}
+//
+//						List<SSRDtl> ssrServices = new ArrayList<>();
+//
+//						if (con.getSsrTransId() != null && !con.getSsrTransId().isEmpty()) {
+//							ssrServices = ssrRepo.getServiceId(cid, bid, con.getSsrTransId(), con.getContainerNo());
+//
+//							if (!ssrServices.isEmpty()) {
+//								List<String> ssrServiceId = ssrServices.stream().map(SSRDtl::getServiceId) // Extract
+//																											// serviceId
+//										.collect(Collectors.toList()); // Collect into a list
+//
+//								combinedService.addAll(ssrServiceId);
+//							}
+//
+//						}
+//
+//						List<SSRDtl> finalSsrServices = ssrServices;
+//
+//						List<String> finalServices = new ArrayList<>(combinedService);
+//
+//						List<Object[]> finalPricing = new ArrayList<>();
+//						List<String> notInPricing = new ArrayList<>();
+//
+//						List<String> conSize1 = new ArrayList<>();
+//						conSize1.add("ALL");
+//						conSize1.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//						List<String> conTypeOfCon1 = new ArrayList<>();
+//						conTypeOfCon1.add("ALL");
+//						conTypeOfCon1.add(con.getTypeOfContainer());
+//
+//						Date assData = assessment.getAssesmentDate(); // Original date
+//						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//						String formattedDate = formatter.format(assData);
+//						Date parsedDate = formatter.parse(formattedDate);
+//
+//						List<Object[]> pricingData = cfstariffservicerepo.getServiceRate(cid, bid, parsedDate,
+//								con.getContainerNo(), assessment.getIgmTransId(), assessment.getIgmNo(),
+//								assessment.getIgmLineNo(), finalServices, tariffNo, conSize1, conTypeOfCon1);
+//
+//						if (!pricingData.isEmpty()) {
+//							List<Object[]> remainingPricing = pricingData.stream()
+//									.filter(data1 -> finalServices.contains(data1[0].toString()))
+//									.collect(Collectors.toList());
+//
+//							notInPricing = finalServices.stream()
+//									.filter(service -> pricingData.stream()
+//											.noneMatch(data1 -> service.equals(data1[0].toString())))
+//									.collect(Collectors.toList());
+//
+//							finalPricing.addAll(remainingPricing);
+//						} else {
+//							notInPricing.addAll(finalServices);
+//						}
+//
+//						if (!notInPricing.isEmpty()) {
+//							List<String> tempPricing = notInPricing;
+//							List<String> conSize2 = new ArrayList<>();
+//							conSize2.add("ALL");
+//							conSize2.add(("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//							List<String> conTypeOfCon2 = new ArrayList<>();
+//							conTypeOfCon2.add("ALL");
+//							conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//							List<Object[]> pricingData1 = cfstariffservicerepo.getServiceRate(cid, bid, parsedDate,
+//									con.getContainerNo(), assessment.getIgmTransId(), assessment.getIgmNo(),
+//									assessment.getIgmLineNo(), notInPricing, "CFS1000001", conSize2, conTypeOfCon2);
+//
+//							if (!pricingData1.isEmpty()) {
+//								List<Object[]> remainingPricing = pricingData1.stream()
+//										.filter(data1 -> tempPricing.contains(data1[0].toString()))
+//										.collect(Collectors.toList());
+//
+//								finalPricing.addAll(remainingPricing);
+//							}
+//						}
+//
+//						finalPricing.stream().forEach(f -> {
+//							AssessmentContainerDTO tempAss = new AssessmentContainerDTO();
+//							CFSDay day = cfsdayrepo.getData(cid, bid);
+//
+//							System.out.println("con.getSsrTransId() " + con.getSsrTransId());
+//
+//							if (con.getSsrTransId() != null && !con.getSsrTransId().isEmpty()) {
+//
+//								if (!finalSsrServices.isEmpty()) {
+//
+//									SSRDtl rate1 = finalSsrServices.stream()
+//											.filter(s -> s.getServiceId().equals(String.valueOf(f[0]))).findFirst()
+//											.orElse(null); // Return null if no match is found
+//
+//									if (rate1 != null) {
+//
+//										try {
+//											tempAss = (AssessmentContainerDTO) con.clone();
+//
+//											Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
+//													day.getStartTime(), day.getEndTime());
+//
+//											tempAss.setInvoiceDate(invDate);
+//											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//											tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//											tempAss.setDiscPercentage(
+//													f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//															: BigDecimal.ZERO);
+//											tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//													: BigDecimal.ZERO);
+//											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//											tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//													: BigDecimal.ZERO);
+//											tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//													: BigDecimal.ZERO);
+//											tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//											tempAss.setContainerStatus(con.getContainerStatus());
+//											tempAss.setGateOutId(con.getGateOutId());
+//											tempAss.setGatePassNo(con.getGatePassNo());
+//											tempAss.setRates(rate1.getTotalRate());
+//											tempAss.setServiceRate(rate1.getRate());
+//											tempAss.setTaxPerc(
+//													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//															: new BigDecimal(String.valueOf(f[12])));
+//											tempAss.setTaxId(String.valueOf(f[11]));
+//											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//											finalConData.add(tempAss);
+//										} catch (CloneNotSupportedException e) {
+//											// TODO Auto-generated catch block
+//											e.printStackTrace();
+//										}
+//
+//									} else {
+//										try {
+//											tempAss = (AssessmentContainerDTO) con.clone();
+//											Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(),
+//													day.getStartTime(), day.getEndTime());
+//
+//											tempAss.setInvoiceDate(invDate);
+//											if ("SA".equals(String.valueOf(f[8]))) {
+//												tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//												tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//												tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//												tempAss.setDiscPercentage(
+//														f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//																: BigDecimal.ZERO);
+//												tempAss.setDiscValue(
+//														f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmPercentage(
+//														f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//																: BigDecimal.ZERO);
+//												tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//														: BigDecimal.ZERO);
+//												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//												tempAss.setRangeFrom(
+//														f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//																: BigDecimal.ZERO);
+//												tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//														: BigDecimal.ZERO);
+//												tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//												tempAss.setContainerStatus(con.getContainerStatus());
+//												tempAss.setGateOutId(con.getGateOutId());
+//												tempAss.setGatePassNo(con.getGatePassNo());
+//												tempAss.setTaxPerc((f[12] == null || String.valueOf(f[12]).isEmpty())
+//														? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//												tempAss.setTaxId(String.valueOf(f[11]));
+//												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//												List<String> conSize2 = new ArrayList<>();
+//												conSize2.add("ALL");
+//												conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+//														: con.getContainerSize());
+//
+//												List<String> conTypeOfCon2 = new ArrayList<>();
+//												conTypeOfCon2.add("ALL");
+//												conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//												List<String> commodityType = new ArrayList<>();
+//												commodityType.add("ALL");
+//												commodityType.add(assessment.getCommodityCode());
+//
+//												List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(
+//														cid, bid, String.valueOf(f[3]), String.valueOf(f[4]),
+//														String.valueOf(f[0]), String.valueOf(f[8]), conSize2,
+//														conTypeOfCon2, commodityType, con.getContainerSize(),
+//														con.getTypeOfContainer(), assessment.getCommodityCode());
+//
+//												if (!rangeValues.isEmpty()) {
+//
+//													BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+//															.filter(r -> ((BigDecimal) r[8])
+//																	.compareTo(BigDecimal.ZERO) == 0) // Filter where
+//																										// rate is 0
+//															.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+//																							// BigDecimal
+//															.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+//															.orElse(BigDecimal.ZERO); // Default value if no match found
+//
+//													tempAss.setFreeDays(freeDaysForExportContainerStorage);
+//
+//													String unit = String.valueOf(f[1]);
+//
+//													AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
+//															BigDecimal.ZERO);
+//													if ("DAY".equals(unit)) {
+//
+//														if (con.getDestuffDate() != null) {
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getGateInDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//
+//															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getDestuffDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//
+//															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																	destuffDateTime1);
+//
+//															if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime1, destuffDateTime1) > 0) {
+//																daysBetween2 = 1;
+//															}
+//
+//															tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+//															tempAss.setExecutionUnit1("");
+//
+//															BigDecimal totalRate = rangeValues.stream().map(r -> {
+//
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//
+//																BigDecimal rate = (BigDecimal) r[8];
+//
+//																if (daysBetween1 >= fromRange
+//																		&& daysBetween1 <= toRange) {
+//																	serviceRate.set(rate); // Set the rate for the
+//																							// matching
+//																							// slab
+//																}
+//
+//																long daysInSlab = Math.min(toRange, daysBetween1)
+//																		- Math.max(fromRange, 1) + 1;
+//
+//																daysInSlab = Math.max(daysInSlab, 0);
+//
+//																serviceRate.set(rate);
+//																return rate.multiply(new BigDecimal(daysInSlab));
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															tempAss.setServiceRate(serviceRate.get());
+//
+//															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																	assessment.getIgmTransId(), assessment.getIgmNo(),
+//																	assessment.getIgmLineNo(), con.getContainerNo());
+//
+//															totalRate = totalRate.subtract(oldVal).setScale(3,
+//																	RoundingMode.HALF_UP);
+//
+//															tempAss.setRates(totalRate);
+//
+//														} else {
+//
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getGateInDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//
+//															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(
+//																			con.getLastInvoiceUptoDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//
+//															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																	destuffDateTime1);
+//
+//															if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime1, destuffDateTime1) > 0) {
+//																daysBetween2 = 1;
+//															}
+//
+//															tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+//															tempAss.setExecutionUnit1("");
+//
+//															System.out.println("daysBetween " + daysBetween1);
+//
+//															BigDecimal totalRate = rangeValues.stream().map(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue(); // Start
+//																												// of
+//																												// the
+//																												// slab
+//																int toRange = ((BigDecimal) r[7]).intValue(); // End of
+//																												// the
+//																												// slab
+//																BigDecimal rate = (BigDecimal) r[8]; // Rate per day in
+//																										// the
+//																										// slab
+//																if (daysBetween1 >= fromRange
+//																		&& daysBetween1 <= toRange) {
+//																	serviceRate.set(rate); // Set the rate for the
+//																							// matching
+//																							// slab
+//																}
+//																// Calculate days in the current slab
+//																long daysInSlab = Math.min(toRange, daysBetween1)
+//																		- Math.max(fromRange, 1) + 1;
+//
+//																daysInSlab = Math.max(daysInSlab, 0);
+//																return rate.multiply(new BigDecimal(daysInSlab));
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															tempAss.setServiceRate(serviceRate.get());
+//
+//															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																	assessment.getIgmTransId(), assessment.getIgmNo(),
+//																	assessment.getIgmLineNo(), con.getContainerNo());
+//
+//															totalRate = totalRate.subtract(oldVal).setScale(3,
+//																	RoundingMode.HALF_UP);
+//
+//															tempAss.setRates(totalRate);
+//
+//														}
+//													}
+//
+//													if ("WEEK".equals(unit)) {
+//														if (con.getDestuffDate() != null) {
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getDestuffDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(
+//																			con.getLastInvoiceUptoDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//
+//															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																	destuffDateTime1);
+//
+//															if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime1, destuffDateTime1) > 0) {
+//																daysBetween2 = 1;
+//															}
+//
+//															long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+//
+//															tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+//															tempAss.setExecutionUnit1("");
+//
+//															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																// Include slabs that overlap with weeksBetween
+//																return weeksBetween >= fromRange;
+//															}).map(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																BigDecimal rate = (BigDecimal) r[8];
+//
+//																// Adjust the fromRange to exclude week 0
+//																int adjustedFromRange = Math.max(fromRange, 1);
+//
+//																// Determine actual weeks in this slab that contribute
+//																// to the total
+//																long weeksInSlab = Math.max(0,
+//																		Math.min(toRange, weeksBetween)
+//																				- adjustedFromRange + 1);
+//
+//																// Exclude slabs where weeksInSlab is 0
+//																return weeksInSlab > 0
+//																		? rate.multiply(new BigDecimal(weeksInSlab))
+//																		: BigDecimal.ZERO;
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															if ("SM".equals(String.valueOf(f[7]))) {
+//																totalRate = (totalRate.multiply(
+//																		con.getArea() == null ? new BigDecimal(1)
+//																				: con.getArea()))
+//																		.setScale(3, RoundingMode.HALF_UP);
+//															}
+//															System.out.println(
+//																	"totalRate " + totalRate + " " + weeksBetween);
+//															tempAss.setServiceRate(serviceRate.get());
+//
+//															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																	assessment.getIgmTransId(), assessment.getIgmNo(),
+//																	assessment.getIgmLineNo(), con.getContainerNo());
+//
+//															totalRate = totalRate.subtract(oldVal).setScale(3,
+//																	RoundingMode.HALF_UP);
+//
+//															tempAss.setRates(totalRate);
+//														} else {
+//															LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(con.getGateInDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																	destuffDateTime);
+//
+//															if (daysBetween == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime, destuffDateTime) > 0) {
+//																daysBetween = 1;
+//															}
+//
+//															final long daysBetween1 = daysBetween;
+//															long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//															LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																	convertToLocalDateTime(
+//																			con.getLastInvoiceUptoDate()),
+//																	day.getStartTime());
+//															LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																	convertToLocalDateTime(con.getInvoiceDate()),
+//																	day.getEndTime());
+//
+//															long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																	destuffDateTime1);
+//
+//															if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																	.between(gateInDateTime1, destuffDateTime1) > 0) {
+//																daysBetween2 = 1;
+//															}
+//
+//															long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+//
+//															tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+//															tempAss.setExecutionUnit1("");
+//
+//															BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																// Include slabs that overlap with weeksBetween
+//																return weeksBetween >= fromRange;
+//															}).map(r -> {
+//																int fromRange = ((BigDecimal) r[6]).intValue();
+//																int toRange = ((BigDecimal) r[7]).intValue();
+//																BigDecimal rate = (BigDecimal) r[8];
+//
+//																// Adjust the fromRange to exclude week 0
+//																int adjustedFromRange = Math.max(fromRange, 1);
+//
+//																// Determine actual weeks in this slab that contribute
+//																// to the total
+//																long weeksInSlab = Math.max(0,
+//																		Math.min(toRange, weeksBetween)
+//																				- adjustedFromRange + 1);
+//
+//																// Exclude slabs where weeksInSlab is 0
+//																return weeksInSlab > 0
+//																		? rate.multiply(new BigDecimal(weeksInSlab))
+//																		: BigDecimal.ZERO;
+//															}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//															totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//															if ("SM".equals(String.valueOf(f[7]))) {
+//																totalRate = (totalRate.multiply(
+//																		con.getArea() == null ? new BigDecimal(1)
+//																				: con.getArea()))
+//																		.setScale(3, RoundingMode.HALF_UP);
+//															}
+//															System.out.println(
+//																	"totalRate " + totalRate + " " + weeksBetween);
+//															tempAss.setServiceRate(serviceRate.get());
+//															BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																	assessment.getIgmTransId(), assessment.getIgmNo(),
+//																	assessment.getIgmLineNo(), con.getContainerNo());
+//
+//															totalRate = totalRate.subtract(oldVal).setScale(3,
+//																	RoundingMode.HALF_UP);
+//
+//															tempAss.setRates(totalRate);
+//														}
+//
+//													}
+//
+//												}
+//
+//											}
+//
+//											finalConData.add(tempAss);
+//
+//										} catch (CloneNotSupportedException e) {
+//											// TODO Auto-generated catch block
+//											e.printStackTrace();
+//										}
+//									}
+//								} else {
+//									try {
+//										tempAss = (AssessmentContainerDTO) con.clone();
+//										Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(), day.getStartTime(),
+//												day.getEndTime());
+//
+//										tempAss.setInvoiceDate(invDate);
+//										if ("SA".equals(String.valueOf(f[8]))) {
+//											tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//											tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//											tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//											tempAss.setDiscPercentage(
+//													f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//															: BigDecimal.ZERO);
+//											tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//													: BigDecimal.ZERO);
+//											tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//													: BigDecimal.ZERO);
+//											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//											tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//													: BigDecimal.ZERO);
+//											tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//													: BigDecimal.ZERO);
+//											tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//											tempAss.setContainerStatus(con.getContainerStatus());
+//											tempAss.setGateOutId(con.getGateOutId());
+//											tempAss.setGatePassNo(con.getGatePassNo());
+//											tempAss.setTaxPerc(
+//													(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//															: new BigDecimal(String.valueOf(f[12])));
+//											tempAss.setTaxId(String.valueOf(f[11]));
+//											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//											List<String> conSize2 = new ArrayList<>();
+//											conSize2.add("ALL");
+//											conSize2.add(("22".equals(con.getContainerSize())) ? "20"
+//													: con.getContainerSize());
+//
+//											List<String> conTypeOfCon2 = new ArrayList<>();
+//											conTypeOfCon2.add("ALL");
+//											conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//											List<String> commodityType = new ArrayList<>();
+//											commodityType.add("ALL");
+//											commodityType.add(assessment.getCommodityCode());
+//
+//											List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(cid,
+//													bid, String.valueOf(f[3]), String.valueOf(f[4]),
+//													String.valueOf(f[0]), String.valueOf(f[8]), conSize2, conTypeOfCon2,
+//													commodityType, con.getContainerSize(), con.getTypeOfContainer(),
+//													assessment.getCommodityCode());
+//
+//											if (!rangeValues.isEmpty()) {
+//												BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+//														.filter(r -> ((BigDecimal) r[8])
+//																.compareTo(BigDecimal.ZERO) == 0) // Filter where
+//																									// rate is 0
+//														.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+//																						// BigDecimal
+//														.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+//														.orElse(BigDecimal.ZERO); // Default value if no match found
+//
+//												tempAss.setFreeDays(freeDaysForExportContainerStorage);
+//												String unit = String.valueOf(f[1]);
+//
+//												AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
+//														BigDecimal.ZERO);
+//												if ("DAY".equals(unit)) {
+//
+//													if (con.getDestuffDate() != null) {
+//														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getGateInDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																destuffDateTime);
+//
+//														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//																destuffDateTime) > 0) {
+//															daysBetween = 1;
+//														}
+//
+//														final long daysBetween1 = daysBetween;
+//
+//														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getDestuffDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//
+//														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																destuffDateTime1);
+//
+//														if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																.between(gateInDateTime1, destuffDateTime1) > 0) {
+//															daysBetween2 = 1;
+//														}
+//
+//														tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+//														tempAss.setExecutionUnit1("");
+//
+//														BigDecimal totalRate = rangeValues.stream().map(r -> {
+//
+//															int fromRange = ((BigDecimal) r[6]).intValue();
+//															int toRange = ((BigDecimal) r[7]).intValue();
+//
+//															BigDecimal rate = (BigDecimal) r[8];
+//
+//															if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+//																serviceRate.set(rate); // Set the rate for the
+//																						// matching
+//																						// slab
+//															}
+//
+//															long daysInSlab = Math.min(toRange, daysBetween1)
+//																	- Math.max(fromRange, 1) + 1;
+//
+//															daysInSlab = Math.max(daysInSlab, 0);
+//
+//															serviceRate.set(rate);
+//															return rate.multiply(new BigDecimal(daysInSlab));
+//														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//														tempAss.setServiceRate(serviceRate.get());
+//
+//														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																assessment.getIgmTransId(), assessment.getIgmNo(),
+//																assessment.getIgmLineNo(), con.getContainerNo());
+//
+//														totalRate = totalRate.subtract(oldVal).setScale(3,
+//																RoundingMode.HALF_UP);
+//
+//														tempAss.setRates(totalRate);
+//
+//													} else {
+//
+//														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getGateInDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																destuffDateTime);
+//
+//														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//																destuffDateTime) > 0) {
+//															daysBetween = 1;
+//														}
+//
+//														final long daysBetween1 = daysBetween;
+//
+//														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//
+//														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																destuffDateTime1);
+//
+//														if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																.between(gateInDateTime1, destuffDateTime1) > 0) {
+//															daysBetween2 = 1;
+//														}
+//
+//														tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+//														tempAss.setExecutionUnit1("");
+//
+//														System.out.println("daysBetween " + daysBetween1);
+//
+//														BigDecimal totalRate = rangeValues.stream().map(r -> {
+//															int fromRange = ((BigDecimal) r[6]).intValue(); // Start
+//																											// of
+//																											// the
+//																											// slab
+//															int toRange = ((BigDecimal) r[7]).intValue(); // End of
+//																											// the
+//																											// slab
+//															BigDecimal rate = (BigDecimal) r[8]; // Rate per day in
+//																									// the
+//																									// slab
+//															if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+//																serviceRate.set(rate); // Set the rate for the
+//																						// matching
+//																						// slab
+//															}
+//															// Calculate days in the current slab
+//															long daysInSlab = Math.min(toRange, daysBetween1)
+//																	- Math.max(fromRange, 1) + 1;
+//
+//															daysInSlab = Math.max(daysInSlab, 0);
+//															return rate.multiply(new BigDecimal(daysInSlab));
+//														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//														tempAss.setServiceRate(serviceRate.get());
+//
+//														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																assessment.getIgmTransId(), assessment.getIgmNo(),
+//																assessment.getIgmLineNo(), con.getContainerNo());
+//
+//														totalRate = totalRate.subtract(oldVal).setScale(3,
+//																RoundingMode.HALF_UP);
+//
+//														tempAss.setRates(totalRate);
+//
+//													}
+//												}
+//
+//												if ("WEEK".equals(unit)) {
+//													if (con.getDestuffDate() != null) {
+//														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getDestuffDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																destuffDateTime);
+//
+//														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//																destuffDateTime) > 0) {
+//															daysBetween = 1;
+//														}
+//
+//														final long daysBetween1 = daysBetween;
+//														long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//
+//														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																destuffDateTime1);
+//
+//														if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																.between(gateInDateTime1, destuffDateTime1) > 0) {
+//															daysBetween2 = 1;
+//														}
+//
+//														long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+//
+//														tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+//														tempAss.setExecutionUnit1("");
+//
+//														BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//															int fromRange = ((BigDecimal) r[6]).intValue();
+//															int toRange = ((BigDecimal) r[7]).intValue();
+//															// Include slabs that overlap with weeksBetween
+//															return weeksBetween >= fromRange;
+//														}).map(r -> {
+//															int fromRange = ((BigDecimal) r[6]).intValue();
+//															int toRange = ((BigDecimal) r[7]).intValue();
+//															BigDecimal rate = (BigDecimal) r[8];
+//
+//															// Adjust the fromRange to exclude week 0
+//															int adjustedFromRange = Math.max(fromRange, 1);
+//
+//															// Determine actual weeks in this slab that contribute
+//															// to the total
+//															long weeksInSlab = Math.max(0,
+//																	Math.min(toRange, weeksBetween) - adjustedFromRange
+//																			+ 1);
+//
+//															// Exclude slabs where weeksInSlab is 0
+//															return weeksInSlab > 0
+//																	? rate.multiply(new BigDecimal(weeksInSlab))
+//																	: BigDecimal.ZERO;
+//														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//														if ("SM".equals(String.valueOf(f[7]))) {
+//															totalRate = (totalRate
+//																	.multiply(con.getArea() == null ? new BigDecimal(1)
+//																			: con.getArea()))
+//																	.setScale(3, RoundingMode.HALF_UP);
+//														}
+//														System.out
+//																.println("totalRate " + totalRate + " " + weeksBetween);
+//														tempAss.setServiceRate(serviceRate.get());
+//
+//														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																assessment.getIgmTransId(), assessment.getIgmNo(),
+//																assessment.getIgmLineNo(), con.getContainerNo());
+//
+//														totalRate = totalRate.subtract(oldVal).setScale(3,
+//																RoundingMode.HALF_UP);
+//
+//														tempAss.setRates(totalRate);
+//													} else {
+//														LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getGateInDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//																destuffDateTime);
+//
+//														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//																destuffDateTime) > 0) {
+//															daysBetween = 1;
+//														}
+//
+//														final long daysBetween1 = daysBetween;
+//														long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//														LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//																convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+//																day.getStartTime());
+//														LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//																convertToLocalDateTime(con.getInvoiceDate()),
+//																day.getEndTime());
+//
+//														long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//																destuffDateTime1);
+//
+//														if (daysBetween2 == 0 && ChronoUnit.HOURS
+//																.between(gateInDateTime1, destuffDateTime1) > 0) {
+//															daysBetween2 = 1;
+//														}
+//
+//														long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+//
+//														tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+//														tempAss.setExecutionUnit1("");
+//
+//														BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//															int fromRange = ((BigDecimal) r[6]).intValue();
+//															int toRange = ((BigDecimal) r[7]).intValue();
+//															// Include slabs that overlap with weeksBetween
+//															return weeksBetween >= fromRange;
+//														}).map(r -> {
+//															int fromRange = ((BigDecimal) r[6]).intValue();
+//															int toRange = ((BigDecimal) r[7]).intValue();
+//															BigDecimal rate = (BigDecimal) r[8];
+//
+//															// Adjust the fromRange to exclude week 0
+//															int adjustedFromRange = Math.max(fromRange, 1);
+//
+//															// Determine actual weeks in this slab that contribute
+//															// to the total
+//															long weeksInSlab = Math.max(0,
+//																	Math.min(toRange, weeksBetween) - adjustedFromRange
+//																			+ 1);
+//
+//															// Exclude slabs where weeksInSlab is 0
+//															return weeksInSlab > 0
+//																	? rate.multiply(new BigDecimal(weeksInSlab))
+//																	: BigDecimal.ZERO;
+//														}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//														if ("SM".equals(String.valueOf(f[7]))) {
+//															totalRate = (totalRate
+//																	.multiply(con.getArea() == null ? new BigDecimal(1)
+//																			: con.getArea()))
+//																	.setScale(3, RoundingMode.HALF_UP);
+//														}
+//														System.out
+//																.println("totalRate " + totalRate + " " + weeksBetween);
+//														tempAss.setServiceRate(serviceRate.get());
+//														BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//																assessment.getIgmTransId(), assessment.getIgmNo(),
+//																assessment.getIgmLineNo(), con.getContainerNo());
+//
+//														totalRate = totalRate.subtract(oldVal).setScale(3,
+//																RoundingMode.HALF_UP);
+//
+//														tempAss.setRates(totalRate);
+//													}
+//
+//												}
+//
+//											}
+//
+//										}
+//
+//										finalConData.add(tempAss);
+//
+//									} catch (CloneNotSupportedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//								}
+//
+//							} else {
+//								try {
+//									tempAss = (AssessmentContainerDTO) con.clone();
+//									Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(), day.getStartTime(),
+//											day.getEndTime());
+//
+//									tempAss.setInvoiceDate(invDate);
+//									if ("SA".equals(String.valueOf(f[8]))) {
+//										tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
+//										tempAss.setServiceId(f[0] != null ? String.valueOf(f[0]) : "");
+//										tempAss.setServiceName(f[22] != null ? String.valueOf(f[22]) : "");
+//										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
+//										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
+//										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
+//										tempAss.setDiscPercentage(f[13] != null ? new BigDecimal(String.valueOf(f[13]))
+//												: BigDecimal.ZERO);
+//										tempAss.setDiscValue(f[14] != null ? new BigDecimal(String.valueOf(f[14]))
+//												: BigDecimal.ZERO);
+//										tempAss.setmPercentage(f[15] != null ? new BigDecimal(String.valueOf(f[15]))
+//												: BigDecimal.ZERO);
+//										tempAss.setmAmount(f[16] != null ? new BigDecimal(String.valueOf(f[16]))
+//												: BigDecimal.ZERO);
+//										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
+//										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
+//										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
+//										tempAss.setRangeFrom(f[19] != null ? new BigDecimal(String.valueOf(f[19]))
+//												: BigDecimal.ZERO);
+//										tempAss.setRangeTo(f[20] != null ? new BigDecimal(String.valueOf(f[20]))
+//												: BigDecimal.ZERO);
+//										tempAss.setAcCode(f[17] != null ? String.valueOf(f[17]) : "");
+//										tempAss.setContainerStatus(con.getContainerStatus());
+//										tempAss.setGateOutId(con.getGateOutId());
+//										tempAss.setGatePassNo(con.getGatePassNo());
+//										tempAss.setTaxPerc(
+//												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
+//														: new BigDecimal(String.valueOf(f[12])));
+//										tempAss.setTaxId(String.valueOf(f[11]));
+//										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+//
+//										List<String> conSize2 = new ArrayList<>();
+//										conSize2.add("ALL");
+//										conSize2.add(
+//												("22".equals(con.getContainerSize())) ? "20" : con.getContainerSize());
+//
+//										List<String> conTypeOfCon2 = new ArrayList<>();
+//										conTypeOfCon2.add("ALL");
+//										conTypeOfCon2.add(con.getTypeOfContainer());
+//
+//										List<String> commodityType = new ArrayList<>();
+//										commodityType.add("ALL");
+//										commodityType.add(assessment.getCommodityCode());
+//
+//										List<Object[]> rangeValues = cfstariffservicerepo.getDataByServiceId(cid, bid,
+//												String.valueOf(f[3]), String.valueOf(f[4]), String.valueOf(f[0]),
+//												String.valueOf(f[8]), conSize2, conTypeOfCon2, commodityType,
+//												con.getContainerSize(), con.getTypeOfContainer(),
+//												assessment.getCommodityCode());
+//
+//										System.out.println("rangeValues " + rangeValues);
+//
+//										if (!rangeValues.isEmpty()) {
+//
+//											BigDecimal freeDaysForExportContainerStorage = rangeValues.stream()
+//													.filter(r -> ((BigDecimal) r[8]).compareTo(BigDecimal.ZERO) == 0) // Filter
+//																														// where
+//																														// rate
+//																														// is
+//																														// 0
+//													.map(r -> (BigDecimal) r[7]) // Extract 'toRange' as
+//																					// BigDecimal
+//													.max(Comparator.naturalOrder()) // Get the maximum 'toRange'
+//													.orElse(BigDecimal.ZERO); // Default value if no match found
+//
+//											tempAss.setFreeDays(freeDaysForExportContainerStorage);
+//
+//											String unit = String.valueOf(f[1]);
+//
+//											AtomicReference<BigDecimal> serviceRate = new AtomicReference<>(
+//													BigDecimal.ZERO);
+//											if ("DAY".equals(unit)) {
+//
+//												if (con.getDestuffDate() != null) {
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getGateInDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//
+//													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getDestuffDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//
+//													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//															destuffDateTime1);
+//
+//													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+//															destuffDateTime1) > 0) {
+//														daysBetween2 = 1;
+//													}
+//
+//													tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+//													tempAss.setExecutionUnit1("");
+//
+//													BigDecimal totalRate = rangeValues.stream().map(r -> {
+//
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//
+//														BigDecimal rate = (BigDecimal) r[8];
+//
+//														if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+//															serviceRate.set(rate); // Set the rate for the
+//																					// matching
+//																					// slab
+//														}
+//
+//														long daysInSlab = Math.min(toRange, daysBetween1)
+//																- Math.max(fromRange, 1) + 1;
+//
+//														daysInSlab = Math.max(daysInSlab, 0);
+//
+//														serviceRate.set(rate);
+//														return rate.multiply(new BigDecimal(daysInSlab));
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													tempAss.setServiceRate(serviceRate.get());
+//
+//													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//															assessment.getIgmTransId(), assessment.getIgmNo(),
+//															assessment.getIgmLineNo(), con.getContainerNo());
+//
+//													totalRate = totalRate.subtract(oldVal).setScale(3,
+//															RoundingMode.HALF_UP);
+//
+//													tempAss.setRates(totalRate);
+//
+//												} else {
+//
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getGateInDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//
+//													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//
+//													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//															destuffDateTime1);
+//
+//													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+//															destuffDateTime1) > 0) {
+//														daysBetween2 = 1;
+//													}
+//
+//													tempAss.setExecutionUnit(String.valueOf(daysBetween2));
+//													tempAss.setExecutionUnit1("");
+//
+//													System.out.println("daysBetween " + daysBetween1);
+//
+//													BigDecimal totalRate = rangeValues.stream().map(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue(); // Start
+//																										// of
+//																										// the
+//																										// slab
+//														int toRange = ((BigDecimal) r[7]).intValue(); // End of
+//																										// the
+//																										// slab
+//														BigDecimal rate = (BigDecimal) r[8]; // Rate per day in
+//																								// the
+//																								// slab
+//														if (daysBetween1 >= fromRange && daysBetween1 <= toRange) {
+//															serviceRate.set(rate); // Set the rate for the
+//																					// matching
+//																					// slab
+//														}
+//														// Calculate days in the current slab
+//														long daysInSlab = Math.min(toRange, daysBetween1)
+//																- Math.max(fromRange, 1) + 1;
+//
+//														daysInSlab = Math.max(daysInSlab, 0);
+//														return rate.multiply(new BigDecimal(daysInSlab));
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													tempAss.setServiceRate(serviceRate.get());
+//
+//													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//															assessment.getIgmTransId(), assessment.getIgmNo(),
+//															assessment.getIgmLineNo(), con.getContainerNo());
+//
+//													totalRate = totalRate.subtract(oldVal).setScale(3,
+//															RoundingMode.HALF_UP);
+//
+//													tempAss.setRates(totalRate);
+//
+//												}
+//											}
+//
+//											if ("WEEK".equals(unit)) {
+//												if (con.getDestuffDate() != null) {
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getDestuffDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//													long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//
+//													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//															destuffDateTime1);
+//
+//													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+//															destuffDateTime1) > 0) {
+//														daysBetween2 = 1;
+//													}
+//
+//													long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+//
+//													tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+//													tempAss.setExecutionUnit1("");
+//
+//													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														// Include slabs that overlap with weeksBetween
+//														return weeksBetween >= fromRange;
+//													}).map(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														BigDecimal rate = (BigDecimal) r[8];
+//
+//														// Adjust the fromRange to exclude week 0
+//														int adjustedFromRange = Math.max(fromRange, 1);
+//
+//														// Determine actual weeks in this slab that contribute to the
+//														// total
+//														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+//																- adjustedFromRange + 1);
+//
+//														// Exclude slabs where weeksInSlab is 0
+//														return weeksInSlab > 0
+//																? rate.multiply(new BigDecimal(weeksInSlab))
+//																: BigDecimal.ZERO;
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													if ("SM".equals(String.valueOf(f[7]))) {
+//														totalRate = (totalRate
+//																.multiply(con.getArea() == null ? new BigDecimal(1)
+//																		: con.getArea()))
+//																.setScale(3, RoundingMode.HALF_UP);
+//													}
+//													System.out.println("totalRate " + totalRate + " " + weeksBetween);
+//													tempAss.setServiceRate(serviceRate.get());
+//
+//													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//															assessment.getIgmTransId(), assessment.getIgmNo(),
+//															assessment.getIgmLineNo(), con.getContainerNo());
+//
+//													totalRate = totalRate.subtract(oldVal).setScale(3,
+//															RoundingMode.HALF_UP);
+//
+//													tempAss.setRates(totalRate);
+//												} else {
+//													LocalDateTime gateInDateTime = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getGateInDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
+//															destuffDateTime);
+//
+//													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
+//															destuffDateTime) > 0) {
+//														daysBetween = 1;
+//													}
+//
+//													final long daysBetween1 = daysBetween;
+//													long weeksBetween = (long) Math.ceil(daysBetween1 / 7.0);
+//
+//													LocalDateTime gateInDateTime1 = adjustToCustomStartOfDay(
+//															convertToLocalDateTime(con.getLastInvoiceUptoDate()),
+//															day.getStartTime());
+//													LocalDateTime destuffDateTime1 = adjustToCustomEndOfDay(
+//															convertToLocalDateTime(con.getInvoiceDate()),
+//															day.getEndTime());
+//
+//													long daysBetween2 = ChronoUnit.DAYS.between(gateInDateTime1,
+//															destuffDateTime1);
+//
+//													if (daysBetween2 == 0 && ChronoUnit.HOURS.between(gateInDateTime1,
+//															destuffDateTime1) > 0) {
+//														daysBetween2 = 1;
+//													}
+//
+//													long weeksBetween1 = (long) Math.ceil(daysBetween2 / 7.0);
+//
+//													tempAss.setExecutionUnit(String.valueOf(weeksBetween1));
+//													tempAss.setExecutionUnit1("");
+//
+//													BigDecimal totalRate = rangeValues.stream().filter(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														// Include slabs that overlap with weeksBetween
+//														return weeksBetween >= fromRange;
+//													}).map(r -> {
+//														int fromRange = ((BigDecimal) r[6]).intValue();
+//														int toRange = ((BigDecimal) r[7]).intValue();
+//														BigDecimal rate = (BigDecimal) r[8];
+//
+//														// Adjust the fromRange to exclude week 0
+//														int adjustedFromRange = Math.max(fromRange, 1);
+//
+//														// Determine actual weeks in this slab that contribute to the
+//														// total
+//														long weeksInSlab = Math.max(0, Math.min(toRange, weeksBetween)
+//																- adjustedFromRange + 1);
+//
+//														// Exclude slabs where weeksInSlab is 0
+//														return weeksInSlab > 0
+//																? rate.multiply(new BigDecimal(weeksInSlab))
+//																: BigDecimal.ZERO;
+//													}).reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
+//													if ("SM".equals(String.valueOf(f[7]))) {
+//														totalRate = (totalRate
+//																.multiply(con.getArea() == null ? new BigDecimal(1)
+//																		: con.getArea()))
+//																.setScale(3, RoundingMode.HALF_UP);
+//													}
+//													System.out.println("totalRate " + totalRate + " " + weeksBetween);
+//													tempAss.setServiceRate(serviceRate.get());
+//													BigDecimal oldVal = cfigmcnrepo.getRateByServiceId(cid, bid,
+//															assessment.getIgmTransId(), assessment.getIgmNo(),
+//															assessment.getIgmLineNo(), con.getContainerNo());
+//
+//													totalRate = totalRate.subtract(oldVal).setScale(3,
+//															RoundingMode.HALF_UP);
+//
+//													tempAss.setRates(totalRate);
+//												}
+//
+//											}
+//
+//										}
+//
+//									}
+//
+//									finalConData.add(tempAss);
+//
+//								} catch (CloneNotSupportedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//							}
+//
+//						});
+//
+//						AssessmentSheet tempAssessment = (AssessmentSheet) assessment.clone();
+//
+//						AssessmentSheet newAss = tempAssessment;
+//
+//						newAss.setCompanyId(cid);
+//						newAss.setBranchId(bid);
+//						newAss.setAssesmentLineNo(String.valueOf(sr));
+//						newAss.setStatus('A');
+//						newAss.setCreatedBy(user);
+//						newAss.setCreatedDate(new Date());
+//						newAss.setApprovedBy(user);
+//						newAss.setApprovedDate(new Date());
+//						newAss.setAssesmentDate(new Date());
+//						newAss.setTransType("Import Container");
+//						newAss.setProfitcentreId(con.getProfitcentreId());
+//
+//						newAss.setAssesmentId(HoldNextIdD1);
+//
+//						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
+//
+//						String billingId = "IMP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+//								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+//										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+//												: assessment.getOthPartyId();
+//
+//						String billingAdd = "IMP".equals(assessment.getBillingParty())
+//								? String.valueOf(assessment.getImpSrNo())
+//								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+//										: "FWR".equals(assessment.getBillingParty())
+//												? String.valueOf(assessment.getAccSrNo())
+//												: assessment.getOthSrNo();
+//
+//						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+//
+//						newAss.setPartyId(billingId);
+//						newAss.setPartySrNo(new BigDecimal(billingAdd));
+//						newAss.setPayableParty(assessment.getBillingParty());
+//						newAss.setPayablePartyId(billingId);
+//
+//						if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
+//							newAss.setIgst("Y");
+//							newAss.setCgst("N");
+//							newAss.setSgst("N");
+//						} else if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'N') {
+//							newAss.setIgst("E");
+//							newAss.setCgst("N");
+//							newAss.setSgst("N");
+//						}
+//
+//						else if (assessment.getSez() == 'N' && assessment.getTaxApplicable() == 'Y') {
+//
+//							if (b.getState().equals(p.getState())) {
+//								newAss.setIgst("N");
+//								newAss.setCgst("Y");
+//								newAss.setSgst("Y");
+//							} else {
+//								newAss.setIgst("Y");
+//								newAss.setCgst("N");
+//								newAss.setSgst("N");
+//							}
+//
+//						} else {
+//							newAss.setIgst("N");
+//							newAss.setCgst("N");
+//							newAss.setSgst("N");
+//						}
+//
+//						Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), assessment.getIgmLineNo());
+//
+//						if (crg != null) {
+//							newAss.setNoOfPackages(crg.getNoOfPackages());
+//
+//						}
+//
+//						List<AssessmentContainerDTO> newAnxData = finalConData.stream().map(item -> {
+//							try {
+//								return (AssessmentContainerDTO) item.clone(); // Clone first
+//							} catch (CloneNotSupportedException e) {
+//								e.printStackTrace();
+//								return null;
+//							}
+//						}).filter(Objects::nonNull) // Remove null values from failed clones
+//								.filter(item -> item.getContainerNo().equals(con.getContainerNo())) // Filter after
+//																									// cloning
+//								.collect(Collectors.toList());
+//
+//						List<AssessmentContainerDTO> filteredData1 = newAnxData.stream()
+//								.filter(c -> "G".equals(c.getServiceGroup())).collect(Collectors.toList());
+//
+//						String crgDays = "";
+//
+//						if (!filteredData1.isEmpty()) {
+//							crgDays = filteredData1.get(0).getExecutionUnit();
+//						}
+//
+//						BigDecimal totalRates1 = filteredData1.stream().map(AssessmentContainerDTO::getRates)
+//								.reduce(BigDecimal.ZERO, BigDecimal::add).setScale(3, RoundingMode.HALF_UP);
+//						//
+////      					Optional<AssessmentContainerDTO> storageDataOpt = finalConData.stream()
+////      							.filter(c -> "S00003".equals(c.getServiceId())).findFirst();
+//						//
+////      					AssessmentContainerDTO storageData = storageDataOpt.orElse(null); // or handle the case where
+////      																						// it's
+////      																						// absent
+//
+//						newAss.setContainerNo(con.getContainerNo());
+//						newAss.setContainerSize(con.getContainerSize());
+//						newAss.setContainerType(con.getContainerType());
+//						newAss.setGateInDate(con.getGateInDate());
+//						newAss.setGateOutDate(con.getGateoutDate() == null ? null : con.getGateoutDate());
+//						newAss.setGrossWeight(con.getGrossWt());
+//						newAss.setGateOutType(con.getGateOutType());
+//						newAss.setAgroProductStatus("AGRO".equals(assessment.getCommodityCode()) ? "Y" : "N");
+//						newAss.setTypeOfContainer(con.getTypeOfContainer());
+//						newAss.setScanerType(con.getScannerType());
+//						newAss.setExaminedPercentage(new BigDecimal(con.getExamPercentage()));
+//						newAss.setWeighmentFlag("N");
+//						newAss.setCargoWeight(con.getCargoWt());
+//						newAss.setDestuffDate(con.getDestuffDate() == null ? null : con.getDestuffDate());
+//						newAss.setCalculateInvoice('N');
+//						newAss.setInvoiceUptoDate(finalConData.get(0).getInvoiceDate());
+//						newAss.setContainerHandlingAmt(BigDecimal.ZERO);
+//						newAss.setContainerStorageAmt(totalRates1);
+//						newAss.setInvoiceCategory(assessment.getInvoiceCategory());
+//						newAss.setInvType("Second");
+//						newAss.setSa(tempAssessment.getSaId());
+//						newAss.setSl(tempAssessment.getSlId());
+//						newAss.setIsBos("N".equals(assessment.getTaxApplicable()) ? 'Y' : 'N');
+//						newAss.setSsrTransId(con.getSsrTransId());
+//						newAss.setLastAssesmentDate(assessment.getLastAssesmentDate());
+//						newAss.setLastAssesmentId(assessment.getLastAssesmentId());
+//						newAss.setLastInvoiceDate(assessment.getLastInvoiceDate());
+//						newAss.setLastInvoiceNo(assessment.getLastInvoiceNo());
+//						newAss.setLastInvoiceUptoDate(con.getLastInvoiceUptoDate());
+//
+//						assessmentsheetrepo.save(newAss);
+//						processnextidrepo.updateAuditTrail(cid, bid, "P05091", HoldNextIdD1, "2024");
+//
+//						AtomicReference<BigDecimal> totalAmount = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> crgStorageDay = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> crgStorageAmt = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> invDay = new AtomicReference<>(BigDecimal.ZERO);
+//						AtomicReference<BigDecimal> anxSr = new AtomicReference<>(new BigDecimal(sr));
+//
+//						finalConData.stream().forEach(c -> {
+//							if (c.getServiceId() != null && !c.getServiceId().isEmpty()) {
+//								Cfinvsrvanx anx = new Cfinvsrvanx();
+//								anx.setCompanyId(cid);
+//								anx.setBranchId(bid);
+//								anx.setErpDocRefNo(newAss.getIgmTransId());
+//								anx.setLineNo(String.valueOf(anxSr.get()));
+//								anx.setProcessTransId(HoldNextIdD1);
+//								anx.setServiceId(c.getServiceId());
+//								anx.setSrlNo(srNo1.get());
+//								anx.setDocRefNo(newAss.getIgmNo());
+//								anx.setIgmLineNo(newAss.getIgmLineNo());
+//								anx.setProfitcentreId(newAss.getProfitcentreId());
+//								anx.setInvoiceType("IMP");
+//								anx.setServiceUnit(c.getServiceUnit());
+//								anx.setExecutionUnit(c.getExecutionUnit());
+//								anx.setServiceUnit1(c.getServiceUnit1());
+//								anx.setExecutionUnit1(c.getExecutionUnit1());
+//								anx.setRate(c.getServiceRate());
+//								anx.setActualNoOfPackages(c.getRates());
+//								anx.setCurrencyId("INR");
+//								anx.setLocalAmt(c.getRates());
+//								anx.setInvoiceAmt(c.getRates());
+//								anx.setCommodityDescription(newAss.getCommodityDescription());
+//								anx.setDiscPercentage(c.getDiscPercentage());
+//								anx.setDiscValue(c.getDiscValue());
+//								anx.setmPercentage(c.getmPercentage());
+//								anx.setmAmount(c.getmAmount());
+//								anx.setAcCode(c.getAcCode());
+//								anx.setProcessTransDate(newAss.getAssesmentDate());
+//								anx.setProcessId("P01101");
+//								anx.setPartyId(newAss.getPartyId());
+//								anx.setWoNo(c.getWoNo());
+//								anx.setWoAmndNo(c.getWoAmndNo());
+//								anx.setContainerNo(c.getContainerNo());
+//								anx.setContainerStatus(con.getContainerStatus());
+//								anx.setGateOutDate(c.getGateoutDate());
+//								anx.setAddServices("N");
+//								anx.setStartDate(c.getGateInDate());
+//								anx.setInvoiceUptoDate(c.getInvoiceDate());
+//								anx.setInvoiceUptoWeek(c.getInvoiceDate());
+//								anx.setStatus("A");
+//								anx.setCreatedBy(user);
+//								anx.setCreatedDate(new Date());
+////	      						anx.setApprovedBy(user);
+////	      						anx.setApprovedDate(new Date());
+//								anx.setTaxApp(String.valueOf(newAss.getTaxApplicable()));
+//								anx.setSrvManualFlag("N");
+//								anx.setCriteria("SA".equals(c.getCriteria()) ? "DW"
+//										: "RA".equals(c.getCriteria()) ? "WT" : "CNTR");
+//								anx.setRangeFrom(c.getRangeFrom());
+//								anx.setRangeTo(c.getRangeTo());
+//								anx.setRangeType(c.getContainerStatus());
+//								anx.setGateOutId(c.getGateOutId());
+//								anx.setGatePassNo(c.getGatePassNo());
+//								anx.setRangeType(c.getCriteria());
+//								anx.setTaxId(c.getTaxId());
+//								anx.setExRate(c.getExRate());
+//								anx.setFreeDays(c.getFreeDays());
+//								if (("Y".equals(newAss.getIgst()))
+//										|| ("Y".equals(newAss.getCgst()) && "Y".equals(newAss.getSgst()))) {
+//									anx.setTaxPerc(c.getTaxPerc());
+//								} else {
+//									anx.setTaxPerc(BigDecimal.ZERO);
+//								}
+//
+//								BigDecimal currentRate = c.getRates() != null ? c.getRates() : BigDecimal.ZERO;
+//								BigDecimal currentTotal = totalAmount.get() != null ? totalAmount.get()
+//										: BigDecimal.ZERO;
+//
+//								// Perform addition
+//								totalAmount.set(currentTotal.add(currentRate));
+//
+//								cfinvsrvanxrepo.save(anx);
+//
+////	      						if ("S00007".equals(c.getServiceId())) {
+////	      							crgStorageDay.set(new BigDecimal(c.getExecutionUnit()));
+////	      							crgStorageAmt.set(c.getRates());
+//								//
+////	      						}
+//								//
+////	      						if ("S00003".equals(c.getServiceId())) {
+////	      							invDay.set(new BigDecimal(c.executionUnit));
+////	      						}
+//
+//								srNo1.set(srNo1.get().add(new BigDecimal(1)));
+//							}
+//						});
+//						totalAmount.updateAndGet(amount -> amount.setScale(3, RoundingMode.HALF_UP));
+//
+////      					int updateIgmCn = cfigmcnrepo.updateInvoiceData(cid, bid, assessment.getIgmTransId(),
+////      							assessment.getIgmNo(), con.getContainerNo(), totalAmount.get(), assessment.getDutyValue(),
+////      							HoldNextIdD1, crgStorageDay.get(), assessment.getInsuranceValue(), invDay.get(),
+////      							con.getInvoiceDate(), newAss.getAssesmentDate(), crgStorageAmt.get());
+//
+//						int updateIgmCn = cfigmcnrepo.updateInvoiceData2(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), con.getContainerNo(), assessment.getDutyValue(), HoldNextIdD1,
+//								crgDays.isEmpty() ? BigDecimal.ZERO : new BigDecimal(crgDays),
+//								assessment.getInsuranceValue(), newAss.getAssesmentDate());
+//
+//						int updateInventory = impInventoryRepo.updateInvData(cid, bid, assessment.getIgmTransId(),
+//								assessment.getIgmNo(), con.getContainerNo(), HoldNextIdD1);
+//
+//						assessment.setAssesmentId(HoldNextIdD1);
+//
+//						sr++;
+//
+//					}
+//				}
+//			} else {
+//				List<AssessmentSheet> existingData = assessmentsheetrepo.getDataByAssessmentId(cid, bid,
+//						assessment.getAssesmentId());
+//
+//				if (existingData.isEmpty()) {
+//					return new ResponseEntity<>("Assessment data not found", HttpStatus.CONFLICT);
+//				} else {
+//					existingData.stream().forEach(c -> {
+//						c.setCreditType(assessment.getCreditType());
+//						c.setComments(assessment.getComments());
+//						c.setIntComments(assessment.getIntComments());
+//						assessmentsheetrepo.save(c);
+//					});
+//				}
+//			}
+//
+//			int updateIgmCrg = cfigmcrgrepo.updateAssessmentData(cid, bid, assessment.getIgmNo(),
+//					assessment.getIgmTransId(), assessment.getIgmLineNo(), assessment.getInsuranceValue(),
+//					assessment.getDutyValue());
+//
+//			List<Object[]> result = assessmentsheetrepo.getAssessmentData(cid, bid, assessment.getAssesmentId());
+//
+//			System.out.println("result " + result);
+//			if (result.isEmpty()) {
+//				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+//			} else {
+//				AtomicReference<BigDecimal> totalRateWithoutTax = new AtomicReference<>(BigDecimal.ZERO);
+//				AtomicReference<BigDecimal> totalRateWithTax = new AtomicReference<>(BigDecimal.ZERO);
+//
+//				result.stream().forEach(r -> {
+//					BigDecimal rate = new BigDecimal(String.valueOf(r[71]));
+//					BigDecimal taxPerc = new BigDecimal(String.valueOf(r[74]));
+//
+//					System.out.println("TaxPerc " + String.valueOf(r[69]) + " " + taxPerc);
+//					BigDecimal taxAmt = (rate.multiply(taxPerc)).divide(new BigDecimal(100), RoundingMode.HALF_UP);
+//					totalRateWithoutTax.set(totalRateWithoutTax.get().add(rate));
+//					totalRateWithTax.set(totalRateWithTax.get().add(rate.add(taxAmt)));
+//				});
+//
+//				// Get the final totals
+//				BigDecimal finaltotalRateWithoutTax = BigDecimal.ZERO;
+//				BigDecimal finaltotalRateWithTax = BigDecimal.ZERO;
+//
+//				String invRoundStatus = branchRepo.getInvoiceRoundOffStatus(cid, bid);
+//
+//				if (invRoundStatus != null && !invRoundStatus.isEmpty() && "N".equals(invRoundStatus)) {
+//					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+//					finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+//				} else if (invRoundStatus != null && !invRoundStatus.isEmpty() && "Y".equals(invRoundStatus)) {
+//					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(0, RoundingMode.HALF_UP);
+//					finaltotalRateWithTax = totalRateWithTax.get().setScale(0, RoundingMode.HALF_UP);
+//				} else {
+//					finaltotalRateWithoutTax = totalRateWithoutTax.get().setScale(3, RoundingMode.HALF_UP);
+//					finaltotalRateWithTax = totalRateWithTax.get().setScale(3, RoundingMode.HALF_UP);
+//				}
+//
+//				String pId = "";
+//
+//				if ("CHA".equals(assessment.getBillingParty())) {
+//
+//					pId = assessment.getCha();
+//
+//				} else if ("IMP".equals(assessment.getBillingParty())) {
+//					pId = assessment.getImporterId();
+//				} else if ("FWR".equals(assessment.getBillingParty())) {
+//					pId = assessment.getOnAccountOf();
+//				} else if ("OTH".equals(assessment.getBillingParty())) {
+//					pId = assessment.getOthPartyId();
+//				}
+//
+//				Party p = partyRepository.getDataById(cid, bid, pId);
+//
+//				Map<String, Object> finalResult = new HashMap<>();
+//				finalResult.put("result", result);
+//				finalResult.put("finaltotalRateWithoutTax", finaltotalRateWithoutTax);
+//				finalResult.put("finaltotalRateWithTax", finaltotalRateWithTax);
+//
+//				if (p != null) {
+//
+//					if (assessment.getCreditType() == 'P') {
+//						Object advanceData = finTransrepo.advanceReceiptBeforeSaveSearch(cid, bid, pId, "AD");
+//
+//						finalResult.put("advanceData", advanceData);
+//					}
+//
+//					BigDecimal credit1 = p.getCrAmtLmt() == null ? BigDecimal.ZERO : p.getCrAmtLmt();
+//					BigDecimal credit2 = p.getCrAmtLmtUse() == null ? BigDecimal.ZERO : p.getCrAmtLmtUse();
+//
+//					BigDecimal allowedValue = credit1.subtract(credit2).setScale(3, RoundingMode.HALF_UP);
+//
+//					System.out.println("allowedValue " + credit1 + " " + credit2 + " " + allowedValue);
+//
+//					finalResult.put("tanNo", p.getTanNoId());
+//					finalResult.put("tdsPerc", p.getTdsPercentage());
+//					finalResult.put("creditAllowed", allowedValue);
+//				}
+//
+//				return new ResponseEntity<>(finalResult, HttpStatus.OK);
+//			}
+//
+//			// return null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//
+//			return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	private LocalDateTime convertToLocalDateTime(Date date) {
 		if (date == null) {

@@ -1197,5 +1197,11 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 						int updateConList(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
 								@Param("trans") String trans, @Param("con") String con, @Param("fwdId") String fwdId,@Param("tarrifNo") String tariffNo,
 								@Param("amdNo") String amdNo);
+						
+						
+						@Query(value = "select DISTINCT c.igmNo,c.igmTransId,c.igmLineNo from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and "
+								+ "c.status = 'A' and c.igmNo=:igm and c.igmLineNo=:line and (c.gateOutId is null OR c.gateOutId = '')")
+						Object getDataByIGMAndLineNo(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+								@Param("line") String line);
 }
 

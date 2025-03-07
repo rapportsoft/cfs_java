@@ -251,5 +251,12 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			+ "AND c.cfsTariffNo = :tariffNo AND c.containerSize IN :consize AND c.cargoType IN :type ")
 	List<Object[]> getRangeServiceDtlForBLWiseUpload(@Param("cid") String cid, @Param("bid") String bid,@Param("service") String service,
 			@Param("tariffNo") String tariffNo, @Param("consize") List<String> consize,@Param("type") List<String> type);
+	
+	
+	@Query(value = "select s.serviceId, c.serviceShortDesc, c.serviceUnit, s.rate,s.cfsTariffNo,s.cfsAmendNo " + "from CFSTariffService s "
+			+ "LEFT OUTER JOIN Services c ON s.companyId=c.companyId and s.branchId=c.branchId and s.serviceId=c.serviceId "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.status = 'A' and c.status = 'A' and s.cfsTariffNo='CFS1000001' "
+			+ "group by s.serviceId")
+	List<Object[]> getGeneralTarrifData3(@Param("cid") String cid, @Param("bid") String bid);
 
 }
