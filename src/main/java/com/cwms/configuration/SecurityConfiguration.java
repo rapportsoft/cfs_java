@@ -142,6 +142,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/customerPortal/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/blTariffUpload/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/waiver/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/customValuation/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
