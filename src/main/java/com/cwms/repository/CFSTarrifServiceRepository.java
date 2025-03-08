@@ -234,7 +234,7 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			+ "WHERE c.companyId = :cid AND c.branchId = :bid AND t.partyId IN ('','') AND t.shippingLine IN ('','') AND t.importerId IN ('','') "
 			+ "AND c.commodityCode IN ('','ALL') AND c.status = 'A' AND c.serviceId IN :serviceList "
 			+ "AND c.cfsTariffNo = :tariffNo AND c.containerSize IN :consize AND c.cargoType IN :type "
-			+ "GROUP BY c.serviceId " + "ORDER BY c.serviceId")
+			+ "GROUP BY c.serviceId,c.containerSize " + "ORDER BY c.serviceId")
 	List<Object[]> getServiceDtlForBLWiseUpload(@Param("cid") String cid, @Param("bid") String bid,@Param("serviceList") List<String> serviceList,
 			@Param("tariffNo") String tariffNo, @Param("consize") List<String> consize,@Param("type") List<String> type);
 	

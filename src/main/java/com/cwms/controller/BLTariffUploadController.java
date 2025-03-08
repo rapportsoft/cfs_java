@@ -315,10 +315,10 @@ public class BLTariffUploadController {
 
 				List<Cfigmcn> conData = cfigmcnrepo.conList(cid, bid, i.get(0), i.get(1), i.get(2));
 
-				List<String> distinctContainerSizes = conData.stream().map(Cfigmcn::getContainerSize) // Extract
-																										// containerSize
-						.distinct() // Get unique values
-						.collect(Collectors.toList()); // Collect as List
+				List<String> distinctContainerSizes = conData.stream()
+					    .map(c -> "22".equals(c.getContainerSize()) ? "20" : c.getContainerSize()) // Map "22" to "20"
+					    .distinct() // Get unique values
+					    .collect(Collectors.toList());
 
 				List<String> distinctToc = conData.stream().map(Cfigmcn::getTypeOfContainer) // Extract containerSize
 						.distinct() // Get unique values
