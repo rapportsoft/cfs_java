@@ -15,19 +15,67 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.GateIn;
 import com.cwms.entities.HubDocument;
+import com.cwms.entities.StuffRequestHub;
 import com.cwms.service.HubService;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("Hub")
-public class HubDocumentController {
-	
+public class HubDocumentController {	
 	
 	@Autowired
 	private HubService hubService;
 	
 	
+	@GetMapping("/getSelectedStuffingEntry")
+	public ResponseEntity<?> getSelectedStuffingEntry(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("stuffingReqId") String stuffingReqId) {
+		try {
+			ResponseEntity<?> sbEntries = hubService.getSelectedStuffingEntry(companyId, branchId, stuffingReqId);
+			return sbEntries;
+		} catch (Exception e) {
+			System.out.println(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+
+	@GetMapping("/getStuffingEntriesToSelect")
+	public ResponseEntity<?> getStuffingEntriesToSelect(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("profitCenterId") String profitCenterId,			
+			@RequestParam(value = "searchValue", required = false) String searchValue) {
+		try {
+			List<Object[]> gateInEntries = hubService.getStuffingEntriesToSelect(companyId, branchId, searchValue, profitCenterId);
+			return ResponseEntity.ok(gateInEntries);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+
 	
+	
+	
+	
+	@PostMapping("/saveHubStuffRequestContainer")
+	public ResponseEntity<?> saveHubStuffRequestContainer(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestBody List<StuffRequestHub> stuffRequestHub,
+			@RequestParam("userId") String User) {
+		ResponseEntity<?> saveHubStuffRequest = hubService.saveHubStuffRequestContainer(companyId, branchId, stuffRequestHub, User);
+		return saveHubStuffRequest;
+	}
+	
+	@GetMapping("/searchIgmNoForStuffing")
+	public ResponseEntity<?> searchIgmNoForStuffing(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,
+			@RequestParam("searchValue") String searchValue, @RequestParam("profitcentreId") String profitcentreId, @RequestParam(value = "stuffReqId", required = false) String stuffReqId){
+		return hubService.searchIgmNoForStuffing(companyId, branchId, searchValue, profitcentreId, stuffReqId);
+	}
+	
+	@GetMapping("/searchContainerNoForHubCLP")
+	public ResponseEntity<?> searchContainerNoForHubCLP(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
+		return hubService.searchContainerNoForHubCLP(companyId, branchId, containerNo, profitcentreId);
+	}
 	
 	
 	

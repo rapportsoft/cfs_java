@@ -110,7 +110,32 @@ public class HubDocument {
     transient private String shippingAgentName;
     transient private String shippingLineName;
     
+    transient private Integer balanceQuantity;
+    transient private BigDecimal balanceWeight;
     
+    
+    
+    
+	public Integer getBalanceQuantity() {
+		return balanceQuantity;
+	}
+
+
+	public void setBalanceQuantity(Integer balanceQuantity) {
+		this.balanceQuantity = balanceQuantity;
+	}
+
+
+	public BigDecimal getBalanceWeight() {
+		return balanceWeight;
+	}
+
+
+	public void setBalanceWeight(BigDecimal balanceWeight) {
+		this.balanceWeight = balanceWeight;
+	}
+
+
 	public BigDecimal getGateInWt() {
 		return gateInWt;
 	}

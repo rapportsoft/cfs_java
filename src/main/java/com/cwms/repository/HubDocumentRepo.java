@@ -13,7 +13,180 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.HubDocument;
 
-public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{
+public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE ExportInventory e " +
+	       "SET e.vesselId = :vesselId, " +	    
+	       "    e.viaNo = :viaNo, " +	      
+	       "    e.stuffReqEditedBy = :stuffReqEditedBy, " +
+	       "    e.hubStuffing = 'Y', " +	 
+	       "    e.stuffReqEditedDate = :editedDate, " +	 
+	       "    e.hubStfEditedBy = :stuffReqEditedBy, " +
+	       "    e.hubStfEditedDate = :editedDate " +
+	       "WHERE e.companyId = :companyId " +
+	       "AND e.branchId = :branchId " +
+	       "AND e.gateInId = :gateInId")
+	int updateHubInventoryStuffingRequestShort(	   
+	    @Param("vesselId") String vesselId,
+	    @Param("viaNo") String viaNo,
+	    @Param("stuffReqEditedBy") String stuffReqEditedBy,
+	    @Param("editedDate") Date editedDate,
+	    @Param("gateInId") String gateInId,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId
+	);
+
+	
+	
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE HubDocument e " +
+	       "SET e.stuffReqWeight = COALESCE(e.stuffReqWeight, 0) + :stuffReqWeight, " +
+	       "    e.stuffReqQty = COALESCE(e.stuffReqQty, 0) + :stuffReqQty " +
+	       "WHERE e.companyId = :companyId " +
+	       "AND e.branchId = :branchId " +
+	       "AND e.hubTransId = :hubTransId " +
+	       "AND e.igmNo = :igmNo " +
+	       "AND e.igmLineNo = :igmLineNo")
+	int updateHubGateInStuffingRequest(          
+	    @Param("companyId") String companyId, 
+	    @Param("branchId") String branchId, 
+	    @Param("stuffReqQty") Integer stuffReqQty,
+	    @Param("stuffReqWeight") BigDecimal stuffReqWeight, 
+	    @Param("hubTransId") String hubTransId, 
+	    @Param("igmNo") String igmNo, 
+	    @Param("igmLineNo") String igmLineNo
+	);
+
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE GateIn e " +
+	       "SET e.hubStuffId = :hubStuffId " +	      
+	       "WHERE e.companyId = :companyId " +
+	       "AND e.branchId = :branchId " +
+	       "AND e.gateInId = :gateInId")
+	int updateHubGateInContainerStuffingRequest(		  
+	    @Param("companyId") String companyId, @Param("branchId") String branchId,
+	    @Param("hubStuffId") String hubStuffId, @Param("gateInId") String gateInId
+	);
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE ExportInventory e " +
+	       "SET e.sbNo = :sbNo, " +
+	       "    e.sbTransId = :sbTransId, " +
+	       "    e.vesselId = :vesselId, " +
+	       "    e.viaNo = :viaNo, " +
+	       "    e.stuffReqId = :stuffReqId, " +
+	       "    e.stuffReqDate = :stuffReqDate, " +
+	       "    e.stuffReqEditedBy = :stuffReqEditedBy, " +
+	       "    e.stuffReqEditedDate = :editedDate, " +
+	       "    e.movementReqId = :stuffReqId, " +
+	       "    e.movementReqDate = :stuffReqDate, " +
+	       "    e.stuffTallyId = :stuffReqId, " +
+	       "    e.stuffTallyDate = :stuffReqDate, " +
+	       "    e.hubStfEditedBy = :stuffReqEditedBy, " +
+	       "    e.hubStfEditedDate = :editedDate, " +
+	       "    e.cycle = 'HUB' " +
+	       "WHERE e.companyId = :companyId " +
+	       "AND e.branchId = :branchId " +
+	       "AND e.gateInId = :gateInId")
+	int updateHubInventoryStuffingRequest(
+	    @Param("sbNo") String sbNo,
+	    @Param("sbTransId") String sbTransId,
+	    @Param("vesselId") String vesselId,
+	    @Param("viaNo") String viaNo,
+	    @Param("stuffReqId") String stuffReqId,
+	    @Param("stuffReqDate") Date stuffReqDate,
+	    @Param("stuffReqEditedBy") String stuffReqEditedBy,
+	    @Param("editedDate") Date editedDate,
+	    @Param("gateInId") String gateInId,
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId
+	);
+
+	
+	
+	@Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END " +
+		       "FROM StuffRequestHub e " +
+		       "WHERE e.companyId = :companyId " +
+		       "AND e.branchId = :branchId " +
+		       "AND e.sbNo = :sbNo " +
+		       "AND e.sbTransId = :sbTransId AND e.containerNo = :containerNo " +
+		       "AND e.profitCentreId = :profitcentreId " +
+		       "AND e.status <> 'D' " +
+		       "AND (:stuffReqLineId IS NULL OR e.stuffReqLineId <> :stuffReqLineId) " +
+		       "AND (:stuffReqId IS NULL OR :stuffReqId = '' OR e.stuffReqId <> :stuffReqId)")
+		boolean existsByIgmNoForstuffing(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("sbNo") String sbNo,
+		    @Param("sbTransId") String sbTransId,
+		    @Param("profitcentreId") String profitcentreId,
+		    @Param("stuffReqId") String stuffReqId,
+		    @Param("stuffReqLineId") Integer stuffReqLineId,
+		    @Param("containerNo") String containerNo
+		);
+	
+	
+	@Query(value = "SELECT c.igmNo, c.igmLineNo, c.hubTransDate, c.importerName, c.noOfPackages, c.grossWt, c.cargoWt, c.cargoDescription, c.hubTransId, (c.noOfPackages - c.stuffReqQty) As balanceQuantity, (c.cargoWt - c.stuffReqWeight) As balanceWeight "
+	        + "FROM HubDocument c "
+	        + "LEFT JOIN StuffRequestHub st ON c.companyId = st.companyId "
+	        + "AND c.branchId = st.branchId "
+	        + "AND st.sbNo = c.igmNo "
+	        + "AND st.sbLineNo = c.igmLineNo "
+	        + "AND st.sbTransId = c.hubTransId "
+	        + "AND st.profitCentreId = c.profitCentreId "
+	        + "AND st.status <> 'D' " 
+	        + "WHERE c.companyId = :companyId "
+	        + "AND c.branchId = :branchId "
+	        + "AND c.noOfPackages = c.gateInPackages "
+	        + "AND c.status != 'D' "
+	        + "AND c.profitCentreId = :profitcentreId "
+	        + "AND (COALESCE(:searchValue, '') = '' OR c.igmNo LIKE CONCAT('%', :searchValue, '%') OR c.igmLineNo LIKE CONCAT('%', :searchValue, '%')) "
+	        + "AND (st.stuffReqId IS NULL OR st.stuffReqId != :stuffReqId) "
+	        + "ORDER BY c.hubTransDate DESC")
+	List<Object[]> searchIgmNoForStuffing(@Param("companyId") String companyId, 
+	                                      @Param("branchId") String branchId,
+	                                      @Param("searchValue") String searchValue, 
+	                                      @Param("profitcentreId") String profitcentreId, 
+	                                      @Param("stuffReqId") String stuffReqId);
+
+	
+	
+	@Query("SELECT E.containerNo, E.containerSize, E.containerType, E.sa, psa.partyName, E.sl, psl.partyName, g.onAccountOf, g.tareWeight, g.inGateInDate, g.deliveryOrderNo, g.gateInId, g.containerHealth, pon.partyName " +  
+		       "FROM ExportInventory E " +  
+		       "LEFT JOIN GateIn g ON E.companyId = g.companyId AND E.branchId = g.branchId " +  
+		       "AND g.profitcentreId = E.profitcentreId AND g.status <> 'D' " +  
+		       "AND g.containerNo = E.containerNo AND (g.stuffRequestId IS NULL OR g.stuffRequestId = '') " +  
+		       "LEFT JOIN Party psa ON g.companyId = psa.companyId AND g.branchId = psa.branchId " +  
+		       "AND g.sa = psa.partyId AND psa.status <> 'D' " +  
+		       "LEFT JOIN Party psl ON g.companyId = psl.companyId AND g.branchId = psl.branchId " +  
+		       "AND g.sl = psl.partyId AND psl.status <> 'D' " + 
+		       "LEFT JOIN Party pon ON g.companyId = pon.companyId AND g.branchId = pon.branchId " +  
+		       "AND g.onAccountOf = pon.partyId AND pon.status <> 'D' " + 
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +  
+		       "AND (E.holdStatus IS NULL OR E.holdStatus = '' OR E.holdStatus <> 'H') " +  
+		       "AND (E.stuffReqId IS NULL OR E.stuffReqId = '') " +  
+		       "AND E.profitcentreId = :profitcentreId " +  
+		       "AND E.containerNo LIKE %:searchValue% " +  
+		       "AND E.status <> 'D' " +  
+		       "AND (g.containerStatus IS NULL OR g.containerStatus = 'MTY')")  
+		List<Object[]> searchContainerNoForHubCLP(@Param("companyId") String companyId,  
+		                                          @Param("branchId") String branchId,  
+		                                          @Param("searchValue") String searchValue,  
+		                                          @Param("profitcentreId") String profitcentreId);  
+
 	
 	 @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END FROM HubDocument e " +
 	           "WHERE e.companyId = :companyId AND e.branchId = :branchId " +
@@ -80,7 +253,7 @@ public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{
 
 	
 	
-	@Query("SELECT Distinct s.igmNo, s.hubTransId " +
+	@Query("SELECT Distinct s.igmNo, s.hubTransId, s.igmLineNo " +
 		       "FROM HubDocument s " +			     
 		       "LEFT JOIN GateIn g ON g.companyId = s.companyId AND g.branchId = s.branchId AND g.docRefNo = s.igmNo " +
 		       "AND g.gateInId = :gateInId AND g.processId = 'P00102' AND g.profitcentreId = :profitCentreId " + 
@@ -176,5 +349,10 @@ public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{
 	HubDocument getSinleHubEntry(@Param("companyId") String companyId, @Param("branchId") String branchId,
 			@Param("profitcentreId") String profitcentreId, @Param("hubTransId") String hubTransId,
 			@Param("igmNo") String igmNo);
+
+
+
+
+	
 
 }

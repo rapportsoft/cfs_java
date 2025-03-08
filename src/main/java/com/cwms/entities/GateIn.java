@@ -44,7 +44,7 @@ public class GateIn implements Cloneable{
 	public String docRefNo;
 
 	@Id
-	@Column(name = "Line_No", length = 10)
+	@Column(name = "Line_No", length = 20)
 	public String lineNo;
 
 	@Id

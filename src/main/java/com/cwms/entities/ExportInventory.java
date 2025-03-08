@@ -319,6 +319,26 @@ public class ExportInventory {
 
     @Column(name = "Invoice_Date")
     private Date invoiceDate;
+    
+    
+    
+    
+    
+    @Column(name = "Hub_Stuffing", columnDefinition = "char(1) NOT NULL DEFAULT 'N'")
+    private String hubStuffing = "N";
+    
+
+    public String getHubStuffing() {
+		return hubStuffing;
+	}
+
+	public void setHubStuffing(String hubStuffing) {
+		this.hubStuffing = hubStuffing;
+	}
+    
+    
+    
+    
 
     public String getInvoiceNo() {
 		return invoiceNo;

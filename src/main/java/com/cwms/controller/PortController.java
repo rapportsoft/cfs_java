@@ -26,6 +26,14 @@ import com.cwms.service.PortService;
 public class PortController {
 	@Autowired
 	private PortService portService;
+	
+	@GetMapping("/getPortListToSelectNew")
+	public ResponseEntity<?> getPortListToSelectNew(@RequestParam("companyId") String companyId,@RequestParam("branchId") String branchId,@RequestParam("jobPrefix") String jobPrefix) {
+		 List<Map<String, String>> portList = portService.getPortToSelectNewAll(companyId, branchId, "Local"); 
+	   
+	    return ResponseEntity.ok(portList);
+	}
+	
 
 	@GetMapping("/searchPorts")
 	public ResponseEntity<?> searchPorts(@RequestParam(name = "companyId", required = false) String companyId,

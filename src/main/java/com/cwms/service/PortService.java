@@ -20,6 +20,15 @@ public class PortService {
 
 	@Autowired
 	private ProcessNextIdService processService;
+	
+	public List<Map<String, String>> getPortToSelectNewAll(String companyId, String branchId, String portType)
+	{		
+		
+		List<Port> portIdList = portRepo.getPortIdListNew(companyId, branchId, portType);
+		List<Map<String, String>> portList = convertToValueLabelListTally(portIdList); 
+		
+		return portList;
+	}
 
 	public List<Port> searchPorts(String companyId, String branchId, String portCode, String portType,
 			String portName) {
