@@ -641,11 +641,11 @@ public class AuctionService {
 					auc.setBidId(auctionCrg.getBidId());
 					auc.setBidDate(auctionCrg.getBidDate());
 					auc.setComments(auctionCrg.getComments());
-					auc.setCvStatus(auctionCrg.getCvStatus());
-					auc.setCvCreatedBy(user);
-					auc.setCvCreatedDate(new Date());
-					auc.setCvApprovedBy(user);
-					auc.setCvApprovedDate(new Date());
+//					auc.setCvStatus(auctionCrg.getCvStatus());
+//					auc.setCvCreatedBy(user);
+//					auc.setCvCreatedDate(new Date());
+//					auc.setCvApprovedBy(user);
+//					auc.setCvApprovedDate(new Date());
 					auc.setCreatedBy(user);
 					auc.setCreatedDate(new Date());
 //				auc.setEditedBy(auctionCrg.getEditedBy());
