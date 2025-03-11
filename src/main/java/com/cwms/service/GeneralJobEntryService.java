@@ -220,7 +220,7 @@ public class GeneralJobEntryService {
 //				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
 				
 				
-
+//				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
 				
 				if (existing != null) {
 					
