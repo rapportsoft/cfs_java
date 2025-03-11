@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cwms.entities.ExportStuffRequest;
 import com.cwms.entities.GateIn;
+import com.cwms.entities.GateOut;
 import com.cwms.entities.HubDocument;
+import com.cwms.entities.HubGatePass;
 import com.cwms.entities.StuffRequestHub;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.entities.Vessel;
@@ -25,7 +27,9 @@ import com.cwms.entities.Voyage;
 import com.cwms.helper.HelperMethods;
 import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
+import com.cwms.repository.GateOutRepo;
 import com.cwms.repository.HubDocumentRepo;
+import com.cwms.repository.HubGatePassRepo;
 import com.cwms.repository.HubStuffRequestRepo;
 import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.repository.VesselRepository;
@@ -57,7 +61,268 @@ public class HubService {
 	
 	
 	@Autowired
-	private HubStuffRequestRepo stuffingRepo;	
+	private HubStuffRequestRepo stuffingRepo;		
+	
+	
+	@Autowired
+	private HubGatePassRepo gatePassRepo;	
+	
+	@Autowired
+	private GateOutRepo gateOutRepo;	
+	
+	
+
+	public ResponseEntity<?> getSelectedGatePassEntry(String companyId, String branchId, String stuffingReqId)
+	{		
+		List<HubGatePass> selectedGateInEntry = gatePassRepo.getSelectedGatePassEntry(companyId, branchId, stuffingReqId);
+		return ResponseEntity.ok(selectedGateInEntry);	
+	}
+	
+	
+	public List<Object[]> getGatePassEntriesToSelect(String companyId, String branchId, String searchValue, String profitCenterId)
+	{				
+		return gatePassRepo.getGatePassEntriesToSelect(companyId, branchId, searchValue, profitCenterId);
+	}
+	
+	
+
+	
+	@Transactional
+	public ResponseEntity<?> saveHubGatePass(String companyId, String branchId,
+			List<HubGatePass> stuffRequestHub, String user) {
+		Date currentDate = new Date();
+		List<HubGatePass> listToSend = new ArrayList<>();
+		String financialYear = helperMethods.getFinancialYear();
+		try {		
+			
+			
+			 Optional<String> firstValidStuffReqId = stuffRequestHub.stream()
+				        .map(HubGatePass::getGatepassId)  // Extract the stuffReqId from each record
+				        .filter(gatepassId -> gatepassId != null && !gatepassId.trim().isEmpty())  // Filter non-null, non-empty strings
+				        .findFirst();
+			
+			String autoStuffingId = (firstValidStuffReqId.isPresent() && !firstValidStuffReqId.get().trim().isEmpty()) 
+				    ? firstValidStuffReqId.get() 
+				    : processService.autoExportStuffingId(companyId, branchId, "P00204");
+			
+			
+			for (HubGatePass exportStuffLoop : stuffRequestHub) {			
+			
+				if (exportStuffLoop.getGatepassId() == null || exportStuffLoop.getGatepassId().isEmpty()) {
+					System.out.println("Save");				
+
+					
+					
+					exportStuffLoop.setCompanyId(companyId);
+					exportStuffLoop.setBranchId(branchId);
+					exportStuffLoop.setGatepassId(autoStuffingId);
+					exportStuffLoop.setFinYear(financialYear);
+					exportStuffLoop.setCreatedBy(user);
+					exportStuffLoop.setCreatedDate(currentDate);
+					exportStuffLoop.setEditedBy(user);
+					exportStuffLoop.setEditedDate(currentDate);
+					exportStuffLoop.setApprovedBy(user);
+					exportStuffLoop.setApprovedDate(currentDate);
+					exportStuffLoop.setStatus('A');
+					
+					HubGatePass savedHubGatePass  = gatePassRepo.save(exportStuffLoop);
+					
+					GateOut gateOut = new GateOut();
+					gateOut.setIgmLineNo(savedHubGatePass.getSbLineNo());
+			        gateOut.setCreatedDate(currentDate);
+			        gateOut.setCreatedBy(user);
+			        gateOut.setGateOutDate(currentDate);
+			        gateOut.setStatus('A');  // Assuming new entries start with "Pending" status
+			        
+			        gateOut.setContainerSize(savedHubGatePass.getContainerSize());
+			        gateOut.setExporterName(savedHubGatePass.getExporterName());
+			        gateOut.setGateOutId(autoStuffingId); // Generate new GateOut ID
+			        gateOut.setShift(savedHubGatePass.getShift());
+			        gateOut.setComments(savedHubGatePass.getComments());
+			        gateOut.setCommodityDescription(savedHubGatePass.getCargoDescription());
+			        gateOut.setWeightTakenOut(savedHubGatePass.getCargoWeight());
+			        gateOut.setBranchId(savedHubGatePass.getBranchId());
+			        gateOut.setQtyTakenOut(BigDecimal.valueOf(savedHubGatePass.getNoOfPackagesStuffed()));
+			        gateOut.setApprovedDate(currentDate);
+			        gateOut.setFinYear(savedHubGatePass.getFinYear());
+			        gateOut.setContainerHealth(savedHubGatePass.getContainerHealth());
+			        gateOut.setSl(savedHubGatePass.getShippingLine());
+			        gateOut.setDocRefDate(savedHubGatePass.getSbDate());
+			        gateOut.setGrossWt(savedHubGatePass.getGrossWeight());
+			        gateOut.setApprovedBy(user);
+			        gateOut.setVehicleNo(savedHubGatePass.getVehicleNo());
+			        gateOut.setContainerType(savedHubGatePass.getContainerType());
+			        gateOut.setContainerNo(savedHubGatePass.getContainerNo());
+			        gateOut.setGatePassNo(savedHubGatePass.getGatepassId());
+			        gateOut.setCompanyId(savedHubGatePass.getCompanyId());
+			        gateOut.setSrNo(String.valueOf(savedHubGatePass.getStuffReqLineId()));
+			        gateOut.setSa(savedHubGatePass.getShippingAgent());
+			        gateOut.setProfitcentreId(savedHubGatePass.getProfitcentreId());
+			        gateOut.setActualNoOfPackages(BigDecimal.valueOf(savedHubGatePass.getNoOfPackages()));
+			        gateOut.setErpDocRefNo(savedHubGatePass.getSbTransId());
+			        gateOut.setTransporterName(savedHubGatePass.getTransporterName());
+			        gateOut.setDocRefNo(savedHubGatePass.getSbNo());
+
+			        // Save the new GateOut entry
+			        gateOutRepo.save(gateOut);
+					
+					
+					
+					listToSend.add(savedHubGatePass);
+					System.out.println("savedHubGatePass : " + savedHubGatePass);
+				
+				}				
+				else
+				{			
+				// Update Queries for Gate Pass nd Gate Out					
+					
+					
+					int updateGatePassEdit = gatePassRepo.updateGatePassEdit(companyId, branchId, exportStuffLoop.getContainerNo(),
+											 exportStuffLoop.getTransporterName(), exportStuffLoop.getIcdDestination(), exportStuffLoop.getComments(), exportStuffLoop.getGatepassId(), user, currentDate);					
+					
+
+					
+					listToSend.add(exportStuffLoop);
+				}			
+			}
+			HubGatePass savedStuffRequest = listToSend.get(0);
+			
+			int updateHubInventoryGatePass = gatePassRepo.updateHubInventoryGatePass(
+					savedStuffRequest.getGatepassId(), user,
+					currentDate, savedStuffRequest.getGateInId(), companyId, branchId);
+			
+			
+			
+			int updateGatePassStuffingReqUpdate = gatePassRepo.updateGatePassStuffingReqUpdate(companyId, branchId, savedStuffRequest.getContainerNo(), savedStuffRequest.getGateInId(), savedStuffRequest.getGatepassId());
+			
+			System.out.println("updateHubInventoryGatePass : " + updateHubInventoryGatePass + " updateGatePassStuffingReqUpdate : " + updateGatePassStuffingReqUpdate);
+
+			
+			List<HubGatePass> result2 = gatePassRepo.getSelectedGatePassEntry(companyId, branchId, autoStuffingId);
+			
+			return ResponseEntity.ok(result2);
+		} catch (Exception e) {
+			// Log the exception (consider using a logging framework like SLF4J)
+			System.out.println("An error occurred while adding export stuufing entries: " + e.getMessage());
+			// Return a ResponseEntity with the error message
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while processing the gate-in entries.");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	public ResponseEntity<?> searchContainerNoForHubGatePass(String companyId, String branchId, String containerNo, String profitcentreId) {
+	    List<Object[]> result = stuffingRepo.searchContainerNoForHubGatePassOnly(companyId, branchId, containerNo, profitcentreId);    
+
+	    List<Map<String, Object>> containerMap = result.stream().map(row -> {
+		    Map<String, Object> map = new HashMap<>();  		   
+		    
+	        map.put("value", row[0]);
+	        map.put("label", row[0]);
+	      
+	        return map;
+		}).collect(Collectors.toList());	
+
+	    return ResponseEntity.ok(containerMap);
+	}
+	
+	
+	
+	
+	
+	
+	public ResponseEntity<?> searchContainerNoForHubGatePassSelect(String companyId, String branchId, String containerNo, String profitcentreId) {
+	    List<Object[]> result = stuffingRepo.searchContainerNoForHubGatePass(companyId, branchId, containerNo, profitcentreId);    
+
+	    List<Map<String, Object>> containerMap = result.stream().map(row -> {
+		    Map<String, Object> map = new HashMap<>();    
+	  
+		    
+		    map.put("stuffReqLineId", row[0]);
+		    map.put("sbTransId", row[1]);
+		    map.put("sbLineNo", row[2]);
+	        map.put("sbNo", row[3]);
+	        map.put("sbDate", row[4]);
+	        map.put("exporterName", row[5]);
+	        map.put("cargoDescription", row[6]);
+	        map.put("noOfPackages", row[7]);
+	        map.put("pod", row[8]);
+		    map.put("podDesc", row[9]);
+		    map.put("stuffReqQty", row[10]);
+	        
+	        
+	        map.put("noOfPackagesStuffed", row[11]);
+		    map.put("cargoWeight", row[12]);
+		    map.put("grossWeight", row[13]);
+	        map.put("cha", row[14]);
+	        map.put("shipingAgent", row[15]);
+	        map.put("shippingLine", row[16]);
+	        map.put("shippingLineName", row[17]);
+	        map.put("onAccountOf", row[18]);
+	        map.put("tareWeight", row[19]);
+		    map.put("gateInId", row[20]);
+		    map.put("containerHealth", row[21]);
+		    
+		    
+		    map.put("terminal", row[22]);
+		    map.put("vesselId", row[23]);
+		    map.put("viaNo", row[24]);
+		    map.put("containerNo", row[25]);
+	        map.put("containerSize", row[26]);
+	        map.put("containerType", row[27]);
+	        map.put("periodFrom", row[28]);
+		    
+	        map.put("value", row[25]);
+	        map.put("label", row[25]);
+	      
+	        return map;
+		}).collect(Collectors.toList());	
+
+	    return ResponseEntity.ok(containerMap);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	

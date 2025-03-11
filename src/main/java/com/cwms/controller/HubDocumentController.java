@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.GateIn;
 import com.cwms.entities.HubDocument;
+import com.cwms.entities.HubGatePass;
 import com.cwms.entities.StuffRequestHub;
 import com.cwms.service.HubService;
 
@@ -25,6 +26,95 @@ public class HubDocumentController {
 	
 	@Autowired
 	private HubService hubService;
+	
+
+	@GetMapping("/searchContainerNoForHubGatePass")
+	public ResponseEntity<?> searchContainerNoForHubGatePass(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
+		return hubService.searchContainerNoForHubGatePass(companyId, branchId, containerNo, profitcentreId);
+	}
+	
+	@GetMapping("/searchContainerNoForHubGatePassSelect")
+	public ResponseEntity<?> searchContainerNoForHubGatePassSelect(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
+			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
+		return hubService.searchContainerNoForHubGatePassSelect(companyId, branchId, containerNo, profitcentreId);
+	}
+	
+	
+	
+
+	@PostMapping("/saveHubGatePass")
+	public ResponseEntity<?> saveHubGatePass(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestBody List<HubGatePass> stuffRequestHub,
+			@RequestParam("userId") String User) {
+		ResponseEntity<?> saveHubStuffRequest = hubService.saveHubGatePass(companyId, branchId, stuffRequestHub, User);
+		return saveHubStuffRequest;
+	}
+	
+	
+	
+
+	
+	
+	@GetMapping("/getSelectedGatePassEntry")
+	public ResponseEntity<?> getSelectedGatePassEntry(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("gatePassId") String gatePassId) {
+		try {
+			ResponseEntity<?> sbEntries = hubService.getSelectedGatePassEntry(companyId, branchId, gatePassId);
+			return sbEntries;
+		} catch (Exception e) {
+			System.out.println(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+
+	@GetMapping("/getGatePassEntriesToSelect")
+	public ResponseEntity<?> getGatePassEntriesToSelect(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("profitCenterId") String profitCenterId,			
+			@RequestParam(value = "searchValue", required = false) String searchValue) {
+		try {
+			List<Object[]> gateInEntries = hubService.getGatePassEntriesToSelect(companyId, branchId, searchValue, profitCenterId);
+			return ResponseEntity.ok(gateInEntries);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while checking duplicate SB No.");
+		}
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@GetMapping("/getSelectedStuffingEntry")

@@ -11,6 +11,47 @@ import jakarta.transaction.Transactional;
 
 public interface HubStuffRequestRepo extends JpaRepository<StuffRequestHub, String>{	
 	
+
+	
+	@Query("SELECT Distinct E.containerNo " +  
+		       "FROM StuffRequestHub E " +    
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +  
+		       "AND E.profitCentreId = :profitcentreId " +  
+		       "AND E.containerNo LIKE %:searchValue% " +  
+		       "AND E.status <> 'D' " +  
+		       "AND (E.gatePassId IS NULL OR E.gatePassId = '')")  
+		List<Object[]> searchContainerNoForHubGatePassOnly(@Param("companyId") String companyId,  
+		                                          @Param("branchId") String branchId,  
+		                                          @Param("searchValue") String searchValue,  
+		                                          @Param("profitcentreId") String profitcentreId);  
+	
+	
+	
+	@Query("SELECT E.stuffReqLineId, E.sbTransId, E.sbLineNo, E.sbNo, E.sbDate, E.exporterName, E.cargoDescription, E.noOfPackages, E.pod, E.podDesc, hub.stuffReqQty, E.noOfPackagesStuffed, E.cargoWeight, E.grossWeight, E.cha, E.shippingAgent, E.shippingLine, psl.partyName, E.onAccountOf, E.tareWeight, E.stuffReqId, E.containerHealth, E.terminal, E.vesselId, E.viaNo, E.containerNo, E.containerSize, E.containerType, E.periodFrom " +  
+		       "FROM StuffRequestHub E " +  		     
+		       "LEFT JOIN Party psl ON E.companyId = psl.companyId AND E.branchId = psl.branchId " +  
+		       "AND E.shippingLine = psl.partyId AND psl.status <> 'D' " + 
+		       "LEFT JOIN HubDocument hub ON E.companyId = hub.companyId AND E.branchId = hub.branchId " +  
+		       "AND E.sbTransId = hub.hubTransId AND E.sbLineNo = hub.igmLineNo AND E.sbNo = hub.igmNo " + 
+		       "WHERE E.companyId = :companyId AND E.branchId = :branchId " +  
+		       "AND E.profitCentreId = :profitcentreId " +  
+		       "AND E.containerNo = :searchValue " +  
+		       "AND E.status <> 'D' " +  
+		       "AND (E.gatePassId IS NULL OR E.gatePassId = '')")  
+		List<Object[]> searchContainerNoForHubGatePass(@Param("companyId") String companyId,  
+		                                          @Param("branchId") String branchId,  
+		                                          @Param("searchValue") String searchValue,  
+		                                          @Param("profitcentreId") String profitcentreId);  
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Query(value = "select c.stuffReqId, DATE_FORMAT(c.stuffReqDate, '%d %b %Y'), c.profitCentreId, po.profitcentreDesc, psa.partyName, psl.partyName, c.containerNo, c.status "
 	        + "from StuffRequestHub c "
 	        + "Left Join Profitcentre po on c.companyId = po.companyId and c.branchId = po.branchId and c.profitCentreId = po.profitcentreId and po.status != 'D' "
