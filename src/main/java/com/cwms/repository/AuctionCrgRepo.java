@@ -36,4 +36,17 @@ public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
 	
 	@Query(value="select a from AuctionDetail a where a.companyId=:cid and a.branchId=:bid and a.noticeId=:id and a.status='A'")
 	public AuctionDetail getDataById(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	@Query(value="select a.noticeId "
+			+ "from AuctionDetail a "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.cvStatus='A' and (:id is null OR :id = '' OR "
+			+ "a.noticeId LIKE CONCAT(:id,'%')) and (a.bidId is null OR a.bidId = '')")
+	public List<String> getBeforeSaveDataForAuctionBid(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	@Query(value="select p.profitcentreDesc,a.noticeId,a.noticeDate,a.igmNo,a.igmDate,a.igmLineNo,a.commodityDescription,a.noOfPackages,"
+			+ "a.grossWt,a.uom,a.duty "
+			+ "from AuctionDetail a "
+			+ "LEFT OUTER JOIN Profitcentre p ON a.companyId=p.companyId and a.branchId=p.branchId and a.profitcentreId=p.profitcentreId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.cvStatus='A' and a.noticeId =:id")
+	public Object getSelectedBeforeSaveDataForAuctionBid(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 }
