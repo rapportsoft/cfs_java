@@ -19,6 +19,7 @@ import com.cwms.entities.GeneralReceivingCrg;
 import com.cwms.entities.GeneralReceivingCrgId;
 import com.cwms.entities.GeneralReceivingGateInDtl;
 import com.cwms.entities.GeneralReceivingGrid;
+import com.cwms.entities.YardBlockCell;
 import com.cwms.repository.GeneralDeliveryCrgRepo;
 import com.cwms.repository.GeneralDeliveryDetailsRepo;
 import com.cwms.repository.GeneralDeliveryGridRepo;
@@ -26,6 +27,7 @@ import com.cwms.repository.GeneralReceivingCrgRepo;
 import com.cwms.repository.GeneralReceivingGateInDtlRepo;
 import com.cwms.repository.GeneralReceivingGridRepo;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.YardBlockCellRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +56,8 @@ public class GeneralDeliveryCrgService {
 	@Autowired
 	private GeneralReceivingGridRepo  generalReceivingGridRepo;
 	
+	@Autowired
+	public YardBlockCellRepository yardBlockCellRepository;
 	
 	public List<GeneralReceivingCrg> getDataByBoeNoForDeliveryScreen(String companyId, String branchId, String partyName) {
 		return generalDeliveryCrgRepo.getDataByBoeNoForDeliveryScreen(companyId, branchId, partyName);
@@ -375,9 +379,22 @@ System.out.println(totalGridPkgs[0]);
 										savedGrid.getReceivingId(),savedGrid.getYardLocation(),savedGrid.getYardBlock(),savedGrid.getBlockCellNo());
 								
 								
+								YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
+										savedGrid.getYardLocation(), savedGrid.getYardBlock(), savedGrid.getBlockCellNo());
+								
+								
 								System.out.println("recGrid   "+recGrid); 
 								if(recGrid!=null)
 								{
+
+									    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+									    BigDecimal gridCellAreaReleased = savedGrid.getCellAreaReleased() != null ? savedGrid.getCellAreaReleased() : BigDecimal.ZERO;
+
+									    existingCell.setCellAreaUsed(existingCellAreaUsed.subtract(gridCellAreaReleased));
+
+									    yardBlockCellRepository.save(existingCell);
+									
+									
 									recGrid.setAreaReleased(
 										    (recGrid.getAreaReleased() != null ? recGrid.getAreaReleased() : BigDecimal.ZERO)
 										        .add(savedGrid.getCellAreaReleased() != null ? savedGrid.getCellAreaReleased() : BigDecimal.ZERO)
@@ -387,6 +404,8 @@ System.out.println(totalGridPkgs[0]);
 										    (recGrid.getDeliveredPackages() != null ? recGrid.getDeliveredPackages() : BigDecimal.ZERO)
 										        .add(savedGrid.getDeliveryPkgs() != null ? savedGrid.getDeliveryPkgs() : BigDecimal.ZERO)
 										);
+										
+										
 
 										GeneralReceivingGrid recGridSaved = generalReceivingGridRepo.save(recGrid);
 
@@ -573,6 +592,12 @@ System.out.println(totalGridPkgs[0]);
 								
 						recGrid = generalDeliveryDetailsRepo.getSavedGeneralDeliveryGrid(companyId, branchId,cfinbondcrg.getDeliveryId(),grid.getYardLocation(),grid.getYardBlock(),grid.getBlockCellNo());
 						
+						
+						YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
+								grid.getYardLocation(), grid.getYardBlock(), grid.getBlockCellNo());
+						
+						
+							    
 						if(recGrid!=null)
 						{
 							
@@ -584,6 +609,20 @@ System.out.println(totalGridPkgs[0]);
 								
 								if(recGrid1!=null)
 								{
+									
+									
+									    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+									    BigDecimal gridCellAreaReleased = grid.getCellAreaReleased() != null ? grid.getCellAreaReleased() : BigDecimal.ZERO;
+									    BigDecimal savedGridCellAreaReleased = recGrid.getCellAreaReleased() != null ? recGrid.getCellAreaReleased() : BigDecimal.ZERO;
+
+									    
+									    
+									    existingCell.setCellAreaUsed(existingCellAreaUsed.subtract(gridCellAreaReleased).add(savedGridCellAreaReleased));
+
+									    yardBlockCellRepository.save(existingCell);
+									    
+									    
+									    
 									recGrid1.setAreaReleased(
 										    (recGrid1.getAreaReleased() != null ? recGrid1.getAreaReleased() : BigDecimal.ZERO)
 										        .add(grid.getCellAreaReleased() != null ? grid.getCellAreaReleased() : BigDecimal.ZERO)
@@ -601,6 +640,9 @@ System.out.println(totalGridPkgs[0]);
 										System.out.println("sabed in edit grd "+generalReceivingGridRepo.save(recGrid1));
 
 								}
+								
+								
+								
 								recGrid.setDeliveryPkgs(grid.getDeliveryPkgs());
 								recGrid.setCellAreaReleased(grid.getCellAreaReleased());
 								

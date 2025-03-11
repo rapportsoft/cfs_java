@@ -19,6 +19,7 @@ import com.cwms.entities.GeneralGateIn;
 import com.cwms.entities.GeneralReceivingCrg;
 import com.cwms.entities.GeneralReceivingGateInDtl;
 import com.cwms.entities.GeneralReceivingGrid;
+import com.cwms.entities.YardBlockCell;
 import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CfBondNocDtlRepository;
 import com.cwms.repository.CfInBondGridRepository;
@@ -384,13 +385,29 @@ System.out.println("************************************************************
 							cf.setBlockCellNo(grid.getBlockCellNo());
 
 							cf.setCellArea(grid.getCellArea());
-							cf.setCellAreaUsed(grid.getCellAreaUsed());
+							cf.setCellAreaUsed(grid.getCellAreaAllocated());
 							cf.setCellAreaAllocated(grid.getCellAreaAllocated());
 
 							cf.setReceivedPackages(grid.getReceivedPackages());
 							cf.setStatus("A");
 
-			                generalReceivingGridRepo.save(cf);
+							GeneralReceivingGrid  gridSaved = generalReceivingGridRepo.save(cf);
+							
+							
+							if (gridSaved != null) 
+							{
+								YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
+										gridSaved.getYardLocation(), gridSaved.getYardBlock(), gridSaved.getBlockCellNo());
+
+								if (existingCell != null) {
+								    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+								    BigDecimal gridCellAreaAllocated = gridSaved.getCellAreaAllocated() != null ? gridSaved.getCellAreaAllocated() : BigDecimal.ZERO;
+
+								    existingCell.setCellAreaUsed(existingCellAreaUsed.add(gridCellAreaAllocated));
+
+								    yardBlockCellRepository.save(existingCell);
+								}
+							}
 						}
 					}
 					 
@@ -575,8 +592,34 @@ System.out.println("************************************************************
 						if(recGrid!=null)
 						{
 							
+							System.out.println("existingCell  :"+recGrid.getYardLocation());
+							
+							System.out.println("recGrid.getYardBlock()  :"+recGrid.getYardBlock());
+							
+							
+							System.out.println("existingCell  recGrid.getBlockCellNo()  :"+recGrid.getBlockCellNo());
+							
+							YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
+									recGrid.getYardLocation(), recGrid.getYardBlock(), recGrid.getBlockCellNo());
+
+							
+							System.out.println("existingCell  :"+existingCell);
+							if (existingCell != null) {
+							    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+							    BigDecimal gridCellAreaAllocated = grid.getCellAreaAllocated() != null ? grid.getCellAreaAllocated() : BigDecimal.ZERO;
+							    BigDecimal recGridCellAreaAllocated = recGrid.getCellAreaAllocated() != null ? recGrid.getCellAreaAllocated() : BigDecimal.ZERO;
+
+							    existingCell.setCellAreaUsed(existingCellAreaUsed.add(gridCellAreaAllocated).subtract(recGridCellAreaAllocated));
+
+							    YardBlockCell  jashdg =  yardBlockCellRepository.save(existingCell);
+							    
+							    System.out.println("jashdg             :"+jashdg);
+							}
+							
 							recGrid.setReceivedPackages(grid.getReceivedPackages());
 							recGrid.setCellAreaAllocated(grid.getCellAreaAllocated());
+							
+							recGrid.setCellAreaUsed(grid.getCellAreaAllocated());
 							
 							 generalReceivingGridRepo.save(recGrid);
 						}
@@ -603,13 +646,29 @@ System.out.println("************************************************************
 							cf.setBlockCellNo(grid.getBlockCellNo());
 
 							cf.setCellArea(grid.getCellArea());
-							cf.setCellAreaUsed(grid.getCellAreaUsed());
+							cf.setCellAreaUsed(grid.getCellAreaAllocated());
 							cf.setCellAreaAllocated(grid.getCellAreaAllocated());
 
 							cf.setReceivedPackages(grid.getReceivedPackages());
 							cf.setStatus("A");
 
-			                generalReceivingGridRepo.save(cf);
+							GeneralReceivingGrid	gridSaved = generalReceivingGridRepo.save(cf);
+			                
+			                
+			                if (gridSaved != null) 
+							{
+								YardBlockCell existingCell = yardBlockCellRepository.getAllData(companyId, branchId,
+										gridSaved.getYardLocation(), gridSaved.getYardBlock(), gridSaved.getBlockCellNo());
+
+								if (existingCell != null) {
+								    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+								    BigDecimal gridCellAreaAllocated = gridSaved.getCellAreaAllocated() != null ? gridSaved.getCellAreaAllocated() : BigDecimal.ZERO;
+
+								    existingCell.setCellAreaUsed(existingCellAreaUsed.add(gridCellAreaAllocated));
+
+								    yardBlockCellRepository.save(existingCell);
+								}
+							}
 			                
 						}
 

@@ -215,20 +215,25 @@ public class GeneralJobEntryService {
 					return new ResponseEntity<>("Duplicate Job of entry no", HttpStatus.BAD_REQUEST);
 				}
 
-				cfBondNoc.setArea(cfBondNoc.getArea().add(bondnocDtl.getAreaOccupied()));
-				cfBondNoc.setNoOfPackages(cfBondNoc.getNoOfPackages().add(bondnocDtl.getNoOfPackages()));
-				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
-				cfBondNoc.setEditedBy(user);
-				cfBondNoc.setEditedDate(new Date());
+//				cfBondNoc.setArea(cfBondNoc.getArea().add(bondnocDtl.getAreaOccupied()));
+//				cfBondNoc.setNoOfPackages(cfBondNoc.getNoOfPackages().add(bondnocDtl.getNoOfPackages()));
+//				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
+				
+				
 
-				jobEntryRepo.save(cfBondNoc);
 				
 				if (existing != null) {
+					
+					cfBondNoc.setArea(cfBondNoc.getArea().add(bondnocDtl.getAreaOccupied().subtract(existing.getAreaOccupied())));
+					cfBondNoc.setNoOfPackages(cfBondNoc.getNoOfPackages().add(bondnocDtl.getNoOfPackages()).subtract(existing.getNoOfPackages()));
+					cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()).subtract(existing.getGrossWeight()));
 
+					
 					existing.setTypeOfPackage(bondnocDtl.getTypeOfPackage());
 					existing.setCommodityDescription(bondnocDtl.getCommodityDescription());
 					existing.setNoOfPackages(bondnocDtl.getNoOfPackages());
 					existing.setGrossWeight(bondnocDtl.getGrossWeight());
+					existing.setAreaOccupied(bondnocDtl.getAreaOccupied());
 					existing.setCommodityId(bondnocDtl.getCommodityId());
 					existing.setEditedBy(user);
 					existing.setEditedDate(new Date());
@@ -248,6 +253,12 @@ public class GeneralJobEntryService {
 
 					String HoldNextIdD = String.format("J%05d", nextNumericNextID);
 
+					
+					cfBondNoc.setArea(cfBondNoc.getArea().add(bondnocDtl.getAreaOccupied()));
+					cfBondNoc.setNoOfPackages(cfBondNoc.getNoOfPackages().add(bondnocDtl.getNoOfPackages()));
+					cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
+					
+					
 					bondnocDtl1.setCompanyId(cid);
 					bondnocDtl1.setBoeNo(cfBondNoc.getBoeNo());
 					bondnocDtl1.setJobTransId(cfBondNoc.getJobTransId());
@@ -269,6 +280,11 @@ public class GeneralJobEntryService {
 					jobEntryDetailsRepo.save(bondnocDtl1);
 					processNextIdRepository.updateAuditTrail(cid, bid, "PJOB90", HoldNextIdD, "2025");
 			}
+				
+				cfBondNoc.setEditedBy(user);
+				cfBondNoc.setEditedDate(new Date());
+
+				jobEntryRepo.save(cfBondNoc);
 
 //   			int updatedRow = cfbondnocDtlRepository.updateCfbondinsbal(validate.getInbondAres().add(cfBondNoc.getArea()),validate.getInbondCargoDuty().add(bondnocDtl.getCargoDuty()),
 //						validate.getInbondCifValue().add(bondnocDtl.getCifValue()),cid,bid);
