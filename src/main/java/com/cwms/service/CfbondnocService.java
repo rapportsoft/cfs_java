@@ -561,7 +561,7 @@ public class CfbondnocService {
 // 				}
 //
 //   				}
-//				System.out.println("nextValue______________________" + nextValue);
+
 
 				cfBondNoc.setCifValue(cfBondNoc.getCifValue().add(bondnocDtl.getCifValue()));
 				cfBondNoc.setCargoDuty(cfBondNoc.getCargoDuty().add(bondnocDtl.getCargoDuty()));
