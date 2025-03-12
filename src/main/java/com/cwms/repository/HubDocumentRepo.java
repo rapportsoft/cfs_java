@@ -327,6 +327,20 @@ public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{
 
 	
 	
+//	@Query("SELECT NEW com.cwms.entities.HubDocument( " +
+//		       "E.companyId, E.branchId, E.hubTransId, E.igmNo, " +
+//		       "E.hubTransDate, E.noOfPackages, E.grossWt, E.cargoWt, E.cargoDescription, " +
+//		       "E.cargoType, E.importerName, E.area, E.status, " +
+//		       "psa.partyName, E.profitCentreId) " +
+//		       "FROM HubDocument E "
+//		       + "LEFT JOIN Party psa ON E.companyId = psa.companyId AND E.branchId = psa.branchId AND E.sa = psa.partyId AND psa.status != 'D' "
+//				+ "WHERE E.companyId = :companyId AND E.branchId = :branchId " + "AND E.profitCentreId = :profitcentreId "
+//				 + "and (:searchValue is null OR :searchValue = '' OR E.igmNo LIKE %:searchValue% OR E.igmLineNo LIKE %:searchValue% OR E.importerName LIKE %:searchValue%) "
+//				+ "AND E.status <> 'D'")
+//	List<HubDocument> getHubEntriesToSelect(@Param("companyId") String companyId, @Param("branchId") String branchId,
+//											@Param("profitcentreId") String profitcentreId, @Param("searchValue") String searchValue);
+
+	
 	@Query("SELECT NEW com.cwms.entities.HubDocument( " +
 		       "E.companyId, E.branchId, E.hubTransId, E.igmNo, " +
 		       "E.hubTransDate, E.noOfPackages, E.grossWt, E.cargoWt, E.cargoDescription, " +
@@ -334,11 +348,13 @@ public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{
 		       "psa.partyName, E.profitCentreId) " +
 		       "FROM HubDocument E "
 		       + "LEFT JOIN Party psa ON E.companyId = psa.companyId AND E.branchId = psa.branchId AND E.sa = psa.partyId AND psa.status != 'D' "
-				+ "WHERE E.companyId = :companyId AND E.branchId = :branchId " + "AND E.profitCentreId = :profitcentreId "
-				 + "and (:searchValue is null OR :searchValue = '' OR E.igmNo LIKE %:searchValue% OR E.igmLineNo LIKE %:searchValue% OR E.importerName LIKE %:searchValue%) "
-				+ "AND E.status <> 'D'")
-	List<HubDocument> getHubEntriesToSelect(@Param("companyId") String companyId, @Param("branchId") String branchId,
-											@Param("profitcentreId") String profitcentreId, @Param("searchValue") String searchValue);
+		       + "WHERE E.companyId = :companyId AND E.branchId = :branchId "
+		       + "AND E.profitCentreId = :profitcentreId "
+		       + "AND (:searchValue IS NULL OR :searchValue = '' OR E.igmNo LIKE %:searchValue% OR E.igmLineNo LIKE %:searchValue% OR E.importerName LIKE %:searchValue%) "
+		       + "AND E.status <> 'D' "
+		       + "ORDER BY E.hubTransDate DESC")
+		List<HubDocument> getHubEntriesToSelect(@Param("companyId") String companyId, @Param("branchId") String branchId,
+		                                        @Param("profitcentreId") String profitcentreId, @Param("searchValue") String searchValue);
 
 	
 	
