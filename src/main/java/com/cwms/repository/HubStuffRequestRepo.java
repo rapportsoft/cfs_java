@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 
 public interface HubStuffRequestRepo extends JpaRepository<StuffRequestHub, String>{	
 	
-
+	
 	
 	@Query("SELECT Distinct E.containerNo " +  
 		       "FROM StuffRequestHub E " +    
@@ -27,7 +27,7 @@ public interface HubStuffRequestRepo extends JpaRepository<StuffRequestHub, Stri
 	
 	
 	
-	@Query("SELECT E.stuffReqLineId, E.sbTransId, E.sbLineNo, E.sbNo, E.sbDate, E.exporterName, E.cargoDescription, E.noOfPackages, E.pod, E.podDesc, hub.stuffReqQty, E.noOfPackagesStuffed, E.cargoWeight, E.grossWeight, E.cha, E.shippingAgent, E.shippingLine, psl.partyName, E.onAccountOf, E.tareWeight, E.stuffReqId, E.containerHealth, E.terminal, E.vesselId, E.viaNo, E.containerNo, E.containerSize, E.containerType, E.periodFrom " +  
+	@Query("SELECT E.stuffReqLineId, E.sbTransId, E.sbLineNo, E.sbNo, E.sbDate, E.exporterName, E.cargoDescription, E.noOfPackages, E.pod, E.podDesc, hub.stuffReqQty, E.noOfPackagesStuffed, E.cargoWeight, E.grossWeight, E.cha, E.shippingAgent, E.shippingLine, psl.partyName, E.onAccountOf, E.tareWeight, E.stuffReqId, E.containerHealth, E.terminal, E.vesselId, E.viaNo, E.containerNo, E.containerSize, E.containerType, E.periodFrom, E.customSealNo, E.agentSealNo " +  
 		       "FROM StuffRequestHub E " +  		     
 		       "LEFT JOIN Party psl ON E.companyId = psl.companyId AND E.branchId = psl.branchId " +  
 		       "AND E.shippingLine = psl.partyId AND psl.status <> 'D' " + 
@@ -43,13 +43,6 @@ public interface HubStuffRequestRepo extends JpaRepository<StuffRequestHub, Stri
 		                                          @Param("searchValue") String searchValue,  
 		                                          @Param("profitcentreId") String profitcentreId);  
 
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	@Query(value = "select c.stuffReqId, DATE_FORMAT(c.stuffReqDate, '%d %b %Y'), c.profitCentreId, po.profitcentreDesc, psa.partyName, psl.partyName, c.containerNo, c.status "

@@ -3,6 +3,7 @@ package com.cwms.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+@SuppressWarnings("serial")
 public class HubDocumentId implements Serializable {
     private String finYear;
     private String companyId;

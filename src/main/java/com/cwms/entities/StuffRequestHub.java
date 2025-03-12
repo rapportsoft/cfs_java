@@ -1730,4 +1730,16 @@ public class StuffRequestHub implements Cloneable {
 		
 	}
 
+	
+	
+	public StuffRequestHub(String stuffReqId, String gateInId, String containerNo, String gatePassId) {
+		this.stuffReqId = stuffReqId;
+		this.gateInId = gateInId;
+		this.containerNo = containerNo;
+		this.gatePassId = gatePassId;
+		this.stuffReqId = stuffReqId;	
+	}
+	
+	
+	
 }

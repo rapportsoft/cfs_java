@@ -3,7 +3,9 @@ package com.cwms.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +29,87 @@ public class HubDocumentController {
 	@Autowired
 	private HubService hubService;
 	
+	
+	
+	@GetMapping(value = "/downLoadHubReport")
+	public ResponseEntity<?> downLoadHubReport(
+	        @RequestParam("companyId") String companyid,
+	        @RequestParam("branchId") String branchId,
+	        @RequestParam("gateInId") String gateInId,
+	        @RequestParam("profitCenterId") String profitCenterId,
+	        @RequestParam("type") String type,
+	        @RequestParam("userId") String userId) {
+	    
+		System.out.println(companyid + " "  + branchId + " " + gateInId + " " + " profitCenterId " + " "+ type + " " + userId);
+		
+	    byte[] gateInReport = null; 
 
+	    try {
+	        if ("GateIn".equals(type)) {
+	            gateInReport = hubService.downLoadHubReportGateIn(companyid, branchId, profitCenterId, gateInId, userId);
+	        } 
+	        else {
+	            gateInReport = hubService.downLoadHubReportGatePass(companyid, branchId, profitCenterId, gateInId, userId);
+	        }
+
+	        // If no report is generated or returned, return a bad request with a message
+	        if (gateInReport == null || gateInReport.length == 0) {
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+	                    .body("No report available for the provided parameters.");
+	        }
+
+	        // Prepare the headers for the response
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF);
+	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=getExportTruckWiseGateInReport.pdf");
+
+	        // Return the report as a response
+	        return ResponseEntity.ok().headers(headers).body(gateInReport);
+
+	    } catch (Exception e) {
+	        // Log the exception (ensure to use a logger in real code)
+	        e.printStackTrace();  // Replace with proper logging (e.g., log.error(e.getMessage(), e))
+
+	        // Return an internal server error response with an error message
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("An error occurred while generating the report: ");
+	    }
+	}
+	
+	
+	
+	
+	
+	@GetMapping("/searchHubMain")
+	public ResponseEntity<?> searchHubMain(
+	        @RequestParam("companyId") String companyId, 
+	        @RequestParam("branchId") String branchId,	        
+	        @RequestParam(value="sbNo", required = false) String sbNo,
+	        @RequestParam(value="sbLineNo", required = false) String sbLineNo	       
+	       ) {	    
+	    try {	    	
+	    	ResponseEntity<?> sbCargoGateIn = hubService.searchHubMain(companyId, branchId, sbNo, sbLineNo);
+	        return sbCargoGateIn;
+	    } catch (Exception e) {	  	
+	    	System.out.println(e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching export");
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@GetMapping("/searchContainerNoForHubGatePass")
 	public ResponseEntity<?> searchContainerNoForHubGatePass(@RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,
 			@RequestParam("containerNo") String containerNo, @RequestParam("profitcentreId") String profitcentreId) {
@@ -82,14 +164,6 @@ public class HubDocumentController {
 		}
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

@@ -16,6 +16,7 @@ import com.cwms.entities.HubDocument;
 public interface HubDocumentRepo extends JpaRepository<HubDocument, String>{	
 	
 	
+	
 	@Transactional
 	@Modifying
 	@Query("UPDATE ExportInventory e " +

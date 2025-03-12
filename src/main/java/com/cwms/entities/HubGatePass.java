@@ -264,6 +264,23 @@ public class HubGatePass {
     @Column(name = "Gross_Weight", columnDefinition = "decimal(15,3) default '0.000'")
     private BigDecimal grossWeight = BigDecimal.ZERO;
     
+    @Column(name = "Driver_Name", length = 100)
+    private String driverName;    
+
+	public String getDriverName() {
+		return driverName;
+	}
+
+
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+
+
+
+
+
 
 	transient private String shippingLineName;
 	
@@ -1208,7 +1225,7 @@ public class HubGatePass {
 		    String partyName, String vehicleNo, Date periodFrom, String transporterName, 
 		    String icdDestination, String comments, String sbNo, String sbLineNo, String sbTransId,
 		    Date sbDate, String cargoDescription, String exporterName, int noOfPackages,
-		    String podDesc, Integer stuffReqQty, BigDecimal cargoWeight, int noOfPackagesStuffed
+		    String podDesc, Integer stuffReqQty, BigDecimal cargoWeight, int noOfPackagesStuffed, String driverName
 		) {
 		    this.companyId = companyId;
 		    this.branchId = branchId;
@@ -1240,6 +1257,7 @@ public class HubGatePass {
 		    this.stuffReqQty = stuffReqQty;
 		    this.cargoWeight = cargoWeight;
 		    this.noOfPackagesStuffed = noOfPackagesStuffed;
+		    this.driverName = driverName;
 		}
 
     

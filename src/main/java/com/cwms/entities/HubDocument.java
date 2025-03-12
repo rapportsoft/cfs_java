@@ -575,6 +575,20 @@ public class HubDocument {
 		this.profitCentreId = profitCentreId;
 	}
 	
+	
+	
+	
+	public HubDocument(String profitCentreId, String hubTransId, String igmLineNo, String igmNo,
+			Integer noOfPackages, BigDecimal gateInPackages, Integer stuffReqQty) {
+		super();
+		this.profitCentreId = profitCentreId;
+		this.hubTransId = hubTransId;
+		this.igmLineNo = igmLineNo;
+		this.igmNo = igmNo;
+		this.noOfPackages = noOfPackages;
+		this.gateInPackages = gateInPackages;
+		this.stuffReqQty = stuffReqQty;		
+	}
     
     
 }
