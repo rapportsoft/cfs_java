@@ -89,10 +89,10 @@ public class AuctionDetail {
 	@Column(name = "importer_address1", length = 250)
 	private String importerAddress1;
 
-	@Column(name = "importer_address2", length = 60)
+	@Column(name = "importer_address2", length = 250)
 	private String importerAddress2;
 
-	@Column(name = "importer_address3", length = 60)
+	@Column(name = "importer_address3", length = 250)
 	private String importerAddress3;
 
 	@Column(name = "Notify_Party", length = 60, nullable = true)
@@ -101,10 +101,10 @@ public class AuctionDetail {
 	@Column(name = "Notify_Party_Address1", length = 250)
 	private String notifyPartyAddress1;
 
-	@Column(name = "Notify_Party_Address2", length = 35, nullable = true)
+	@Column(name = "Notify_Party_Address2", length = 250, nullable = true)
 	private String notifyPartyAddress2;
 
-	@Column(name = "Notify_Party_Address3", length = 35, nullable = true)
+	@Column(name = "Notify_Party_Address3", length = 250, nullable = true)
 	private String notifyPartyAddress3;
 
 	@Column(name = "Commodity_Description", length = 250, nullable = true)
