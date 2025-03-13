@@ -272,6 +272,146 @@ public class AuctionDetail {
 	@Column(name = "Custome_OutOf_charge_Date", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date customeOutOfChargeDate;
+	
+	@Column(name = "Qty_taken_Out", precision = 8, scale = 0)
+	private BigDecimal qtyTakenOut;
+	
+	@Column(name = "Invoice_No", length = 16)
+	private String invoiceNo;
+
+	@Column(name = "Invoice_Date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date invoiceDate;
+	
+	
+	
+
+	public AuctionDetail(String companyId, String branchId, String profitcentreId, String noticeId, String noticeAmndNo,
+			String finalNoticeId, String noticeType, String transType, Date noticeDate, String igmTransId,
+			Date igmTransDate, String igmNo, Date igmDate, String igmLineNo, String viaNo, String shift, String source,
+			String boeNo, Date boeDate, String vessel, String sa, String importerName, String importerAddress1,
+			String importerAddress2, String importerAddress3, String notifyParty, String notifyPartyAddress1,
+			String notifyPartyAddress2, String notifyPartyAddress3, String commodityDescription,
+			BigDecimal noOfPackages, BigDecimal actualNoOfPackages, String typeOfPackage, BigDecimal grossWt,
+			String uom, String blNo, Date blDate, String assessiableAvailable, BigDecimal accessableValueAsValuation,
+			BigDecimal rateOfDuty, BigDecimal amtOfDuty, BigDecimal duty, BigDecimal mop, BigDecimal pmv,
+			BigDecimal fairValueOfGoods, String bidId, Date bidDate, String comments, String cvStatus,
+			String cvCreatedBy, Date cvCreatedDate, String cvApprovedBy, Date cvApprovedDate, String createdBy,
+			Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate, String status,
+			String pol, String fileNo, String lotNo, String hsnNo, String auctionStatus, String fileStatus,
+			BigDecimal tcs, BigDecimal igst, BigDecimal sgst, BigDecimal cgst, String auctionType, BigDecimal bidAmt,
+			String stcStatus, String acceptRejectStatus, Date gstApprovedDate, Date cmdApprovedDate,
+			Date bidamtApprovedDate, Date stcApprovedDate, Date customeAcceptRejectDate, Date customeOutOfChargeDate,
+			BigDecimal qtyTakenOut, String invoiceNo, Date invoiceDate) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.profitcentreId = profitcentreId;
+		this.noticeId = noticeId;
+		this.noticeAmndNo = noticeAmndNo;
+		this.finalNoticeId = finalNoticeId;
+		this.noticeType = noticeType;
+		this.transType = transType;
+		this.noticeDate = noticeDate;
+		this.igmTransId = igmTransId;
+		this.igmTransDate = igmTransDate;
+		this.igmNo = igmNo;
+		this.igmDate = igmDate;
+		this.igmLineNo = igmLineNo;
+		this.viaNo = viaNo;
+		this.shift = shift;
+		this.source = source;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.vessel = vessel;
+		this.sa = sa;
+		this.importerName = importerName;
+		this.importerAddress1 = importerAddress1;
+		this.importerAddress2 = importerAddress2;
+		this.importerAddress3 = importerAddress3;
+		this.notifyParty = notifyParty;
+		this.notifyPartyAddress1 = notifyPartyAddress1;
+		this.notifyPartyAddress2 = notifyPartyAddress2;
+		this.notifyPartyAddress3 = notifyPartyAddress3;
+		this.commodityDescription = commodityDescription;
+		this.noOfPackages = noOfPackages;
+		this.actualNoOfPackages = actualNoOfPackages;
+		this.typeOfPackage = typeOfPackage;
+		this.grossWt = grossWt;
+		this.uom = uom;
+		this.blNo = blNo;
+		this.blDate = blDate;
+		this.assessiableAvailable = assessiableAvailable;
+		this.accessableValueAsValuation = accessableValueAsValuation;
+		this.rateOfDuty = rateOfDuty;
+		this.amtOfDuty = amtOfDuty;
+		this.duty = duty;
+		this.mop = mop;
+		this.pmv = pmv;
+		this.fairValueOfGoods = fairValueOfGoods;
+		this.bidId = bidId;
+		this.bidDate = bidDate;
+		this.comments = comments;
+		this.cvStatus = cvStatus;
+		this.cvCreatedBy = cvCreatedBy;
+		this.cvCreatedDate = cvCreatedDate;
+		this.cvApprovedBy = cvApprovedBy;
+		this.cvApprovedDate = cvApprovedDate;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.approvedDate = approvedDate;
+		this.status = status;
+		this.pol = pol;
+		this.fileNo = fileNo;
+		this.lotNo = lotNo;
+		this.hsnNo = hsnNo;
+		this.auctionStatus = auctionStatus;
+		this.fileStatus = fileStatus;
+		this.tcs = tcs;
+		this.igst = igst;
+		this.sgst = sgst;
+		this.cgst = cgst;
+		this.auctionType = auctionType;
+		this.bidAmt = bidAmt;
+		this.stcStatus = stcStatus;
+		this.acceptRejectStatus = acceptRejectStatus;
+		this.gstApprovedDate = gstApprovedDate;
+		this.cmdApprovedDate = cmdApprovedDate;
+		this.bidamtApprovedDate = bidamtApprovedDate;
+		this.stcApprovedDate = stcApprovedDate;
+		this.customeAcceptRejectDate = customeAcceptRejectDate;
+		this.customeOutOfChargeDate = customeOutOfChargeDate;
+		this.qtyTakenOut = qtyTakenOut;
+		this.invoiceNo = invoiceNo;
+		this.invoiceDate = invoiceDate;
+	}
+
+	public BigDecimal getQtyTakenOut() {
+		return qtyTakenOut;
+	}
+
+	public void setQtyTakenOut(BigDecimal qtyTakenOut) {
+		this.qtyTakenOut = qtyTakenOut;
+	}
+
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
 
 	public String getCompanyId() {
 		return companyId;

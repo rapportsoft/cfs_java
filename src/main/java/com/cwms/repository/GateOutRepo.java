@@ -143,4 +143,28 @@ List<Object[]> searchExportGateOut(@Param("cid") String cid, @Param("bid") Strin
 			+ "(g.containerNo != '' AND g.containerNo is not null) and g.processId='P00223' and (g.portReturnFlag is null OR "
 			+ "g.portReturnFlag = '' OR g.portReturnFlag = 'N') and g.containerNo=:con order by g.createdDate desc LIMIT 1")
 	GateOut getSingleContainerNosForPortReturn1(@Param("cid") String cid,@Param("bid") String bid,@Param("con") String con);
+	
+	@Query("select c from GateOut c "
+			+ "where c.companyId=:companyId and c.branchId=:branchId and c.gateOutId =:gateOutId and c.srNo =:srNo and c.status = 'A'")
+	GateOut getGateOutData(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("gateOutId") String gateOutId, @Param("srNo") String srNo);
+	
+	
+	@Query("select c.gateOutId,c.gateOutDate,c.shift,c.gateNoOut,c.status,c.createdBy,c.gatePassNo,c.gatePassDate,c.docRefNo,c.igmLineNo,"
+			+ "c.transporterName,p.profitcentreDesc,c.deliveryOrderNo,c.deliveryOrderDate,c.doValidityDate,c.vehicleNo,c.driverName,"
+			+ "c.qtyTakenOut,c.comments "
+			+ "from GateOut c "
+			+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+			+ "where c.companyId=:companyId and c.branchId=:branchId and c.gateOutId =:gateOutId and c.srNo =:srNo and c.status = 'A'")
+	Object getAfterSaveGateOutData(@Param("companyId") String companyId, @Param("branchId") String branchId,
+			@Param("gateOutId") String gateOutId, @Param("srNo") String srNo);
+	
+	@Query(value="select i.gateOutId,DATE_FORMAT(i.gateOutDate,'%d/%m/%Y %H:%i'),i.gatePassNo,DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %H:%i'),"
+			+ "i.docRefNo,i.igmLineNo,i.transporterName,i.vehicleNo,i.driverName "
+			+ "from GateOut i "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status = 'A' and (:id is null OR :id = '' OR "
+			+ "i.gateOutId LIKE CONCAT(:id,'%') OR i.gatePassNo LIKE CONCAT(:id,'%') OR i.docRefNo LIKE CONCAT(:id,'%') "
+			+ "OR i.igmLineNo LIKE CONCAT(:id,'%') OR i.transporterName LIKE CONCAT(:id,'%') OR i.vehicleNo LIKE CONCAT(:id,'%') "
+			+ "OR i.driverName LIKE CONCAT(:id,'%')) and i.processId='P01408' order by i.gateOutDate desc")
+	List<Object[]> searchAuctionGateOutData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
 }

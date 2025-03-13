@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.cwms.entities.AuctionDetail;
 
 public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
+
 	@Query(value="select a.noticeId, DATE_FORMAT(a.noticeDate,'%d/%M/%y %H:%m'), a.igmNo, DATE_FORMAT(a.igmDate,'%d/%M/%y'),a.igmTransId,"
 			+ "a.igmLineNo,a.vessel,p.profitcentreDesc,a.importerName,a.blNo "
 			+ "from AuctionDetail a "
@@ -37,6 +38,7 @@ public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
 	@Query(value="select a from AuctionDetail a where a.companyId=:cid and a.branchId=:bid and a.noticeId=:id and a.status='A'")
 	public AuctionDetail getDataById(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
 	
+	
 	@Query(value="select a.noticeId "
 			+ "from AuctionDetail a "
 			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.cvStatus='A' and (:id is null OR :id = '' OR "
@@ -49,4 +51,9 @@ public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
 			+ "LEFT OUTER JOIN Profitcentre p ON a.companyId=p.companyId and a.branchId=p.branchId and a.profitcentreId=p.profitcentreId "
 			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.cvStatus='A' and a.noticeId =:id")
 	public Object getSelectedBeforeSaveDataForAuctionBid(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	@Query(value="select a from AuctionDetail a where a.companyId=:cid and a.branchId=:bid and a.igmTransId=:trans and a.igmNo=:igm "
+			+ "and a.igmLineNo=:line and a.noticeType = 'F' and a.status='A'")
+	public AuctionDetail getDataByIgmDtls(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
+			@Param("igm") String igm,@Param("line") String line);
 }

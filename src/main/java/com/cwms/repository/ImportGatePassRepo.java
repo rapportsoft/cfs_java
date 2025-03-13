@@ -181,4 +181,70 @@ public interface ImportGatePassRepo extends JpaRepository<ImportGatePass, String
 			+ "i.igmNo=veh.igmNo and i.igmTransId=veh.igmTransId and i.gatePassId=veh.gatePassId "
 			+ "where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and i.gatePassId=:gate")
 	List<Object[]> getDataForImportGatePassItemWiseLCLReport(@Param("cid") String cid, @Param("bid") String bid,@Param("gate") String gate);
+
+	@Query(value="select NEW com.cwms.entities.ImportGatePass(i.gatePassId, i.srNo, i.vehicleGatePassId, i.conSrNo,"
+			+ "i.gatePassDate, i.igmNo, i.igmLineNo, i.igmTransId, i.transType, i.containerNo,"
+			+ "i.containerSize, i.containerType, i.boe, i.grossWt, i.noOfPackage,"
+			+ "i.qtyTakenOut, i.vehicleQtyTakenOut, i.transporter, i.transporterName,"
+			+ "GROUP_CONCAT(v.vehicleNo), i.driverName) "
+			+ "from ImportGatePass i "
+			+ "LEFT OUTER JOIN VehicleTrack v ON i.companyId=v.companyId and i.branchId=v.branchId and i.gatePassId=v.gateInId and v.status != 'D' "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status != 'D' and "
+			+ "i.gatePassId=:val and (i.gateOutId is null OR i.gateOutId = '')")
+	List<ImportGatePass> getDataByGatePassIdForGateOut(@Param("cid") String cid, @Param("bid") String bid,@Param("val") String val);
+	
+	
+	@Query("SELECT i.gatePassId,i.gatePassDate,i.shift,p.profitcentreDesc,i.status,i.createdBy,i.invoiceNo,i.invoiceDate,"
+			+ "i.igmNo,i.igmTransId,i.igmLineNo,i.vehicleGatePassId,i.vehicleNo,i.driverName,i.transporter,i.transporterName,"
+			+ "i.doNo, i.doDate, i.doValidityDate,i.transporterStatus,i.remarks,i.commodity,i.noOfPackage,i.gateOutQty,i.qtyTakenOut "
+			+ "FROM ImportGatePass i "
+			+ "LEFT OUTER JOIN Profitcentre p ON i.companyId=p.companyId and i.branchId=p.branchId and i.profitcentreId=p.profitcentreId "
+			+ "WHERE i.companyId=:cid AND i.branchId=:bid AND i.igmNo=:igm AND i.igmLineNo=:line "
+			+ "AND i.gatePassId=:gate AND i.status = 'A' AND i.srNo=:sr")
+	Object getDataBtIdAndSr(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, @Param("line") String line, 
+			@Param("gate") String gate,@Param("sr") int sr);
+	
+	@Query("SELECT i.gatePassId,DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %H:%i'),i.shift,p.profitcentreDesc,i.status,i.createdBy,i.invoiceNo,DATE_FORMAT(i.invoiceDate,'%d/%m/%Y %H:%i'),"
+			+ "i.igmNo,i.igmTransId,i.igmLineNo,i.vehicleGatePassId,i.vehicleNo,i.driverName,i.transporter,i.transporterName,"
+			+ "i.doNo, i.doDate, DATE_FORMAT(i.doValidityDate,'%d/%m/%Y'),i.transporterStatus,i.remarks,i.commodity,i.noOfPackage,i.gateOutQty,i.qtyTakenOut "
+			+ "FROM ImportGatePass i "
+			+ "LEFT OUTER JOIN Profitcentre p ON i.companyId=p.companyId and i.branchId=p.branchId and i.profitcentreId=p.profitcentreId "
+			+ "WHERE i.companyId=:cid AND i.branchId=:bid AND i.igmNo=:igm AND i.igmLineNo=:line "
+			+ "AND i.gatePassId=:gate AND i.status = 'A' AND i.srNo=:sr")
+	Object getDataBtIdAndSr1(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm, @Param("line") String line, 
+			@Param("gate") String gate,@Param("sr") int sr);
+	
+	
+	@Query(value="select i.gatePassId,DATE_FORMAT(i.gatePassDate,'%d/%m/%Y %H:%i'),i.invoiceNo,i.igmNo,i.igmLineNo,i.transporterName,"
+			+ "i.vehicleNo,i.driverName "
+			+ "from ImportGatePass i "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status='A' and (:id is null OR :id = '' OR i.gatePassId LIKE CONCAT(:id,'%')"
+			+ " OR i.invoiceNo LIKE CONCAT(:id,'%') OR i.igmNo LIKE CONCAT(:id,'%') OR i.igmLineNo LIKE CONCAT(:id,'%') OR "
+			+ "i.transporterName LIKE CONCAT(:id,'%') OR i.vehicleNo LIKE CONCAT(:id,'%') OR i.driverName LIKE CONCAT(:id,'%')) "
+			+ "and i.transType = 'Auction' order by i.gatePassDate desc")
+	List<Object[]> searchAuctionData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+	
+	@Query(value="select i.gatePassId,i.vehicleNo "
+			+ "from ImportGatePass i "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status='A' and (:id is null OR :id = '' OR "
+			+ "i.gatePassId LIKE CONCAT(:id,'%') OR i.vehicleNo LIKE CONCAT(:id,'%')) and i.transType='Auction' "
+			+ "and (i.gateOutId is null OR i.gateOutId = '')")
+	List<Object[]> getBeforeSaveAuctionGateOutData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+	
+	@Query(value="select i.gatePassId,i.gatePassDate,p.profitcentreDesc,i.igmNo,i.igmLineNo,i.vehicleNo,i.driverName,i.transporterName,"
+			+ "i.doNo, i.doDate, i.doValidityDate,i.qtyTakenOut "
+			+ "from ImportGatePass i "
+			+ "LEFT OUTER JOIN Profitcentre p ON i.companyId=p.companyId and i.branchId=p.branchId and i.profitcentreId=p.profitcentreId "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status = 'A' and i.gatePassId=:id and i.srNo=:sr")
+	Object getSelectedBeforeSaveAuctionGateOutData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
+			@Param("sr") int sr);
+	
+	
+	@Query(value="select i "
+			+ "from ImportGatePass i "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status = 'A' and i.gatePassId=:id and i.srNo=:sr")
+	ImportGatePass getGatePassData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id,
+			@Param("sr") int sr);
+	
+
 }
