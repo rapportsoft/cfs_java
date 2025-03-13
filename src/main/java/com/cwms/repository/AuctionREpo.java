@@ -690,7 +690,38 @@ List<Object[]> firstNoticePrintHead(
 
 
 
-@Query(value = "SELECT DISTINCT c.notice_type,c.IGM_Trans_Id, c.IGM_No, c.IGM_Line_No ,c.container_no ,a.bl_no ,c.notice_id,c.second_notice_id,c.final_notice_id " +
+//@Query(value = "SELECT DISTINCT c.notice_type,c.IGM_Trans_Id, c.IGM_No, c.IGM_Line_No ,c.container_no ,a.bl_no ,c.notice_id,c.second_notice_id,c.final_notice_id " +
+//        "FROM cfigmcn c " +
+//        "LEFT OUTER JOIN cfigmcrg a ON c.Company_Id = a.Company_Id " +
+//        "AND c.branch_id = a.branch_id " +
+//        "AND c.igm_trans_id = a.igm_trans_id " +
+//        "AND c.igm_no = a.igm_no " +
+//        "AND c.Profitcentre_Id = a.Profitcentre_Id " +
+//        "AND c.igm_line_no = a.igm_line_no " +
+//        "WHERE c.Company_Id = :companyId " +
+//        "AND c.Branch_Id = :branchId " +
+////        "AND c.empty_out_date IS NULL " +
+//        "AND c.container_status != 'MTY' " +
+//        "AND c.Status = 'A' " +
+//        "AND c.Profitcentre_Id ='N00002' "+
+//        "AND (c.gate_out_id = '' AND c.de_stuff_id = '') " +
+//        "AND c.Status = 'A' " +
+//        "AND ((:igmTransId IS NULL OR :igmTransId = '' OR c.container_no LIKE CONCAT(:igmTransId, '%')) " +
+//        "AND (:igmNo IS NULL OR :igmNo = '' OR c.igm_no LIKE CONCAT(:igmNo, '%')) " +
+//        "AND (:igmLineNo IS NULL OR :igmLineNo = '' OR c.igm_line_no LIKE CONCAT(:igmLineNo, '%')) " +
+//        "AND (:blNo IS NULL OR :blNo = '' OR a.bl_no LIKE CONCAT(:blNo, '%'))) ",
+//nativeQuery = true)
+//List<Object[]> getForMainAuctionSearch(
+//		@Param("companyId") String companyId, 
+//        @Param("branchId") String branchId,
+//        @Param("igmTransId") String igmTransId,
+//        @Param("igmNo") String igmNo,
+//        @Param("igmLineNo") String igmLineNo,
+//        @Param("blNo") String blNo);
+
+
+@Query(value = "SELECT DISTINCT c.notice_type,c.IGM_Trans_Id, c.IGM_No, c.IGM_Line_No ,c.container_no ,a.bl_no ,c.notice_id," +
+		"c.second_notice_id,c.final_notice_id,au.cv_status " +
         "FROM cfigmcn c " +
         "LEFT OUTER JOIN cfigmcrg a ON c.Company_Id = a.Company_Id " +
         "AND c.branch_id = a.branch_id " +
@@ -698,6 +729,8 @@ List<Object[]> firstNoticePrintHead(
         "AND c.igm_no = a.igm_no " +
         "AND c.Profitcentre_Id = a.Profitcentre_Id " +
         "AND c.igm_line_no = a.igm_line_no " +
+        "LEFT OUTER JOIN cfauccrg au ON c.company_Id=au.company_Id and c.branch_Id=au.branch_Id and c.igm_No=au.igm_No and " +
+        "c.igm_Trans_Id=au.igm_Trans_Id and c.igm_Line_No=au.igm_Line_No and c.final_notice_id=au.notice_id " +
         "WHERE c.Company_Id = :companyId " +
         "AND c.Branch_Id = :branchId " +
 //        "AND c.empty_out_date IS NULL " +

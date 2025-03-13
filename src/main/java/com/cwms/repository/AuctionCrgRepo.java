@@ -56,4 +56,27 @@ public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
 			+ "and a.igmLineNo=:line and a.noticeType = 'F' and a.status='A'")
 	public AuctionDetail getDataByIgmDtls(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,
 			@Param("igm") String igm,@Param("line") String line);
+	
+	
+	@Query(value="SELECT a.noticeId, a.igmNo, a.igmTransId, a.igmLineNo, a.cvStatus, a.bidId, a.qtyTakenOut, r.auctionNo "
+	        + "FROM AuctionDetail a "
+	        + "LEFT OUTER JOIN Auction c ON a.companyId = c.companyId AND a.branchId = c.branchId AND a.noticeId = c.noticeId "
+	        + "LEFT OUTER JOIN AuctionRecording r ON a.companyId = r.companyId AND a.branchId = r.branchId AND a.bidId = r.bidId "
+	        + "WHERE a.companyId = :cid AND a.branchId = :bid AND a.status = 'A' AND a.noticeId = :id "
+	        + "GROUP BY r.bidId")
+	public List<Object[]> mainSearch(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+	
+	@Query(value="select g.gateOutId "
+			+ "from GateOut g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status='A' and g.erpDocRefNo=:erp and g.docRefNo=:doc and "
+			+ "g.igmLineNo=:line group by g.erpDocRefNo,g.docRefNo,g.igmLineNo order by g.gateOutId desc")
+	String findGateOutId(@Param("cid") String cid, @Param("bid") String bid, @Param("erp") String erp, @Param("doc") String doc,
+			@Param("line") String line);
+	
+	@Query(value="select g.gatePassId "
+			+ "from ImportGatePass g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status='A' and g.igmTransId=:erp and g.igmNo=:doc and "
+			+ "g.igmLineNo=:line group by g.igmTransId,g.igmNo,g.igmLineNo order by g.gatePassId desc")
+	String findGatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("erp") String erp, @Param("doc") String doc,
+			@Param("line") String line);
 }

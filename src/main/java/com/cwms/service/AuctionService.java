@@ -22,6 +22,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.cwms.entities.Auction;
 import com.cwms.entities.AuctionDetail;
+import com.cwms.entities.AuctionSearchDto;
 import com.cwms.entities.Branch;
 import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfExBondCrg;
@@ -31,6 +32,7 @@ import com.cwms.entities.Cfinbondcrg;
 import com.cwms.entities.Company;
 import com.cwms.entities.ContainerDTO;
 import com.cwms.entities.GateOut;
+import com.cwms.entities.ImportGatePass;
 import com.cwms.repository.AuctionCrgRepo;
 import com.cwms.repository.AuctionREpo;
 import com.cwms.repository.BranchRepo;
@@ -1022,24 +1024,87 @@ public class AuctionService {
 	
 	
 	
+//	public ResponseEntity<?> getDataForMainAuctionSearch(String cid, String bid, String igmTransId, String igmNo,
+//			String igmLineNo,String blNo) {
+//
+//		List<String> idList = new ArrayList<>();
+//		Cfinbondcrg firstInbond = null;
+//		CfExBondCrg firstExBond = null;
+//		GateOut firstGateOut = null;
+//		CFBondGatePass firstGatePass = null;
+//		Map<String, Object> myMap = new HashMap<>();
+//		
+//		
+//		List<Object[]> mainList = autionRepo.getForMainAuctionSearch(cid, bid, igmTransId, igmNo, igmLineNo,blNo);
+//
+//		if (mainList == null || mainList.isEmpty()) {
+//	        return new ResponseEntity<>("Data not found.", HttpStatus.CONFLICT);
+//	    }
+//
+//		
+//		Object[] list = mainList.get(0);
+//
+//		char type = (char) list[0];
+//		String igm = (String) list[2];
+//		String item = (String) list[3];
+//		String con = (String) list[4];
+//		String bl = (String) list[5];
+//		String n1 = (String) list[6];
+//		String n2 = (String) list[7];
+//		String n3 = (String) list[8];
+//	    // Assign IDs based on conditions
+//		
+//		String typeN =String.valueOf(type);
+//		
+//	    if ("P".equals(typeN)) {
+//	    	System.out.println(" in p ");
+//	    	idList.add("P01401");
+//	        idList.add("P01402");
+//	    } else if ("S".equals(typeN)) {
+//	    	System.out.println(" in s ");
+//	    	idList.add("P01401");
+//	        idList.add("P01402");
+//	        idList.add("P01403");
+//	    } else if ("F".equals(typeN)) {
+//	    	System.out.println(" in f ");
+//	    	idList.add("P01401");
+//	        idList.add("P01402");
+//	        idList.add("P01403");
+//	    }else
+//	    {
+//	    	idList.add("P01401");
+//	    }
+//
+//	    // Prepare response data
+//	    myMap.put("list", list);
+//	    myMap.put("idList", idList);
+//	    myMap.put("firstNotice", firstInbond);
+//	    myMap.put("secondNotice", firstExBond);
+//	    myMap.put("finalNotice", firstGatePass);
+//
+////	    System.out.println("");
+//		return new ResponseEntity<>(myMap, HttpStatus.OK);
+//	}
+//	
+	
+	
+	
 	public ResponseEntity<?> getDataForMainAuctionSearch(String cid, String bid, String igmTransId, String igmNo,
-			String igmLineNo,String blNo) {
+			String igmLineNo, String blNo) {
 
 		List<String> idList = new ArrayList<>();
 		Cfinbondcrg firstInbond = null;
 		CfExBondCrg firstExBond = null;
 		GateOut firstGateOut = null;
-		CFBondGatePass firstGatePass = null;
+		ImportGatePass firstGatePass = null;
 		Map<String, Object> myMap = new HashMap<>();
-		
-		
-		List<Object[]> mainList = autionRepo.getForMainAuctionSearch(cid, bid, igmTransId, igmNo, igmLineNo,blNo);
+
+		List<Object[]> mainList = autionRepo.getForMainAuctionSearch(cid, bid, igmTransId, igmNo, igmLineNo, blNo);
 
 		if (mainList == null || mainList.isEmpty()) {
-	        return new ResponseEntity<>("Data not found.", HttpStatus.CONFLICT);
-	    }
+			return new ResponseEntity<>("Data not found.", HttpStatus.CONFLICT);
+		}
 
-		
 		Object[] list = mainList.get(0);
 
 		char type = (char) list[0];
@@ -1050,39 +1115,112 @@ public class AuctionService {
 		String n1 = (String) list[6];
 		String n2 = (String) list[7];
 		String n3 = (String) list[8];
-	    // Assign IDs based on conditions
-		
-		String typeN =String.valueOf(type);
-		
-	    if ("P".equals(typeN)) {
-	    	System.out.println(" in p ");
-	    	idList.add("P01401");
-	        idList.add("P01402");
-	    } else if ("S".equals(typeN)) {
-	    	System.out.println(" in s ");
-	    	idList.add("P01401");
-	        idList.add("P01402");
-	        idList.add("P01403");
-	    } else if ("F".equals(typeN)) {
-	    	System.out.println(" in f ");
-	    	idList.add("P01401");
-	        idList.add("P01402");
-	        idList.add("P01403");
-	    }else
-	    {
-	    	idList.add("P01401");
-	    }
+		String cvStatus = String.valueOf(list[9]);
+		// Assign IDs based on conditions
+		AuctionSearchDto auctionDto = new AuctionSearchDto();
+		String typeN = String.valueOf(type);
 
-	    // Prepare response data
-	    myMap.put("list", list);
-	    myMap.put("idList", idList);
-	    myMap.put("firstNotice", firstInbond);
-	    myMap.put("secondNotice", firstExBond);
-	    myMap.put("finalNotice", firstGatePass);
+		if ("P".equals(typeN)) {
+			idList.add("P01401");
+			idList.add("P01402");
+		} else if ("S".equals(typeN)) {
+			idList.add("P01401");
+			idList.add("P01402");
+			idList.add("P01403");
+		} else if ("F".equals(typeN)) {
+			idList.add("P01401");
+			idList.add("P01402");
+			idList.add("P01403");
+
+			List<Object[]> data = auctionCrgRepo.mainSearch(cid, bid, n3);
+			
+			
+
+			if (!data.isEmpty()) {
+
+				Object[] val = data.get(0);
+
+				String valNoticeId = String.valueOf(val[0]);
+				String valIgmNo = String.valueOf(val[1]);
+				String valIgmTransId = String.valueOf(val[2]);
+				String valIgmLineNo = String.valueOf(val[3]);
+				String valCvStatus = String.valueOf(val[4]);
+				String valBidId = String.valueOf(val[5]);
+				String valQtyTakenOut = (val[6] == null || String.valueOf(val[6]).isEmpty()) ? "0" : String.valueOf(val[6]);
+				String valAuctionNo = val[7] == null ? "" : String.valueOf(val[7]);
+				
+				auctionDto.setNoticeId(valNoticeId);
+				auctionDto.setIgmTransId(valIgmTransId);
+				auctionDto.setIgmNo(valIgmNo);
+				auctionDto.setIgmLineNo(valIgmLineNo);
+				
+
+				if ("A".equals(valCvStatus)) {
+					idList.add("P01404");
+
+					if (valBidId != null && !valBidId.isEmpty()) {
+						idList.add("P01405");
+						auctionDto.setBidId(valBidId);
+
+						if (valAuctionNo != null && !valAuctionNo.isEmpty()) {
+							idList.add("P01406");
+							auctionDto.setAuctionId(valAuctionNo);
+
+							System.out.println("valQtyTakenOut "+valQtyTakenOut);
+							if (valQtyTakenOut != null && !valQtyTakenOut.isEmpty()
+									&& (new BigDecimal(valQtyTakenOut).compareTo(BigDecimal.ZERO) > 0)) {
+								idList.add("P01407");
+								idList.add("P01408");
+								
+								String gatePassId = auctionCrgRepo.findGatePassId(cid, bid, valIgmTransId, valIgmNo,
+										valIgmLineNo);
+								
+								auctionDto.setGatePassId(gatePassId);
+
+								String gateOutId = auctionCrgRepo.findGateOutId(cid, bid, valIgmTransId, valIgmNo,
+										valIgmLineNo);
+								
+								auctionDto.setGateOutId(gateOutId);
+
+							} else {
+								idList.add("P01407");
+							}
+
+						} else {
+							idList.add("P01406");
+						}
+
+					} else {
+						idList.add("P01405");
+					}
+				} else {
+					idList.add("P01404");
+				}
+
+			}
+
+		} else {
+			idList.add("P01401");
+		}
+
+//		for (Object[] row : mainList) {
+//			if ("A".equals(String.valueOf(row[9]))) {
+//				idList.add("P01404");
+//				break; // Exit loop after first match
+//			}
+//		}
+
+
+		myMap.put("list", list);
+		myMap.put("idList", idList);
+		myMap.put("firstNotice", firstInbond);
+		myMap.put("secondNotice", firstExBond);
+		myMap.put("finalNotice", firstGatePass);
+		myMap.put("auctionDto", auctionDto);
 
 //	    System.out.println("");
 		return new ResponseEntity<>(myMap, HttpStatus.OK);
 	}
-	
+
 	
 }
