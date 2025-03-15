@@ -57,7 +57,7 @@ public interface GeneralDeliveryCrgRepo extends JpaRepository<GeneralDeliveryCrg
 		        @Param("partyName") String partyName);
 	
 	
-	@Query("SELECT c from GeneralReceivingGrid c where c.companyId =:companyId and c.branchId=:branchId and c.receivingId=:receivingId and c.status !='D'")
+	@Query("SELECT c from GeneralReceivingGrid c where c.companyId =:companyId and c.branchId=:branchId and c.receivingId=:receivingId and (c.receivedPackages - COALESCE(c.deliveredPackages, 0)) > 0 AND c.status !='D'")
 	List<GeneralReceivingGrid> getDataForDeliveryScreen(@Param ("companyId") String companyId,
 			@Param ("branchId") String branchId ,
 			@Param ("receivingId") String receivingId);
@@ -76,6 +76,7 @@ public interface GeneralDeliveryCrgRepo extends JpaRepository<GeneralDeliveryCrg
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +
 		       "AND c.receivingId = :receivingId " +
+		       "AND (c.receivingPackages - COALESCE(c.deliveredPackages, 0)) > 0 " +
 		       "AND c.status != 'D'")
 		List<GeneralReceivingGateInDtl> getDataForDeliveryScreenFromReceivingDTL(
 		        @Param("companyId") String companyId, 

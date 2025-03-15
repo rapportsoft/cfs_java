@@ -145,6 +145,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/generalJobEntry/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/generalgatein/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/generaldelivery/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/api/gatepasscontroller/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/api/receiving/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/customValuation/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionRecording/**")).authenticated()

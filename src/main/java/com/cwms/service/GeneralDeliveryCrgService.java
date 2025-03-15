@@ -295,6 +295,8 @@ System.out.println(totalGridPkgs[0]);
 						crgDetails.setJobTransId(item.getJobTransId());
 						crgDetails.setJobNo(item.getJobNo());
 
+						crgDetails.setBoeDate(cfinbondcrg.getBoeDate());
+						crgDetails.setBoeNo(cfinbondcrg.getBoeNo());
 						crgDetails.setStatus("A");
 
 
@@ -387,12 +389,12 @@ System.out.println(totalGridPkgs[0]);
 								if(recGrid!=null)
 								{
 
-									    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
-									    BigDecimal gridCellAreaReleased = savedGrid.getCellAreaReleased() != null ? savedGrid.getCellAreaReleased() : BigDecimal.ZERO;
-
-									    existingCell.setCellAreaUsed(existingCellAreaUsed.subtract(gridCellAreaReleased));
-
-									    yardBlockCellRepository.save(existingCell);
+//									    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+//									    BigDecimal gridCellAreaReleased = savedGrid.getCellAreaReleased() != null ? savedGrid.getCellAreaReleased() : BigDecimal.ZERO;
+//
+//									    existingCell.setCellAreaUsed(existingCellAreaUsed.subtract(gridCellAreaReleased));
+//
+//									    yardBlockCellRepository.save(existingCell);
 									
 									
 									recGrid.setAreaReleased(
@@ -545,7 +547,8 @@ System.out.println(totalGridPkgs[0]);
 							
 
 							
-							
+							findCfBondCrgDTLData.setBoeDate(cfinbondcrg.getBoeDate());
+							findCfBondCrgDTLData.setBoeNo(cfinbondcrg.getBoeNo());
 							findCfBondCrgDTLData.setEditedBy(user);
 							findCfBondCrgDTLData.setStatus("A");
 							findCfBondCrgDTLData.setEditedDate(new Date());
@@ -611,15 +614,15 @@ System.out.println(totalGridPkgs[0]);
 								{
 									
 									
-									    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
-									    BigDecimal gridCellAreaReleased = grid.getCellAreaReleased() != null ? grid.getCellAreaReleased() : BigDecimal.ZERO;
-									    BigDecimal savedGridCellAreaReleased = recGrid.getCellAreaReleased() != null ? recGrid.getCellAreaReleased() : BigDecimal.ZERO;
-
-									    
-									    
-									    existingCell.setCellAreaUsed(existingCellAreaUsed.subtract(gridCellAreaReleased).add(savedGridCellAreaReleased));
-
-									    yardBlockCellRepository.save(existingCell);
+//									    BigDecimal existingCellAreaUsed = existingCell.getCellAreaUsed() != null ? existingCell.getCellAreaUsed() : BigDecimal.ZERO;
+//									    BigDecimal gridCellAreaReleased = grid.getCellAreaReleased() != null ? grid.getCellAreaReleased() : BigDecimal.ZERO;
+//									    BigDecimal savedGridCellAreaReleased = recGrid.getCellAreaReleased() != null ? recGrid.getCellAreaReleased() : BigDecimal.ZERO;
+//
+//									    
+//									    
+//									    existingCell.setCellAreaUsed(existingCellAreaUsed.subtract(gridCellAreaReleased).add(savedGridCellAreaReleased));
+//
+//									    yardBlockCellRepository.save(existingCell);
 									    
 									    
 									    

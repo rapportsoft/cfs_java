@@ -128,7 +128,14 @@ public class GeneralDeliveryDetails {
     @Column(name = "Job_trans_id", length = 10, nullable = true)
     private String jobTransId;
 
-	
+    @Column(name = "BOE_No", length = 20, nullable = true)
+    private String boeNo;
+
+    @Column(name = "BOE_Date", nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date boeDate;
+    
+    
 	public GeneralDeliveryDetails(String companyId, String branchId, String deliveryId, String receivingId, int srNo,
 			Date deliveryDate, String jonDtlTransId, String commodityDescription, String commodityId,
 			String actCommodityId, String typeOfPackage, String depositNo, Date receivingDate,
@@ -137,7 +144,7 @@ public class GeneralDeliveryDetails {
 			BigDecimal gatePassPackages, BigDecimal gatePassWeight, BigDecimal remainingPackages,
 			BigDecimal remainingWeight, String createdBy, Date createdDate, String editedBy, Date editedDate,
 			String approvedBy, Date approvedDate, String status, String containerNo, String containerSize,
-			String containerType, String jobNo, String jobTransId) {
+			String containerType, String jobNo, String jobTransId,String boeNo,Date boeDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -174,6 +181,8 @@ public class GeneralDeliveryDetails {
 		this.containerType = containerType;
 		this.jobNo = jobNo;
 		this.jobTransId = jobTransId;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
 	}
 
 	public String getJobNo() {
@@ -459,6 +468,22 @@ public class GeneralDeliveryDetails {
 
 	public void setContainerType(String containerType) {
 		this.containerType = containerType;
+	}
+
+	public String getBoeNo() {
+		return boeNo;
+	}
+
+	public void setBoeNo(String boeNo) {
+		this.boeNo = boeNo;
+	}
+
+	public Date getBoeDate() {
+		return boeDate;
+	}
+
+	public void setBoeDate(Date boeDate) {
+		this.boeDate = boeDate;
 	}
 
 	@Override

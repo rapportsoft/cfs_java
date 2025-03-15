@@ -145,7 +145,7 @@ public class GeneralJobEntryService {
 
 				// Increment the last value
 				String nextValue = incrementTPNo(lastValue, yearPart);
-				System.out.println("nextValue______________________" + nextValue);
+//				System.out.println("nextValue______________________" + nextValue);
 
 				cfBondNoc.setCompanyId(cid);
 				cfBondNoc.setJobNo(nextValue);
@@ -220,7 +220,7 @@ public class GeneralJobEntryService {
 //				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
 				
 				
-//				cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()));
+
 				
 				if (existing != null) {
 					
@@ -228,7 +228,7 @@ public class GeneralJobEntryService {
 					cfBondNoc.setNoOfPackages(cfBondNoc.getNoOfPackages().add(bondnocDtl.getNoOfPackages()).subtract(existing.getNoOfPackages()));
 					cfBondNoc.setGrossWeight(cfBondNoc.getGrossWeight().add(bondnocDtl.getGrossWeight()).subtract(existing.getGrossWeight()));
 
-					
+					existing.setBoeNo(cfBondNoc.getBoeNo());
 					existing.setTypeOfPackage(bondnocDtl.getTypeOfPackage());
 					existing.setCommodityDescription(bondnocDtl.getCommodityDescription());
 					existing.setNoOfPackages(bondnocDtl.getNoOfPackages());

@@ -47,7 +47,7 @@ public class GeneralReceivingGrid {
     private BigDecimal cellAreaAllocated = BigDecimal.ZERO;
     
     @Column(name = "Qty_Taken_Out")
-    private Integer qtyTakenOut = 0;
+    private BigDecimal qtyTakenOut = BigDecimal.ZERO;
     
     @Column(name = "Area_Released", precision = 8, scale = 3)
     private BigDecimal areaReleased = BigDecimal.ZERO;
@@ -87,7 +87,7 @@ public class GeneralReceivingGrid {
 
 	public GeneralReceivingGrid(String companyId, String branchId, String receivingId, String gateInId, int srNo,
 			String yardLocation, String yardBlock, String blockCellNo, BigDecimal cellArea, BigDecimal cellAreaUsed,
-			BigDecimal cellAreaAllocated, Integer qtyTakenOut, BigDecimal areaReleased, String gridReleased,
+			BigDecimal cellAreaAllocated, BigDecimal qtyTakenOut, BigDecimal areaReleased, String gridReleased,
 			BigDecimal receivedPackages, BigDecimal deliveredPackages, String status, String createdBy,
 			Date createdDate, String editedBy, Date editedDate, String approvedBy,
 			Date approvedDate) {
@@ -210,11 +210,11 @@ public class GeneralReceivingGrid {
 		this.cellAreaAllocated = cellAreaAllocated;
 	}
 
-	public Integer getQtyTakenOut() {
+	public BigDecimal getQtyTakenOut() {
 		return qtyTakenOut;
 	}
 
-	public void setQtyTakenOut(Integer qtyTakenOut) {
+	public void setQtyTakenOut(BigDecimal qtyTakenOut) {
 		this.qtyTakenOut = qtyTakenOut;
 	}
 

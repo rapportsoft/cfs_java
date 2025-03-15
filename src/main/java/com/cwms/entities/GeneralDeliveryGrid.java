@@ -44,10 +44,10 @@ public class GeneralDeliveryGrid {
     @Column(name = "Receiving_Id", length = 10, nullable = false)
     private String receivingId;
     
-    @Column(name = "Cell_Area_Allocated", precision = 8, scale = 3, nullable = false)
+    @Column(name = "Cell_Area_Allocated", precision = 18, scale = 3, nullable = false)
     private BigDecimal cellAreaAllocated =BigDecimal.ZERO;
     
-    @Column(name = "Cell_Area_Released", precision = 8, scale = 3, nullable = false)
+    @Column(name = "Cell_Area_Released", precision = 18, scale = 3, nullable = false)
     private BigDecimal cellAreaReleased =BigDecimal.ZERO;
     
     @Column(name = "Delivery_Pkgs", precision = 8, scale = 0, nullable = false)
@@ -74,17 +74,26 @@ public class GeneralDeliveryGrid {
     @Column(name = "Approved_Date")
     private Date approvedDate;
     
+  
+    
     @Column(name = "Qty_Taken_Out", precision = 8, scale = 0, nullable = false)
     private BigDecimal qtyTakenOut =BigDecimal.ZERO;
     
+    
+    @Column(name = "Weight_Taken_Out", precision = 18, scale = 0, nullable = false)
+    private BigDecimal weightTakenOut =BigDecimal.ZERO;
+    
     @Column(name = "Received_Packages", precision = 8, scale = 0, nullable = false)
     private BigDecimal receivedPackages =BigDecimal.ZERO;
+    
+    @Column(name = "Gate_Cell_Area_Released", precision = 18, scale = 3, nullable = false)
+    private BigDecimal gateCellAreaReleased =BigDecimal.ZERO;
 
 	public GeneralDeliveryGrid(String deliveryId, String boeNo, int srNo, String yardLocation, String yardBlock,
 			String blockCellNo, String companyId, String branchId, String receivingId, BigDecimal cellAreaAllocated,
 			BigDecimal cellAreaReleased, BigDecimal deliveryPkgs, String status, String createdBy, Date createdDate,
-			String editedBy, Date editedDate, String approvedBy, Date approvedDate, BigDecimal qtyTakenOut,
-			BigDecimal receivedPackages) {
+			String editedBy, Date editedDate, String approvedBy, Date approvedDate, BigDecimal qtyTakenOut,BigDecimal weightTakenOut,
+			BigDecimal receivedPackages,BigDecimal gateCellAreaReleased) {
 		super();
 		this.deliveryId = deliveryId;
 		this.boeNo = boeNo;
@@ -106,7 +115,9 @@ public class GeneralDeliveryGrid {
 		this.approvedBy = approvedBy;
 		this.approvedDate = approvedDate;
 		this.qtyTakenOut = qtyTakenOut;
+		this.weightTakenOut=weightTakenOut;
 		this.receivedPackages = receivedPackages;
+		this.gateCellAreaReleased=gateCellAreaReleased;
 	}
 
 	public GeneralDeliveryGrid() {
@@ -282,6 +293,22 @@ public class GeneralDeliveryGrid {
 		this.receivedPackages = receivedPackages;
 	}
 
+	public BigDecimal getWeightTakenOut() {
+		return weightTakenOut;
+	}
+
+	public void setWeightTakenOut(BigDecimal weightTakenOut) {
+		this.weightTakenOut = weightTakenOut;
+	}
+
+	public BigDecimal getGateCellAreaReleased() {
+		return gateCellAreaReleased;
+	}
+
+	public void setGateCellAreaReleased(BigDecimal gateCellAreaReleased) {
+		this.gateCellAreaReleased = gateCellAreaReleased;
+	}
+
 	@Override
 	public String toString() {
 		return "GeneralDeliveryGrid [deliveryId=" + deliveryId + ", boeNo=" + boeNo + ", srNo=" + srNo
@@ -291,8 +318,11 @@ public class GeneralDeliveryGrid {
 				+ ", deliveryPkgs=" + deliveryPkgs + ", status=" + status + ", createdBy=" + createdBy
 				+ ", createdDate=" + createdDate + ", editedBy=" + editedBy + ", editedDate=" + editedDate
 				+ ", approvedBy=" + approvedBy + ", approvedDate=" + approvedDate + ", qtyTakenOut=" + qtyTakenOut
-				+ ", receivedPackages=" + receivedPackages + "]";
+				+ ", weightTakenOut=" + weightTakenOut + ", receivedPackages=" + receivedPackages
+				+ ", gateCellAreaReleased=" + gateCellAreaReleased + "]";
 	}
+
+	
     
     
     

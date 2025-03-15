@@ -20,7 +20,7 @@ public interface GeneralDeliveryDetailsRepo extends JpaRepository<GeneralDeliver
 		       "AND c.receivingId = :receivingId " +
 		       "AND c.depositNo = :depositNo " +
 		       "AND c.commodityId = :commodityId " +
-		       "AND c.status = 'A'")
+		       "AND c.status != 'D' ")
 		GeneralDeliveryDetails getAfterSaveForEdit( 
 		    @Param("companyId") String companyId, 
 		    @Param("branchId") String branchId, 
@@ -46,7 +46,23 @@ public interface GeneralDeliveryDetailsRepo extends JpaRepository<GeneralDeliver
 		    @Param("blockCellNo") String blockCellNo);
 		
 		
-		
+		@Query("SELECT c FROM GeneralDeliveryGrid c " +
+			       "WHERE c.companyId = :companyId " +
+			       "AND c.branchId = :branchId " +
+			       "AND c.deliveryId = :deliveryId " +
+			       "AND c.receivingId = :receivingId " +
+			       "AND c.yardLocation = :yardLocation " +
+			       "AND c.yardBlock = :yardBlock " +
+			       "AND c.blockCellNo = :blockCellNo " +
+			       "AND c.status = 'A'")
+			GeneralDeliveryGrid getSavedGrid( 
+			    @Param("companyId") String companyId, 
+			    @Param("branchId") String branchId, 
+			    @Param("deliveryId") String deliveryId,
+			    @Param("receivingId") String receivingId,
+			    @Param("yardLocation") String yardLocation, 
+			    @Param("yardBlock") String yardBlock,
+			    @Param("blockCellNo") String blockCellNo);
 		
 		
 		
