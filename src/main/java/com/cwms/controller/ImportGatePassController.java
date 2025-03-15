@@ -119,16 +119,16 @@ public class ImportGatePassController {
 				return new ResponseEntity<>("Item no. "+crg.getIgmLineNo()+" is on hold.", HttpStatus.CONFLICT);
 			}
 
-			DestuffCrg crgData = destuffcrgrepo.getSingleData2(cid, bid, crg.getIgmTransId(), igm, item);
+			List<DestuffCrg> crgData = destuffcrgrepo.getLclData(cid, bid, crg.getIgmTransId(), igm, item);
 
-			if (crgData == null) {
+			if (crgData.isEmpty()) {
 				return new ResponseEntity<>("Destuff data not found", HttpStatus.CONFLICT);
 			}
 
-			if (crgData.getYardPackages().subtract(BigDecimal.valueOf(crgData.getQtyTakenOut()))
-					.compareTo(BigDecimal.ZERO) <= 0) {
-				return new ResponseEntity<>("Gate pass already generated.", HttpStatus.CONFLICT);
-			}
+//			if (crgData.getYardPackages().subtract(BigDecimal.valueOf(crgData.getQtyTakenOut()))
+//					.compareTo(BigDecimal.ZERO) <= 0) {
+//				return new ResponseEntity<>("Gate pass already generated.", HttpStatus.CONFLICT);
+//			}
 
 			Map<String, Object> con = new HashedMap<>();
 			con.put("crg", crg);
@@ -1535,9 +1535,11 @@ public class ImportGatePassController {
 				if (cr == null) {
 					return new ResponseEntity<>("Cargo data not found", HttpStatus.CONFLICT);
 				}
+				
+				System.out.println("i.getIgmTransId(), i.getIgmNo(),i.getIgmLineNo(),i.getDestuffId() "+i.getIgmTransId()+" "+i.getIgmNo()+" "+i.getIgmLineNo()+" "+i.getDestuffId());
 
-				DestuffCrg destuff = destuffcrgrepo.getSingleData2(cid, bid, i.getIgmTransId(), i.getIgmNo(),
-						i.getIgmLineNo());
+				DestuffCrg destuff = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(),
+						i.getIgmLineNo(),i.getDestuffId());
 
 				if (destuff == null) {
 					return new ResponseEntity<>("Destuff data not found", HttpStatus.CONFLICT);
@@ -1620,8 +1622,8 @@ public class ImportGatePassController {
 					return new ResponseEntity<>("Cargo data not found", HttpStatus.CONFLICT);
 				}
 
-				DestuffCrg destuff = destuffcrgrepo.getSingleData2(cid, bid, i.getIgmTransId(), i.getIgmNo(),
-						i.getIgmLineNo());
+				DestuffCrg destuff = destuffcrgrepo.getSingleData1(cid, bid, i.getIgmTransId(), i.getIgmNo(),
+						i.getIgmLineNo(),i.getDestuffId());
 
 				if (destuff == null) {
 					return new ResponseEntity<>("Destuff data not found", HttpStatus.CONFLICT);

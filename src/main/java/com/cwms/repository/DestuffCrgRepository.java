@@ -103,4 +103,9 @@ public interface DestuffCrgRepository extends JpaRepository<DestuffCrg, String> 
 	        + "c.igmTransId = :trans and d.containerStatus <> 'E' group by d.containerNo,c.igmLineNo")
 	List<Object[]> getImportReportsDataByDestuffConWiseFCL(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
 	                                                    @Param("trans") String trans, @Param("con") String con);
+	
+	@Query(value="select d from DestuffCrg d where d.companyId=:cid and d.branchId=:bid and d.igmTransId=:igmTransId and d.igmNo=:igm "
+			+ "and d.igmLineNo=:line and d.status != 'D' and (COALESCE(d.yardPackages,0) - COALESCE(d.qtyTakenOut) > 0)")
+	List<DestuffCrg> getLclData(@Param("cid") String cid,@Param("bid") String bid,@Param("igmTransId") String igmTransId,@Param("igm") String igm,
+			@Param("line") String line);
 }
