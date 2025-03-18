@@ -179,7 +179,6 @@ public class HelperMethods {
 	        return Base64.getEncoder().encodeToString(signedPdfBytes);
 	    }
 
-	 
 	 private String getISTDateTime() {
 		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 		    sdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata")); // ✅ Set to IST
