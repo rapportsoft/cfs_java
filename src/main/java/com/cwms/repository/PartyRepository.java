@@ -181,7 +181,7 @@ List<Object[]> getPartyByTypeValue(
 	List<Object[]> getAll(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 	
 	
-	@Query(value="select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "
+	@Query(value="select p.partyId,p.partyName,a.address1,a.address2,a.address3,a.srNo,a.gstNo from Party p LEFT OUTER JOIN PartyAddress a ON p.companyId=a.companyId and "
 			+ "p.branchId=a.branchId and p.partyId=a.partyId where p.companyId=:cid and p.branchId=:bid and p.status != 'D' "
 			+ "and p.imp = 'Y' and (:val is null OR :val = '' OR p.partyName like CONCAT (:val,'%'))")
 	List<Object[]> getDataForImp(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
