@@ -751,6 +751,11 @@ List<Object[]> getForMainAuctionSearch(
         @Param("igmNo") String igmNo,
         @Param("igmLineNo") String igmLineNo,
         @Param("blNo") String blNo);
+
+
+@Query(value="select a from Auction a where a.companyId=:cid and a.branchId=:bid and a.status='A' and a.noticeId=:id and "
+   		+ "a.containerNo=:con")
+   Auction getDataByNoticeIdAndContainerNo(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("con") String con);
 }
 
 

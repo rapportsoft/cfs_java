@@ -181,4 +181,42 @@ public interface AssessmentSheetRepo extends JpaRepository<AssessmentSheet, Stri
 			+ "and a.containerNo=:cont")
 	AssessmentSheet getDataByAssessmentIdAndContNo(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id,@Param("cont") String cont);
 	
+	
+	@Query(value="select DISTINCT a.assesmentId,a.assesmentLineNo,a.transType,a.assesmentDate,a.igmTransId,a.status,a.igmNo,a.igmLineNo,"
+			+ "a.viaNo,a.igmDate,a.createdBy,a.blNo,a.blDate,a.profitcentreId,p.profitcentreDesc,a.sl,p1.partyName,a.sa,p2.partyName,"
+			+ "pa1.address1,pa1.address2,pa1.address3,pa1.gstNo,"
+			+ "a.insuranceValue,a.dutyValue,a.commodityDescription,a.commodityCode,a.importerId,a.importerName,a.impSrNo,"
+			+ "a.cha,a.chaSrNo,pa2.address1,pa2.address2,pa2.address3,pa2.gstNo,a.sez,a.taxApplicable,"
+			+ "a.onAccountOf,p5.partyName,a.accSrNo,pa4.gstNo,pa4.state,a.comments,a.othPartyId,p4.partyName,"
+			+ "a.othSrNo,pa3.gstNo,pa3.state,a.billingParty,a.invoiceNo,a.creditType,a.invoiceCategory,a.isAncillary,"
+			+ "a.invoiceDate,a.irn,a.receiptNo,a.intComments,a.sbNo,a.sbDate,a.noOf20ft,"
+			+ "a.containerNo,a.containerSize,a.containerType,a.gateInDate,i.hsnCode,i.fileNo,i.lotNo,i.prevRate,i.tcsRate,i.taxPerc,"
+			+ "i.dutyRate,i.serviceId,s.serviceShortDesc,i.actualNoOfPackages,p3.partyName,i.rate,a.igst,a.cgst,a.sgst,a.invoiceUptoDate "
+			+ "from AssessmentSheet a "
+			+ "LEFT OUTER JOIN Party p1 ON a.companyId=p1.companyId and a.branchId=p1.branchId and a.sl=p1.partyId "
+			+ "LEFT OUTER JOIN Party p2 ON a.companyId=p2.companyId and a.branchId=p2.branchId and a.sa=p2.partyId "
+			+ "LEFT OUTER JOIN Profitcentre p ON a.companyId=p.companyId and a.branchId=p.branchId and a.profitcentreId=p.profitcentreId "
+			+ "LEFT OUTER JOIN PartyAddress pa1 ON a.companyId=pa1.companyId and a.branchId=pa1.branchId and a.importerId=pa1.partyId and a.impSrNo=CAST(pa1.srNo as INTEGER) "
+			+ "LEFT OUTER JOIN Party p3 ON a.companyId=p3.companyId and a.branchId=p3.branchId and a.cha=p3.partyId "
+			+ "LEFT OUTER JOIN PartyAddress pa2 ON a.companyId=pa2.companyId and a.branchId=pa2.branchId and a.cha=pa2.partyId and a.chaSrNo=CAST(pa2.srNo as INTEGER) "
+			+ "LEFT OUTER JOIN Party p4 ON a.companyId=p4.companyId and a.branchId=p4.branchId and a.othPartyId=p4.partyId "
+			+ "LEFT OUTER JOIN PartyAddress pa3 ON a.companyId=pa3.companyId and a.branchId=pa3.branchId and a.othPartyId=pa3.partyId and a.othSrNo=pa3.srNo "
+			+ "LEFT OUTER JOIN Party p5 ON a.companyId=p5.companyId and a.branchId=p5.branchId and a.onAccountOf=p5.partyId "
+			+ "LEFT OUTER JOIN PartyAddress pa4 ON a.companyId=pa4.companyId and a.branchId=pa4.branchId and a.onAccountOf=pa4.partyId and a.accSrNo=CAST(pa4.srNo as INTEGER) "
+			+ "LEFT OUTER JOIN Cfinvsrvanx i ON a.companyId=i.companyId and a.branchId=i.branchId and a.assesmentId=i.processTransId and a.igmTransId=i.erpDocRefNo and a.containerNo=i.containerNo "
+			+ "LEFT OUTER JOIN Services s ON i.companyId=s.companyId and i.branchId=s.branchId and i.serviceId=s.serviceId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and a.assesmentId=:id order by i.serviceId")
+	List<Object[]> getAuctionAssessmentData(@Param("cid") String cid,@Param("bid") String bid,@Param("id") String id);
+	
+	
+	@Query(value="select DISTINCT a.invoiceNo,a.assesmentId,DATE_FORMAT(a.assesmentDate,'%d/%m/%Y %h:%i'),a.igmTransId,"
+			+ "a.igmNo,a.igmLineNo,DATE_FORMAT(a.igmDate,'%d/%m/%Y %h:%i'),a.blNo,DATE_FORMAT(a.blDate,'%d/%m/%Y %h:%i'),"
+			+ "p.partyName "
+			+ "from AssessmentSheet a "
+			+ "LEFT OUTER JOIN Party p ON a.companyId=p.companyId and a.branchId=p.branchId and a.importerId=p.partyId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and (:val is null OR :val = '' OR "
+			+ "a.invoiceNo LIKE CONCAT('%',:val,'%') OR a.assesmentId LIKE CONCAT('%',:val,'%') OR "
+			+ "a.igmTransId LIKE CONCAT('%',:val,'%') OR a.igmNo LIKE CONCAT('%',:val,'%') OR a.blNo LIKE CONCAT('%',:val,'%')) "
+			+ "and (a.invoiceNo is not null AND a.invoiceNo != '') and a.transType='Import Auction' order by a.assesmentDate desc")
+	List<Object[]> searchAuctionInvoiceData(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 }

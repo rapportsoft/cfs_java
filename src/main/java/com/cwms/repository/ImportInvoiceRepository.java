@@ -252,6 +252,21 @@ public interface ImportInvoiceRepository extends JpaRepository<AssessmentSheet, 
             @Param("igmTransId") String igmTransId);
 	
 	
-
+	@Query(value = "select a.IGM_No , a.igm_line_no , a.BL_No, DATE_FORMAT(a.BL_Date,'%d-%m-%Y'), c.BE_No, DATE_FORMAT(c.BE_Date,'%d-%m-%Y'), a.container_no, a.container_size, a.container_type, DATE_FORMAT(a.Gate_In_Date,'%d-%m-%Y'), IFNULL(ROUND((a.Gross_Weight / 1000 ) , 2 ),0) cargo_wtmton, IFNULL(ROUND((e.Gross_Weight) , 2 ),0) cargo_wt, "
+			+ "c.No_Of_Packages, IFNULL(e.No_Of_Packages,0), c.Type_of_Container, c.Gate_out_Type,ROUND(a.Container_Handling_Amt,2), ROUND(a.Container_Storage_Amt,2), v.Vessel_Name,e.Type_Of_Package, a.Seal_Cutting_Type ,IFNULL( e.Commodity_Description , '' ),DATE_FORMAT(a.Invoice_Date,'%d/%m/%Y'),e.cha_name,a.last_invoice_no,DATE_FORMAT(a.invoice_upto_date,'%d/%m/%Y %H:%i'),"
+			+ "ac.lot_no,p1.party_name "
+			+ "from cfassesmentsheet a left outer join cfigmcn c "
+			+ "on a.company_id=c.company_id  and a.branch_id=c.branch_id  and a.container_no=c.container_no and a.IGM_Trans_id=c.IGM_Trans_id and a.igm_No = c.Igm_No "
+			+ "and a.Igm_Line_No = c.Igm_Line_No and a.Profitcentre_Id = c.Profitcentre_Id /*and a.Assesment_Id = c.Assesment_Id*/ left outer join cfigmcrg e on e.company_id=c.company_id  and e.branch_id=c.branch_id  "
+			+ "and e.IGM_Trans_id=c.IGM_Trans_id and e.igm_No = c.Igm_No and e.Igm_Line_No = c.Igm_Line_No and e.Profitcentre_Id = c.Profitcentre_Id left outer join cfigm d on d.company_id=e.company_id  and d.branch_id=e.branch_id  "
+			+ "and d.IGM_Trans_id=e.IGM_Trans_id and d.igm_No = e.Igm_No and d.Profitcentre_Id = e.Profitcentre_Id left outer join vessel v on d.Company_Id = v.Company_Id and d.Vessel_Id = v.Vessel_Id "
+			+ "LEFT OUTER JOIN cfauccrg ac on a.company_id=ac.company_id  and a.branch_id=ac.branch_id  and a.igm_line_no=ac.igm_line_no and a.IGM_Trans_id=c.IGM_Trans_id and a.igm_No = c.Igm_No and a.sb_no=ac.notice_id "
+			+ "LEFT OUTER JOIN Party p1 on a.company_id=p1.company_id  and a.branch_id=p1.branch_id  and a.sa=p1.party_id "
+			+ "where a.Company_Id=:companyId "
+			+ "AND a.branch_id=:branchId and a.status='A' and a.IGM_Trans_id = :igmTransId and a.assesment_id = :assessmentId  /*and (a.Container_Handling_Amt > 0 or  a.Container_Storage_Amt > 0)*/ order by a.container_no ASC",nativeQuery = true)
+	List<Object[]> getOperationalDetails1(@Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("igmTransId") String igmTransId,
+	        @Param("assessmentId") String assessmentId);
 }
 

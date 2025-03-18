@@ -109,7 +109,25 @@ public class HelperMethods {
 
 	
 	
-	
+	 public String generateAuctionInvoiceAndSignPdf(Context context) throws Exception {
+	        // Step 1: Generate PDF from HTML
+	        ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+	        String htmlContent = templateEngine.process("AuctionInvoicePrint.html", context);
+
+	        ITextRenderer renderer = new ITextRenderer();
+	        renderer.setDocumentFromString(htmlContent);
+	        renderer.layout();
+	        renderer.createPDF(pdfOutputStream);
+
+	        byte[] pdfBytes = pdfOutputStream.toByteArray();
+
+	        // Step 2: Sign the PDF
+	        byte[] signedPdfBytes = signPdf(pdfBytes);
+
+	        // Step 3: Convert to Base64
+	        return Base64.getEncoder().encodeToString(signedPdfBytes);
+	    }
+
 	
 	
 	

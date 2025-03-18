@@ -57,6 +57,15 @@ public class AssessmentContainerDTO implements Cloneable {
 	public String serviceGroup;
 	public BigDecimal area;
 	public BigDecimal freeDays;
+	public String hsnCode;
+	public String fileNo;
+	public String lotNo;
+	public BigDecimal bidAmt;
+	public BigDecimal tcs;
+	public BigDecimal igst;
+	public BigDecimal cgst;
+	public BigDecimal sgst;
+	public BigDecimal rateOfDuty;
 	
 	public AssessmentContainerDTO() {
 		super();
@@ -67,9 +76,261 @@ public class AssessmentContainerDTO implements Cloneable {
 	
 
 
+	public BigDecimal getTcs() {
+		return tcs;
+	}
 
 
-	 public String getAssesmentId() {
+
+
+
+	public void setTcs(BigDecimal tcs) {
+		this.tcs = tcs;
+	}
+
+
+
+
+
+	public AssessmentContainerDTO(String assesmentId, String assesmentLineNo, String containerNo, String containerSize,
+			String containerType, Date gateInDate, Date destuffDate, Date gateoutDate, String examPercentage,
+			String typeOfContainer, String scannerType, String gateOutType, String checkDate, Date invoiceDate,
+			String upTariffNo, String profitcentreId, String serviceId, String serviceName, BigDecimal rates,
+			BigDecimal grossWt, BigDecimal cargoWt, String ssrTransId, Date invoiceUptoDate, Date lastInvoiceUptoDate,
+			String serviceUnit, String executionUnit, String serviceUnit1, String executionUnit1, String currencyId,
+			BigDecimal discPercentage, BigDecimal discValue, BigDecimal mPercentage, BigDecimal mAmount, String woNo,
+			String woAmndNo, String criteria, BigDecimal rangeFrom, BigDecimal rangeTo, String containerStatus,
+			String gateOutId, String gatePassNo, String taxApp, String acCode, BigDecimal serviceRate,
+			BigDecimal taxPerc, String taxId, BigDecimal exRate, String serviceGroup, BigDecimal area,
+			BigDecimal freeDays, String hsnCode, String fileNo, String lotNo, BigDecimal bidAmt, BigDecimal tcs,
+			BigDecimal igst, BigDecimal cgst, BigDecimal sgst, BigDecimal rateOfDuty) {
+		super();
+		this.assesmentId = assesmentId;
+		this.assesmentLineNo = assesmentLineNo;
+		this.containerNo = containerNo;
+		this.containerSize = containerSize;
+		this.containerType = containerType;
+		this.gateInDate = gateInDate;
+		this.destuffDate = destuffDate;
+		this.gateoutDate = gateoutDate;
+		this.examPercentage = examPercentage;
+		this.typeOfContainer = typeOfContainer;
+		this.scannerType = scannerType;
+		this.gateOutType = gateOutType;
+		this.checkDate = checkDate;
+		this.invoiceDate = invoiceDate;
+		this.upTariffNo = upTariffNo;
+		this.profitcentreId = profitcentreId;
+		this.serviceId = serviceId;
+		this.serviceName = serviceName;
+		this.rates = rates;
+		this.grossWt = grossWt;
+		this.cargoWt = cargoWt;
+		this.ssrTransId = ssrTransId;
+		this.invoiceUptoDate = invoiceUptoDate;
+		this.lastInvoiceUptoDate = lastInvoiceUptoDate;
+		this.serviceUnit = serviceUnit;
+		this.executionUnit = executionUnit;
+		this.serviceUnit1 = serviceUnit1;
+		this.executionUnit1 = executionUnit1;
+		this.currencyId = currencyId;
+		this.discPercentage = discPercentage;
+		this.discValue = discValue;
+		this.mPercentage = mPercentage;
+		this.mAmount = mAmount;
+		this.woNo = woNo;
+		this.woAmndNo = woAmndNo;
+		this.criteria = criteria;
+		this.rangeFrom = rangeFrom;
+		this.rangeTo = rangeTo;
+		this.containerStatus = containerStatus;
+		this.gateOutId = gateOutId;
+		this.gatePassNo = gatePassNo;
+		this.taxApp = taxApp;
+		this.acCode = acCode;
+		this.serviceRate = serviceRate;
+		this.taxPerc = taxPerc;
+		this.taxId = taxId;
+		this.exRate = exRate;
+		this.serviceGroup = serviceGroup;
+		this.area = area;
+		this.freeDays = freeDays;
+		this.hsnCode = hsnCode;
+		this.fileNo = fileNo;
+		this.lotNo = lotNo;
+		this.bidAmt = bidAmt;
+		this.tcs = tcs;
+		this.igst = igst;
+		this.cgst = cgst;
+		this.sgst = sgst;
+		this.rateOfDuty = rateOfDuty;
+	}
+
+
+
+
+
+	public String getHsnCode() {
+		return hsnCode;
+	}
+
+
+
+
+
+
+
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
+
+
+
+
+
+
+
+	public String getFileNo() {
+		return fileNo;
+	}
+
+
+
+
+
+
+
+	public void setFileNo(String fileNo) {
+		this.fileNo = fileNo;
+	}
+
+
+
+
+
+
+
+	public String getLotNo() {
+		return lotNo;
+	}
+
+
+
+
+
+
+
+	public void setLotNo(String lotNo) {
+		this.lotNo = lotNo;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getBidAmt() {
+		return bidAmt;
+	}
+
+
+
+
+
+
+
+	public void setBidAmt(BigDecimal bidAmt) {
+		this.bidAmt = bidAmt;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getIgst() {
+		return igst;
+	}
+
+
+
+
+
+
+
+	public void setIgst(BigDecimal igst) {
+		this.igst = igst;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getCgst() {
+		return cgst;
+	}
+
+
+
+
+
+
+
+	public void setCgst(BigDecimal cgst) {
+		this.cgst = cgst;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getSgst() {
+		return sgst;
+	}
+
+
+
+
+
+
+
+	public void setSgst(BigDecimal sgst) {
+		this.sgst = sgst;
+	}
+
+
+
+
+
+
+
+	public BigDecimal getRateOfDuty() {
+		return rateOfDuty;
+	}
+
+
+
+
+
+
+
+	public void setRateOfDuty(BigDecimal rateOfDuty) {
+		this.rateOfDuty = rateOfDuty;
+	}
+
+
+
+
+
+
+
+	public String getAssesmentId() {
 		return assesmentId;
 	}
 

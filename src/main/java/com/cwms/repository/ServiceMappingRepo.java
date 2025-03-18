@@ -129,5 +129,12 @@ public interface ServiceMappingRepo extends JpaRepository<ServiceMapping, String
 
 			);
 			
+			
+			
+			@Query(value = "select s.serviceId " + "from ServiceMapping s "
+					+ "where s.companyId = :cid and s.branchId = :bid and s.status = 'A' and "
+					+ "s.profitcentreId = :profit and s.invoiceType = :type group by s.serviceId")
+			List<String> getServicesForAuctionInvoice(@Param("cid") String cid, @Param("bid") String bid,
+					@Param("profit") String profit, @Param("type") String type);
 
 }

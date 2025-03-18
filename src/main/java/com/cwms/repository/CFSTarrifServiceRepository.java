@@ -258,5 +258,26 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			+ "where s.companyId=:cid and s.branchId=:bid and s.status = 'A' and c.status = 'A' and s.cfsTariffNo='CFS1000001' "
 			+ "group by s.serviceId")
 	List<Object[]> getGeneralTarrifData3(@Param("cid") String cid, @Param("bid") String bid);
+	
+	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
+			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, tx.taxPerc, igm.percentage, igm.amount, "
+			+ "igm.mPercentage, igm.mAmount, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc "
+			+ "FROM CFSTariffService c "
+			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+			+ "AND c.cfsAmendNo = t.cfsAmndNo AND c.profitCentreId = t.profitCentreId "
+			+ "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+			+ "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
+			+ "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
+			+ "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+			+ "LEFT OUTER JOIN IgmServiceDtl igm ON c.companyId = igm.companyId AND c.branchId = igm.branchId "
+			+ "AND c.serviceId = igm.serviceId AND igm.containerNo = :con AND igm.igmTransId = :trans AND "
+			+ "igm.igmNo = :igm AND igm.igmLineNo = :lineNo and igm.companyId = :cid AND igm.branchId = :bid "
+			+ "WHERE c.companyId = :cid AND c.branchId = :bid "
+			+ "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
+			+ "AND c.cfsTariffNo = :tariffNo GROUP BY c.serviceId " + "ORDER BY c.serviceId")
+	List<Object[]> getAuctionInvoiceServiceRate(@Param("cid") String cid, @Param("bid") String bid,
+			@Param("assessDate") Date assessDate, @Param("con") String con, @Param("trans") String trans,
+			@Param("igm") String igm, @Param("lineNo") String lineNo, @Param("serviceList") List<String> serviceList,
+			@Param("tariffNo") String tariffNo);
 
 }

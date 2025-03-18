@@ -1563,6 +1563,34 @@ public class Cfinvsrvanx implements Cloneable {
 		}
 		
 		
-		
+		public Cfinvsrvanx(String companyId, String branchId, String assesmentId, String assesmentLineNo,Date assesmentDate, String containerNo, String containerSize, String containerType, Date gateInDate, Date invoiceDate,
+				String gateOutId, String gatePassNo,  String partyId, Date gateOutDate, Date  movReqDate, Date stuffTallyDate,
+				String hsnCode,String fileNo,String lotNo,BigDecimal prevRate,BigDecimal tcsRate,BigDecimal taxPerc,BigDecimal dutyRate)
+		{
+			this.companyId = companyId;
+			this.branchId = branchId;
+			this.processTransId = assesmentId;
+			this.lineNo = assesmentLineNo;
+			this.processTransDate = assesmentDate;
+			this.containerNo = containerNo;
+			this.containerSize = containerSize;
+			this.containerType = containerType;
+			this.startDate = gateInDate;
+			this.invoiceUptoWeek = invoiceDate;
+			this.gateOutId = gateOutId;
+			this.gatePassNo = gatePassNo;
+			this.partyId = partyId;		
+			this.gateOutDate = gateOutDate;
+			this.invoiceUptoDate = invoiceDate;		
+			this.movReqDate = movReqDate;
+			this.stuffTallyDate = stuffTallyDate;
+			this.hsnCode = hsnCode;
+			this.fileNo = fileNo;
+			this.lotNo = lotNo;
+			this.prevRate = prevRate;
+			this.tcsRate = tcsRate;
+			this.taxPerc = taxPerc;
+			this.dutyRate = dutyRate;
+		}
 		
 }

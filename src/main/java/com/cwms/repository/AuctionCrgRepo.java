@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cwms.entities.AuctionDetail;
+import com.cwms.entities.AuctionServiceMap;
 
 public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
 
@@ -79,4 +80,33 @@ public interface AuctionCrgRepo extends JpaRepository<AuctionDetail, String>{
 			+ "g.igmLineNo=:line and g.transType='Auction' group by g.gatePassId order by g.gatePassId desc LIMIT 1")
 	String findGatePassId(@Param("cid") String cid, @Param("bid") String bid, @Param("erp") String erp, @Param("doc") String doc,
 			@Param("line") String line);
+	
+	// Auction Invoice
+
+		@Query(value = "select a.igmTransId,a.igmNo,a.igmLineNo,d.blNo,d.noticeId from AuctionRecording a "
+				+ "LEFT OUTER JOIN AuctionDetail d ON a.companyId=d.companyId and a.branchId=d.branchId and a.igmTransId=d.igmTransId and "
+				+ "a.igmNo=d.igmNo and a.igmLineNo=d.igmLineNo and d.noticeType='F' "
+				+ "where a.companyId=:cid and a.branchId=:bid and a.status='A' and (d.invoiceNo is null OR d.invoiceNo = '') and "
+				+ "(:id is null OR :id = '' OR a.igmNo LIKE CONCAT(:id,'%') OR a.igmLineNo LIKE CONCAT(:id,'%') OR d.blNo LIKE CONCAT(:id,'%'))")
+		List<Object[]> getBeforeAssessmentData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+
+		@Query(value = "select crg.igmTransId,crg.igmNo,crg.igmLineNo,crg.blNo,crg.blDate,p.profitcentreDesc,crg.boeNo,crg.viaNo,crg.igmDate,"
+				+ "i.shippingAgent,p1.partyName,i.shippingLine,p2.partyName,crg.accessableValueAsValuation,crg.duty,crg.commodityDescription,"
+				+ "crg.noticeId,crg.noticeDate,crg.noticeType,crg.importerName,crg.importerAddress1,crg.importerAddress2,crg.importerAddress3,"
+				+ "c.containerNo,c.containerSize,c.containerType,c.gateInDate,c.profitcentreId,c.containerStatus,crg.hsnNo,crg.fileNo,crg.lotNo,"
+				+ "crg.bidAmt,crg.tcs,crg.igst,crg.cgst,crg.sgst,crg.rateOfDuty "
+				+ "from Auction c "
+				+ "LEFT OUTER JOIN AuctionDetail crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.noticeId=crg.noticeId "
+				+ "LEFT OUTER JOIN CFIgm i ON crg.companyId=i.companyId and crg.branchId=i.branchId and crg.igmNo=i.igmNo and crg.igmTransId=i.igmTransId "
+				+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+				+ "LEFT OUTER JOIN Party p1 ON i.companyId=p1.companyId and i.branchId=p1.branchId and i.shippingAgent=p1.partyId "
+				+ "LEFT OUTER JOIN Party p2 ON i.companyId=p2.companyId and i.branchId=p2.branchId and i.shippingLine=p2.partyId "
+				+ "where c.companyId=:cid and c.branchId=:bid and c.status = 'A' and crg.igmTransId=:trans and crg.igmNo=:igm and "
+				+ "crg.igmLineNo=:lineNo and c.noticeId=:id and (crg.invoiceNo is null OR crg.invoiceNo = '')")
+		List<Object[]> getBeforeSaveAssessmentData(@Param("cid") String cid, @Param("bid") String bid,@Param("trans") String trans,
+				 @Param("igm") String igm, @Param("lineNo") String lineNo, @Param("id") String id);
+		
+		@Query(value="select a from AuctionServiceMap a where a.auctionType=:type")
+		AuctionServiceMap getFromType(@Param("type") String type);
+
 }

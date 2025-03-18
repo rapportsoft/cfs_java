@@ -578,7 +578,16 @@ public class ImportInvoiceService {
 	};
 
 
+public List<Object[]> getOperationalDetails1 (String comapnyId,String branchId,String igmTransId,String assessmentId) {
+		
+		List<Object[]> opdtls = importinvoicerepo.getOperationalDetails1(comapnyId, branchId, igmTransId, assessmentId);
+		System.out.println("is empty"+opdtls.isEmpty());
+		
 
+		return opdtls;
+		
+		
+	}
 
 }
 
