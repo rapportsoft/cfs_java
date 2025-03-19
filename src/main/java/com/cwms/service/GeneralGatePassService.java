@@ -39,6 +39,7 @@ import com.cwms.entities.GeneralGatePassGrid;
 import com.cwms.entities.GeneralReceivingCrg;
 import com.cwms.entities.GeneralReceivingGrid;
 import com.cwms.entities.GenerelJobEntry;
+import com.cwms.entities.JarDetail;
 import com.cwms.entities.YardBlockCell;
 import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CompanyRepo;
@@ -49,6 +50,7 @@ import com.cwms.repository.GeneralGatePassGridRepo;
 import com.cwms.repository.GeneralGatePassRepository;
 import com.cwms.repository.GeneralReceivingGateInDtlRepo;
 import com.cwms.repository.GeneralReceivingGridRepo;
+import com.cwms.repository.JarDetailRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.YardBlockCellRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -95,6 +97,9 @@ public class GeneralGatePassService {
 
 	@Autowired
 	private GeneralGatePassGridRepo generalGatePassGridRepo;
+	
+	@Autowired
+	JarDetailRepository jarDetailRepository;
 
 	public List<Object[]> getAllDataFormDeliveryDetails(String cid, String bid, String val) {
 		return generalGatePassRepository.getAllDataFormDeliveryDetails(cid, bid, val);
@@ -201,6 +206,7 @@ public class GeneralGatePassService {
 						gatePassDtl.setShift(gatePass.getShift());
 						gatePassDtl.setProfitCentreId(gatePass.getProfitCentreId());
 
+						gatePassDtl.setHandlingPerson(gatePass.getHandlingPerson());
 						gatePassDtl.setVehicleNo(gatePass.getVehicleNo());
 						gatePassDtl.setDriverName(gatePass.getDriverName());
 						gatePassDtl.setDepositNo(item.getDepositNo());
@@ -335,7 +341,7 @@ public class GeneralGatePassService {
 							gatePassDtl.setGatePassDate(gatePass.getGatePassDate());
 							gatePassDtl.setShift(gatePass.getShift());
 							gatePassDtl.setProfitCentreId(gatePass.getProfitCentreId());
-
+							gatePassDtl.setHandlingPerson(gatePass.getHandlingPerson());
 							gatePassDtl.setVehicleNo(gatePass.getVehicleNo());
 							gatePassDtl.setDriverName(gatePass.getDriverName());
 							gatePassDtl.setTransporterName(gatePass.getTransporterName());
@@ -412,7 +418,7 @@ public class GeneralGatePassService {
 							gatePassDtl1.setGatePassDate(gatePass.getGatePassDate());
 							gatePassDtl1.setShift(gatePass.getShift());
 							gatePassDtl1.setProfitCentreId(gatePass.getProfitCentreId());
-
+							gatePassDtl1.setHandlingPerson(gatePass.getHandlingPerson());
 							gatePassDtl1.setVehicleNo(gatePass.getVehicleNo());
 							gatePassDtl1.setDriverName(gatePass.getDriverName());
 							gatePassDtl1.setDepositNo(item.getDepositNo());
@@ -559,6 +565,7 @@ public class GeneralGatePassService {
 			{
 				
 				for (GeneralGatePassGrid grid : cfinbondcrgDtlList) {
+				
 
 					GeneralGatePassGrid data = new GeneralGatePassGrid();
 					System.out.println("Grid please check each cloumn :" + grid);
@@ -704,7 +711,7 @@ public class GeneralGatePassService {
 			{
 				for (GeneralGatePassGrid grid : cfinbondcrgDtlList) {
 				
-				GeneralGatePassGrid update = generalGatePassGridRepo.getToUpdateData(companyId, branchId, grid.getDeliveryId(),gatePass.getGatePassId());
+				GeneralGatePassGrid update = generalGatePassGridRepo.getToUpdateData(companyId, branchId, grid.getDeliveryId(),gatePass.getGatePassId(),grid.getSrNo());
 				
 				
 				if(update!=null)
@@ -877,36 +884,36 @@ public class GeneralGatePassService {
 
 		BigDecimal totalSum = BigDecimal.ZERO;
 
-		if (gatePassDtlList != null) {
-			for (GeneralGatePassCargo list : gatePassDtlList) {
-
-				System.out.println("jhsdjhsfjsdjfgdsjfdgsjfh :" + list.getDeliveryId());
-				System.out.println("jhsdjhsfjsdjfgdsjfdgsjfh :" + list.getReceivingId());
-
-				BigDecimal sumOfInbondFormGrid = generalGatePassRepository.getSumOfQtyTakenOutCommodityWise(companyId,
-						branchId, list.getDeliveryId(), cfinbondcrg.getGatePassId());
-
-				if (sumOfInbondFormGrid != null) {
-					totalSum = totalSum.add(sumOfInbondFormGrid);
-				}
-			}
-		}
-
-//			Set<String> uniqueIds = new HashSet<>();
+//		if (gatePassDtlList != null) {
+//			for (GeneralGatePassCargo list : gatePassDtlList) {
 //
-//			if (gatePassDtlList != null) {
-//			    for (GeneralGatePassCargo item : gatePassDtlList) {
-//			        String uniqueKey = item.getDeliveryId() + "-" + item.getReceivingId(); // Create a unique key
-//			        if (uniqueIds.add(uniqueKey)) { // Ensure distinct values
-//			            BigDecimal sum = generalGatePassRepository.getSumOfQtyTakenOutCommodityWise(
-//			                companyId, branchId, item.getDeliveryId(), item.getReceivingId()
-//			            );
-//			            if (sum != null) {
-//			                totalSum = totalSum.add(sum);
-//			            }
-//			        }
-//			    }
+//				System.out.println("jhsdjhsfjsdjfgdsjfdgsjfh :" + list.getDeliveryId());
+//				System.out.println("jhsdjhsfjsdjfgdsjfdgsjfh :" + list.getGatePassId());
+//
+//				BigDecimal sumOfInbondFormGrid = generalGatePassRepository.getSumOfQtyTakenOutCommodityWise(companyId,
+//						branchId, list.getDeliveryId(), cfinbondcrg.getGatePassId());
+//
+//				if (sumOfInbondFormGrid != null) {
+//					totalSum = totalSum.add(sumOfInbondFormGrid);
+//				}
 //			}
+//		}
+
+			Set<String> uniqueIds = new HashSet<>();
+
+			if (gatePassDtlList != null) {
+			    for (GeneralGatePassCargo item : gatePassDtlList) {
+			        String uniqueKey = item.getDeliveryId() + "-" + item.getGatePassId(); // Create a unique key
+			        if (uniqueIds.add(uniqueKey)) { // Ensure distinct values
+			            BigDecimal sum = generalGatePassRepository.getSumOfQtyTakenOutCommodityWise(
+			                companyId, branchId, item.getDeliveryId(), item.getGatePassId()
+			            );
+			            if (sum != null) {
+			                totalSum = totalSum.add(sum);
+			            }
+			        }
+			    }
+			}
 
 		System.out.println("Total Sum: " + totalSum);
 
@@ -1533,5 +1540,11 @@ public class GeneralGatePassService {
 		
 		
 		return new ResponseEntity<>(myMap, HttpStatus.OK);
+	}
+	
+
+	public List<JarDetail> listByJarId(String jarId,String cid) {
+		// TODO Auto-generated method stub
+		return jarDetailRepository.findByID(jarId,cid);
 	}
 }

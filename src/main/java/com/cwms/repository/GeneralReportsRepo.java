@@ -131,7 +131,7 @@ List<Object[]> getGeneralDeliveryReport(
         "gp.gate_pass_packages, gp.gate_pass_weight, " +
         "COALESCE(gd.reciving_packages, 0) - COALESCE(gd.delivered_packages, 0) AS balance_receiving_packages, " +
         "COALESCE(gd.delivered_packages, 0) - COALESCE(gp.gate_pass_packages, 0) AS gatepass_balance, " +
-        "d.yard_location, d.yard_block, d.block_cell_no, gd.job_no, gd.job_trans_id " +
+        "d.yard_location, d.yard_block, d.block_cell_no, gd.job_no, gd.job_trans_id,gd.commodity_id " +
         "FROM generalreceivingcrg c " +
         "LEFT OUTER JOIN generalreceivinggateindtl gd ON c.company_id = gd.company_id " +
         "AND c.branch_id = gd.branch_id " +
@@ -154,7 +154,7 @@ List<Object[]> getGeneralDeliveryReport(
         "AND c.receiving_date <= :endDate " +
         "AND (:imp IS NULL OR :imp = '' OR c.Importer_Name = :imp) " +
         "AND (:cha IS NULL OR :cha = '' OR c.cha = :cha) " +
-        "GROUP BY c.boe_no", nativeQuery = true)
+        "GROUP BY gd.commodity_id ", nativeQuery = true)
 List<Object[]> getReceivingDetails(@Param("companyId") String companyId, 
                                    @Param("branchId") String branchId, 
                                    @Param("endDate") Date endDate,

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.GeneralDeliveryGrid;
 import com.cwms.entities.GeneralGatePassCargo;
+import com.cwms.entities.JarDetail;
+import com.cwms.repository.JarDetailRepository;
 import com.cwms.service.GeneralGatePassService;
 import com.lowagie.text.DocumentException;
 
@@ -26,6 +29,10 @@ public class GeneralGatePassController {
 
 	@Autowired
 	private GeneralGatePassService generalGatePassService;
+	
+	@Autowired
+	JarDetailRepository jarDetailRepository;
+	
 	
 	 @GetMapping("/getAllDataFormDeliveryDetails")
 	    public List<Object[]> getAllDataFormDeliveryDetails(
@@ -142,5 +149,11 @@ public class GeneralGatePassController {
 	    		@RequestParam(value ="bondingNo",required = false) String bondingNo
 	    		) {
 			return generalGatePassService.getForMainBondingSearch(companyId, branchId, nocNo, boeNo, bondingNo);
+		}
+	    
+	    @GetMapping("/jarIdList/{jarId}/{cid}")
+		public List<JarDetail> getjarDtl(@PathVariable("jarId") String jarId,@PathVariable("cid") String cid) {
+			System.out.println(jarId);
+			return generalGatePassService.listByJarId(jarId,cid);
 		}
 }
