@@ -933,4 +933,10 @@ public class GeneralDeliveryCrg {
 	
 	
 	
+	public GeneralDeliveryCrg(String deliveryId, String receivingId,String boeNo) {
+		super();
+		this.deliveryId = deliveryId;
+		this.receivingId = receivingId;
+		this.boeNo = boeNo;
+	}
 }

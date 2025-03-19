@@ -1014,6 +1014,63 @@ public class GeneralGateIn {
 		this.editedBy=editedBy;
 		this.area=area;
 	}
+
+	
+	// for gate in print 
+	public GeneralGateIn(String gateInId, String boeNo, String jobTransId, String jobNo) {
+		super();
+		this.gateInId = gateInId;
+		this.boeNo = boeNo;
+		this.jobTransId = jobTransId;
+		this.jobNo = jobNo;
+	}
+
+	public GeneralGateIn(String companyId, String branchId, String gateInId, int srNo, String gateNo, Date gateInDate,
+			String boeNo, Date boeDate, String containerNo, BigDecimal grossWeight, String cha, String importerId,
+			String importerName, String address1, String address2, String address3, String commodityDescription,
+			BigDecimal noOfPackages, String vehicleNo, String driverName, String comments, String status,
+			String createdBy, String transporter, String transporterName, String commodityId, String actCommodityId,
+			String lrNo, BigDecimal gateInPackages, String typeOfPackage, String jobTransId, String jobNo,
+			Date jobTransDate, Date jobDate, BigDecimal jobNop, BigDecimal jobGwt, String vehicleType) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.gateInId = gateInId;
+		this.srNo = srNo;
+		this.gateNo = gateNo;
+		this.gateInDate = gateInDate;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.containerNo = containerNo;
+		this.grossWeight = grossWeight;
+		this.cha = cha;
+		this.importerId = importerId;
+		this.importerName = importerName;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.address3 = address3;
+		this.commodityDescription = commodityDescription;
+		this.noOfPackages = noOfPackages;
+		this.vehicleNo = vehicleNo;
+		this.driverName = driverName;
+		this.comments = comments;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.transporter = transporter;
+		this.transporterName = transporterName;
+		this.commodityId = commodityId;
+		this.actCommodityId = actCommodityId;
+		this.lrNo = lrNo;
+		this.gateInPackages = gateInPackages;
+		this.typeOfPackage = typeOfPackage;
+		this.jobTransId = jobTransId;
+		this.jobNo = jobNo;
+		this.jobTransDate = jobTransDate;
+		this.jobDate = jobDate;
+		this.jobNop = jobNop;
+		this.jobGwt = jobGwt;
+		this.vehicleType = vehicleType;
+	}
     
     
     

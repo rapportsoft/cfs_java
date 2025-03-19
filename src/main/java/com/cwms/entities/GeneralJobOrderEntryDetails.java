@@ -86,7 +86,7 @@ public class GeneralJobOrderEntryDetails implements Serializable {
 	@Column(name = "No_Of_Packages", precision = 8, scale = 0, nullable = true)
 	private BigDecimal noOfPackages = BigDecimal.ZERO;
 
-	@Column(name = "Area_Occupied", precision = 5, scale = 0, nullable = true)
+	@Column(name = "Area_Occupied", precision = 16, scale = 3, nullable = true)
 	private BigDecimal areaOccupied;
 
 

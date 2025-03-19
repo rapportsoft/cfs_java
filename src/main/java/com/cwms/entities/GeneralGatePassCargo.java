@@ -155,6 +155,11 @@ public class GeneralGatePassCargo {
     @Column(name = "Prev_Qty_Taken_Out", precision = 6, scale = 0, nullable = true)
     private BigDecimal prevQtyTakenOut;
 
+    
+    @Column(name = "Handling_Person", length = 252,nullable = true)
+    private String handlingPerson;
+    
+    
 	public GeneralGatePassCargo(String companyId, String branchId, String gatePassId, Date gatePassDate, int srNo,
 			String depositNo, String receivingId, String jobNo, String jobTransId, String commodityId,
 			String actCommodityId, String typeOfPackage, String commodityDescription, String profitCentreId,
@@ -164,7 +169,7 @@ public class GeneralGatePassCargo {
 			BigDecimal deliveredPackages, BigDecimal deliveredWeight, String transporterName, String vehicleNo,
 			String driverName, String comments, BigDecimal gatePassPackages, BigDecimal gatePassWeight, String status,
 			String createdBy, Date createdDate, String editedBy, Date editedDate, String approvedBy, Date approvedDate,
-			String botplRecptNo, BigDecimal prevQtyTakenOut) {
+			String botplRecptNo, BigDecimal prevQtyTakenOut,String handlingPerson) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -211,6 +216,7 @@ public class GeneralGatePassCargo {
 		this.approvedDate = approvedDate;
 		this.botplRecptNo = botplRecptNo;
 		this.prevQtyTakenOut = prevQtyTakenOut;
+		this.handlingPerson = handlingPerson;
 	}
 
 	public String getCompanyId() {
@@ -578,6 +584,14 @@ public class GeneralGatePassCargo {
 		// TODO Auto-generated constructor stub
 	}
 
+	public String getHandlingPerson() {
+		return handlingPerson;
+	}
+
+	public void setHandlingPerson(String handlingPerson) {
+		this.handlingPerson = handlingPerson;
+	}
+
 	@Override
 	public String toString() {
 		return "GeneralGatePassCargo [companyId=" + companyId + ", branchId=" + branchId + ", gatePassId=" + gatePassId
@@ -601,7 +615,7 @@ public class GeneralGatePassCargo {
 	public GeneralGatePassCargo(String companyId, String branchId, String gatePassId, Date gatePassDate, int srNo,
 			String receivingId, String deliveryId, String gateOutId, Date gateOutDate, String importerName,
 			String transporterName, String vehicleNo, BigDecimal gatePassPackages, BigDecimal gatePassWeight,
-			String status,String boeNo,String createdBy,String approvedBy,String transType,String shift,String comments,String driverName) {
+			String status,String boeNo,String createdBy,String approvedBy,String transType,String shift,String comments,String driverName,String handlingPerson) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -625,6 +639,7 @@ public class GeneralGatePassCargo {
 		this.shift=shift;
 		this.comments=comments;
 		this.driverName=driverName;
+		this.handlingPerson=handlingPerson;
 	}
 
 	public GeneralGatePassCargo(String companyId, String branchId, String gatePassId, Date gatePassDate, int srNo,
@@ -635,7 +650,7 @@ public class GeneralGatePassCargo {
 			BigDecimal receivingWeight, BigDecimal deliveredPackages, BigDecimal deliveredWeight,
 			String transporterName, String vehicleNo, String driverName, String comments, BigDecimal gatePassPackages,
 			BigDecimal gatePassWeight, String status, String createdBy, Date createdDate, String approvedBy,
-			Date approvedDate, String botplRecptNo, BigDecimal prevQtyTakenOut) {
+			Date approvedDate, String botplRecptNo, BigDecimal prevQtyTakenOut,String handlingPerson) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -678,6 +693,7 @@ public class GeneralGatePassCargo {
 		this.approvedDate = approvedDate;
 		this.botplRecptNo = botplRecptNo;
 		this.prevQtyTakenOut = prevQtyTakenOut;
+		this.handlingPerson=handlingPerson;
 	}
 
 	
@@ -690,6 +706,18 @@ public class GeneralGatePassCargo {
     
    
 	
-	
+	public GeneralGatePassCargo(String gatePassId,
+			String depositNo, String receivingId, String jobNo, String jobTransId, String commodityId,
+			String deliveryId,  String boeNo) {
+		super();
+		this.gatePassId = gatePassId;
+		this.depositNo = depositNo;
+		this.receivingId = receivingId;
+		this.jobNo = jobNo;
+		this.jobTransId = jobTransId;
+		this.commodityId = commodityId;
+		this.deliveryId = deliveryId;
+		this.boeNo = boeNo;
+	}
 	
 }

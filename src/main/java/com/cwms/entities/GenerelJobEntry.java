@@ -600,6 +600,17 @@ public class GenerelJobEntry implements Serializable {
 		this.editedBy=editedBy;
 		this.forwarderName=forwarderName;
 	}
+	
+	
+	public GenerelJobEntry(String companyId, String branchId, String jobTransId, String jobNo,String boeNo) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.jobTransId = jobTransId;
+		this.jobNo = jobNo;
+		this.boeNo = boeNo;
+
+	}
 
 
 

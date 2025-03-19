@@ -506,7 +506,13 @@ public class GeneralDeliveryDetails {
 
 	
     
-    
+	public GeneralDeliveryDetails(String deliveryId, String receivingId,String boeNo,String depositNo) {
+		super();
+		this.deliveryId = deliveryId;
+		this.receivingId = receivingId;
+		this.boeNo = boeNo;
+		this.depositNo = depositNo;
+	}
     
 	
 	

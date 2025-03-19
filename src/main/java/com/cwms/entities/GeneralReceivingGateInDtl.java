@@ -121,6 +121,9 @@ public class GeneralReceivingGateInDtl {
     @Column(name = "Act_Commodity_Id", length = 10, nullable = true)
     private String actCommodityId;
     
+    @Column(name = "Deposit_No", length = 15, nullable = true)
+	private String depositNo;
+    
    @Transient
     private BigDecimal grossWeight;
 
@@ -138,7 +141,7 @@ public class GeneralReceivingGateInDtl {
 		BigDecimal receivingPackages, BigDecimal receivingWeight, String status, BigDecimal deliveredPackages,
 		BigDecimal deliveredWeight, String commodityDescription, String typeOfPackage, String commodityId,
 		String jobDtlTransId, String jobNo, String jobTransId, String createdBy, Date createdDate, String editedBy,
-		Date editedDate, String approvedBy, Date approvedDate, String actCommodityId) {
+		Date editedDate, String approvedBy, Date approvedDate, String actCommodityId,String depositNo) {
 	super();
 	this.companyId = companyId;
 	this.branchId = branchId;
@@ -172,7 +175,26 @@ public class GeneralReceivingGateInDtl {
 	this.approvedBy = approvedBy;
 	this.approvedDate = approvedDate;
 	this.actCommodityId = actCommodityId;
+	this.depositNo = depositNo;
 }
+
+
+
+
+
+
+	public String getDepositNo() {
+		return depositNo;
+	}
+
+
+
+
+
+
+	public void setDepositNo(String depositNo) {
+		this.depositNo = depositNo;
+	}
 
 
 
@@ -513,7 +535,7 @@ public class GeneralReceivingGateInDtl {
 			BigDecimal jobNop, BigDecimal jobGwt, BigDecimal gateInPackages, BigDecimal gateInWeight,
 			BigDecimal receivingPackages, BigDecimal receivingWeight, String status, BigDecimal deliveredPackages,
 			BigDecimal deliveredWeight, String commodityDescription, String typeOfPackage, String commodityId,
-			String jobDtlTransId, String actCommodityId, String jobNo, String jobTransId,Date createdDate) {
+			String jobDtlTransId, String actCommodityId, String jobNo, String jobTransId,Date createdDate,String depositNo) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -542,6 +564,7 @@ public class GeneralReceivingGateInDtl {
 		this.jobNo = jobNo;
 		this.jobTransId = jobTransId;
 		this.createdDate=createdDate;
+		this.depositNo=depositNo;
 	}
 
 	

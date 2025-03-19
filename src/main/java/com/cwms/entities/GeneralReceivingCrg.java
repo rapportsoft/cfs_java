@@ -909,7 +909,8 @@ public class GeneralReceivingCrg {
 			BigDecimal receivedWeight, BigDecimal deliveredPackages, String spaceAllocated, BigDecimal shortQty,
 			String comments, String invoiceStatus, String status, String createdBy, Date createdDate, String editedBy,
 			String approvedBy, Date approvedDate, String remark, String jobNo, String jobTransId,
-			String noOf20Ft, String noOf40Ft, String assesmentId,String transporterName,BigDecimal cargoValue,BigDecimal cargoDuty) {
+			String noOf20Ft, String noOf40Ft, String assesmentId,String transporterName,BigDecimal cargoValue,BigDecimal cargoDuty, String handlingEquip1,
+			String handlingEquip2, String handlingEquip3) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -961,6 +962,9 @@ public class GeneralReceivingCrg {
 		this.transporterName = transporterName;
 		this.cargoValue=cargoValue;
 		this.cargoDuty=cargoDuty;
+		this.handlingEquip1 = handlingEquip1;
+		this.handlingEquip2 = handlingEquip2;
+		this.handlingEquip3 = handlingEquip3;
 	}
 
 	
@@ -998,6 +1002,12 @@ public class GeneralReceivingCrg {
 		this.deliveredWeight=deliveredWeight;
 	}
 
+	
+	public GeneralReceivingCrg(String receivingId,String boeNo) {
+		super();
+		this.receivingId = receivingId;
+		this.boeNo = boeNo;
+	}
 
 	
 }
