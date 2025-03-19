@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.CFBondGatePass;
+import com.cwms.entities.CfBondNocDtl;
 import com.cwms.entities.GeneralDeliveryGrid;
 import com.cwms.entities.GeneralGatePassCargo;
 import com.cwms.service.GeneralGatePassService;
@@ -131,4 +132,15 @@ public class GeneralGatePassController {
 	            return ResponseEntity.status(500).body("Error generating PDF: " + e.getMessage());
 	        }
 	    }
+	    
+	    @GetMapping("/getDataForMainBondingSearch")
+	    public ResponseEntity<?> getDataForMainSearch(
+	    		@RequestParam ("companyId") String companyId,
+	    		@RequestParam ("branchId") String branchId,
+	    		@RequestParam (value ="nocNo", required =false ) String nocNo ,
+	    		@RequestParam(value ="boeNo",required = false ) String boeNo,
+	    		@RequestParam(value ="bondingNo",required = false) String bondingNo
+	    		) {
+			return generalGatePassService.getForMainBondingSearch(companyId, branchId, nocNo, boeNo, bondingNo);
+		}
 }
