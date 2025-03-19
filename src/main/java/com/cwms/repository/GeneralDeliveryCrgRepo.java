@@ -71,7 +71,7 @@ public interface GeneralDeliveryCrgRepo extends JpaRepository<GeneralDeliveryCrg
 		       "c.jobGwt, c.gateInPackages, c.gateInWeight, c.receivingPackages, " +
 		       "c.receivingWeight, c.status, c.deliveredPackages, c.deliveredWeight, " +
 		       "c.commodityDescription, c.typeOfPackage, c.commodityId, " +
-		       "c.jobDtlTransId, c.actCommodityId,c.jobNo,c.jobTransId,c.createdDate) " +
+		       "c.jobDtlTransId, c.actCommodityId,c.jobNo,c.jobTransId,c.createdDate,c.depositNo) " +
 		       "FROM GeneralReceivingGateInDtl c " +
 		       "WHERE c.companyId = :companyId " +
 		       "AND c.branchId = :branchId " +

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.cwms.entities.GateIn;
 import com.cwms.entities.GeneralGateIn;
 import com.cwms.entities.GeneralJobOrderEntryDetails;
 import com.cwms.entities.GenerelJobEntry;
@@ -159,4 +161,75 @@ GeneralGateIn getGeneralGateIn(
        @Param("gateInId") String gateInId,
        @Param("commodityId") String commodityId
    );
+@Query("SELECT DISTINCT NEW com.cwms.entities.GeneralGateIn( " +
+	       "g.gateInId, g.boeNo, g.jobTransId, " +
+	       "g.jobNo " +
+	       ") " +
+	       "FROM GeneralGateIn g " +
+	       "WHERE g.companyId = :companyId " +
+	       "AND g.branchId = :branchId " +
+	       "AND g.gateInId = :gateInId " +
+	       "AND g.status != 'D'")
+	List<GeneralGateIn> getDistinct(
+	       @Param("companyId") String companyId,
+	       @Param("branchId") String branchId,
+	       @Param("gateInId") String gateInId);
+
+
+
+
+
+
+
+
+
+
+
+
+@Query("SELECT NEW com.cwms.entities.GeneralGateIn(g.companyId, g.branchId, g.gateInId, g.srNo, g.gateNo, g.gateInDate, " +
+	       "g.boeNo, g.boeDate, g.containerNo, g.grossWeight, g.cha, g.importerId, g.importerName, g.address1, g.address2, g.address3, " +
+	       "g.commodityDescription, g.noOfPackages, g.vehicleNo, g.driverName, g.comments, g.status, a.partyName, " +
+	       "g.transporter, g.transporterName, g.commodityId, g.actCommodityId, g.lrNo, g.gateInPackages, g.typeOfPackage, " +
+	       "g.jobTransId, g.jobNo, g.jobTransDate, g.jobDate, g.jobNop, g.jobGwt, g.vehicleType) " +
+	       "FROM GeneralGateIn g " +
+	       "LEFT OUTER JOIN Party a ON g.companyId = a.companyId AND g.branchId = a.branchId AND g.cha = a.partyId " +
+	       "WHERE g.companyId = :companyId " +
+	       "AND g.branchId = :branchId " +
+	       "AND g.gateInId = :gateInId " +
+	       "AND g.jobTransId = :jobTransId " +
+	       "AND g.boeNo = :boeNo " +
+	       "AND g.status != 'D' ")
+	List<GeneralGateIn> findDataForGettingPrint(
+	       @Param("companyId") String companyId,
+	       @Param("branchId") String branchId,
+	       @Param("gateInId") String gateInId,
+	       @Param("jobTransId") String jobTransId,
+	       @Param("boeNo") String boeNo
+	);
+
+
+
+
+
+
+
+
+//@Query("SELECT NEW com.cwms.entities.GeneralGateIn(g.companyId, g.branchId, g.gateInId, g.finYear, g.erpDocRefNo, g.docRefNo, g.lineNo, g.srNo, g.docRefDate, " +
+//	       "g.boeNo, g.boeDate, g.nocNo, g.nocDate, g.gateInType, g.profitcentreId, g.containerNo, g.containerSize, g.containerType, g.isoCode, " +
+//	       "g.grossWeight, g.eirGrossWeight, g.cha, g.importerName, g.commodityDescription, g.actualNoOfPackages, g.qtyTakenIn, g.shift, g.transporterStatus, " +
+//	       "g.transporterName, g.transporter, g.vehicleNo, g.driverName, g.status, '', '', '', g.inGateInDate, g.weightTakenIn,g.typeOfPackage,g.commodity,g.gateInPackages) " +
+//	       "FROM GeneralGateIn g " +
+//	       "WHERE g.companyId = :companyId " +
+//	       "AND g.branchId = :branchId " +
+//	       "AND g.gateInId = :gateInId " +
+//	       "AND g.erpDocRefNo = :erpDocRefNo " +
+//	       "AND g.boeNo = :boeNo " +
+//	       "AND g.status != 'D' ")
+//List<GeneralGateIn> findDataForGettingPrintDetails(
+//	       @Param("companyId") String companyId,
+//	       @Param("branchId") String branchId,
+//	       @Param("gateInId") String gateInId,
+//	       @Param("erpDocRefNo") String erpDocRefNo,
+//	       @Param("boeNo") String boeNo
+//	       );
 }

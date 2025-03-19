@@ -114,7 +114,7 @@ public interface GeneralReceivingCrgRepo extends JpaRepository<GeneralReceivingC
 		       "c.grossWeight, c.uom, c.areaOccupied, c.areaAllocated, c.cargoCondition, c.gateInPackages, c.gateInWeight, " +
 		       "c.totalDeliveredPkg, c.receivedPackages, c.receivedWeight, c.deliveredPackages, c.spaceAllocated, c.shortQty, " +
 		       "c.comments, c.invoiceStatus, c.status, c.createdBy, c.createdDate, pa.partyName, c.approvedBy, c.approvedDate, " +
-		       "c.remark, c.jobNo, c.jobTransId, c.noOf20Ft, c.noOf40Ft, c.assesmentId, c.transporterName,c.cargoValue,c.cargoDuty) " +
+		       "c.remark, c.jobNo, c.jobTransId, c.noOf20Ft, c.noOf40Ft, c.assesmentId, c.transporterName,c.cargoValue,c.cargoDuty,c.handlingEquip1,c.handlingEquip2,c.handlingEquip3) " +
 		       "FROM GeneralReceivingCrg c " +
 		       "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId AND c.branchId = pa.branchId AND c.cha = pa.partyId " +
 		       "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.jobTransId = :nocTransId " +

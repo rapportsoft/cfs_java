@@ -8,8 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cwms.entities.CFBondGatePass;
+import com.cwms.entities.CfExBondCrg;
 import com.cwms.entities.CfExBondGrid;
+import com.cwms.entities.Cfinbondcrg;
+import com.cwms.entities.GeneralDeliveryCrg;
+import com.cwms.entities.GeneralDeliveryDetails;
+import com.cwms.entities.GeneralGateIn;
 import com.cwms.entities.GeneralGatePassCargo;
+import com.cwms.entities.GeneralReceivingCrg;
+import com.cwms.entities.GenerelJobEntry;
 
 public interface GeneralGatePassRepository extends JpaRepository<GeneralGatePassCargo, String> {
 
@@ -87,16 +94,28 @@ BigDecimal getSumOfQtyTakenOutForCommodity(@Param("companyId") String companyId,
 	                            @Param("commodityId") String commodityId);
 
 
-@Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM GeneralDeliveryGrid c " +
+//@Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM GeneralDeliveryGrid c " +
+//	       "WHERE c.companyId = :companyId " +
+//	       "AND c.branchId = :branchId " +
+//	       "AND c.status != 'D' " +
+//	       "AND c.deliveryId = :deliveryId " +
+//	       "AND c.receivingId = :receivingId ")
+//BigDecimal  getSumOfQtyTakenOutCommodityWise(@Param("companyId") String companyId,
+//	                            @Param("branchId") String branchId,
+//	                            @Param("deliveryId") String deliveryId,
+//	                            @Param("receivingId") String receivingId);
+
+
+@Query("SELECT COALESCE(SUM(c.qtyTakenOut), 0) FROM GeneralGatePassGrid c " +
 	       "WHERE c.companyId = :companyId " +
 	       "AND c.branchId = :branchId " +
 	       "AND c.status != 'D' " +
 	       "AND c.deliveryId = :deliveryId " +
-	       "AND c.receivingId = :receivingId ")
+	       "AND c.gatePassId = :gatePassId ")
 BigDecimal  getSumOfQtyTakenOutCommodityWise(@Param("companyId") String companyId,
 	                            @Param("branchId") String branchId,
 	                            @Param("deliveryId") String deliveryId,
-	                            @Param("receivingId") String receivingId);
+	                            @Param("gatePassId") String gatePassId);
 
 
 //@Query("SELECT COALESCE(SUM(c.gatePassPackages), 0) FROM GeneralGatePassCargo c " +
@@ -146,7 +165,7 @@ GeneralGatePassCargo toUpdateGatePassCargo(@Param("companyId") String companyId,
 
 @Query("SELECT DISTINCT NEW com.cwms.entities.GeneralGatePassCargo(c.companyId, c.branchId, c.gatePassId, c.gatePassDate, " +
         "c.srNo, c.receivingId, c.deliveryId, c.gateOutId, c.gateOutDate, c.importerName, " +
-        "c.transporterName, c.vehicleNo, c.gatePassPackages, c.gatePassWeight, c.status,c.boeNo,c.createdBy,c.approvedBy,c.transType,c.shift,c.comments,c.driverName) " +
+        "c.transporterName, c.vehicleNo, c.gatePassPackages, c.gatePassWeight, c.status,c.boeNo,c.createdBy,c.approvedBy,c.transType,c.shift,c.comments,c.driverName,c.handlingPerson) " +
     "FROM GeneralGatePassCargo c " +
     "WHERE c.companyId = :companyId " +
     "AND c.branchId = :branchId " +
@@ -171,7 +190,7 @@ List<GeneralGatePassCargo> findCfbondnocByCompanyIdAndBranchIdForCfbondGateIn(
         "c.receivingWeight, c.deliveredPackages, c.deliveredWeight, " +
         "c.transporterName, c.vehicleNo, c.driverName, c.comments, " +
         "c.gatePassPackages, c.gatePassWeight, c.status, c.createdBy, " +
-        "c.createdDate, c.approvedBy, c.approvedDate, c.botplRecptNo, c.prevQtyTakenOut) " +
+        "c.createdDate, c.approvedBy, c.approvedDate, c.botplRecptNo, c.prevQtyTakenOut,c.handlingPerson) " +
     "FROM GeneralGatePassCargo c " +
     "WHERE c.companyId = :companyId " +
     "AND c.branchId = :branchId " +
@@ -184,6 +203,242 @@ List<GeneralGatePassCargo> getAllListOfGatePass(
     @Param("gatePassId") String gatePassId
 );
 
+@Query("SELECT NEW com.cwms.entities.GenerelJobEntry(c.companyId, c.branchId, c.jobTransId, c.jobNo, c.boeNo) " +
+"FROM GenerelJobEntry c " +
+"WHERE c.companyId = :companyId " +
+"AND c.branchId = :branchId " +
+"AND c.status != 'D' " +
+"AND ((:nocNo IS NULL OR :nocNo = '' OR c.jobNo LIKE CONCAT(:nocNo, '%')) " +
+"AND (:boeNo IS NULL OR :boeNo = '' OR c.boeNo LIKE CONCAT(:boeNo, '%')))")
+GenerelJobEntry getForBondingSearch(@Param("companyId") String companyId, 
+                                               @Param("branchId") String branchId,
+                                               @Param("nocNo") String nocNo,
+                                               @Param("boeNo") String boeNo);
+
+@Query("select count(c) > 0  from  GeneralJobOrderEntryDetails c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
+ 		+ "c.jobNo =:nocNo  and c.jobTransId =:nocTransId and (c.noOfPackages - c.gateInPackages) > 0  "
+		 )
+ Boolean checkGateInPackages (
+		 @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocNo") String nocNo,
+	        @Param("nocTransId") String nocTransId);
 
 
+
+
+@Query("select count(c) > 0  from  GeneralJobOrderEntryDetails c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
+ 		+ "c.jobNo =:nocNo  and c.jobTransId =:nocTransId and (c.noOfPackages - c.gateInPackages) = 0   and "
+ 		  + "c.gateInPackages > 0")
+ Boolean checkGateInPackagesAll (
+		 @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocNo") String nocNo,
+	        @Param("nocTransId") String nocTransId);
+
+
+
+@Query("select count(c) > 0  from  GeneralGateIn c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
+ 		+ "c.jobNo =:nocNo  and c.jobTransId =:nocTransId and (c.noOfPackages - c.receivingPackages) > 0  "
+		 )
+ Boolean checkGateInPackagesGeneralGateIn (
+		 @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocNo") String nocNo,
+	        @Param("nocTransId") String nocTransId);
+
+
+@Query("SELECT c FROM GeneralGateIn c " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.jobNo = :nocNo " +
+	       "AND c.jobTransId = :nocTransId " +
+	       "ORDER BY c.createdDate DESC")
+	List<GeneralGateIn> getSavedData(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocNo") String nocNo,
+	    @Param("nocTransId") String nocTransId
+	);
+
+
+
+@Query("select count(c) > 0  from  GeneralGateIn c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
+ 		+ "c.jobNo =:nocNo  and c.jobTransId =:nocTransId and (c.noOfPackages - c.receivingPackages) = 0   and "
+ 		  + "c.receivingPackages > 0")
+ Boolean checkGateInPackagesAllGeneralGateIn (
+		 @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocNo") String nocNo,
+	        @Param("nocTransId") String nocTransId);
+
+
+
+
+//@Query("select count(c) > 0  from  GeneralReceivingGateInDtl c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
+// 		+ "c.jobNo =:nocNo  and c.jobTransId =:nocTransId and (c.gateInPackages - c.receivingPackages) > 0  "
+//		 )
+// Boolean checkInBondedPackages (
+//		 @Param("companyId") String companyId,
+//	        @Param("branchId") String branchId,
+//	        @Param("nocNo") String nocNo,
+//	        @Param("nocTransId") String nocTransId);
+
+
+@Query("SELECT COUNT(c) > 0 FROM GeneralReceivingGateInDtl c " +
+	       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +
+	       "AND c.status != 'D' " +
+	       "AND c.jobNo = :nocNo " +
+	       "AND c.jobTransId = :nocTransId " +
+	       "AND (COALESCE(c.gateInPackages, 0) - COALESCE(c.receivingPackages, 0)) > 0")
+	Boolean checkInBondedPackages(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocNo") String nocNo,
+	        @Param("nocTransId") String nocTransId);
+
+
+@Query("select count(c) > 0 from GeneralReceivingGateInDtl c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status !='D' AND "
+        + "c.jobNo = :nocNo AND c.jobTransId = :nocTransId AND "
+        + "COALESCE(c.gateInPackages, 0) - c.receivingPackages = 0 AND "
+        + "c.receivingPackages > 0")
+Boolean checkInBondedPackagesAllDone(
+        @Param("companyId") String companyId,
+        @Param("branchId") String branchId,
+        @Param("nocNo") String nocNo,
+        @Param("nocTransId") String nocTransId);
+
+@Query("SELECT new com.cwms.entities.GeneralReceivingCrg(c.receivingId, c.boeNo) "
+	     + "FROM GeneralReceivingCrg c "
+	     + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.jobTransId = :nocTransId AND c.jobNo = :nocNo "
+	     + "ORDER BY c.createdDate DESC")
+	List<GeneralReceivingCrg> getInBondingIdAndBoeNo(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocTransId") String nocTransId,
+	        @Param("nocNo") String nocNo);
+
+
+
+@Query("SELECT COUNT(c) > 0 FROM GeneralReceivingGateInDtl c " +
+	       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +
+	       "AND c.status != 'D' " +
+	       "AND c.jobNo = :nocNo " +
+	       "AND c.jobTransId = :jobTransId " +
+	       "AND (COALESCE(c.receivingPackages, 0) - COALESCE(c.deliveredPackages, 0)) > 0")
+	Boolean checkInForDelivery(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocNo") String nocNo,
+	    @Param("jobTransId") String jobTransId
+	);
+
+
+
+
+//@Query("SELECT COUNT(c) > 0 FROM GeneralDeliveryDetails c " +
+//	       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +
+//	       "AND c.status != 'D' " +
+//	       "AND c.jobNo = :nocNo " +
+//	       "AND c.jobTransId = :jobTransId " +
+//	       "AND (COALESCE(c.receivingPackages, 0) - COALESCE(c.deliveredPackages, 0)) > 0")
+//	Boolean checkInForPartialGatePass(
+//	    @Param("companyId") String companyId,
+//	    @Param("branchId") String branchId,
+//	    @Param("nocNo") String nocNo,
+//	    @Param("jobTransId") String jobTransId
+//	);
+//
+//
+//
+//@Query("select count(c) > 0 from GeneralDeliveryDetails c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+//	       "c.jobNo = :nocNo AND c.jobTransId = :jobTransId AND "
+//	       + "COALESCE(c.receivingPackages, 0) - c.deliveredPackages = 0 AND "
+//	        + "c.deliveredPackages > 0")
+//	Boolean checkInForALLGatePass(
+//	    @Param("companyId") String companyId,
+//	    @Param("branchId") String branchId,
+//	    @Param("nocNo") String nocNo,
+//	    @Param("jobTransId") String jobTransId
+//	);
+
+
+@Query("select count(c) > 0 from GeneralDeliveryDetails c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+	       "c.jobNo = :nocNo AND c.jobTransId = :jobTransId AND "
+	       + "COALESCE(c.deliveredPackages, 0) - c.gatePassPackages = 0 AND "
+	        + "c.gatePassPackages > 0")
+	Boolean checkInForALLGatePassAll(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocNo") String nocNo,
+	    @Param("jobTransId") String jobTransId
+	);
+
+
+@Query("SELECT COUNT(c) > 0 FROM GeneralDeliveryDetails c " +
+	       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +
+	       "AND c.status != 'D' " +
+	       "AND c.jobNo = :nocNo " +
+	       "AND c.jobTransId = :jobTransId " +
+	       "AND (COALESCE(c.deliveredPackages, 0) - COALESCE(c.gatePassPackages, 0)) > 0")
+	Boolean checkInForPartialGatePassAll(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocNo") String nocNo,
+	    @Param("jobTransId") String jobTransId
+	);
+
+
+@Query("select count(c) > 0 from GeneralGatePassCargo c WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.status != 'D' AND " +
+	       "c.jobNo = :nocNo AND c.jobTransId = :jobTransId AND "
+	       + "COALESCE(c.deliveredPackages, 0) - c.gatePassPackages = 0 AND "
+	        + "c.gatePassPackages > 0")
+	Boolean checkInFromGatePass(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocNo") String nocNo,
+	    @Param("jobTransId") String jobTransId
+	);
+
+
+@Query("SELECT COUNT(c) > 0 FROM GeneralGatePassCargo c " +
+	       "WHERE c.companyId = :companyId AND c.branchId = :branchId " +
+	       "AND c.status != 'D' " +
+	       "AND c.jobNo = :nocNo " +
+	       "AND c.jobTransId = :jobTransId " +
+	       "AND (COALESCE(c.deliveredPackages, 0) - COALESCE(c.gatePassPackages, 0)) > 0")
+	Boolean checkInForFromGatePut(
+	    @Param("companyId") String companyId,
+	    @Param("branchId") String branchId,
+	    @Param("nocNo") String nocNo,
+	    @Param("jobTransId") String jobTransId
+	);
+
+
+@Query("SELECT new com.cwms.entities.GeneralDeliveryDetails(c.deliveryId, c.receivingId, c.boeNo,c.depositNo) "
+	     + "FROM GeneralDeliveryDetails c "
+	     + "WHERE c.companyId = :companyId AND c.branchId = :branchId AND c.jobTransId = :nocTransId AND c.jobNo = :nocNo "
+	     + "ORDER BY c.createdDate DESC")
+	List<GeneralDeliveryDetails> getExbondIdAndInbondId(
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("nocTransId") String nocTransId,
+	        @Param("nocNo") String nocNo);
+
+
+
+@Query("SELECT NEW com.cwms.entities.GeneralGatePassCargo(c.gatePassId, c.depositNo, c.receivingId, c.jobNo, c.jobTransId, " +
+	       "c.commodityId, c.deliveryId, c.boeNo) " +
+	       "FROM GeneralGatePassCargo c " +
+	       "WHERE c.companyId = :companyId " +
+	       "AND c.branchId = :branchId " +
+	       "AND c.jobTransId = :nocTransId " +
+	       "AND c.jobNo = :nocNo " +
+	       "AND c.status != 'D' " +
+	       "ORDER BY c.createdDate DESC")
+List<GeneralGatePassCargo> getCfBondGatePassList(
+	    @Param("companyId") String companyId, 
+	    @Param("branchId") String branchId, 
+	    @Param("nocTransId") String nocTransId, 
+	    @Param("nocNo") String nocNo);
 }
