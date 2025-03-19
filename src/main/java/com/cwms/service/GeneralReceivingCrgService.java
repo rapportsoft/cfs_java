@@ -257,7 +257,7 @@ System.out.println("************************************************************
 					cfinbondcrg.setApprovedDate(new Date());
 					cfinbondcrg.setBoeDate(cfinbondcrg.getBoeDate());
 					cfinbondcrg.setBoeNo(cfinbondcrg.getBoeNo());
-					cfinbondcrg.setStatus("N");
+					cfinbondcrg.setStatus("A");
 					cfinbondcrg.setReceivingDate(new Date());
 					cfinbondcrg.setReceivingId(nectInBondingId);
 					cfinbondcrg.setDepositNo(nectInBondingHDRId);
@@ -299,6 +299,7 @@ System.out.println("************************************************************
 						crgDetails.setSrNo(srNo);
 						crgDetails.setBranchId(branchId);
 						crgDetails.setCompanyId(companyId);
+						crgDetails.setDepositNo(nectInBondingHDRId);
 						
 						crgDetails.setReceivingId(nectInBondingId);
 						crgDetails.setGateInId(item.getGateInId());
@@ -515,6 +516,9 @@ System.out.println("************************************************************
 							findCfBondCrgData.setCargoDuty(cfinbondcrg.getCargoDuty());
 							findCfBondCrgData.setCargoValue(cfinbondcrg.getCargoValue());
 							findCfBondCrgData.setGateInPackages(totalGateIn);
+							findCfBondCrgData.setHandlingEquip1(cfinbondcrg.getHandlingEquip1());
+							findCfBondCrgData.setHandlingEquip2(cfinbondcrg.getHandlingEquip2());
+							findCfBondCrgData.setHandlingEquip3(cfinbondcrg.getHandlingEquip3());
 							findCfBondCrgData.setGateInWeight(totalGateInWeight);
 							findCfBondCrgData.setEditedBy(user);
 							findCfBondCrgData.setStatus("A");
