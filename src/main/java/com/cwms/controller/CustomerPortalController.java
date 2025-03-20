@@ -238,8 +238,8 @@ public class CustomerPortalController {
 
 			Branch branch = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-			CompletableFuture.runAsync(() -> emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getLoginId(),
-					party.getLoginPassword(), branch.getCrmLink(), crm.getDefaultotp()));
+		emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getLoginId(),
+					party.getLoginPassword(), branch.getCrmLink(), crm.getDefaultotp());
 		}
 
 		List<Object[]> userData = partyRepo.getDataByUserId(cid, bid, party.getPartyId());
@@ -316,8 +316,8 @@ public class CustomerPortalController {
 
 			Branch branch = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-			CompletableFuture.runAsync(() -> emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getUserId(),
-					party.getPassword(), branch.getCrmLink(), crm.getDefaultotp()));
+			emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getUserId(),
+					party.getPassword(), branch.getCrmLink(), crm.getDefaultotp());
 		}
 		return new ResponseEntity<>("User save successfully!!",HttpStatus.OK);
 

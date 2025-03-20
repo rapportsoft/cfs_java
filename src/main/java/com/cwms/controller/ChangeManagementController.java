@@ -728,9 +728,9 @@ public class ChangeManagementController {
 
 				String sub = hdr.getTicketNo() + " - " + hdr.getSubject();
 
-				CompletableFuture.runAsync(() -> tktemailservice.sendRegistrationMail(toMail, com, sub, ccMailString,
+				tktemailservice.sendRegistrationMail(toMail, com, sub, ccMailString,
 						dtl.getMessage(), files, hdr.getTicketNo(), hdr.getCreatedBy(), b.getBranchName(),
-						hdr.getPriority(), hdr.getIncidentType(), hdr.getTicketStatus()));
+						hdr.getPriority(), hdr.getIncidentType(), hdr.getTicketStatus());
 			}
 
 		}
@@ -806,9 +806,9 @@ public class ChangeManagementController {
 				String sub = "Approval Notification: Support Ticket " + hdr.getTicketNo()
 						+ " is Now Approved";
 
-				CompletableFuture.runAsync(() -> tktemailservice.sendApproverRegistrationMail(toMail, com, sub,
+				tktemailservice.sendApproverRegistrationMail(toMail, com, sub,
 						ccMailString, dtl.getMessage(), files, hdr.getTicketNo(), hdr.getCreatedBy(), b.getBranchName(),
-						hdr.getPriority(), hdr.getIncidentType(), hdr.getMessage(), hdr.getTicketStatus()));
+						hdr.getPriority(), hdr.getIncidentType(), hdr.getMessage(), hdr.getTicketStatus());
 			}
 
 		}
@@ -885,9 +885,9 @@ public class ChangeManagementController {
 				
 				String desc = "In Process".equals(hdr.getTicketStatus()) ? "The support ticket is currently in progress. Please find the details below:" : "The support ticket has been successfully resolved. Please find the details below:";
 
-				CompletableFuture.runAsync(() -> tktemailservice.sendSolvedRegistrationMail(toMail, com, sub,
+				tktemailservice.sendSolvedRegistrationMail(toMail, com, sub,
 						ccMailString, dtl.getMessage(), files, hdr.getTicketNo(), hdr.getCreatedBy(), b.getBranchName(),
-						hdr.getPriority(), hdr.getIncidentType(), hdr.getMessage(), hdr.getTicketStatus(), b.getServiceProvider(),desc));
+						hdr.getPriority(), hdr.getIncidentType(), hdr.getMessage(), hdr.getTicketStatus(), b.getServiceProvider(),desc);
 			}
 
 		}
