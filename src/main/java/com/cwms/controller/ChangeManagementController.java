@@ -710,6 +710,13 @@ public class ChangeManagementController {
 				if (approverMail != null && !approverMail.isEmpty()) {
 					ccMail.add(approverMail);
 				}
+				
+				String uEmail = userRepo.getEmail(cid, bid, hdr.getCreatedBy());
+
+				if (uEmail != null && !uEmail.isEmpty()) {
+
+					ccMail.add(uEmail);
+				}
 
 				String com = companyrepo.findByCompany_Id1(cid);
 				String ccMailString = (ccMail == null || ccMail.isEmpty()) ? "" : String.join(",", ccMail);
