@@ -152,7 +152,8 @@ public class Branch {
     @Column(name="Crm_Link",length = 100)
     private String crmLink;
     
-    
+    @Column(name="Service_Provider",length = 200)
+    private String serviceProvider;
     
     
         
@@ -170,14 +171,18 @@ public class Branch {
 
 
 
-	protected Branch(String companyId, String branchId, String branchName, Character bizCentreType, String baseCurrency,
+
+
+
+	public Branch(String companyId, String branchId, String branchName, Character bizCentreType, String baseCurrency,
 			String foreignCurrency, Character status, String address1, String address2, String irlNo, String gST_No,
 			String pan_No, String cin, String address3, String city, String state, String country, String pin,
 			String stdCode, String phoneNo, String emailId, String sacCode, String tdsAcCode, String tdsRange,
 			String tanNo, String comments, String domainName, String bankName, String bankAddress, String bankIFSCCode,
 			String bankAcountNo, String faxNo, String createdBy, Date createdDate, String editedBy, Date editedDate,
 			String approvedBy, Date approvedDate, String branchCode, String sealNo, String bondCode, String cfsCode,
-			String invoiceRoundOff, String lotNo, Date lotDate, String crmLink, String companyName) {
+			String invoiceRoundOff, String lotNo, Date lotDate, String crmLink, String serviceProvider,
+			String companyName) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -225,7 +230,23 @@ public class Branch {
 		this.lotNo = lotNo;
 		this.lotDate = lotDate;
 		this.crmLink = crmLink;
+		this.serviceProvider = serviceProvider;
 		this.companyName = companyName;
+	}
+
+
+	
+
+
+	public String getServiceProvider() {
+		return serviceProvider;
+	}
+
+
+
+
+	public void setServiceProvider(String serviceProvider) {
+		this.serviceProvider = serviceProvider;
 	}
 
 

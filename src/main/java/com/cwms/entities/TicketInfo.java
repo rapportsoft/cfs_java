@@ -77,6 +77,9 @@ public class TicketInfo {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="Approved_Date")
 	public Date approvedDate;
+	
+	@Column(name = "Message", columnDefinition = "TEXT")
+	public String message;
 
 	protected TicketInfo() {
 		super();
@@ -84,13 +87,10 @@ public class TicketInfo {
 	}
 
 	
-
-	
-
-	protected TicketInfo(String companyId, String branchId, String ticketNo, String ticketStatus, String requester,
+	public TicketInfo(String companyId, String branchId, String ticketNo, String ticketStatus, String requester,
 			String assignee, String approver, String followers, String incidentType, String incident, String priority,
 			String subject, String status, String createdBy, Date createdDate, String editedBy, Date editedDate,
-			String approvedBy, Date approvedDate) {
+			String approvedBy, Date approvedDate, String message) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -111,11 +111,19 @@ public class TicketInfo {
 		this.editedDate = editedDate;
 		this.approvedBy = approvedBy;
 		this.approvedDate = approvedDate;
+		this.message = message;
 	}
-
 
 	
 
+	public String getMessage() {
+		return message;
+	}
+
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 
 	public String getIncident() {

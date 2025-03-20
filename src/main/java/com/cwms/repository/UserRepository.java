@@ -126,4 +126,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 	 		+ "AND ((:searchValue IS NULL OR :searchValue = '') OR "
 	 		+ "(u.User_Id like CONCAT('%', :searchValue, '%') OR u.User_Name like CONCAT('%', :searchValue, '%')))")
 	 public List<User> getAllUserData(@Param("cid") String userId,@Param("bid") String bid,@Param("searchValue") String searchValue);
+	 
+	 @Query(value="SELECT User_Email FROM userinfo WHERE company_id=:cid AND branch_id=:bid AND user_id=:uid AND status='A'", nativeQuery=true)
+	    public String getEmail(@Param("cid") String cid, @Param("bid") String bid, @Param("uid") String uid);
 }

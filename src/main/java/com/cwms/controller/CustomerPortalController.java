@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -237,8 +238,8 @@ public class CustomerPortalController {
 
 			Branch branch = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-			emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getLoginId(),
-					party.getLoginPassword(), branch.getCrmLink(), crm.getDefaultotp());
+			CompletableFuture.runAsync(() -> emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getLoginId(),
+					party.getLoginPassword(), branch.getCrmLink(), crm.getDefaultotp()));
 		}
 
 		List<Object[]> userData = partyRepo.getDataByUserId(cid, bid, party.getPartyId());
@@ -315,8 +316,8 @@ public class CustomerPortalController {
 
 			Branch branch = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-			emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getUserId(),
-					party.getPassword(), branch.getCrmLink(), crm.getDefaultotp());
+			CompletableFuture.runAsync(() -> emailService.sendRegistrationMail(data.getContactEmail(), com, data.getPartyName(), party.getUserId(),
+					party.getPassword(), branch.getCrmLink(), crm.getDefaultotp()));
 		}
 		return new ResponseEntity<>("User save successfully!!",HttpStatus.OK);
 
