@@ -73,8 +73,8 @@ public interface GeneralReportsRepo extends JpaRepository<GeneralGateIn, String>
             "a.Importer_Name, b.Party_Name, a.BOE_No, " + 
             "DATE_FORMAT(a.BOE_Date,'%d %b %y') AS BOEDate, " + 
             "dd.Commodity_Description, dd.Container_No, " + 
-            "a.No_Of_20FT, a.No_Of_40FT, g.delivered_packages, g.delivered_weight, " + 
-            "g.gate_pass_packages, g.gate_pass_weight, dd.type_of_package,gd.yard_location,gd.yard_block,gd.block_cell_no, " + 
+            "a.No_Of_20FT, a.No_Of_40FT, dd.delivered_packages, dd.delivered_weight, " + 
+            "IFNULL(dd.gate_pass_packages,'0'), IFNULL(dd.gate_pass_weight,'0'), dd.type_of_package,gd.yard_location,gd.yard_block,gd.block_cell_no, " + 
             "g.Vehicle_No, a.Transporter_name, a.Handling_Equip, " + 
             "a.Handling_Equip1, a.Handling_Equip2, " + 
             "a.Owner, a.Owner1, a.Owner2, dd.Job_No, a.Comments, " + 
@@ -102,17 +102,19 @@ public interface GeneralReportsRepo extends JpaRepository<GeneralGateIn, String>
             "AND a.receiving_id = g.receiving_id " + 
             "AND a.deposit_no = g.deposit_no " + 
             "AND g.commodity_id = dd.commodity_id " + 
-            "LEFT OUTER JOIN generalgatepassgrid gd " + 
+            "LEFT OUTER JOIN generaldeliverygrid gd " + 
             "ON a.Company_Id = gd.Company_Id " + 
             "AND a.branch_id = gd.branch_id " +  
-            "AND g.Delivery_Id = gd.Delivery_Id " + 
-            "AND g.gate_pass_id = gd.gate_pass_id " +  
+            "AND a.Delivery_Id = gd.Delivery_Id " + 
+            "AND a.receiving_id = gd.receiving_id " +  
+            "AND a.boe_no = gd.boe_no " +  
             "WHERE a.Company_Id = :companyId " + 
             "AND a.Branch_Id = :branchId " + 
             "AND a.Status = 'A' " +  
             "AND a.Delivery_Date BETWEEN :startDate AND :endDate " +  
             "AND (:imp IS NULL OR :imp = '' OR a.Importer_Name = :imp) " +
 	        "AND (:cha IS NULL OR :cha = '' OR a.cha = :cha) " +
+	        "GROUP BY dd.commodity_id " +
             "ORDER BY a.Delivery_Date ASC", 
     nativeQuery = true)
 List<Object[]> getGeneralDeliveryReport(
