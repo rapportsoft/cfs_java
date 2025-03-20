@@ -32,6 +32,7 @@ import com.cwms.helper.HelperMethods;
 import com.cwms.repository.AuctionCrgRepo;
 import com.cwms.repository.AuctionRecordingRepo;
 import com.cwms.repository.BranchRepo;
+import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CompanyRepo;
 import com.cwms.repository.GateOutRepo;
 import com.cwms.repository.ImportGatePassRepo;
@@ -74,6 +75,9 @@ public class AuctionGatePassController {
 
 	@Autowired
 	private GateOutRepo gateoutrepo;
+	
+	@Autowired
+	private CfIgmCnRepository cfigmcnrepo;
 
 	@GetMapping("/getVehicleData")
 	public ResponseEntity<?> getVehicleData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -484,6 +488,10 @@ public class AuctionGatePassController {
 				gatePass.setGateOutQty(out.getQtyTakenOut().intValue());
 				
 				importgatepassrepo.save(gatePass);
+				
+				int updateId = cfigmcnrepo.updategateOutId1(cid, bid, gatePass.getIgmTransId(), gatePass.getIgmNo(),
+						gatePass.getIgmLineNo(), HoldNextIdD1);
+
 
 				Object result = gateoutrepo.getAfterSaveGateOutData(cid, bid, HoldNextIdD1, "1");
 

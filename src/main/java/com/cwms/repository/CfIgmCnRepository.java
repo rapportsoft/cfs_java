@@ -1203,5 +1203,49 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 								+ "c.status = 'A' and c.igmNo=:igm and c.igmLineNo=:line and (c.gateOutId is null OR c.gateOutId = '')")
 						Object getDataByIGMAndLineNo(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
 								@Param("line") String line);
+						
+						@Modifying
+						@Transactional
+						@Query(value = "Update Cfigmcn cn SET cn.gateOutId=:id , cn.gateOutDate = CURRENT_DATE where cn.companyId=:cid and cn.branchId=:bid and "
+								+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.igmLineNo=:line and cn.status != 'D'")
+						int updategateOutId1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+								@Param("igm") String igm,@Param("line") String line, @Param("id") String id);
+						
+						
+					    @Query(value="select c.igmTransId,c.igmNo,c.igmLineNo,a.containerNo,a.containerSize,a.containerType,c.containerStatus,"
+					    		+ "c.yardLocation,c.yardBlock,c.blockCellNo,DATE_FORMAT(a.gateInDate,'%d/%m/%Y'),c.holdStatus,DATE_FORMAT(c.holdDate,'%d/%m/%Y %H:%i'),"
+					    		+ "DATE_FORMAT(c.releaseDate,'%d/%m/%Y %H:%i'),c.auctionStatus,a.noticeType "
+					    		+ "from Auction a "
+					    		+ "LEFT OUTER JOIN AuctionDetail d ON a.companyId=d.companyId and a.branchId=d.branchId and a.noticeId=d.noticeId "
+					    		+ "LEFT OUTER JOIN Cfigmcn c ON a.companyId=c.companyId and a.branchId=c.branchId and d.igmTransId=c.igmTransId "
+					    		+ "and d.igmNo=c.igmNo and d.igmLineNo=c.igmLineNo and a.containerNo=c.containerNo "
+					    		+ "where a.companyId=:cid and a.branchId=:bid and a.status='A' and a.noticeType='F' and "
+					    		+ "c.containerStatus = 'FCL' and (c.gateOutId is null OR c.gateOutId='') group by a.containerNo")
+					    List<Object[]> getAuctionContainerWiseData(@Param("cid") String cid, @Param("bid") String bid);
+					    
+						@Modifying
+						@Transactional
+						@Query(value = "Update Cfigmcn cn SET cn.auctionStatus=:id where cn.companyId=:cid and cn.branchId=:bid and "
+								+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.igmLineNo=:line and cn.containerNo=:con and cn.status != 'D'")
+						int updateAuctionExaminationStatus(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+								@Param("igm") String igm,@Param("line") String line, @Param("con") String con,@Param("id") char id);
+						
+						  @Query(value="select a.igmTransId,a.igmNo,a.igmLineNo,a.importerName,a.commodityDescription,DATE_FORMAT(c.gateInDate,'%d/%m/%Y'),"
+						  		    + "i.holdStatus,DATE_FORMAT(i.holdDate,'%d/%m/%Y %H:%i'),DATE_FORMAT(i.releaseDate,'%d/%m/%Y %H:%i'),i.auctionStatus,a.noticeType "
+						    		+ "from AuctionDetail a "
+						    		+ "LEFT OUTER JOIN Cfigmcn c ON a.companyId=c.companyId and a.branchId=c.branchId and a.igmTransId=c.igmTransId "
+						    		+ "and a.igmNo=c.igmNo and a.igmLineNo=c.igmLineNo "
+						    		+ "LEFT OUTER JOIN Cfigmcrg i ON a.companyId=i.companyId and a.branchId=i.branchId and a.igmTransId=i.igmTransId "
+						    		+ "and a.igmNo=i.igmNo and a.igmLineNo=i.igmLineNo "
+						    		+ "where a.companyId=:cid and a.branchId=:bid and a.status='A' and a.noticeType='F' "
+						    		+ "and (c.gateOutId is null OR c.gateOutId='') group by a.igmTransId,a.igmNo,a.igmLineNo")
+						    List<Object[]> getAuctionCargoWiseData(@Param("cid") String cid, @Param("bid") String bid);
+						    
+							@Modifying
+							@Transactional
+							@Query(value = "Update Cfigmcrg cn SET cn.auctionStatus=:id where cn.companyId=:cid and cn.branchId=:bid and "
+									+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.igmLineNo=:line and cn.status != 'D'")
+							int updateAuctionExaminationStatus1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+									@Param("igm") String igm,@Param("line") String line, @Param("id") String id);
 }
 

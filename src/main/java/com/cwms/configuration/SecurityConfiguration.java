@@ -152,6 +152,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionRecording/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionGatePass/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionInvoice/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/auctionExamination/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
