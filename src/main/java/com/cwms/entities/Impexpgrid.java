@@ -97,6 +97,19 @@ public class Impexpgrid implements Cloneable{
 
 	    @Column(name = "Status",  length = 1)
 	    private String status;
+	    
+	    
+	    @Column(name = "Yard_Weight", precision = 16, scale = 4, columnDefinition = "decimal(16,4) default '0.0000'")
+	    private BigDecimal yardWeight;
+	    
+
+		public BigDecimal getYardWeight() {
+			return yardWeight;
+		}
+
+		public void setYardWeight(BigDecimal yardWeight) {
+			this.yardWeight = yardWeight;
+		}
 
 		public Impexpgrid() {
 			super();

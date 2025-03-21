@@ -1,12 +1,14 @@
 package com.cwms.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +30,7 @@ import com.cwms.entities.Branch;
 import com.cwms.entities.Company;
 import com.cwms.repository.BranchRepo;
 import com.cwms.repository.CompanyRepo;
+import com.cwms.repository.ExportAuditRepo;
 import com.cwms.repository.ExportCartingRepo;
 import com.cwms.repository.ExportGatePassRepo;
 import com.cwms.repository.ExportStuffRequestRepo;
@@ -70,7 +74,125 @@ public class ExportReportController {
 	@Autowired
 	private ExportReportService exportReportService;
 
+	
+	
+	@Autowired
+	private ExportAuditRepo auditRepo;
+
+	@GetMapping("/searchValuesInputSearch")
+	public ResponseEntity<?> searchValuesInputSearch(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam("searchValue") String searchValue,
+			@RequestParam(name = "type", required = false) String type) {
+		List<Map<String, Object>> toSendGetParties = new ArrayList<>();
+
+		if ("containerNo".equals(type)) {
+			List<Object[]> getContainerNoList = auditRepo.getContainerNoList(companyId, branchId, searchValue);
+			toSendGetParties = getContainerNoList.stream().map(row -> {
+				Map<String, Object> map = new HashMap<>();
+				map.put("value", row[1]);
+				map.put("label", row[0]);
+				return map;
+			}).collect(Collectors.toList());
+
+		} else if ("gatePassNo".equals(type)) {
+			List<Object[]> getGatePassNoList = auditRepo.getGatePassNoList(companyId, branchId, searchValue);
+			toSendGetParties = getGatePassNoList.stream().map(row -> {
+				Map<String, Object> map = new HashMap<>();
+				map.put("value", row[0]);
+				map.put("label", row[0]);
+				return map;
+			}).collect(Collectors.toList());
+
+		} else if ("containerNo2".equals(type)) {
+
+		}
+		return ResponseEntity.ok(toSendGetParties);
+	}
+
+// Export AuditTrail...
+
+	@PostMapping("/saveExporAudit")
+	public ResponseEntity<?> saveExporAudit(@RequestParam("companyId") String companyId,
+			@RequestParam("branchId") String branchId, @RequestParam(value = "sbNo", required = false) String sbNo,
+			@RequestParam(value = "containerNo", required = false) String containerNo,
+			@RequestBody Map<String, Object> requestData, @RequestParam("userId") String user,
+			@RequestParam("type") String type) {
+
+		ResponseEntity<?> addExportSbEntry = exportReportService.saveExporAudit(companyId, branchId, requestData, user,
+				type, sbNo, containerNo);
+
+		return addExportSbEntry;
+	}
+
+	@GetMapping(value = "/exportAuditTrailSearh")
+	public ResponseEntity<?> exportAuditTrailSearh(@RequestParam("companyId") String companyid,
+			@RequestParam("branchId") String branchId, @RequestParam(value = "sbNo", required = false) String sbNo,
+			@RequestParam(value = "containerNo", required = false) String containerNo,
+			@RequestParam("profitCenterId") String profitCenterId) {
+		System.out.println(companyid + " " + branchId + " sbNo " + sbNo + " " + " profitCenterId " + profitCenterId
+				+ " containerNo " + containerNo);
+
+		try {
+
+			ResponseEntity<?> exportAuditTrailSearh = exportReportService.exportAuditTrailSearh(companyid, branchId,
+					profitCenterId, sbNo, containerNo);
+
+			return exportAuditTrailSearh;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while export auditTrail Search ");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 //	GATE IN PASS - EXPORT CARGO CARTING
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	@GetMapping(value = "/downLoadExportGateInReport")

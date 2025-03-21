@@ -642,6 +642,17 @@ public class PartyController {
 			        return map;
 			    }).collect(Collectors.toList());	
 			  
+		  }else if("sl".equals(type) || "sa".equals(type) || "trans".equals(type))
+		  {
+			  List<Object[]> partyByTypeValue = partyrepo.getPartyByTypeValue(companyId, branchId, searchValue, type);
+				
+			  toSendGetParties = partyByTypeValue.stream().map(row -> {
+			        Map<String, Object> map = new HashMap<>();
+			        map.put("value", row[0]);
+			        map.put("label", row[1]);
+			        return map;
+			    }).collect(Collectors.toList());		  
+			  
 		  }
 		  
 		return ResponseEntity.ok(toSendGetParties);

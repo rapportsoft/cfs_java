@@ -1,6 +1,7 @@
 package com.cwms.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,6 +51,11 @@ public class ImpexpgridController {
 	private ObjectMapper objectMapper;
 	
 	
+	
+	
+	
+	
+
 	
 	@PostMapping("/saveImpExpGrid")
 	public ResponseEntity<?> saveImpExpGrid(
@@ -161,6 +167,25 @@ public class ImpexpgridController {
 	                ExistImpexpgrid.setCellAreaUsed(impexpgrid.getCellAreaUsed());
 	                ExistImpexpgrid.setCellAreaAllocated(impexpgrid.getCellAreaAllocated());
 	                ExistImpexpgrid.setYardPackages(impexpgrid.getYardPackages());
+	                
+	                BigDecimal weightPerPackageYard = existing.getGateInPackages().compareTo(BigDecimal.ZERO) > 0
+	                	    ? existing.getGateInWeight().divide(existing.getGateInPackages(), 4, RoundingMode.HALF_UP) // ✅ Fix: Divide by total packages
+	                	    : BigDecimal.ZERO;
+
+	                	// Calculate actual weight
+	                	BigDecimal actualNoOfWeightYard = BigDecimal.valueOf(impexpgrid.getYardPackages())
+	                	    .multiply(weightPerPackageYard)
+	                	    .setScale(4, RoundingMode.HALF_UP);
+
+
+				      
+				
+				        ExistImpexpgrid.setYardWeight(actualNoOfWeightYard);
+				
+	                
+	                
+	                
+	                
 	                ExistImpexpgrid.setEditedBy(userId);
 	                ExistImpexpgrid.setEditedDate(new Date());
 	                sendImpexpgrid = impGridRepo.save(ExistImpexpgrid);
@@ -179,7 +204,10 @@ public class ImpexpgridController {
 	                impexpgrid.setCreatedDate(new Date());
 	                impexpgrid.setApprovedBy(userId);
 	                impexpgrid.setApprovedDate(new Date());
-	                sendImpexpgrid = impGridRepo.save(impexpgrid);
+	                
+	                
+	                
+	                
 	                
 	                
 	                ExportCarting existing = cartingRepo.getCartingByIds(cartingObject.getCompanyId(), cartingObject.getBranchId(), cartingObject.getProfitcentreId(), cartingObject.getGateInId(), cartingObject.getCartingTransId(), cartingObject.getSbTransId(), cartingObject.getSbNo());
@@ -189,12 +217,24 @@ public class ImpexpgridController {
 					BigDecimal areaOccupied = existing.getAreaOccupied();
 					
 					existing.setYardPackages(yardPackages.add(new BigDecimal(impexpgrid.getYardPackages())));
+					BigDecimal weightPerPackageYard = existing.getGateInPackages().compareTo(BigDecimal.ZERO) > 0
+						    ? existing.getGateInWeight().divide(existing.getGateInPackages(), 4, RoundingMode.HALF_UP) // ✅ Fix: Divide by total packages
+						    : BigDecimal.ZERO;
+
+						// Calculate actual weight
+						BigDecimal actualNoOfWeightYard = BigDecimal.valueOf(impexpgrid.getYardPackages())
+						    .multiply(weightPerPackageYard)
+						    .setScale(4, RoundingMode.HALF_UP);
 
 					
-					System.out.println("areaOccupied "+areaOccupied + "impexpgrid.getAreaReleased()" + impexpgrid.getCellAreaAllocated() );
+					        impexpgrid.setYardWeight(actualNoOfWeightYard);
+					
+					System.out.println("existing.getGateInPackages( "+existing.getGateInPackages() + "existing.getGateInWeight()" + existing.getGateInWeight() + " impexpgrid.getYardPackages() "+ impexpgrid.getYardPackages() + " weightPerPackageYard "+ weightPerPackageYard + " actualNoOfWeightYard " + actualNoOfWeightYard);
 					
 					existing.setAreaOccupied(areaOccupied.add(impexpgrid.getCellAreaAllocated()));
 
+					
+					sendImpexpgrid = impGridRepo.save(impexpgrid);
 	                // Update yard cell area used
 	                updateYardCellArea(impexpgrid, impexpgrid.getCellAreaAllocated(),cartingObject, impexpgrid.getYardPackages());
 	            }
@@ -208,6 +248,172 @@ public class ImpexpgridController {
 	                .body("An error occurred while saving the Impexpgrid data.");
 	    }
 	}
+
+	
+	
+	
+	
+	
+	
+	
+//	
+//	@PostMapping("/saveImpExpGrid")
+//	public ResponseEntity<?> saveImpExpGrid(
+//	                                         @RequestParam("userId") String userId,	                                         
+//	                                         @RequestBody Map<String, Object> requestData
+//	                                        ) {
+//	    List<Impexpgrid> savedImpexpgrids = new ArrayList<>();
+//	    try {
+//	    		    	
+//	    	List<Impexpgrid> impexpgrids = objectMapper.convertValue(requestData.get("yardGrid"),
+//					new TypeReference<List<Impexpgrid>>() {
+//					});
+//	    	ExportCarting cartingObject = objectMapper.convertValue(requestData.get("cartingObject"), ExportCarting.class);
+//	    			
+//	    	
+//	    	Set<String> uniqueEntries = new HashSet<>();
+//	        Map<String, List<Integer>> errorYardLocations = new HashMap<>();
+//
+//	        for (Impexpgrid impexpgrid : impexpgrids) {
+//	            // Create a unique key based on relevant fields
+//	            String uniqueKey = impexpgrid.getCompanyId() + "|" +
+//	                    impexpgrid.getBranchId() + "|" +
+//	                    impexpgrid.getYardLocation() + "|" +
+//	                    impexpgrid.getYardBlock() + "|" +
+//	                    impexpgrid.getBlockCellNo() + "|" +
+//	                    impexpgrid.getProcessTransId() + "|" +
+//	                    impexpgrid.getLineNo() + "|" +
+//	                    impexpgrid.getSubSrNo();
+//
+//	            // Check for existence in the database
+//	            boolean existsInDatabase = impGridRepo.existsByYardGrid(
+//	                impexpgrid.getCompanyId(),
+//	                impexpgrid.getBranchId(),
+//	                impexpgrid.getYardLocation(),
+//	                impexpgrid.getYardBlock(),
+//	                impexpgrid.getBlockCellNo(),
+//	                impexpgrid.getProcessTransId(),
+//	                impexpgrid.getLineNo(),
+//	                impexpgrid.getSubSrNo()
+//	            );
+//
+//	            // If it exists in the database, add to errors
+//	            if (existsInDatabase) {
+//	                errorYardLocations
+//	                    .computeIfAbsent("Duplicate in DB", k -> new ArrayList<>())
+//	                    .add(impexpgrid.getSubSrNo());
+//	            }
+//
+//	            // Check for duplicates in the list
+//	            if (!uniqueEntries.add(uniqueKey)) {
+//	                errorYardLocations
+//	                    .computeIfAbsent("Duplicate in List", k -> new ArrayList<>())
+//	                    .add(impexpgrid.getSubSrNo());
+//	            }
+//	        }
+//
+//	        if (!errorYardLocations.isEmpty()) {
+//	            // Return a response with error yard locations
+//	            return ResponseEntity.badRequest().body(errorYardLocations);
+//	        }
+//
+//	    	
+////	    	 System.out.println("cartingObject /n" +cartingObject);
+//	        for (Impexpgrid impexpgrid : impexpgrids) {
+//	            System.out.println(impexpgrid);
+//
+//	            Impexpgrid sendImpexpgrid = new Impexpgrid();
+//
+//	            Impexpgrid ExistImpexpgrid = impGridRepo.getImpexpgridSubLineNo(impexpgrid.getCompanyId(),
+//	                    impexpgrid.getBranchId(), impexpgrid.getYardLocation(),
+//	                    impexpgrid.getYardBlock(), impexpgrid.getBlockCellNo(),
+//	                    impexpgrid.getProcessTransId(), impexpgrid.getLineNo(),
+//	                    impexpgrid.getSubSrNo());
+//
+//	            if (ExistImpexpgrid != null) {
+//	            	
+//	            	
+//	            	BigDecimal allocatedExist = ExistImpexpgrid.getCellAreaAllocated() != null ? ExistImpexpgrid.getCellAreaAllocated() : BigDecimal.ZERO;
+//					BigDecimal allocatedNew = impexpgrid.getCellAreaAllocated() != null ? impexpgrid.getCellAreaAllocated() : BigDecimal.ZERO;
+//	
+//					// Calculate the difference
+//					BigDecimal Difference = allocatedExist.subtract(allocatedNew);
+//	//
+//					int allocatedExistPackages = ExistImpexpgrid.getYardPackages();
+//					int allocatedNewPackages = impexpgrid.getYardPackages();
+//					
+//					System.out.println("allocatedExistPackages "+allocatedExistPackages + "allocatedNewPackages" + allocatedNewPackages );
+//	
+//					System.out.println("allocatedExist "+allocatedExist + "allocatedNew" + allocatedNew );
+//					
+//					
+//					 ExportCarting existing = cartingRepo.getCartingByIds(cartingObject.getCompanyId(), cartingObject.getBranchId(), cartingObject.getProfitcentreId(), cartingObject.getGateInId(), cartingObject.getCartingTransId(), cartingObject.getSbTransId(), cartingObject.getSbNo());
+//
+//						
+//						BigDecimal yardPackages = existing.getYardPackages();
+//						BigDecimal areaOccupied = existing.getAreaOccupied();
+//						
+//						existing.setYardPackages(yardPackages.subtract(new BigDecimal(allocatedExistPackages)).add(new BigDecimal(allocatedNewPackages)));
+//
+//						existing.setAreaOccupied(areaOccupied.subtract(allocatedExist).add(allocatedNew));
+//
+////						existing.setAreaOccupied(areaOccupied.add(allocatedArea));
+//						
+//						cartingRepo.save(existing);
+//	            	
+//				    // Update yard cell area used
+//	                updateYardCellArea(impexpgrid, Difference,cartingObject,allocatedExistPackages-allocatedNewPackages);
+//	                
+//	                ExistImpexpgrid.setCellAreaUsed(impexpgrid.getCellAreaUsed());
+//	                ExistImpexpgrid.setCellAreaAllocated(impexpgrid.getCellAreaAllocated());
+//	                ExistImpexpgrid.setYardPackages(impexpgrid.getYardPackages());
+//	                ExistImpexpgrid.setEditedBy(userId);
+//	                ExistImpexpgrid.setEditedDate(new Date());
+//	                sendImpexpgrid = impGridRepo.save(ExistImpexpgrid);
+//
+//	            
+//	            } else {
+//	                String financialYear = helperMethods.getFinancialYear();
+//	                int maxSubSrNo = impGridRepo.getMaxSubSrNo(impexpgrid.getCompanyId(), impexpgrid.getBranchId(), impexpgrid.getProcessTransId(), impexpgrid.getLineNo());
+//	                
+//	                impexpgrid.setSubSrNo(maxSubSrNo + 1);
+//	                impexpgrid.setFinYear(financialYear);
+//	                impexpgrid.setStatus("A");
+//	                impexpgrid.setCreatedBy(userId);
+//	                impexpgrid.setEditedBy(userId);
+//	                impexpgrid.setEditedDate(new Date());
+//	                impexpgrid.setCreatedDate(new Date());
+//	                impexpgrid.setApprovedBy(userId);
+//	                impexpgrid.setApprovedDate(new Date());
+//	                sendImpexpgrid = impGridRepo.save(impexpgrid);
+//	                
+//	                
+//	                ExportCarting existing = cartingRepo.getCartingByIds(cartingObject.getCompanyId(), cartingObject.getBranchId(), cartingObject.getProfitcentreId(), cartingObject.getGateInId(), cartingObject.getCartingTransId(), cartingObject.getSbTransId(), cartingObject.getSbNo());
+//
+////	                System.out.println("existing /n" +existing);
+//					BigDecimal yardPackages = existing.getYardPackages();
+//					BigDecimal areaOccupied = existing.getAreaOccupied();
+//					
+//					existing.setYardPackages(yardPackages.add(new BigDecimal(impexpgrid.getYardPackages())));
+//
+//					
+//					System.out.println("areaOccupied "+areaOccupied + "impexpgrid.getAreaReleased()" + impexpgrid.getCellAreaAllocated() );
+//					
+//					existing.setAreaOccupied(areaOccupied.add(impexpgrid.getCellAreaAllocated()));
+//
+//	                // Update yard cell area used
+//	                updateYardCellArea(impexpgrid, impexpgrid.getCellAreaAllocated(),cartingObject, impexpgrid.getYardPackages());
+//	            }
+//	            savedImpexpgrids.add(sendImpexpgrid);
+//	        }
+//	        return ResponseEntity.ok(savedImpexpgrids);
+//	    } catch (Exception e) {
+//	        System.out.println(e);
+//	        // Return an appropriate error response
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//	                .body("An error occurred while saving the Impexpgrid data.");
+//	    }
+//	}
 
 	private void updateYardCellArea(Impexpgrid impexpgrid, BigDecimal allocatedArea, ExportCarting cartingEntry, int packages) {
 	    YardBlockCell yardCellByCellNo = yardBlockCellRepository.getYardCellByCellNo(

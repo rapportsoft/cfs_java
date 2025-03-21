@@ -68,6 +68,7 @@ List<Object[]> getPartyByTypeValueTariff(
         "   OR (:type = 'cha' AND p.cha = 'Y') " + 
         "   OR (:type = 'exp' AND p.exp = 'Y') " + 
         "   OR (:type = 'sa' AND p.agt = 'Y') " + 
+        "   OR (:type = 'trans' AND p.agt = 'Y') " + 
         "   OR (:type = 'sl' AND p.lin = 'Y') " + 
         ") " + 
         "AND (:val IS NULL OR :val = '' OR p.party_name LIKE CONCAT(:val, '%'))", 

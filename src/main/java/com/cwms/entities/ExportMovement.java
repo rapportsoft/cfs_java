@@ -282,6 +282,19 @@ public class ExportMovement {
 	    private String trailerType = ""; // varchar(30) NOT NULL DEFAULT ''
 
 	    
+	    @Column(name = "Rotation_No", length = 10)
+	    private String rotationNo;
+	    
+	    
+	    public String getRotationNo() {
+			return rotationNo;
+		}
+
+		public void setRotationNo(String rotationNo) {
+			this.rotationNo = rotationNo;
+		}
+	    
+	    
 	    @Transient
 	    private String shippingLineName;
 

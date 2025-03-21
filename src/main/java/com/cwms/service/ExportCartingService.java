@@ -1,6 +1,7 @@
 package com.cwms.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -226,6 +227,185 @@ public class ExportCartingService {
 	
 	
 	
+//	@Transactional
+//	public ResponseEntity<?> addExportCarting(String companyId, String branchId, List<ExportCarting> cartingList, String User, String status)
+//	{
+//		Date currentDate = new Date();	
+//		String autoCartingTransId = "";
+//		boolean isUpdate = false;
+//		
+//		
+//		List<ExportCarting> cartingListToSend = new ArrayList<>();
+//
+//		ExportCarting firstCarting = null;
+//		if (cartingList != null && !cartingList.isEmpty()) {
+//		    firstCarting = cartingList.get(0);
+//
+//		    // Check if CartingTransId exists
+//		    if (firstCarting.getCartingTransId() != null && !firstCarting.getCartingTransId().trim().isEmpty()) {
+//		        isUpdate = true;
+//		        autoCartingTransId = firstCarting.getCartingTransId();
+//		    } else {
+//		        autoCartingTransId = processService.autoCartingTransId(companyId, branchId, "P00103");
+//		    }
+//		} 
+//		
+//		for(ExportCarting cartingEntry : cartingList)
+//		{
+//						
+//			GateIn gateInByIds = gateInRepo.getGateInByIds(companyId, branchId, cartingEntry.getProfitcentreId(), cartingEntry.getGateInId(), cartingEntry.getSbTransId(), cartingEntry.getSbNo(), "EXP");
+//			
+//			 ExportSbCargoEntry exportSbCargoEntry = exportSbService.getExportSbCargoEntry(companyId, branchId, gateInByIds.getDocRefNo(), gateInByIds.getErpDocRefNo());
+//
+//			
+////			For Update
+//			if(isUpdate)
+//			{
+//				ExportCarting existing = cartingRepo.getCartingByIds(cartingEntry.getCompanyId(), cartingEntry.getBranchId(), cartingEntry.getProfitcentreId(), cartingEntry.getGateInId(), cartingEntry.getCartingTransId(), cartingEntry.getSbTransId(), cartingEntry.getSbNo());
+//				
+//				
+//				existing.setGridBlock(cartingEntry.getGridBlock());
+//				existing.setGridCellNo(cartingEntry.getGridCellNo());
+//				existing.setGridLocation(cartingEntry.getGridLocation());
+//				existing.setDamageComments(cartingEntry.getDamageComments());
+//				
+//								
+//				BigDecimal ExistingPackages = existing.getActualNoOfPackages();
+//				BigDecimal newPackages = cartingEntry.getActualNoOfPackages();
+//
+//				BigDecimal difference = ExistingPackages.subtract(newPackages);
+//				
+////				System.out.println("difference "+difference + "\n ExistingPackages :  "+ ExistingPackages + " \n newPackages "+newPackages);
+//				
+//				gateInByIds.setCartedPackages(gateInByIds.getCartedPackages().add(difference));
+//				exportSbCargoEntry.setCartedPackages(exportSbCargoEntry.getCartedPackages().add(difference));
+//				
+//				
+//				existing.setAreaOccupied(cartingEntry.getAreaOccupied());
+//				existing.setYardPackages(cartingEntry.getYardPackages());
+//				existing.setActualNoOfPackages(cartingEntry.getActualNoOfPackages());
+//				existing.setExcessPackages(cartingEntry.getExcessPackages());
+//				existing.setShortagePackages(cartingEntry.getShortagePackages());
+//				
+//				
+//				
+//				
+//				existing.setStatus(status.equals("A") ? status : existing.getStatus());
+//				
+//				System.out.println( "status "+ status + " getApprovedBy \n" + existing.getApprovedBy());
+//				if (existing.getApprovedBy() == null || existing.getApprovedBy().trim().isEmpty()) {
+//				    System.out.println(" IN ");
+//				    existing.setApprovedBy(status.equals("A") ? User : existing.getApprovedBy());
+//				}
+//
+//				
+//				System.out.println(" AFTER "+existing.getApprovedBy());
+//				ExportCarting save = cartingRepo.save(existing);
+//				cartingListToSend.add(save);
+//				
+//				
+//				
+//
+//			}
+////			Add
+//			else
+//			{
+//				
+//				gateInByIds.setCartingStatus("Y");
+//				gateInByIds.setCartedPackages(
+//					    gateInByIds.getCartedPackages().add(
+//					        cartingEntry.getActualNoOfPackages()				            
+//					    )
+//					);
+//				
+//				
+//				exportSbCargoEntry.setCartedPackages(exportSbCargoEntry.getCartedPackages()
+//						.add(cartingEntry.getActualNoOfPackages()));
+//				
+//				gateInByIds.setCartingTransId(autoCartingTransId);
+//				
+//				
+//				cartingEntry.setCartingTransId(autoCartingTransId);
+//                cartingEntry.setFinYear(helperMethods.getFinancialYear());				
+//				cartingEntry.setCreatedBy(User);
+//				cartingEntry.setCreatedDate(currentDate);	
+//				cartingEntry.setApprovedBy(status.equals("A") ? User : " ");
+//				cartingEntry.setApprovedDate(currentDate);
+////				cartingEntry.setStatus("A");	
+//				
+//				if (cartingEntry.getApprovedBy() == null || cartingEntry.getApprovedBy().trim().isEmpty()) {
+//				    System.out.println(" IN ");
+//				    cartingEntry.setApprovedBy(status.equals("A") ? User : cartingEntry.getApprovedBy());
+//				}
+//				
+//				cartingEntry.setStatus(status.equals("A") ? status : "N");
+//				ExportCarting save = cartingRepo.save(cartingEntry);
+//				cartingListToSend.add(save);
+//				
+//				Impexpgrid grid = new Impexpgrid();
+//				grid.setCompanyId(companyId);
+//				grid.setBranchId(branchId);
+//				grid.setFinYear(helperMethods.getFinancialYear());
+//				grid.setProcessTransId(autoCartingTransId);
+//				grid.setLineNo(Integer.parseInt(cartingEntry.getCartingLineId()));
+//				grid.setSubSrNo(1);
+//				grid.setYardLocation(cartingEntry.getGridLoc());
+//				grid.setYardBlock(cartingEntry.getGridBlock());
+//				grid.setBlockCellNo(cartingEntry.getGridCellNo());
+//				grid.setYardPackages(cartingEntry.getYardPackages().intValue());				
+//				grid.setTransType("EXP");
+//				grid.setAreaReleased(BigDecimal.ZERO);
+//				grid.setCellArea(cartingEntry.getYardArea());
+//				grid.setCellAreaAllocated(cartingEntry.getAreaOccupied());
+//				
+//				grid.setCellAreaUsed(cartingEntry.getYardAreaUsed().add(cartingEntry.getAreaOccupied()));
+//				
+//				grid.setCreatedBy(User);
+//				grid.setCreatedDate(currentDate);
+//				grid.setEditedBy(User);
+//				grid.setEditedDate(currentDate);
+//				grid.setApprovedBy(User);
+//				grid.setApprovedDate(currentDate);
+//				grid.setStatus("A");
+//				
+//				impGridRepo.save(grid);
+//				
+//				
+//				
+//				int updateGateOutExport = vehicleRepo.updateGateOutExport(companyId, branchId, cartingEntry.getGateInId(), cartingEntry.getCartingTransId(), cartingEntry.getCartingTransDate(),User, new Date());
+//			
+//				System.out.println("updateGateOutExport : " + updateGateOutExport);
+//				
+//				
+//			}
+//			
+//			
+//			gateInRepo.save(gateInByIds);
+//			exportSbService.saveExportSbCargoEntry(exportSbCargoEntry);
+//			
+//		}
+//ExportCarting exportCarting = cartingListToSend.get(0);
+//		
+//		List<ExportCarting> selectedGateInEntry = cartingRepo.getSelectedCartingEntry(companyId, branchId, exportCarting.getProfitcentreId(), exportCarting.getCartingTransId(), "EXP");
+//
+//		return ResponseEntity.ok(selectedGateInEntry);
+//	}
+//	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Transactional
 	public ResponseEntity<?> addExportCarting(String companyId, String branchId, List<ExportCarting> cartingList, String User, String status)
 	{
@@ -285,7 +465,16 @@ public class ExportCartingService {
 				existing.setActualNoOfPackages(cartingEntry.getActualNoOfPackages());
 				existing.setExcessPackages(cartingEntry.getExcessPackages());
 				existing.setShortagePackages(cartingEntry.getShortagePackages());
+				 BigDecimal weightPerPackage = cartingEntry.getGateInPackages().compareTo(BigDecimal.ZERO) > 0
+				            ? cartingEntry.getGateInWeight().divide(cartingEntry.getGateInPackages(), 4, RoundingMode.HALF_UP) 
+				            : BigDecimal.ZERO;
+
+				        // Calculate actual weight
+				        BigDecimal actualNoOfWeight = cartingEntry.getActualNoOfPackages().multiply(weightPerPackage)
+				            .setScale(4, RoundingMode.HALF_UP); // Ensure precision 16,4
 				
+				
+				        existing.setActualNoOfWeight(actualNoOfWeight);
 				
 				
 				
@@ -323,7 +512,16 @@ public class ExportCartingService {
 				
 				gateInByIds.setCartingTransId(autoCartingTransId);
 				
+				 BigDecimal weightPerPackage = cartingEntry.getGateInPackages().compareTo(BigDecimal.ZERO) > 0
+				            ? cartingEntry.getGateInWeight().divide(cartingEntry.getGateInPackages(), 4, RoundingMode.HALF_UP) 
+				            : BigDecimal.ZERO;
+
+				        // Calculate actual weight
+				        BigDecimal actualNoOfWeight = cartingEntry.getActualNoOfPackages().multiply(weightPerPackage)
+				            .setScale(4, RoundingMode.HALF_UP); // Ensure precision 16,4
 				
+				
+				cartingEntry.setActualNoOfWeight(actualNoOfWeight);
 				cartingEntry.setCartingTransId(autoCartingTransId);
                 cartingEntry.setFinYear(helperMethods.getFinancialYear());				
 				cartingEntry.setCreatedBy(User);
@@ -351,7 +549,23 @@ public class ExportCartingService {
 				grid.setYardLocation(cartingEntry.getGridLoc());
 				grid.setYardBlock(cartingEntry.getGridBlock());
 				grid.setBlockCellNo(cartingEntry.getGridCellNo());
-				grid.setYardPackages(cartingEntry.getYardPackages().intValue());				
+				grid.setYardPackages(cartingEntry.getYardPackages().intValue());	
+				
+				 BigDecimal weightPerPackageYard = cartingEntry.getGateInPackages().compareTo(BigDecimal.ZERO) > 0
+				            ? cartingEntry.getGateInWeight().divide(cartingEntry.getGateInPackages(), 4, RoundingMode.HALF_UP) 
+				            : BigDecimal.ZERO;
+
+				        // Calculate actual weight
+				        BigDecimal actualNoOfWeightYard = cartingEntry.getYardPackages().multiply(weightPerPackageYard)
+				            .setScale(4, RoundingMode.HALF_UP); // Ensure precision 16,4
+				
+				
+				        grid.setYardWeight(actualNoOfWeightYard);
+				
+				
+				
+				
+				
 				grid.setTransType("EXP");
 				grid.setAreaReleased(BigDecimal.ZERO);
 				grid.setCellArea(cartingEntry.getYardArea());
@@ -389,7 +603,6 @@ ExportCarting exportCarting = cartingListToSend.get(0);
 
 		return ResponseEntity.ok(selectedGateInEntry);
 	}
-	
 	
 	
 }
