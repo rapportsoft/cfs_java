@@ -34,4 +34,10 @@ public interface IGMServiceDtlDocRepo extends JpaRepository<IgmServiceDtlDoc, St
 	String getDataBySrNo(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
 			@Param("trans") String trans, @Param("line") String line,@Param("sr") int srNO);
 	
+	@Query(value = "select i.igmNo,i.igmTransId,i.igmLineNo,i.srNo,i.docPath "
+			+ "from IgmServiceDtlDoc i where i.companyId=:cid and i.branchId=:bid and i.igmNo=:igm and "
+			+ "i.igmTransId=:trans")
+	List<Object[]> getDataByNocDtls(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+			@Param("trans") String trans);
+	
 }

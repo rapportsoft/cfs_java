@@ -184,10 +184,30 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 			@Param("amd") String amd,@Param("service") String service,@Param("rtype") BigDecimal rtype,@Param("code") List<String> code,@Param("code1") String code1);
 	
 	
+//	
+//	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
+//	        + "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, tx.taxPerc, '', '', "
+//	        + "'', '', s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc "
+//	        + "FROM CFSTariffService c "
+//	        + "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+//	        + "AND c.cfsAmendNo = t.cfsAmndNo AND c.profitCentreId = t.profitCentreId "
+//	        + "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+//	        + "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
+//	        + "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
+//	        + "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+//	        + "WHERE c.companyId = :cid AND c.branchId = :bid "
+//	        + "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
+//	        + "AND c.cfsTariffNo = :tariffNo "
+//	        + "GROUP BY c.serviceId "
+//	        + "ORDER BY c.serviceId")
+//	List<Object[]> getServiceRateForBondNoc(@Param("cid") String cid, @Param("bid") String bid, @Param("assessDate") Date assessDate,
+//	                              @Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo);
+//	
+	
 	
 	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
 	        + "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, tx.taxPerc, '', '', "
-	        + "'', '', s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc "
+	        + "'', '', s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,igm.percentage, igm.amount "
 	        + "FROM CFSTariffService c "
 	        + "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
 	        + "AND c.cfsAmendNo = t.cfsAmndNo AND c.profitCentreId = t.profitCentreId "
@@ -195,13 +215,16 @@ public interface CFSTarrifServiceRepository extends JpaRepository<CFSTariffServi
 	        + "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
 	        + "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
 	        + "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+	        + "LEFT OUTER JOIN IgmServiceDtl igm ON c.companyId = igm.companyId AND c.branchId = igm.branchId "
+	        + "AND c.serviceId = igm.serviceId AND igm.igmTransId = :trans AND igm.igmNo = :igm AND igm.status = 'A' "
 	        + "WHERE c.companyId = :cid AND c.branchId = :bid "
 	        + "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
 	        + "AND c.cfsTariffNo = :tariffNo "
 	        + "GROUP BY c.serviceId "
 	        + "ORDER BY c.serviceId")
 	List<Object[]> getServiceRateForBondNoc(@Param("cid") String cid, @Param("bid") String bid, @Param("assessDate") Date assessDate,
-	                              @Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo);
+	                              @Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo,
+	                              @Param("trans") String trans,@Param("igm") String igm);
 	
 	
 	

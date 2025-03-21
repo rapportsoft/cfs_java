@@ -11481,7 +11481,7 @@ public class AssessmentService {
 					Date parsedDate = formatter.parse(formattedDate);
 
 					List<Object[]> pricingData = cfstariffservicerepo.getServiceRateForBondNoc(cid, bid, parsedDate,
-							finalServices, con.getUpTariffNo());
+							finalServices, con.getUpTariffNo(),assessment.getIgmTransId(), assessment.getIgmNo());
 
 					if (!pricingData.isEmpty()) {
 						List<Object[]> remainingPricing = pricingData.stream()
@@ -11501,7 +11501,7 @@ public class AssessmentService {
 						List<String> tempPricing = notInPricing;
 
 						List<Object[]> pricingData1 = cfstariffservicerepo.getServiceRateForBondNoc(cid, bid,
-								parsedDate, notInPricing, "CFS1000001");
+								parsedDate, notInPricing, "CFS1000001", assessment.getIgmTransId(), assessment.getIgmNo());
 
 						if (!pricingData1.isEmpty()) {
 							List<Object[]> remainingPricing = pricingData1.stream()
@@ -11539,6 +11539,33 @@ public class AssessmentService {
 												.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
 
 										Date invDate = updatedInvDate;
+										
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
+
+										if (cPerc != null && !cPerc.isEmpty()) {
+											BigDecimal disPerc = new BigDecimal(cPerc);
+											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+											BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+													.divide(new BigDecimal(100));
+
+											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(amt);
+
+										} else if (cAmt != null && !cAmt.isEmpty()) {
+
+											BigDecimal disAmt = (rate1.getTotalRate()
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(disAmt);
+
+										}  else {
+											tempAss.setRates(rate1.getTotalRate());
+										}
+
 
 										tempAss.setInvoiceDate(invDate);
 										tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
@@ -11547,18 +11574,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -11570,7 +11593,6 @@ public class AssessmentService {
 										tempAss.setContainerStatus(con.getContainerStatus());
 										tempAss.setGateOutId(con.getGateOutId());
 										tempAss.setGatePassNo(con.getGatePassNo());
-										tempAss.setRates(rate1.getTotalRate());
 										tempAss.setServiceRate(rate1.getRate());
 										tempAss.setTaxPerc(
 												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
@@ -11605,19 +11627,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -11714,10 +11731,9 @@ public class AssessmentService {
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													tempAss.setServiceRate(serviceRate.get());
 
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -11728,37 +11744,17 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
+													}  else {
 														tempAss.setRates(totalRate);
 													}
 
@@ -11817,10 +11813,8 @@ public class AssessmentService {
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -11831,39 +11825,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
+													}  else {
 														tempAss.setRates(totalRate);
 													}
+
 
 												}
 
@@ -11914,22 +11889,14 @@ public class AssessmentService {
 													tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 													tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 													tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-													tempAss.setDiscPercentage(
-															(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[13]))
-																	: BigDecimal.ZERO);
-													tempAss.setDiscValue(
-															(f[14] != null && !String.valueOf(f[14]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[14]))
-																	: BigDecimal.ZERO);
-													tempAss.setmPercentage(
-															(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[15]))
-																	: BigDecimal.ZERO);
-													tempAss.setmAmount(
-															(f[16] != null && !String.valueOf(f[16]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[16]))
-																	: BigDecimal.ZERO);
+													tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+															? new BigDecimal(String.valueOf(f[23]))
+															: BigDecimal.ZERO);
+													tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+															? new BigDecimal(String.valueOf(f[24]))
+															: BigDecimal.ZERO);
+													tempAss.setmPercentage(BigDecimal.ZERO);
+													tempAss.setmAmount(BigDecimal.ZERO);
 													tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 													tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 													tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -11954,10 +11921,8 @@ public class AssessmentService {
 													tempAss.setServiceRate(totalRate);
 													tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -11968,40 +11933,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
-														tempAss.setRates(
-																new BigDecimal(String.valueOf(finalRangeValue[8])));
+													}  else {
+														tempAss.setRates(totalRate);
 													}
+
 
 												}
 
@@ -12067,22 +12012,14 @@ public class AssessmentService {
 													tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 													tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 													tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-													tempAss.setDiscPercentage(
-															(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[13]))
-																	: BigDecimal.ZERO);
-													tempAss.setDiscValue(
-															(f[14] != null && !String.valueOf(f[14]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[14]))
-																	: BigDecimal.ZERO);
-													tempAss.setmPercentage(
-															(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[15]))
-																	: BigDecimal.ZERO);
-													tempAss.setmAmount(
-															(f[16] != null && !String.valueOf(f[16]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[16]))
-																	: BigDecimal.ZERO);
+													tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+															? new BigDecimal(String.valueOf(f[23]))
+															: BigDecimal.ZERO);
+													tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+															? new BigDecimal(String.valueOf(f[24]))
+															: BigDecimal.ZERO);
+													tempAss.setmPercentage(BigDecimal.ZERO);
+													tempAss.setmAmount(BigDecimal.ZERO);
 													tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 													tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 													tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12107,10 +12044,8 @@ public class AssessmentService {
 
 													tempAss.setServiceRate(totalRate);
 
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12121,40 +12056,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
-														tempAss.setRates(
-																new BigDecimal(String.valueOf(finalRangeValue[8])));
+													}  else {
+														tempAss.setRates(totalRate);
 													}
+
 												}
 
 											}
@@ -12166,20 +12081,14 @@ public class AssessmentService {
 												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-												tempAss.setDiscPercentage(
-														(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																? new BigDecimal(String.valueOf(f[13]))
-																: BigDecimal.ZERO);
-												tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-														? new BigDecimal(String.valueOf(f[14]))
+												tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+														? new BigDecimal(String.valueOf(f[23]))
 														: BigDecimal.ZERO);
-												tempAss.setmPercentage(
-														(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																? new BigDecimal(String.valueOf(f[15]))
-																: BigDecimal.ZERO);
-												tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-														? new BigDecimal(String.valueOf(f[16]))
+												tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+														? new BigDecimal(String.valueOf(f[24]))
 														: BigDecimal.ZERO);
+												tempAss.setmPercentage(BigDecimal.ZERO);
+												tempAss.setmAmount(BigDecimal.ZERO);
 												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12200,10 +12109,8 @@ public class AssessmentService {
 												BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 												tempAss.setServiceRate(totalRate);
 
-												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+												String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+												String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12214,39 +12121,20 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 													tempAss.setRates(disAmt);
 
-												} else if (mPerc != null && !mPerc.isEmpty()) {
-													BigDecimal disPerc = new BigDecimal(mPerc);
-													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-													BigDecimal amt = (totalRate.multiply(finalPerc))
-															.divide(new BigDecimal(100));
-
-													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else if (mAmt != null && !mAmt.isEmpty()) {
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-															.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else {
-													tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+												}  else {
+													tempAss.setRates(totalRate);
 												}
+
 
 											}
 
@@ -12257,19 +12145,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12292,10 +12175,8 @@ public class AssessmentService {
 
 											tempAss.setServiceRate(totalRate);
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12306,39 +12187,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
+
 										}
 
 										finalConData.add(tempAss);
@@ -12371,18 +12233,14 @@ public class AssessmentService {
 									tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 									tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 									tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-									tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-											? new BigDecimal(String.valueOf(f[13]))
+									tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+											? new BigDecimal(String.valueOf(f[23]))
 											: BigDecimal.ZERO);
-									tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-											? new BigDecimal(String.valueOf(f[14]))
+									tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+											? new BigDecimal(String.valueOf(f[24]))
 											: BigDecimal.ZERO);
-									tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-											? new BigDecimal(String.valueOf(f[15]))
-											: BigDecimal.ZERO);
-									tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-											? new BigDecimal(String.valueOf(f[16]))
-											: BigDecimal.ZERO);
+									tempAss.setmPercentage(BigDecimal.ZERO);
+									tempAss.setmAmount(BigDecimal.ZERO);
 									tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 									tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 									tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12478,10 +12336,8 @@ public class AssessmentService {
 											totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 											tempAss.setServiceRate(serviceRate.get());
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12492,39 +12348,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
+											}  else {
 												tempAss.setRates(totalRate);
 											}
+
 
 										}
 
@@ -12578,10 +12415,8 @@ public class AssessmentService {
 											}
 											System.out.println("totalRate " + totalRate + " " + weeksBetween);
 											tempAss.setServiceRate(serviceRate.get());
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12592,37 +12427,17 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
+											}  else {
 												tempAss.setRates(totalRate);
 											}
 
@@ -12671,19 +12486,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12703,11 +12513,8 @@ public class AssessmentService {
 
 											tempAss.setServiceRate(totalRate);
 											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
-
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12718,38 +12525,18 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(finalRangeValue[8])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
 
 										}
@@ -12813,19 +12600,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12846,10 +12628,8 @@ public class AssessmentService {
 
 											tempAss.setServiceRate(totalRate);
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12860,39 +12640,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(finalRangeValue[8])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
+
 										}
 
 									}
@@ -12904,18 +12665,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -12935,10 +12692,8 @@ public class AssessmentService {
 										BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 										tempAss.setServiceRate(totalRate);
 
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -12949,39 +12704,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
-											tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+										}  else {
+											tempAss.setRates(totalRate);
 										}
+
 
 									}
 
@@ -12993,18 +12729,14 @@ public class AssessmentService {
 									tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 									tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 									tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-									tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-											? new BigDecimal(String.valueOf(f[13]))
+									tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+											? new BigDecimal(String.valueOf(f[23]))
 											: BigDecimal.ZERO);
-									tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-											? new BigDecimal(String.valueOf(f[14]))
+									tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+											? new BigDecimal(String.valueOf(f[24]))
 											: BigDecimal.ZERO);
-									tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-											? new BigDecimal(String.valueOf(f[15]))
-											: BigDecimal.ZERO);
-									tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-											? new BigDecimal(String.valueOf(f[16]))
-											: BigDecimal.ZERO);
+									tempAss.setmPercentage(BigDecimal.ZERO);
+									tempAss.setmAmount(BigDecimal.ZERO);
 									tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 									tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 									tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -13029,51 +12761,32 @@ public class AssessmentService {
 
 									System.out.println("String.valueOf(f[2]) " + String.valueOf(f[2]));
 
-									String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-									String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-									String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-									String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+									String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+									String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 									if (cPerc != null && !cPerc.isEmpty()) {
 										BigDecimal disPerc = new BigDecimal(cPerc);
 										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
 
-										BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
+										BigDecimal amt = (totalRate.multiply(finalPerc))
+												.divide(new BigDecimal(100));
 
 										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-										BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
+										tempAss.setRates(amt);
 
 									} else if (cAmt != null && !cAmt.isEmpty()) {
 
-										BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
+										BigDecimal disAmt = (totalRate
+												.subtract(new BigDecimal(cAmt)))
+												.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 										tempAss.setRates(disAmt);
 
-									} else if (mPerc != null && !mPerc.isEmpty()) {
-										BigDecimal disPerc = new BigDecimal(mPerc);
-										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-										BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
-
-										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-										BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
-									} else if (mAmt != null && !mAmt.isEmpty()) {
-										BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
-									} else {
-										tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+									}  else {
+										tempAss.setRates(totalRate);
 									}
+
 								}
 
 								finalConData.add(tempAss);
@@ -13442,7 +13155,7 @@ public class AssessmentService {
 					Date parsedDate = formatter.parse(formattedDate);
 
 					List<Object[]> pricingData = cfstariffservicerepo.getServiceRateForBondNoc(cid, bid, parsedDate,
-							finalServices, con.getUpTariffNo());
+							finalServices, con.getUpTariffNo(),assessment.getIgmTransId(), assessment.getIgmNo());
 
 					if (!pricingData.isEmpty()) {
 						List<Object[]> remainingPricing = pricingData.stream()
@@ -13462,7 +13175,7 @@ public class AssessmentService {
 						List<String> tempPricing = notInPricing;
 
 						List<Object[]> pricingData1 = cfstariffservicerepo.getServiceRateForBondNoc(cid, bid,
-								parsedDate, notInPricing, "CFS1000001");
+								parsedDate, notInPricing, "CFS1000001",assessment.getIgmTransId(), assessment.getIgmNo());
 
 						if (!pricingData1.isEmpty()) {
 							List<Object[]> remainingPricing = pricingData1.stream()
@@ -13500,6 +13213,33 @@ public class AssessmentService {
 												.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
 
 										Date invDate = updatedInvDate;
+										
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
+
+										if (cPerc != null && !cPerc.isEmpty()) {
+											BigDecimal disPerc = new BigDecimal(cPerc);
+											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+											BigDecimal amt = (rate1.getRate().multiply(finalPerc))
+													.divide(new BigDecimal(100));
+
+											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(amt);
+
+										} else if (cAmt != null && !cAmt.isEmpty()) {
+
+											BigDecimal disAmt = (rate1.getRate()
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(disAmt);
+
+										}  else {
+											tempAss.setRates(rate1.getRate());
+										}
+
 
 										tempAss.setInvoiceDate(invDate);
 										tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
@@ -13508,18 +13248,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -13531,7 +13267,6 @@ public class AssessmentService {
 										tempAss.setContainerStatus(con.getContainerStatus());
 										tempAss.setGateOutId(con.getGateOutId());
 										tempAss.setGatePassNo(con.getGatePassNo());
-										tempAss.setRates(rate1.getTotalRate());
 										tempAss.setServiceRate(rate1.getRate());
 										tempAss.setTaxPerc(
 												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
@@ -13566,19 +13301,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -13676,10 +13406,8 @@ public class AssessmentService {
 													totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 													tempAss.setServiceRate(serviceRate.get());
 
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -13690,39 +13418,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
+													}  else {
 														tempAss.setRates(totalRate);
 													}
+
 
 												}
 
@@ -13780,10 +13489,8 @@ public class AssessmentService {
 													}
 													System.out.println("totalRate " + totalRate + " " + weeksBetween);
 													tempAss.setServiceRate(serviceRate.get());
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -13794,39 +13501,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
+													}  else {
 														tempAss.setRates(totalRate);
 													}
+
 
 												}
 
@@ -13877,22 +13565,14 @@ public class AssessmentService {
 													tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 													tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 													tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-													tempAss.setDiscPercentage(
-															(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[13]))
-																	: BigDecimal.ZERO);
-													tempAss.setDiscValue(
-															(f[14] != null && !String.valueOf(f[14]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[14]))
-																	: BigDecimal.ZERO);
-													tempAss.setmPercentage(
-															(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[15]))
-																	: BigDecimal.ZERO);
-													tempAss.setmAmount(
-															(f[16] != null && !String.valueOf(f[16]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[16]))
-																	: BigDecimal.ZERO);
+													tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+															? new BigDecimal(String.valueOf(f[23]))
+															: BigDecimal.ZERO);
+													tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+															? new BigDecimal(String.valueOf(f[24]))
+															: BigDecimal.ZERO);
+													tempAss.setmPercentage(BigDecimal.ZERO);
+													tempAss.setmAmount(BigDecimal.ZERO);
 													tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 													tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 													tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -13917,10 +13597,8 @@ public class AssessmentService {
 													tempAss.setServiceRate(totalRate);
 													tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -13931,40 +13609,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
-														tempAss.setRates(
-																new BigDecimal(String.valueOf(finalRangeValue[8])));
+													}  else {
+														tempAss.setRates(totalRate);
 													}
+
 
 												}
 
@@ -14030,22 +13688,14 @@ public class AssessmentService {
 													tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 													tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 													tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-													tempAss.setDiscPercentage(
-															(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[13]))
-																	: BigDecimal.ZERO);
-													tempAss.setDiscValue(
-															(f[14] != null && !String.valueOf(f[14]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[14]))
-																	: BigDecimal.ZERO);
-													tempAss.setmPercentage(
-															(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[15]))
-																	: BigDecimal.ZERO);
-													tempAss.setmAmount(
-															(f[16] != null && !String.valueOf(f[16]).isEmpty())
-																	? new BigDecimal(String.valueOf(f[16]))
-																	: BigDecimal.ZERO);
+													tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+															? new BigDecimal(String.valueOf(f[23]))
+															: BigDecimal.ZERO);
+													tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+															? new BigDecimal(String.valueOf(f[24]))
+															: BigDecimal.ZERO);
+													tempAss.setmPercentage(BigDecimal.ZERO);
+													tempAss.setmAmount(BigDecimal.ZERO);
 													tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 													tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 													tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14069,11 +13719,8 @@ public class AssessmentService {
 															String.valueOf(finalRangeValue[8]));
 
 													tempAss.setServiceRate(totalRate);
-
-													String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-													String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-													String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-													String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+													String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+													String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 													if (cPerc != null && !cPerc.isEmpty()) {
 														BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14084,40 +13731,20 @@ public class AssessmentService {
 
 														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
+														tempAss.setRates(amt);
 
 													} else if (cAmt != null && !cAmt.isEmpty()) {
 
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
 																.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setRates(disAmt);
 
-													} else if (mPerc != null && !mPerc.isEmpty()) {
-														BigDecimal disPerc = new BigDecimal(mPerc);
-														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-														BigDecimal amt = (totalRate.multiply(finalPerc))
-																.divide(new BigDecimal(100));
-
-														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-																BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else if (mAmt != null && !mAmt.isEmpty()) {
-														BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-																.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-														tempAss.setRates(disAmt);
-													} else {
-														tempAss.setRates(
-																new BigDecimal(String.valueOf(finalRangeValue[8])));
+													}  else {
+														tempAss.setRates(totalRate);
 													}
+
 												}
 
 											}
@@ -14129,20 +13756,14 @@ public class AssessmentService {
 												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-												tempAss.setDiscPercentage(
-														(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																? new BigDecimal(String.valueOf(f[13]))
-																: BigDecimal.ZERO);
-												tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-														? new BigDecimal(String.valueOf(f[14]))
+												tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+														? new BigDecimal(String.valueOf(f[23]))
 														: BigDecimal.ZERO);
-												tempAss.setmPercentage(
-														(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																? new BigDecimal(String.valueOf(f[15]))
-																: BigDecimal.ZERO);
-												tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-														? new BigDecimal(String.valueOf(f[16]))
+												tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+														? new BigDecimal(String.valueOf(f[24]))
 														: BigDecimal.ZERO);
+												tempAss.setmPercentage(BigDecimal.ZERO);
+												tempAss.setmAmount(BigDecimal.ZERO);
 												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14163,10 +13784,8 @@ public class AssessmentService {
 												BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 												tempAss.setServiceRate(totalRate);
 
-												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+												String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+												String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14177,39 +13796,20 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 													tempAss.setRates(disAmt);
 
-												} else if (mPerc != null && !mPerc.isEmpty()) {
-													BigDecimal disPerc = new BigDecimal(mPerc);
-													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-													BigDecimal amt = (totalRate.multiply(finalPerc))
-															.divide(new BigDecimal(100));
-
-													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else if (mAmt != null && !mAmt.isEmpty()) {
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-															.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else {
-													tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+												}  else {
+													tempAss.setRates(totalRate);
 												}
+
 
 											}
 
@@ -14220,19 +13820,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14255,10 +13850,8 @@ public class AssessmentService {
 
 											tempAss.setServiceRate(totalRate);
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14269,39 +13862,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
+
 										}
 
 										finalConData.add(tempAss);
@@ -14334,18 +13908,14 @@ public class AssessmentService {
 									tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 									tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 									tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-									tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-											? new BigDecimal(String.valueOf(f[13]))
+									tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+											? new BigDecimal(String.valueOf(f[23]))
 											: BigDecimal.ZERO);
-									tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-											? new BigDecimal(String.valueOf(f[14]))
+									tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+											? new BigDecimal(String.valueOf(f[24]))
 											: BigDecimal.ZERO);
-									tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-											? new BigDecimal(String.valueOf(f[15]))
-											: BigDecimal.ZERO);
-									tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-											? new BigDecimal(String.valueOf(f[16]))
-											: BigDecimal.ZERO);
+									tempAss.setmPercentage(BigDecimal.ZERO);
+									tempAss.setmAmount(BigDecimal.ZERO);
 									tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 									tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 									tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14441,10 +14011,8 @@ public class AssessmentService {
 											totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 											tempAss.setServiceRate(serviceRate.get());
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14455,39 +14023,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
+											}  else {
 												tempAss.setRates(totalRate);
 											}
+
 
 										}
 
@@ -14541,10 +14090,8 @@ public class AssessmentService {
 											}
 											System.out.println("totalRate " + totalRate + " " + weeksBetween);
 											tempAss.setServiceRate(serviceRate.get());
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14555,39 +14102,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
+											}  else {
 												tempAss.setRates(totalRate);
 											}
+
 
 										}
 
@@ -14634,19 +14162,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14667,10 +14190,8 @@ public class AssessmentService {
 											tempAss.setServiceRate(totalRate);
 											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14681,39 +14202,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(finalRangeValue[8])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
+
 
 										}
 
@@ -14776,19 +14278,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14809,10 +14306,8 @@ public class AssessmentService {
 
 											tempAss.setServiceRate(totalRate);
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14823,39 +14318,20 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(finalRangeValue[8])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
+
 										}
 
 									}
@@ -14867,18 +14343,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14898,10 +14370,8 @@ public class AssessmentService {
 										BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 										tempAss.setServiceRate(totalRate);
 
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -14912,39 +14382,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
-											tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+										}  else {
+											tempAss.setRates(totalRate);
 										}
+
 
 									}
 
@@ -14956,18 +14407,14 @@ public class AssessmentService {
 									tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 									tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 									tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-									tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-											? new BigDecimal(String.valueOf(f[13]))
+									tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+											? new BigDecimal(String.valueOf(f[23]))
 											: BigDecimal.ZERO);
-									tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-											? new BigDecimal(String.valueOf(f[14]))
+									tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+											? new BigDecimal(String.valueOf(f[24]))
 											: BigDecimal.ZERO);
-									tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-											? new BigDecimal(String.valueOf(f[15]))
-											: BigDecimal.ZERO);
-									tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-											? new BigDecimal(String.valueOf(f[16]))
-											: BigDecimal.ZERO);
+									tempAss.setmPercentage(BigDecimal.ZERO);
+									tempAss.setmAmount(BigDecimal.ZERO);
 									tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 									tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 									tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -14992,51 +14439,32 @@ public class AssessmentService {
 
 									System.out.println("String.valueOf(f[2]) " + String.valueOf(f[2]));
 
-									String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-									String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-									String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-									String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+									String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+									String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 									if (cPerc != null && !cPerc.isEmpty()) {
 										BigDecimal disPerc = new BigDecimal(cPerc);
 										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
 
-										BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
+										BigDecimal amt = (totalRate.multiply(finalPerc))
+												.divide(new BigDecimal(100));
 
 										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-										BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
+										tempAss.setRates(amt);
 
 									} else if (cAmt != null && !cAmt.isEmpty()) {
 
-										BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
+										BigDecimal disAmt = (totalRate
+												.subtract(new BigDecimal(cAmt)))
+												.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 										tempAss.setRates(disAmt);
 
-									} else if (mPerc != null && !mPerc.isEmpty()) {
-										BigDecimal disPerc = new BigDecimal(mPerc);
-										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-										BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
-
-										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-										BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
-									} else if (mAmt != null && !mAmt.isEmpty()) {
-										BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
-									} else {
-										tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+									}  else {
+										tempAss.setRates(totalRate);
 									}
+
 								}
 
 								finalConData.add(tempAss);
@@ -17693,7 +17121,7 @@ public class AssessmentService {
 				Date parsedDate = formatter.parse(formattedDate);
 
 				List<Object[]> pricingData = cfstariffservicerepo.getServiceRateForBondNoc(cid, bid, parsedDate,
-						finalServices, con.getUpTariffNo());
+						finalServices, con.getUpTariffNo(),assessment.getIgmTransId(), assessment.getViaNo());
 
 				if (!pricingData.isEmpty()) {
 					List<Object[]> remainingPricing = pricingData.stream()
@@ -17712,7 +17140,7 @@ public class AssessmentService {
 					List<String> tempPricing = notInPricing;
 
 					List<Object[]> pricingData1 = cfstariffservicerepo.getServiceRateForBondNoc(cid, bid, parsedDate,
-							notInPricing, "CFS1000001");
+							notInPricing, "CFS1000001",assessment.getIgmTransId(), assessment.getViaNo());
 
 					if (!pricingData1.isEmpty()) {
 						List<Object[]> remainingPricing = pricingData1.stream()
@@ -17750,6 +17178,32 @@ public class AssessmentService {
 											.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
 
 									Date invDate = updatedInvDate;
+									
+									String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+									String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
+
+									if (cPerc != null && !cPerc.isEmpty()) {
+										BigDecimal disPerc = new BigDecimal(cPerc);
+										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+										BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+												.divide(new BigDecimal(100));
+
+										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+										tempAss.setRates(amt);
+
+									} else if (cAmt != null && !cAmt.isEmpty()) {
+
+										BigDecimal disAmt = (rate1.getTotalRate()
+												.subtract(new BigDecimal(cAmt)))
+												.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+										tempAss.setRates(disAmt);
+
+									}  else {
+										tempAss.setRates(rate1.getTotalRate());
+									}
 
 									tempAss.setInvoiceDate(invDate);
 									tempAss.setServiceGroup(f[18] != null ? String.valueOf(f[18]) : "");
@@ -17758,18 +17212,14 @@ public class AssessmentService {
 									tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 									tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 									tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-									tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-											? new BigDecimal(String.valueOf(f[13]))
+									tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+											? new BigDecimal(String.valueOf(f[23]))
 											: BigDecimal.ZERO);
-									tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-											? new BigDecimal(String.valueOf(f[14]))
+									tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+											? new BigDecimal(String.valueOf(f[24]))
 											: BigDecimal.ZERO);
-									tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-											? new BigDecimal(String.valueOf(f[15]))
-											: BigDecimal.ZERO);
-									tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-											? new BigDecimal(String.valueOf(f[16]))
-											: BigDecimal.ZERO);
+									tempAss.setmPercentage(BigDecimal.ZERO);
+									tempAss.setmAmount(BigDecimal.ZERO);
 									tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 									tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 									tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -17781,7 +17231,6 @@ public class AssessmentService {
 									tempAss.setContainerStatus(con.getContainerStatus());
 									tempAss.setGateOutId(con.getGateOutId());
 									tempAss.setGatePassNo(con.getGatePassNo());
-									tempAss.setRates(rate1.getTotalRate());
 									tempAss.setServiceRate(rate1.getRate());
 									tempAss.setTaxPerc(
 											(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
@@ -17816,18 +17265,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -17924,11 +17369,9 @@ public class AssessmentService {
 												}).reduce(BigDecimal.ZERO, BigDecimal::add);
 												totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 												tempAss.setServiceRate(serviceRate.get());
-
-												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+												
+												String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+												String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
@@ -17939,39 +17382,20 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 													tempAss.setRates(disAmt);
 
-												} else if (mPerc != null && !mPerc.isEmpty()) {
-													BigDecimal disPerc = new BigDecimal(mPerc);
-													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-													BigDecimal amt = (totalRate.multiply(finalPerc))
-															.divide(new BigDecimal(100));
-
-													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else if (mAmt != null && !mAmt.isEmpty()) {
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-															.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else {
+												}  else {
 													tempAss.setRates(totalRate);
 												}
+
 
 											}
 
@@ -18026,10 +17450,8 @@ public class AssessmentService {
 												}
 												System.out.println("totalRate " + totalRate + " " + weeksBetween);
 												tempAss.setServiceRate(serviceRate.get());
-												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+												String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+												String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18040,39 +17462,20 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 													tempAss.setRates(disAmt);
 
-												} else if (mPerc != null && !mPerc.isEmpty()) {
-													BigDecimal disPerc = new BigDecimal(mPerc);
-													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-													BigDecimal amt = (totalRate.multiply(finalPerc))
-															.divide(new BigDecimal(100));
-
-													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else if (mAmt != null && !mAmt.isEmpty()) {
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-															.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else {
+												}  else {
 													tempAss.setRates(totalRate);
 												}
+
 
 											}
 
@@ -18120,20 +17523,14 @@ public class AssessmentService {
 												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-												tempAss.setDiscPercentage(
-														(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																? new BigDecimal(String.valueOf(f[13]))
-																: BigDecimal.ZERO);
-												tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-														? new BigDecimal(String.valueOf(f[14]))
+												tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+														? new BigDecimal(String.valueOf(f[23]))
 														: BigDecimal.ZERO);
-												tempAss.setmPercentage(
-														(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																? new BigDecimal(String.valueOf(f[15]))
-																: BigDecimal.ZERO);
-												tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-														? new BigDecimal(String.valueOf(f[16]))
+												tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+														? new BigDecimal(String.valueOf(f[24]))
 														: BigDecimal.ZERO);
+												tempAss.setmPercentage(BigDecimal.ZERO);
+												tempAss.setmAmount(BigDecimal.ZERO);
 												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -18156,10 +17553,8 @@ public class AssessmentService {
 												tempAss.setServiceRate(totalRate);
 												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 
-												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+												String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+												String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18170,40 +17565,20 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 													tempAss.setRates(disAmt);
 
-												} else if (mPerc != null && !mPerc.isEmpty()) {
-													BigDecimal disPerc = new BigDecimal(mPerc);
-													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-													BigDecimal amt = (totalRate.multiply(finalPerc))
-															.divide(new BigDecimal(100));
-
-													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else if (mAmt != null && !mAmt.isEmpty()) {
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-															.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else {
-													tempAss.setRates(
-															new BigDecimal(String.valueOf(finalRangeValue[8])));
+												}  else {
+													tempAss.setRates(totalRate);
 												}
+
 
 											}
 
@@ -18268,20 +17643,14 @@ public class AssessmentService {
 												tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 												tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 												tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-												tempAss.setDiscPercentage(
-														(f[13] != null && !String.valueOf(f[13]).isEmpty())
-																? new BigDecimal(String.valueOf(f[13]))
-																: BigDecimal.ZERO);
-												tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-														? new BigDecimal(String.valueOf(f[14]))
+												tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+														? new BigDecimal(String.valueOf(f[23]))
 														: BigDecimal.ZERO);
-												tempAss.setmPercentage(
-														(f[15] != null && !String.valueOf(f[15]).isEmpty())
-																? new BigDecimal(String.valueOf(f[15]))
-																: BigDecimal.ZERO);
-												tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-														? new BigDecimal(String.valueOf(f[16]))
+												tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+														? new BigDecimal(String.valueOf(f[24]))
 														: BigDecimal.ZERO);
+												tempAss.setmPercentage(BigDecimal.ZERO);
+												tempAss.setmAmount(BigDecimal.ZERO);
 												tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 												tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 												tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -18304,10 +17673,8 @@ public class AssessmentService {
 
 												tempAss.setServiceRate(totalRate);
 
-												String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-												String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-												String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-												String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+												String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+												String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 												if (cPerc != null && !cPerc.isEmpty()) {
 													BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18318,40 +17685,20 @@ public class AssessmentService {
 
 													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
+													tempAss.setRates(amt);
 
 												} else if (cAmt != null && !cAmt.isEmpty()) {
 
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
 															.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 													tempAss.setRates(disAmt);
 
-												} else if (mPerc != null && !mPerc.isEmpty()) {
-													BigDecimal disPerc = new BigDecimal(mPerc);
-													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-													BigDecimal amt = (totalRate.multiply(finalPerc))
-															.divide(new BigDecimal(100));
-
-													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-															BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else if (mAmt != null && !mAmt.isEmpty()) {
-													BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-															.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-													tempAss.setRates(disAmt);
-												} else {
-													tempAss.setRates(
-															new BigDecimal(String.valueOf(finalRangeValue[8])));
+												}  else {
+													tempAss.setRates(totalRate);
 												}
+
 											}
 
 										}
@@ -18363,19 +17710,14 @@ public class AssessmentService {
 											tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 											tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 											tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-											tempAss.setDiscPercentage(
-													(f[13] != null && !String.valueOf(f[13]).isEmpty())
-															? new BigDecimal(String.valueOf(f[13]))
-															: BigDecimal.ZERO);
-											tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-													? new BigDecimal(String.valueOf(f[14]))
+											tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+													? new BigDecimal(String.valueOf(f[23]))
 													: BigDecimal.ZERO);
-											tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-													? new BigDecimal(String.valueOf(f[15]))
+											tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+													? new BigDecimal(String.valueOf(f[24]))
 													: BigDecimal.ZERO);
-											tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-													? new BigDecimal(String.valueOf(f[16]))
-													: BigDecimal.ZERO);
+											tempAss.setmPercentage(BigDecimal.ZERO);
+											tempAss.setmAmount(BigDecimal.ZERO);
 											tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 											tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 											tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -18395,10 +17737,8 @@ public class AssessmentService {
 											BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 											tempAss.setServiceRate(totalRate);
 
-											String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-											String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-											String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-											String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+											String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+											String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 											if (cPerc != null && !cPerc.isEmpty()) {
 												BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18409,38 +17749,18 @@ public class AssessmentService {
 
 												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
+												tempAss.setRates(amt);
 
 											} else if (cAmt != null && !cAmt.isEmpty()) {
 
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
 														.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 												tempAss.setRates(disAmt);
 
-											} else if (mPerc != null && !mPerc.isEmpty()) {
-												BigDecimal disPerc = new BigDecimal(mPerc);
-												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-												BigDecimal amt = (totalRate.multiply(finalPerc))
-														.divide(new BigDecimal(100));
-
-												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-														BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else if (mAmt != null && !mAmt.isEmpty()) {
-												BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt)))
-														.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-												tempAss.setRates(disAmt);
-											} else {
-												tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+											}  else {
+												tempAss.setRates(totalRate);
 											}
 
 										}
@@ -18452,18 +17772,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -18486,10 +17802,8 @@ public class AssessmentService {
 
 										tempAss.setServiceRate(totalRate);
 
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18500,39 +17814,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
-											tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+										}  else {
+											tempAss.setRates(totalRate);
 										}
+
 									}
 
 									finalConData.add(tempAss);
@@ -18565,18 +17860,14 @@ public class AssessmentService {
 								tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 								tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 								tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-								tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-										? new BigDecimal(String.valueOf(f[13]))
+								tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+										? new BigDecimal(String.valueOf(f[23]))
 										: BigDecimal.ZERO);
-								tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-										? new BigDecimal(String.valueOf(f[14]))
+								tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+										? new BigDecimal(String.valueOf(f[24]))
 										: BigDecimal.ZERO);
-								tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-										? new BigDecimal(String.valueOf(f[15]))
-										: BigDecimal.ZERO);
-								tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-										? new BigDecimal(String.valueOf(f[16]))
-										: BigDecimal.ZERO);
+								tempAss.setmPercentage(BigDecimal.ZERO);
+								tempAss.setmAmount(BigDecimal.ZERO);
 								tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 								tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 								tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -18669,10 +17960,8 @@ public class AssessmentService {
 										totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 										tempAss.setServiceRate(serviceRate.get());
 
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18683,39 +17972,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
+										}  else {
 											tempAss.setRates(totalRate);
 										}
+
 
 									}
 
@@ -18769,10 +18039,8 @@ public class AssessmentService {
 										}
 										System.out.println("totalRate " + totalRate + " " + weeksBetween);
 										tempAss.setServiceRate(serviceRate.get());
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18783,39 +18051,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
+										}  else {
 											tempAss.setRates(totalRate);
 										}
+
 
 									}
 
@@ -18862,18 +18111,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -18894,10 +18139,8 @@ public class AssessmentService {
 										tempAss.setServiceRate(totalRate);
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -18908,39 +18151,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
-											tempAss.setRates(new BigDecimal(String.valueOf(finalRangeValue[8])));
+										}  else {
+											tempAss.setRates(totalRate);
 										}
+
 
 									}
 
@@ -19003,18 +18227,14 @@ public class AssessmentService {
 										tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 										tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 										tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-										tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-												? new BigDecimal(String.valueOf(f[13]))
+										tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+												? new BigDecimal(String.valueOf(f[23]))
 												: BigDecimal.ZERO);
-										tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-												? new BigDecimal(String.valueOf(f[14]))
+										tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+												? new BigDecimal(String.valueOf(f[24]))
 												: BigDecimal.ZERO);
-										tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-												? new BigDecimal(String.valueOf(f[15]))
-												: BigDecimal.ZERO);
-										tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-												? new BigDecimal(String.valueOf(f[16]))
-												: BigDecimal.ZERO);
+										tempAss.setmPercentage(BigDecimal.ZERO);
+										tempAss.setmAmount(BigDecimal.ZERO);
 										tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 										tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 										tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -19035,10 +18255,8 @@ public class AssessmentService {
 
 										tempAss.setServiceRate(totalRate);
 
-										String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-										String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-										String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-										String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+										String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+										String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 										if (cPerc != null && !cPerc.isEmpty()) {
 											BigDecimal disPerc = new BigDecimal(cPerc);
@@ -19049,39 +18267,20 @@ public class AssessmentService {
 
 											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
+											tempAss.setRates(amt);
 
 										} else if (cAmt != null && !cAmt.isEmpty()) {
 
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 											tempAss.setRates(disAmt);
 
-										} else if (mPerc != null && !mPerc.isEmpty()) {
-											BigDecimal disPerc = new BigDecimal(mPerc);
-											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-											BigDecimal amt = (totalRate.multiply(finalPerc))
-													.divide(new BigDecimal(100));
-
-											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-											BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else if (mAmt != null && !mAmt.isEmpty()) {
-											BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-													BigDecimal.ROUND_HALF_UP);
-
-											tempAss.setRates(disAmt);
-										} else {
-											tempAss.setRates(new BigDecimal(String.valueOf(finalRangeValue[8])));
+										}  else {
+											tempAss.setRates(totalRate);
 										}
+
 									}
 
 								}
@@ -19093,18 +18292,14 @@ public class AssessmentService {
 									tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 									tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 									tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-									tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-											? new BigDecimal(String.valueOf(f[13]))
+									tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+											? new BigDecimal(String.valueOf(f[23]))
 											: BigDecimal.ZERO);
-									tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-											? new BigDecimal(String.valueOf(f[14]))
+									tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+											? new BigDecimal(String.valueOf(f[24]))
 											: BigDecimal.ZERO);
-									tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-											? new BigDecimal(String.valueOf(f[15]))
-											: BigDecimal.ZERO);
-									tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-											? new BigDecimal(String.valueOf(f[16]))
-											: BigDecimal.ZERO);
+									tempAss.setmPercentage(BigDecimal.ZERO);
+									tempAss.setmAmount(BigDecimal.ZERO);
 									tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 									tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 									tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -19124,50 +18319,30 @@ public class AssessmentService {
 									BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 									tempAss.setServiceRate(totalRate);
 
-									String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-									String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-									String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-									String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+									String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+									String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 									if (cPerc != null && !cPerc.isEmpty()) {
 										BigDecimal disPerc = new BigDecimal(cPerc);
 										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
 
-										BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
+										BigDecimal amt = (totalRate.multiply(finalPerc))
+												.divide(new BigDecimal(100));
 
 										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-										BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
+										tempAss.setRates(amt);
 
 									} else if (cAmt != null && !cAmt.isEmpty()) {
 
-										BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
+										BigDecimal disAmt = (totalRate
+												.subtract(new BigDecimal(cAmt)))
+												.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 										tempAss.setRates(disAmt);
 
-									} else if (mPerc != null && !mPerc.isEmpty()) {
-										BigDecimal disPerc = new BigDecimal(mPerc);
-										BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-										BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
-
-										amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-										BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
-									} else if (mAmt != null && !mAmt.isEmpty()) {
-										BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-												BigDecimal.ROUND_HALF_UP);
-
-										tempAss.setRates(disAmt);
-									} else {
-										tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+									}  else {
+										tempAss.setRates(totalRate);
 									}
 
 								}
@@ -19180,18 +18355,14 @@ public class AssessmentService {
 								tempAss.setServiceUnit(f[1] != null ? String.valueOf(f[1]) : "");
 								tempAss.setServiceUnit1(f[7] != null ? String.valueOf(f[7]) : "");
 								tempAss.setCurrencyId(f[5] != null ? String.valueOf(f[5]) : "");
-								tempAss.setDiscPercentage((f[13] != null && !String.valueOf(f[13]).isEmpty())
-										? new BigDecimal(String.valueOf(f[13]))
+								tempAss.setDiscPercentage((f[23] != null && !String.valueOf(f[23]).isEmpty())
+										? new BigDecimal(String.valueOf(f[23]))
 										: BigDecimal.ZERO);
-								tempAss.setDiscValue((f[14] != null && !String.valueOf(f[14]).isEmpty())
-										? new BigDecimal(String.valueOf(f[14]))
+								tempAss.setDiscValue((f[24] != null && !String.valueOf(f[24]).isEmpty())
+										? new BigDecimal(String.valueOf(f[24]))
 										: BigDecimal.ZERO);
-								tempAss.setmPercentage((f[15] != null && !String.valueOf(f[15]).isEmpty())
-										? new BigDecimal(String.valueOf(f[15]))
-										: BigDecimal.ZERO);
-								tempAss.setmAmount((f[16] != null && !String.valueOf(f[16]).isEmpty())
-										? new BigDecimal(String.valueOf(f[16]))
-										: BigDecimal.ZERO);
+								tempAss.setmPercentage(BigDecimal.ZERO);
+								tempAss.setmAmount(BigDecimal.ZERO);
 								tempAss.setWoNo(f[3] != null ? String.valueOf(f[3]) : "");
 								tempAss.setWoAmndNo(f[4] != null ? String.valueOf(f[4]) : "");
 								tempAss.setCriteria(f[8] != null ? String.valueOf(f[8]) : "");
@@ -19215,49 +18386,32 @@ public class AssessmentService {
 
 								System.out.println("String.valueOf(f[2]) " + String.valueOf(f[2]));
 
-								String cPerc = String.valueOf(f[13] == null ? "" : f[13]);
-								String cAmt = String.valueOf(f[14] == null ? "" : f[14]);
-								String mPerc = String.valueOf(f[15] == null ? "" : f[15]);
-								String mAmt = String.valueOf(f[16] == null ? "" : f[16]);
+								String cPerc = String.valueOf(f[23] == null ? "" : f[23]);
+								String cAmt = String.valueOf(f[24] == null ? "" : f[24]);
 
 								if (cPerc != null && !cPerc.isEmpty()) {
 									BigDecimal disPerc = new BigDecimal(cPerc);
 									BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
 
-									BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
+									BigDecimal amt = (totalRate.multiply(finalPerc))
+											.divide(new BigDecimal(100));
 
 									amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
 
-									BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3, BigDecimal.ROUND_HALF_UP);
-
-									tempAss.setRates(disAmt);
+									tempAss.setRates(amt);
 
 								} else if (cAmt != null && !cAmt.isEmpty()) {
 
-									BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-											BigDecimal.ROUND_HALF_UP);
+									BigDecimal disAmt = (totalRate
+											.subtract(new BigDecimal(cAmt)))
+											.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 									tempAss.setRates(disAmt);
 
-								} else if (mPerc != null && !mPerc.isEmpty()) {
-									BigDecimal disPerc = new BigDecimal(mPerc);
-									BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
-
-									BigDecimal amt = (totalRate.multiply(finalPerc)).divide(new BigDecimal(100));
-
-									amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
-
-									BigDecimal disAmt = (totalRate.subtract(amt)).setScale(3, BigDecimal.ROUND_HALF_UP);
-
-									tempAss.setRates(disAmt);
-								} else if (mAmt != null && !mAmt.isEmpty()) {
-									BigDecimal disAmt = (totalRate.subtract(new BigDecimal(cAmt))).setScale(3,
-											BigDecimal.ROUND_HALF_UP);
-
-									tempAss.setRates(disAmt);
-								} else {
-									tempAss.setRates(new BigDecimal(String.valueOf(f[2])));
+								}  else {
+									tempAss.setRates(totalRate);
 								}
+
 							}
 
 							finalConData.add(tempAss);

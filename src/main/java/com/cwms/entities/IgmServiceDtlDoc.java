@@ -34,7 +34,7 @@ public class IgmServiceDtlDoc {
 	private String igmTransId;
 
 	@Id
-	@Column(name = "IGM_No", length = 10)
+	@Column(name = "IGM_No", length = 25)
 	private String igmNo;
 
 	@Id

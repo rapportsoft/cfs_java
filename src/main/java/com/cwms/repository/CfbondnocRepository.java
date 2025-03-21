@@ -808,5 +808,11 @@ List<Object[]> getDataBeforeAssessment(@Param("cid") String cid, @Param("bid") S
       		+ "e.exBondBeNo=:boe "
       		+ "ORDER BY e.createdDate DESC ")
       Object getDataForExbondSSR(@Param("cid") String cid,@Param("bid") String bid,@Param("boe") String boe);
+    
+    @Query(value = "select c.boeNo, c.bondingNo, c.nocTransId, c.nocNo " +
+            "from Cfbondnoc c " +
+            "where c.companyId = :cid and c.branchId = :bid and c.status = 'A' " +
+            "and (:val is null OR :val = '' OR c.boeNo LIKE CONCAT('%', :val, '%') OR c.bondingNo LIKE CONCAT('%', :val, '%'))")
+    List<Object[]> getDataBeforeWaiver(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
 
 }

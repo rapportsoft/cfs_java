@@ -503,6 +503,29 @@ List<String> getExBondBeNo(@Param("cid") String cid,@Param("bid") String bid,@Pa
 	    	  	    @Param("nocTransId") String nocTransId, 
 	    	  	    @Param("id") String id,@Param("invNo") String invNo,@Param("uptoDate") Date uptoDate,
 	    	  	    @Param("billAmt") BigDecimal billAmt,@Param("invAmt") BigDecimal invAmt,@Param("ctype") String ctype);
+		 
+		 @Query(value="select DISTINCT e.exBondBeNo, e.nocTransId, e.exBondingId from CfExBondCrg e "
+					+ "where e.companyId=:cid and e.branchId=:bid and e.status='A' and (:val is null OR :val = '' OR e.exBondBeNo LIKE CONCAT('%',:val,'%'))")
+			List<Object[]> getExBondBeNoForWaiver(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			 @Query("SELECT c FROM CfExBondCrg c WHERE c.companyId = :companyId AND c.branchId = :branchId "
+				 		+ "AND c.nocTransId = :nocTransId AND c.exBondingId = :exBondingId and c.status='A'")
+				 CfExBondCrg findExistingCfexbondCrg2(
+				        @Param("companyId") String companyId,
+				        @Param("branchId") String branchId,
+				        @Param("nocTransId") String nocTransId,
+				        @Param("exBondingId") String exBondingId
+				    );
 
 }
 

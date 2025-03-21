@@ -27,4 +27,16 @@ public interface IgmServiceDtlRepo extends JpaRepository<IgmServiceDtl, String> 
 			+ "and i.igmNo=:igm and i.igmLineNo=:line")
 	List<Object[]> getDataByIgmDtls(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
 			@Param("line") String line);
+	
+	@Query(value="select DISTINCT i.igmTransId,i.igmNo,i.igmLineNo,i.serviceId,s.serviceShortDesc,i.percentage,i.amount,i.remark "
+			+ "from IgmServiceDtl i "
+			+ "LEFT OUTER JOIN Services s ON i.companyId=s.companyId and i.branchId=s.branchId and i.serviceId=s.serviceId "
+			+ "where i.companyId=:cid and i.branchId=:bid and i.status='A' and i.igmTransId=:trans "
+			+ "and i.igmNo=:igm")
+	List<Object[]> getDataByNOCDtls(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm);
+	
+	@Query(value="select i from IgmServiceDtl i where i.companyId=:cid and i.branchId=:bid and i.status='A' and i.igmTransId=:trans "
+			+ "and i.igmNo=:igm and i.igmLineNo=:line and i.serviceId=:service")
+	IgmServiceDtl getDataByServiceId1(@Param("cid") String cid,@Param("bid") String bid,@Param("trans") String trans,@Param("igm") String igm,
+			@Param("line") String line,@Param("service") String service);
 }
