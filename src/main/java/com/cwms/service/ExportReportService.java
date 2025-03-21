@@ -238,7 +238,7 @@ public class ExportReportService {
 
 				recordsUpdated = (int) result.get("updatedFieldsCount");
 				updatedSbNo = (String) result.get("sbNo");
-				updatedContainerNo = (String) result.get("containerNo");
+				updatedContainerNo = containerNo;
 
 			} else if ("stuffTally".equals(type)) {
 				stuffTally = objectMapper.convertValue(requestData.get("stuffTally"),

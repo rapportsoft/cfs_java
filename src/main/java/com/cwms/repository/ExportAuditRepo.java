@@ -103,7 +103,7 @@ public interface ExportAuditRepo extends JpaRepository<ExportAudit, String> {
 			+ "FROM ExportSbCargoEntry E "
 			+ "LEFT JOIN GateIn sb ON E.companyId = sb.companyId AND E.branchId = sb.branchId AND E.sbTransId = sb.erpDocRefNo AND E.sbNo = sb.docRefNo AND sb.gateInType = 'EXP' AND sb.profitcentreId = E.profitcentreId AND sb.status != 'D' "
 			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
-			+ "AND E.sbNo = :sbNo " + "AND E.status <> 'D'")
+			+ "AND E.sbNo = :sbNo AND sb.gateInId IS NOT NULL " + "AND E.status <> 'D'")
 	List<GateInJoDTO> getGateInJO2ndTable(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
 	
 
@@ -113,7 +113,7 @@ public interface ExportAuditRepo extends JpaRepository<ExportAudit, String> {
 			+ "LEFT JOIN ExportCarting sb ON E.companyId = sb.companyId AND E.branchId = sb.branchId AND E.sbTransId = sb.sbTransId AND E.sbNo = sb.sbNo AND sb.profitcentreId = E.profitcentreId AND sb.status != 'D' "
 			+ "LEFT JOIN Impexpgrid im ON sb.companyId = im.companyId AND sb.branchId = im.branchId AND sb.cartingTransId = im.processTransId AND sb.cartingLineId = CAST(im.lineNo AS STRING) AND im.status != 'D' "
 			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
-			+ "AND E.sbNo = :sbNo " + "AND E.status <> 'D'")
+			+ "AND E.sbNo = :sbNo AND sb.cartingTransId IS NOT NULL " + "AND E.status <> 'D'")
 	List<GateInJoDetailDTO> getGateInJODTL3rdTable(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
 	
 	
@@ -125,7 +125,7 @@ public interface ExportAuditRepo extends JpaRepository<ExportAudit, String> {
 			+ "LEFT JOIN ExportCarting sb ON E.companyId = sb.companyId AND E.branchId = sb.branchId AND E.sbTransId = sb.sbTransId AND E.sbNo = sb.sbNo AND sb.profitcentreId = E.profitcentreId AND sb.status != 'D' "
 			+ "LEFT JOIN Impexpgrid im ON sb.companyId = im.companyId AND sb.branchId = im.branchId AND sb.cartingTransId = im.processTransId AND sb.cartingLineId = CAST(im.lineNo AS STRING) AND im.status != 'D' "
 			+ "WHERE E.companyId = :companyId AND E.branchId = :branchId "
-			+ "AND E.sbNo = :sbNo " + "AND E.status <> 'D'")
+			+ "AND E.sbNo = :sbNo AND sb.cartingTransId IS NOT NULL " + "AND E.status <> 'D'")
 	List<CartingTallyDTO> getCartingTallyDTO4thTable(@Param("companyId") String companyId, @Param("branchId") String branchId, @Param("sbNo") String sbNo);
 	
 	
