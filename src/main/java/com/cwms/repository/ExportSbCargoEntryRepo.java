@@ -509,4 +509,13 @@ public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry
 			+ "group by e.gateInId order by e.createdDate desc")
 	List<Object[]> getHistoryDataWithContainerNo(@Param("cid") String cid, @Param("bid") String bid,@Param("con") String con);
 	
+	
+	
+	@Query("SELECT E.sbTransId,E.sbNo,E.sbLineNo FROM ExportSbCargoEntry E WHERE E.companyId = :companyId AND E.branchId = :branchId "
+	        + "AND E.sbNo = :sbNo "
+	        + "AND E.status = 'A'")
+	Object getExportSbEntryBySbNo(@Param("companyId") String companyId, @Param("branchId") String branchId,
+	                              @Param("sbNo") String sbNo);
+
+	
 }
