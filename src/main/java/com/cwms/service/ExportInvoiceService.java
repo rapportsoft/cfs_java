@@ -1899,7 +1899,7 @@ public class ExportInvoiceService {
 
 //	SAVE ASSESMENT DATA EXPORT CONTAINER
 
-	@Transactional
+@Transactional
 	public ResponseEntity<?> saveExportAssesment(String cid, String bid, String user, Map<String, Object> data, String invoiceType)
 			throws JsonMappingException, JsonProcessingException {
 		try {
@@ -2064,7 +2064,8 @@ public class ExportInvoiceService {
 					Date parsedDate = formatter.parse(formattedDate);
 
 					List<Object[]> pricingData = exportInvoiceRepo.getServiceRate(cid, bid, parsedDate,
-							con.getContainerNo(), finalServices, con.getUpTariffNo(), conSize1, conTypeOfCon1);
+							con.getContainerNo(), finalServices, con.getUpTariffNo(), conSize1, conTypeOfCon1, assessment.getSbTransId(),
+							assessment.getSbNo());
 
 					if (!pricingData.isEmpty()) {
 						List<Object[]> remainingPricing = pricingData.stream()
@@ -2091,7 +2092,8 @@ public class ExportInvoiceService {
 						conTypeOfCon2.add(con.getTypeOfContainer());
 
 						List<Object[]> pricingData1 = exportInvoiceRepo.getServiceRate(cid, bid, parsedDate,
-								con.getContainerNo(), notInPricing, "CFS1000001", conSize2, conTypeOfCon2);
+								con.getContainerNo(), notInPricing, "CFS1000001", conSize2, conTypeOfCon2,assessment.getSbTransId(),
+								assessment.getSbNo());
 
 						if (!pricingData1.isEmpty()) {
 							List<Object[]> remainingPricing = pricingData1.stream()
@@ -2131,6 +2133,32 @@ public class ExportInvoiceService {
 
 										Date invDate = adjustInvoiceDate(tempAss.getInvoiceDate(), day.getStartTime(),
 												day.getEndTime());
+										
+										String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+										String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+										if (cPerc != null && !cPerc.isEmpty()) {
+											BigDecimal disPerc = new BigDecimal(cPerc);
+											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+											BigDecimal amt = (rate1.getTotalRate().multiply(finalPerc))
+													.divide(new BigDecimal(100));
+
+											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(amt);
+
+										} else if (cAmt != null && !cAmt.isEmpty()) {
+
+											BigDecimal disAmt = (rate1.getTotalRate()
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(disAmt);
+
+										}  else {
+											tempAss.setRates(rate1.getTotalRate());
+										}
 
 										tempAss.setInvoiceDate(invDate);
 										tempAss.setServiceGroup(f[14] != null ? String.valueOf(f[14]) : "");
@@ -2153,13 +2181,18 @@ public class ExportInvoiceService {
 										tempAss.setContainerStatus(con.getContainerStatus());
 										tempAss.setGateOutId(con.getGateOutId());
 										tempAss.setGatePassNo(con.getGatePassNo());
-										tempAss.setRates(rate1.getTotalRate());
 										tempAss.setServiceRate(rate1.getRate());
 										tempAss.setTaxPerc(
 												(f[12] == null || String.valueOf(f[12]).isEmpty()) ? BigDecimal.ZERO
 														: new BigDecimal(String.valueOf(f[12])));
 										tempAss.setTaxId(String.valueOf(f[11]));
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+										tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+												? new BigDecimal(String.valueOf(f[20]))
+												: BigDecimal.ZERO);
+										tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+												? new BigDecimal(String.valueOf(f[21]))
+												: BigDecimal.ZERO);
 
 										finalConData.add(tempAss);
 									} catch (CloneNotSupportedException e) {
@@ -2254,6 +2287,12 @@ public class ExportInvoiceService {
 													tempAss.setTaxId(String.valueOf(f[11]));
 													tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 													tempAss.setCargoSbNo(sbNo);
+													tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+															? new BigDecimal(String.valueOf(f[20]))
+															: BigDecimal.ZERO);
+													tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+															? new BigDecimal(String.valueOf(f[21]))
+															: BigDecimal.ZERO);
 
 													List<String> conSize2 = new ArrayList<>();
 													conSize2.add("ALL");
@@ -2333,7 +2372,31 @@ public class ExportInvoiceService {
 																		.setScale(3, RoundingMode.HALF_UP);
 															}
 
-															tempAss.setRates(totalRate);
+															String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+															String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+															if (cPerc != null && !cPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(cPerc);
+																BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+
+															} else if (cAmt != null && !cAmt.isEmpty()) {
+
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+
+															}  else {
+																tempAss.setRates(totalRate);
+															}
 															tempAss.setServiceRate(serviceRate.get());
 
 														}
@@ -2405,7 +2468,31 @@ public class ExportInvoiceService {
 
 //															serviceRate.updateAndGet(existingValue -> existingValue.add(serviceRate.get()));														
 															tempAss.setServiceRate(serviceRate.get());
-															tempAss.setRates(totalRate);
+															String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+															String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+															if (cPerc != null && !cPerc.isEmpty()) {
+																BigDecimal disPerc = new BigDecimal(cPerc);
+																BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+																BigDecimal amt = (totalRate.multiply(finalPerc))
+																		.divide(new BigDecimal(100));
+
+																amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(amt);
+
+															} else if (cAmt != null && !cAmt.isEmpty()) {
+
+																BigDecimal disAmt = (totalRate
+																		.subtract(new BigDecimal(cAmt)))
+																		.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+																tempAss.setRates(disAmt);
+
+															}  else {
+																tempAss.setRates(totalRate);
+															}
 														}
 
 													}
@@ -2450,6 +2537,12 @@ public class ExportInvoiceService {
 														: new BigDecimal(String.valueOf(f[12])));
 												tempAss.setTaxId(String.valueOf(f[11]));
 												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+												tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+														? new BigDecimal(String.valueOf(f[20]))
+														: BigDecimal.ZERO);
+												tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+														? new BigDecimal(String.valueOf(f[21]))
+														: BigDecimal.ZERO);
 
 												List<String> conSize2 = new ArrayList<>();
 												conSize2.add("ALL");
@@ -2573,7 +2666,31 @@ public class ExportInvoiceService {
 														totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 
 														tempAss.setServiceRate(serviceRate.get());
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+														String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														}  else {
+															tempAss.setRates(totalRate);
+														}
 
 													}
 
@@ -2646,7 +2763,31 @@ public class ExportInvoiceService {
 //																			.setScale(3, RoundingMode.HALF_UP);
 //																}
 
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+														String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														}  else {
+															tempAss.setRates(totalRate);
+														}
 														tempAss.setServiceRate(serviceRate.get());
 													}
 
@@ -2759,8 +2900,38 @@ public class ExportInvoiceService {
 																String.valueOf(finalRangeValue[8]));
 
 														tempAss.setServiceRate(totalRate);
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+														String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														}  else {
+															tempAss.setRates(totalRate);
+														}
 														tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+														tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+																? new BigDecimal(String.valueOf(f[20]))
+																: BigDecimal.ZERO);
+														tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+																? new BigDecimal(String.valueOf(f[21]))
+																: BigDecimal.ZERO);
 													}
 
 												} else if ("TEU".equals(unit) || "SM".equals(unit)
@@ -2852,11 +3023,41 @@ public class ExportInvoiceService {
 																		: new BigDecimal(String.valueOf(f[12])));
 														tempAss.setTaxId(String.valueOf(f[11]));
 														tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+														tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+																? new BigDecimal(String.valueOf(f[20]))
+																: BigDecimal.ZERO);
+														tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+																? new BigDecimal(String.valueOf(f[21]))
+																: BigDecimal.ZERO);
 														BigDecimal totalRate = new BigDecimal(
 																String.valueOf(finalRangeValue[8]));
 
 														tempAss.setServiceRate(totalRate);
-														tempAss.setRates(totalRate);
+														String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+														String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+														if (cPerc != null && !cPerc.isEmpty()) {
+															BigDecimal disPerc = new BigDecimal(cPerc);
+															BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+															BigDecimal amt = (totalRate.multiply(finalPerc))
+																	.divide(new BigDecimal(100));
+
+															amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(amt);
+
+														} else if (cAmt != null && !cAmt.isEmpty()) {
+
+															BigDecimal disAmt = (totalRate
+																	.subtract(new BigDecimal(cAmt)))
+																	.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+															tempAss.setRates(disAmt);
+
+														}  else {
+															tempAss.setRates(totalRate);
+														}
 													}
 
 												} else {
@@ -2886,9 +3087,39 @@ public class ExportInvoiceService {
 																	: new BigDecimal(String.valueOf(f[12])));
 													tempAss.setTaxId(String.valueOf(f[11]));
 													tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+													tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+															? new BigDecimal(String.valueOf(f[20]))
+															: BigDecimal.ZERO);
+													tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+															? new BigDecimal(String.valueOf(f[21]))
+															: BigDecimal.ZERO);
 													BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 													tempAss.setServiceRate(totalRate);
-													tempAss.setRates(totalRate);
+													String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+													String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+													if (cPerc != null && !cPerc.isEmpty()) {
+														BigDecimal disPerc = new BigDecimal(cPerc);
+														BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+														BigDecimal amt = (totalRate.multiply(finalPerc))
+																.divide(new BigDecimal(100));
+
+														amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(amt);
+
+													} else if (cAmt != null && !cAmt.isEmpty()) {
+
+														BigDecimal disAmt = (totalRate
+																.subtract(new BigDecimal(cAmt)))
+																.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+														tempAss.setRates(disAmt);
+
+													}  else {
+														tempAss.setRates(totalRate);
+													}
 												}
 
 											}
@@ -2921,10 +3152,40 @@ public class ExportInvoiceService {
 												tempAss.setExecutionUnit1("");
 												tempAss.setTaxId(String.valueOf(f[11]));
 												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+												tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+														? new BigDecimal(String.valueOf(f[20]))
+														: BigDecimal.ZERO);
+												tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+														? new BigDecimal(String.valueOf(f[21]))
+														: BigDecimal.ZERO);
 												BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 
 												tempAss.setServiceRate(totalRate);
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 											}
 
 										}
@@ -3044,6 +3305,12 @@ public class ExportInvoiceService {
 										tempAss.setTaxId(String.valueOf(f[11]));
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
 										tempAss.setCargoSbNo(sbNo);
+										tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+												? new BigDecimal(String.valueOf(f[20]))
+												: BigDecimal.ZERO);
+										tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+												? new BigDecimal(String.valueOf(f[21]))
+												: BigDecimal.ZERO);
 
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
@@ -3129,7 +3396,31 @@ public class ExportInvoiceService {
 												System.out.println("tempAss.serviceRate.get() " + serviceRate.get());
 
 												tempAss.setServiceRate(serviceRate.get());
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 
 											}
 
@@ -3204,7 +3495,31 @@ public class ExportInvoiceService {
 												System.out.println("tempAss.serviceRate.get() 2 " + serviceRate.get());
 //												serviceRate.updateAndGet(existingValue -> existingValue.add(serviceRate.get()));														
 												tempAss.setServiceRate(serviceRate.get());
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 											}
 
 										}
@@ -3251,6 +3566,13 @@ public class ExportInvoiceService {
 														: new BigDecimal(String.valueOf(f[12])));
 										tempAss.setTaxId(String.valueOf(f[11]));
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+										tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+												? new BigDecimal(String.valueOf(f[20]))
+												: BigDecimal.ZERO);
+										tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+												? new BigDecimal(String.valueOf(f[21]))
+												: BigDecimal.ZERO);
+										
 										List<String> conSize2 = new ArrayList<>();
 										conSize2.add("ALL");
 										conSize2.add(
@@ -3366,7 +3688,31 @@ public class ExportInvoiceService {
 												}).reduce(BigDecimal.ZERO, BigDecimal::add);
 												totalRate = totalRate.setScale(3, BigDecimal.ROUND_HALF_UP);
 												tempAss.setServiceRate(serviceRate.get());
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 
 											}
 
@@ -3439,7 +3785,31 @@ public class ExportInvoiceService {
 //													}
 												System.out.println("totalRate " + totalRate + " " + weeksBetween);
 												tempAss.setServiceRate(serviceRate.get());
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 
 											}
 
@@ -3517,10 +3887,41 @@ public class ExportInvoiceService {
 														: new BigDecimal(String.valueOf(f[12])));
 												tempAss.setTaxId(String.valueOf(f[11]));
 												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+												tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+														? new BigDecimal(String.valueOf(f[20]))
+														: BigDecimal.ZERO);
+												tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+														? new BigDecimal(String.valueOf(f[21]))
+														: BigDecimal.ZERO);
+												
 												BigDecimal totalRate = new BigDecimal(
 														String.valueOf(finalRangeValue[8]));
 												tempAss.setServiceRate(totalRate);
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 
 											}
 
@@ -3605,11 +4006,41 @@ public class ExportInvoiceService {
 														: new BigDecimal(String.valueOf(f[12])));
 												tempAss.setTaxId(String.valueOf(f[11]));
 												tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+												tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+														? new BigDecimal(String.valueOf(f[20]))
+														: BigDecimal.ZERO);
+												tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+														? new BigDecimal(String.valueOf(f[21]))
+														: BigDecimal.ZERO);
 												BigDecimal totalRate = new BigDecimal(
 														String.valueOf(finalRangeValue[8]));
 
 												tempAss.setServiceRate(totalRate);
-												tempAss.setRates(totalRate);
+												String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+												String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+												if (cPerc != null && !cPerc.isEmpty()) {
+													BigDecimal disPerc = new BigDecimal(cPerc);
+													BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+													BigDecimal amt = (totalRate.multiply(finalPerc))
+															.divide(new BigDecimal(100));
+
+													amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(amt);
+
+												} else if (cAmt != null && !cAmt.isEmpty()) {
+
+													BigDecimal disAmt = (totalRate
+															.subtract(new BigDecimal(cAmt)))
+															.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+													tempAss.setRates(disAmt);
+
+												}  else {
+													tempAss.setRates(totalRate);
+												}
 											}
 
 										}
@@ -3640,10 +4071,40 @@ public class ExportInvoiceService {
 															: new BigDecimal(String.valueOf(f[12])));
 											tempAss.setTaxId(String.valueOf(f[11]));
 											tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+											tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+													? new BigDecimal(String.valueOf(f[20]))
+													: BigDecimal.ZERO);
+											tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+													? new BigDecimal(String.valueOf(f[21]))
+													: BigDecimal.ZERO);
 											BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 
 											tempAss.setServiceRate(totalRate);
-											tempAss.setRates(totalRate);
+											String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+											String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+											if (cPerc != null && !cPerc.isEmpty()) {
+												BigDecimal disPerc = new BigDecimal(cPerc);
+												BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+												BigDecimal amt = (totalRate.multiply(finalPerc))
+														.divide(new BigDecimal(100));
+
+												amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(amt);
+
+											} else if (cAmt != null && !cAmt.isEmpty()) {
+
+												BigDecimal disAmt = (totalRate
+														.subtract(new BigDecimal(cAmt)))
+														.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+												tempAss.setRates(disAmt);
+
+											}  else {
+												tempAss.setRates(totalRate);
+											}
 										}
 
 									}
@@ -3675,9 +4136,39 @@ public class ExportInvoiceService {
 														: new BigDecimal(String.valueOf(f[12])));
 										tempAss.setTaxId(String.valueOf(f[11]));
 										tempAss.setExRate(new BigDecimal(String.valueOf(f[9])));
+										tempAss.setDiscPercentage((f[20] != null && !String.valueOf(f[20]).isEmpty())
+												? new BigDecimal(String.valueOf(f[20]))
+												: BigDecimal.ZERO);
+										tempAss.setDiscValue((f[21] != null && !String.valueOf(f[21]).isEmpty())
+												? new BigDecimal(String.valueOf(f[21]))
+												: BigDecimal.ZERO);
 										BigDecimal totalRate = new BigDecimal(String.valueOf(f[2]));
 										tempAss.setServiceRate(totalRate);
-										tempAss.setRates(totalRate);
+										String cPerc = String.valueOf(f[20] == null ? "" : f[20]);
+										String cAmt = String.valueOf(f[21] == null ? "" : f[21]);
+
+										if (cPerc != null && !cPerc.isEmpty()) {
+											BigDecimal disPerc = new BigDecimal(cPerc);
+											BigDecimal finalPerc = new BigDecimal(100).subtract(disPerc);
+
+											BigDecimal amt = (totalRate.multiply(finalPerc))
+													.divide(new BigDecimal(100));
+
+											amt = amt.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(amt);
+
+										} else if (cAmt != null && !cAmt.isEmpty()) {
+
+											BigDecimal disAmt = (totalRate
+													.subtract(new BigDecimal(cAmt)))
+													.setScale(3, BigDecimal.ROUND_HALF_UP);
+
+											tempAss.setRates(disAmt);
+
+										}  else {
+											tempAss.setRates(totalRate);
+										}
 									}
 
 									finalConData.add(tempAss);
@@ -3899,8 +4390,8 @@ public class ExportInvoiceService {
 								anx.setLocalAmt(c.getRates());
 								anx.setInvoiceAmt(c.getRates());
 								anx.setCommodityDescription(newAss.getCommodityDescription());
-								anx.setDiscPercentage(zero);
-								anx.setDiscValue(zero);
+								anx.setDiscPercentage(c.getDiscPercentage());
+								anx.setDiscValue(c.getDiscValue());
 								anx.setmPercentage(zero);
 								anx.setmAmount(c.getmAmount());
 								anx.setAcCode(c.getAcCode());
@@ -4219,7 +4710,6 @@ public class ExportInvoiceService {
 			return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 	
 	
 	

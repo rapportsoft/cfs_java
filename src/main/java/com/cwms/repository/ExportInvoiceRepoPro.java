@@ -742,8 +742,27 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 			@Param("code") List<String> code, @Param("size1") String size1, @Param("ctype1") String ctype1,
 			@Param("code1") String code1);
 
+//	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
+//			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, COALESCE(tx.taxPerc, 0) AS taxPerc, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,GROUP_CONCAT(distinct sm.storageType) AS storageTypes "
+//			+ "FROM CFSTariffService c "
+//			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
+//			+ "AND c.cfsAmendNo = t.cfsAmndNo "
+//			+ "LEFT OUTER JOIN Services s ON c.companyId = s.companyId AND c.branchId = s.branchId AND c.serviceId = s.serviceId "
+//			+ "LEFT OUTER JOIN ServiceMapping sm ON c.companyId = sm.companyId AND c.branchId = sm.branchId AND s.serviceId = sm.serviceId "
+//			+ "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
+//			+ "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
+//			+ "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+//			+ "WHERE c.companyId = :cid AND c.branchId = :bid "
+//			+ "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
+//			+ "AND c.cfsTariffNo = :tariffNo AND c.containerSize IN :consize AND c.cargoType IN :type "
+//			+ "GROUP BY c.serviceId " + "ORDER BY c.serviceId")
+//	List<Object[]> getServiceRate(@Param("cid") String cid, @Param("bid") String bid,
+//			@Param("assessDate") Date assessDate, @Param("con") String con,
+//			@Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo,
+//			@Param("consize") List<String> consize, @Param("type") List<String> type);
+	
 	@Query(value = "SELECT c.serviceId, c.serviceUnit, c.rate, c.cfsTariffNo, c.cfsAmendNo, c.currencyId, c.srNo, "
-			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, COALESCE(tx.taxPerc, 0) AS taxPerc, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,GROUP_CONCAT(distinct sm.storageType) AS storageTypes "
+			+ "c.serviceUnitI, c.rangeType, cu.exrate, c.minimumRate, s.taxId, COALESCE(tx.taxPerc, 0) AS taxPerc, s.acCode, s.serviceGroup, c.fromRange, c.toRange, s.criteriaType,s.serviceShortDesc,GROUP_CONCAT(distinct sm.storageType) AS storageTypes,igm.percentage, igm.amount "
 			+ "FROM CFSTariffService c "
 			+ "LEFT OUTER JOIN CfsTarrif t ON c.companyId = t.companyId AND c.branchId = t.branchId AND c.cfsTariffNo = t.cfsTariffNo "
 			+ "AND c.cfsAmendNo = t.cfsAmndNo "
@@ -752,6 +771,8 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 			+ "LEFT OUTER JOIN CurrencyConv cu ON c.companyId = cu.companyId AND c.branchId = cu.branchId AND c.currencyId = cu.convCurrency "
 			+ "LEFT OUTER JOIN TaxDtl tx ON s.companyId = tx.companyId AND s.taxId = tx.taxId "
 			+ "AND DATE(:assessDate) BETWEEN tx.periodFrom AND tx.periodTo "
+			+ "LEFT OUTER JOIN IgmServiceDtl igm ON c.companyId = igm.companyId AND c.branchId = igm.branchId "
+		    + "AND c.serviceId = igm.serviceId AND igm.igmTransId = :trans AND igm.igmNo = :igm AND igm.status = 'A' "
 			+ "WHERE c.companyId = :cid AND c.branchId = :bid "
 			+ "AND c.status = 'A' AND :assessDate < t.cfsValidateDate AND c.serviceId IN :serviceList "
 			+ "AND c.cfsTariffNo = :tariffNo AND c.containerSize IN :consize AND c.cargoType IN :type "
@@ -759,7 +780,8 @@ String getCargoStorageServiceId(@Param("companyId") String companyId,
 	List<Object[]> getServiceRate(@Param("cid") String cid, @Param("bid") String bid,
 			@Param("assessDate") Date assessDate, @Param("con") String con,
 			@Param("serviceList") List<String> serviceList, @Param("tariffNo") String tariffNo,
-			@Param("consize") List<String> consize, @Param("type") List<String> type);
+			@Param("consize") List<String> consize, @Param("type") List<String> type,
+			@Param("trans") String trans,@Param("igm") String igm);
 
 	@Query(value = "select NEW com.cwms.entities.SSRDtl(s.containerNo, s.serviceId, s.serviceUnit, s.executionUnit,s.serviceUnit1, s.executionUnit1, s.rate,"
 			+ "s.totalRate) " + "from SSRDtl s "
