@@ -20,6 +20,7 @@ import com.cwms.entities.ExportSbEntry;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.helper.HelperMethods;
+import com.cwms.repository.BufferWorkOrderRepo;
 import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.VehicleTrackRepository;
@@ -44,6 +45,9 @@ public class GateInService {
 	
 	@Autowired
 	private ExportInventoryRepository exportinventoryrepo;
+	
+	@Autowired
+	private BufferWorkOrderRepo bufferworepo;
 	
 	private List<Map<String, String>> convertToValueLabelList(List<String> data) {
 	    return data.stream().map(obj -> {
@@ -271,7 +275,7 @@ public class GateInService {
 	
 
 	@Transactional
-	public ResponseEntity<?> addGateInBuffer(String companyId, String branchId, GateIn gateInLoop, String user) {
+	public ResponseEntity<?> addGateInBuffer(String companyId, String branchId, GateIn gateInLoop, String user, String woNo) {
 	    Date currentDate = new Date();	    
 	    String financialYear = helperMethods.getFinancialYear();
 	    try {
@@ -343,7 +347,8 @@ public class GateInService {
 	                gateInLoop.setFinYear(financialYear);
 	               gateInRepo.save(gateInLoop);             
 	                
-	                
+	                int updateGateInId = bufferworepo.updateGateInId(companyId, branchId, woNo, gateInLoop.getContainerNo(), autoGateInId);
+
 	                
 	                VehicleTrack v = new VehicleTrack();
 					v.setCompanyId(companyId);

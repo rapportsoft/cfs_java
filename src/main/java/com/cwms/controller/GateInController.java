@@ -1121,9 +1121,9 @@ public class GateInController {
 	@PostMapping("/addGateInBuffer")
 	public ResponseEntity<?> addGateInBuffer(@RequestParam("companyId") String companyId,
 			@RequestParam("branchId") String branchId, @RequestBody GateIn gateIn,
-			@RequestParam("userId") String User) {
+			@RequestParam("userId") String User,@RequestParam("woNo") String woNo) {
 
-		ResponseEntity<?> addExportSbEntry = gateInService.addGateInBuffer(companyId, branchId, gateIn, User);
+		ResponseEntity<?> addExportSbEntry = gateInService.addGateInBuffer(companyId, branchId, gateIn, User, woNo);
 		return addExportSbEntry;
 	}
 

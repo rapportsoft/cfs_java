@@ -153,6 +153,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionGatePass/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionInvoice/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionExamination/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/bufferWO/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
