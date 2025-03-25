@@ -155,6 +155,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/auctionExamination/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/bufferWO/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/rescangateout/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/portEir/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

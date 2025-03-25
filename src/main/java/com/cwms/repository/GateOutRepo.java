@@ -167,4 +167,37 @@ List<Object[]> searchExportGateOut(@Param("cid") String cid, @Param("bid") Strin
 			+ "OR i.igmLineNo LIKE CONCAT(:id,'%') OR i.transporterName LIKE CONCAT(:id,'%') OR i.vehicleNo LIKE CONCAT(:id,'%') "
 			+ "OR i.driverName LIKE CONCAT(:id,'%')) and i.processId='P01408' order by i.gateOutDate desc")
 	List<Object[]> searchAuctionGateOutData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+	
+	
+	@Query(value="select g.gateOutId,g.containerNo,g.docRefNo,g.srNo "
+			+ "from GateOut g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status = 'A' and (g.eirNo is null OR g.eirNo = '') and "
+			+ "g.processId='P00223' and g.profitcentreId='N00004' and (:id is null OR :id = '' OR "
+			+ "g.gateOutId LIKE CONCAT(:id,'%') OR g.containerNo LIKE CONCAT(:id,'%') OR g.docRefNo LIKE CONCAT(:id,'%')) order by g.gateOutId")
+	List<Object[]> getDataBeforeSavePortEIR(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
+	
+	@Query(value="select g.eirNo,g.eirDate,g.gateNoOut,p.profitcentreDesc,g.eirStatus,g.eirCreatedBy,g.gateOutId,g.gateOutDate,g.srNo,"
+			+ "g.docRefNo,g.erpDocRefNo,c.partyName,g.containerNo,g.containerSize,g.containerType,g.transporterStatus,g.transporterName,"
+			+ "g.vehicleNo,g.driverName "
+			+ "from GateOut g "
+			+ "LEFT OUTER JOIN Profitcentre p ON g.companyId=p.companyId and g.branchId=p.branchId and g.profitcentreId=p.profitcentreId "
+			+ "LEFT OUTER JOIN Party c ON g.companyId=c.companyId and g.branchId=c.branchId and g.cha=c.partyId "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status = 'A' and g.gateOutId=:id and g.srNo=:sr")
+	Object gateOutDataFOrEirENtry(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id, @Param("sr") String sr);
+	
+	@Query(value="select g "
+			+ "from GateOut g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status = 'A' and g.gateOutId=:id and g.srNo=:sr")
+	GateOut gateOutDataFOrEirENtry1(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id, @Param("sr") String sr);
+	
+	@Query(value="select g.eirNo,DATE_FORMAT(g.eirDate,'%d/%m/%Y'),g.gateOutId,DATE_FORMAT(g.gateOutDate,'%d/%m/%Y'),g.srNo,"
+			+ "g.gatePassNo,g.containerNo,g.containerSize,g.containerType,g.transporterName,g.vehicleNo,g.driverName,g.eirApprovedDate "
+			+ "from GateOut g "
+			+ "where g.companyId=:cid and g.branchId=:bid and g.status = 'A' and (g.eirNo is not null OR g.eirNo != '') and "
+			+ "g.processId='P00223' and g.profitcentreId='N00004' and (:id is null OR :id = '' OR "
+			+ "g.gateOutId LIKE CONCAT(:id,'%') OR g.containerNo LIKE CONCAT(:id,'%') OR g.docRefNo LIKE CONCAT(:id,'%') "
+			+ "OR g.eirNo LIKE CONCAT(:id,'%') OR g.containerSize LIKE CONCAT(:id,'%') OR g.containerType LIKE CONCAT(:id,'%') "
+			+ "OR g.transporterName LIKE CONCAT(:id,'%') OR g.vehicleNo LIKE CONCAT(:id,'%') OR g.driverName LIKE CONCAT(:id,'%')) "
+			+ "order by g.eirApprovedDate desc")
+	List<Object[]> searchData(@Param("cid") String cid, @Param("bid") String bid, @Param("id") String id);
 }
