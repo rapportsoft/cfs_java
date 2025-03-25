@@ -2,20 +2,27 @@ package com.cwms.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cwms.entities.CFBondGatePass;
 import com.cwms.entities.GateOut;
+import com.cwms.entities.GateOutSpl;
+import com.cwms.helper.HelperMethods;
 import com.cwms.repository.CfbondGatePassRepository;
 import com.cwms.repository.GateOutRepo;
+import com.cwms.repository.GateOutSplRepo;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VehicleTrackRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,6 +43,154 @@ public class GateOutService {
 	
 	@Autowired
     private VehicleTrackRepository vehicleTrackRepository;
+	
+	@Autowired
+	private GateOutSplRepo splRepo;
+	
+	@Autowired
+	private HelperMethods helper;
+	
+	@Autowired
+	private ProcessNextIdService processService;
+	
+	
+	
+
+	public ResponseEntity<?> getSelectedSplOutEntry(String companyId, String branchId, String profitCenterId, String gateOutId)
+	{		
+		List<GateOutSpl> getSelectedSplOutEntry = splRepo.getSelectedSplOutEntry(companyId, branchId, gateOutId, profitCenterId);
+		return ResponseEntity.ok(getSelectedSplOutEntry);	
+	}
+	
+	
+	public List<Object[]> getSplOutToSelect(String companyId, String branchId, String searchValue)
+	{				
+		return splRepo.getSplOutToSelect(companyId, branchId, searchValue);
+	}
+	
+	
+	
+	
+
+	@Transactional
+	public ResponseEntity<?> saveGateOutSPLImport(String companyId, String branchId, String user,
+			List<GateOutSpl> gateOutList) {
+		Date currentDate = new Date();
+		List<GateOutSpl> listToSend = new ArrayList<>();
+		try {
+
+
+			Optional<String> firstValidStuffReqId = gateOutList.stream().map(GateOutSpl::getGateOutId)
+					.filter(stuffReqId -> stuffReqId != null && !stuffReqId.trim().isEmpty()).findFirst();
+
+			String autoGateOutId = (firstValidStuffReqId.isPresent() && !firstValidStuffReqId.get().trim().isEmpty())
+					? firstValidStuffReqId.get()
+					: processService.autoExportStuffingId(companyId, branchId, "P00219");
+			
+			GateOutSpl gateOutSpl = gateOutList.get(0);
+
+			for (GateOutSpl out : gateOutList) {
+
+				if (out.getGateOutId() == null || out.getGateOutId().isEmpty()) {
+
+					out.setGateOutId(autoGateOutId);
+					out.setCompanyId(companyId);
+					out.setBranchId(branchId);
+					out.setCreatedBy(user);
+					out.setCreatedDate(currentDate);
+					
+					out.setFinYear(helper.getFinancialYear());
+
+					out.setEditedBy(user);
+					out.setEditedDate(currentDate);
+
+					out.setStatus("A");
+					out.setApprovedBy(user);
+					out.setApprovedDate(currentDate);
+					splRepo.save(out);
+					
+					int updateSplOutGatePass = splRepo.updateSplOutGatePass(companyId, branchId, out.getContainerNo(),
+							out.getGatePassNo());
+					int updateSplOutVehicleTrack = splRepo.updateSplOutVehicleTrack(companyId, branchId, out.getVehicleNo(),
+							out.getGateOutId(), out.getGateOutDate());
+
+					System.out.println("updateSplOutGatePass : " + updateSplOutGatePass + " \nupdateSplOutVehicleTrack : "
+							+ updateSplOutVehicleTrack);
+					
+					
+
+				} else {
+					
+					
+					int updateSplOutGateOut = splRepo.updateSplOutGateOut(companyId, branchId, out.getContainerNo(), out.getGateOutId(), 
+						        out.getShift(), out.getGateNo(), out.getDestination(), out.getTransporter(), out.getTransporterName(), 
+						        out.getOutBookingType(), out.getMovementBy(), out.getShipperName(),	out.getComments()
+						    );
+					
+					System.out.println("updateSplOutGateOut : " + updateSplOutGateOut );
+
+				}
+
+			
+				
+				System.out.println(" out \n" + out);
+
+			}
+			List<GateOutSpl> getSelectedSplOutEntry = splRepo.getSelectedSplOutEntry(companyId, branchId, autoGateOutId, gateOutSpl.getProfitcentreId());
+
+			return ResponseEntity.ok(getSelectedSplOutEntry);
+
+		} catch (Exception e) {
+			System.out.println(
+					"An error occurred while addingImport GateOut Special Gate Out entries: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while addingImport GateOut Special Gate Out entries.");
+		}
+	}
+
+	public ResponseEntity<?> searchGatePassNoForSPLImport(String companyId, String branchId, String searchValue,
+			String profitcentreId) {
+
+		List<String> result = splRepo.searchGatePassNoForSPLImport(companyId, branchId, searchValue, profitcentreId);
+
+		List<Map<String, Object>> containerList = result.stream().map(row -> {
+			Map<String, Object> map = new HashMap<>();
+			map.put("value", row);
+			map.put("label", row);
+			return map;
+		}).collect(Collectors.toList());
+
+		return ResponseEntity.ok(containerList);
+
+	}
+
+	public ResponseEntity<?> selectGatePassNoForSPLImport(String companyId, String branchId, String gatePassNo,
+			String profitcentreId) {
+
+		return ResponseEntity.ok(splRepo.selectGatePassNoForSPLImport(companyId, branchId, gatePassNo, profitcentreId));
+
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public ResponseEntity<?> saveDataOfExbondGateOut(String companyId, String branchId, String user,
 			String flag, Map<String, Object> requestBody) {
