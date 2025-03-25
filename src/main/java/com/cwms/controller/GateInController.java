@@ -376,11 +376,18 @@ public class GateInController {
 		}
 	}
 
+//	@GetMapping("/getImpData")
+//	public List<Object[]> getImpData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+//			@RequestParam(name = "search", required = false) String search) {
+//
+//		return gateinrepo.getAll(cid, bid, search);
+//	}
+	
 	@GetMapping("/getImpData")
 	public List<Object[]> getImpData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
-			@RequestParam(name = "search", required = false) String search) {
+			@RequestParam(name = "search", required = false) String search, @RequestParam("process") String process) {
 
-		return gateinrepo.getAll(cid, bid, search);
+		return gateinrepo.getAll(cid, bid, search, process);
 	}
 
 	@GetMapping("/getSingleData")

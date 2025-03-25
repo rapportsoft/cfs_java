@@ -356,21 +356,34 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	GateIn getData1(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("cont") String cont);
 	
 	
+//	@Query("SELECT g.gateInId, g.erpDocRefNo, g.docRefNo, g.containerNo, g.vehicleNo, "
+//	        + "g.status, DATE_FORMAT(g.inGateInDate, '%d %M %y'),p.profitcentreDesc, py1.partyName, py2.partyName, po.portName, v.vesselName "
+//	        + "FROM GateIn g "
+//	        + "LEFT JOIN Profitcentre p ON g.companyId = p.companyId AND g.branchId = p.branchId AND g.profitcentreId = p.profitcentreId "
+//	        + "LEFT JOIN Party py1 ON g.companyId = py1.companyId AND g.branchId = py1.branchId AND g.sa = py1.partyId "
+//	        + "LEFT JOIN Party py2 ON g.companyId = py2.companyId AND g.branchId = py2.branchId AND g.sl = py2.partyId "
+//	        + "LEFT JOIN Port po ON g.companyId = po.companyId AND g.branchId = po.branchId AND g.terminal = po.portCode "
+//	        + "LEFT JOIN Vessel v ON g.companyId = v.companyId AND g.branchId = v.branchId AND g.vessel = v.vesselId "
+//	        + "WHERE g.companyId = :cid "
+//	        + "AND g.branchId = :bid "
+//	        + "AND g.gateInType = 'IMP' "
+//	        + "AND g.status != 'D' "
+//	        + "AND (:search IS NULL OR :search = '' OR g.gateInId LIKE CONCAT(:search, '%') "
+//	        + "OR g.containerNo LIKE CONCAT('%', :search, '%')) order by g.gateInId desc")
+//	List<Object[]> getAll(@Param("cid") String cid, @Param("bid") String bid, @Param("search") String search);
+	
 	@Query("SELECT g.gateInId, g.erpDocRefNo, g.docRefNo, g.containerNo, g.vehicleNo, "
-	        + "g.status, DATE_FORMAT(g.inGateInDate, '%d %M %y'),p.profitcentreDesc, py1.partyName, py2.partyName, po.portName, v.vesselName "
-	        + "FROM GateIn g "
-	        + "LEFT JOIN Profitcentre p ON g.companyId = p.companyId AND g.branchId = p.branchId AND g.profitcentreId = p.profitcentreId "
-	        + "LEFT JOIN Party py1 ON g.companyId = py1.companyId AND g.branchId = py1.branchId AND g.sa = py1.partyId "
-	        + "LEFT JOIN Party py2 ON g.companyId = py2.companyId AND g.branchId = py2.branchId AND g.sl = py2.partyId "
-	        + "LEFT JOIN Port po ON g.companyId = po.companyId AND g.branchId = po.branchId AND g.terminal = po.portCode "
-	        + "LEFT JOIN Vessel v ON g.companyId = v.companyId AND g.branchId = v.branchId AND g.vessel = v.vesselId "
-	        + "WHERE g.companyId = :cid "
-	        + "AND g.branchId = :bid "
-	        + "AND g.gateInType = 'IMP' "
-	        + "AND g.status != 'D' "
-	        + "AND (:search IS NULL OR :search = '' OR g.gateInId LIKE CONCAT(:search, '%') "
-	        + "OR g.containerNo LIKE CONCAT('%', :search, '%')) order by g.gateInId desc")
-	List<Object[]> getAll(@Param("cid") String cid, @Param("bid") String bid, @Param("search") String search);
+			+ "g.status, DATE_FORMAT(g.inGateInDate, '%d %M %y'),p.profitcentreDesc, py1.partyName, py2.partyName, po.portName, v.vesselName "
+			+ "FROM GateIn g "
+			+ "LEFT JOIN Profitcentre p ON g.companyId = p.companyId AND g.branchId = p.branchId AND g.profitcentreId = p.profitcentreId "
+			+ "LEFT JOIN Party py1 ON g.companyId = py1.companyId AND g.branchId = py1.branchId AND g.sa = py1.partyId "
+			+ "LEFT JOIN Party py2 ON g.companyId = py2.companyId AND g.branchId = py2.branchId AND g.sl = py2.partyId "
+			+ "LEFT JOIN Port po ON g.companyId = po.companyId AND g.branchId = po.branchId AND g.terminal = po.portCode "
+			+ "LEFT JOIN Vessel v ON g.companyId = v.companyId AND g.branchId = v.branchId AND g.vessel = v.vesselId "
+			+ "WHERE g.companyId = :cid " + "AND g.branchId = :bid " + "AND g.gateInType = 'IMP' and g.processId=:process "
+			+ "AND g.status != 'D' " + "AND (:search IS NULL OR :search = '' OR g.gateInId LIKE CONCAT(:search, '%') "
+			+ "OR g.containerNo LIKE CONCAT('%', :search, '%')) order by g.gateInId desc")
+	List<Object[]> getAll(@Param("cid") String cid, @Param("bid") String bid, @Param("search") String search, @Param("process") String process);
 
 
 //	@Query("SELECT NEW com.cwms.entities.GateIn(E.companyId, E.branchId, E.gateInId, E.finYear, E.erpDocRefNo, " +
@@ -639,6 +652,41 @@ public interface GateInRepository extends JpaRepository<GateIn, String> {
 	
 	
 	
+	// Rescan Gate out
+
+		@Query(value = "select g.gateInId,g.containerNo " + "from GateIn g "
+				+ "LEFT OUTER JOIN Cfigmcn c ON g.companyId=c.companyId and g.branchId=c.branchId and g.docRefNo=c.igmNo and "
+				+ "g.erpDocRefNo=c.igmTransId and g.containerNo=c.containerNo "
+				+ "where g.companyId=:cid and g.branchId=:bid and g.status='A' and g.profitcentreId = 'N00002' and (c.gateOutId is null OR "
+				+ "c.gateOutId = '') and c.invoiceAssesed='N' and c.rscanOut='N' and c.scannerType != '' and (:id is null OR :id = '' OR "
+				+ "g.containerNo LIKE CONCAT (:id,'%'))")
+		List<Object[]> searchBeforeSaveDataForRescangateout(@Param("cid") String cid, @Param("bid") String bid,
+				@Param("id") String id);
+
+		@Query("SELECT g.gateInId, g.erpDocRefNo, g.docRefNo, g.containerNo, g.vehicleNo, "
+				+ "g.status, DATE_FORMAT(g.inGateInDate, '%d %M %y'),p.profitcentreDesc, py1.partyName, py2.partyName, po.portName, v.vesselName "
+				+ "FROM GateIn g "
+				+ "LEFT JOIN Profitcentre p ON g.companyId = p.companyId AND g.branchId = p.branchId AND g.profitcentreId = p.profitcentreId "
+				+ "LEFT JOIN Party py1 ON g.companyId = py1.companyId AND g.branchId = py1.branchId AND g.sa = py1.partyId "
+				+ "LEFT JOIN Party py2 ON g.companyId = py2.companyId AND g.branchId = py2.branchId AND g.sl = py2.partyId "
+				+ "LEFT JOIN Port po ON g.companyId = po.companyId AND g.branchId = po.branchId AND g.terminal = po.portCode "
+				+ "LEFT JOIN Vessel v ON g.companyId = v.companyId AND g.branchId = v.branchId AND g.vessel = v.vesselId "
+				+ "WHERE g.companyId = :cid " + "AND g.branchId = :bid " + "AND g.gateInType = 'IMP' "
+				+ "AND g.status != 'D' " + "AND g.gateInId = :id")
+		Object getSearchBeforeSaveDataForRescangateout(@Param("cid") String cid, @Param("bid") String bid,
+				@Param("id") String id);
+		
+		
+		// Rescan Gate In
+
+		@Query(value = "select g.gateInId,g.containerNo " + "from GateIn g "
+				+ "LEFT OUTER JOIN Cfigmcn c ON g.companyId=c.companyId and g.branchId=c.branchId and g.docRefNo=c.igmNo and "
+				+ "g.erpDocRefNo=c.igmTransId and g.containerNo=c.containerNo "
+				+ "where g.companyId=:cid and g.branchId=:bid and g.status='A' and g.profitcentreId = 'N00002' and (c.gateOutId is null OR "
+				+ "c.gateOutId = '') and c.invoiceAssesed='N' and c.rscanOut='Y' and c.scannerType != '' and (:id is null OR :id = '' OR "
+				+ "g.containerNo LIKE CONCAT (:id,'%')) and g.processId='P00217'")
+		List<Object[]> searchBeforeSaveDataForRescangatein(@Param("cid") String cid, @Param("bid") String bid,
+				@Param("id") String id);
 
 
 
