@@ -156,6 +156,8 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/bufferWO/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/rescangateout/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/portEir/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/ssrUpload/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/lclTariffUpload/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))

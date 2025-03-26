@@ -1247,5 +1247,33 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 									+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.igmLineNo=:line and cn.status != 'D'")
 							int updateAuctionExaminationStatus1(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
 									@Param("igm") String igm,@Param("line") String line, @Param("id") String id);
+							
+							
+							@Modifying
+							@Transactional
+							@Query(value = "Update Cfigmcn c SET c.upTariffFwd=:fwdId,c.upTariffNo=:tarrifNo,c.upTariffAmndNo=:amdNo,"
+									+ "c.tariffCode=:code, c.subItemNo=:subItem "
+									+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' and c.igmNo=:igm and c.igmTransId=:trans and "
+									+ "c.containerNo=:con and (c.gateOutId is null OR c.gateOutId = '')")
+							int updateConList1(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+									@Param("trans") String trans, @Param("con") String con, @Param("fwdId") String fwdId,@Param("tarrifNo") String tariffNo,
+									@Param("amdNo") String amdNo,@Param("code") String code,@Param("subItem") String subItem);
+							
+							@Modifying
+							@Transactional
+							@Query(value = "Update Cfigmcrg c SET c.customerId=:fwdId "
+									+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' and c.igmNo=:igm and c.igmTransId=:trans and "
+									+ "c.igmLineNo=:line")
+							int updateIGMCrg(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+									@Param("trans") String trans, @Param("line") String line, @Param("fwdId") String fwdId);
+							
+							
+							@Modifying
+							@Transactional
+							@Query(value = "Update Cfigmcn cn SET cn.ssrTransId=:id where cn.companyId=:cid and cn.branchId=:bid and "
+									+ "cn.igmTransId=:trans and cn.igmNo=:igm and cn.containerNo=:con and cn.status != 'D'")
+							int updateSSRID(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
+									@Param("igm") String igm, @Param("con") String con,@Param("id") String id);
+							
 }
 

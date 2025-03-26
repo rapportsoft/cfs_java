@@ -149,4 +149,11 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 			+ "OR s.docRefNo LIKE CONCAT ('%',:val,'%') OR s.exBondBeId LIKE CONCAT ('%',:val,'%') OR s.exBondId LIKE CONCAT ('%',:val,'%') "
 			+ "OR s.beNo LIKE CONCAT ('%',:val,'%') OR s.inBondId LIKE CONCAT ('%',:val,'%') OR s.ssrType LIKE CONCAT ('%',:val,'%')) order by s.transId desc")
 	List<Object[]> searchBondSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val, @Param("profit") String profit);
+
+	@Query(value="select s.transId,s.docRefNo,s.igmLineNo,s.containerNo,s.containerSize,s.containerType,a.serviceShortDesc,s.totalRate "
+			+ "from SSRDtl s "
+			+ "LEFT OUTER JOIN Services a ON s.companyId=a.companyId and s.branchId=a.branchId and s.serviceId=a.serviceId "
+			+ "where s.companyId=:cid and s.branchId=:bid and s.transId=:val and s.status='A'")
+	List<Object[]> getDataBySSRTransId(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
+
 }
