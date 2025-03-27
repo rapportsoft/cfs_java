@@ -24,7 +24,9 @@ import com.cwms.entities.EmptyInventory;
 import com.cwms.entities.ExportInventory;
 import com.cwms.entities.GateIn;
 import com.cwms.entities.GateOut;
+import com.cwms.entities.HoldDetails;
 import com.cwms.entities.ImportInventory;
+import com.cwms.entities.NotGateInHoldDtl;
 import com.cwms.entities.VehicleTrack;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
@@ -33,7 +35,9 @@ import com.cwms.repository.EmptyInventoryRepo;
 import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.GateOutRepository;
+import com.cwms.repository.HoldDetailsRepository;
 import com.cwms.repository.ImportInventoryRepository;
+import com.cwms.repository.NotGateInHoldDtlRepo;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.service.GateInService;
@@ -72,6 +76,12 @@ public class GateInController {
 	
 	@Autowired
 	private EmptyInventoryRepo emptyinventoryrepo;
+	
+	@Autowired
+	private NotGateInHoldDtlRepo notgateinholddtlrepo;
+	
+	@Autowired
+	private HoldDetailsRepository holdRepo;
 
 	@PostMapping("/saveGateIn")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -121,6 +131,53 @@ public class GateInController {
 				gatein.setStatus("A");
 				gatein.setGateInType("IMP");
 				gatein.setProcessId("P00203");
+				
+				NotGateInHoldDtl dtl = notgateinholddtlrepo.getDataByContainerNo(cid, bid, gatein.getContainerNo());
+				HoldDetails hold = new HoldDetails();
+				if(dtl != null) {
+					dtl.setGateInId(HoldNextIdD1);
+					dtl.setMergeFlag("Y");
+					dtl.setMergeDate(new Date());
+					
+					notgateinholddtlrepo.save(dtl);
+					
+					String holdId2 = processnextidrepo.findAuditTrail(cid, bid, "P05078", "2024");
+
+					int lastNextNumericId2 = Integer.parseInt(holdId2.substring(4));
+
+					int nextNumericNextID2 = lastNextNumericId2 + 1;
+
+					String HoldNextIdD2 = String.format("HOLD%06d", nextNumericNextID2);
+				
+					
+					hold.setCompanyId(cid);
+					hold.setBranchId(bid);
+					hold.setDocRefNo(HoldNextIdD1);
+					hold.setContainerNo(gatein.getContainerNo());
+					hold.setDocRefDate(new Date());
+					hold.setIgmLineNo(cn.get(0).getIgmLineNo());
+					hold.setHldSrNo(1);
+					hold.setIgmNo(gatein.getDocRefNo());
+					hold.setIgmTransId(gatein.getErpDocRefNo());
+					hold.setGateInId(HoldNextIdD1);
+					hold.setCreatedBy(user);
+					hold.setCreatedDate(new Date());
+					hold.setStatus("A");
+					hold.setApprovedBy(user);
+					hold.setApprovedDate(new Date());
+					hold.setHoldStatus("H");
+					hold.setHoldingAgency(dtl.getCsd());
+					hold.setHoldDate(dtl.getCsdHoldDate());
+					hold.setHoldRemarks(dtl.getCsdHoldRemarks());
+					hold.setHoldUser(user);
+
+					holdRepo.save(hold);
+
+					processnextidrepo.updateAuditTrail(cid, bid, "P05078", HoldNextIdD2, "2024");
+					
+					
+				}
+				
 				cn.stream().forEach(c -> {
 					c.setGateInDate(new Date());
 					c.setGateInId(HoldNextIdD1);
@@ -137,7 +194,15 @@ public class GateInController {
 					c.setYardBlock1(gatein.getYardBlock1());
 					c.setBlockCellNo1(gatein.getYardCell1());
 					c.setMovementType(gatein.getDrt());
-					System.out.println("gatein.getTareWeight() " + gatein.getTareWeight());
+				
+					if(dtl != null) {
+						c.setHoldDate(new Date());
+						c.setHoldDocRefNo(hold.getDocRefNo());
+						c.setHoldingAgentName(dtl.getCsdHoldUserName());
+						c.setHoldRemarks(dtl.getCsdHoldRemarks());
+						c.setHoldStatus("H");
+					}
+					
 					c.setCargoWt(c.getGrossWt()
 							.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
 					gatein.setCargoWeight(c.getGrossWt()

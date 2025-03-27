@@ -21,4 +21,8 @@ public interface NotGateInHoldDtlRepo extends JpaRepository<NotGateInHoldDtl, St
 			+ "from NotGateInHoldDtl c "
 			+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' order by c.createdDate desc")
 	List<Object[]> getAdvanceHoldData(@Param("cid") String cid,@Param("bid") String bid);
+	
+	@Query(value="select c from NotGateInHoldDtl c "
+			+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' and c.mergeFlag='N' and c.containerNo=:con")
+	NotGateInHoldDtl getDataByContainerNo(@Param("cid") String cid,@Param("bid") String bid,@Param("con") String con);
 }
