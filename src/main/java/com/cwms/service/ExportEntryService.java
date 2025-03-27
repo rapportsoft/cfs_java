@@ -1,7 +1,14 @@
 package com.cwms.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +34,8 @@ import com.cwms.entities.ExportStuffRequest;
 import com.cwms.entities.ExportStuffTally;
 import com.cwms.entities.ExportTransfer;
 import com.cwms.entities.GateIn;
+import com.cwms.helper.FileResponseDTO;
+import com.cwms.helper.FileUploadProperties;
 import com.cwms.helper.HelperMethods;
 import com.cwms.repository.ExportBackToTownRepo;
 import com.cwms.repository.ExportCartingRepo;
@@ -79,6 +88,175 @@ public class ExportEntryService {
 	
 	@Autowired
 	private ExportBackToTownRepo backToTownRepo;
+	
+	@Autowired
+	private FileUploadProperties fileUploadPath;
+
+	public ResponseEntity<?> getDataForDocumentupload(String companyId, String branchId, String profitcentreId,
+			String sbTransId, String hSbTransId, String sbNo, String sbLineNo) {
+		try {
+			return ResponseEntity.ok(byteCodesOfImageOrPdf(companyId, branchId, sbNo, sbTransId, sbLineNo, hSbTransId));
+		} catch (Exception e) {
+			System.out.println(" Error in getDataForDocumentupload " + e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while getting Saved Files.");
+		}
+
+	}
+
+	public List<FileResponseDTO> byteCodesOfImageOrPdf(String companyId, String branchId, String sbNo, String sbTransId,
+			String sbLineNo, String hSbTransId) {
+		try {
+			String existingPathsJson = entryCargoRepo.getSBDocumentUploadPath(companyId, branchId, sbNo, sbTransId,
+					sbLineNo, hSbTransId);
+			List<String> existingPaths = existingPathsJson != null
+					? objectMapper.readValue(existingPathsJson, new TypeReference<List<String>>() {
+					})
+					: new ArrayList<>();
+
+			List<FileResponseDTO> byteCodesOfImageOrPdf = helperMethods.getByteCodesOfImageOrPdf(existingPaths,
+					companyId, branchId, sbTransId, hSbTransId, sbNo, sbLineNo);
+			return byteCodesOfImageOrPdf;
+		} catch (Exception e) {
+			System.out.println(" Error in getDataForDocumentupload " + e);
+			return null;
+		}
+	}
+
+	public String setFilePathsAsJson(List<String> paths) {
+		try {
+			return objectMapper.writeValueAsString(paths);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null; // Avoid returning an empty string, as it may cause JSON parsing issues
+		}
+	}
+
+	public ResponseEntity<?> saveSBDocumentUpload(String companyId, String branchId, String sbNo, String sbTransId,
+			String sbLineNo, String hSbTransId, Map<String, Object> data, String userId) {
+		try {
+			List<FileResponseDTO> files = objectMapper.readValue(
+					objectMapper.writeValueAsString(data.get("FileResponseDTO")),
+					new TypeReference<List<FileResponseDTO>>() {
+					});
+
+			// 1️⃣ Get the existing file paths from the database
+			String existingPathsJson = entryCargoRepo.getSBDocumentUploadPath(companyId, branchId, sbNo, sbTransId,
+					sbLineNo, hSbTransId);
+			List<String> existingPaths = existingPathsJson != null
+					? objectMapper.readValue(existingPathsJson, new TypeReference<List<String>>() {
+					})
+					: new ArrayList<>();
+
+			List<String> removedFiles = objectMapper.readValue(
+					objectMapper.writeValueAsString(data.get("removedFiles")), new TypeReference<List<String>>() {
+					});
+
+			// Define folder path
+			String directoryPath = Paths.get(fileUploadPath.getPath(), sbNo + "_" + sbTransId).toString();
+			File directory = new File(directoryPath);
+
+			// 2️⃣ Delete the removed files
+			if (removedFiles != null && !removedFiles.isEmpty()) {
+				for (String fileName : removedFiles) {
+					Path filePath = Paths.get(directoryPath, fileName);
+					File file = filePath.toFile();
+					if (file.exists()) {
+						file.delete();
+					}
+					existingPaths.remove(filePath.toString()); // Remove from the list
+				}
+
+				if (directory.exists() && directory.isDirectory()) {
+					String[] remainingFiles = directory.list();
+					if (remainingFiles == null || remainingFiles.length == 0) {
+						directory.delete(); // Delete the empty directory
+					}
+				}
+
+			}
+
+			// 3️⃣ Process new files
+			if (files != null && !files.isEmpty()) {
+				if (!directory.exists() && !directory.mkdirs()) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create directory.");
+				}
+
+				for (FileResponseDTO fileDTO : files) {
+					if ("Y".equals(fileDTO.getIsSaved()) || fileDTO.getBase64Url() == null
+							|| fileDTO.getBase64Url().trim().isEmpty()) {
+						continue;
+					}
+
+					try {
+						// Extract file type and decode base64
+						String base64Data = fileDTO.getBase64Url().split(",")[1]; // Remove data URL prefix
+						byte[] fileBytes = Base64.getDecoder().decode(base64Data);
+
+						// Construct file path
+						String fileName = fileDTO.getFileName();
+						Path filePath = Paths.get(directoryPath, fileName);
+
+						// Save file to directory
+						Files.write(filePath, fileBytes, StandardOpenOption.CREATE,
+								StandardOpenOption.TRUNCATE_EXISTING);
+						existingPaths.add(filePath.toString());
+
+					} catch (IOException | IllegalArgumentException e) {
+						e.printStackTrace();
+						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+								.body("Failed to save file: " + fileDTO.getFileName());
+					}
+				}
+			}
+
+			// 4️⃣ Convert updated file paths to JSON and save
+			String updatedPathsJson = objectMapper.writeValueAsString(existingPaths);
+			int updateSBDocumentUpload = entryCargoRepo.updateSBDocumentUload(companyId, branchId, sbNo, sbTransId,
+					sbLineNo, hSbTransId, updatedPathsJson, userId);
+
+			System.out.println("updateSBDocumentUpload : " + updateSBDocumentUpload);			
+
+			return ResponseEntity.ok(byteCodesOfImageOrPdf(companyId, branchId, sbNo, sbTransId, sbLineNo, hSbTransId));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error updating files: " + e.getMessage());
+		}
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public ResponseEntity<?> searchExportMain(String companyId, String branchId, String sbNo, String containerNo)

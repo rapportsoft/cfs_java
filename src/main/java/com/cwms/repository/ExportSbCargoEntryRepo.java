@@ -18,6 +18,58 @@ import jakarta.transaction.Transactional;
 public interface ExportSbCargoEntryRepo extends JpaRepository<ExportSbCargoEntry, String>
 {
 	
+	@Query("SELECT s.sbDocumentUploadPath " +
+		       "FROM ExportSbCargoEntry s " +		       
+		       "WHERE s.companyId = :companyId AND s.branchId = :branchId " +
+		       "AND s.sbNo = :sbNo " +
+		       "AND s.hSbTransId = :hSbTransId " +
+		       "AND s.sbTransId = :sbTransId AND s.sbLineNo = :sbLineNo " +
+		       "AND s.status <> 'D'")
+	String getSBDocumentUploadPath(
+		    @Param("companyId") String companyId,
+		    @Param("branchId") String branchId,
+		    @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("sbLineNo") String sbLineNo,
+	        @Param("hSbTransId") String hSbTransId
+		);
+	
+	
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE ExportSbCargoEntry e " +
+	       "SET e.sbDocumentUploadPath = :filePath, e.sbDocumentUploadedBy = :user " +
+	       "WHERE e.companyId = :companyId " +
+	       "  AND e.branchId = :branchId " +
+	       "  AND e.sbNo = :sbNo " +
+	       "  AND e.sbTransId = :sbTransId " +
+	       "  AND e.hSbTransId = :hSbTransId " +
+	       "  AND e.sbLineNo = :sbLineNo " +
+	       "  AND e.status <> 'D'")
+	int updateSBDocumentUload(	    
+	        @Param("companyId") String companyId,
+	        @Param("branchId") String branchId,
+	        @Param("sbNo") String sbNo,
+	        @Param("sbTransId") String sbTransId,
+	        @Param("sbLineNo") String sbLineNo,
+	        @Param("hSbTransId") String hSbTransId,
+	        @Param("filePath") String filePath,
+	        @Param("user") String user);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Modifying
 	@Transactional
 	@Query("UPDATE ExportSbCargoEntry e " +

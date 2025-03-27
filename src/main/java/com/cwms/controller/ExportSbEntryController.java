@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,61 @@ public class ExportSbEntryController
 {
 	@Autowired
 	private ExportEntryService exportEntryService;	
+	
+	
+	
+	
+	@GetMapping("/getDataForDocumentupload")
+	public ResponseEntity<?> getDataForDocumentupload(
+	        @RequestParam("companyId") String companyId, @RequestParam("branchId") String branchId,	        
+	        @RequestParam("profitcentreId") String profitcentreId, @RequestParam("sbTransId") String sbTransId, 
+	        @RequestParam("hSbTransId") String hSbTransId, @RequestParam("sbNo") String sbNo,  @RequestParam("sbLineNo") String sbLineNo
+	       ) {	    
+	    try {	    	
+	    	ResponseEntity<?> getDataForDocumentupload = exportEntryService.getDataForDocumentupload(companyId, branchId, profitcentreId, sbTransId, hSbTransId, sbNo, sbLineNo);
+	        return getDataForDocumentupload;
+	    } catch (Exception e) {	       
+	        // Return an appropriate error response
+	    	System.out.println(e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while getting Saved Files.");
+	    }
+	}
+	
+	
+	@PostMapping(value = "/saveSBDocumentUpload", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> saveSBDocumentUpload(
+    		@RequestParam("sbNo") String sbNo,
+            @RequestParam("sbTransId") String sbTransId,
+            @RequestParam("hsbTransId") String hSbTransId,
+            @RequestParam("sbLineNo") String sbLineNo,
+            @RequestParam("companyId") String companyId,
+            @RequestParam("branchId") String branchId,
+            @RequestParam("userId") String userId,
+//            @RequestBody List<FileResponseDTO> files,  // Receiving list of FileResponseDTO
+//            @RequestParam(value = "removedFiles", required = false) List<String> removedFiles // Receiving list of filenames   ,
+            @RequestBody Map<String, Object> data
+    ) {
+        try {
+            ResponseEntity<?> saveSBDocumentUpload = exportEntryService.saveSBDocumentUpload(
+                     companyId, branchId, sbNo, sbTransId, sbLineNo, hSbTransId, data, userId);
+            return saveSBDocumentUpload;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while searching export");
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@GetMapping("/searchExportMain")

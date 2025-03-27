@@ -15,8 +15,10 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
@@ -295,5 +297,69 @@ public class HelperMethods {
 
 	 
 	 
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+
+	    
+	    public List<FileResponseDTO> getByteCodesOfImageOrPdf(List<String> filePaths, String companyId, String branchId, 
+	    														String sbTransId, String hSbTransId, String sbNo, String sbLineNo) {
+	    	
+	        List<FileResponseDTO> sendData = new ArrayList<>();
+	        for (String filePathDb : filePaths) {
+	            try {
+	                Path filePath = Paths.get(filePathDb);
+
+	                // Check if file exists and is readable
+	                if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+	                    System.err.println("File not found or unreadable: " + filePathDb);
+	                    continue; // Skip this file and continue with others
+	                }
+
+	                // Read file bytes
+	                byte[] fileBytes = Files.readAllBytes(filePath);
+
+	                // Detect file MIME type dynamically
+	                String mimeType = Files.probeContentType(filePath);
+	                if (mimeType == null) {
+	                    System.err.println("Unknown file type: " + filePathDb);
+	                    continue; // Skip unknown file types
+	                }
+
+	                // Convert file content to Base64
+	                String base64Content = Base64.getEncoder().encodeToString(fileBytes);
+
+	                // Construct Data URL
+	                String base64Url = "data:" + mimeType + ";base64," + base64Content;
+
+	                // Create DTO object
+	                FileResponseDTO newFile = new FileResponseDTO();
+	                newFile.setFileName(filePath.getFileName().toString());
+	                newFile.setFileType(mimeType);
+	                newFile.setBase64Url(base64Url);
+	                newFile.sethSbTransId(hSbTransId);
+	                newFile.setSbTransId(sbTransId);
+	                newFile.setSbNo(sbNo);
+	                newFile.setSbLineNo(sbLineNo);       
+	                newFile.setIsSaved("Y");
+
+	                sendData.add(newFile);
+	            } catch (IOException e) {
+	                System.err.println("Error reading file: " + filePathDb + " - " + e.getMessage());
+	            }
+	        }
+
+	        return sendData;
+	    }
+
+	    
+	    
+	    
+	    
 	 
 }

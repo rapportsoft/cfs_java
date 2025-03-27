@@ -2,7 +2,12 @@ package com.cwms.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -191,6 +196,64 @@ public class ExportSbCargoEntry {
 
     @Column(name="Stuffed_Wt",precision = 16,scale = 3)
     private BigDecimal stuffedWt;
+    
+    
+    
+    @Column(name = "Sb_Document_UploadPath", columnDefinition = "TEXT") // Store as JSON
+    private String sbDocumentUploadPath;  
+    
+    @Column(name = "Sb_Document_UploadedBy", length = 30)
+    private String sbDocumentUploadedBy; 
+    
+	public String getSbDocumentUploadedBy() {
+		return sbDocumentUploadedBy;
+	}
+
+
+	public void setSbDocumentUploadedBy(String sbDocumentUploadedBy) {
+		this.sbDocumentUploadedBy = sbDocumentUploadedBy;
+	}
+
+
+	public static ObjectMapper getObjectmapper() {
+		return objectMapper;
+	}
+
+
+		public String getSbDocumentUploadPath() {
+		return sbDocumentUploadPath;
+	}
+
+
+	public void setSbDocumentUploadPath(String sbDocumentUploadPath) {
+		this.sbDocumentUploadPath = sbDocumentUploadPath;
+	}
+
+	
+	
+	
+	 private static final ObjectMapper objectMapper = new ObjectMapper();
+
+	    // Convert JSON to List<String>
+	    public List<String> getFilePaths() {
+	        try {
+	            return sbDocumentUploadPath != null ? objectMapper.readValue(sbDocumentUploadPath, new TypeReference<List<String>>() {}) : List.of();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return List.of();
+	        }
+	    }
+
+	    // Convert List<String> to JSON
+	    public void setFilePaths(List<String> paths) {
+	        try {
+	            this.sbDocumentUploadPath = objectMapper.writeValueAsString(paths);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	
+    
     
     
     
