@@ -158,6 +158,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/portEir/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/ssrUpload/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/lclTariffUpload/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/notGateInHoldContainer/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
