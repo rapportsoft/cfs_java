@@ -327,8 +327,14 @@ public class HelperMethods {
 	                // Detect file MIME type dynamically
 	                String mimeType = Files.probeContentType(filePath);
 	                if (mimeType == null) {
-	                    System.err.println("Unknown file type: " + filePathDb);
-	                    continue; // Skip unknown file types
+	                    if (filePathDb.endsWith(".xls")) {
+	                        mimeType = "application/vnd.ms-excel";
+	                    } else if (filePathDb.endsWith(".xlsx")) {
+	                        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	                    } else {
+	                        System.err.println("Unknown file type: " + filePathDb);
+	                        continue; // Skip unknown file types
+	                    }
 	                }
 
 	                // Convert file content to Base64
