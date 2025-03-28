@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cwms.entities.CommonGatePass;
+import com.cwms.entities.EmptyInventory;
 import com.cwms.entities.EmptyJobOrder;
 import com.cwms.entities.GateOut;
 import com.cwms.entities.VehicleTrack;
@@ -111,6 +112,13 @@ public class CommonGatePassController {
 			if (existingJobOrder == null) {
 				return new ResponseEntity<>("Empty job order data not found", HttpStatus.CONFLICT);
 			}
+			
+			EmptyInventory inv = emptyinventoryrepo.getById1(cid, bid, existingJobOrder.getErpDocRefNo(), existingJobOrder.getDocRefNo(),
+					existingJobOrder.getGateInId(), existingJobOrder.getContainerNo());
+
+			if (inv == null) {
+				return new ResponseEntity<>("Empty inventory data not found", HttpStatus.CONFLICT);
+			}
 
 			if (c.getGatePassId() == null || c.getGatePassId().isEmpty()) {
 				c.setCha(common.getCha());
@@ -150,6 +158,11 @@ public class CommonGatePassController {
 				existingJobOrder.setGatePassId(HoldNextIdD1);
 
 				emptyJobOrderRepo.save(existingJobOrder);
+				
+				inv.setGatePassDate(new Date());
+				inv.setGatePassId(HoldNextIdD1);
+				
+				emptyinventoryrepo.save(inv);
 
 				processnextidrepo.updateAuditTrail(cid, bid, "P05076", HoldNextIdD1, "2024");
 				
@@ -312,6 +325,13 @@ public class CommonGatePassController {
 			if (existingJobOrder == null) {
 				return new ResponseEntity<>("Empty job order data not found", HttpStatus.CONFLICT);
 			}
+			
+			EmptyInventory inv = emptyinventoryrepo.getById1(cid, bid, existingJobOrder.getErpDocRefNo(), existingJobOrder.getDocRefNo(),
+					existingJobOrder.getGateInId(), existingJobOrder.getContainerNo());
+
+			if (inv == null) {
+				return new ResponseEntity<>("Empty inventory data not found", HttpStatus.CONFLICT);
+			}
 
 			if (g.getGateOutId() == null || g.getGateOutId().isEmpty()) {
 				g.setCompanyId(cid);
@@ -341,6 +361,11 @@ public class CommonGatePassController {
 				
 				exist.setGateOutId(HoldNextIdD1);
 				commongatepassrepo.save(exist);
+				
+				inv.setGateOutId(HoldNextIdD1);
+				inv.setGateOutDate(new Date());
+				
+				emptyinventoryrepo.save(inv);
 
 				VehicleTrack track = vehicleTrackRepo.getByGateInId(cid, bid, gateout.getVehicleId());
 

@@ -100,6 +100,10 @@ public class EmptyInventory {
 	@Column(name = "Gate_Pass_Id", length = 10)
 	public String gatePassId = ""; // Default value
 
+	@Column(name = "Gate_Pass_Date")
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date gatePassDate;
+	
 	@Column(name = "Gate_Out_Id", length = 10)
 	public String gateOutId = ""; // Default value
 
@@ -125,12 +129,17 @@ public class EmptyInventory {
 
 	
 
+	
+
+
+	
+
 	public EmptyInventory(String companyId, String branchId, String gateInId, String finYear, String erpDocRefNo,
 			String docRefNo, String subDocRefNo, String movementCode, String profitcentreId, String deStuffId,
 			Date emptyDate, Date gateInDate, String isoCode, String containerNo, String containerSize,
 			String containerType, String sa, String sl, String onAccountOf, String cha, String stuffId,
-			String stuffTallyId, String emptyJobOrder, String gatePassId, String gateOutId, Date gateOutDate,
-			String status, String createdBy, Date createdDate) {
+			String stuffTallyId, String emptyJobOrder, String gatePassId, Date gatePassDate, String gateOutId,
+			Date gateOutDate, String status, String createdBy, Date createdDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -156,6 +165,7 @@ public class EmptyInventory {
 		this.stuffTallyId = stuffTallyId;
 		this.emptyJobOrder = emptyJobOrder;
 		this.gatePassId = gatePassId;
+		this.gatePassDate = gatePassDate;
 		this.gateOutId = gateOutId;
 		this.gateOutDate = gateOutDate;
 		this.status = status;
@@ -164,7 +174,33 @@ public class EmptyInventory {
 	}
 
 
-	
+
+
+
+
+
+
+	public Date getGatePassDate() {
+		return gatePassDate;
+	}
+
+
+
+
+
+
+
+
+	public void setGatePassDate(Date gatePassDate) {
+		this.gatePassDate = gatePassDate;
+	}
+
+
+
+
+
+
+
 
 	public String getStatus() {
 		return status;
