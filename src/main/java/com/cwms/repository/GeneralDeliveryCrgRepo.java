@@ -18,7 +18,7 @@ public interface GeneralDeliveryCrgRepo extends JpaRepository<GeneralDeliveryCrg
 		       "c.receivingDate, c.profitcentreId, c.boeNo, c.boeDate, c.cha, " +
 		       "c.noOfMarks, c.uom, c.areaOccupied, c.gateInPackages, c.gateInWeight, " +
 		       "c.receivedPackages, c.receivedWeight, c.spaceAllocated, c.noOf20Ft, " +
-		       "c.noOf40Ft, c.cargoValue, c.cargoDuty, pa.partyName,c.deliveredPackages,c.deliveredWeight) " +
+		       "c.noOf40Ft, c.cargoValue, c.cargoDuty, pa.partyName,c.deliveredPackages,c.deliveredWeight,c.importerId) " +
 		       "FROM GeneralReceivingCrg c " +
 		       "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId " +
 		       "AND c.branchId = pa.branchId " +
@@ -40,7 +40,7 @@ public interface GeneralDeliveryCrgRepo extends JpaRepository<GeneralDeliveryCrg
 		       "c.receivingDate, c.profitcentreId, c.boeNo, c.boeDate, c.cha, " +
 		       "c.noOfMarks, c.uom, c.areaOccupied, c.gateInPackages, c.gateInWeight, " +
 		       "c.receivedPackages, c.receivedWeight, c.spaceAllocated, c.noOf20Ft, " +
-		       "c.noOf40Ft, c.cargoValue, c.cargoDuty, pa.partyName,c.deliveredPackages,c.deliveredWeight) " +
+		       "c.noOf40Ft, c.cargoValue, c.cargoDuty, pa.partyName,c.deliveredPackages,c.deliveredWeight,c.importerId) " +
 		       "FROM GeneralReceivingCrg c " +
 		       "LEFT OUTER JOIN Party pa ON c.companyId = pa.companyId " +
 		       "AND c.branchId = pa.branchId " +

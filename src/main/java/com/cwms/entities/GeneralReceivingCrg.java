@@ -973,7 +973,7 @@ public class GeneralReceivingCrg {
 			String importerName, Date receivingDate, String profitcentreId, String boeNo, Date boeDate, String cha,
 			String noOfMarks, String uom, BigDecimal areaOccupied, BigDecimal gateInPackages, BigDecimal gateInWeight,
 			BigDecimal receivedPackages, BigDecimal receivedWeight, String spaceAllocated, String noOf20Ft,
-			String noOf40Ft, BigDecimal cargoValue, BigDecimal cargoDuty,String editedBy,BigDecimal deliveredPackages,BigDecimal deliveredWeight) {
+			String noOf40Ft, BigDecimal cargoValue, BigDecimal cargoDuty,String editedBy,BigDecimal deliveredPackages,BigDecimal deliveredWeight,String importerId) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -1000,6 +1000,8 @@ public class GeneralReceivingCrg {
 		this.editedBy=editedBy;
 		this.deliveredPackages=deliveredPackages;
 		this.deliveredWeight=deliveredWeight;
+		this.importerId=importerId;
+		
 	}
 
 	

@@ -52,7 +52,7 @@ public interface GeneralReportsRepo extends JpaRepository<GeneralGateIn, String>
 	        "    AND a.Branch_Id = :branchId " +
 	        "    AND a.Status <> 'D' " +
 	        "    AND a.Receiving_Date BETWEEN :startDate AND :endDate " +
-	        "AND (:imp IS NULL OR :imp = '' OR a.Importer_Name = :imp) " +
+	        "AND (:imp IS NULL OR :imp = '' OR a.Importer_id = :imp) " +
 	        "AND (:cha IS NULL OR :cha = '' OR a.cha = :cha) " +
 	        "ORDER BY a.Receiving_Date ASC", nativeQuery = true)
 	List<Object[]> findReceivingDetails(
@@ -112,7 +112,7 @@ public interface GeneralReportsRepo extends JpaRepository<GeneralGateIn, String>
             "AND a.Branch_Id = :branchId " + 
             "AND a.Status = 'A' " +  
             "AND a.Delivery_Date BETWEEN :startDate AND :endDate " +  
-            "AND (:imp IS NULL OR :imp = '' OR a.Importer_Name = :imp) " +
+            "AND (:imp IS NULL OR :imp = '' OR a.Importer_id = :imp) " +
 	        "AND (:cha IS NULL OR :cha = '' OR a.cha = :cha) " +
 	        "GROUP BY dd.commodity_id " +
             "ORDER BY a.Delivery_Date ASC", 
@@ -154,7 +154,7 @@ List<Object[]> getGeneralDeliveryReport(
         "WHERE c.company_id = :companyId " +
         "AND c.branch_id = :branchId " +
         "AND c.receiving_date <= :endDate " +
-        "AND (:imp IS NULL OR :imp = '' OR c.Importer_Name = :imp) " +
+        "AND (:imp IS NULL OR :imp = '' OR c.Importer_id = :imp) " +
         "AND (:cha IS NULL OR :cha = '' OR c.cha = :cha) " +
         "GROUP BY gd.commodity_id ", nativeQuery = true)
 List<Object[]> getReceivingDetails(@Param("companyId") String companyId, 
