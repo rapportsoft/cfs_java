@@ -1275,5 +1275,100 @@ public interface CfIgmCnRepository extends JpaRepository<Cfigmcn, String> {
 							int updateSSRID(@Param("cid") String cid, @Param("bid") String bid, @Param("trans") String trans,
 									@Param("igm") String igm, @Param("con") String con,@Param("id") String id);
 							
+							
+							@Query(value="select c.igmNo,c.igmTransId,c.igmLineNo,i.blNo,c.beNo,c.containerNo,c.containerNo,c.createdDate "
+									+ "from Cfigmcn c "
+									+ "LEFT OUTER JOIN Cfigmcrg i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and "
+									+ "c.igmTransId=i.igmTransId and c.igmLineNo=i.igmLineNo "
+									+ "where c.companyId=:cid and c.branchId=:bid and (:igm is null OR :igm = '' OR c.igmNo=:igm) and "
+									+ "(:item is null OR :item = '' OR c.igmLineNo=:item) and (:blNo is null OR :blNo = '' OR i.blNo=:blNo) and "
+									+ "(:con is null OR :con = '' OR c.containerNo=:con) and (:beNo is null OR :beNo = '' OR c.beNo=:beNo) order by c.createdDate desc")
+						    List<Object[]> importContainerHistory1(@Param("cid") String cid, @Param("bid") String bid, @Param("igm") String igm,
+									@Param("item") String item, @Param("blNo") String blNo, @Param("con") String con,@Param("beNo") String beNo);
+						    
+							@Query(value="select c.igmNo,DATE_FORMAT(igm.igmDate,'%d/%m/%Y'),c.igmLineNo,c.beNo,DATE_FORMAT(c.beDate,'%d/%m/%Y'),c.cargoValue,"
+									+ "c.cargoDuty,i.blNo,DATE_FORMAT(i.blDate,'%d/%m/%Y'),p.profitcentreDesc,i.noOfPackages,i.grossWeight,DATE_FORMAT(c.oocDate,'%d/%m/%Y'),"
+									+ "v.vesselName,igm.viaNo,c.doNo,(select COUNT(c1) from Cfigmcn c1 where c1.companyId=:cid and c1.branchId=:bid and "
+									+ "c1.igmTransId=:trans and c1.igmNo=:igm and c1.igmLineNo=:item),sl.partyName,i.importerName,ch.partyName,igm.port,i.origin,"
+									+ "DATE_FORMAT(c.doDate,'%d/%m/%Y'),i.commodityDescription,DATE_FORMAT(c.forceEntryDate,'%d/%m/%Y'),c.forceEntryApproval "
+									+ "from Cfigmcn c "
+									+ "LEFT OUTER JOIN Cfigmcrg i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and "
+									+ "c.igmTransId=i.igmTransId and c.igmLineNo=i.igmLineNo "
+									+ "LEFT OUTER JOIN CFIgm igm ON c.companyId=igm.companyId and c.branchId=igm.branchId and c.igmNo=igm.igmNo and "
+									+ "c.igmTransId=igm.igmTransId "
+									+ "LEFT OUTER JOIN Profitcentre p ON c.companyId=p.companyId and c.branchId=p.branchId and c.profitcentreId=p.profitcentreId "
+									+ "LEFT OUTER JOIN Vessel v ON igm.companyId=v.companyId and igm.branchId=v.branchId and igm.vesselId=v.vesselId "
+									+ "LEFT OUTER JOIN Party sl ON igm.companyId=sl.companyId and igm.branchId=sl.branchId and igm.shippingLine=sl.partyId "
+									+ "LEFT OUTER JOIN Party ch ON c.companyId=ch.companyId and c.branchId=ch.branchId and c.cha=ch.partyId "
+									+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmTransId=:trans and "
+									+ "c.igmLineNo=:item and c.containerNo=:con and c.status = 'A' group by c.igmNo,c.igmLineNo")
+						    Object importContainerHistory2(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+									@Param("item") String item, @Param("con") String con);
+							
+							
+							@Query(value="select c.containerNo,c.containerSize,c.containerType,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %H:%i'),c.scannerType,"
+									+ "c.scanningDoneStatus,DATE_FORMAT(c.scanningDoneDate,'%d/%m/%Y'),c.noOfPackages,c.examinedPackages,c.cargoWt,"
+									+ "c.typeOfContainer,DATE_FORMAT(c.sealCutReqDate,'%d/%m/%Y %H:%i'),DATE_FORMAT(c.containerExamDate,'%d/%m/%Y %H:%i'),"
+									+ "c.gateOutType,c.gatePassNo,DATE_FORMAT(p.gatePassDate,'%d/%m/%Y %H:%i'),DATE_FORMAT(c.gateOutDate,'%d/%m/%Y %H:%i'),"
+									+ "c.deStuffId,DATE_FORMAT(c.deStuffDate,'%d/%m/%Y'),em.gatePassId,DATE_FORMAT(em.gatePassDate,'%d/%m/%Y %H:%i'),"
+									+ "em.gateOutId,DATE_FORMAT(em.gateOutDate,'%d/%m/%Y %H:%i'),c.holdStatus "
+									+ "from Cfigmcn c "
+									+ "LEFT OUTER JOIN ImportGatePass p ON c.companyId=p.companyId and c.branchId=p.branchId and c.gatePassNo=p.gatePassId and p.srNo=1 "
+									+ "LEFT OUTER JOIN ImportInventory in ON c.companyId=in.companyId and c.branchId=in.branchId and c.igmTransId=in.igmTransId and "
+									+ "c.igmNo=in.igmNo and c.containerNo=in.containerNo and c.gateInId=in.gateInId "
+									+ "LEFT OUTER JOIN EmptyInventory em ON c.companyId=em.companyId and c.branchId=em.branchId and c.gateInId=em.gateInId and "
+									+ "c.igmTransId=em.erpDocRefNo and c.igmNo=em.docRefNo and c.containerNo=em.containerNo "
+									+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmTransId=:trans and "
+									+ "c.igmLineNo=:item and c.status = 'A'")
+						    List<Object[]> importContainerHistory3(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+									@Param("item") String item);
+						    
+							@Query(value="select DISTINCT c.gateInId,DATE_FORMAT(c.gateInDate,'%d/%m/%Y %H:%i'),c.containerNo "
+									+ "from ManualGateIn c "
+									+ "where c.companyId=:cid and c.branchId=:bid and c.docRefNo=:igm and c.erpDocRefNo=:trans and "
+									+ "c.lineNo=:item and c.status = 'A'")
+						    List<Object[]> importContainerHistory4(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+									@Param("item") String item);
+						    
+							@Query(value="select DISTINCT c.invoiceNo,DATE_FORMAT(c.invoiceDate,'%d/%m/%Y %H:%i') "
+									+ "from AssessmentSheet c "
+									+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmTransId=:trans and "
+									+ "c.igmLineNo=:item and c.status = 'A' and (c.invoiceNo is not null and c.invoiceNo != '')")
+						    List<Object[]> importContainerHistory5(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+									@Param("item") String item);
+						    
+						    
+						    // Common Container History 
+						    
+						    @Query(value="select c.igmNo,c.igmTransId,c.igmLineNo,i.blNo,c.beNo,c.containerNo,c.containerNo,c.createdDate "
+						    		+ "from Cfigmcn c "
+									+ "LEFT OUTER JOIN Cfigmcrg i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and "
+									+ "c.igmTransId=i.igmTransId and c.igmLineNo=i.igmLineNo "
+						    		+ "where c.companyId=:cid and c.branchId=:bid and c.status='A' and c.containerNo=:con order by c.createdDate desc")
+						    List<Object[]> getDataByContainerNo(@Param("cid") String cid,@Param("bid") String bid,@Param("con") String con);
+						    
+						    @Query(value="select c.containerNo,c.containerSize,'CFS Import',c.containerStatus,c.gateOutType,p1.partyName,CONCAT(c.igmNo,' : ',c.igmLineNo),"
+						    		+ "i.viaNo,v.vesselName,DATE_FORMAT(c.createdDate,'%d/%m/%Y %H:%i'),c.createdBy,CONCAT(c.yardLocation,'-',c.yardBlock,'-',c.blockCellNo),"
+						    		+ "crg.destination,DATE_FORMAT(c.forceEntryDate,'%d/%m/%Y %H:%i'),c.holdStatus,c.gateInId,DATE_FORMAT(g.inGateInDate,'%d/%m/%Y %H:%i'),"
+						    		+ "g.createdBy,c.sealCutWoTransId,c.sealCutApprovedBy,DATE_FORMAT(c.sealCutApprovedDate,'%d/%m/%Y %H:%i'),c.containerExamWoTransId,"
+						    		+ "DATE_FORMAT(c.containerExamDate,'%d/%m/%Y %H:%i'),c.containerExamApprovedBy,c.deStuffId,DATE_FORMAT(c.destuffWoDate,'%d/%m/%Y %H:%i'),"
+						    		+ "c.destuffWoCreatedBy,f.oprInvoiceNo,DATE_FORMAT(c.invoiceDate,'%d/%m/%Y %H:%i'),f.approvedBy,gp.gatePassId,gp.approvedBy,"
+						    		+ "DATE_FORMAT(gp.gatePassDate,'%d/%m/%Y %H:%i'),go.gateOutId,DATE_FORMAT(go.gateOutDate,'%d/%m/%Y %H:%i'),go.approvedBy "
+						    		+ "from Cfigmcn c "
+						    		+ "LEFT OUTER JOIN CFIgm i ON c.companyId=i.companyId and c.branchId=i.branchId and c.igmNo=i.igmNo and c.igmTransId=i.igmTransId "
+						    		+ "LEFT OUTER JOIN Party p1 ON i.companyId=p1.companyId and i.branchId=p1.branchId and i.shippingAgent=p1.partyId "
+						    		+ "LEFT OUTER JOIN Vessel v ON i.companyId=v.companyId and i.branchId=v.branchId and i.vesselId=v.vesselId "
+						    		+ "LEFT OUTER JOIN Cfigmcrg crg ON c.companyId=crg.companyId and c.branchId=crg.branchId and c.igmNo=crg.igmNo and c.igmTransId=crg.igmTransId "
+						    		+ "and c.igmLineNo=crg.igmLineNo "
+						    		+ "LEFT OUTER JOIN GateIn g ON c.companyId=g.companyId and c.branchId=g.branchId and c.gateInId=g.gateInId "
+						    		+ "LEFT OUTER JOIN FinTrans f ON c.companyId=f.companyId and c.branchId=f.branchId and c.invoiceNo=f.oprInvoiceNo "
+						    		+ "LEFT OUTER JOIN ImportGatePass gp ON c.companyId=gp.companyId and c.branchId=gp.branchId and c.gatePassNo=gp.gatePassId and gp.srNo=1 "
+						    		+ "LEFT OUTER JOIN GateOut go ON c.companyId=go.companyId and c.branchId=go.branchId and c.gateOutId=go.gateOutId and go.srNo='1'"
+						    		+ "where c.companyId=:cid and c.branchId=:bid and c.igmNo=:igm and c.igmTransId=:trans and "
+									+ "c.igmLineNo=:item and c.containerNo=:con and c.status = 'A' group by c.igmNo,c.igmLineNo")
+						    List<Object[]> getContatainerData(@Param("cid") String cid,@Param("bid") String bid,@Param("igm") String igm,@Param("trans") String trans,
+									@Param("item") String item, @Param("con") String con);
+							
+							
 }
 

@@ -1,6 +1,7 @@
 package com.cwms.controller;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,7 @@ import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.ChildMenuRepository;
+import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.ManualContainerGateInRepo;
@@ -78,6 +80,9 @@ public class CfIgmController {
 	
 	@Autowired
 	private VehicleTrackRepository vehicletrackrepo;
+	
+	@Autowired
+	private ExportInventoryRepository exportInvRepo;
 
 	@GetMapping("/search")
 	public List<Object[]> getSearchData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -2090,6 +2095,767 @@ public class CfIgmController {
 	}
 	
 	
-	
+	@GetMapping("/importContainerHistory")
+	public ResponseEntity<?> importConHistory(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("igm") String igm, @RequestParam("item") String itemNo, @RequestParam("blNo") String blNo,
+			@RequestParam("con") String containerNo, @RequestParam("beNo") String beNo) {
+
+		try {
+
+			List<Object[]> findData = cfigmcnrepo.importContainerHistory1(cid, bid, igm, itemNo, blNo, containerNo,
+					beNo);
+
+			if (findData.isEmpty()) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			} else {
+
+				Object[] igmData = findData.get(0);
+
+				String igmTransId = String.valueOf(igmData[1]);
+				String igmNo = String.valueOf(igmData[0]);
+				String igmLineNo = String.valueOf(igmData[2]);
+				String conNo = String.valueOf(igmData[5]);
+
+				Map<String, Object> result = new HashMap<>();
+
+				Object record1 = cfigmcnrepo.importContainerHistory2(cid, bid, igmNo, igmTransId, igmLineNo, conNo);
+
+				result.put("record1", record1);
+
+				List<Object[]> record2 = cfigmcnrepo.importContainerHistory3(cid, bid, igmNo, igmTransId, igmLineNo);
+
+				result.put("record2", record2);
+
+				List<Object[]> record3 = cfigmcnrepo.importContainerHistory4(cid, bid, igmNo, igmTransId, igmLineNo);
+
+				result.put("record3", record3);
+
+				List<Object[]> record4 = cfigmcnrepo.importContainerHistory5(cid, bid, igmNo, igmTransId, igmLineNo);
+
+				result.put("record4", record4);
+
+				return new ResponseEntity<>(result, HttpStatus.OK);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/commonContainerHistory")
+	public ResponseEntity<?> commonContainerHistory(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("con") String containerNo) {
+
+		try {
+
+			List<Object[]> findData = cfigmcnrepo.getDataByContainerNo(cid, bid, containerNo);
+
+			List<Object[]> findData1 = exportInvRepo.getDataByContNo(cid, bid, containerNo);
+
+			String status = "";
+
+			if (findData.isEmpty() && !findData1.isEmpty()) {
+				status = "Export";
+			} else if (!findData.isEmpty() && findData1.isEmpty()) {
+				status = "Import";
+			} else if (findData.isEmpty() && findData1.isEmpty()) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			} else {
+				Object[] o1 = findData.get(0);
+				Object[] o2 = findData1.get(0);
+
+				String createdDate1 = (String.valueOf(o1[7]));
+				String createdDate2 = (String.valueOf(o2[4]));
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+				// format
+				try {
+					Date date1 = sdf.parse(createdDate1);
+					Date date2 = sdf.parse(createdDate2);
+
+					if (date1.after(date2)) {
+						status = "Import";
+					} else {
+						status = "Export";
+					}
+
+					System.out.println("Status: " + status);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			if ("Import".equals(status)) {
+
+				Object[] igmData = findData.get(0);
+
+				String igmTransId = String.valueOf(igmData[1]);
+				String igmNo = String.valueOf(igmData[0]);
+				String igmLineNo = String.valueOf(igmData[2]);
+				String conNo = String.valueOf(igmData[5]);
+
+				List<Map<String, String>> result = new ArrayList<>();
+
+				List<Object[]> record1 = cfigmcnrepo.getContatainerData(cid, bid, igmNo, igmTransId, igmLineNo, conNo);
+
+				if (!record1.isEmpty()) {
+
+					Object[] a = record1.get(0);
+
+					Map<String, String> r1 = new HashMap<>();
+
+					r1.put("containerNo",
+							(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+					r1.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+					r1.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+					r1.put("fcl", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+					r1.put("deliveryMode",
+							(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+					r1.put("agent", (a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+					r1.put("nominator", (a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+					r1.put("transId", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+					r1.put("desc", "Job Order Updated");
+					r1.put("vcnNo", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+					r1.put("vessel", (a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8]) : "");
+					r1.put("processDate",
+							(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+					r1.put("processBy",
+							(a[10] != null && !String.valueOf(a[10]).isEmpty()) ? String.valueOf(a[10]) : "");
+					r1.put("currentLocation",
+							(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11]) : "");
+					r1.put("pod", (a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12]) : "");
+					r1.put("forceEntry",
+							(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13]) : "");
+					r1.put("holdStatus",
+							(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14]) : "");
+
+					result.add(r1);
+
+					if (a[15] != null && !String.valueOf(a[15]).isEmpty()) {
+
+						Map<String, String> r2 = new HashMap<>();
+
+						r2.put("containerNo",
+								(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+						r2.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+						r2.put("category",
+								(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+						r2.put("fcl", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+						r2.put("deliveryMode",
+								(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+						r2.put("agent", (a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+						r2.put("nominator",
+								(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+						r2.put("transId",
+								(a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+						r2.put("desc", "Received Import Full");
+						r2.put("vcnNo", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+						r2.put("vessel", (a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8]) : "");
+						r2.put("processDate",
+								(a[16] != null && !String.valueOf(a[16]).isEmpty()) ? String.valueOf(a[16]) : "");
+						r2.put("processBy",
+								(a[17] != null && !String.valueOf(a[17]).isEmpty()) ? String.valueOf(a[17]) : "");
+						r2.put("currentLocation",
+								(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11]) : "");
+						r2.put("pod", (a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12]) : "");
+						r2.put("forceEntry",
+								(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13]) : "");
+						r2.put("holdStatus",
+								(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14]) : "");
+
+						result.add(r2);
+
+						if (a[18] != null && !String.valueOf(a[18]).isEmpty()) {
+
+							Map<String, String> r3 = new HashMap<>();
+
+							r3.put("containerNo",
+									(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+							r3.put("size",
+									(a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+							r3.put("category",
+									(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+							r3.put("fcl",
+									(a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+							r3.put("deliveryMode",
+									(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+							r3.put("agent",
+									(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+							r3.put("nominator",
+									(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+							r3.put("transId",
+									(a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+							r3.put("desc", "Import Seal Cutting Done");
+							r3.put("vcnNo",
+									(a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+							r3.put("vessel",
+									(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8]) : "");
+							r3.put("processDate",
+									(a[20] != null && !String.valueOf(a[20]).isEmpty()) ? String.valueOf(a[20]) : "");
+							r3.put("processBy",
+									(a[19] != null && !String.valueOf(a[19]).isEmpty()) ? String.valueOf(a[19]) : "");
+							r3.put("currentLocation",
+									(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11]) : "");
+							r3.put("pod",
+									(a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12]) : "");
+							r3.put("forceEntry",
+									(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13]) : "");
+							r3.put("holdStatus",
+									(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14]) : "");
+
+							result.add(r3);
+
+							if (a[21] != null && !String.valueOf(a[21]).isEmpty()) {
+
+								Map<String, String> r4 = new HashMap<>();
+
+								r4.put("containerNo",
+										(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+								r4.put("size",
+										(a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+								r4.put("category",
+										(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+								r4.put("fcl",
+										(a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+								r4.put("deliveryMode",
+										(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+								r4.put("agent",
+										(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+								r4.put("nominator",
+										(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+								r4.put("transId",
+										(a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+								r4.put("desc", "Import Examination Done");
+								r4.put("vcnNo",
+										(a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+								r4.put("vessel",
+										(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8]) : "");
+								r4.put("processDate",
+										(a[22] != null && !String.valueOf(a[22]).isEmpty()) ? String.valueOf(a[22])
+												: "");
+								r4.put("processBy",
+										(a[23] != null && !String.valueOf(a[23]).isEmpty()) ? String.valueOf(a[23])
+												: "");
+								r4.put("currentLocation",
+										(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11])
+												: "");
+								r4.put("pod",
+										(a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12])
+												: "");
+								r4.put("forceEntry",
+										(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13])
+												: "");
+								r4.put("holdStatus",
+										(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14])
+												: "");
+
+								result.add(r4);
+
+								if (a[24] != null && !String.valueOf(a[24]).isEmpty()) {
+
+									Map<String, String> r5 = new HashMap<>();
+
+									r5.put("containerNo",
+											(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0])
+													: "");
+									r5.put("size",
+											(a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1])
+													: "");
+									r5.put("category",
+											(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2])
+													: "");
+									r5.put("fcl",
+											(a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3])
+													: "");
+									r5.put("deliveryMode",
+											(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4])
+													: "");
+									r5.put("agent",
+											(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+													: "");
+									r5.put("nominator",
+											(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+													: "");
+									r5.put("transId",
+											(a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6])
+													: "");
+									r5.put("desc", "Import Destuff Done");
+									r5.put("vcnNo",
+											(a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7])
+													: "");
+									r5.put("vessel",
+											(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8])
+													: "");
+									r5.put("processDate",
+											(a[25] != null && !String.valueOf(a[25]).isEmpty()) ? String.valueOf(a[25])
+													: "");
+									r5.put("processBy",
+											(a[26] != null && !String.valueOf(a[26]).isEmpty()) ? String.valueOf(a[26])
+													: "");
+									r5.put("currentLocation",
+											(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11])
+													: "");
+									r5.put("pod",
+											(a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12])
+													: "");
+									r5.put("forceEntry",
+											(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13])
+													: "");
+									r5.put("holdStatus",
+											(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14])
+													: "");
+
+									result.add(r5);
+
+								}
+
+								if (a[27] != null && !String.valueOf(a[27]).isEmpty()) {
+
+									Map<String, String> r5 = new HashMap<>();
+
+									r5.put("containerNo",
+											(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0])
+													: "");
+									r5.put("size",
+											(a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1])
+													: "");
+									r5.put("category",
+											(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2])
+													: "");
+									r5.put("fcl",
+											(a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3])
+													: "");
+									r5.put("deliveryMode",
+											(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4])
+													: "");
+									r5.put("agent",
+											(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+													: "");
+									r5.put("nominator",
+											(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+													: "");
+									r5.put("transId",
+											(a[27] != null && !String.valueOf(a[27]).isEmpty()) ? String.valueOf(a[27])
+													: "");
+									r5.put("desc", "Import Destuff Done");
+									r5.put("vcnNo",
+											(a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7])
+													: "");
+									r5.put("vessel",
+											(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8])
+													: "");
+									r5.put("processDate",
+											(a[28] != null && !String.valueOf(a[28]).isEmpty()) ? String.valueOf(a[28])
+													: "");
+									r5.put("processBy",
+											(a[29] != null && !String.valueOf(a[29]).isEmpty()) ? String.valueOf(a[29])
+													: "");
+									r5.put("currentLocation",
+											(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11])
+													: "");
+									r5.put("pod",
+											(a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12])
+													: "");
+									r5.put("forceEntry",
+											(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13])
+													: "");
+									r5.put("holdStatus",
+											(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14])
+													: "");
+
+									result.add(r5);
+
+								}
+
+								if (a[30] != null && !String.valueOf(a[30]).isEmpty()) {
+
+									Map<String, String> r5 = new HashMap<>();
+
+									r5.put("containerNo",
+											(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0])
+													: "");
+									r5.put("size",
+											(a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1])
+													: "");
+									r5.put("category",
+											(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2])
+													: "");
+									r5.put("fcl",
+											(a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3])
+													: "");
+									r5.put("deliveryMode",
+											(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4])
+													: "");
+									r5.put("agent",
+											(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+													: "");
+									r5.put("nominator",
+											(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+													: "");
+									r5.put("transId",
+											(a[30] != null && !String.valueOf(a[30]).isEmpty()) ? String.valueOf(a[30])
+													: "");
+									r5.put("desc", "Import Gate Pass Done");
+									r5.put("vcnNo",
+											(a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7])
+													: "");
+									r5.put("vessel",
+											(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8])
+													: "");
+									r5.put("processDate",
+											(a[32] != null && !String.valueOf(a[32]).isEmpty()) ? String.valueOf(a[32])
+													: "");
+									r5.put("processBy",
+											(a[31] != null && !String.valueOf(a[31]).isEmpty()) ? String.valueOf(a[31])
+													: "");
+									r5.put("currentLocation",
+											(a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11])
+													: "");
+									r5.put("pod",
+											(a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12])
+													: "");
+									r5.put("forceEntry",
+											(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13])
+													: "");
+									r5.put("holdStatus",
+											(a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14])
+													: "");
+
+									result.add(r5);
+
+									if (a[33] != null && !String.valueOf(a[33]).isEmpty()) {
+
+										Map<String, String> r6 = new HashMap<>();
+
+										r6.put("containerNo",
+												(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0])
+														: "");
+										r6.put("size",
+												(a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1])
+														: "");
+										r6.put("category",
+												(a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2])
+														: "");
+										r6.put("fcl",
+												(a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3])
+														: "");
+										r6.put("deliveryMode",
+												(a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4])
+														: "");
+										r6.put("agent",
+												(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+														: "");
+										r6.put("nominator",
+												(a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5])
+														: "");
+										r6.put("transId",
+												(a[33] != null && !String.valueOf(a[33]).isEmpty())
+														? String.valueOf(a[33])
+														: "");
+										r6.put("desc", "Import Gate Out Done");
+										r6.put("vcnNo",
+												(a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7])
+														: "");
+										r6.put("vessel",
+												(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8])
+														: "");
+										r6.put("processDate",
+												(a[34] != null && !String.valueOf(a[34]).isEmpty())
+														? String.valueOf(a[34])
+														: "");
+										r6.put("processBy",
+												(a[35] != null && !String.valueOf(a[35]).isEmpty())
+														? String.valueOf(a[35])
+														: "");
+										r6.put("currentLocation",
+												(a[11] != null && !String.valueOf(a[11]).isEmpty())
+														? String.valueOf(a[11])
+														: "");
+										r6.put("pod",
+												(a[12] != null && !String.valueOf(a[12]).isEmpty())
+														? String.valueOf(a[12])
+														: "");
+										r6.put("forceEntry",
+												(a[13] != null && !String.valueOf(a[13]).isEmpty())
+														? String.valueOf(a[13])
+														: "");
+										r6.put("holdStatus",
+												(a[14] != null && !String.valueOf(a[14]).isEmpty())
+														? String.valueOf(a[14])
+														: "");
+
+										result.add(r6);
+
+										return new ResponseEntity<>(result, HttpStatus.OK);
+
+									}
+
+								} else {
+									return new ResponseEntity<>(result, HttpStatus.OK);
+								}
+
+							} else {
+								return new ResponseEntity<>(result, HttpStatus.OK);
+							}
+
+						} else {
+							return new ResponseEntity<>(result, HttpStatus.OK);
+						}
+
+					} else {
+						return new ResponseEntity<>(result, HttpStatus.OK);
+					}
+
+					return new ResponseEntity<>(result, HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+				}
+
+			} else {
+				Object[] igmData = findData1.get(0);
+
+				String gateInId = String.valueOf(igmData[3]);
+				String conNo = String.valueOf(igmData[2]);
+
+				List<Map<String, String>> result = new ArrayList<>();
+
+				List<Object[]> record1 = exportInvRepo.getDataByGateInIdFOrHistory(cid, bid, gateInId, conNo);
+
+				if (!record1.isEmpty()) {
+
+					Object[] a = record1.get(0);
+
+					Map<String, String> r1 = new HashMap<>();
+
+					r1.put("containerNo",
+							(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+					r1.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+					r1.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+					r1.put("fcl", "FCL");
+					r1.put("deliveryMode","Loaded");
+					r1.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+					r1.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+					r1.put("transId", (a[5] != null && !String.valueOf(a[5]).isEmpty()) ? String.valueOf(a[5]) : "");
+					r1.put("desc", "Export Empty In Done");
+					r1.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+					r1.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+					r1.put("processDate",
+							(a[8] != null && !String.valueOf(a[8]).isEmpty()) ? String.valueOf(a[8]) : "");
+					r1.put("processBy",
+							(a[10] != null && !String.valueOf(a[10]).isEmpty()) ? String.valueOf(a[10]) : "");
+					r1.put("currentLocation",
+							(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+					r1.put("pod", "");
+					r1.put("forceEntry","");
+					r1.put("holdStatus","");
+
+					result.add(r1);
+
+					if (a[11] != null && !String.valueOf(a[11]).isEmpty()) {
+
+						Map<String, String> r2 = new HashMap<>();
+
+						r2.put("containerNo",
+								(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+						r2.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+						r2.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+						r2.put("fcl", "FCL");
+						r2.put("deliveryMode","Loaded");
+						r2.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+						r2.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+						r2.put("transId", (a[11] != null && !String.valueOf(a[11]).isEmpty()) ? String.valueOf(a[11]) : "");
+						r2.put("desc", "Export Stuffing Request Done");
+						r2.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+						r2.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+						r2.put("processDate",
+								(a[12] != null && !String.valueOf(a[12]).isEmpty()) ? String.valueOf(a[12]) : "");
+						r2.put("processBy",
+								(a[13] != null && !String.valueOf(a[13]).isEmpty()) ? String.valueOf(a[13]) : "");
+						r2.put("currentLocation",
+								(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+						r2.put("pod", (a[14] != null && !String.valueOf(a[14]).isEmpty()) ? String.valueOf(a[14]) : "");
+						r2.put("forceEntry","");
+						r2.put("holdStatus","");
+
+						result.add(r2);
+
+						if (a[15] != null && !String.valueOf(a[15]).isEmpty()) {
+
+							Map<String, String> r3 = new HashMap<>();
+
+							r3.put("containerNo",
+									(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+							r3.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+							r3.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+							r3.put("fcl", "FCL");
+							r3.put("deliveryMode","Loaded");
+							r3.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+							r3.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+							r3.put("transId", (a[15] != null && !String.valueOf(a[15]).isEmpty()) ? String.valueOf(a[15]) : "");
+							r3.put("desc", "Export Stuffing Tally Done");
+							r3.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+							r3.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+							r3.put("processDate",
+									(a[16] != null && !String.valueOf(a[16]).isEmpty()) ? String.valueOf(a[16]) : "");
+							r3.put("processBy",
+									(a[17] != null && !String.valueOf(a[17]).isEmpty()) ? String.valueOf(a[17]) : "");
+							r3.put("currentLocation",
+									(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+							r3.put("pod", (a[18] != null && !String.valueOf(a[18]).isEmpty()) ? String.valueOf(a[18]) : "");
+							r3.put("forceEntry","");
+							r3.put("holdStatus","");
+
+							result.add(r3);
+
+							if (a[19] != null && !String.valueOf(a[19]).isEmpty()) {
+
+								Map<String, String> r4 = new HashMap<>();
+
+								r4.put("containerNo",
+										(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+								r4.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+								r4.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+								r4.put("fcl", "FCL");
+								r4.put("deliveryMode","Loaded");
+								r4.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+								r4.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+								r4.put("transId", (a[19] != null && !String.valueOf(a[19]).isEmpty()) ? String.valueOf(a[19]) : "");
+								r4.put("desc", "Export Movement Request Done");
+								r4.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+								r4.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+								r4.put("processDate",
+										(a[20] != null && !String.valueOf(a[20]).isEmpty()) ? String.valueOf(a[20]) : "");
+								r4.put("processBy",
+										(a[21] != null && !String.valueOf(a[21]).isEmpty()) ? String.valueOf(a[21]) : "");
+								r4.put("currentLocation",
+										(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+								r4.put("pod", (a[22] != null && !String.valueOf(a[22]).isEmpty()) ? String.valueOf(a[22]) : "");
+								r4.put("forceEntry",(a[23] != null && !String.valueOf(a[23]).isEmpty()) ? String.valueOf(a[23]) : "");
+								r4.put("holdStatus","");
+
+								result.add(r4);
+
+								if (a[24] != null && !String.valueOf(a[24]).isEmpty()) {
+
+									Map<String, String> r5 = new HashMap<>();
+
+									r5.put("containerNo",
+											(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+									r5.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+									r5.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+									r5.put("fcl", "FCL");
+									r5.put("deliveryMode","Loaded");
+									r5.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+									r5.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+									r5.put("transId", (a[24] != null && !String.valueOf(a[24]).isEmpty()) ? String.valueOf(a[24]) : "");
+									r5.put("desc", "Invoice Completed");
+									r5.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+									r5.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+									r5.put("processDate",
+											(a[25] != null && !String.valueOf(a[25]).isEmpty()) ? String.valueOf(a[25]) : "");
+									r5.put("processBy",
+											(a[26] != null && !String.valueOf(a[26]).isEmpty()) ? String.valueOf(a[26]) : "");
+									r5.put("currentLocation",
+											(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+									r5.put("pod", (a[22] != null && !String.valueOf(a[22]).isEmpty()) ? String.valueOf(a[22]) : "");
+									r5.put("forceEntry","");
+									r5.put("holdStatus","");
+
+
+									result.add(r5);
+
+								}
+
+								
+
+								if (a[27] != null && !String.valueOf(a[27]).isEmpty()) {
+
+									Map<String, String> r5 = new HashMap<>();
+
+									r5.put("containerNo",
+											(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+									r5.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+									r5.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+									r5.put("fcl", "FCL");
+									r5.put("deliveryMode","Loaded");
+									r5.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+									r5.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+									r5.put("transId", (a[27] != null && !String.valueOf(a[27]).isEmpty()) ? String.valueOf(a[27]) : "");
+									r5.put("desc", "Export Gate Pass Done");
+									r5.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+									r5.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+									r5.put("processDate",
+											(a[28] != null && !String.valueOf(a[28]).isEmpty()) ? String.valueOf(a[28]) : "");
+									r5.put("processBy",
+											(a[29] != null && !String.valueOf(a[29]).isEmpty()) ? String.valueOf(a[29]) : "");
+									r5.put("currentLocation",
+											(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+									r5.put("pod", (a[22] != null && !String.valueOf(a[22]).isEmpty()) ? String.valueOf(a[22]) : "");
+									r5.put("forceEntry","");
+									r5.put("holdStatus","");
+
+									result.add(r5);
+
+									if (a[30] != null && !String.valueOf(a[30]).isEmpty()) {
+
+										Map<String, String> r6 = new HashMap<>();
+
+										r6.put("containerNo",
+												(a[0] != null && !String.valueOf(a[0]).isEmpty()) ? String.valueOf(a[0]) : "");
+										r6.put("size", (a[1] != null && !String.valueOf(a[1]).isEmpty()) ? String.valueOf(a[1]) : "");
+										r6.put("category", (a[2] != null && !String.valueOf(a[2]).isEmpty()) ? String.valueOf(a[2]) : "");
+										r6.put("fcl", "FCL");
+										r6.put("deliveryMode","Loaded");
+										r6.put("agent", (a[3] != null && !String.valueOf(a[3]).isEmpty()) ? String.valueOf(a[3]) : "");
+										r6.put("nominator", (a[4] != null && !String.valueOf(a[4]).isEmpty()) ? String.valueOf(a[4]) : "");
+										r6.put("transId", (a[30] != null && !String.valueOf(a[30]).isEmpty()) ? String.valueOf(a[30]) : "");
+										r6.put("desc", "Export Gate Out Done");
+										r6.put("vcnNo", (a[6] != null && !String.valueOf(a[6]).isEmpty()) ? String.valueOf(a[6]) : "");
+										r6.put("vessel", (a[7] != null && !String.valueOf(a[7]).isEmpty()) ? String.valueOf(a[7]) : "");
+										r6.put("processDate",
+												(a[31] != null && !String.valueOf(a[31]).isEmpty()) ? String.valueOf(a[31]) : "");
+										r6.put("processBy",
+												(a[32] != null && !String.valueOf(a[32]).isEmpty()) ? String.valueOf(a[32]) : "");
+										r6.put("currentLocation",
+												(a[9] != null && !String.valueOf(a[9]).isEmpty()) ? String.valueOf(a[9]) : "");
+										r6.put("pod", (a[22] != null && !String.valueOf(a[22]).isEmpty()) ? String.valueOf(a[22]) : "");
+										r6.put("forceEntry","");
+										r6.put("holdStatus","");
+										result.add(r6);
+
+										return new ResponseEntity<>(result, HttpStatus.OK);
+
+									}
+
+								} else {
+									return new ResponseEntity<>(result, HttpStatus.OK);
+								}
+
+							} else {
+								return new ResponseEntity<>(result, HttpStatus.OK);
+							}
+
+						} else {
+							return new ResponseEntity<>(result, HttpStatus.OK);
+						}
+
+					} else {
+						return new ResponseEntity<>(result, HttpStatus.OK);
+					}
+
+					return new ResponseEntity<>(result, HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	
 }
