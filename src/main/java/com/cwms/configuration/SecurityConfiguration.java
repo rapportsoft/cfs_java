@@ -159,6 +159,7 @@ public class SecurityConfiguration {
                         .requestMatchers(mvcMatcherBuilder.pattern("/ssrUpload/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/lclTariffUpload/**")).authenticated()
                         .requestMatchers(mvcMatcherBuilder.pattern("/notGateInHoldContainer/**")).authenticated()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/scmtr/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
