@@ -1554,6 +1554,22 @@ public class ExportInvoiceService {
 					newAss.setProfitcentreId(con.getProfitcentreId());
 
 					newAss.setAssesmentId(HoldNextIdD1);
+					String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+							: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+									: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+											: assessment.getOthPartyId();
+
+					String billingAdd = "EXP".equals(assessment.getBillingParty())
+							? String.valueOf(assessment.getImpSrNo())
+							: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+									: "FWR".equals(assessment.getBillingParty())
+											? String.valueOf(assessment.getAccSrNo())
+											: assessment.getOthSrNo();
+
+					PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+					newAss.setPartyId(billingId);
+					newAss.setPartySrNo(new BigDecimal(billingAdd));
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 						newAss.setIgst("Y");
@@ -1569,22 +1585,7 @@ public class ExportInvoiceService {
 
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-						String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-												: assessment.getOthPartyId();
-
-						String billingAdd = "EXP".equals(assessment.getBillingParty())
-								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-										: "FWR".equals(assessment.getBillingParty())
-												? String.valueOf(assessment.getAccSrNo())
-												: assessment.getOthSrNo();
-
-						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-						newAss.setPartyId(billingId);
-						newAss.setPartySrNo(new BigDecimal(billingAdd));
+						
 
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
@@ -4246,6 +4247,23 @@ public class ExportInvoiceService {
 					newAss.setProfitcentreId(con.getProfitcentreId());
 
 					newAss.setAssesmentId(HoldNextIdD1);
+					
+					String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+							: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+									: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+											: assessment.getOthPartyId();
+
+					String billingAdd = "EXP".equals(assessment.getBillingParty())
+							? String.valueOf(assessment.getImpSrNo())
+							: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+									: "FWR".equals(assessment.getBillingParty())
+											? String.valueOf(assessment.getAccSrNo())
+											: assessment.getOthSrNo();
+
+					PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+					newAss.setPartyId(billingId);
+					newAss.setPartySrNo(new BigDecimal(billingAdd));
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 						newAss.setIgst("Y");
@@ -4261,22 +4279,7 @@ public class ExportInvoiceService {
 
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-						String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-												: assessment.getOthPartyId();
-
-						String billingAdd = "EXP".equals(assessment.getBillingParty())
-								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-										: "FWR".equals(assessment.getBillingParty())
-												? String.valueOf(assessment.getAccSrNo())
-												: assessment.getOthSrNo();
-
-						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-						newAss.setPartyId(billingId);
-						newAss.setPartySrNo(new BigDecimal(billingAdd));
+			
 
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
@@ -5438,6 +5441,22 @@ public class ExportInvoiceService {
 					newAss.setProfitcentreId(con.getProfitcentreId());
 
 					newAss.setAssesmentId(HoldNextIdD1);
+					String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
+							: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
+									: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
+											: assessment.getOthPartyId();
+
+					String billingAdd = "EXP".equals(assessment.getBillingParty())
+							? String.valueOf(assessment.getImpSrNo())
+							: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
+									: "FWR".equals(assessment.getBillingParty())
+											? String.valueOf(assessment.getAccSrNo())
+											: assessment.getOthSrNo();
+
+					PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
+
+					newAss.setPartyId(billingId);
+					newAss.setPartySrNo(new BigDecimal(billingAdd));
 
 					if (assessment.getSez() == 'Y' && assessment.getTaxApplicable() == 'Y') {
 						newAss.setIgst("Y");
@@ -5453,22 +5472,7 @@ public class ExportInvoiceService {
 
 						Branch b = branchRepo.getDataByCompanyAndBranch(cid, bid);
 
-						String billingId = "EXP".equals(assessment.getBillingParty()) ? assessment.getImporterId()
-								: "CHA".equals(assessment.getBillingParty()) ? assessment.getCha()
-										: "FWR".equals(assessment.getBillingParty()) ? assessment.getOnAccountOf()
-												: assessment.getOthPartyId();
-
-						String billingAdd = "EXP".equals(assessment.getBillingParty())
-								? String.valueOf(assessment.getImpSrNo())
-								: "CHA".equals(assessment.getBillingParty()) ? String.valueOf(assessment.getChaSrNo())
-										: "FWR".equals(assessment.getBillingParty())
-												? String.valueOf(assessment.getAccSrNo())
-												: assessment.getOthSrNo();
-
-						PartyAddress p = partyRepo.getData(cid, bid, billingId, billingAdd);
-
-						newAss.setPartyId(billingId);
-						newAss.setPartySrNo(new BigDecimal(billingAdd));
+						
 
 						if (b.getState().equals(p.getState())) {
 							newAss.setIgst("N");
