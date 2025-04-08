@@ -673,6 +673,7 @@ public class ExcelUploadController {
 								cn.setIgmLineNo(itemNo);
 								cn.setProfitcentreId("N00002");
 								cn.setIso(iso);
+								cn.setTypeOfContainer("General");
 								cn.setFinYear(finYear);
 								cn.setContainerSize(isoData.getContainerSize());
 								cn.setContainerType(isoData.getContainerType());
@@ -794,6 +795,7 @@ public class ExcelUploadController {
 								cn.setFinYear(finYear);
 								cn.setContainerSize(isoData.getContainerSize());
 								cn.setContainerType(isoData.getContainerType());
+								cn.setTypeOfContainer("General");
 								cn.setContainerWeight(isoData.getTareWeight());
 								cn.setGrossWt(isoData.getTareWeight().add(crg.getGrossWeight()));
 								if ("LCL".equals(status)) {
@@ -1325,6 +1327,7 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
+							cn.setTypeOfContainer("General");
 							BigDecimal gw = (new BigDecimal(cargoWt).multiply(new BigDecimal(1000))).setScale(3,
 									RoundingMode.HALF_UP);
 
@@ -1787,6 +1790,7 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
+							cn.setTypeOfContainer("General");
 							BigDecimal gw = (new BigDecimal(cargoWt).multiply(new BigDecimal(1000))).setScale(3,
 									RoundingMode.HALF_UP);
 
@@ -2257,6 +2261,7 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
+							cn.setTypeOfContainer("General");
 							BigDecimal gw = (new BigDecimal(cargoWt).multiply(new BigDecimal(1000))).setScale(3,
 									RoundingMode.HALF_UP);
 
@@ -2721,6 +2726,7 @@ public class ExcelUploadController {
 							cn.setProfitcentreId("N00002");
 							cn.setIso(iso);
 							cn.setFinYear(finYear);
+							cn.setTypeOfContainer("General");
 							BigDecimal gw = (new BigDecimal(cargoWt).multiply(new BigDecimal(1000))).setScale(3,
 									RoundingMode.HALF_UP);
 
