@@ -1,6 +1,7 @@
 package com.cwms.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cwms.entities.CFIgm;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.EmptyInventory;
@@ -27,7 +30,10 @@ import com.cwms.entities.GateOut;
 import com.cwms.entities.HoldDetails;
 import com.cwms.entities.ImportInventory;
 import com.cwms.entities.NotGateInHoldDtl;
+import com.cwms.entities.SSRDtl;
+import com.cwms.entities.SSRJobDtl;
 import com.cwms.entities.VehicleTrack;
+import com.cwms.repository.CFSTarrifServiceRepository;
 import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
@@ -39,6 +45,8 @@ import com.cwms.repository.HoldDetailsRepository;
 import com.cwms.repository.ImportInventoryRepository;
 import com.cwms.repository.NotGateInHoldDtlRepo;
 import com.cwms.repository.ProcessNextIdRepository;
+import com.cwms.repository.SSRDtlRepository;
+import com.cwms.repository.SSRJobDtlRepo;
 import com.cwms.repository.VehicleTrackRepository;
 import com.cwms.service.GateInService;
 
@@ -82,6 +90,15 @@ public class GateInController {
 	
 	@Autowired
 	private HoldDetailsRepository holdRepo;
+	
+	@Autowired
+	private SSRJobDtlRepo ssrJobDtlRepo;
+	
+	@Autowired
+	private CFSTarrifServiceRepository cfsstdtrfsrvrepo;
+
+	@Autowired
+	private SSRDtlRepository ssrdtlrepo;
 
 	@PostMapping("/saveGateIn")
 	public ResponseEntity<?> saveData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -243,6 +260,8 @@ public class GateInController {
 				});
 
 				gateinrepo.save(gatein);
+				
+				mapSSR(cid, bid, user , gatein, cn.get(0));
 				
 				VehicleTrack v = new VehicleTrack();
 				v.setCompanyId(cid);
@@ -1231,6 +1250,165 @@ public class GateInController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("An error occurred while checking duplicate SB No.");
 		}
+	}
+	
+	
+	
+	@Async
+	public void mapSSR(String companyId, String branchId, String user, GateIn gate, Cfigmcn con) {
+
+		try {
+
+			SSRJobDtl jobDtl = ssrJobDtlRepo.getExistingDataOfContainerNo(companyId, branchId, gate.getContainerNo());
+
+			if (jobDtl != null) {
+
+				List<String> serviceList = ssrJobDtlRepo.getServiceDataByContainerNo(companyId, branchId,
+						jobDtl.getTransId(), jobDtl.getContainerNo());
+
+				if (!serviceList.isEmpty()) {
+
+					List<String> conSize = new ArrayList<>();
+					conSize.add("ALL");
+					conSize.add(gate.getContainerSize());
+
+					List<String> conType = new ArrayList<>();
+					conType.add("ALL");
+					conType.add(con.getTypeOfContainer());
+
+					List<Object[]> serviceDtls = cfsstdtrfsrvrepo.getServiceDtlForBLWiseUpload(companyId, branchId,
+							serviceList, "CFS1000001", conSize, conType);
+
+					if (!serviceDtls.isEmpty()) {
+
+						String holdId1 = processnextidrepo.findAuditTrail(companyId, branchId, "P05080", "2024");
+
+						int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+						int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+						String HoldNextIdD1 = String.format("ISSR%06d", nextNumericNextID1);
+
+						CFIgm igm = cfigmrepo.getDataByIgmNoAndtrans(companyId, branchId, con.getIgmTransId(),
+								con.getIgmNo());
+
+						Cfigmcrg crg = cfigmcrgrepo.getDataByIgmAndLine(companyId, branchId, con.getIgmTransId(),
+								con.getIgmNo(), con.getIgmLineNo());
+
+						serviceDtls.stream().forEach(s -> {
+
+							SSRJobDtl jobData = ssrJobDtlRepo.getDataByContainerNoAndServiceId(companyId, branchId,
+									jobDtl.getTransId(), jobDtl.getContainerNo(), String.valueOf(s[0]));
+
+							if (jobData != null) {
+								BigDecimal rate = (jobData == null) ? BigDecimal.ZERO : jobData.getRate();
+
+								String lastValue = processnextidrepo.findAuditTrail(companyId, branchId, "P05081",
+										"2024");
+
+								String[] parts = lastValue.split("/");
+								String baseId = parts[0];
+								String baseId1 = parts[1];
+								String financialYear = parts[2];
+
+								// Increment the numerical part
+								int newVal = Integer.parseInt(baseId1) + 1;
+
+								// Format newVal to maintain leading zeros (e.g., 0001)
+								String formattedNewVal = String.format("%04d", newVal);
+
+								// Get the current financial year
+								String currentFinancialYear = getCurrentFinancialYear();
+
+								// Construct the new ID
+								String newId = baseId + "/" + formattedNewVal + "/" + currentFinancialYear;
+
+								SSRDtl newSsr = new SSRDtl();
+
+								newSsr.setApprovedBy(user);
+								newSsr.setApprovedDate(new Date());
+								newSsr.setBeDate(crg.getBeDate());
+								newSsr.setBeNo(crg.getBeNo());
+								newSsr.setBlDate(crg.getBlDate());
+								newSsr.setBlNo(crg.getBlNo());
+								newSsr.setBranchId(branchId);
+								newSsr.setCargoWt(con.getCargoWt());
+								newSsr.setCha(con.getCha());
+								newSsr.setCommodityDescription(crg.getCommodityDescription());
+								newSsr.setCompanyId(companyId);
+								newSsr.setContainerNo(con.getContainerNo());
+								newSsr.setContainerSize(con.getContainerSize());
+								newSsr.setContainerType(con.getContainerType());
+								newSsr.setCreatedBy(user);
+								newSsr.setCreatedDate(new Date());
+								newSsr.setDocRefDate(igm.getIgmDate());
+								newSsr.setDocRefNo(con.getIgmNo());
+								newSsr.setErpDocRefNo(con.getIgmTransId());
+								newSsr.setExecutionUnit("1");
+								newSsr.setGateOutType(con.getGateOutType());
+								newSsr.setIgmLineNo(con.getIgmLineNo());
+								newSsr.setNoOfPackages(con.getNoOfPackages());
+								newSsr.setProfitcentreId(con.getProfitcentreId());
+								newSsr.setRate(new BigDecimal(String.valueOf(s[3])));
+								newSsr.setSa(igm.getShippingAgent());
+								newSsr.setServiceId(String.valueOf(s[0]));
+								newSsr.setServiceUnit(String.valueOf(s[1]));
+								newSsr.setServiceUnit1(String.valueOf(s[19]));
+								newSsr.setSl(igm.getShippingLine());
+								newSsr.setSrNo(new BigDecimal(0));
+								newSsr.setSsrModeFor("CONT");
+								newSsr.setSsrRefNo(newId);
+								newSsr.setStatus('A');
+								newSsr.setTotalRate(rate);
+								newSsr.setTransDate(new Date());
+								newSsr.setTransId(HoldNextIdD1);
+								newSsr.setTransLineNo(new BigDecimal(1));
+								newSsr.setAccId(crg.getAccountHolderId());
+								newSsr.setImpId(crg.getImporterId());
+								newSsr.setSsrPartyId(jobData.getSsrPartyId());
+
+								ssrdtlrepo.save(newSsr);
+
+								jobData.setSsrFlag("Y");
+
+								ssrJobDtlRepo.save(jobData);
+
+								processnextidrepo.updateAuditTrail(companyId, branchId, "P05080", HoldNextIdD1, "2024");
+								processnextidrepo.updateAuditTrail(companyId, branchId, "P05081", newId, "2024");
+							}
+
+						});
+
+						int update = cfigmcnrepo.updateSSRID(companyId, branchId, con.getIgmTransId(), con.getIgmNo(),
+								con.getContainerNo(), HoldNextIdD1);
+
+					}
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static String getCurrentFinancialYear() {
+		LocalDate now = LocalDate.now();
+		int year = now.getYear();
+		int month = now.getMonthValue();
+		int day = now.getDayOfMonth();
+
+		// Check if the current date is before or after April 1st
+		if (month < 4 || (month == 4 && day < 1)) {
+			year--; // If before April 1st, consider the previous year
+		}
+
+		// Calculate financial year start and end
+		int financialYearStart = year % 100; // Current year for start
+		int financialYearEnd = (year + 1) % 100; // Next year for end
+
+		// Format as YY-YY
+		return String.format("%02d-%02d", financialYearStart, financialYearEnd);
 	}
 
 }

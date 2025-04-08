@@ -46,11 +46,11 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 	List<Object[]> getBeforeSaveDataFromSbNo(@Param("cid") String cid,@Param("bid") String bid,@Param("sb") String sb);
 	
 	
-	@Query(value="select DISTINCT s.transId,s.erpDocRefNo,s.docRefNo,s.igmLineNo,s.blNo,s.beNo from SSRDtl s "
+	@Query(value="select DISTINCT s.transId,s.erpDocRefNo,s.docRefNo,s.igmLineNo,s.blNo,s.beNo,s.containerNo from SSRDtl s "
 			+ "where s.companyId=:cid and s.branchId=:bid and s.status != 'D' and s.profitcentreId=:profit  and "
 			+ "(:val is null OR :val = '' OR s.transId LIKE CONCAT ('%',:val,'%') OR s.erpDocRefNo LIKE CONCAT ('%',:val,'%') "
 			+ "OR s.docRefNo LIKE CONCAT ('%',:val,'%') OR s.igmLineNo LIKE CONCAT ('%',:val,'%') OR s.blNo LIKE CONCAT ('%',:val,'%') "
-			+ "OR s.beNo LIKE CONCAT ('%',:val,'%')) order by s.transId desc")
+			+ "OR s.beNo LIKE CONCAT ('%',:val,'%') OR s.containerNo LIKE CONCAT ('%',:val,'%')) order by s.transId desc")
 	List<Object[]> searchSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val, @Param("profit") String profit);
 	
 
@@ -149,11 +149,10 @@ public interface SSRDtlRepository extends JpaRepository<SSRDtl, String> {
 			+ "OR s.docRefNo LIKE CONCAT ('%',:val,'%') OR s.exBondBeId LIKE CONCAT ('%',:val,'%') OR s.exBondId LIKE CONCAT ('%',:val,'%') "
 			+ "OR s.beNo LIKE CONCAT ('%',:val,'%') OR s.inBondId LIKE CONCAT ('%',:val,'%') OR s.ssrType LIKE CONCAT ('%',:val,'%')) order by s.transId desc")
 	List<Object[]> searchBondSSR(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val, @Param("profit") String profit);
-
+	
 	@Query(value="select s.transId,s.docRefNo,s.igmLineNo,s.containerNo,s.containerSize,s.containerType,a.serviceShortDesc,s.totalRate "
 			+ "from SSRDtl s "
 			+ "LEFT OUTER JOIN Services a ON s.companyId=a.companyId and s.branchId=a.branchId and s.serviceId=a.serviceId "
 			+ "where s.companyId=:cid and s.branchId=:bid and s.transId=:val and s.status='A'")
 	List<Object[]> getDataBySSRTransId(@Param("cid") String cid, @Param("bid") String bid, @Param("val") String val);
-
 }

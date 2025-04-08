@@ -55,6 +55,7 @@ import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.CfsTarrif;
 import com.cwms.entities.SSRDtl;
+import com.cwms.entities.SSRJobDtl;
 import com.cwms.helper.HelperMethods;
 import com.cwms.repository.CFSBLDetailsrepo;
 import com.cwms.repository.CFSRepositary;
@@ -64,6 +65,7 @@ import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.ProcessNextIdRepository;
 import com.cwms.repository.SSRDtlRepository;
+import com.cwms.repository.SSRJobDtlRepo;
 import com.cwms.repository.SerViceRepositary;
 import com.cwms.service.ProcessNextIdService;
 import com.cwms.service.Tarrifservice;
@@ -114,6 +116,16 @@ public class SSRUploadController {
 	
 	@Autowired
 	private SSRDtlRepository ssrdtlrepo;
+	
+	@Value("${file.ssrWJOUploadFormat}")
+	private String ssrWJOTemplateDownloadPath;
+
+	@Value("${file.ssrWJOUploadPath}")
+	private String ssrWJOTariffUploadPath;
+	
+	
+	@Autowired
+	private SSRJobDtlRepo ssrjobdtlrepo;
 
 	@GetMapping("/excelFormatDownload")
 	public ResponseEntity<?> downloadExcelFile() {
@@ -634,5 +646,270 @@ public class SSRUploadController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
 		}
 	}
+	
+	
+	
+	
+	
+	@PostMapping("/ssrWJOExcelUpload")
+	public ResponseEntity<?> ssrWJOExcelUpload(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestParam("id") String id, @RequestParam("file") MultipartFile file)
+			throws ParseException, IOException {
+		
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().body("File is empty.");
+		}
+		String fileName = file.getOriginalFilename();
+		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String newFileName = fileName + "_" + timestamp + ".xlsx";
+
+		// Define the path where the new file will be saved
+		Path newFilePath = Paths.get(ssrWJOTariffUploadPath, newFileName);
+
+		// Use try-with-resources to handle streams and ensure proper encoding
+		try (InputStream inputStream = file.getInputStream();
+				OutputStream outputStream = Files.newOutputStream(newFilePath, StandardOpenOption.CREATE)) {
+
+			// Transfer file content while preserving special characters
+			byte[] buffer = new byte[8192];
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+		}
+
+		// Now, create a new File object for the newly created file
+		File newFile = newFilePath.toFile();
+
+		try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+			Sheet sheet = workbook.getSheetAt(0);
+			FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+			// Extract headers dynamically
+			Row headerRow = sheet.getRow(0);
+			Map<Integer, String> headerMap = new HashMap<>();
+			List<String> list1 = new ArrayList<>();
+			Map<String, Object> result = new HashMap<>();
+
+			List<String> headerVal = new ArrayList<>();
+
+			List<String> serviceList = new ArrayList<>();
+			List<String> serviceNameList = new ArrayList<>();
+
+			for (Cell cell : headerRow) {
+				headerMap.put(cell.getColumnIndex(), cell.getStringCellValue());
+
+				headerVal.add(cell.getStringCellValue());
+
+				if (cell.getColumnIndex() >= 6) {
+					String checkServiceIsExistOrNot = serviceRepo.isExistServiceId(cid, bid, cell.getStringCellValue());
+					if (checkServiceIsExistOrNot == null || checkServiceIsExistOrNot.isEmpty()) {
+						list1.add(cell.getStringCellValue() + " ~ " + cell.getStringCellValue()
+								+ " are not matching with the Services short desc.");
+					} else {
+						serviceList.add(checkServiceIsExistOrNot);
+						serviceNameList.add(checkServiceIsExistOrNot + "~" + cell.getStringCellValue());
+					}
+				}
+			}
+
+			if (!list1.isEmpty()) {
+				result.put("message", "error");
+				result.put("result", list1);
+				return new ResponseEntity<>(result, HttpStatus.OK);
+			}
+
+			List<String> errorList = new ArrayList<>();
+
+			List<List<String>> allData = new ArrayList<>();
+
+
+			List<Map<String, String>> serviceDataList = new ArrayList<>();
+
+			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+				Row row = sheet.getRow(i);
+				if (row != null) {
+					Map<String, String> rowData = new HashMap<>();
+					List<String> data1 = new ArrayList<>();
+					Map<String, String> serviceData = new HashMap<>(); // Store serviceId mapped data
+
+					int serviceIndex = 0; // To track serviceList index
+					int valIndex = 0;
+
+					int totalColumns = headerMap.size(); // Total number of columns based on headers
+					for (int colIndex = 0; colIndex < totalColumns; colIndex++) {
+						Cell cell = row.getCell(colIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK); // Get cell, even
+																										// if empty
+
+						String columnName = headerMap.get(colIndex); // Get header name
+						String cellValue = (valIndex == colIndex) ? String.valueOf(getCellValue(cell, evaluator)) : ""; // Extract
+																														// value
+
+						rowData.put(columnName, cellValue);
+						data1.add(cellValue);
+
+						// If column index >= 7 (service columns), get serviceId from serviceList
+						if (colIndex >= 6) {
+							if (serviceIndex < serviceList.size()) {
+								String serviceId = serviceList.get(serviceIndex); // Get serviceId from serviceList
+								serviceData.put(serviceId, cellValue); // Map serviceId to cell value
+								serviceIndex++; // Move to the next serviceId
+							}
+						}
+
+						valIndex++;
+					}
+
+					allData.add(data1);
+					// Add mapped service data to list
+					if (!serviceData.isEmpty()) {
+						serviceDataList.add(serviceData);
+					}
+				}
+			}
+
+			AtomicInteger index = new AtomicInteger(1);
+
+			allData.stream().forEach(i -> {
+			
+				
+				if (i.get(2) == null || i.get(2).isEmpty()) {
+					errorList.add("Container no ~ Container no is required for index " + index.get());
+				}
+
+				index.incrementAndGet();
+			});
+
+			if (!errorList.isEmpty()) {
+				result.put("message", "error");
+				result.put("result", errorList);
+
+				return new ResponseEntity<>(result, HttpStatus.OK);
+			}
+
+			
+			AtomicReference<String> cfsTariffNo = new AtomicReference<>("");
+			AtomicReference<String> cfsAmndNo = new AtomicReference<>("");
+			
+			System.out.println("allData "+allData);
+			System.out.println("serviceList "+serviceList);
+
+	    	String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05136", "2024");
+
+			int lastNextNumericId1 = Integer.parseInt(holdId1.substring(4));
+
+			int nextNumericNextID1 = lastNextNumericId1 + 1;
+
+			String HoldNextIdD1 = String.format("JSSR%06d", nextNumericNextID1);
+			
+			AtomicInteger sr = new AtomicInteger(1);
+			
+			allData.stream().forEach(i -> {
+				AtomicInteger in = new AtomicInteger(6);
+				SSRJobDtl dtl = ssrjobdtlrepo.getExistingDataOfContainerNo(cid, bid, String.valueOf(i.get(2)));
+				
+				if(dtl != null) {
+					
+					int updateContainerStatus = ssrjobdtlrepo.handleDuplicateContainer(cid, bid, dtl.getTransId(), dtl.getContainerNo());
+				}
+				
+				if(!serviceList.isEmpty()) {
+					
+					serviceList.stream().forEach(s->{
+						
+						SSRJobDtl newDtl = new SSRJobDtl();
+						newDtl.setCompanyId(cid);
+						newDtl.setBranchId(bid);
+						newDtl.setTransDate(new Date());
+						newDtl.setTransId(HoldNextIdD1);
+						newDtl.setDocRefNo(String.valueOf(i.get(0)));
+						newDtl.setSsrRefNo(HoldNextIdD1);
+						newDtl.setDocRefDate(new Date());
+						newDtl.setIgmLineNo(String.valueOf(i.get(1)));
+						newDtl.setContainerNo(String.valueOf(i.get(2)));
+						newDtl.setContainerSize(String.valueOf(i.get(3)));
+						newDtl.setProfitcentreId("N00002");
+						newDtl.setSsrModeFor("CONT");
+						newDtl.setSrlNo(new BigDecimal(sr.get()));
+						newDtl.setServiceId(s);
+						newDtl.setServiceUnit("CNTR");
+						newDtl.setExecutionUnit("1");
+						newDtl.setServiceUnit1("NA");
+						newDtl.setServiceUnit1("1");
+						newDtl.setRate(new BigDecimal(i.get(in.get())));
+						newDtl.setTotalRate(new BigDecimal(i.get(in.get())));
+						newDtl.setSsrFlag("N");
+						newDtl.setStatus("A");
+						newDtl.setCreatedBy(user);
+						newDtl.setCreatedDate(new Date());
+						newDtl.setApprovedBy(user);
+						newDtl.setApprovedDate(new Date());
+						newDtl.setSsrPartyId(id);
+						
+						ssrjobdtlrepo.save(newDtl);
+						
+						processnextidrepo.updateAuditTrail(cid, bid, "P05136", HoldNextIdD1, "2024");
+						in.incrementAndGet();
+						sr.incrementAndGet();
+					});
+				}
+				
+
+				
+			});
+
+			result.put("message", "success");
+			result.put("result", "File uploaded and processed successfully");
+
+			return new ResponseEntity<>(result, HttpStatus.OK);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process the file");
+		}
+	}
+	
+	
+	@GetMapping("/getSSRJobData")
+	public ResponseEntity<?> getSSRJobData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("id") String id){
+		
+		try {
+			
+			List<Object[]> data = ssrjobdtlrepo.getSearchData(cid, bid, id);
+			
+			if(data.isEmpty()) {
+				return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+			}
+			
+			return new ResponseEntity<>(data,HttpStatus.OK);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+		}
+	}
+	
+	
+	@GetMapping("/getSelectedSSRJobData")
+	public ResponseEntity<?> getSelectedSSRJobData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,@RequestParam("id") String id){
+		
+		try {
+			
+			List<Object[]> data = ssrjobdtlrepo.getDataBySSRTransId(cid, bid, id);
+			
+			if(data.isEmpty()) {
+				return new ResponseEntity<>("Data not found",HttpStatus.CONFLICT);
+			}
+			
+			return new ResponseEntity<>(data,HttpStatus.OK);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+		}
+	}
+	
+	
+	
 }
 
