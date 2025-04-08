@@ -13,7 +13,6 @@ import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,11 +48,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cwms.entities.CFIgm;
-import com.cwms.entities.CFSBLDetails;
 import com.cwms.entities.CFSTariffService;
 import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
-import com.cwms.entities.CfsTarrif;
 import com.cwms.entities.SSRDtl;
 import com.cwms.entities.SSRJobDtl;
 import com.cwms.helper.HelperMethods;
@@ -80,6 +77,12 @@ public class SSRUploadController {
 
 	@Value("${file.ssrUploadPath}")
 	private String blTariffUploadPath;
+	
+	@Value("${file.ssrWJOUploadFormat}")
+	private String ssrWJOTemplateDownloadPath;
+
+	@Value("${file.ssrWJOUploadPath}")
+	private String ssrWJOTariffUploadPath;
 
 	@Autowired
 	private SerViceRepositary serviceRepo;
@@ -117,13 +120,6 @@ public class SSRUploadController {
 	@Autowired
 	private SSRDtlRepository ssrdtlrepo;
 	
-	@Value("${file.ssrWJOUploadFormat}")
-	private String ssrWJOTemplateDownloadPath;
-
-	@Value("${file.ssrWJOUploadPath}")
-	private String ssrWJOTariffUploadPath;
-	
-	
 	@Autowired
 	private SSRJobDtlRepo ssrjobdtlrepo;
 
@@ -132,6 +128,33 @@ public class SSRUploadController {
 		try {
 			// Path to your Excel file (you need to define 'filePath' correctly)
 			File file = new File(blTemplateDownloadPath);
+
+			// Check if the file exists
+			if (!file.exists()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+
+			// Serve the file
+			Path path = Paths.get(file.getAbsolutePath());
+			Resource resource = new UrlResource(path.toUri());
+
+			// Return the file with the correct content type for Excel
+			return ResponseEntity.ok()
+					.contentType(MediaType
+							.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+					.body(resource);
+
+		} catch (MalformedURLException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/WJOExcelFormatDownload")
+	public ResponseEntity<?> downloadExcelFile1() {
+		try {
+			// Path to your Excel file (you need to define 'filePath' correctly)
+			File file = new File(ssrWJOTemplateDownloadPath);
 
 			// Check if the file exists
 			if (!file.exists()) {
@@ -646,8 +669,6 @@ public class SSRUploadController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
 		}
 	}
-	
-	
 	
 	
 	
