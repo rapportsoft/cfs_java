@@ -1951,12 +1951,102 @@ public class VendorTariffService {
 
 		return list;
 	}
-
+//
+//	@Transactional
+//	public void ammendTariff(String companyId, String branchId, String tariffNo, String oldAmendNo, String newAmendNo,
+//			String user) {
+//
+//		String updateQueryTariff = "UPDATE CfsTarrif t "
+//				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP "
+//				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmndNo = :oldAmendNo";
+//
+//		entityManager.createQuery(updateQueryTariff).setParameter("tariffNo", tariffNo)
+//				.setParameter("oldAmendNo", oldAmendNo).setParameter("companyId", companyId).setParameter("user", user)
+//				.setParameter("branchId", branchId).executeUpdate();
+//
+//		String updateQuery = "UPDATE CFSTariffService t "
+//				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP  "
+//				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmendNo = :oldAmendNo";
+//
+//		entityManager.createQuery(updateQuery).setParameter("tariffNo", tariffNo).setParameter("oldAmendNo", oldAmendNo)
+//				.setParameter("user", user).setParameter("companyId", companyId).setParameter("branchId", branchId)
+//				.executeUpdate();
+//
+//		String insertQuery = "INSERT INTO cfstdtrfsrv ("
+//				+ "Company_Id, Branch_Id, Fin_Year, CFS_Tariff_No, CFS_Amend_No, Service_Id, "
+//				+ "Sr_No, Container_Size, Commodity_Code, Cargo_Type, Status, Range_Type, "
+//				+ "profit_centre_id, Service_Unit, Service_UnitI, From_Range, To_Range, Rate, "
+//				+ "Minimum_Rate, Created_By, Created_Date, Edited_By, Edited_Date, Approved_By, "
+//				+ "Approved_Date, Currency_Id, ammend_status, Default_chk) "
+//				+ "SELECT t.Company_Id, t.Branch_Id, t.Fin_Year, t.CFS_Tariff_No, :newAmendNo, t.Service_Id, "
+//				+ "t.Sr_No, t.Container_Size, t.Commodity_Code, t.Cargo_Type, 'A', t.Range_Type, "
+//				+ "t.profit_centre_id, t.Service_Unit, t.Service_UnitI, t.From_Range, t.To_Range, t.Rate, "
+//				+ "t.Minimum_Rate, t.Created_By, t.Created_Date, t.Edited_By, t.Edited_Date, t.Approved_By, "
+//				+ "t.Approved_Date, t.Currency_Id, 'N', t.Default_chk " + "FROM cfstdtrfsrv t "
+//				+ "WHERE t.company_Id = :companyId AND t.branch_Id = :branchId AND t.CFS_Tariff_No = :tariffNo AND t.CFS_Amend_No = :oldAmendNo";
+//
+//		entityManager.createNativeQuery(insertQuery).setParameter("newAmendNo", newAmendNo)
+//				.setParameter("tariffNo", tariffNo).setParameter("oldAmendNo", oldAmendNo)
+//				.setParameter("companyId", companyId).setParameter("branchId", branchId).executeUpdate();
+//
+//	}
+//
+//	
+//	
+//	
+//	@Transactional
+//	public void applyRatesOf(String companyId, String branchId, String oldTariffNo, String oldAmendNo, String newTariffNo, String newAmendNo, String user) {
+//		
+//		String insertQuery = "INSERT INTO cfstdtrfsrv ("
+//				+ "Company_Id, Branch_Id, Fin_Year, CFS_Tariff_No, CFS_Amend_No, Service_Id, "
+//				+ "Sr_No, Container_Size, Commodity_Code, Cargo_Type, Status, Range_Type, "
+//				+ "profit_centre_id, Service_Unit, Service_UnitI, From_Range, To_Range, Rate, "
+//				+ "Minimum_Rate, Created_By, Created_Date, Edited_By, Edited_Date, Approved_By, "
+//				+ "Approved_Date, Currency_Id, ammend_status, Default_chk) "
+//				+ "SELECT t.Company_Id, t.Branch_Id, t.Fin_Year, :newTariffNo, :newAmendNo, t.Service_Id, "
+//				+ "t.Sr_No, t.Container_Size, t.Commodity_Code, t.Cargo_Type, 'A', t.Range_Type, "
+//				+ "t.profit_centre_id, t.Service_Unit, t.Service_UnitI, t.From_Range, t.To_Range, t.Rate, "
+//				+ "t.Minimum_Rate, :user, CURRENT_TIMESTAMP, t.Edited_By, t.Edited_Date, t.Approved_By, "
+//				+ "t.Approved_Date, t.Currency_Id, 'N', t.Default_chk " + "FROM cfstdtrfsrv t "
+//				+ "WHERE t.company_Id = :companyId AND t.branch_Id = :branchId AND t.CFS_Tariff_No = :oldTariffNo AND t.CFS_Amend_No = :oldAmendNo";
+//
+//		entityManager.createNativeQuery(insertQuery).setParameter("newAmendNo", newAmendNo).setParameter("newTariffNo", newTariffNo)
+//				.setParameter("oldTariffNo", oldTariffNo).setParameter("oldAmendNo", oldAmendNo).setParameter("user", user)
+//				.setParameter("companyId", companyId).setParameter("branchId", branchId).executeUpdate();
+//
+//		
+//		
+//	}
+//	
+//	
+//	
+//	@Transactional
+//	public void uploadTariff(String companyId, String branchId, String tariffNo, String oldAmendNo, String newAmendNo, String user) {
+//
+//		String updateQueryTariff = "UPDATE CfsTarrif t "
+//				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP "
+//				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmndNo = :oldAmendNo";
+//
+//		entityManager.createQuery(updateQueryTariff).setParameter("tariffNo", tariffNo)
+//				.setParameter("oldAmendNo", oldAmendNo).setParameter("companyId", companyId).setParameter("user", user)
+//				.setParameter("branchId", branchId).executeUpdate();
+//
+//		String updateQuery = "UPDATE CFSTariffService t "
+//				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP  "
+//				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmendNo = :oldAmendNo";
+//
+//		entityManager.createQuery(updateQuery).setParameter("tariffNo", tariffNo).setParameter("oldAmendNo", oldAmendNo)
+//				.setParameter("user", user).setParameter("companyId", companyId).setParameter("branchId", branchId)
+//				.executeUpdate();		
+//	}
+//
+//	
+	
 	@Transactional
 	public void ammendTariff(String companyId, String branchId, String tariffNo, String oldAmendNo, String newAmendNo,
 			String user) {
 
-		String updateQueryTariff = "UPDATE CfsTarrif t "
+		String updateQueryTariff = "UPDATE VendorTariff t "
 				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP "
 				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmndNo = :oldAmendNo";
 
@@ -1964,7 +2054,7 @@ public class VendorTariffService {
 				.setParameter("oldAmendNo", oldAmendNo).setParameter("companyId", companyId).setParameter("user", user)
 				.setParameter("branchId", branchId).executeUpdate();
 
-		String updateQuery = "UPDATE CFSTariffService t "
+		String updateQuery = "UPDATE VendorTariffSrv t "
 				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP  "
 				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmendNo = :oldAmendNo";
 
@@ -1972,7 +2062,7 @@ public class VendorTariffService {
 				.setParameter("user", user).setParameter("companyId", companyId).setParameter("branchId", branchId)
 				.executeUpdate();
 
-		String insertQuery = "INSERT INTO cfstdtrfsrv ("
+		String insertQuery = "INSERT INTO cfstdtrfsrvap ("
 				+ "Company_Id, Branch_Id, Fin_Year, CFS_Tariff_No, CFS_Amend_No, Service_Id, "
 				+ "Sr_No, Container_Size, Commodity_Code, Cargo_Type, Status, Range_Type, "
 				+ "profit_centre_id, Service_Unit, Service_UnitI, From_Range, To_Range, Rate, "
@@ -1997,7 +2087,7 @@ public class VendorTariffService {
 	@Transactional
 	public void applyRatesOf(String companyId, String branchId, String oldTariffNo, String oldAmendNo, String newTariffNo, String newAmendNo, String user) {
 		
-		String insertQuery = "INSERT INTO cfstdtrfsrv ("
+		String insertQuery = "INSERT INTO cfstdtrfsrvap ("
 				+ "Company_Id, Branch_Id, Fin_Year, CFS_Tariff_No, CFS_Amend_No, Service_Id, "
 				+ "Sr_No, Container_Size, Commodity_Code, Cargo_Type, Status, Range_Type, "
 				+ "profit_centre_id, Service_Unit, Service_UnitI, From_Range, To_Range, Rate, "
@@ -2023,7 +2113,7 @@ public class VendorTariffService {
 	@Transactional
 	public void uploadTariff(String companyId, String branchId, String tariffNo, String oldAmendNo, String newAmendNo, String user) {
 
-		String updateQueryTariff = "UPDATE CfsTarrif t "
+		String updateQueryTariff = "UPDATE VendorTariff t "
 				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP "
 				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmndNo = :oldAmendNo";
 
@@ -2031,7 +2121,7 @@ public class VendorTariffService {
 				.setParameter("oldAmendNo", oldAmendNo).setParameter("companyId", companyId).setParameter("user", user)
 				.setParameter("branchId", branchId).executeUpdate();
 
-		String updateQuery = "UPDATE CFSTariffService t "
+		String updateQuery = "UPDATE VendorTariffSrv t "
 				+ "SET t.status = 'C', t.ammendStatus = 'C', t.editedBy = :user, t.editedDate = CURRENT_TIMESTAMP  "
 				+ "WHERE t.companyId = :companyId AND t.branchId = :branchId AND t.cfsTariffNo = :tariffNo AND t.cfsAmendNo = :oldAmendNo";
 
@@ -2040,6 +2130,5 @@ public class VendorTariffService {
 				.executeUpdate();		
 	}
 
-	
 	
 }
