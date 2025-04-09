@@ -266,7 +266,7 @@ public List<Map<String,String>> getDetailsOfBill1(String companyId,String branch
 		
 		List<Map<String,String>> result = new ArrayList<>();
 		
-		List<Object[]> billdtl = miscellaneousInvPrintRepository.getDetailsOfBill1(companyId, branchId, invoiceNo);
+		List<Object[]> billdtl = miscellaneousInvPrintRepository.getDetailsOfBill2(companyId, branchId, invoiceNo);
 		
 		
 		

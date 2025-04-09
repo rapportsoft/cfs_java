@@ -74,6 +74,13 @@ public interface MiscellaneousInvPrintRepository  extends JpaRepository<ExportSt
 		List<Object[]> getDetailsOfBill1(@Param("companyId") String companyId, 
 	            @Param("branchId") String branchId,
 	            @Param("invoiceNo") String invoiceNo);
+		
+		@Query(value="select a.service_id,c.service_long_desc,count(a.service_id),sum(a.execution_unit),a.service_unit,sum(a.local_amt),IFNULL(ROUND( ((sum(b.invoice_Amt)/count(a.service_id))), 3 ), 0) UNITAMT,max(a.rate),DATE_FORMAT(a.approved_date,'%d %b %Y %T'),c.range_type,sum(a.execution_unit1),"
+				+ "a.service_unit1,a.ac_code,IFNULL(j.Jar_Dtl_Desc,'N/A' ),IFNULL(ROUND( a.Tax_Perc_N, 1 ), 0 ) from cfinvsrvanxap a  left outer join cfinvsrvdtlap b on a.invoice_no=b.invoice_no and a.service_id=b.service_id  and a.company_Id=b.Company_Id and a.branch_Id=b.branch_Id  "
+				+ "left outer join services c on a.service_id=c.service_id  and a.company_Id=c.Company_Id left outer join jar_detail j on a.ac_code=j.Jar_Dtl_Id  and j.company_Id=c.Company_Id and j.Jar_Id = 'J00024'  where   a.Company_Id=:companyId  AND  a.branch_id=:branchId  AND a.Invoice_No=:invoiceNo and a.status='A' and a.Invoice_Amt > 0 and b.status='A' and a.tax_id_N !=''  group by c.service_short_desc order by c.print_sequence desc",nativeQuery = true)
+		List<Object[]> getDetailsOfBill2(@Param("companyId") String companyId, 
+	            @Param("branchId") String branchId,
+	            @Param("invoiceNo") String invoiceNo);
 	
 }
 
