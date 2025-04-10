@@ -489,6 +489,9 @@ public class Cfigmcrg {
 	    
 	    @Transient
 		private String typeOfCargo = ""; // Default value
+	    
+		@Transient
+		private String invoiceDone = "N";
 
 		public Cfigmcrg() {
 			super();
@@ -502,6 +505,34 @@ public class Cfigmcrg {
 		
 		
 		
+
+
+
+		public String getInvoiceDone() {
+			return invoiceDone;
+		}
+
+
+
+
+
+
+
+
+
+
+
+		public void setInvoiceDone(String invoiceDone) {
+			this.invoiceDone = invoiceDone;
+		}
+
+
+
+
+
+
+
+
 
 
 
@@ -533,7 +564,9 @@ public class Cfigmcrg {
 
 
 
-		protected Cfigmcrg(String companyId, String branchId, String finYear, String igmTransId, String igmCrgTransId,
+	
+
+		public Cfigmcrg(String companyId, String branchId, String finYear, String igmTransId, String igmCrgTransId,
 				String profitcentreId, String igmLineNo, String igmNo, String cycle, String viaNo, String blNo,
 				Date blDate, String cargoMovement, int sampleQty, String importerId, String importerName,
 				String importerSr, String importerAddress1, String importerAddress2, String importerAddress3,
@@ -563,7 +596,7 @@ public class Cfigmcrg {
 				String accountHolderId, String accountHolderName, String beNo, Date beDate, String chaCode,
 				String chaName, String mobileNo, String sealCuttingType, BigDecimal beWt, String sealCuttingRemarks,
 				String examinationRemarks, String blType, String hsnCode, Date igmDate, String sa, String sl,
-				String length, String height, String weight, String odcType, String typeOfCargo) {
+				String length, String height, String weight, String odcType, String typeOfCargo, String invoiceDone) {
 			super();
 			this.companyId = companyId;
 			this.branchId = branchId;
@@ -706,6 +739,7 @@ public class Cfigmcrg {
 			this.weight = weight;
 			this.odcType = odcType;
 			this.typeOfCargo = typeOfCargo;
+			this.invoiceDone = invoiceDone;
 		}
 
 

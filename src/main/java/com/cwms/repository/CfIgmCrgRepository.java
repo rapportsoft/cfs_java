@@ -315,4 +315,12 @@ public interface CfIgmCrgRepository extends JpaRepository<Cfigmcrg, String> {
                 @Param("trans") String trans,
                 @Param("line") String igmLineNo,@Param("val") BigDecimal val,@Param("duty") BigDecimal duty);
 		
+		@Query(value="select DISTINCT COALESCE(c.invoiceAssesed,'N') from Cfigmcn c where c.companyId=:cid and c.branchId=:bid and "
+				+ "c.igmTransId=:trans and c.igmNo=:igm and c.igmLineNo=:line and c.status='A' and c.invoiceAssesed='Y'")
+		String getInvoiceDoneStatus(@Param("cid") String cid,
+                @Param("bid") String bid,
+                @Param("trans") String trans,
+                @Param("igm") String igm,
+                @Param("line") String igmLineNo);
+		
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.cwms.entities.Cfigmcn;
 import com.cwms.entities.Cfigmcrg;
 import com.cwms.entities.ContainerExaminationDTO;
 import com.cwms.entities.ContainerSealCuttingDTO;
+import com.cwms.entities.ExportAudit;
 import com.cwms.entities.ContainerSealCuttingDTO.Cargo;
 import com.cwms.entities.ContainerSealCuttingDTO.Container;
 import com.cwms.entities.GateIn;
@@ -38,6 +40,7 @@ import com.cwms.repository.CfIgmCnRepository;
 import com.cwms.repository.CfIgmCrgRepository;
 import com.cwms.repository.CfIgmRepository;
 import com.cwms.repository.ChildMenuRepository;
+import com.cwms.repository.ExportAuditRepo;
 import com.cwms.repository.ExportInventoryRepository;
 import com.cwms.repository.GateInRepository;
 import com.cwms.repository.ImportInventoryRepository;
@@ -83,6 +86,9 @@ public class CfIgmController {
 	
 	@Autowired
 	private ExportInventoryRepository exportInvRepo;
+	
+	@Autowired
+	private ExportAuditRepo exportauditrepo;
 
 	@GetMapping("/search")
 	public List<Object[]> getSearchData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -177,6 +183,118 @@ public class CfIgmController {
 
 	}
 
+//	@PostMapping("/saveCrgData")
+//	public ResponseEntity<?> saveCrgData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+//			@RequestParam("user") String user, @RequestParam("igmTransId") String igmTransId,
+//			@RequestBody List<Cfigmcrg> igmcrg) {
+//
+//		if (!igmcrg.isEmpty()) {
+//			CFIgm igm = cfigmrepo.getDataByIgmNo(cid, bid, igmTransId);
+//			if (igm == null) {
+//				return new ResponseEntity<>("IGM data not found", HttpStatus.BAD_REQUEST);
+//			}
+//
+//			List<Cfigmcrg> data = new ArrayList<Cfigmcrg>();
+//
+//			for (Cfigmcrg i : igmcrg) {
+//				if (i.getIgmTransId().isEmpty()) {
+//					Boolean exist = cfigmcrgrepo.isExistRecord(cid, bid, i.getBlNo());
+//
+//					if (exist) {
+//						return new ResponseEntity<>("Duplicate BL No", HttpStatus.BAD_REQUEST);
+//					}
+//
+////					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, i.getIgmLineNo());
+////
+////					if (exist1) {
+////						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
+////					}
+//
+//					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, i.getIgmLineNo(), igm.getIgmNo());
+//
+//
+//					if (exist1) {
+//						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
+//					}
+//
+//					String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05061", "2024");
+//
+//					int lastNextNumericId1 = Integer.parseInt(holdId1.substring(3));
+//
+//					int nextNumericNextID1 = lastNextNumericId1 + 1;
+//
+//					String HoldNextIdD1 = String.format("ICR%07d", nextNumericNextID1);
+//
+//					i.setIgmCrgTransId(HoldNextIdD1);
+//					i.setCompanyId(cid);
+//					i.setProfitcentreId(igm.getProfitcentreId());
+//					i.setBranchId(bid);
+//					i.setIgmNo(igm.getIgmNo());
+//					i.setIgmTransId(igmTransId);
+//					i.setCreatedBy(user);
+//					i.setCreatedDate(new Date());
+//					i.setViaNo(igm.getViaNo());
+//					i.setApprovedBy(user);
+//					i.setApprovedDate(new Date());
+//					i.setStatus("A");
+//
+//					cfigmcrgrepo.save(i);
+//					data.add(i);
+//					processnextidrepo.updateAuditTrail(cid, bid, "P05061", HoldNextIdD1, "2024");
+//				} else {
+//					Boolean exist = cfigmcrgrepo.isExistRecord1(cid, bid, i.getBlNo(), i.getIgmCrgTransId());
+//
+//					if (exist) {
+//						return new ResponseEntity<>("Duplicate BL No", HttpStatus.BAD_REQUEST);
+//					}
+//
+////					Boolean exist1 = cfigmcrgrepo.isExistLineRecord1(cid, bid, i.getIgmLineNo(), i.getIgmCrgTransId());
+////
+////					if (exist1) {
+////						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
+////					}
+//					Boolean exist1 = cfigmcrgrepo.isExistLineRecord1(cid, bid, i.getIgmLineNo(), i.getIgmCrgTransId(),
+//							i.getIgmNo());
+//
+//					if (exist1) {
+//						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
+//					}
+//
+//					Cfigmcrg existingData1 = cfigmcrgrepo.getData(cid, bid, igmTransId, i.getIgmNo(),
+//							i.getIgmCrgTransId());
+//
+//					int updateContainer = cfigmcnrepo.updateIGMLineData(cid, bid, igmTransId,
+//							existingData1.getProfitcentreId(), existingData1.getIgmNo(), existingData1.getIgmLineNo(),
+//							i.getIgmLineNo());
+//
+//					int updateData = cfigmcrgrepo.updateData(cid, bid, igmTransId, i.getIgmNo(), i.getIgmCrgTransId(),
+//							i.getCycle(), i.getIgmLineNo(), i.getBlNo(), i.getBlDate(), i.getCommodityDescription(),
+//							i.getCargoMovement(), i.getGrossWeight(), i.getUnitOfWeight(), i.getNoOfPackages(),
+//							i.getTypeOfPackage(), i.getAccountHolderId(), i.getAccountHolderName(), i.getMarksOfNumbers(),
+//							i.getImporterId(), i.getImporterName(), i.getImporterAddress1(), i.getImporterAddress2(),
+//							i.getImporterAddress3(), i.getNotifyPartyId(), i.getNotifyPartyName(),
+//							i.getNotifiedAddress1(), i.getNotifiedAddress2(), i.getNotifiedAddress3(),
+//							i.getDestination(), i.getCargoType(), i.getImoCode(), i.getUnNo(), i.getHazReeferRemarks(),
+//							user, new Date(),i.getHsnCode());
+//
+//					Cfigmcrg existingData = cfigmcrgrepo.getData(cid, bid, igmTransId, i.getIgmNo(),
+//							i.getIgmCrgTransId());
+//
+//					if (existingData != null) {
+//						data.add(existingData);
+//					}
+//
+//				}
+//
+//			}
+//			return new ResponseEntity<>(data, HttpStatus.OK);
+//
+//		} else {
+//			return new ResponseEntity<>("Import Cargo details not found", HttpStatus.BAD_REQUEST);
+//		}
+//
+//	}
+	
 	@PostMapping("/saveCrgData")
 	public ResponseEntity<?> saveCrgData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("user") String user, @RequestParam("igmTransId") String igmTransId,
@@ -206,7 +324,6 @@ public class CfIgmController {
 
 					Boolean exist1 = cfigmcrgrepo.isExistLineRecord(cid, bid, i.getIgmLineNo(), igm.getIgmNo());
 
-
 					if (exist1) {
 						return new ResponseEntity<>("Duplicate IGM Line No", HttpStatus.BAD_REQUEST);
 					}
@@ -233,7 +350,6 @@ public class CfIgmController {
 					i.setStatus("A");
 
 					cfigmcrgrepo.save(i);
-					data.add(i);
 					processnextidrepo.updateAuditTrail(cid, bid, "P05061", HoldNextIdD1, "2024");
 				} else {
 					Boolean exist = cfigmcrgrepo.isExistRecord1(cid, bid, i.getBlNo(), i.getIgmCrgTransId());
@@ -261,27 +377,44 @@ public class CfIgmController {
 							existingData1.getProfitcentreId(), existingData1.getIgmNo(), existingData1.getIgmLineNo(),
 							i.getIgmLineNo());
 
+					System.out.println("i.getBlNo() " + i.getBlNo());
+
 					int updateData = cfigmcrgrepo.updateData(cid, bid, igmTransId, i.getIgmNo(), i.getIgmCrgTransId(),
 							i.getCycle(), i.getIgmLineNo(), i.getBlNo(), i.getBlDate(), i.getCommodityDescription(),
 							i.getCargoMovement(), i.getGrossWeight(), i.getUnitOfWeight(), i.getNoOfPackages(),
-							i.getTypeOfPackage(), i.getAccountHolderId(), i.getAccountHolderName(), i.getMarksOfNumbers(),
-							i.getImporterId(), i.getImporterName(), i.getImporterAddress1(), i.getImporterAddress2(),
-							i.getImporterAddress3(), i.getNotifyPartyId(), i.getNotifyPartyName(),
-							i.getNotifiedAddress1(), i.getNotifiedAddress2(), i.getNotifiedAddress3(),
-							i.getDestination(), i.getCargoType(), i.getImoCode(), i.getUnNo(), i.getHazReeferRemarks(),
-							user, new Date(),i.getHsnCode());
+							i.getTypeOfPackage(), i.getAccountHolderId(), i.getAccountHolderName(),
+							i.getMarksOfNumbers(), i.getImporterId(), i.getImporterName(), i.getImporterAddress1(),
+							i.getImporterAddress2(), i.getImporterAddress3(), i.getNotifyPartyId(),
+							i.getNotifyPartyName(), i.getNotifiedAddress1(), i.getNotifiedAddress2(),
+							i.getNotifiedAddress3(), i.getDestination(), i.getCargoType(), i.getImoCode(), i.getUnNo(),
+							i.getHazReeferRemarks(), user, new Date(), i.getHsnCode());
 
-					Cfigmcrg existingData = cfigmcrgrepo.getData(cid, bid, igmTransId, i.getIgmNo(),
-							i.getIgmCrgTransId());
+					System.out.println("updateData " + updateData);
 
-					if (existingData != null) {
-						data.add(existingData);
+					List<String> conData = importinventoryrepo.getContainers(cid, bid, igmTransId, i.getIgmNo(),
+							i.getIgmLineNo());
+
+					if (!conData.isEmpty()) {
+						conData.stream().forEach(c -> {
+							int updateIGMCrgImportInventoryData = importinventoryrepo.updateIGMCrgImportInventoryData(
+									cid, bid, igmTransId, i.getIgmNo(), c, i.getImporterName(), i.getCycle());
+						});
 					}
 
+					int updateIGMCrgDestuffCrgData = importinventoryrepo.updateIGMCrgDestuffCrgData(cid, bid,
+							igmTransId, i.getIgmNo(), i.getIgmLineNo(), i.getCommodityDescription(),
+							i.getMarksOfNumbers(), i.getGrossWeight(), i.getTypeOfPackage(),
+							i.getNoOfPackages().intValue(), i.getImporterName(), i.getImporterAddress1(),
+							i.getImporterAddress2(), i.getImporterAddress3());
+
+					checkAndUpdateIGMCRGAudit(cid, bid, user, existingData1, i);
 				}
 
 			}
-			return new ResponseEntity<>(data, HttpStatus.OK);
+
+			List<Cfigmcrg> existingData5 = cfigmcrgrepo.getDataByIgm(cid, bid, igmTransId, igm.getIgmNo());
+
+			return new ResponseEntity<>(existingData5, HttpStatus.OK);
 
 		} else {
 			return new ResponseEntity<>("Import Cargo details not found", HttpStatus.BAD_REQUEST);
@@ -289,11 +422,28 @@ public class CfIgmController {
 
 	}
 
+//	@GetMapping("/getDatabyIgmNoAndTrans")
+//	public List<Cfigmcrg> getData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+//			@RequestParam("trans") String trans, @RequestParam("igm") String igm) {
+//		return cfigmcrgrepo.getDataByIgm(cid, bid, trans, igm);
+//	}
+	
 	@GetMapping("/getDatabyIgmNoAndTrans")
 	public List<Cfigmcrg> getData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("trans") String trans, @RequestParam("igm") String igm) {
-		return cfigmcrgrepo.getDataByIgm(cid, bid, trans, igm);
+		List<Cfigmcrg> existingData = cfigmcrgrepo.getDataByIgm(cid, bid, trans, igm);
+
+		existingData.stream().forEach(c -> {
+			String invStatus = cfigmcrgrepo.getInvoiceDoneStatus(cid, bid, c.getIgmTransId(), c.getIgmNo(),
+					c.getIgmLineNo());
+
+			c.setInvoiceDone((invStatus == null || invStatus.isEmpty()) ? "N" : invStatus);
+		});
+
+		return existingData;
+
 	}
+
 
 	@PostMapping("/deleteCrg")
 	public String deleteData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
@@ -311,6 +461,344 @@ public class CfIgmController {
 		}
 	}
 
+//	@PostMapping("/saveContainer")
+//	public ResponseEntity<?> saveCnData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+//			@RequestParam("user") String user, @RequestParam("flag") String flag,
+//			@RequestParam(name = "oldContainer", required = false) String oldContainer, @RequestBody Cfigmcn cn) {
+//
+//		if (cn != null) {
+//			if ("add".equals(flag)) {
+//				
+//				Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), cn.getIgmLineNo());
+//
+//				if (crg == null) {
+//					return new ResponseEntity<>("Import cargo data not found", HttpStatus.BAD_REQUEST);
+//				}
+//				
+//				CFIgm igm = cfigmrepo.getDataByIgmNo(cid, bid, cn.getIgmTransId());
+//				if (igm == null) {
+//					return new ResponseEntity<>("IGM data not found", HttpStatus.BAD_REQUEST);
+//				}
+//
+//				Boolean isExist = cfigmcnrepo.isExistContainer(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
+//						cn.getIgmLineNo(), cn.getContainerNo());
+//
+//				if (isExist) {
+//					return new ResponseEntity<>("Duplicate Container No", HttpStatus.BAD_REQUEST);
+//				}
+//
+//				if ("H".equals(cn.getHoldStatus())) {
+//					cn.setHoldDate(new Date());
+//					cn.setHoldRemarks(cn.getHoldRemarks());
+//					cn.setHoldingAgentName(user);
+//				}
+//
+//				else {
+//					cn.setHoldStatus("N");
+//					cn.setHoldRemarks("");
+//				}
+//
+//				String holdId1 = processnextidrepo.findAuditTrail(cid, bid, "P05062", "2024");
+//
+//				int lastNextNumericId1 = Integer.parseInt(holdId1.substring(1));
+//
+//				int nextNumericNextID1 = lastNextNumericId1 + 1;
+//
+//				String HoldNextIdD1 = String.format("C%09d", nextNumericNextID1);
+//
+//				cn.setContainerTransId(HoldNextIdD1);
+//				cn.setCompanyId(cid);
+//				cn.setBranchId(bid);
+//				cn.setStatus('A');
+//				cn.setCreatedBy(user);
+//				cn.setCreatedDate(new Date());
+//				cn.setApprovedBy(user);
+//				cn.setApprovedDate(new Date());
+//				cn.setCycle(crg.getCycle());
+//				cn.setGateOutType(cn.getUpTariffDelMode());
+//				
+//				
+//				
+//				ManualGateIn manual = manualcontainergateinrepo.getDataByContainerNo(cid, bid, cn.getContainerNo());
+//				
+//				if(manual != null) {
+//					cn.setGateInDate(manual.getGateInDate());
+//					cn.setGateInId(manual.getGateInId());
+//					cn.setHaz(manual.getHazardous());
+//					cn.setHazClass(manual.getHazClass());
+//					cn.setEirGrossWeight(manual.getEirGrossWeight());
+//					cn.setVehicleType(manual.getVehicleType());
+//					//cn.setContainerWeight(manual.getTareWeight());
+//					cn.setContainerSealNo(manual.getContainerSealNo());
+//					cn.setYardLocation(manual.getYardLocation());
+//					cn.setYardBlock(manual.getYardBlock());
+//					cn.setBlockCellNo(manual.getYardCell());
+//				
+//					//cn.setMovementType(manual.getDrt());
+//					
+//					cn.setCargoWt(cn.getGrossWt()
+//							.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
+////					gatein.setCargoWeight(c.getGrossWt()
+////							.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
+//
+//					cn.setRefer("RF".equals(cn.getContainerType()) ? 'Y' : 'N');
+//					
+////					if ("Y".equals(manual.getLowBed())) {
+////						cn.setLowBed('Y');
+////					} else {
+////						cn.setLowBed('N');
+////					}
+//
+//					
+//					cn.setMovementType("Y".equals(manual.getDrt()) ? "DRT" : "CFS");
+//
+//					if ("Y".equals(manual.getPnStatus())) {
+//						cn.setPnStatus('Y');
+//					} else {
+//						cn.setPnStatus('N');
+//					}
+//
+//					if ("Y".equals(manual.getOdcStatus())) {
+//						cn.setOdcStatus('Y');
+//					} else {
+//						cn.setOdcStatus('N');
+//					}
+//					
+//					
+//					crg.setActualCargoWeight(crg.getActualCargoWeight() == null ? BigDecimal.ZERO
+//							: crg.getActualCargoWeight().add(cn.getGrossWt().subtract(
+//									manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO)));
+//					cfigmcrgrepo.save(crg);
+//					
+//					
+////					manual.setErpDocRefNo(cn.getIgmTransId());
+////					manual.setDocRefNo(cn.getIgmNo());
+////					manual.setDocRefDate(igm.getIgmDate());
+////					manual.setLineNo(cn.getIgmLineNo());
+////					manual.setContainerStatus(cn.getContainerStatus());
+////					manual.setIsoCode(cn.getIso());
+////					if (cn.getOdcStatus() == 'Y') {
+////						manual.setOdcStatus("Y");
+////					} else {
+////						manual.setOdcStatus("N");
+////					}
+////					
+////					if (cn.getLowBed() == 'Y') {
+////						manual.setLowBed("Y");
+////					} else {
+////						manual.setLowBed("N");
+////					}
+////					manual.setGrossWeight(cn.getGrossWt());
+////					manual.setScannerType(cn.getScannerType());
+////					manual.setCustomsSealNo(cn.getCustomsSealNo());
+////					manual.setScanningDoneStatus(cn.getScanningDoneStatus());
+////					manual.setVessel(igm.getVesselId());
+////					manual.setViaNo(igm.getViaNo());
+////					manual.setVoyageNo(igm.getVoyageNo());
+////					manual.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
+////					
+////					manualcontainergateinrepo.save(manual);
+//					
+//					int updateData = manualcontainergateinrepo.updateManualGateIn(cid, bid, manual.getGateInId(), cn.getIgmTransId(), cn.getIgmNo(), 
+//							cn.getIgmLineNo(), cn.getContainerStatus(), cn.getIso(), String.valueOf(cn.getOdcStatus()), String.valueOf(cn.getLowBed()), cn.getGrossWt(), 
+//							cn.getScannerType(), cn.getCustomsSealNo(), cn.getScanningDoneStatus(), igm.getVesselId(), igm.getViaNo(), 
+//							igm.getVoyageNo(), "RF".equals(cn.getContainerType()) ? "Y" : "N", igm.getIgmDate());
+//					
+//					GateIn gatein = new GateIn();
+//					
+//					gatein.setGateInId(manual.getGateInId());
+//					gatein.setCompanyId(cid);
+//					gatein.setLineNo("");
+//					gatein.setSrNo(1);
+//					gatein.setInGateInDate(manual.getGateInDate());
+//					gatein.setBranchId(bid);
+//					gatein.setFinYear(cn.getFinYear());
+//					gatein.setCreatedBy(user);
+//					gatein.setCreatedDate(new Date());
+//					gatein.setApprovedBy(user);
+//					gatein.setApprovedDate(new Date());
+//					gatein.setStatus("A");
+//					gatein.setGateInType("IMP");
+//					gatein.setCargoWeight(cn.getGrossWt()
+//					.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
+//					gatein.setContainerNo(manual.getContainerNo());
+//					gatein.setContainerStatus(cn.getContainerStatus());
+//					gatein.setContainerSize(cn.getContainerSize());
+//					gatein.setContainerType(cn.getContainerType());
+//					gatein.setIsoCode(cn.getIso());
+//					gatein.setSl(igm.getShippingLine());
+//					gatein.setContainerSealNo(manual.getContainerSealNo());
+//					gatein.setActualSealNo(manual.getActualSealNo());
+//					gatein.setDocRefDate(igm.getIgmDate());
+//					gatein.setErpDocRefNo(cn.getIgmTransId());
+//					gatein.setDocRefNo(cn.getIgmNo());
+//					gatein.setJobDate(igm.getDocDate());
+//					gatein.setTerminal(manual.getTerminal());
+//					gatein.setJobOrderId(cn.getIgmNo());
+//					gatein.setTareWeight(cn.getContainerWeight());
+//					gatein.setTerminal(igm.getPort());
+//					gatein.setVessel(igm.getVesselId());
+//					gatein.setViaNo(igm.getViaNo());
+//					gatein.setEirGrossWeight(manual.getEirGrossWeight());
+//					gatein.setRefer(manual.getRefer());
+//					gatein.setLowBed(manual.getLowBed());
+//					gatein.setScannerType(cn.getScannerType());
+//					gatein.setOdcStatus(manual.getOdcStatus());
+//					gatein.setTemperature(cn.getTemperature());
+//					gatein.setProfitcentreId(igm.getProfitcentreId());
+//					gatein.setLineNo(cn.getIgmLineNo());
+//					gatein.setHazardous(manual.getHazardous());
+//					gatein.setOrigin(crg.getOrigin());
+//					gatein.setVehicleNo(manual.getVehicleNo());
+//					gatein.setDriverName(manual.getDriverName());
+//					gatein.setVehicleType(manual.getVehicleType());
+//					gatein.setTransporter(manual.getTransporter());
+//					gatein.setTransporterName(manual.getTransporterName());
+//					gatein.setTransporterStatus("O");
+//					gatein.setPortExitNo(manual.getPortExitNo());
+//					gatein.setPortExitDate(manual.getPortExitDate());
+//					gatein.setScanningDoneStatus(cn.getScanningDoneStatus());
+//					gatein.setYardLocation(manual.getYardLocation());
+//					gatein.setYardBlock(manual.getYardBlock());
+//					gatein.setYardCell(manual.getYardCell());
+//					gatein.setContainerHealth(manual.getContainerHealth());
+//					gatein.setLowBed(String.valueOf(cn.getLowBed()));
+//					gatein.setOdcStatus(String.valueOf(cn.getOdcStatus()));
+//					gatein.setPnStatus(manual.getPnStatus());
+//					gatein.setCustomsSealNo(cn.getCustomsSealNo());
+//					gatein.setDrt("N");
+//					gatein.setHazardous(manual.getHazardous());
+//					gatein.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
+//					gatein.setProcessId("P00212");
+//					gateinrepo.save(gatein);
+//					
+//					VehicleTrack v = new VehicleTrack();
+//					v.setCompanyId(cid);
+//					v.setBranchId(bid);
+//					v.setFinYear(igm.getFinYear());
+//					v.setVehicleNo(manual.getVehicleNo());
+//					v.setProfitcentreId(igm.getProfitcentreId());
+//					v.setSrNo(1);
+//					v.setTransporterStatus(gatein.getTransporterStatus().charAt(0));
+//					v.setTransporterName(manual.getTransporterName());
+//					v.setTransporter(manual.getTransporter());
+//					v.setDriverName(manual.getDriverName());
+//					v.setVehicleStatus('E');
+//					v.setGateInId(manual.getGateInId());
+//					v.setGateInDate(new Date());
+//					v.setGateNoIn("Gate01");
+//					v.setShiftIn("1");
+//					v.setStatus('A');
+//					v.setCreatedBy(user);
+//					v.setCreatedDate(new Date());
+//					v.setApprovedBy(user);
+//					v.setApprovedDate(new Date());
+//
+//					vehicletrackrepo.save(v);
+//					
+//					
+//					ImportInventory inventory = new ImportInventory();
+//					inventory.setCompanyId(cid);
+//					inventory.setBranchId(bid);
+//					inventory.setFinYear(igm.getFinYear());
+//					inventory.setIgmTransId(cn.getIgmTransId());
+//					inventory.setProfitcentreId(cn.getProfitcentreId());
+//					inventory.setIgmNo(cn.getIgmNo());
+//					inventory.setVesselId(igm.getVesselId());
+//					inventory.setViaNo(igm.getViaNo());
+//					inventory.setContainerNo(cn.getContainerNo());
+//					inventory.setContainerSize(cn.getContainerSize());
+//					inventory.setContainerType(cn.getContainerType());
+//					inventory.setIso(cn.getIso());
+//					inventory.setSa(igm.getShippingAgent());
+//					inventory.setSl(igm.getShippingLine());
+//					inventory.setImporterName(crg.getImporterName());
+//					inventory.setContainerStatus(cn.getContainerStatus());
+//					inventory.setContainerSealNo(manual.getContainerSealNo());
+//					inventory.setScannerType(cn.getScannerType());
+//					inventory.setYardLocation(manual.getYardLocation());
+//					inventory.setYardLocation1(manual.getYardLocation1());
+//					inventory.setYardBlock(manual.getYardBlock());
+//					inventory.setBlockCellNo(manual.getYardCell());
+//					inventory.setGateInId(manual.getGateInId());
+//					inventory.setGateInDate(manual.getGateInDate());
+//					inventory.setStatus("A");
+//					inventory.setCreatedBy(user);
+//					inventory.setCreatedDate(new Date());
+//					inventory.setApprovedBy(user);
+//					inventory.setApprovedDate(new Date());
+//					inventory.setNoOfItem(1);
+//					inventory.setContainerWeight(cn.getGrossWt()
+//							.subtract(cn.getContainerWeight() != null ? cn.getContainerWeight() : BigDecimal.ZERO));
+//					inventory.setCycle(cn.getCycle());
+//					
+//					
+//					importinventoryrepo.save(inventory);
+//
+//				}
+//				
+//				
+//				
+//				cfigmcnrepo.save(cn);
+//				processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD1, "2024");
+//				int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
+//				return new ResponseEntity<>(cn, HttpStatus.OK);
+//			} else {
+//				System.out.println("cn.getContainerTransId() " + cn.getContainerTransId());
+//				Boolean isExist = cfigmcnrepo.isExistContainer1(cid, bid, cn.getIgmTransId(), cn.getIgmNo(),
+//						cn.getIgmLineNo(), cn.getContainerNo(), cn.getContainerTransId());
+//
+//				if (isExist) {
+//					return new ResponseEntity<>("Duplicate Container No", HttpStatus.BAD_REQUEST);
+//				}
+//
+//				Cfigmcn existingRecord1 = cfigmcnrepo.getSingleData4(cid, bid, cn.getIgmTransId(),
+//						cn.getProfitcentreId(), cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId());
+//
+//				if ("H".equals(cn.getHoldStatus()) && !"H".equals(existingRecord1.getHoldStatus())) {
+//					int update = cfigmcnrepo.updateContainerData(cid, bid, cn.getIgmTransId(), cn.getProfitcentreId(),
+//							cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId(), cn.getContainerNo(),
+//							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getTypeOfContainer(),
+//							cn.getContainerStatus(), cn.getTemperature(), cn.getContainerWeight(), cn.getGrossWt(),
+//							cn.getNoOfPackages(), cn.getContainerSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
+//							cn.getScanningDoneStatus(), cn.getOdcStatus(), cn.getLowBed(), user, new Date(),
+//							cn.getHoldRemarks(), cn.getHoldStatus(), new Date(), user, existingRecord1.getReleaseDate(),
+//							existingRecord1.getReleaseAgent());
+//				} else if ("R".equals(cn.getHoldStatus()) && "H".equals(existingRecord1.getHoldStatus())) {
+//					int update = cfigmcnrepo.updateContainerData(cid, bid, cn.getIgmTransId(), cn.getProfitcentreId(),
+//							cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId(), cn.getContainerNo(),
+//							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getTypeOfContainer(),
+//							cn.getContainerStatus(), cn.getTemperature(), cn.getContainerWeight(), cn.getGrossWt(),
+//							cn.getNoOfPackages(), cn.getContainerSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
+//							cn.getScanningDoneStatus(), cn.getOdcStatus(), cn.getLowBed(), user, new Date(),
+//							cn.getHoldRemarks(), cn.getHoldStatus(), existingRecord1.getHoldDate(),
+//							existingRecord1.getHoldingAgentName(), new Date(), user);
+//				} else {
+//					int update = cfigmcnrepo.updateContainerData(cid, bid, cn.getIgmTransId(), cn.getProfitcentreId(),
+//							cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerTransId(), cn.getContainerNo(),
+//							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getTypeOfContainer(),
+//							cn.getContainerStatus(), cn.getTemperature(), cn.getContainerWeight(), cn.getGrossWt(),
+//							cn.getNoOfPackages(), cn.getContainerSealNo(), cn.getUpTariffDelMode(), cn.getScannerType(),
+//							cn.getScanningDoneStatus(), cn.getOdcStatus(), cn.getLowBed(), user, new Date(),
+//							existingRecord1.getHoldRemarks(), existingRecord1.getHoldStatus(),
+//							existingRecord1.getHoldDate(), existingRecord1.getHoldingAgentName(),
+//							existingRecord1.getReleaseDate(), existingRecord1.getReleaseAgent());
+//				}
+//				int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(),
+//						existingRecord1.getContainerNo());
+//				int b = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
+//
+//				Cfigmcn existingRecord = cfigmcnrepo.getSingleData(cid, bid, cn.getIgmTransId(), cn.getProfitcentreId(),
+//						cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerNo());
+//
+//				return new ResponseEntity<>(existingRecord, HttpStatus.OK);
+//			}
+//		} else {
+//			return new ResponseEntity<>("Container data not found", HttpStatus.BAD_REQUEST);
+//		}
+//
+//	}
+
 	@PostMapping("/saveContainer")
 	public ResponseEntity<?> saveCnData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("user") String user, @RequestParam("flag") String flag,
@@ -318,13 +806,13 @@ public class CfIgmController {
 
 		if (cn != null) {
 			if ("add".equals(flag)) {
-				
+
 				Cfigmcrg crg = cfigmcrgrepo.getData1(cid, bid, cn.getIgmTransId(), cn.getIgmNo(), cn.getIgmLineNo());
 
 				if (crg == null) {
 					return new ResponseEntity<>("Import cargo data not found", HttpStatus.BAD_REQUEST);
 				}
-				
+
 				CFIgm igm = cfigmrepo.getDataByIgmNo(cid, bid, cn.getIgmTransId());
 				if (igm == null) {
 					return new ResponseEntity<>("IGM data not found", HttpStatus.BAD_REQUEST);
@@ -366,40 +854,37 @@ public class CfIgmController {
 				cn.setApprovedDate(new Date());
 				cn.setCycle(crg.getCycle());
 				cn.setGateOutType(cn.getUpTariffDelMode());
-				
-				
-				
+
 				ManualGateIn manual = manualcontainergateinrepo.getDataByContainerNo(cid, bid, cn.getContainerNo());
-				
-				if(manual != null) {
+
+				if (manual != null) {
 					cn.setGateInDate(manual.getGateInDate());
 					cn.setGateInId(manual.getGateInId());
 					cn.setHaz(manual.getHazardous());
 					cn.setHazClass(manual.getHazClass());
 					cn.setEirGrossWeight(manual.getEirGrossWeight());
 					cn.setVehicleType(manual.getVehicleType());
-					//cn.setContainerWeight(manual.getTareWeight());
+					// cn.setContainerWeight(manual.getTareWeight());
 					cn.setContainerSealNo(manual.getContainerSealNo());
 					cn.setYardLocation(manual.getYardLocation());
 					cn.setYardBlock(manual.getYardBlock());
 					cn.setBlockCellNo(manual.getYardCell());
-				
-					//cn.setMovementType(manual.getDrt());
-					
+
+					// cn.setMovementType(manual.getDrt());
+
 					cn.setCargoWt(cn.getGrossWt()
 							.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
 //					gatein.setCargoWeight(c.getGrossWt()
 //							.subtract(gatein.getTareWeight() != null ? gatein.getTareWeight() : BigDecimal.ZERO));
 
 					cn.setRefer("RF".equals(cn.getContainerType()) ? 'Y' : 'N');
-					
+
 //					if ("Y".equals(manual.getLowBed())) {
 //						cn.setLowBed('Y');
 //					} else {
 //						cn.setLowBed('N');
 //					}
 
-					
 					cn.setMovementType("Y".equals(manual.getDrt()) ? "DRT" : "CFS");
 
 					if ("Y".equals(manual.getPnStatus())) {
@@ -413,14 +898,12 @@ public class CfIgmController {
 					} else {
 						cn.setOdcStatus('N');
 					}
-					
-					
+
 					crg.setActualCargoWeight(crg.getActualCargoWeight() == null ? BigDecimal.ZERO
 							: crg.getActualCargoWeight().add(cn.getGrossWt().subtract(
 									manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO)));
 					cfigmcrgrepo.save(crg);
-					
-					
+
 //					manual.setErpDocRefNo(cn.getIgmTransId());
 //					manual.setDocRefNo(cn.getIgmNo());
 //					manual.setDocRefDate(igm.getIgmDate());
@@ -448,14 +931,16 @@ public class CfIgmController {
 //					manual.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
 //					
 //					manualcontainergateinrepo.save(manual);
-					
-					int updateData = manualcontainergateinrepo.updateManualGateIn(cid, bid, manual.getGateInId(), cn.getIgmTransId(), cn.getIgmNo(), 
-							cn.getIgmLineNo(), cn.getContainerStatus(), cn.getIso(), String.valueOf(cn.getOdcStatus()), String.valueOf(cn.getLowBed()), cn.getGrossWt(), 
-							cn.getScannerType(), cn.getCustomsSealNo(), cn.getScanningDoneStatus(), igm.getVesselId(), igm.getViaNo(), 
-							igm.getVoyageNo(), "RF".equals(cn.getContainerType()) ? "Y" : "N", igm.getIgmDate());
-					
+
+					int updateData = manualcontainergateinrepo.updateManualGateIn(cid, bid, manual.getGateInId(),
+							cn.getIgmTransId(), cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerStatus(), cn.getIso(),
+							String.valueOf(cn.getOdcStatus()), String.valueOf(cn.getLowBed()), cn.getGrossWt(),
+							cn.getScannerType(), cn.getCustomsSealNo(), cn.getScanningDoneStatus(), igm.getVesselId(),
+							igm.getViaNo(), igm.getVoyageNo(), "RF".equals(cn.getContainerType()) ? "Y" : "N",
+							igm.getIgmDate());
+
 					GateIn gatein = new GateIn();
-					
+
 					gatein.setGateInId(manual.getGateInId());
 					gatein.setCompanyId(cid);
 					gatein.setLineNo("");
@@ -470,7 +955,7 @@ public class CfIgmController {
 					gatein.setStatus("A");
 					gatein.setGateInType("IMP");
 					gatein.setCargoWeight(cn.getGrossWt()
-					.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
+							.subtract(manual.getTareWeight() != null ? manual.getTareWeight() : BigDecimal.ZERO));
 					gatein.setContainerNo(manual.getContainerNo());
 					gatein.setContainerStatus(cn.getContainerStatus());
 					gatein.setContainerSize(cn.getContainerSize());
@@ -521,7 +1006,7 @@ public class CfIgmController {
 					gatein.setRefer("RF".equals(cn.getContainerType()) ? "Y" : "N");
 					gatein.setProcessId("P00212");
 					gateinrepo.save(gatein);
-					
+
 					VehicleTrack v = new VehicleTrack();
 					v.setCompanyId(cid);
 					v.setBranchId(bid);
@@ -545,8 +1030,7 @@ public class CfIgmController {
 					v.setApprovedDate(new Date());
 
 					vehicletrackrepo.save(v);
-					
-					
+
 					ImportInventory inventory = new ImportInventory();
 					inventory.setCompanyId(cid);
 					inventory.setBranchId(bid);
@@ -581,14 +1065,11 @@ public class CfIgmController {
 					inventory.setContainerWeight(cn.getGrossWt()
 							.subtract(cn.getContainerWeight() != null ? cn.getContainerWeight() : BigDecimal.ZERO));
 					inventory.setCycle(cn.getCycle());
-					
-					
+
 					importinventoryrepo.save(inventory);
 
 				}
-				
-				
-				
+
 				cfigmcnrepo.save(cn);
 				processnextidrepo.updateAuditTrail(cid, bid, "P05062", HoldNextIdD1, "2024");
 				int a = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
@@ -638,6 +1119,28 @@ public class CfIgmController {
 						existingRecord1.getContainerNo());
 				int b = cfigmcnrepo.updateNoOfItem(cid, bid, cn.getIgmNo(), cn.getIgmTransId(), cn.getContainerNo());
 
+				int updateIGMCnInventoryData = importinventoryrepo.updateIGMCnInventoryData(cid, bid,
+						existingRecord1.getIgmTransId(), existingRecord1.getIgmNo(), existingRecord1.getContainerNo(),
+						cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getContainerStatus(),
+						cn.getContainerWeight(), cn.getScannerType(), cn.getContainerSealNo());
+
+				if (existingRecord1.getGateInId() != null && !existingRecord1.getGateInId().isEmpty()) {
+					int updateIGMCnGateInData = importinventoryrepo.updateIGMCnGateInData(cid, bid,
+							existingRecord1.getIgmTransId(), existingRecord1.getIgmNo(), existingRecord1.getGateInId(),
+							cn.getIso(), cn.getContainerSize(), cn.getContainerType(), cn.getContainerStatus(),
+							String.valueOf(cn.getOdcStatus()), String.valueOf(cn.getLowBed()), cn.getTemperature(),
+							cn.getContainerWeight(), cn.getGrossWt(), cn.getScannerType(), cn.getContainerSealNo());
+				}
+
+				if (existingRecord1.getDeStuffId() != null && !existingRecord1.getDeStuffId().isEmpty()) {
+					int updateIGMCnDestuffData = importinventoryrepo.updateIGMCnDestuffData(cid, bid,
+							existingRecord1.getIgmTransId(), existingRecord1.getIgmNo(), existingRecord1.getDeStuffId(),
+							existingRecord1.getContainerNo(), cn.getContainerSize(), cn.getContainerType(),
+							cn.getContainerStatus(), cn.getGrossWt(), cn.getContainerSealNo());
+				}
+
+				checkAndUpdateIGMCNAudit(cid, bid, user, existingRecord1, cn);
+				
 				Cfigmcn existingRecord = cfigmcnrepo.getSingleData(cid, bid, cn.getIgmTransId(), cn.getProfitcentreId(),
 						cn.getIgmNo(), cn.getIgmLineNo(), cn.getContainerNo());
 
@@ -648,7 +1151,7 @@ public class CfIgmController {
 		}
 
 	}
-
+	
 	@GetMapping("/getContainerData")
 	public List<Cfigmcn> getContainerData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
 			@RequestParam("igmTrans") String igmTrans, @RequestParam("profit") String profit,
@@ -2858,4 +3361,388 @@ public class CfIgmController {
 	}
 
 	
+	
+	
+	@Transactional
+	@PostMapping("/updateIgmHead")
+	public ResponseEntity<?> updateIgmHead(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+			@RequestParam("user") String user, @RequestBody CFIgm igm) {
+
+		try {
+
+			CFIgm existingData1 = cfigmrepo.getDataByIgmNoAndtrans(cid, bid, igm.getIgmTransId(), igm.getIgmNo());
+
+			if (existingData1 == null) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			}
+
+			if (!igm.getShippingLine().equals(existingData1.getShippingLine())) {
+				checkAndUpdateIGMAudit(cid, bid, user, "Shipping Line", existingData1.getShippingLine(),
+						existingData1.getShippingLine(), igm);
+			}
+
+			if (!igm.getShippingAgent().equals(existingData1.getShippingAgent())) {
+				checkAndUpdateIGMAudit(cid, bid, user, "Shipping Agent", existingData1.getShippingAgent(),
+						existingData1.getShippingAgent(), igm);
+			}
+
+			if (!igm.getVesselId().equals(existingData1.getVesselId())) {
+				checkAndUpdateIGMAudit(cid, bid, user, "Vessel", existingData1.getVesselId(),
+						existingData1.getVesselId(), igm);
+			}
+
+			int updateIGMHeaderData = importinventoryrepo.updateIGMHeaderData(cid, bid, igm.getIgmTransId(),
+					igm.getShippingAgent(), igm.getShippingLine(), igm.getVesselId(), user);
+
+			int updateIGMHeaderGateInData = importinventoryrepo.updateIGMHeaderGateInData(cid, bid, igm.getIgmTransId(),
+					igm.getShippingAgent(), igm.getShippingLine(), igm.getVesselId());
+
+			int updateIGMHeaderImportInventoryData = importinventoryrepo.updateIGMHeaderImportInventoryData(cid, bid,
+					igm.getIgmTransId(), igm.getShippingAgent(), igm.getShippingLine(), igm.getVesselId());
+
+			int updateIGMHeaderDestuffData = importinventoryrepo.updateIGMHeaderDestuffData(cid, bid,
+					igm.getIgmTransId(), igm.getShippingAgent(), igm.getShippingLine());
+
+			int updateIGMHeaderImportGatePassData = importinventoryrepo.updateIGMHeaderImportGatePassData(cid, bid,
+					igm.getIgmTransId(), igm.getShippingLine());
+
+			int updateIGMHeaderGateOutData = importinventoryrepo.updateIGMHeaderGateOutData(cid, bid,
+					igm.getIgmTransId(), igm.getShippingAgent(), igm.getShippingLine(), igm.getVesselId());
+
+			CFIgm existingData = cfigmrepo.getDataByIgmNoAndtrans(cid, bid, igm.getIgmTransId(), igm.getIgmNo());
+
+			if (existingData == null) {
+				return new ResponseEntity<>("Data not found", HttpStatus.CONFLICT);
+			}
+
+			return new ResponseEntity<>(existingData, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public void checkAndUpdateIGMAudit(String cid, String bid, String user, String field, String oldValue,
+			String newValue, CFIgm existingData) {
+
+		// Generate next ID for the audit record
+		String holdId = processnextidrepo.findAuditTrail(cid, bid, "P05085", "2024");
+		int lastNumericId = Integer.parseInt(holdId.substring(4));
+		int nextNumericId = lastNumericId + 1;
+		String nextAuditId = String.format("EXPA%06d", nextNumericId);
+
+		// Create new audit record
+		ExportAudit audit = new ExportAudit();
+		audit.setCompanyId(cid);
+		audit.setBranchId(bid);
+		audit.setApprovedBy(user);
+		audit.setApprovedDate(new Date());
+		audit.setAuditDate(new Date());
+		audit.setAuditId(nextAuditId);
+		audit.setContainerNo("");
+		audit.setCreatedBy(user);
+		audit.setCreatedDate(new Date());
+		audit.setField(field);
+		audit.setProfitcentreId(existingData.getProfitcentreId());
+		audit.setSbNo("");
+		audit.setStatus("A");
+		audit.setTableName("IGM Entry");
+		audit.setOldValue(oldValue);
+		audit.setNewValue(newValue);
+		audit.setIgmLineNo("");
+		audit.setIgmNo(existingData.getIgmNo());
+		exportauditrepo.save(audit);
+
+		// Update process ID
+		processnextidrepo.updateAuditTrail(cid, bid, "P05085", nextAuditId, "2024");
+
+	}
+
+	public void checkAndUpdateIGMCRGAudit1(String cid, String bid, String user, String field, String oldValue,
+			String newValue, Cfigmcrg existingData) {
+
+		// Generate next ID for the audit record
+		String holdId = processnextidrepo.findAuditTrail(cid, bid, "P05085", "2024");
+		int lastNumericId = Integer.parseInt(holdId.substring(4));
+		int nextNumericId = lastNumericId + 1;
+		String nextAuditId = String.format("EXPA%06d", nextNumericId);
+
+		// Create new audit record
+		ExportAudit audit = new ExportAudit();
+		audit.setCompanyId(cid);
+		audit.setBranchId(bid);
+		audit.setApprovedBy(user);
+		audit.setApprovedDate(new Date());
+		audit.setAuditDate(new Date());
+		audit.setAuditId(nextAuditId);
+		audit.setContainerNo("");
+		audit.setCreatedBy(user);
+		audit.setCreatedDate(new Date());
+		audit.setField(field);
+		audit.setProfitcentreId(existingData.getProfitcentreId());
+		audit.setSbNo("");
+		audit.setStatus("A");
+		audit.setTableName("IGM CRG Entry");
+		audit.setOldValue(oldValue);
+		audit.setNewValue(newValue);
+		audit.setIgmLineNo(existingData.getIgmLineNo());
+		audit.setIgmNo(existingData.getIgmNo());
+		exportauditrepo.save(audit);
+
+		// Update process ID
+		processnextidrepo.updateAuditTrail(cid, bid, "P05085", nextAuditId, "2024");
+
+	}
+
+	public void checkAndUpdateIGMCNAudit1(String cid, String bid, String user, String field, String oldValue,
+			String newValue, Cfigmcn existingData) {
+
+		// Generate next ID for the audit record
+		String holdId = processnextidrepo.findAuditTrail(cid, bid, "P05085", "2024");
+		int lastNumericId = Integer.parseInt(holdId.substring(4));
+		int nextNumericId = lastNumericId + 1;
+		String nextAuditId = String.format("EXPA%06d", nextNumericId);
+
+		// Create new audit record
+		ExportAudit audit = new ExportAudit();
+		audit.setCompanyId(cid);
+		audit.setBranchId(bid);
+		audit.setApprovedBy(user);
+		audit.setApprovedDate(new Date());
+		audit.setAuditDate(new Date());
+		audit.setAuditId(nextAuditId);
+		audit.setContainerNo(existingData.getContainerNo());
+		audit.setCreatedBy(user);
+		audit.setCreatedDate(new Date());
+		audit.setField(field);
+		audit.setProfitcentreId(existingData.getProfitcentreId());
+		audit.setSbNo("");
+		audit.setStatus("A");
+		audit.setTableName("IGM Container Entry");
+		audit.setOldValue(oldValue);
+		audit.setNewValue(newValue);
+		audit.setIgmLineNo(existingData.getIgmLineNo());
+		audit.setIgmNo(existingData.getIgmNo());
+		exportauditrepo.save(audit);
+
+		// Update process ID
+		processnextidrepo.updateAuditTrail(cid, bid, "P05085", nextAuditId, "2024");
+
+	}
+
+	public void checkAndUpdateIGMCRGAudit(String cid, String bid, String user, Cfigmcrg existingData,
+			Cfigmcrg newData) {
+
+		if (!existingData.getCycle().equals(newData.getCycle())) {
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Cycle", existingData.getCycle(), newData.getCycle(),
+					existingData);
+		}
+
+		if (!existingData.getBlNo().equals(newData.getBlNo())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "BL NO", existingData.getBlNo(), newData.getBlNo(),
+					existingData);
+		}
+
+		if (existingData.getBlDate().compareTo(newData.getBlDate()) != 0) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "BL Date", existingData.getBlDate().toString(),
+					newData.getBlDate().toString(), existingData);
+		}
+
+		if (!existingData.getHsnCode().equals(newData.getHsnCode())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "HSN Code", existingData.getHsnCode(), newData.getHsnCode(),
+					existingData);
+
+		}
+
+		if (!existingData.getCommodityDescription().equals(newData.getCommodityDescription())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Commodity Description", existingData.getCommodityDescription(),
+					newData.getCommodityDescription(), existingData);
+		}
+
+		if (!existingData.getMarksOfNumbers().equals(newData.getMarksOfNumbers())) {
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Marks & Nos", existingData.getMarksOfNumbers(),
+					newData.getMarksOfNumbers(), existingData);
+
+		}
+		if (!existingData.getCargoMovement().equals(newData.getCargoMovement())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Cargo Movement", existingData.getCargoMovement(),
+					newData.getCargoMovement(), existingData);
+
+		}
+		if (existingData.getGrossWeight().compareTo(newData.getGrossWeight()) != 0) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Cargo Weight", String.valueOf(existingData.getGrossWeight()),
+					String.valueOf(newData.getGrossWeight()), existingData);
+
+		}
+
+		if (!existingData.getUnitOfWeight().equals(newData.getUnitOfWeight())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Unit", existingData.getUnitOfWeight(),
+					newData.getUnitOfWeight(), existingData);
+
+		}
+
+		if (existingData.getNoOfPackages().compareTo(newData.getNoOfPackages()) != 0) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "No Of Packages", String.valueOf(existingData.getNoOfPackages()),
+					String.valueOf(newData.getNoOfPackages()), existingData);
+
+		}
+
+		if (!existingData.getTypeOfPackage().equals(newData.getTypeOfPackage())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Type Of Package", existingData.getTypeOfPackage(),
+					newData.getTypeOfPackage(), existingData);
+
+		}
+
+		if (!existingData.getAccountHolderName().equals(newData.getAccountHolderName())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Account Holder", existingData.getAccountHolderName(),
+					newData.getAccountHolderName(), existingData);
+
+		}
+
+		if (!existingData.getImporterName().equals(newData.getImporterName())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Importer Name", existingData.getImporterName(),
+					newData.getImporterName(), existingData);
+
+		}
+		if (!existingData.getImporterAddress1().equals(newData.getImporterAddress1())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Importer Address1", existingData.getImporterAddress1(),
+					newData.getImporterAddress1(), existingData);
+
+		}
+		if (!existingData.getImporterAddress2().equals(newData.getImporterAddress2())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Importer Address2", existingData.getImporterAddress2(),
+					newData.getImporterAddress2(), existingData);
+
+		}
+		if (!existingData.getImporterAddress3().equals(newData.getImporterAddress3())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Importer Address3", existingData.getImporterAddress3(),
+					newData.getImporterAddress3(), existingData);
+
+		}
+		if (!existingData.getNotifyPartyName().equals(newData.getNotifyPartyName())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Notified Party", existingData.getNotifyPartyName(),
+					newData.getNotifyPartyName(), existingData);
+
+		}
+		if (!existingData.getNotifiedAddress1().equals(newData.getNotifiedAddress1())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Notified Party Address1", existingData.getNotifiedAddress1(),
+					newData.getNotifiedAddress1(), existingData);
+
+		}
+		if (!existingData.getNotifiedAddress2().equals(newData.getNotifiedAddress2())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Notified Party Address2", existingData.getNotifiedAddress2(),
+					newData.getNotifiedAddress2(), existingData);
+
+		}
+		if (!existingData.getNotifiedAddress3().equals(newData.getNotifiedAddress3())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Notified Party Address3", existingData.getNotifiedAddress3(),
+					newData.getNotifiedAddress3(), existingData);
+
+		}
+		if (!existingData.getOrigin().equals(newData.getOrigin())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Origin", existingData.getOrigin(), newData.getOrigin(),
+					existingData);
+
+		}
+		if (!existingData.getDestination().equals(newData.getDestination())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Destination", existingData.getDestination(),
+					newData.getDestination(), existingData);
+
+		}
+		if (!existingData.getCargoType().equals(newData.getCargoType())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Cargo Type", existingData.getCargoType(),
+					newData.getCargoType(), existingData);
+
+		}
+		if (!existingData.getImoCode().equals(newData.getImoCode())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Imo Code", existingData.getImoCode(), newData.getImoCode(),
+					existingData);
+
+		}
+		if (!existingData.getUnNo().equals(newData.getUnNo())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Un No", existingData.getUnNo(), newData.getUnNo(),
+					existingData);
+
+		}
+		if (!existingData.getHazReeferRemarks().equals(newData.getHazReeferRemarks())) {
+
+			checkAndUpdateIGMCRGAudit1(cid, bid, user, "Haz/Reefer Remarks", existingData.getHazReeferRemarks(),
+					newData.getHazReeferRemarks(), existingData);
+
+		}
+
+	}
+
+	public void checkAndUpdateIGMCNAudit(String cid, String bid, String user, Cfigmcn existingData, Cfigmcn newData) {
+
+		if(!existingData.getIso().equals(newData.getIso())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Iso", existingData.getIso(), newData.getIso(), existingData);
+		}
+		
+		if(!existingData.getContainerStatus().equals(newData.getContainerStatus())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Container Status", existingData.getContainerStatus(), newData.getContainerStatus(), existingData);
+		}
+		
+		if(existingData.getNoOfPackages() != newData.getNoOfPackages()) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "No Of Packages", String.valueOf(existingData.getNoOfPackages()), String.valueOf(newData.getNoOfPackages()), existingData);
+		}
+		if(!String.valueOf(existingData.getOdcStatus()).equals(String.valueOf(newData.getOdcStatus()))) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Odc Status", String.valueOf(existingData.getOdcStatus()), String.valueOf(newData.getOdcStatus()), existingData);
+		}
+		if(!String.valueOf(existingData.getLowBed()).equals(String.valueOf(newData.getLowBed()))) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Low Bed", String.valueOf(existingData.getLowBed()), String.valueOf(newData.getLowBed()), existingData);
+		}
+		if(!existingData.getGateOutType().equals(newData.getUpTariffDelMode())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Delivery Mode", existingData.getGateOutType(), newData.getUpTariffDelMode(), existingData);
+		}
+		if(!existingData.getTypeOfContainer().equals(newData.getTypeOfContainer())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Type Of Container", existingData.getTypeOfContainer(), newData.getTypeOfContainer(), existingData);
+		}
+		if(!existingData.getTemperature().equals(newData.getTemperature())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Temperature", existingData.getTemperature(), newData.getTemperature(), existingData);
+		}
+		if(!existingData.getContainerSize().equals(newData.getContainerSize())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Container Size", existingData.getContainerSize(), newData.getContainerSize(), existingData);
+		}
+		if(!existingData.getContainerType().equals(newData.getContainerType())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Container Type", existingData.getContainerType(), newData.getContainerType(), existingData);
+		}
+		if(existingData.getContainerWeight().compareTo(newData.getContainerWeight()) != 0) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Tare Wt", String.valueOf(existingData.getContainerWeight()), String.valueOf(newData.getContainerWeight()), existingData);
+		}
+		if(existingData.getGrossWt().compareTo(newData.getGrossWt()) != 0) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Gross Wt", String.valueOf(existingData.getGrossWt()), String.valueOf(newData.getGrossWt()), existingData);
+		}
+		if(!existingData.getScannerType().equals(newData.getScannerType())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Scan Type", existingData.getScannerType(), newData.getScannerType(), existingData);
+		}
+		if(!existingData.getContainerSealNo().equals(newData.getContainerSealNo())) {
+			checkAndUpdateIGMCNAudit1(cid, bid, user, "Container Seal No", existingData.getContainerSealNo(), newData.getContainerSealNo(), existingData);
+		}
+	}
+
 }
