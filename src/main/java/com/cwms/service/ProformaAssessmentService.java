@@ -593,7 +593,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getDestuffDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -687,7 +687,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -785,7 +785,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -889,7 +889,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -1553,7 +1553,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getDestuffDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -1638,7 +1638,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -1725,7 +1725,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -1820,7 +1820,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -2904,7 +2904,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -3018,7 +3018,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -3140,7 +3140,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -3267,7 +3267,7 @@ public class ProformaAssessmentService {
 																	convertToLocalDateTime(con.getInvoiceDate()),
 																	day.getEndTime());
 															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																	destuffDateTime);
+																	destuffDateTime) + 1;
 
 															if (daysBetween == 0 && ChronoUnit.HOURS
 																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -3484,7 +3484,7 @@ public class ProformaAssessmentService {
 																convertToLocalDateTime(con.getInvoiceDate()),
 																day.getEndTime());
 														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																destuffDateTime);
+																destuffDateTime) + 1;
 
 														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 																destuffDateTime) > 0) {
@@ -3597,7 +3597,7 @@ public class ProformaAssessmentService {
 																convertToLocalDateTime(con.getInvoiceDate()),
 																day.getEndTime());
 														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																destuffDateTime);
+																destuffDateTime) + 1;
 
 														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 																destuffDateTime) > 0) {
@@ -3717,7 +3717,7 @@ public class ProformaAssessmentService {
 																convertToLocalDateTime(con.getInvoiceDate()),
 																day.getEndTime());
 														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																destuffDateTime);
+																destuffDateTime) + 1;
 
 														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 																destuffDateTime) > 0) {
@@ -3843,7 +3843,7 @@ public class ProformaAssessmentService {
 																convertToLocalDateTime(con.getInvoiceDate()),
 																day.getEndTime());
 														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-																destuffDateTime);
+																destuffDateTime) + 1;
 
 														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 																destuffDateTime) > 0) {
@@ -4065,7 +4065,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -4178,7 +4178,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -4298,7 +4298,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -4422,7 +4422,7 @@ public class ProformaAssessmentService {
 															convertToLocalDateTime(con.getInvoiceDate()),
 															day.getEndTime());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -5228,7 +5228,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getDestuffDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -5328,7 +5328,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -5432,7 +5432,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -5542,7 +5542,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -6236,7 +6236,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getDestuffDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -6327,7 +6327,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -6420,7 +6420,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -6522,7 +6522,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -7588,7 +7588,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -7658,7 +7658,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -7736,7 +7736,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -7819,7 +7819,7 @@ public class ProformaAssessmentService {
 //																	convertToLocalDateTime(con.getInvoiceDate()),
 //																	day.getEndTime());
 //															long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																	destuffDateTime);
+//																	destuffDateTime) + 1;
 //
 //															if (daysBetween == 0 && ChronoUnit.HOURS
 //																	.between(gateInDateTime, destuffDateTime) > 0) {
@@ -7992,7 +7992,7 @@ public class ProformaAssessmentService {
 //																convertToLocalDateTime(con.getInvoiceDate()),
 //																day.getEndTime());
 //														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																destuffDateTime);
+//																destuffDateTime) + 1;
 //
 //														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //																destuffDateTime) > 0) {
@@ -8061,7 +8061,7 @@ public class ProformaAssessmentService {
 //																convertToLocalDateTime(con.getInvoiceDate()),
 //																day.getEndTime());
 //														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																destuffDateTime);
+//																destuffDateTime) + 1;
 //
 //														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //																destuffDateTime) > 0) {
@@ -8137,7 +8137,7 @@ public class ProformaAssessmentService {
 //																convertToLocalDateTime(con.getInvoiceDate()),
 //																day.getEndTime());
 //														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																destuffDateTime);
+//																destuffDateTime) + 1;
 //
 //														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //																destuffDateTime) > 0) {
@@ -8219,7 +8219,7 @@ public class ProformaAssessmentService {
 //																convertToLocalDateTime(con.getInvoiceDate()),
 //																day.getEndTime());
 //														long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//																destuffDateTime);
+//																destuffDateTime) + 1;
 //
 //														if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //																destuffDateTime) > 0) {
@@ -8397,7 +8397,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -8466,7 +8466,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -8542,7 +8542,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -8622,7 +8622,7 @@ public class ProformaAssessmentService {
 //															convertToLocalDateTime(con.getInvoiceDate()),
 //															day.getEndTime());
 //													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-//															destuffDateTime);
+//															destuffDateTime) + 1;
 //
 //													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 //															destuffDateTime) > 0) {
@@ -10197,7 +10197,7 @@ public class ProformaAssessmentService {
 													LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 															con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -10270,7 +10270,7 @@ public class ProformaAssessmentService {
 													LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 															con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -10801,7 +10801,7 @@ public class ProformaAssessmentService {
 													.ofInstant(con.getGateInDate().toInstant(), ZoneId.systemDefault());
 											LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 													con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime);
+											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime) + 1;
 
 											if (daysBetween == 0
 													&& ChronoUnit.HOURS.between(gateInDateTime, destuffDateTime) > 0) {
@@ -10874,7 +10874,7 @@ public class ProformaAssessmentService {
 													.ofInstant(con.getGateInDate().toInstant(), ZoneId.systemDefault());
 											LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 													con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime);
+											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime) + 1;
 
 											if (daysBetween == 0
 													&& ChronoUnit.HOURS.between(gateInDateTime, destuffDateTime) > 0) {
@@ -11828,7 +11828,7 @@ public class ProformaAssessmentService {
 													LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 															con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -11902,7 +11902,7 @@ public class ProformaAssessmentService {
 													LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 															con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
 													long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-															destuffDateTime);
+															destuffDateTime) + 1;
 
 													if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 															destuffDateTime) > 0) {
@@ -12425,7 +12425,7 @@ public class ProformaAssessmentService {
 													con.getLastInvoiceUptoDate().toInstant(), ZoneId.systemDefault());
 											LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 													con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime);
+											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime) + 1;
 
 											if (daysBetween == 0
 													&& ChronoUnit.HOURS.between(gateInDateTime, destuffDateTime) > 0) {
@@ -12496,7 +12496,7 @@ public class ProformaAssessmentService {
 													con.getLastInvoiceUptoDate().toInstant(), ZoneId.systemDefault());
 											LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 													con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime);
+											long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime) + 1;
 
 											if (daysBetween == 0
 													&& ChronoUnit.HOURS.between(gateInDateTime, destuffDateTime) > 0) {
@@ -13957,7 +13957,7 @@ public class ProformaAssessmentService {
 												LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 														con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
 												long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-														destuffDateTime);
+														destuffDateTime) + 1;
 
 												if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 														destuffDateTime) > 0) {
@@ -14031,7 +14031,7 @@ public class ProformaAssessmentService {
 												LocalDateTime destuffDateTime = LocalDateTime.ofInstant(
 														con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
 												long daysBetween = ChronoUnit.DAYS.between(gateInDateTime,
-														destuffDateTime);
+														destuffDateTime) + 1;
 
 												if (daysBetween == 0 && ChronoUnit.HOURS.between(gateInDateTime,
 														destuffDateTime) > 0) {
@@ -14547,7 +14547,7 @@ public class ProformaAssessmentService {
 												.ofInstant(con.getGateInDate().toInstant(), ZoneId.systemDefault());
 										LocalDateTime destuffDateTime = LocalDateTime
 												.ofInstant(con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-										long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime);
+										long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime) + 1;
 
 										if (daysBetween == 0
 												&& ChronoUnit.HOURS.between(gateInDateTime, destuffDateTime) > 0) {
@@ -14620,7 +14620,7 @@ public class ProformaAssessmentService {
 												.ofInstant(con.getGateInDate().toInstant(), ZoneId.systemDefault());
 										LocalDateTime destuffDateTime = LocalDateTime
 												.ofInstant(con.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-										long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime);
+										long daysBetween = ChronoUnit.DAYS.between(gateInDateTime, destuffDateTime) + 1;
 
 										if (daysBetween == 0
 												&& ChronoUnit.HOURS.between(gateInDateTime, destuffDateTime) > 0) {
