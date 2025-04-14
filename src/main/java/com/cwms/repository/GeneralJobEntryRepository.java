@@ -140,7 +140,7 @@ public interface GeneralJobEntryRepository extends JpaRepository<GenerelJobEntry
 		@Query(value = "select c.jobTransId,c.profitcentreId,p.profitcentreDesc,c.jobNo,c.jobDate,COALESCE(SUM(r.cargoValue),0),COALESCE(SUM(r.cargoDuty),0),"
 				+ "c.importerId,c.importerName,c.impSrNo,c.importerAddress1,c.importerAddress2,c.importerAddress3,pa1.gstNo,c.cha,p1.partyName,"
 				+ "GROUP_CONCAT(dtl.commodityDescription),(COALESCE(SUM(r.receivedPackages),0) - COALESCE(SUM(r.deliveredPackages),0)),c.noOf20ft,c.noOf40ft,"
-				+ "(COALESCE(c.area,0) - COALESCE(SUM(r.areaOccupied),0)),c.grossWeight,c.invoiceUptoDate,c.assesmentId,c.invoiceNo,c.assesmentDate,c.invoiceDate,"
+				+ "(COALESCE(r.areaOccupied,0) * (COALESCE(SUM(r.receivedPackages),0) - COALESCE(SUM(r.deliveredPackages),0)))/COALESCE(SUM(r.receivedPackages),0),c.grossWeight,c.invoiceUptoDate,c.assesmentId,c.invoiceNo,c.assesmentDate,c.invoiceDate,"
 				+ "CEIL(DATEDIFF(CURRENT_TIMESTAMP, c.jobDate) / 7) from GenerelJobEntry c "
 				+ "LEFT OUTER JOIN GeneralReceivingCrg r ON c.companyId=r.companyId and c.branchId=r.branchId and c.jobNo=r.jobNo and r.status='A' "
 				+ "and c.jobTransId=r.jobTransId and c.boeNo=r.boeNo and (COALESCE(r.receivedPackages,0) - COALESCE(r.deliveredPackages,0)) > 0 "
