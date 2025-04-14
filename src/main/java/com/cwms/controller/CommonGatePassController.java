@@ -113,7 +113,7 @@ public class CommonGatePassController {
 				return new ResponseEntity<>("Empty job order data not found", HttpStatus.CONFLICT);
 			}
 			
-			EmptyInventory inv = emptyinventoryrepo.getById1(cid, bid, existingJobOrder.getErpDocRefNo(), existingJobOrder.getDocRefNo(),
+			EmptyInventory inv = emptyinventoryrepo.getById2(cid, bid, existingJobOrder.getErpDocRefNo(), existingJobOrder.getDocRefNo(),
 					existingJobOrder.getGateInId(), existingJobOrder.getContainerNo());
 
 			if (inv == null) {
@@ -326,7 +326,7 @@ public class CommonGatePassController {
 				return new ResponseEntity<>("Empty job order data not found", HttpStatus.CONFLICT);
 			}
 			
-			EmptyInventory inv = emptyinventoryrepo.getById1(cid, bid, existingJobOrder.getErpDocRefNo(), existingJobOrder.getDocRefNo(),
+			EmptyInventory inv = emptyinventoryrepo.getById2(cid, bid, existingJobOrder.getErpDocRefNo(), existingJobOrder.getDocRefNo(),
 					existingJobOrder.getGateInId(), existingJobOrder.getContainerNo());
 
 			if (inv == null) {

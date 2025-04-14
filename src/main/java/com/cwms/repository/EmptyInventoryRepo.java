@@ -23,6 +23,17 @@ public interface EmptyInventoryRepo extends JpaRepository<EmptyInventory, String
 	                       @Param("cont") String cont);
 	
 	@Query(value="select e from EmptyInventory e where e.companyId=:cid and e.branchId=:bid and e.erpDocRefNo=:erp and e.docRefNo=:doc and "
+	        + "e.gateInId=:gatein and e.containerNo=:cont and e.status != 'D'")
+	EmptyInventory getById2(@Param("cid") String cid, 
+	                       @Param("bid") String bid, 
+	                       @Param("erp") String erp, 
+	                       @Param("doc") String doc, 
+	                       @Param("gatein") String gatein, 
+	                       @Param("cont") String cont);
+	
+	
+	
+	@Query(value="select e from EmptyInventory e where e.companyId=:cid and e.branchId=:bid and e.erpDocRefNo=:erp and e.docRefNo=:doc and "
 	        + "e.gateInId=:gatein and e.containerNo=:cont and e.status != 'D' and (e.emptyJobOrder = '' OR e.emptyJobOrder is null)")
 	EmptyInventory getById1(@Param("cid") String cid, 
 	                       @Param("bid") String bid, 
@@ -30,6 +41,8 @@ public interface EmptyInventoryRepo extends JpaRepository<EmptyInventory, String
 	                       @Param("doc") String doc, 
 	                       @Param("gatein") String gatein, 
 	                       @Param("cont") String cont);
+	
+	
 
 	
    @Query(value="select e.containerNo,e.containerSize,e.containerType,e.isoCode,e.erpDocRefNo,e.docRefNo,p.partyName,e.gateInId,e.gateInDate,"
