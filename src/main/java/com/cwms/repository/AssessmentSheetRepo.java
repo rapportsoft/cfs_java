@@ -219,4 +219,25 @@ public interface AssessmentSheetRepo extends JpaRepository<AssessmentSheet, Stri
 			+ "a.igmTransId LIKE CONCAT('%',:val,'%') OR a.igmNo LIKE CONCAT('%',:val,'%') OR a.blNo LIKE CONCAT('%',:val,'%')) "
 			+ "and (a.invoiceNo is not null AND a.invoiceNo != '') and a.transType='Import Auction' order by a.assesmentDate desc")
 	List<Object[]> searchAuctionInvoiceData(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	@Query(value="select DISTINCT a.invoiceNo,a.assesmentId,DATE_FORMAT(a.assesmentDate,'%d/%m/%Y %h:%i'),a.igmTransId,"
+			+ "a.igmNo,DATE_FORMAT(a.igmDate,'%d/%m/%Y %h:%i'),p.partyName,a.sbNo "
+			+ "from AssessmentSheet a "
+			+ "LEFT OUTER JOIN Party p ON a.companyId=p.companyId and a.branchId=p.branchId and a.importerId=p.partyId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and (:val is null OR :val = '' OR "
+			+ "a.invoiceNo LIKE CONCAT('%',:val,'%') OR a.assesmentId LIKE CONCAT('%',:val,'%') OR "
+			+ "a.igmTransId LIKE CONCAT('%',:val,'%') OR a.igmNo LIKE CONCAT('%',:val,'%') OR a.blNo LIKE CONCAT('%',:val,'%') OR a.sbNo LIKE CONCAT('%',:val,'%')) "
+			+ "and (a.invoiceNo is not null AND a.invoiceNo != '') and a.transType='General Cargo' and a.invType='RECEIVING' order by a.assesmentDate desc")
+	List<Object[]> searchGeneralJobInvoiceData(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
+	
+	
+	@Query(value="select DISTINCT a.invoiceNo,a.assesmentId,DATE_FORMAT(a.assesmentDate,'%d/%m/%Y %h:%i'),a.igmTransId,"
+			+ "a.igmNo,DATE_FORMAT(a.igmDate,'%d/%m/%Y %h:%i'),p.partyName,a.sbNo "
+			+ "from AssessmentSheet a "
+			+ "LEFT OUTER JOIN Party p ON a.companyId=p.companyId and a.branchId=p.branchId and a.importerId=p.partyId "
+			+ "where a.companyId=:cid and a.branchId=:bid and a.status = 'A' and (:val is null OR :val = '' OR "
+			+ "a.invoiceNo LIKE CONCAT('%',:val,'%') OR a.assesmentId LIKE CONCAT('%',:val,'%') OR "
+			+ "a.igmTransId LIKE CONCAT('%',:val,'%') OR a.igmNo LIKE CONCAT('%',:val,'%') OR a.blNo LIKE CONCAT('%',:val,'%') OR a.sbNo LIKE CONCAT('%',:val,'%')) "
+			+ "and (a.invoiceNo is not null AND a.invoiceNo != '') and a.transType='General Cargo' and a.invType='DELIVERY' order by a.assesmentDate desc")
+	List<Object[]> searchGeneralDeliveryInvoiceData(@Param("cid") String cid,@Param("bid") String bid,@Param("val") String val);
 }

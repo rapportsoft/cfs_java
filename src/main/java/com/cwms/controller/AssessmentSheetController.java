@@ -19,6 +19,7 @@ import com.cwms.repository.CFSTarrifServiceRepository;
 import com.cwms.repository.PartyRepository;
 import com.cwms.repository.TaxRepository;
 import com.cwms.service.AssessmentService;
+import com.cwms.service.GeneralAssessmentService;
 import com.cwms.service.MiscellaneousService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -42,6 +43,9 @@ public class AssessmentSheetController {
     
     @Autowired
     private MiscellaneousService miscellaneousService;
+    
+	@Autowired
+	private GeneralAssessmentService generalAssessmentService;
 	 
 	 @GetMapping("/searchImportBeforeSaveAssessmentData")
 	 public ResponseEntity<?> searchImportBeforeSaveAssessmentData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
@@ -314,5 +318,109 @@ public class AssessmentSheetController {
 					@RequestParam("assId") String assId, @RequestParam("invId") String invId) {
 				return miscellaneousService.getSelectedMISCInvoiceData1(cid, bid, assId, invId);
 			}
+			
+			
+			// General Receiving Invoice
+
+			@GetMapping("/searchGeneralJobBeforeSaveAssessmentData")
+			public ResponseEntity<?> searchGeneralJobBeforeSaveAssessmentData(@RequestParam("cid") String cid,
+					@RequestParam("bid") String bid, @RequestParam(name = "val", required = false) String val) {
+				return generalAssessmentService.searchGeneralJobBeforeSaveAssessmentData(cid, bid, val);
+			}
+
+			@GetMapping("/getGeneralJobBeforeSaveAssessmentData")
+			public ResponseEntity<?> getGeneralJobBeforeSaveAssessmentData(@RequestParam("cid") String cid,
+					@RequestParam("bid") String bid, @RequestParam("trans") String trans, @RequestParam("boe") String boe) {
+				return generalAssessmentService.getGeneralJobBeforeSaveAssessmentData(cid, bid, trans, boe);
+			}
+
+			@PostMapping("/saveGeneralReceivingAssessmentData")
+			public ResponseEntity<?> saveGeneralReceivingAssessmentData(@RequestParam("cid") String cid,
+					@RequestParam("bid") String bid, @RequestParam("user") String user,
+					@RequestBody Map<String, Object> assessmentData)
+					throws JsonMappingException, JsonProcessingException, ParseException, CloneNotSupportedException {
+				return generalAssessmentService.generalAssessmentService(cid, bid, user, assessmentData);
+			}
+
+			@PostMapping("/saveGeneralJobInvoiceReceipt")
+			public ResponseEntity<?> saveGeneralJobInvoiceReceipt(@RequestParam("cid") String cid,
+					@RequestParam("bid") String bid, @RequestParam("creditStatus") String creditStatus,
+					@RequestParam("user") String user, @RequestBody Map<String, Object> assessmentData)
+					throws JsonMappingException, JsonProcessingException {
+
+				if ("Y".equals(creditStatus)) {
+					return generalAssessmentService.saveGeneralRecCreditInvoiceReceipt(cid, bid, user, assessmentData);
+				} else if ("P".equals(creditStatus)) {
+					return generalAssessmentService.saveGeneralRecPdaInvoiceReceipt(cid, bid, user, assessmentData);
+				} else {
+					return generalAssessmentService.saveGeneralRecInvoiceReceipt(cid, bid, user, assessmentData);
+				}
+
+			}
+			
+			
+			@PostMapping("/saveGeneralAddService")
+			public ResponseEntity<?> saveGeneralAddService(@RequestParam("companyId") String companyId,
+					@RequestParam("branchId") String branchId, @RequestBody Map<String, Object> requestData,
+					@RequestParam("userId") String user, @RequestParam("type") String type)
+					throws JsonMappingException, JsonProcessingException {
+				ResponseEntity<?> addExportAssesmentSheet = generalAssessmentService.saveGeneralAddService(companyId, branchId, user,
+						requestData, type);
+				return addExportAssesmentSheet;
+			}
+			
+			@GetMapping("/searchGeneralInvoiceData")
+			public ResponseEntity<?> searchGeneralInvoiceData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam(name = "val", required = false) String val, @RequestParam("type") String type) {
+				return generalAssessmentService.searchGeneralInvoiceData(cid, bid, val, type);
+			}
+			
+			
+			
+			// General Delivery Invoice
+			
+			@GetMapping("/getBeforeAssessmentDeliveryData")
+			public ResponseEntity<?> getBeforeAssessmentDeliveryData(@RequestParam("cid") String cid,@RequestParam("bid") String bid,
+					@RequestParam("val") String val){
+				
+				try {
+					
+					return generalAssessmentService.getBeforeAssessmentDeliveryData(cid, bid, val);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					return new ResponseEntity<>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
+			
+			@GetMapping("/getGeneralDeliveryBeforeSaveAssessmentData")
+			public ResponseEntity<?> getGeneralDeliveryBeforeSaveAssessmentData(@RequestParam("cid") String cid,
+					@RequestParam("bid") String bid, @RequestParam("val") String val) {
+				return generalAssessmentService.getGeneralDeliveryBeforeSaveAssessmentData(cid, bid, val);
+			}
+			
+			@PostMapping("/saveGeneralDeliveryAssessmentData")
+			public ResponseEntity<?> saveGeneralDeliveryAssessmentData(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam("user") String user, @RequestBody Map<String, Object> assessmentData)
+					throws JsonMappingException, JsonProcessingException, ParseException, CloneNotSupportedException {
+				return generalAssessmentService.saveGeneralDeliveryAssessmentData(cid, bid, user, assessmentData);
+			}
+			
+			@PostMapping("/saveGeneralDeliveryInvoiceReceipt")
+			public ResponseEntity<?> saveGeneralDeliveryInvoiceReceipt(@RequestParam("cid") String cid, @RequestParam("bid") String bid,
+					@RequestParam("creditStatus") String creditStatus, @RequestParam("user") String user,
+					@RequestBody Map<String, Object> assessmentData) throws JsonMappingException, JsonProcessingException {
+
+				if ("Y".equals(creditStatus)) {
+					return generalAssessmentService.saveExbondCreditInvoiceReceipt(cid, bid, user, assessmentData);
+				} else if ("P".equals(creditStatus)) {
+					return generalAssessmentService.saveExbondPdaInvoiceReceipt(cid, bid, user, assessmentData);
+				} else {
+					return generalAssessmentService.saveExbondInvoiceReceipt(cid, bid, user, assessmentData);
+				}
+
+			}
+
 			
 }
