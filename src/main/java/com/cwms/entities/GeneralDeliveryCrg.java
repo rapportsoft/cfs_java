@@ -222,6 +222,30 @@ public class GeneralDeliveryCrg {
 
     @Column(name = "Handling_Invoice_No", length = 10, nullable = true)
     private String handlingInvoiceNo;
+    
+    @Column(name = "Invoice_Assesed", length = 1, nullable = true)
+	private String invoiceAssesed;
+
+	@Column(name = "Invoice_No", length = 16, nullable = true)
+	private String invoiceNo;
+
+	@Column(name = "Invoice_Date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	private Date invoiceDate;
+	
+	@Column(name = "Invoice_Upto_Date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	private Date invoiceUptoDate;
+
+
+	@Column(name = "Assesment_Date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	private Date assesmentDate;
+
+
 
 	public GeneralDeliveryCrg(String companyId, String branchId, String deliveryId, String receivingId,
 			Date deliveryDate, String profitCentreId, String boeNo, Date boeDate, String depositNo,
@@ -236,7 +260,8 @@ public class GeneralDeliveryCrg {
 			BigDecimal cargoValue, BigDecimal cargoDuty, BigDecimal cifValue, BigDecimal rCargoValue,
 			BigDecimal rCargoDuty, BigDecimal rCifValue, String handlingEquip, String handlingEquip1,
 			String handlingEquip2, String owner, String owner1, String owner2, String transporter, String numberOfMarks,
-			char handlingStatus, String transporterName, String handlingInvoiceNo) {
+			char handlingStatus, String transporterName, String handlingInvoiceNo, String invoiceAssesed,
+			String invoiceNo, Date invoiceDate, Date invoiceUptoDate, Date assesmentDate) {
 		super();
 		this.companyId = companyId;
 		this.branchId = branchId;
@@ -301,11 +326,58 @@ public class GeneralDeliveryCrg {
 		this.handlingStatus = handlingStatus;
 		this.transporterName = transporterName;
 		this.handlingInvoiceNo = handlingInvoiceNo;
+		this.invoiceAssesed = invoiceAssesed;
+		this.invoiceNo = invoiceNo;
+		this.invoiceDate = invoiceDate;
+		this.invoiceUptoDate = invoiceUptoDate;
+		this.assesmentDate = assesmentDate;
 	}
 
 	public GeneralDeliveryCrg() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	
+
+	public String getInvoiceAssesed() {
+		return invoiceAssesed;
+	}
+
+	public void setInvoiceAssesed(String invoiceAssesed) {
+		this.invoiceAssesed = invoiceAssesed;
+	}
+
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	public Date getInvoiceUptoDate() {
+		return invoiceUptoDate;
+	}
+
+	public void setInvoiceUptoDate(Date invoiceUptoDate) {
+		this.invoiceUptoDate = invoiceUptoDate;
+	}
+
+	public Date getAssesmentDate() {
+		return assesmentDate;
+	}
+
+	public void setAssesmentDate(Date assesmentDate) {
+		this.assesmentDate = assesmentDate;
 	}
 
 	public String getCompanyId() {

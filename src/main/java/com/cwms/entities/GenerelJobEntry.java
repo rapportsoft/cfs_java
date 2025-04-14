@@ -143,7 +143,174 @@ public class GenerelJobEntry implements Serializable {
 	@Transient
 	private String forwarderName;
 	
+	@Column(name = "Invoice_Assesed", length = 1, nullable = true)
+	private String invoiceAssesed;
+
+	@Column(name = "Assesment_Id", length = 20, nullable = true)
+	private String assesmentId;
+
+	@Column(name = "Invoice_No", length = 16, nullable = true)
+	private String invoiceNo;
+
+	@Column(name = "Invoice_Date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	private Date invoiceDate;
 	
+	@Column(name = "Invoice_Upto_Date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	private Date invoiceUptoDate;
+
+	@Column(name = "Assesment_Date", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	private Date assesmentDate;
+	
+	
+	
+	
+
+	public GenerelJobEntry(String companyId, String branchId, String jobTransId, String jobNo, String profitcentreId,
+			Date jobTransDate, Date jobDate, String gateInId, String boeNo, Date boeDate, String cha, String cargoType,
+			int impSrNo, String importerId, String importerName, String importerAddress1, String importerAddress2,
+			String importerAddress3, String forwarder, BigDecimal grossWeight, BigDecimal area, BigDecimal noOfPackages,
+			BigDecimal gateInPackages, String numberOfMarks, String packageOrWeight, String noOf20ft, String noOf40ft,
+			String godownNo, Date approvedDate, String createdBy, Date createdDate, String editedBy, Date editedDate,
+			String approvedBy, String comments, String status, String forwarderName, String invoiceAssesed,
+			String assesmentId, String invoiceNo, Date invoiceDate, Date invoiceUptoDate, Date assesmentDate) {
+		super();
+		this.companyId = companyId;
+		this.branchId = branchId;
+		this.jobTransId = jobTransId;
+		this.jobNo = jobNo;
+		this.profitcentreId = profitcentreId;
+		this.jobTransDate = jobTransDate;
+		this.jobDate = jobDate;
+		this.gateInId = gateInId;
+		this.boeNo = boeNo;
+		this.boeDate = boeDate;
+		this.cha = cha;
+		this.cargoType = cargoType;
+		this.impSrNo = impSrNo;
+		this.importerId = importerId;
+		this.importerName = importerName;
+		this.importerAddress1 = importerAddress1;
+		this.importerAddress2 = importerAddress2;
+		this.importerAddress3 = importerAddress3;
+		this.forwarder = forwarder;
+		this.grossWeight = grossWeight;
+		this.area = area;
+		this.noOfPackages = noOfPackages;
+		this.gateInPackages = gateInPackages;
+		this.numberOfMarks = numberOfMarks;
+		this.packageOrWeight = packageOrWeight;
+		this.noOf20ft = noOf20ft;
+		this.noOf40ft = noOf40ft;
+		this.godownNo = godownNo;
+		this.approvedDate = approvedDate;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.editedBy = editedBy;
+		this.editedDate = editedDate;
+		this.approvedBy = approvedBy;
+		this.comments = comments;
+		this.status = status;
+		this.forwarderName = forwarderName;
+		this.invoiceAssesed = invoiceAssesed;
+		this.assesmentId = assesmentId;
+		this.invoiceNo = invoiceNo;
+		this.invoiceDate = invoiceDate;
+		this.invoiceUptoDate = invoiceUptoDate;
+		this.assesmentDate = assesmentDate;
+	}
+	
+	
+	
+
+	public String getInvoiceAssesed() {
+		return invoiceAssesed;
+	}
+
+
+
+
+	public void setInvoiceAssesed(String invoiceAssesed) {
+		this.invoiceAssesed = invoiceAssesed;
+	}
+
+
+
+
+	public String getAssesmentId() {
+		return assesmentId;
+	}
+
+
+
+
+	public void setAssesmentId(String assesmentId) {
+		this.assesmentId = assesmentId;
+	}
+
+
+
+
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+
+
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
+
+
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+
+
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+
+
+
+	public Date getInvoiceUptoDate() {
+		return invoiceUptoDate;
+	}
+
+
+
+
+	public void setInvoiceUptoDate(Date invoiceUptoDate) {
+		this.invoiceUptoDate = invoiceUptoDate;
+	}
+
+
+
+
+	public Date getAssesmentDate() {
+		return assesmentDate;
+	}
+
+
+
+
+	public void setAssesmentDate(Date assesmentDate) {
+		this.assesmentDate = assesmentDate;
+	}
+
+
+
 
 	public BigDecimal getGateInPackages() {
 		return gateInPackages;
